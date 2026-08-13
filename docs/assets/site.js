@@ -92,6 +92,13 @@
       sections.forEach(function (section) {
         var stillVisible = section.querySelectorAll('[data-search-card]:not([hidden])').length;
         section.hidden = query !== '' && stillVisible === 0;
+
+        var badge = section.querySelector('[data-category-count]');
+        if (badge) {
+          var total = parseInt(badge.getAttribute('data-category-count'), 10);
+          var shown = query === '' ? total : stillVisible;
+          badge.textContent = shown + ' ' + (shown === 1 ? 'skill' : 'skills');
+        }
       });
 
       clearButton.hidden = query === '';

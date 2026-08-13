@@ -115,6 +115,7 @@ def _render_head(*, title: str, meta_description: str, base_path: str = "") -> s
 <meta property="og:type" content="website">
 <meta property="og:title" content="{escape_html(title)}">
 <meta property="og:description" content="{desc}">
+<link rel="icon" type="image/svg+xml" href="{base_path}/assets/favicon.svg">
 <link rel="preload" href="{base_path}/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{base_path}/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{base_path}/assets/styles.css">
@@ -240,7 +241,7 @@ def _render_category_section(category: dict, skills: dict, icon_index: int,
     <div class="category-section__head">
       {_icon(icon_id, css_class="icon category-section__icon", base_path=base_path)}
       <h2 class="category-section__title">{escape_html(category['title'])}</h2>
-      <span class="tag category-section__count">{count} {noun}</span>
+      <span class="tag category-section__count" data-category-count="{count}">{count} {noun}</span>
     </div>
     <div class="card-grid" data-card-grid>
 {cards}

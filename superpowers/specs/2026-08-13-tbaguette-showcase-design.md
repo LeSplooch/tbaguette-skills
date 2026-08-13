@@ -2,9 +2,11 @@
 
 ## Purpose
 
-A static showcase-and-reference site for the 64 skills in the `TBaguette` plugin
-(`~/.claude/skills/TBaguette/`), built using the TBaguette skills themselves as a live
-test of the library.
+A static showcase-and-reference site for the 65 skills in the `TBaguette` plugin, built
+using the TBaguette skills themselves as a live test of the library. Originally authored
+at `~/.claude/skills/TBaguette/` (the live install location on the author's machine);
+this repo now embeds its own copy at `skills/` and is the source of truth for anything
+this site builds from — see the Structure section below.
 
 ## Concept: La Boulangerie TBaguette
 
@@ -64,7 +66,7 @@ respected throughout.
   skill cards (name, one-line trigger summary, category tag) linking out. Client-side
   search/filter over an index embedded at generation time — no fetch, no CORS issues,
   works opened directly from disk or served.
-- `skills/<slug>/index.html` × 64 — full rendered `SKILL.md` body, typeset for real
+- `skills/<slug>/index.html` × 65 — full rendered `SKILL.md` body, typeset for real
   reading, breadcrumb, prev/next within category, category siblings.
 - `formidable` exception: its 24 reference files (12 stacks + 12 commands) are inlined
   as anchored, tabbed sections on its one page rather than spawning 24 more URLs —
@@ -73,9 +75,13 @@ respected throughout.
   rewritten to same-page anchors at generation time.
 - `assets/styles.css`, `assets/site.js` — hand-authored, not generated.
 - `scripts/content_pipeline.py`, `scripts/templates.py`, `scripts/generate.py` —
-  the generator. `index.html` and `skills/**` are generated output, marked as such
-  with a header comment; the skill files under `~/.claude/skills/TBaguette/` remain
-  the single source of truth. Re-running `generate.py` regenerates the site.
+  the generator. `docs/index.html` and `docs/skills/**` are generated output, marked
+  as such with a header comment; `skills/` at this repo's own root is the source of
+  truth the generator reads from — not the live `~/.claude/skills/TBaguette/`
+  install, which exists only on the author's machine and has no bearing on what a
+  clone of this repo builds. Editing a skill happens at the live install first, then
+  gets copied into this repo's `skills/` before regenerating, so a clone is always
+  self-contained. Re-running `generate.py` regenerates the site.
 
 ## Content contract (schema `content.json`)
 
@@ -124,11 +130,23 @@ files.
 
 ## Out of scope
 
-No deployment or hosting setup (local static files only, deploy-ready if wanted
-later). No CMS or live editing — the generator is the update path.
+No CMS or live editing — the generator is the update path. No CI/CD for the deploy
+itself (a manual `generate.py` run plus a commit to `docs/` is the whole release
+process); automating that is a reasonable future addition, not a current requirement.
+
+## Deployment
+
+GitHub Pages, serving `docs/` directly from the repo's default branch — no separate
+`gh-pages` branch, no Actions workflow. This makes the real site URL a subpath
+(`https://<user>.github.io/<repo>/`), not the domain root, which is why every
+generated href/src is threaded through a `base_path` parameter (see `generate.py
+--base-path`) rather than hardcoded root-relative.
 
 ## Verification
 
 Static server via the Browser pane; click through landing, several skill pages
 (including formidable's tabbed page and at least one table-heavy page), search/filter,
-mobile width, contrast on both themes. Screenshot before calling it done.
+mobile width, contrast on both themes. Critically, verify under the actual production
+base path, not just served at the root — a root-only check will not catch a broken
+asset or nav link that only breaks once a subpath prefix is involved, which is exactly
+the class of bug this project shipped once already. Screenshot before calling it done.

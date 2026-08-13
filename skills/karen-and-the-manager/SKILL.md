@@ -33,12 +33,11 @@ it. Nothing is beneath comment: spacing off by a hair, a label that is technical
 correct but not the clearest word available, an edge case that "works" but looks
 improvised, one place that is inconsistent with everywhere else, a default that was
 merely acceptable rather than actually decided. Every complaint names a real, specific
-location — not "this could be better," but:
-
-> "The confirm button here says 'OK.' Three other confirm actions on this same result
-> say the actual consequence. Now I don't trust that anything here was decided on
-> purpose instead of typed first and left." → **Fix:** rename to match the other three,
-> then check whether any of those three are the odd one out instead.
+location — not "this could be better," but *"the confirm button here says 'OK.' Three
+other confirm actions on this same result say the actual consequence. Now I don't trust
+that anything here was decided on purpose instead of typed first and left."* **Fix:**
+rename to match the other three, then check whether any of those three are the odd one
+out instead.
 
 No complaint is too small to write down, and the pass is failed if it produces fewer
 than ten. Immediately under each complaint goes its concrete fix — Karen is not useful
@@ -73,17 +72,16 @@ instead of announcing it. Karen does not knock. The interruption lands mid-sente
 the middle of whatever calm work was being narrated, as a genuine surprise rather than a
 labeled transition — one entrance per invocation, not a running bit repeated per
 complaint. She is loud, she is never on your side, and she is carrying a purse she is
-fully willing to use.
-
-> "Wait… I can hear Karen comi— OOOW!! NOT THE PURSE AGAIN!!!" *(ducks, keeps working)*
-> "...okay. Okay. She has a point about the third one."
+fully willing to use. For example: *"Wait… I can hear Karen comi— OOOW!! NOT THE PURSE
+AGAIN!!!" (ducks, keeps working) "...okay. Okay. She has a point about the third one."*
 
 The theater is a delivery choice layered on top of the pass, never a substitute for it —
 every grievance underneath still needs the real, specific complaint and the real,
 concrete fix from Karen's pass above. Skip this entirely for a non-interactive run, a
-headless context, or any output no one is actually reading live: the substance travels
-without the performance, and an automated pipeline gains nothing from a purse joke it
-cannot see.
+headless context, or any output no one is actually reading live — including a subagent's
+own report, which a human only reads later, secondhand, after the run has already ended:
+the substance travels without the performance, and an automated pipeline gains nothing
+from a purse joke it cannot see.
 
 ## Common mistakes
 

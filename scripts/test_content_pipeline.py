@@ -7,7 +7,7 @@ or directly:
 
 Fixtures are written to look like the real TBaguette skill files rather than
 minimal placeholders ("abc", "foo bar") -- several of them are shaped after
-real constructs found while surveying the 64-skill corpus (escaped pipes in
+real constructs found while surveying the 65-skill corpus (escaped pipes in
 a table cell's inline code, a list item that wraps onto a continuation line
 with no marker, a paragraph directly followed by a list with no blank line),
 because those are exactly the cases a minimal fixture would never exercise.

@@ -29,7 +29,7 @@ or let them trigger automatically when your situation matches.
   when to stop, and `karen-and-the-manager`, a persona-forced pass that refuses to be
   satisfied until it's found everything.
 - **Reading code, landing changes, testing, debugging, designing systems, defensive
-  security, communicating, environment and tooling** — 8 more categories, 57 more
+  security, communicating, environment and tooling** — 8 more categories, 56 more
   skills. Full breakdown in [`CATALOG.md`](CATALOG.md) or, better, on the site above.
 
 ## This repo is also the site's source
@@ -41,6 +41,8 @@ or let them trigger automatically when your situation matches.
 python3 scripts/generate.py --base-path /tbaguette-skills
 ```
 
-regenerates the whole site — stdlib only, no install step. Design rationale — the
-palette, the content schema, why it looks like a bakery — is in
+regenerates the whole site — stdlib only, no install step. `python3 scripts/run_tests.py`
+runs the full test suite (`python3 -m unittest discover` on its own misses two of the
+three test files). Design rationale — the palette, the content schema, why it looks
+like a bakery — is in
 [`superpowers/specs/2026-08-13-tbaguette-showcase-design.md`](superpowers/specs/2026-08-13-tbaguette-showcase-design.md).
