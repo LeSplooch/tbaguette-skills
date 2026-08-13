@@ -180,7 +180,15 @@ def _render_document(*, title: str, meta_description: str, body_class: str,
 # ---------------------------------------------------------------------------
 
 
+# Clones on first run; pulls in place on every run after, rather than
+# erroring on "destination already exists" the way a bare `git clone` does.
+# Safe either way: git itself refuses to clone into a non-empty directory it
+# doesn't own (proven — see scripts/test_install_command.sh), so this can
+# never overwrite unrelated content some other skill or plugin happens to
+# have at the same path, only ever update its own prior clone.
 INSTALL_COMMAND = (
+    "[ -d ~/.claude/skills/TBaguette/.git ] && "
+    "git -C ~/.claude/skills/TBaguette pull || "
     "git clone https://github.com/LeSplooch/tbaguette-skills.git "
     "~/.claude/skills/TBaguette"
 )

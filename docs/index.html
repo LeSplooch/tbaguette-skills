@@ -37,7 +37,7 @@
   </p>
   <div class="install-frame__body">
     <div class="install">
-      <code class="install__command" id="install-command">git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code>
+      <code class="install__command" id="install-command">[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code>
       <button class="install__copy" type="button" data-copy-target="install-command"
               aria-label="Copy install command">
         <span class="install__copy-icons">

@@ -10,7 +10,7 @@ Usage:
 
 from pathlib import Path
 
-from templates import INSTALL_COMMAND, render_index, render_skill_page
+from templates import INSTALL_COMMAND, escape_html, render_index, render_skill_page
 
 # ---------------------------------------------------------------------------
 # The fixture from the original design brief. Only additive edits belong
@@ -163,7 +163,14 @@ def main() -> None:
         check(f"contains skill summary for {slug!r}", skill["summary"] in index_html)
         check(f"links to /skills/{slug}/", f'href="/skills/{slug}/"' in index_html)
     check("has a search input", 'data-search-input' in index_html)
-    check("install command appears verbatim", INSTALL_COMMAND in index_html)
+    # The command contains && , which escape_html correctly turns into
+    # &amp;&amp; — checking for the raw form here would either fail (proving
+    # nothing) or, worse, pass by accident if escaping were ever silently
+    # disabled. Checking the escaped form catches that regression directly.
+    check("install command appears, correctly HTML-escaped",
+          escape_html(INSTALL_COMMAND) in index_html)
+    check("raw, un-escaped command never appears (would mean escaping broke)",
+          INSTALL_COMMAND not in index_html)
     check("install command sits right after the headline, before the lede",
           index_html.index("hero__headline") < index_html.index('id="install-command"')
           < index_html.index("hero__lede"))

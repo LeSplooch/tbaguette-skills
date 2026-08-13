@@ -14,12 +14,20 @@ category, every skill readable in full.
 ## Install
 
 ```bash
-git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette
+[ -d ~/.claude/skills/TBaguette/.git ] && git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette
 ```
 
 Restart Claude Code (or run `/reload-plugins`). It loads as the `TBaguette@skills-dir`
 plugin — invoke any skill directly (`TBaguette:formidable`, `TBaguette:knowing-when-to-stop`, ...)
-or let them trigger automatically when your situation matches.
+or let them trigger automatically when your situation matches. Run the same command again
+later to pull updates in place.
+
+This only ever touches `~/.claude/skills/TBaguette` — it cannot alter, merge into, or
+overwrite any other skill or plugin you already have. `git clone` refuses outright if that
+exact path already exists and isn't empty or a clone of this repo, so a name collision
+fails loudly instead of silently overwriting something. `scripts/test_install_command.sh`
+proves this against four scenarios (fresh install, re-run, an empty pre-existing directory,
+and a real collision) — it's part of `run_tests.py`, not just asserted here.
 
 ## What's in it
 
