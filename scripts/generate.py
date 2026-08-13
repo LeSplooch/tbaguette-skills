@@ -174,6 +174,11 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
     )
     _write(output_dir / "verify-install" / "index.html", verify_html)
 
+    # Plain text, no GENERATED_HEADER — client JS in site.js string-compares
+    # this directly against the datetime it captured at page load, so this
+    # must be exactly last_updated_utc and nothing else.
+    (output_dir / "version.txt").write_text(last_updated_utc, encoding="utf-8")
+
 
 def generate(project_root: Path, skills_root: Path, *, base_path: str = "") -> dict:
     """Builds content fresh from the embedded skill files and atomically
@@ -211,7 +216,7 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "") -> d
     # everything under one served directory), and a wholesale docs_dir swap
     # would carry those away and delete them along with anything else a
     # human ever adds there that this script doesn't know about.
-    for name in ("index.html", "skills", "verify-install"):
+    for name in ("index.html", "skills", "verify-install", "version.txt"):
         target = docs_dir / name
         backup = project_root / f".docs.previous.{name}"
         if backup.is_dir():

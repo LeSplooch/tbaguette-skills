@@ -11,6 +11,7 @@ Usage:
 
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 import tempfile
@@ -173,6 +174,27 @@ def main() -> None:
             'href="/tbaguette-skills/skills/karen-and-the-manager/"' in index_html,
         )
 
+        version_txt_path = docs / "version.txt"
+        check("version.txt exists after generation", version_txt_path.exists())
+        version_txt_content = version_txt_path.read_text(encoding="utf-8")
+
+        index_dt_match = re.search(r'datetime="([^"]+)"', index_html)
+        check("index.html's header carries a parseable datetime attribute",
+              index_dt_match is not None)
+        check(
+            "version.txt's content matches the timestamp baked into index.html, "
+            "byte for byte (this is the exact string client JS string-compares "
+            "against, so it must carry no GENERATED_HEADER or other prefix)",
+            index_dt_match is not None and version_txt_content == index_dt_match.group(1),
+        )
+
+        formidable_dt_match = re.search(r'datetime="([^"]+)"', formidable_html)
+        check(
+            "the same version.txt also matches a skill page's timestamp "
+            "(one run, one instant, everywhere)",
+            formidable_dt_match is not None and version_txt_content == formidable_dt_match.group(1),
+        )
+
         # A second run proves the atomic-swap machinery is safe to repeat,
         # not just safe to run once — this is the exact property that
         # protects a real "edit a skill, rerun generate.py" workflow.
@@ -185,6 +207,11 @@ def main() -> None:
         check(
             "no leftover staging or backup directory after two runs",
             not any(p.name.startswith(".docs.") for p in tmp_root.iterdir()),
+        )
+        check("version.txt still exists after a second run", version_txt_path.exists())
+        check(
+            "no leftover version.txt backup file after two runs",
+            not (tmp_root / ".docs.previous.version.txt").exists(),
         )
     finally:
         shutil.rmtree(tmp_root, ignore_errors=True)
