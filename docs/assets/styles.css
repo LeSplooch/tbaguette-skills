@@ -822,6 +822,26 @@ code {
 
 .search__input::placeholder { color: var(--text-secondary); }
 
+/* The field wrapper is this input's focus indicator — :focus-within above
+   lights its border and glow — so the input opts out of the global
+   :focus-visible outline. Left in, that outline draws a whole second ring:
+   the input is the flex child *after* the icon, so its box starts inset from
+   the field's left edge, and outline-offset then pushes the ring back out
+   over the field's own border. Two mismatched rounded rectangles, where the
+   design asks for one border getting brighter. Opting out is safe here
+   because the wrapper treatment clears the 3:1 an indicator needs (--accent
+   sits at 8.2:1 on --bg) — except under a forced palette, which drops
+   box-shadow and overrides border-color outright, leaving :focus-within
+   nothing to show. There, put a real outline back on the wrapper. */
+.search__input:focus-visible { outline: none; }
+
+@media (forced-colors: active) {
+  .search__field:focus-within {
+    outline: 2px solid;
+    outline-offset: 2px;
+  }
+}
+
 .search__clear {
   margin-inline-end: var(--space-2);
   padding: var(--space-1) var(--space-3);

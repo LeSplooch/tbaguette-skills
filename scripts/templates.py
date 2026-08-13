@@ -122,23 +122,25 @@ def _render_head(*, title: str, meta_description: str, base_path: str = "") -> s
 <script>{_THEME_BOOTSTRAP_JS}</script>"""
 
 
-def _render_updated_time(last_updated_utc: str) -> str:
+def _render_updated_time(last_updated_utc: str, base_path: str = "") -> str:
     # last_updated_utc is a UTC instant baked in at generation time (see
     # generate.py's own docstring on why it must be the very last step
     # before commit for this to be honest). Rendered here as a plain UTC
     # string so the page still says something true with JS disabled;
     # site.js's initUpdatedTime() replaces the text with both the visitor's
     # local time and UTC once it runs, since the visitor's own timezone
-    # can't be known at build time.
+    # can't be known at build time. data-version-url points site.js's
+    # initVersionCheck() at the generated docs/version.txt, which always
+    # carries this same instant — see scripts/generate.py's _build_into().
     fallback = escape_html(last_updated_utc.replace("+00:00", "Z")) + " UTC"
     return f"""<p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="{escape_html(last_updated_utc)}" data-format-updated>{fallback}</time>
+      <time class="site-header__updated-value" datetime="{escape_html(last_updated_utc)}" data-format-updated data-version-url="{base_path}/version.txt">{fallback}</time>
     </p>"""
 
 
 def _render_header(base_path: str = "", last_updated_utc: str = "") -> str:
-    updated_html = _render_updated_time(last_updated_utc) if last_updated_utc else ""
+    updated_html = _render_updated_time(last_updated_utc, base_path) if last_updated_utc else ""
     return f"""<header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">

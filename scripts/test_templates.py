@@ -133,19 +133,28 @@ def check_base_path() -> None:
     categories = FIXTURE["categories"]
     skills = FIXTURE["skills"]
     base = "/tbaguette-skills"
+    # last_updated_utc must be passed here, unlike the other renders in this
+    # function — _render_header() omits the whole updated-time element
+    # (data-version-url along with it) when it's empty, so proving that
+    # element's own href is base_path-prefixed needs it present at all.
+    iso = "2026-08-13T00:00:00+00:00"
 
-    index_html = render_index(categories, skills, base_path=base)
+    index_html = render_index(categories, skills, base_path=base, last_updated_utc=iso)
     check("prefixed stylesheet href", f'"{base}/assets/styles.css"' in index_html)
     check("prefixed script src", f'"{base}/assets/site.js"' in index_html)
     check("prefixed skill card link", f'href="{base}/skills/formidable/"' in index_html)
+    check("version-check URL is base_path-prefixed too", f'data-version-url="{base}/version.txt"' in index_html)
     check("un-prefixed root-relative form is absent once base_path is set", '"/assets/styles.css"' not in index_html)
 
     formidable = skills["formidable"]
     page_html = render_skill_page(
-        formidable, prev_skill=None, next_skill=None, siblings=[], categories=categories, base_path=base
+        formidable, prev_skill=None, next_skill=None, siblings=[], categories=categories,
+        base_path=base, last_updated_utc=iso,
     )
     check("prefixed breadcrumb home link", f'href="{base}/"' in page_html)
     check("prefixed icon sprite reference", f'{base}/assets/icons.svg#' in page_html)
+    check("skill page's version-check URL is base_path-prefixed too",
+          f'data-version-url="{base}/version.txt"' in page_html)
     print("  base_path check passed")
 
 
@@ -223,6 +232,9 @@ def check_header_and_badges() -> None:
           "2026-08-13T19:42:07Z UTC" in html)
     check("header time element is wired for site.js to find and reformat",
           "data-format-updated" in html)
+    check("header time element also carries the version-check URL, "
+          "base_path-prefixed (empty base_path here, so root-relative)",
+          'data-version-url="/version.txt"' in html)
     check("wordmark carries its decorative wheat mark", "#icon-wheat" in html)
     check("wordmark reads TBaguette's Atelier, not just TBaguette",
           '<span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>' in html)
