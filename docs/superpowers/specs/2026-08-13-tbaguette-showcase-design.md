@@ -60,7 +60,7 @@ respected throughout.
 
 ## Structure
 
-- `index.html` — hero, then the 9 categories in `CATALOG.md` order, each a grid of
+- `index.html` — hero, then the 10 categories in `CATALOG.md` order, each a grid of
   skill cards (name, one-line trigger summary, category tag) linking out. Client-side
   search/filter over an index embedded at generation time — no fetch, no CORS issues,
   works opened directly from disk or served.
