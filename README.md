@@ -13,8 +13,16 @@ category, every skill readable in full.
 
 ## Install
 
+macOS, Linux, or Windows in WSL / Git Bash (bash, zsh, and fish all verified — see below):
+
 ```bash
 [ -d ~/.claude/skills/TBaguette/.git ] && git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette
+```
+
+Windows, native PowerShell (5.1 or 7+ — the default terminal since Windows 10):
+
+```powershell
+if (Test-Path "$HOME\.claude\skills\TBaguette\.git" -PathType Container) { git -C "$HOME\.claude\skills\TBaguette" pull } else { git clone https://github.com/LeSplooch/tbaguette-skills.git "$HOME\.claude\skills\TBaguette" }
 ```
 
 Restart Claude Code (or run `/reload-plugins`). It loads as the `TBaguette@skills-dir`
@@ -22,13 +30,19 @@ plugin — invoke any skill directly (`TBaguette:formidable`, `TBaguette:knowing
 or let them trigger automatically when your situation matches. Run the same command again
 later to pull updates in place.
 
-This only ever touches `~/.claude/skills/TBaguette` — it cannot alter, merge into, or
-overwrite any other skill or plugin you already have. `git clone` refuses outright if that
+Both commands only ever touch `~/.claude/skills/TBaguette` — neither can alter, merge into,
+or overwrite any other skill or plugin you already have. `git clone` refuses outright if that
 exact path already exists and isn't empty or a clone of this repo, so a name collision
 fails loudly instead of silently overwriting something. `scripts/test_install_command.py`
-(stdlib-only Python, no bash required) proves this against four scenarios (fresh install,
-re-run, an empty pre-existing directory, and a real collision) — it's part of
-`run_tests.py`, not just asserted here. Read the walkthrough and the exact source at
+(stdlib-only Python, no bash required to *run* the test) proves this against four scenarios
+(fresh install, re-run, an empty pre-existing directory, and a real collision), then
+cross-checks the literal bash command above against every POSIX-ish shell it finds on the
+build machine — bash, zsh, fish, and sh. All of it is part of `run_tests.py`, not just
+asserted here. The PowerShell command isn't machine-tested the same way (no PowerShell
+runtime in this project's build) — it's verified by careful construction against
+documented `Test-Path`/`git` behavior instead, which the verify-install page is upfront
+about rather than overclaiming. Read the full walkthrough, the exact test source, and a
+Command Prompt equivalent too at
 [lesplooch.github.io/tbaguette-skills/verify-install](https://lesplooch.github.io/tbaguette-skills/verify-install/).
 
 ## What's in it

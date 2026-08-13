@@ -659,6 +659,21 @@ code {
 .install__copy.is-copied .install__copy-icon--check { opacity: 1; transform: none; color: var(--text-accent); }
 .install__copy.is-copied { color: var(--text-accent); border-color: var(--border-strong); }
 
+.install__hint {
+  margin-top: var(--space-2);
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+/* The platform-picker tabs reuse .tabs/.tabs__tab/.tabs__panel wholesale
+   (same component as formidable's Stacks/Commands) but sit inside a small,
+   already-padded card rather than a full article — .tabs__panels' prose
+   sizing (measure-prose max-width, text-3) is the wrong fit here, since a
+   panel holds only a one-line command + hint, not running text. */
+.install-tabs { margin-top: 0; }
+.install-tabs .tabs__panels { margin-top: var(--space-4); }
+.install-tabs .tabs__panel { max-width: none; font-size: inherit; line-height: inherit; }
+
 .search {
   margin-top: var(--space-7);
   max-width: 34rem;
@@ -911,6 +926,29 @@ code {
 .prose li { padding-left: 0.2em; }
 .prose li::marker { color: var(--text-secondary); }
 .prose ul ul, .prose ol ol, .prose ul ol, .prose ol ul { margin-top: var(--space-2); }
+
+/* A single-command box in running prose — the PowerShell/cmd.exe mentions on
+   the install-verification page. Deliberately not the full .code-block
+   treatment (line numbers, syntax highlighting): that component is for
+   displaying real multi-line source, this is one line of supplementary
+   reference plain text. */
+.prose-code-block {
+  display: block;
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  overflow-x: auto;
+  background: var(--surface-hover);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.prose-code-block code {
+  padding: 0;
+  background: none;
+  font-size: var(--text-1);
+  white-space: pre;
+  color: var(--text-primary);
+}
 
 .prose a {
   color: var(--text-accent);

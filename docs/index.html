@@ -36,16 +36,47 @@
     Install TBaguette&rsquo;s skills
   </p>
   <div class="install-frame__body">
-    <div class="install">
-      <code class="install__command" id="install-command">[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code>
-      <button class="install__copy" type="button" data-copy-target="install-command"
-              aria-label="Copy install command">
-        <span class="install__copy-icons">
-          <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-copy"></use></svg>
-          <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
-        </span>
-        <span data-copy-label>Copy</span>
-      </button>
+    <div class="tabs install-tabs" data-tabs data-autoselect-platform="true">
+      <div class="tabs__list install-tabs__list" role="tablist" aria-label="Choose your platform">
+        <button class="tabs__tab" type="button" role="tab" id="tab-install-posix"
+                aria-controls="install-posix" aria-selected="true" tabindex="0"
+                data-platform="posix">macOS / Linux</button>
+        <button class="tabs__tab" type="button" role="tab" id="tab-install-powershell"
+                aria-controls="install-powershell" aria-selected="false" tabindex="-1"
+                data-platform="windows">Windows (PowerShell)</button>
+      </div>
+      <div class="tabs__panels install-tabs__panels">
+<div class="tabs__panel install-tabs__panel" role="tabpanel" id="install-posix"
+             aria-labelledby="tab-install-posix" tabindex="0">
+          <div class="install">
+            <code class="install__command" id="install-posix-command">[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code>
+            <button class="install__copy" type="button" data-copy-target="install-posix-command"
+                    aria-label="Copy install command">
+              <span class="install__copy-icons">
+                <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-copy"></use></svg>
+                <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
+              </span>
+              <span data-copy-label>Copy</span>
+            </button>
+          </div>
+          <p class="install__hint">Works in bash, zsh, or fish — including WSL and Git Bash on Windows.</p>
+        </div>
+<div class="tabs__panel install-tabs__panel" role="tabpanel" id="install-powershell"
+             aria-labelledby="tab-install-powershell" tabindex="0" hidden>
+          <div class="install">
+            <code class="install__command" id="install-powershell-command">if (Test-Path &quot;$HOME\.claude\skills\TBaguette\.git&quot; -PathType Container) { git -C &quot;$HOME\.claude\skills\TBaguette&quot; pull } else { git clone https://github.com/LeSplooch/tbaguette-skills.git &quot;$HOME\.claude\skills\TBaguette&quot; }</code>
+            <button class="install__copy" type="button" data-copy-target="install-powershell-command"
+                    aria-label="Copy install command">
+              <span class="install__copy-icons">
+                <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-copy"></use></svg>
+                <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
+              </span>
+              <span data-copy-label>Copy</span>
+            </button>
+          </div>
+          <p class="install__hint">PowerShell 5.1 or 7+, the Windows default terminal since Windows 10.</p>
+        </div>
+      </div>
     </div>
     <p class="install-frame__note">
       <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>

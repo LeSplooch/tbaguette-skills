@@ -186,6 +186,11 @@ def _render_document(*, title: str, meta_description: str, body_class: str,
 # doesn't own (proven — see scripts/test_install_command.py), so this can
 # never overwrite unrelated content some other skill or plugin happens to
 # have at the same path, only ever update its own prior clone.
+#
+# Verified verbatim (not just "should work in theory") against bash, zsh, and
+# fish — see test_install_command.py's check_matches_published_command. WSL
+# and Git Bash both run one of those three, so this one string already
+# covers every POSIX-shell visitor.
 INSTALL_COMMAND = (
     "[ -d ~/.claude/skills/TBaguette/.git ] && "
     "git -C ~/.claude/skills/TBaguette pull || "
@@ -193,25 +198,93 @@ INSTALL_COMMAND = (
     "~/.claude/skills/TBaguette"
 )
 
+# The same clone-or-pull logic for native Windows PowerShell (5.1, the
+# Windows 10+ default, and 7+) — visitors on Windows who are NOT already in
+# WSL or Git Bash need this instead, since `[ -d ... ] && ... || ...` isn't
+# PowerShell syntax at all. -PathType Container mirrors POSIX's -d (a
+# directory test specifically, not just "something exists here"). Not
+# executable in this project's own CI (no PowerShell runtime in the build
+# environment — see verify-install page for exactly what is and isn't
+# machine-verified for each platform), so correctness here rests on
+# Test-Path/git -C/git clone being standard, well-documented behavior rather
+# than an automated cross-check the way the POSIX command has.
+INSTALL_COMMAND_POWERSHELL = (
+    'if (Test-Path "$HOME\\.claude\\skills\\TBaguette\\.git" -PathType Container) '
+    '{ git -C "$HOME\\.claude\\skills\\TBaguette" pull } '
+    "else "
+    '{ git clone https://github.com/LeSplooch/tbaguette-skills.git "$HOME\\.claude\\skills\\TBaguette" }'
+)
+
+# Command Prompt (cmd.exe) equivalent — mentioned on the verify-install page
+# rather than given equal billing in the install frame's tabs, since a
+# developer on Windows who isn't in WSL/Git Bash overwhelmingly has
+# PowerShell available (it's been the Windows default since Windows 10) and
+# reaches cmd.exe by choice, not necessity. IF EXIST tests for a file or a
+# directory — cmd.exe has no clean one-line directory-only test the way -d
+# and -PathType Container do — which is loose in principle but never wrong
+# in practice here, since a real git checkout's .git is always a directory.
+INSTALL_COMMAND_CMD = (
+    'if exist "%USERPROFILE%\\.claude\\skills\\TBaguette\\.git" '
+    '(git -C "%USERPROFILE%\\.claude\\skills\\TBaguette" pull) '
+    "else "
+    '(git clone https://github.com/LeSplooch/tbaguette-skills.git "%USERPROFILE%\\.claude\\skills\\TBaguette")'
+)
+
+INSTALL_HINT_POSIX = "Works in bash, zsh, or fish — including WSL and Git Bash on Windows."
+INSTALL_HINT_POWERSHELL = "PowerShell 5.1 or 7+, the Windows default terminal since Windows 10."
+
+
+def _render_install_panel(*, panel_id: str, tab_id: str, command: str, hint: str,
+                           selected: bool, base_path: str = "") -> str:
+    escaped = escape_html(command)
+    hidden_attr = "" if selected else " hidden"
+    return f"""<div class="tabs__panel install-tabs__panel" role="tabpanel" id="{panel_id}"
+             aria-labelledby="{tab_id}" tabindex="0"{hidden_attr}>
+          <div class="install">
+            <code class="install__command" id="{panel_id}-command">{escaped}</code>
+            <button class="install__copy" type="button" data-copy-target="{panel_id}-command"
+                    aria-label="Copy install command">
+              <span class="install__copy-icons">
+                <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-copy"></use></svg>
+                <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-check"></use></svg>
+              </span>
+              <span data-copy-label>Copy</span>
+            </button>
+          </div>
+          <p class="install__hint">{escape_html(hint)}</p>
+        </div>"""
+
 
 def _render_install(base_path: str = "") -> str:
-    command = escape_html(INSTALL_COMMAND)
+    posix_panel = _render_install_panel(
+        panel_id="install-posix", tab_id="tab-install-posix",
+        command=INSTALL_COMMAND, hint=INSTALL_HINT_POSIX,
+        selected=True, base_path=base_path,
+    )
+    powershell_panel = _render_install_panel(
+        panel_id="install-powershell", tab_id="tab-install-powershell",
+        command=INSTALL_COMMAND_POWERSHELL, hint=INSTALL_HINT_POWERSHELL,
+        selected=False, base_path=base_path,
+    )
     return f"""<div class="install-frame">
   <p class="install-frame__label">
     {_icon("icon-crust", base_path=base_path)}
     Install TBaguette&rsquo;s skills
   </p>
   <div class="install-frame__body">
-    <div class="install">
-      <code class="install__command" id="install-command">{command}</code>
-      <button class="install__copy" type="button" data-copy-target="install-command"
-              aria-label="Copy install command">
-        <span class="install__copy-icons">
-          <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-copy"></use></svg>
-          <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-check"></use></svg>
-        </span>
-        <span data-copy-label>Copy</span>
-      </button>
+    <div class="tabs install-tabs" data-tabs data-autoselect-platform="true">
+      <div class="tabs__list install-tabs__list" role="tablist" aria-label="Choose your platform">
+        <button class="tabs__tab" type="button" role="tab" id="tab-install-posix"
+                aria-controls="install-posix" aria-selected="true" tabindex="0"
+                data-platform="posix">macOS / Linux</button>
+        <button class="tabs__tab" type="button" role="tab" id="tab-install-powershell"
+                aria-controls="install-powershell" aria-selected="false" tabindex="-1"
+                data-platform="windows">Windows (PowerShell)</button>
+      </div>
+      <div class="tabs__panels install-tabs__panels">
+{posix_panel}
+{powershell_panel}
+      </div>
     </div>
     <p class="install-frame__note">
       {_icon("icon-check", base_path=base_path)}
@@ -581,12 +654,47 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
       skill survive the refusal.</li>
     </ul>
     <p>All twelve checks across those four scenarios pass before this site is
-    ever deployed — plus three more that run the exact command string
-    published above, word for word, through a real shell on any system that
-    has one, rather than trusting that this page's Python reimplementation
-    of it stayed faithful to what actually ships. <code>run_tests.py</code>
-    runs all fifteen alongside everything else, not as a separate manual
-    step someone has to remember.</p>
+    ever deployed — plus twelve more that run the exact command string
+    published above, word for word, through every POSIX-ish shell this
+    project's own build machine has installed (bash, zsh, fish, and sh),
+    rather than trusting that this page's Python reimplementation of it
+    stayed faithful to what actually ships. <code>run_tests.py</code> runs
+    all twenty-four alongside everything else, not as a separate manual step
+    someone has to remember.</p>
+
+    <h2 id="every-platform">Every platform, not just one</h2>
+    <p>The install frame above shows two commands, not one: a POSIX command
+    for macOS, Linux, and anyone on Windows already inside WSL or Git Bash,
+    and a PowerShell command for everyone else on Windows — which is most
+    Windows users, since PowerShell has been the default terminal since
+    Windows 10. Both do the exact same thing, in the same order, for the
+    same reason: check for an existing clone, <code>git pull</code> if it's
+    there, <code>git clone</code> if it isn't.</p>
+    <p>The POSIX command is the one machine-verified above, across four
+    shells:</p>
+    <pre class="prose-code-block"><code>{escape_html(INSTALL_COMMAND)}</code></pre>
+    <p>The PowerShell command carries the exact same logic over to
+    <code>Test-Path</code> and native cmdlets:</p>
+    <pre class="prose-code-block"><code>{escape_html(INSTALL_COMMAND_POWERSHELL)}</code></pre>
+    <p>That one isn't cross-checked by an automated test the way the POSIX
+    command is — this project's own build has no PowerShell runtime to run
+    it against — so its correctness rests on <code>Test-Path</code>,
+    <code>git -C</code>, and <code>git clone</code> being ordinary,
+    well-documented behavior, not on an executed proof. If that's not good
+    enough, that's a fair position to hold; the honest answer is "verified
+    by careful construction," not "verified," for this one specifically.</p>
+    <p>And for Command Prompt, which nothing in the install frame targets
+    but which still exists on every Windows machine:</p>
+    <pre class="prose-code-block"><code>{escape_html(INSTALL_COMMAND_CMD)}</code></pre>
+    <p>Same logic again, translated to <code>IF EXIST</code> and
+    <code>%USERPROFILE%</code> — with one honest imprecision.
+    <code>IF EXIST</code> can't cleanly test "is this specifically a
+    directory" in one line the way <code>-d</code> and
+    <code>-PathType Container</code> can, so it matches a file or a
+    directory at that path indiscriminately. That's never actually wrong
+    here, since a real git checkout's <code>.git</code> is always a
+    directory, but it's a looser guarantee than the other two, worth naming
+    rather than glossing over.</p>
 
     <h2 id="the-test-itself">The test itself</h2>
     <p>This is <a href="{INSTALL_TEST_GITHUB_URL}">{INSTALL_TEST_SOURCE_PATH}</a>,

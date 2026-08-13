@@ -129,36 +129,54 @@ def siblings_checksum(home: Path) -> list[tuple[str, str]]:
     return sorted(entries)
 
 
+# Every shell worth naming explicitly rather than just "a POSIX shell": bash
+# and zsh cover the macOS/Linux default in every version this century, sh is
+# whatever /bin/sh resolves to locally (often bash or dash), and fish is
+# included deliberately even though it isn't POSIX-compatible in general —
+# fish 3.0+ (2018) added && / || specifically so commands copy-pasted from
+# bash/zsh docs would still work, which is exactly this page's use case, and
+# it's worth proving rather than assuming.
+CANDIDATE_SHELLS = ("bash", "zsh", "fish", "sh")
+
+
 def check_matches_published_command(workdir: Path) -> None:
-    """Best-effort bonus check: on any system with a POSIX shell on PATH,
-    also runs the literal published command string — not this file's
-    reimplementation of it — against one fresh scenario. Skipped, not
-    failed, where no such shell exists (a bare Windows system with neither
-    Git Bash nor WSL); install() above already proves the same guarantee
-    there via git directly, which is the whole reason it's written that
-    way rather than as a wrapper around a shell string."""
-    shell = shutil.which("bash") or shutil.which("sh")
-    if shell is None:
-        print("  (skipped: no POSIX shell on PATH — install() above already "
-              "verified the same guarantee via git directly, without one)")
-        return
+    """Best-effort bonus: for every shell in CANDIDATE_SHELLS actually
+    present on PATH, runs the literal published command string — not this
+    file's reimplementation of it — against its own fresh scenario. A shell
+    missing from PATH is skipped with a note, not a failure; on a bare
+    Windows system with neither Git Bash nor WSL, every candidate is
+    skipped, and that's fine — install() above already proves the same
+    guarantee via git directly, with no shell dependency at all. This
+    function exists to additionally cross-check the exact string published
+    on the site, on whichever real shells happen to be available here."""
+    tested_any = False
+    for shell_name in CANDIDATE_SHELLS:
+        shell = shutil.which(shell_name)
+        if shell is None:
+            print(f"  (skipped {shell_name}: not on PATH)")
+            continue
+        tested_any = True
 
-    home = workdir / "shellcheck"
-    home.mkdir()
-    seed_sibling_skills(home)
-    before = siblings_checksum(home)
+        home = workdir / f"shellcheck-{shell_name}"
+        home.mkdir()
+        seed_sibling_skills(home)
+        before = siblings_checksum(home)
 
-    env = {**os.environ, "HOME": str(home)}
-    result = subprocess.run(
-        [shell, "-c", INSTALL_COMMAND], env=env, capture_output=True, text=True,
-    )
-    check(result.returncode == 0,
-          f"the literal published command also exits 0 under {Path(shell).name}")
-    check((home / ".claude" / "skills" / "TBaguette" / "README.md").is_file(),
-          "...and actually installs something")
-    check(before == siblings_checksum(home),
-          "...without touching the sibling skills, using the exact string "
-          "published on the site, not a reimplementation of it")
+        env = {**os.environ, "HOME": str(home)}
+        result = subprocess.run(
+            [shell, "-c", INSTALL_COMMAND], env=env, capture_output=True, text=True,
+        )
+        check(result.returncode == 0,
+              f"the literal published command exits 0 under {shell_name}")
+        check((home / ".claude" / "skills" / "TBaguette" / "README.md").is_file(),
+              f"...and actually installs something, under {shell_name}")
+        check(before == siblings_checksum(home),
+              f"...without touching the sibling skills under {shell_name}, using "
+              "the exact string published on the site, not a reimplementation of it")
+
+    if not tested_any:
+        print("  (skipped entirely: no POSIX-ish shell on PATH — install() above "
+              "already verified the same guarantee via git directly, without one)")
 
 
 def main() -> int:

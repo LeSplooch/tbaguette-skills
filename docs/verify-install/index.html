@@ -86,12 +86,47 @@
       skill survive the refusal.</li>
     </ul>
     <p>All twelve checks across those four scenarios pass before this site is
-    ever deployed — plus three more that run the exact command string
-    published above, word for word, through a real shell on any system that
-    has one, rather than trusting that this page's Python reimplementation
-    of it stayed faithful to what actually ships. <code>run_tests.py</code>
-    runs all fifteen alongside everything else, not as a separate manual
-    step someone has to remember.</p>
+    ever deployed — plus twelve more that run the exact command string
+    published above, word for word, through every POSIX-ish shell this
+    project's own build machine has installed (bash, zsh, fish, and sh),
+    rather than trusting that this page's Python reimplementation of it
+    stayed faithful to what actually ships. <code>run_tests.py</code> runs
+    all twenty-four alongside everything else, not as a separate manual step
+    someone has to remember.</p>
+
+    <h2 id="every-platform">Every platform, not just one</h2>
+    <p>The install frame above shows two commands, not one: a POSIX command
+    for macOS, Linux, and anyone on Windows already inside WSL or Git Bash,
+    and a PowerShell command for everyone else on Windows — which is most
+    Windows users, since PowerShell has been the default terminal since
+    Windows 10. Both do the exact same thing, in the same order, for the
+    same reason: check for an existing clone, <code>git pull</code> if it's
+    there, <code>git clone</code> if it isn't.</p>
+    <p>The POSIX command is the one machine-verified above, across four
+    shells:</p>
+    <pre class="prose-code-block"><code>[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code></pre>
+    <p>The PowerShell command carries the exact same logic over to
+    <code>Test-Path</code> and native cmdlets:</p>
+    <pre class="prose-code-block"><code>if (Test-Path &quot;$HOME\.claude\skills\TBaguette\.git&quot; -PathType Container) { git -C &quot;$HOME\.claude\skills\TBaguette&quot; pull } else { git clone https://github.com/LeSplooch/tbaguette-skills.git &quot;$HOME\.claude\skills\TBaguette&quot; }</code></pre>
+    <p>That one isn't cross-checked by an automated test the way the POSIX
+    command is — this project's own build has no PowerShell runtime to run
+    it against — so its correctness rests on <code>Test-Path</code>,
+    <code>git -C</code>, and <code>git clone</code> being ordinary,
+    well-documented behavior, not on an executed proof. If that's not good
+    enough, that's a fair position to hold; the honest answer is "verified
+    by careful construction," not "verified," for this one specifically.</p>
+    <p>And for Command Prompt, which nothing in the install frame targets
+    but which still exists on every Windows machine:</p>
+    <pre class="prose-code-block"><code>if exist &quot;%USERPROFILE%\.claude\skills\TBaguette\.git&quot; (git -C &quot;%USERPROFILE%\.claude\skills\TBaguette&quot; pull) else (git clone https://github.com/LeSplooch/tbaguette-skills.git &quot;%USERPROFILE%\.claude\skills\TBaguette&quot;)</code></pre>
+    <p>Same logic again, translated to <code>IF EXIST</code> and
+    <code>%USERPROFILE%</code> — with one honest imprecision.
+    <code>IF EXIST</code> can't cleanly test "is this specifically a
+    directory" in one line the way <code>-d</code> and
+    <code>-PathType Container</code> can, so it matches a file or a
+    directory at that path indiscriminately. That's never actually wrong
+    here, since a real git checkout's <code>.git</code> is always a
+    directory, but it's a looser guarantee than the other two, worth naming
+    rather than glossing over.</p>
 
     <h2 id="the-test-itself">The test itself</h2>
     <p>This is <a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/scripts/test_install_command.py">scripts/test_install_command.py</a>,
@@ -233,36 +268,54 @@
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">return</span> sorted(entries)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-comment"># Every shell worth naming explicitly rather than just &quot;a POSIX shell&quot;: bash</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-comment"># and zsh cover the macOS/Linux default in every version this century, sh is</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-comment"># whatever /bin/sh resolves to locally (often bash or dash), and fish is</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-comment"># included deliberately even though it isn&#x27;t POSIX-compatible in general —</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-comment"># fish 3.0+ (2018) added &amp;&amp; / || specifically so commands copy-pasted from</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-comment"># bash/zsh docs would still work, which is exactly this page&#x27;s use case, and</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-comment"># it&#x27;s worth proving rather than assuming.</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">CANDIDATE_SHELLS = (<span class="tok-string">&quot;bash&quot;</span>, <span class="tok-string">&quot;zsh&quot;</span>, <span class="tok-string">&quot;fish&quot;</span>, <span class="tok-string">&quot;sh&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-keyword">def</span> check_matches_published_command(workdir: Path) -&gt; <span class="tok-const">None</span>:</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-string">&quot;&quot;&quot;Best-effort bonus check: on any system with a POSIX shell on PATH,</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    also runs the literal published command string — not this file&#x27;s</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    reimplementation of it — against one fresh scenario. Skipped, not</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    failed, where no such shell exists (a bare Windows system with neither</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    Git Bash nor WSL); install() above already proves the same guarantee</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    there via git directly, which is the whole reason it&#x27;s written that</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    way rather than as a wrapper around a shell string.&quot;&quot;&quot;</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    shell = shutil.which(<span class="tok-string">&quot;bash&quot;</span>) <span class="tok-keyword">or</span> shutil.which(<span class="tok-string">&quot;sh&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">if</span> shell <span class="tok-keyword">is</span> <span class="tok-const">None</span>:</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        print(<span class="tok-string">&quot;  (skipped: no POSIX shell on PATH — install() above already &quot;</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;verified the same guarantee via git directly, without one)&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        <span class="tok-keyword">return</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-string">&quot;&quot;&quot;Best-effort bonus: for every shell in CANDIDATE_SHELLS actually</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    present on PATH, runs the literal published command string — not this</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    file&#x27;s reimplementation of it — against its own fresh scenario. A shell</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    missing from PATH is skipped with a note, not a failure; on a bare</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    Windows system with neither Git Bash nor WSL, every candidate is</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    skipped, and that&#x27;s fine — install() above already proves the same</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    guarantee via git directly, with no shell dependency at all. This</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    function exists to additionally cross-check the exact string published</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    on the site, on whichever real shells happen to be available here.&quot;&quot;&quot;</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">    tested_any = <span class="tok-const">False</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">for</span> shell_name <span class="tok-keyword">in</span> CANDIDATE_SHELLS:</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        shell = shutil.which(shell_name)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        <span class="tok-keyword">if</span> shell <span class="tok-keyword">is</span> <span class="tok-const">None</span>:</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">            print(<span class="tok-string">f&quot;  (skipped {shell_name}: not on PATH)&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">            <span class="tok-keyword">continue</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        tested_any = <span class="tok-const">True</span></span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    home = workdir / <span class="tok-string">&quot;shellcheck&quot;</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    home.mkdir()</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    seed_sibling_skills(home)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    before = siblings_checksum(home)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        home = workdir / <span class="tok-string">f&quot;shellcheck-{shell_name}&quot;</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        home.mkdir()</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        seed_sibling_skills(home)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        before = siblings_checksum(home)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    env = {**os.environ, <span class="tok-string">&quot;HOME&quot;</span>: str(home)}</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    result = subprocess.run(</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        [shell, <span class="tok-string">&quot;-c&quot;</span>, INSTALL_COMMAND], env=env, capture_output=<span class="tok-const">True</span>, text=<span class="tok-const">True</span>,</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    )</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    check(result.returncode == <span class="tok-number">0</span>,</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">          <span class="tok-string">f&quot;the literal published command also exits 0 under {Path(shell).name}&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    check((home / <span class="tok-string">&quot;.claude&quot;</span> / <span class="tok-string">&quot;skills&quot;</span> / <span class="tok-string">&quot;TBaguette&quot;</span> / <span class="tok-string">&quot;README.md&quot;</span>).is_file(),</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">          <span class="tok-string">&quot;...and actually installs something&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    check(before == siblings_checksum(home),</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">          <span class="tok-string">&quot;...without touching the sibling skills, using the exact string &quot;</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">          <span class="tok-string">&quot;published on the site, not a reimplementation of it&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        env = {**os.environ, <span class="tok-string">&quot;HOME&quot;</span>: str(home)}</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        result = subprocess.run(</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">            [shell, <span class="tok-string">&quot;-c&quot;</span>, INSTALL_COMMAND], env=env, capture_output=<span class="tok-const">True</span>, text=<span class="tok-const">True</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        )</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(result.returncode == <span class="tok-number">0</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">f&quot;the literal published command exits 0 under {shell_name}&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check((home / <span class="tok-string">&quot;.claude&quot;</span> / <span class="tok-string">&quot;skills&quot;</span> / <span class="tok-string">&quot;TBaguette&quot;</span> / <span class="tok-string">&quot;README.md&quot;</span>).is_file(),</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">f&quot;...and actually installs something, under {shell_name}&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(before == siblings_checksum(home),</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">f&quot;...without touching the sibling skills under {shell_name}, using &quot;</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;the exact string published on the site, not a reimplementation of it&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">if</span> <span class="tok-keyword">not</span> tested_any:</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        print(<span class="tok-string">&quot;  (skipped entirely: no POSIX-ish shell on PATH — install() above &quot;</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;already verified the same guarantee via git directly, without one)&quot;</span>)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-keyword">def</span> main() -&gt; int:</span></li>

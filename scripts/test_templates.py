@@ -12,6 +12,8 @@ from pathlib import Path
 
 from templates import (
     INSTALL_COMMAND,
+    INSTALL_COMMAND_CMD,
+    INSTALL_COMMAND_POWERSHELL,
     INSTALL_TEST_GITHUB_URL,
     escape_html,
     render_index,
@@ -178,6 +180,17 @@ def check_verify_install_page() -> None:
     check("at least one string span made it through from the real file",
           'class="tok-string"' in html)
 
+    check("explains the PowerShell command exists, correctly escaped",
+          escape_html(INSTALL_COMMAND_POWERSHELL) in html)
+    check("explains the cmd.exe command exists, correctly escaped",
+          escape_html(INSTALL_COMMAND_CMD) in html)
+    check("is upfront that the PowerShell command is reasoned, not machine-tested",
+          "not on an executed proof" in html)
+    check("names the actual shells the POSIX command is cross-checked against",
+          "bash, zsh, fish, and sh" in html)
+    check("the twenty-four-check total is stated, not left at the stale earlier count",
+          "twenty-four" in html and "fifteen" not in html)
+
     base = "/tbaguette-skills"
     prefixed = render_verify_install_page(lines, categories, base_path=base)
     check("code block content is base_path-independent (no hrefs inside code lines)",
@@ -206,32 +219,67 @@ def main() -> None:
         check(f"contains skill summary for {slug!r}", skill["summary"] in index_html)
         check(f"links to /skills/{slug}/", f'href="/skills/{slug}/"' in index_html)
     check("has a search input", 'data-search-input' in index_html)
-    # The command contains && , which escape_html correctly turns into
-    # &amp;&amp; — checking for the raw form here would either fail (proving
-    # nothing) or, worse, pass by accident if escaping were ever silently
-    # disabled. Checking the escaped form catches that regression directly.
-    check("install command appears, correctly HTML-escaped",
+    # Both commands contain && / {} , which escape_html correctly turns into
+    # entity forms — checking for the raw form here would either fail
+    # (proving nothing) or, worse, pass by accident if escaping were ever
+    # silently disabled. Checking the escaped form catches that regression
+    # directly.
+    check("POSIX install command appears, correctly HTML-escaped",
           escape_html(INSTALL_COMMAND) in index_html)
-    check("raw, un-escaped command never appears (would mean escaping broke)",
+    check("raw, un-escaped POSIX command never appears (would mean escaping broke)",
           INSTALL_COMMAND not in index_html)
-    check("install command sits right after the headline, before the lede",
-          index_html.index("hero__headline") < index_html.index('id="install-command"')
+    check("PowerShell install command appears, correctly HTML-escaped",
+          escape_html(INSTALL_COMMAND_POWERSHELL) in index_html)
+    check("raw, un-escaped PowerShell command never appears",
+          INSTALL_COMMAND_POWERSHELL not in index_html)
+    check("install frame sits right after the headline, before the lede",
+          index_html.index("hero__headline") < index_html.index('id="install-posix-command"')
           < index_html.index("hero__lede"))
-    check("has a copy button wired to the install command", 'data-copy-target="install-command"' in index_html)
-    check("install command is wrapped in its labeled frame",
+    check("has a copy button wired to the POSIX command",
+          'data-copy-target="install-posix-command"' in index_html)
+    check("has a separate copy button wired to the PowerShell command",
+          'data-copy-target="install-powershell-command"' in index_html)
+    check("install frame is wrapped in its labeled frame",
           index_html.index("install-frame") < index_html.index("Install TBaguette")
-          < index_html.index('id="install-command"'))
+          < index_html.index('id="install-posix-command"'))
     label_start = index_html.index('install-frame__label')
     label_end = index_html.index('</p>', label_start)
     check("frame label itself carries an icon (icon-crust also appears in category "
           "headers elsewhere on the page, so this checks the label's own slice, not "
           "just presence anywhere)",
           '#icon-crust' in index_html[label_start:label_end])
-    check("verification note sits after the command and before the lede, inside the frame",
-          index_html.index('id="install-command"') < index_html.index("install-frame__note")
+    check("verification note sits after both commands and before the lede, inside the frame",
+          index_html.index('id="install-powershell-command"') < index_html.index("install-frame__note")
           < index_html.index("hero__lede"))
     check("verification note links to the on-site explanation page, base_path-prefixed",
           'href="/verify-install/"' in index_html)
+
+    # --- platform picker: two tabs, POSIX shown by default, PowerShell hidden ---
+    print("install platform picker")
+    posix_tab_start = index_html.index('id="tab-install-posix"')
+    posix_tab = index_html[posix_tab_start:index_html.index('</button>', posix_tab_start)]
+    check("POSIX tab starts selected", 'aria-selected="true"' in posix_tab)
+    check("POSIX tab is tagged for the auto-select logic to recognize as the non-Windows option",
+          'data-platform="posix"' in posix_tab)
+
+    ps_tab_start = index_html.index('id="tab-install-powershell"')
+    ps_tab = index_html[ps_tab_start:index_html.index('</button>', ps_tab_start)]
+    check("Windows tab starts unselected", 'aria-selected="false"' in ps_tab)
+    check("Windows tab is tagged for the auto-select logic to find",
+          'data-platform="windows"' in ps_tab)
+
+    ps_panel_start = index_html.index('id="install-powershell"')
+    ps_panel = index_html[ps_panel_start:index_html.index('id="install-powershell-command"')]
+    check("PowerShell panel starts hidden (JS-driven auto-select or a click reveals it)",
+          "hidden" in ps_panel)
+    posix_panel_start = index_html.index('id="install-posix"')
+    posix_panel = index_html[posix_panel_start:index_html.index('id="install-posix-command"')]
+    check("POSIX panel does NOT start hidden — correct even with JS disabled",
+          "hidden" not in posix_panel)
+
+    check("group opts into platform auto-selection", 'data-autoselect-platform="true"' in index_html)
+    check("each platform panel names which shells/versions it covers",
+          "Works in bash, zsh, or fish" in index_html and "PowerShell 5.1 or 7" in index_html)
     print(f"  wrote {index_path}")
 
     # --- render_skill_page: formidable (the interesting one) --------------

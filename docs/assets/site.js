@@ -4,8 +4,9 @@
  * its markup isn't on the current page:
  *   - theme toggle   (every page)
  *   - search/filter  (landing page only)
- *   - tabs           (formidable's skill page only)
- *   - copy install command (landing page only)
+ *   - tabs           (formidable's skill page's Stacks/Commands; the
+ *                      landing page's install-command platform picker)
+ *   - copy install command (landing page only; one button per platform tab)
  * Loaded with `defer`, so the DOM is fully parsed before any of this runs —
  * no DOMContentLoaded wrapper needed.
  */
@@ -20,6 +21,21 @@
 
   function toArray(nodeList) {
     return Array.prototype.slice.call(nodeList);
+  }
+
+  // Best-effort OS sniff, used only to pick a sane default platform tab in
+  // the install frame — never to gate functionality. navigator.platform is
+  // deprecated but still broadly supported; userAgentData.platform is its
+  // modern, more honest replacement where a browser has it. Worst case on a
+  // browser with neither (or a misleading one), the visitor sees the POSIX
+  // command first and clicks the other tab themselves — never a dead end.
+  function isWindowsPlatform() {
+    var uaData = window.navigator.userAgentData;
+    if (uaData && typeof uaData.platform === 'string') {
+      return /win/i.test(uaData.platform);
+    }
+    var legacy = window.navigator.platform || window.navigator.userAgent || '';
+    return /win/i.test(legacy);
   }
 
   // -------------------------------------------------------------------
@@ -138,55 +154,63 @@
   // Copy install command
   // -------------------------------------------------------------------
 
+  function fallbackCopy(text) {
+    var scratch = document.createElement('textarea');
+    scratch.value = text;
+    scratch.setAttribute('readonly', '');
+    scratch.style.position = 'fixed';
+    scratch.style.opacity = '0';
+    document.body.appendChild(scratch);
+    scratch.select();
+    try { document.execCommand('copy'); } catch (err) { /* nothing left to try */ }
+    document.body.removeChild(scratch);
+  }
+
+  // One page can carry more than one copy button now — the install frame
+  // has a separate command (and a separate button) per platform tab. Each
+  // button gets its own independent target/label/timer via its own
+  // [data-copy-target] id, so copying one platform's command never
+  // clobbers another's "Copied!" state.
   function initInstallCopy() {
-    var button = document.querySelector('[data-copy-target]');
-    if (!button) return;
+    var buttons = toArray(document.querySelectorAll('[data-copy-target]'));
+    if (!buttons.length) return;
 
-    var target = document.getElementById(button.getAttribute('data-copy-target'));
-    var label = button.querySelector('[data-copy-label]');
-    if (!target || !label) return;
+    buttons.forEach(function (button) {
+      var target = document.getElementById(button.getAttribute('data-copy-target'));
+      var label = button.querySelector('[data-copy-label]');
+      if (!target || !label) return;
 
-    var defaultLabel = label.textContent;
-    var resetTimer = null;
+      var defaultLabel = label.textContent;
+      var resetTimer = null;
 
-    function showCopied() {
-      button.classList.add('is-copied');
-      label.textContent = 'Copied!';
-      clearTimeout(resetTimer);
-      resetTimer = setTimeout(function () {
-        button.classList.remove('is-copied');
-        label.textContent = defaultLabel;
-      }, 1600);
-    }
+      function showCopied() {
+        button.classList.add('is-copied');
+        label.textContent = 'Copied!';
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(function () {
+          button.classList.remove('is-copied');
+          label.textContent = defaultLabel;
+        }, 1600);
+      }
 
-    function fallbackCopy(text) {
-      var scratch = document.createElement('textarea');
-      scratch.value = text;
-      scratch.setAttribute('readonly', '');
-      scratch.style.position = 'fixed';
-      scratch.style.opacity = '0';
-      document.body.appendChild(scratch);
-      scratch.select();
-      try { document.execCommand('copy'); } catch (err) { /* nothing left to try */ }
-      document.body.removeChild(scratch);
-    }
-
-    button.addEventListener('click', function () {
-      var text = target.textContent;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(showCopied, function () {
+      button.addEventListener('click', function () {
+        var text = target.textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(showCopied, function () {
+            fallbackCopy(text);
+            showCopied();
+          });
+        } else {
           fallbackCopy(text);
           showCopied();
-        });
-      } else {
-        fallbackCopy(text);
-        showCopied();
-      }
+        }
+      });
     });
   }
 
   // -------------------------------------------------------------------
-  // Tabs (formidable's stacks / commands groups)
+  // Tabs (formidable's stacks / commands groups; the install frame's
+  // platform picker)
   // -------------------------------------------------------------------
 
   function scrollToPanel(panel) {
@@ -216,6 +240,19 @@
         });
         if (options.focus) tab.focus();
         if (options.scroll) scrollToPanel(document.getElementById(tab.getAttribute('aria-controls')));
+      }
+
+      // Opt-in only (the install frame sets this; formidable's Stacks/
+      // Commands tabs don't and are unaffected): pre-select whichever tab
+      // is tagged data-platform="windows" for a visitor who looks like
+      // they're on Windows. Still just a default — every tab stays
+      // reachable by click either way, for WSL/Git Bash users on Windows
+      // or anyone detection got wrong.
+      if (group.getAttribute('data-autoselect-platform') === 'true' && isWindowsPlatform()) {
+        var windowsTab = tabs.filter(function (candidate) {
+          return candidate.getAttribute('data-platform') === 'windows';
+        })[0];
+        if (windowsTab) activate(windowsTab);
       }
 
       tabs.forEach(function (tab, index) {
