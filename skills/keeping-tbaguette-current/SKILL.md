@@ -1,6 +1,6 @@
 ---
 name: keeping-tbaguette-current
-description: Use at the start of a conversation if it has been 24 hours or more since the last check (read the timestamp in ~/.claude/tbaguette-update-log.md first — skip silently and instantly if it isn't due yet, never shell out to git just to find out), or any time the user asks whether TBaguette is current, what changed recently, or wants to sync to the latest skills. Checks the installed plugin against the published repo, updates it if it can fast-forward cleanly, and reports what changed in a short, readable summary — never a raw commit log.
+description: Use at the start of every conversation, unconditionally — not gated on how long it's been since the last check — and any time the user asks whether TBaguette is current, what changed recently, or wants to sync to the latest skills. Checks the installed plugin against the published repo, updates it if it can fast-forward cleanly, and reports what changed in a short, readable summary — never a raw commit log.
 ---
 
 # Keeping TBaguette current
@@ -31,21 +31,20 @@ If `~/.claude/skills/TBaguette/.git` doesn't exist, there's nothing to do —
 stop quietly. This shouldn't normally happen (this skill only runs from
 inside that same installed plugin), but don't assume; check.
 
-## 1. Check — rate-limited, so this never becomes noise
+## 1. Check — every conversation, unconditionally
 
-Read `~/.claude/tbaguette-update-log.md`'s `Last checked:` line first (see
-format below — it's always ISO-8601 UTC, e.g. `2026-08-14T10:03:12Z`). If
-the file doesn't exist yet, there's no prior check — treat that as due now,
-same as if 24 hours had already passed. Otherwise: if less than 24 *elapsed*
-hours have passed (not "the calendar date changed" — a check at 11:58pm and
-another four minutes later are the same rate-limit window even though the
-date rolled over) and the user didn't explicitly ask for a check, stop here
-— don't run `git fetch` at all. This is what keeps "automatic" from meaning
-"a network call on every single message."
+No rate-limit gate here, on purpose: check every single time this skill
+runs at the start of a conversation, regardless of how recently the last
+check happened — don't read `~/.claude/tbaguette-update-log.md`'s
+`Last checked:` line to decide *whether* to check. This is safe to do
+unthrottled because of the grain it runs at, not despite it: this fires
+once per new conversation (per the trigger description above), never once
+per message, and a single `git fetch` against one small repo under a short
+timeout is cheap enough not to need throttling on top of that.
 
-If it's due (or explicitly requested), fetch with a short timeout — this is
-meant to be a quiet background courtesy check, and a stalled connection
-should never hang the whole turn waiting on it:
+Fetch with a short timeout — this is meant to be a quiet background courtesy
+check, and a stalled connection should never hang the whole turn waiting on
+it:
 
 ```
 git -C ~/.claude/skills/TBaguette fetch origin master --quiet
@@ -56,9 +55,8 @@ git -C ~/.claude/skills/TBaguette fetch origin master --quiet
 Compare `git -C ~/.claude/skills/TBaguette rev-parse HEAD` against
 `git -C ~/.claude/skills/TBaguette rev-parse origin/master`. Update the
 `Last checked:` timestamp in the log either way, including when the fetch
-itself failed — an attempt happened, and this is what keeps a multi-day
-network outage from turning into a check racing to retry on every message
-once it's back; it'll pick back up cleanly at the next 24-hour mark.
+itself failed — it's a record of the most recent attempt for a human
+skimming the log, not an input to any decision this skill makes.
 
 - **Same SHA:** up to date. If this was a background/automatic check, don't
   say anything — silence is correct for "nothing to report." If the user
