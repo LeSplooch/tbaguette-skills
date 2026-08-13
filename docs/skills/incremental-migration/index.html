@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-13T16:08:37+00:00" data-format-updated>2026-08-13T16:08:37Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-13T16:22:14+00:00" data-format-updated>2026-08-13T16:22:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -59,7 +59,7 @@
 <p><strong>Expand–migrate–contract</strong> — for interfaces, schemas, formats, and anything with readers and writers. Add the new thing alongside the old (purely additive, backward compatible), move writers then readers, then remove the old. Each phase deploys separately.</p>
 <p><strong>Strangler fig</strong> — for whole subsystems. Put a seam in front of the existing implementation <em>first</em> — a façade, router, adapter, or proxy that changes nothing — and ship it. Then move one capability at a time behind that seam until nothing routes to the old implementation, and delete it. The seam ships before any migration work, as its own change, with its own verification that behavior is unchanged.</p>
 <p>A field rename under expand–migrate–contract, as concrete as it gets:</p>
-<pre><code>1. add new field, optional/nullable                       deploy
+<pre class="prose-code-block"><code>1. add new field, optional/nullable                       deploy
 2. write both, read old                                   deploy
 3. backfill existing rows; verify equality, not completion
 4. read new, still write both                             deploy

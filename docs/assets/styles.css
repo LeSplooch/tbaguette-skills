@@ -1118,11 +1118,13 @@ code {
 .prose li::marker { color: var(--text-secondary); }
 .prose ul ul, .prose ol ol, .prose ul ol, .prose ol ul { margin-top: var(--space-2); }
 
-/* A single-command box in running prose — the PowerShell/cmd.exe mentions on
-   the install-verification page. Deliberately not the full .code-block
-   treatment (line numbers, syntax highlighting): that component is for
-   displaying real multi-line source, this is one line of supplementary
-   reference plain text. */
+/* A plain-text code box in running prose: the PowerShell/cmd.exe one-liners
+   on the install-verification page, and every fenced ``` block inside a
+   skill's own markdown body (commands, short scripts, the update-log
+   template — see content_pipeline.py's _consume_fenced_code_block).
+   Deliberately not the full .code-block treatment (line numbers, syntax
+   highlighting): that component is for displaying real syntax-highlighted
+   source, this is supplementary reference plain text, one line or many. */
 .prose-code-block {
   display: block;
   margin-top: var(--space-3);

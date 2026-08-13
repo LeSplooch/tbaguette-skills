@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-13T16:08:37+00:00" data-format-updated>2026-08-13T16:08:37Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-13T16:22:14+00:00" data-format-updated>2026-08-13T16:22:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -71,7 +71,7 @@
 <table><thead><tr><th>Opacity</th><th>Signal</th><th>Cheapest answer</th></tr></thead><tbody><tr><td>Reflection, dynamic field access, metaprogramming</td><td>the name is assembled from a string at runtime</td><td>log every key at the dispatch point, one run</td></tr><tr><td>Polymorphism with many implementers</td><td>the interface has nine implementations, one executes</td><td>log or break on the concrete type at the call site</td></tr><tr><td>Message passing, queues, events, signals</td><td>producer and consumer share no import edge</td><td>search the topic or event name, trace each half separately, join at the payload schema</td></tr><tr><td>Config-driven wiring, DI containers, plugin registries</td><td>the graph lives in config, not code</td><td>read the config as the source and search the string keys</td></tr><tr><td>Generated code</td><td>the file has a &quot;do not edit&quot; banner</td><td>trace the schema or template, not the output</td></tr><tr><td>Concurrency</td><td>value differs between reads with no write between</td><td>log with a thread or task identity and a sequence number</td></tr></tbody></table>
 <p><strong>The 15-minute rule.</strong> After 15 minutes or three dead ends of static reading, one log line at the sink answers in one run what another hour of reading will not settle. Instrumentation is the cheaper tool past that threshold, not a concession. Log the value, its identity, and where it came from; remove it in the same change that lands the fix.</p>
 <h2 id="write-the-chain">Write the chain</h2>
-<pre><code>tenant_id
+<pre class="prose-code-block"><code>tenant_id
   [source]    header X-Tenant            ingress.*:44    absent -&gt; &quot;&quot;
   [transform] lowercased, trimmed        middleware.*:91
   [copy]      into RequestContext        context.*:12    RENAMED: tenant

@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-13T16:08:37+00:00" data-format-updated>2026-08-13T16:08:37Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-13T16:22:14+00:00" data-format-updated>2026-08-13T16:22:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -60,7 +60,7 @@
 <p>The trusted set is short and enumerable: values this process constructed, from constants, since the last boundary crossing.</p>
 <h2 id="parse-dont-validate">Parse, don't validate</h2>
 <p>At the boundary, convert bytes into a value whose type makes invalid states unrepresentable, then pass the typed value inward. Never pass the raw string onward next to a boolean asserting it was checked.</p>
-<pre><code>BAD:   if is_valid_email(s) { send(s) }        // s is still a string; the next call site forgets
+<pre class="prose-code-block"><code>BAD:   if is_valid_email(s) { send(s) }        // s is still a string; the next call site forgets
 GOOD:  let addr = Email::parse(s)?             // Email cannot exist unless parsing succeeded
        send(addr)                              // no re-check possible, none needed</code></pre>
 <ul><li>One constructor. If any other code path can build the type, the guarantee is decorative — private constructors, smart-constructor modules, or a package boundary are how this is enforced.</li><li>Realizations by paradigm: newtypes and refinement types (Rust, Haskell, branded types in TypeScript); value objects with private constructors (Java, C#, Ruby); a struct plus constructor discipline and no exported zero value (Go); a class validating in its initializer with frozen fields (Python); a struct with a <code>parse_</code> function returning a status and never a bare pointer (C).</li><li>The typed value carries the <em>parsed</em> form, not the original text — keeping the raw alongside guarantees someone uses the raw. Parse at the outermost layer that understands the format; re-validating deeper in means the type did not carry the guarantee, so fix the type rather than adding the check.</li></ul>

@@ -717,7 +717,10 @@ def _consume_fenced_code_block(lines: list[str], index: int) -> tuple[str, int]:
         closing_index += 1
     code_text = "\n".join(lines[index + 1 : closing_index])
     next_index = closing_index + 1 if closing_index < total else closing_index
-    return f"<pre><code>{escape_html(code_text)}</code></pre>", next_index
+    return (
+        f'<pre class="prose-code-block"><code>{escape_html(code_text)}</code></pre>',
+        next_index,
+    )
 
 
 def _consume_table(

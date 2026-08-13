@@ -331,7 +331,7 @@ class TableRenderingTests(unittest.TestCase):
 class FencedCodeBlockTests(unittest.TestCase):
     def test_fenced_code_block_is_literal_not_a_list_or_markup(self):
         html = render_markdown_body(FENCED_CODE_WITH_NUMBERED_LOOKING_LINES)
-        self.assertIn("<pre><code>", html)
+        self.assertIn('<pre class="prose-code-block"><code>', html)
         self.assertNotIn("<ol>", html)
         self.assertIn("1. add new field, optional          deploy", html)
         # Markup outside the fence still renders normally.
@@ -345,7 +345,7 @@ class FencedCodeBlockTests(unittest.TestCase):
     def test_language_tag_after_fence_marker_is_discarded_not_rendered(self):
         markdown = "```sh\necho hi\n```\n"
         html = render_markdown_body(markdown)
-        self.assertIn("<pre><code>echo hi</code></pre>", html)
+        self.assertIn('<pre class="prose-code-block"><code>echo hi</code></pre>', html)
         self.assertNotIn("sh\n", html)
 
 

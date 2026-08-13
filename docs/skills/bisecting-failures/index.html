@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-13T16:08:37+00:00" data-format-updated>2026-08-13T16:08:37Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-13T16:22:14+00:00" data-format-updated>2026-08-13T16:22:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -63,7 +63,7 @@
 <p>Bisecting the input and bisecting the code are different searches with different answers. Run the input search first when the failure is data-dependent: it is usually faster and it hands you a minimal reproduction as a side effect.</p>
 <h2 id="the-bisect-script">The bisect script</h2>
 <p>The script is what makes bisection unattended, and its exit codes are what make it correct.</p>
-<pre><code>build || exit 125          # cannot test this candidate — skip, do not judge
+<pre class="prose-code-block"><code>build || exit 125          # cannot test this candidate — skip, do not judge
 setup_clean_state
 timeout 300 run_one_test   # hard timeout, or one hang stalls the whole search
 case $? in
