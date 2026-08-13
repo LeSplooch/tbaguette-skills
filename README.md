@@ -1,4 +1,4 @@
-# TBaguette
+# TBaguette's Atelier
 
 65 skills for [Claude Code](https://claude.com/claude-code) — judgment calls, code
 comprehension, change discipline, testing, debugging, systems design, defensive

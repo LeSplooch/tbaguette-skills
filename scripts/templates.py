@@ -144,7 +144,7 @@ def _render_header(base_path: str = "", last_updated_utc: str = "") -> str:
   <div class="container site-header__inner">
     <a class="wordmark" href="{base_path}/">
       {_icon("icon-wheat", css_class="icon wordmark__icon", base_path=base_path)}
-      <span class="wordmark__text">TBaguette</span>
+      <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
     </a>
     <div class="site-header__actions">
       {updated_html}
@@ -164,9 +164,9 @@ def _render_footer(categories: list[dict], base_path: str = "") -> str:
     ))
     return f"""<footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is an
-      atelier for Claude Code skills — the judgment calls that sit between the
-      ticket and the commit, organized like a proper bench.</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to
+      TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and
+      the commit, organized like a proper bench.</p>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
@@ -419,7 +419,7 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
         f'<div data-categories>\n{sections}\n</div>',
     )
     return _render_document(
-        title="La Boulangerie TBaguette — Claude Code skills, organized",
+        title="TBaguette’s Atelier — Claude Code skills, organized",
         meta_description=(
             f"{skill_count} Claude Code skills for the craft between the ticket and "
             f"the commit, organized into {category_count} categories and cross-linked "
@@ -596,7 +596,7 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
     category_title = skill.get("category_title", "")
     summary = skill.get("summary") or skill.get("description", "")
     return _render_document(
-        title=f"{name} — {category_title} — La Boulangerie TBaguette",
+        title=f"{name} — {category_title} — TBaguette’s Atelier",
         meta_description=summary,
         body_class="page-skill",
         main_html=main_html,
@@ -761,7 +761,7 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
 
     main_html = _join(breadcrumb, article)
     return _render_document(
-        title="The install command only touches one folder — La Boulangerie TBaguette",
+        title="The install command only touches one folder — TBaguette’s Atelier",
         meta_description=(
             "How the TBaguette install command is verified never to alter, "
             "overwrite, or merge into any other skill or plugin you already "

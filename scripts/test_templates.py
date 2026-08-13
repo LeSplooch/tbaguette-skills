@@ -166,6 +166,8 @@ def check_verify_install_page() -> None:
     html = render_verify_install_page(lines, categories)
     check("looks like a document", "<html" in html)
     check("title names what the page proves", "only touches one folder" in html)
+    check("this page's <title> also ends in TBaguette’s Atelier, not the retired name",
+          "<title>The install command only touches one folder — TBaguette’s Atelier</title>" in html)
     check("links out to the real file on GitHub as provenance",
           f'href="{INSTALL_TEST_GITHUB_URL}"' in html)
     check("renders one list item per source line",
@@ -222,6 +224,14 @@ def check_header_and_badges() -> None:
     check("header time element is wired for site.js to find and reformat",
           "data-format-updated" in html)
     check("wordmark carries its decorative wheat mark", "#icon-wheat" in html)
+    check("wordmark reads TBaguette's Atelier, not just TBaguette",
+          '<span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>' in html)
+    check("document <title> is TBaguette’s Atelier, not the retired La Boulangerie form",
+          "<title>TBaguette’s Atelier — Claude Code skills, organized</title>" in html
+          and "La Boulangerie TBaguette —" not in html)
+    check("footer still names La Boulangerie TBaguette as the place, without repeating "
+          "\"atelier\" awkwardly now that the title itself is TBaguette's Atelier",
+          "La Boulangerie TBaguette</strong> is home to\n      TBaguette&rsquo;s Atelier" in html)
 
     check("exactly two change-badges rendered (fresh and revised only, not untouched)",
           html.count('class="change-badge') == 2)
@@ -244,6 +254,8 @@ def check_header_and_badges() -> None:
           fresh_page_html.index("skill-article__title-row")
           < fresh_page_html.index("change-badge")
           < fresh_page_html.index("skill-article__tag"))
+    check("a skill page's own <title> ends in TBaguette’s Atelier too",
+          "<title>fresh — Cat — TBaguette’s Atelier</title>" in fresh_page_html)
 
 
 def main() -> None:
