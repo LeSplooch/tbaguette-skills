@@ -468,14 +468,30 @@ code {
   position: absolute;
   inset: 0;
   z-index: -1;
+  background: var(--bg-deep);
+}
+
+/* The glow gradients live on their own pseudo-element, blurred, rather than
+   directly on .site-header__band's background: a gradient this large (up to
+   220% radius) fading from a low-alpha color to fully transparent has almost
+   no delta per pixel, and both browsers tested rasterize that as visible
+   concentric banding rather than a smooth ramp — worse the larger and
+   subtler the gradient, which this is. The blur is a low-pass filter over
+   that same stepped ramp, which is what actually removes the bands (a
+   softer-looking glow is a side effect, not the goal). Kept off ::after
+   below so the gilded rule stays a crisp line rather than a smear. */
+.site-header__band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background:
     radial-gradient(140% 220% at 6% 0%,
       color-mix(in oklch, var(--accent) 20%, transparent),
       transparent 65%),
     radial-gradient(90% 160% at 100% 0%,
       color-mix(in oklch, var(--accent) 12%, transparent),
-      transparent 60%),
-    var(--bg-deep);
+      transparent 60%);
+  filter: blur(16px);
 }
 
 /* The "gilded rule": a soft gold line along the header's bottom edge that
