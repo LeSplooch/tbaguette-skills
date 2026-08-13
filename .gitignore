@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+
+# Test-generated scaffolding, not part of the deployable site.
+/_preview/
+
+# Debug/inspection snapshot from running content_pipeline.py standalone.
+# generate.py never reads this file — it calls build_content() in-process —
+# so it isn't a build artifact anyone downstream depends on, and committing
+# it would just be another copy of the site's own content to keep in sync.
+/scripts/content.json
+
+# generate.py's atomic-swap machinery; only present if a build was
+# interrupted between its rename steps, which should be rare to never.
+/.docs.previous.*
+/.docs.build.*/

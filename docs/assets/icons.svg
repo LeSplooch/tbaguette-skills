@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <!--
+    La Boulangerie TBaguette — line-mark sprite.
+    Single stroke weight throughout (consumers set stroke-width via the
+    shared .icon class in styles.css; these symbols carry no fill/stroke
+    styling of their own so they inherit currentColor correctly in both
+    themes). Six marks total:
+      icon-wheat, icon-crust, icon-grain  — category markers, cycled across
+        the ten landing-page category headings. Decorative, not a
+        per-category semantic mapping (the content schema carries no such
+        mapping) — variety without invented meaning.
+      icon-sun, icon-moon                 — theme toggle status.
+      icon-search                         — search field affordance.
+    All symbols share a 0 0 24 24 viewBox so they drop in at a consistent
+    optical size wherever used.
+  -->
+
+  <symbol id="icon-wheat" viewBox="0 0 24 24">
+    <path d="M12 21 L12 4" />
+    <path d="M12 6.5 L8.25 3.25 M12 6.5 L15.75 3.25" />
+    <path d="M12 9.75 L8.25 6.75 M12 9.75 L15.75 6.75" />
+    <path d="M12 13 L8.5 10.25 M12 13 L15.5 10.25" />
+    <path d="M8.75 17.25 Q12 15.75 15.25 17.25" />
+  </symbol>
+
+  <symbol id="icon-crust" viewBox="0 0 24 24">
+    <path d="M4 15.5 Q4 7.5 12 6 Q20 7.5 20 15.5 Q20 18.25 12 18.75 Q4 18.25 4 15.5 Z" />
+    <path d="M9 8.75 Q9.75 7.25 11 6.75" />
+    <path d="M13.75 8.5 Q14.5 7.25 15.5 6.75" />
+    <circle cx="9.5" cy="13.5" r="0.9" />
+    <circle cx="13" cy="15.25" r="1.1" />
+    <circle cx="15.5" cy="12" r="0.7" />
+  </symbol>
+
+  <symbol id="icon-grain" viewBox="0 0 24 24">
+    <path d="M12 4.75 C16.25 8 16.25 16 12 19.25 C7.75 16 7.75 8 12 4.75 Z" />
+    <path d="M12 6.5 L12 17.5" />
+  </symbol>
+
+  <symbol id="icon-sun" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="4" />
+    <path d="M19 12 L21.5 12 M16.95 16.95 L18.68 18.68 M12 19 L12 21.5 M7.05 16.95 L5.32 18.68 M5 12 L2.5 12 M7.05 7.05 L5.32 5.32 M12 5 L12 2.5 M16.95 7.05 L18.68 5.32" />
+  </symbol>
+
+  <symbol id="icon-moon" viewBox="0 0 24 24">
+    <path d="M15.5 3.5 A 8 8 0 1 0 15.5 20.5 A 6.2 6.2 0 1 1 15.5 3.5 Z" />
+  </symbol>
+
+  <symbol id="icon-search" viewBox="0 0 24 24">
+    <circle cx="10.5" cy="10.5" r="6.5" />
+    <path d="M15.3 15.3 L20.5 20.5" />
+  </symbol>
+</svg>

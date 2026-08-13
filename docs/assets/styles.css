@@ -1,0 +1,1049 @@
+/*
+  La Boulangerie TBaguette — design system
+  =========================================
+  One stylesheet, hand-authored. Token layer (primitive -> semantic) feeds every
+  component below it; components reference roles (--surface, --text-primary, ...),
+  never raw primitives (--crumb-850, --cream-100, ...) directly. Dark ("crust") is
+  the default theme; [data-theme="flour"] on <html> remaps the semantic layer only.
+
+  Contents
+  1. Font faces (self-hosted, latin-subset)
+  2. Tokens — primitives, semantic (dark default + flour theme)
+  3. Reset & base
+  4. Utilities (visually-hidden, skip-link, container, measure)
+  5. Type
+  6. Icons
+  7. Header / wordmark / theme toggle
+  8. Hero + search
+  9. Category sections + card grid + card
+  10. Breadcrumb
+  11. Article: lede, prose, tables, code, lists
+  12. Tabs (formidable)
+  13. Prev/next + see-also
+  14. Footer
+  15. Motion + reduced-motion
+  16. Responsive notes (fluid by default; hard breakpoints only where noted)
+*/
+
+/* ---------------------------------------------------------------------------
+   1. Font faces — self-hosted, latin-subset woff2 pulled from Google Fonts'
+   own latin-range files (not the CDN link) so there is no third-party request
+   at runtime, no FOUT waterfall, and we control font-display ourselves.
+   Fraunces and Work Sans are true variable fonts (one file covers their full
+   weight range, Fraunces also opsz); IBM Plex Mono ships static weights only.
+   ------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url('fonts/fraunces-variable.woff2') format('woff2-variations'),
+       url('fonts/fraunces-variable.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url('fonts/fraunces-italic-variable.woff2') format('woff2-variations'),
+       url('fonts/fraunces-italic-variable.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Work Sans';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('fonts/work-sans-variable.woff2') format('woff2-variations'),
+       url('fonts/work-sans-variable.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/ibm-plex-mono-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('fonts/ibm-plex-mono-500.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+/* ---------------------------------------------------------------------------
+   2. Tokens
+   ------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: dark;
+
+  /* --- primitives (tier 1: raw values, never referenced by components) --- */
+  --crust-950: #1a130f;
+  --crust-900: #22190f;
+  --crumb-850: #2b2015;
+  --crumb-800: #362819;
+  --gold-500: #dda25c;
+  --gold-400: #e8b876;
+  --gold-700: #a86f34;
+  /* --gold-800 is a deviation from the locked palette: measured, gold-700 on
+     flour-50/flour-100 is 3.4-3.8:1, which clears the 3:1 floor for large
+     text/icons/borders but fails the 4.5:1 floor for body-sized text. Rather
+     than reinterpret gold-700's value, we add one darker step so inline links
+     and other body-sized accent text in the flour theme have a contrast-safe
+     home; gold-700 stays reserved for non-text/large-text uses. See --text-accent
+     usage rule below. */
+  --gold-800: #83552a;
+  --cream-100: #f5ead9;
+  --cream-300: #cbb79c;
+  --flour-50: #faf3e8;
+  --flour-100: #f2e6d2;
+  --ink-900: #241a12;
+  /* --ink-700 fills a gap the locked palette left open: it names a primary
+     light-theme text color (--ink-900) but no secondary. cream-300 is
+     explicitly "warm-tinted, never neutral gray" for the dark theme; ink-700
+     is its light-theme counterpart, built the same way (warm brown, not gray),
+     measured at >=5.6:1 on both flour surfaces. */
+  --ink-700: #6b5642;
+
+  /* --- semantic (tier 2: the only tier components should reference) ---
+     Dark ("crust") is the default; no [data-theme] attribute needed. */
+
+  /* usage: page background */
+  --bg: var(--crust-950);
+  /* usage: footer + any "deep" recessed section */
+  --bg-deep: var(--crust-900);
+  /* usage: card / input / raised-panel background */
+  --surface: var(--crumb-850);
+  /* usage: hover/active state of a surface, or a surface nested on a surface */
+  --surface-hover: var(--crumb-800);
+  /* usage: primary reading text */
+  --text-primary: var(--cream-100);
+  /* usage: secondary text — captions, meta, summaries, secondary nav */
+  --text-secondary: var(--cream-300);
+  /* usage: body-sized accent text only — inline links, active tab/nav label.
+     Must independently clear 4.5:1; do not reuse --accent here. */
+  --text-accent: var(--gold-500);
+  /* usage: non-text accent — icon strokes, card borders, tag underlines,
+     decorative rules. Only needs to clear 3:1. */
+  --accent: var(--gold-500);
+  /* usage: hover/active shift for --accent and --text-accent */
+  --accent-hover: var(--gold-400);
+  /* usage: border on the solid-fill accent button/badge component tier.
+     Fixed across both themes on purpose — see .btn-accent notes below. */
+  --accent-solid: var(--gold-500);
+  --accent-solid-hover: var(--gold-400);
+  --text-on-accent-solid: var(--crust-950);
+  /* usage: hairline dividers, card borders at rest */
+  --border-subtle: rgb(245 234 217 / 10%);
+  --border-strong: rgb(245 234 217 / 20%);
+  /* usage: focus outline, always painted with an offset onto the surrounding
+     bg so it never has to fight the focused element's own fill for contrast */
+  --focus-ring: var(--gold-400);
+  /* usage: shadow color mix-ins */
+  --shadow-ink: 20 10% 3%;
+
+  /* --- space: 4px base steps, ordinal (never t-shirt sizes — see naming-things) --- */
+  --space-1: 0.25rem;   /* 4px  */
+  --space-2: 0.5rem;    /* 8px  */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.5rem;    /* 24px */
+  --space-6: 2rem;      /* 32px */
+  --space-7: 3rem;      /* 48px */
+  --space-8: 4rem;      /* 64px */
+  --space-9: 6rem;      /* 96px */
+
+  /* --- radius: soft/organic, not sharp-corporate, not pill-everything --- */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+
+  /* --- type scale: ~1.25 through body sizes, opening up to ~1.4 at the
+     display end (type.md sanctions this for editorial/display work) --- */
+  --text-1: 0.8rem;      /* 12.8px — meta, mono tags, fine print   */
+  --text-2: 0.9rem;      /* 14.4px — secondary UI, breadcrumb      */
+  --text-3: 1rem;        /* 16px   — body                          */
+  --text-4: 1.25rem;     /* 20px   — lede, h3, card name            */
+  --text-5: 1.75rem;     /* 28px   — h2                             */
+  --text-6: 2.5rem;      /* 40px   — h1 / skill-name page title     */
+  --text-7: clamp(2.25rem, 1.4rem + 3.6vw, 4rem); /* hero headline  */
+
+  --font-display: 'Fraunces', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-body: 'Work Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --leading-tight: 1.1;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  /* --- motion: 3 durations + instant, 3 easings (tokens.md minimum set) --- */
+  --duration-instant: 0ms;
+  --duration-micro: 130ms;   /* hover, toggle, press      */
+  --duration-enter: 220ms;   /* element enter/exit        */
+  --duration-view: 360ms;    /* layout/view transition    */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --measure-prose: 66ch;
+  --container-wide: 78rem;
+}
+
+[data-theme='flour'] {
+  color-scheme: light;
+
+  --bg: var(--flour-50);
+  --bg-deep: color-mix(in oklch, var(--ink-900) 9%, var(--flour-50));
+  --surface: var(--flour-100);
+  --surface-hover: color-mix(in oklch, var(--ink-900) 8%, var(--flour-100));
+  --text-primary: var(--ink-900);
+  --text-secondary: var(--ink-700);
+  --text-accent: var(--gold-800);
+  --accent: var(--gold-700);
+  --accent-hover: var(--gold-800);
+  /* accent-solid / text-on-accent-solid intentionally NOT remapped: the solid
+     gold-500 fill + near-black label is the one brand mark that stays
+     identical in both themes, like a foil stamp — see .btn-accent notes. */
+  --border-subtle: rgb(36 26 18 / 10%);
+  --border-strong: rgb(36 26 18 / 20%);
+  --focus-ring: var(--gold-700);
+  --shadow-ink: 30 25% 14%;
+}
+
+/* ---------------------------------------------------------------------------
+   3. Reset & base
+   ------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-3);
+  line-height: var(--leading-normal);
+  transition: background-color var(--duration-view) var(--ease-in-out),
+              color var(--duration-view) var(--ease-in-out);
+}
+
+img, svg { display: block; max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+button, input {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+ul, ol { padding-left: 1.25em; }
+li + li { margin-top: var(--space-2); }
+
+table { border-collapse: collapse; }
+
+/* One focus treatment, everywhere, always keyboard-reachable. Offset so the
+   ring is measured against the surrounding surface, never the element's own
+   fill (this is what keeps a ring on a solid gold button legible in both
+   themes without a special case). */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--text-on-accent-solid);
+}
+
+/* ---------------------------------------------------------------------------
+   4. Utilities
+   ------------------------------------------------------------------------- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  z-index: 100;
+  top: var(--space-2);
+  left: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  transform: translateY(-150%);
+  transition: transform var(--duration-micro) var(--ease-out);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .container { padding-inline: var(--space-8); }
+}
+
+.measure {
+  max-width: var(--measure-prose);
+}
+
+/* ---------------------------------------------------------------------------
+   5. Type
+   ------------------------------------------------------------------------- */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+h1 { font-size: var(--text-6); font-weight: 650; }
+h2 { font-size: var(--text-5); font-weight: 600; margin-top: var(--space-8); margin-bottom: var(--space-4); }
+h3 { font-size: var(--text-4); font-weight: 600; margin-top: var(--space-6); margin-bottom: var(--space-3); }
+
+p { margin-top: var(--space-4); }
+* + h2, * + h3 { margin-top: var(--space-8); }
+
+strong { font-weight: 700; color: var(--text-primary); }
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--surface-hover);
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+}
+
+/* ---------------------------------------------------------------------------
+   6. Icons — single-stroke line marks, one consistent weight
+   ------------------------------------------------------------------------- */
+
+.icon {
+  width: 1.5em;
+  height: 1.5em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   7. Header / wordmark / theme toggle
+   ------------------------------------------------------------------------- */
+
+.site-header {
+  position: relative;
+  z-index: 10;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 650;
+  font-size: var(--text-4);
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+}
+
+.wordmark:hover { color: var(--text-accent); }
+
+.theme-toggle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.theme-toggle:hover {
+  color: var(--text-accent);
+  border-color: var(--border-strong);
+  background: var(--surface);
+}
+
+.theme-toggle__icon {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: scale(0.6) rotate(-40deg);
+}
+
+.theme-toggle__icon--moon { opacity: 1; transform: none; }
+[data-theme='flour'] .theme-toggle__icon--sun { opacity: 1; transform: none; }
+[data-theme='flour'] .theme-toggle__icon--moon { opacity: 0; transform: scale(0.6) rotate(40deg); }
+
+/* ---------------------------------------------------------------------------
+   8. Hero + search
+   ------------------------------------------------------------------------- */
+
+.hero {
+  padding-block: var(--space-8) var(--space-9);
+}
+
+.hero__headline {
+  margin-top: 0;
+  max-width: 18ch;
+  font-size: var(--text-7);
+  font-weight: 620;
+  letter-spacing: -0.015em;
+  opacity: 0;
+  animation: hero-rise var(--duration-view) var(--ease-out) forwards;
+}
+
+.hero__lede {
+  margin-top: var(--space-5);
+  max-width: 52ch;
+  font-size: var(--text-4);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  opacity: 0;
+  animation: hero-rise var(--duration-view) var(--ease-out) 80ms forwards;
+}
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.search {
+  margin-top: var(--space-7);
+  max-width: 34rem;
+}
+
+.search__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: border-color var(--duration-micro) var(--ease-out),
+              box-shadow var(--duration-micro) var(--ease-out);
+}
+
+.search__field:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 30%, transparent);
+}
+
+.search__icon {
+  margin-inline-start: var(--space-4);
+  color: var(--text-secondary);
+}
+
+.search__input {
+  flex: 1;
+  padding: var(--space-4);
+  font-size: var(--text-3);
+  color: var(--text-primary);
+}
+
+.search__input::placeholder { color: var(--text-secondary); }
+
+.search__clear {
+  margin-inline-end: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+}
+
+.search__clear:hover { color: var(--text-accent); }
+
+.search__status {
+  margin-top: var(--space-3);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+}
+
+.search__empty {
+  margin-top: var(--space-6);
+  padding: var(--space-6);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+}
+
+.search__empty[hidden] { display: none; }
+
+.search__empty-query { color: var(--text-primary); font-weight: 600; }
+
+/* ---------------------------------------------------------------------------
+   9. Category sections + card grid + card
+   ------------------------------------------------------------------------- */
+
+.category-section {
+  padding-block: var(--space-8);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.category-section[hidden] { display: none; }
+
+.category-section__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.category-section__icon { color: var(--accent); width: 1.75em; height: 1.75em; }
+
+.category-section__title {
+  font-size: var(--text-5);
+  margin: 0;
+}
+
+.category-section__count {
+  margin-inline-start: auto;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-5);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: transform var(--duration-enter) var(--ease-out),
+              border-color var(--duration-enter) var(--ease-out),
+              box-shadow var(--duration-enter) var(--ease-out),
+              background-color var(--duration-enter) var(--ease-out);
+}
+
+.card[hidden] { display: none; }
+
+.card:hover,
+.card:focus-visible {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 2px hsl(var(--shadow-ink) / 0.5),
+    0 20px 32px -16px color-mix(in oklch, var(--accent) 45%, transparent);
+}
+
+.card:focus-visible {
+  outline-offset: 4px;
+}
+
+.card__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-4);
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.card__summary {
+  margin-top: var(--space-3);
+  color: var(--text-secondary);
+  font-size: var(--text-3);
+  flex: 1;
+}
+
+.card__foot {
+  margin-top: var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3em 0.7em;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.card__arrow {
+  color: var(--text-secondary);
+  transition: transform var(--duration-micro) var(--ease-out),
+              color var(--duration-micro) var(--ease-out);
+}
+
+.card:hover .card__arrow,
+.card:focus-visible .card__arrow {
+  color: var(--text-accent);
+  transform: translateX(3px);
+}
+
+/* ---------------------------------------------------------------------------
+   10. Breadcrumb
+   ------------------------------------------------------------------------- */
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  padding-block: var(--space-5);
+}
+
+.breadcrumb a { border-radius: var(--radius-sm); }
+.breadcrumb a:hover { color: var(--text-accent); }
+
+.breadcrumb__current {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.breadcrumb__sep { color: var(--border-strong); }
+
+/* ---------------------------------------------------------------------------
+   11. Article: header, lede, prose, tables, code, lists
+   ------------------------------------------------------------------------- */
+
+.skill-article { padding-block: var(--space-6) var(--space-9); }
+
+.skill-article__head { max-width: var(--measure-prose); }
+
+.skill-article__title {
+  font-family: var(--font-mono);
+  font-size: clamp(1.75rem, 1.35rem + 1.8vw, var(--text-6));
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.skill-article__tag { margin-top: var(--space-4); }
+
+.lede {
+  margin-top: var(--space-6);
+  max-width: var(--measure-prose);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--text-4);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.prose {
+  margin-top: var(--space-8);
+  max-width: var(--measure-prose);
+  font-size: var(--text-3);
+  line-height: var(--leading-relaxed);
+}
+
+.prose > :first-child { margin-top: 0; }
+
+.prose h2, .prose h3 { scroll-margin-top: var(--space-6); }
+
+.prose p { color: var(--text-primary); }
+
+.prose ul, .prose ol {
+  margin-top: var(--space-4);
+  padding-left: 1.4em;
+}
+
+.prose li { padding-left: 0.2em; }
+.prose li::marker { color: var(--text-secondary); }
+.prose ul ul, .prose ol ol, .prose ul ol, .prose ol ul { margin-top: var(--space-2); }
+
+.prose a {
+  color: var(--text-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--text-accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  border-radius: 3px;
+  transition: text-decoration-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.prose a:hover {
+  text-decoration-color: currentColor;
+  background: color-mix(in oklch, var(--text-accent) 12%, transparent);
+}
+
+/* body_html is injected verbatim (see templates.py) so we can't wrap a
+   <table> in a scroll container without parsing content we've been told not
+   to re-parse. Instead the table is its own scroll container: `display:
+   block` lets `overflow-x: auto` take effect directly on the table element
+   while its row/cell children keep their table-layout roles from the UA
+   stylesheet, which is what keeps columns aligned inside the scroll area. */
+.prose table {
+  display: block;
+  margin-top: var(--space-6);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  font-size: var(--text-2);
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.prose th, .prose td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.prose thead th {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-strong);
+  white-space: nowrap;
+}
+
+.prose tbody tr {
+  transition: background-color var(--duration-micro) var(--ease-out);
+}
+
+.prose tbody tr:hover { background: var(--surface); }
+.prose tbody tr:last-child td { border-bottom: none; }
+
+/* ---------------------------------------------------------------------------
+   12. Tabs (formidable stacks / commands)
+   ------------------------------------------------------------------------- */
+
+.formidable-extra {
+  margin-top: var(--space-9);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.formidable-extra__group + .formidable-extra__group {
+  margin-top: var(--space-9);
+}
+
+.formidable-extra__subtitle { font-size: var(--text-5); margin-top: 0; }
+
+.tabs { margin-top: var(--space-5); }
+
+.tabs__list {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 32px), transparent 100%);
+  mask-image: linear-gradient(to right, black calc(100% - 32px), transparent 100%);
+}
+
+.tabs__tab {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.tabs__tab:hover { color: var(--text-primary); border-color: var(--border-strong); }
+
+.tabs__tab[aria-selected='true'] {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border-color: var(--accent-solid);
+  font-weight: 500;
+}
+
+.tabs__panels { margin-top: var(--space-6); }
+
+.tabs__panel {
+  max-width: var(--measure-prose);
+  font-size: var(--text-3);
+  line-height: var(--leading-relaxed);
+  animation: panel-in var(--duration-enter) var(--ease-out);
+}
+
+.tabs__panel[hidden] { display: none; }
+.tabs__panel > :first-child { margin-top: 0; }
+
+@keyframes panel-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ---------------------------------------------------------------------------
+   13. Prev/next + see-also
+   ------------------------------------------------------------------------- */
+
+.prevnext {
+  margin-top: var(--space-9);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.prevnext__link {
+  flex: 1 1 16rem;
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.prevnext__link:hover, .prevnext__link:focus-visible {
+  border-color: var(--accent);
+  background: var(--surface-hover);
+}
+
+.prevnext__link--next { text-align: right; }
+
+.prevnext__label {
+  display: block;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.prevnext__name {
+  display: block;
+  margin-top: var(--space-1);
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.see-also {
+  margin-top: var(--space-8);
+}
+
+.see-also__title { font-size: var(--text-4); }
+
+.see-also__list {
+  margin-top: var(--space-4);
+  list-style: none;
+  padding-left: 0;
+}
+
+.see-also__list li {
+  padding-left: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.see-also__list li:first-child { border-top: none; }
+.see-also__list li + li { margin-top: 0; }
+
+.see-also__link {
+  display: block;
+  padding-block: var(--space-4);
+  border-radius: var(--radius-sm);
+}
+
+.see-also__link:hover .see-also__name,
+.see-also__link:focus-visible .see-also__name { color: var(--text-accent); }
+
+.see-also__name {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  transition: color var(--duration-micro) var(--ease-out);
+}
+
+.see-also__summary {
+  margin-top: var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--text-2);
+}
+
+/* ---------------------------------------------------------------------------
+   14. Footer
+   ------------------------------------------------------------------------- */
+
+.site-footer {
+  margin-top: var(--space-9);
+  background: var(--bg-deep);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.site-footer__inner {
+  padding-block: var(--space-8);
+  display: grid;
+  gap: var(--space-7);
+}
+
+@media (min-width: 720px) {
+  .site-footer__inner {
+    grid-template-columns: minmax(0, 26rem) 1fr;
+  }
+}
+
+.site-footer__brand {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: var(--text-4);
+  font-style: italic;
+  color: var(--text-secondary);
+  max-width: 42ch;
+}
+
+.site-footer__brand strong {
+  font-style: normal;
+  color: var(--text-primary);
+}
+
+.site-footer__nav-title {
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.site-footer__categories {
+  margin-top: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  list-style: none;
+  padding-left: 0;
+}
+
+.site-footer__categories li { margin: 0; padding: 0; }
+
+.site-footer__categories a {
+  display: inline-block;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out);
+}
+
+.site-footer__categories a:hover {
+  color: var(--text-accent);
+  border-color: var(--border-strong);
+}
+
+/* ---------------------------------------------------------------------------
+   15. Motion — opt in, never opt out. Base rules above ship without loop
+   animation; the hero rise and panel fade are the only authored entrances,
+   and both are removed (not shortened) under reduced motion.
+   ------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__headline, .hero__lede {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .tabs__panel { animation: none; }
+
+  .card, .theme-toggle__icon, .search__field, .tabs__tab,
+  .prevnext__link, .see-also__name, .site-footer__categories a,
+  .skip-link, .prose a, .prose tbody tr {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  .card:hover, .card:focus-visible {
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   16. Responsive
+   Layout is fluid by default (clamp() type, auto-fill grid, flex-wrap) so most
+   widths need no explicit rule. The few true reorganizations are declared
+   locally above (footer to two columns at 720px, container padding at 640px).
+   Verified down to 360px: header, hero, search, card grid, tables (own
+   scroll container), tabs (own scroll container), breadcrumb, prev/next.
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 420px) {
+  .prevnext__link--next { text-align: left; }
+}

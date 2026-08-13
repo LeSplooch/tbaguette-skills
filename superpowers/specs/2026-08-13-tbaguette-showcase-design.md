@@ -81,7 +81,7 @@ respected throughout.
 
 ```
 {
-  "categories": [{"slug", "title", "skill_slugs": [...]}, ... 9, in catalog order],
+  "categories": [{"slug", "title", "skill_slugs": [...]}, ... 10, in catalog order],
   "skills": {
     "<slug>": {
       "slug", "name", "category_slug", "category_title",
@@ -93,7 +93,14 @@ respected throughout.
     "formidable": {
       ...same base fields..., "is_formidable": true,
       "formidable_stacks":   [{"id", "title", "html"}, ... 12],
-      "formidable_commands": [{"id", "title", "html"}, ... 12]
+      // 12 reference/*.md files exist; formidable_commands holds 11 of them —
+      // craft-floor.md is deliberately excluded (it's the build-time quality
+      // bar, not a user-facing command) and rendered separately instead, as
+      // its own non-tabbed section with id="cmd-craft-floor" so the two
+      // existing links to it from formidable's own body/stack/command
+      // content still resolve.
+      "formidable_commands": [{"id", "title", "html"}, ... 11],
+      "formidable_craft_floor_html": "..."   // rendered separately, see above
     }
   }
 }
