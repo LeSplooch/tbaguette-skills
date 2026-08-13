@@ -79,6 +79,22 @@ def check_changed_skill_slugs() -> None:
         changed_after_unrelated = generate._changed_skill_slugs(repo)
         check("a change outside skills/ doesn't add anything",
               set(changed_after_unrelated) == {"alpha", "gamma"})
+
+        # This project's own pre-commit hook runs `git add -A` *before*
+        # calling generate() — a real-world case, not a hypothetical one:
+        # the first real skill shipped through that hook showed "Updated"
+        # instead of "New" on the live site, because a staged-added file
+        # reads "A " in `git status --porcelain`, not "??". Prove the fix
+        # by staging gamma exactly the way the hook does, not just leaving
+        # it untracked the way the check above already covers.
+        _run_git(["add", "-A"], repo)
+        changed_after_staging = generate._changed_skill_slugs(repo)
+        check("a *staged* new skill (git add -A, matching the pre-commit "
+              "hook's own order of operations) is still reported as new, "
+              "not misread as merely updated",
+              changed_after_staging.get("gamma") == "new")
+        check("a staged modification is still reported as updated",
+              changed_after_staging.get("alpha") == "updated")
     finally:
         shutil.rmtree(repo, ignore_errors=True)
 

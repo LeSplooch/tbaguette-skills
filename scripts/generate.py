@@ -97,7 +97,16 @@ def _changed_skill_slugs(project_root: Path) -> dict[str, str]:
         if len(parts) < 2 or parts[0] != "skills":
             continue
         slug = parts[1]
-        kind = "new" if status.strip() == "??" else "updated"
+        # "new" covers two porcelain shapes, not one: "??" (untracked) is
+        # what a fresh `git status` shows, but this project's own
+        # pre-commit hook (.githooks/pre-commit) runs generate() *after*
+        # `git add -A` has already staged everything — at that point an
+        # added file reads "A " instead, and checking only for "??" would
+        # silently misclassify every real new skill as merely "updated"
+        # the moment it's actually shipped through the normal commit flow.
+        # Caught live: the first real skill added after the hook existed
+        # showed "Updated" instead of "New" on the deployed site.
+        kind = "new" if status == "??" or status[0] == "A" else "updated"
         if slug not in changed or kind == "new":
             changed[slug] = kind
     return changed
