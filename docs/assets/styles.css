@@ -108,7 +108,7 @@
   --gold-400: #e8b876;
   --gold-700: #a86f34;
   /* --gold-800 is a deviation from the locked palette: measured, gold-700 on
-     flour-50/flour-100 is 3.4-3.8:1, which clears the 3:1 floor for large
+     flour-50/flour-100 is 3.2-3.6:1, which clears the 3:1 floor for large
      text/icons/borders but fails the 4.5:1 floor for body-sized text. Rather
      than reinterpret gold-700's value, we add one darker step so inline links
      and other body-sized accent text in the flour theme have a contrast-safe
@@ -117,14 +117,24 @@
   --gold-800: #83552a;
   --cream-100: #f5ead9;
   --cream-300: #cbb79c;
-  --flour-50: #faf3e8;
-  --flour-100: #f2e6d2;
+  /* flour-50/flour-100: nudged one small step darker than the original
+     locked-palette values (#faf3e8 / #f2e6d2) — "a tiny bit less bright" in
+     the light theme, ~6% lower relative luminance, tuned in OKLCH so hue and
+     chroma hold exactly and only lightness moves. Every dependent contrast
+     pairing in the flour theme was re-measured against the new values, not
+     assumed safe by extrapolation — darkening a light background always
+     *reduces* its contrast against fixed-dark text (the gap closes, it
+     doesn't widen), which is the opposite of the first intuition and is
+     exactly what tightened --bg-deep and --surface-hover below enough to
+     need their own mix-ratio corrections. */
+  --flour-50: #f3ece1;
+  --flour-100: #ebdfcc;
   --ink-900: #241a12;
   /* --ink-700 fills a gap the locked palette left open: it names a primary
      light-theme text color (--ink-900) but no secondary. cream-300 is
      explicitly "warm-tinted, never neutral gray" for the dark theme; ink-700
      is its light-theme counterpart, built the same way (warm brown, not gray),
-     measured at >=5.6:1 on both flour surfaces. */
+     measured at >=5.2:1 on both flour surfaces. */
   --ink-700: #6b5642;
 
   /* --- semantic (tier 2: the only tier components should reference) ---
@@ -227,9 +237,23 @@
   color-scheme: light;
 
   --bg: var(--flour-50);
-  --bg-deep: color-mix(in oklch, var(--ink-900) 9%, var(--flour-50));
+  /* 9% -> 6%: with the darker flour-50 above, 9% pulled bg-deep close enough
+     to --text-accent's own luminance to drop its contrast against it below
+     4.5:1 (measured: 4.46:1) — the header's "Updated" label sits directly on
+     this. 6% restores a real margin (4.77:1) while staying visibly deeper
+     than --bg, which is the one thing this token exists to do. */
+  --bg-deep: color-mix(in oklch, var(--ink-900) 6%, var(--flour-50));
   --surface: var(--flour-100);
-  --surface-hover: color-mix(in oklch, var(--ink-900) 8%, var(--flour-100));
+  /* 8% -> 6%, same reasoning as --bg-deep above, against the darker
+     flour-100: at 8% this measured 4.42:1 for --text-secondary (a card's
+     summary text on hover) against a 4.5:1 floor — a real regression, and
+     one that turned out to already be live before this change too (8%
+     against the *original* flour-100 was 4.35:1, already failing; nobody
+     had measured it since gold-800 was tuned against flour-50/100 directly,
+     never against this derived token). 6% clears both --text-secondary
+     (4.64:1) and --text-accent, held to the 3:1 non-text floor here since
+     .card__arrow is a directional glyph, not read text (4.27:1). */
+  --surface-hover: color-mix(in oklch, var(--ink-900) 6%, var(--flour-100));
   --text-primary: var(--ink-900);
   --text-secondary: var(--ink-700);
   --text-accent: var(--gold-800);
