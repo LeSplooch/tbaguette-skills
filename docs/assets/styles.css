@@ -635,7 +635,7 @@ code {
 
 .install-frame {
   margin-top: var(--space-6);
-  max-width: 34rem;
+  max-width: 46rem;
   overflow: hidden;
   background: var(--surface);
   border: 1px solid color-mix(in oklch, var(--accent) 42%, transparent);
@@ -720,13 +720,13 @@ code {
 .install__command {
   flex: 1;
   min-width: 0;
-  overflow-x: auto;
   padding: var(--space-4);
   background: var(--surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   font-size: var(--text-2);
-  white-space: nowrap;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .install__copy {
