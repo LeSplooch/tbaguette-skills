@@ -70,3 +70,17 @@ runs the full test suite (`python3 -m unittest discover` on its own misses two o
 three test files). Design rationale — the palette, the content schema, why it looks
 like a bakery — is in
 [`superpowers/specs/2026-08-13-tbaguette-showcase-design.md`](superpowers/specs/2026-08-13-tbaguette-showcase-design.md).
+
+One-time setup after cloning, if you'll be committing:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+This points git at the tracked pre-commit hook in [`.githooks/`](.githooks/pre-commit),
+which regenerates the site before every commit, unconditionally — including a
+CSS- or skills-only change, which is still "the site was updated." It exists because
+that got missed manually once: a styles-only commit shipped without regenerating,
+leaving the header's own "Updated" timestamp pointing at the previous commit instead of
+itself. `core.hooksPath` is local to your clone (git only reads `.git/hooks` by
+default), so this one command is what actually turns the hook on.

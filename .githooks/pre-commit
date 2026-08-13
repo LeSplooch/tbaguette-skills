@@ -1,0 +1,30 @@
+#!/bin/sh
+# Pre-commit hook: regenerate the site before every single commit,
+# unconditionally, so nothing generated — the last-updated timestamp in the
+# header above all (see scripts/generate.py's own docstring on why it must
+# always run as the literal last step before commit) — can ever go stale
+# relative to what actually lands. A CSS-only or skills-only change is still
+# "the site was updated" from a visitor's perspective, and there's no
+# smaller, safe-to-skip category of change worth trying to detect instead of
+# just always regenerating: it's fast, idempotent, and removes the judgment
+# call entirely rather than relying on remembering it per commit — this hook
+# exists because that judgment call was tried once and got it wrong (a
+# styles.css-only commit shipped without regenerating, leaving the header's
+# "Updated" time pointing at the previous commit instead).
+#
+# One-time setup after cloning (not automatic — git only reads hooks from
+# .git/hooks by default; this file lives in the repo so it travels with it,
+# but core.hooksPath is what points git at it, and that setting is itself
+# local, not versioned):
+#   git config core.hooksPath .githooks
+
+set -e
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+echo "pre-commit: regenerating the site (scripts/generate.py)..."
+python3 scripts/generate.py --base-path /tbaguette-skills
+
+git add docs/
+echo "pre-commit: docs/ staged with this run's regeneration."
