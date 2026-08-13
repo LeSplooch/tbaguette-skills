@@ -314,6 +314,13 @@ def _render_install(base_path: str = "") -> str:
       <span>Only ever touches this folder — verified against your other skills, not
       just claimed. <a href="{base_path}/verify-install/">See how</a>.</span>
     </p>
+    <p class="install-frame__note">
+      {_icon("icon-check", base_path=base_path)}
+      <span>Restart Claude Code (or run <code>/reload-plugins</code>), then invoke a
+      skill as <code>TBaguette:skill-name</code>. This is for Claude Code specifically —
+      the Claude Desktop app and claude.ai chat load skills from your account instead of
+      this folder, so cloning here won't make them appear there.</span>
+    </p>
   </div>
 </div>"""
 

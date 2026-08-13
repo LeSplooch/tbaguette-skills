@@ -311,6 +311,15 @@ def main() -> None:
           < index_html.index("hero__lede"))
     check("verification note links to the on-site explanation page, base_path-prefixed",
           'href="/verify-install/"' in index_html)
+    check("a second note tells visitors to restart/reload and how to invoke a skill",
+          'Restart Claude Code' in index_html and 'TBaguette:skill-name' in index_html)
+    check("that note clarifies this is Claude Code-specific, not Desktop app/claude.ai chat "
+          "(the actual bug this was written to prevent: a visitor installs correctly but "
+          "never sees the skills because they're looking in the wrong product)",
+          'Claude Desktop app and claude.ai chat load skills from your account' in index_html)
+    check("the Claude-Code-specific note sits after the safety note, before the lede",
+          index_html.index("install-frame__note") < index_html.index('Restart Claude Code')
+          < index_html.index("hero__lede"))
 
     # --- platform picker: two tabs, POSIX shown by default, PowerShell hidden ---
     print("install platform picker")

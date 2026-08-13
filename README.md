@@ -30,6 +30,12 @@ plugin — invoke any skill directly (`TBaguette:formidable`, `TBaguette:knowing
 or let them trigger automatically when your situation matches. Run the same command again
 later to pull updates in place.
 
+This installs for **Claude Code** specifically. The general Claude Desktop app and claude.ai
+chat don't read `~/.claude/skills/` at all — they load whatever skills are enabled on your
+claude.ai account instead, synced separately. Cloning this repo won't make these skills show
+up there; enable them from **Customize** in the Desktop app sidebar or the skills settings on
+claude.ai instead.
+
 Both commands only ever touch `~/.claude/skills/TBaguette` — neither can alter, merge into,
 or overwrite any other skill or plugin you already have. `git clone` refuses outright if that
 exact path already exists and isn't empty or a clone of this repo, so a name collision
