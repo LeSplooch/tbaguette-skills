@@ -62,7 +62,7 @@ def main() -> int:
     total = 0
     for label, cmd in SUITES:
         print(f"\n{'=' * 70}\n{label}\n{'=' * 70}")
-        result = subprocess.run(cmd, cwd=SCRIPTS_DIR, capture_output=True, text=True)
+        result = subprocess.run(cmd, cwd=SCRIPTS_DIR, capture_output=True, text=True, check=False)
         print(result.stdout, end="")
         print(result.stderr, end="", file=sys.stderr)
 

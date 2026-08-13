@@ -52,24 +52,36 @@ import sys
 import tempfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
-from templates import INSTALL_COMMAND  # noqa: E402
+from templates import INSTALL_COMMAND
 
 REPO_URL = "https://github.com/LeSplooch/tbaguette-skills.git"
 
-_checks = 0
-_fails = 0
+
+class Tally:
+    """Accumulates check() results instead of raising on the first failure —
+    deliberately different from checker.Checker's fail-fast style (used by
+    this project's other plain assert-based test files). This file's whole
+    point is comparing results across four independent scenarios, and across
+    several shells in the bonus check; stopping at the first failure would
+    hide whether everything else still held, which is exactly the question
+    a report of "3 of 24 failed, here's which three" answers and a bare
+    traceback from the first one doesn't."""
+
+    def __init__(self) -> None:
+        self.total = 0
+        self.failures = 0
+
+    def check(self, label: str, condition: bool) -> None:
+        self.total += 1
+        if condition:
+            print(f"  ok  {label}")
+        else:
+            print(f"  FAIL  {label}")
+            self.failures += 1
 
 
-def check(condition: bool, label: str) -> None:
-    global _checks, _fails
-    _checks += 1
-    if condition:
-        print(f"  ok  {label}")
-    else:
-        print(f"  FAIL  {label}")
-        _fails += 1
+tally = Tally()
+check = tally.check
 
 
 def install(home: Path) -> subprocess.CompletedProcess:
@@ -81,11 +93,11 @@ def install(home: Path) -> subprocess.CompletedProcess:
     if (target / ".git").is_dir():
         return subprocess.run(
             ["git", "-C", str(target), "pull"],
-            capture_output=True, text=True,
+            capture_output=True, text=True, check=False,
         )
     return subprocess.run(
         ["git", "clone", REPO_URL, str(target)],
-        capture_output=True, text=True,
+        capture_output=True, text=True, check=False,
     )
 
 
@@ -164,15 +176,15 @@ def check_matches_published_command(workdir: Path) -> None:
 
         env = {**os.environ, "HOME": str(home)}
         result = subprocess.run(
-            [shell, "-c", INSTALL_COMMAND], env=env, capture_output=True, text=True,
+            [shell, "-c", INSTALL_COMMAND], env=env, capture_output=True, text=True, check=False,
         )
-        check(result.returncode == 0,
-              f"the literal published command exits 0 under {shell_name}")
-        check((home / ".claude" / "skills" / "TBaguette" / "README.md").is_file(),
-              f"...and actually installs something, under {shell_name}")
-        check(before == siblings_checksum(home),
-              f"...without touching the sibling skills under {shell_name}, using "
-              "the exact string published on the site, not a reimplementation of it")
+        check(f"the literal published command exits 0 under {shell_name}",
+              result.returncode == 0)
+        check(f"...and actually installs something, under {shell_name}",
+              (home / ".claude" / "skills" / "TBaguette" / "README.md").is_file())
+        check(f"...without touching the sibling skills under {shell_name}, using "
+              "the exact string published on the site, not a reimplementation of it",
+              before == siblings_checksum(home))
 
     if not tested_any:
         print("  (skipped entirely: no POSIX-ish shell on PATH — install() above "
@@ -188,25 +200,25 @@ def main() -> int:
         seed_sibling_skills(home_a)
         before_a = siblings_checksum(home_a)
         result = install(home_a)
-        check(result.returncode == 0, "clone exits 0")
-        check((home_a / ".claude" / "skills" / "TBaguette" / "README.md").is_file(),
-              "TBaguette content actually present")
-        check(before_a == siblings_checksum(home_a),
-              "sibling skills byte-identical after install")
+        check("clone exits 0", result.returncode == 0)
+        check("TBaguette content actually present",
+              (home_a / ".claude" / "skills" / "TBaguette" / "README.md").is_file())
+        check("sibling skills byte-identical after install",
+              before_a == siblings_checksum(home_a))
 
         print("scenario B: re-run when already installed (must update, not error)")
         home_b = home_a  # continues from A, which already installed TBaguette
         before_b = siblings_checksum(home_b)
         result = install(home_b)
         combined_output = (result.stdout or "") + (result.stderr or "")
-        check(result.returncode == 0, "re-run exits 0 (does not error)")
+        check("re-run exits 0 (does not error)", result.returncode == 0)
         check(
+            "re-run reports a pull, not a clone-refused error",
             any(marker in combined_output for marker in
                 ("Already up to date", "Updating", "Fast-forward")),
-            "re-run reports a pull, not a clone-refused error",
         )
-        check(before_b == siblings_checksum(home_b),
-              "sibling skills still byte-identical after re-run")
+        check("sibling skills still byte-identical after re-run",
+              before_b == siblings_checksum(home_b))
 
         print("scenario C: an empty pre-existing TBaguette directory")
         home_c = workdir / "c"
@@ -214,10 +226,10 @@ def main() -> int:
         seed_sibling_skills(home_c)
         before_c = siblings_checksum(home_c)
         result = install(home_c)
-        check(result.returncode == 0, "clone into empty existing dir exits 0")
-        check((home_c / ".claude" / "skills" / "TBaguette" / "README.md").is_file(),
-              "TBaguette content actually present")
-        check(before_c == siblings_checksum(home_c), "sibling skills byte-identical")
+        check("clone into empty existing dir exits 0", result.returncode == 0)
+        check("TBaguette content actually present",
+              (home_c / ".claude" / "skills" / "TBaguette" / "README.md").is_file())
+        check("sibling skills byte-identical", before_c == siblings_checksum(home_c))
 
         print("scenario D: a non-empty, non-git TBaguette directory (real collision)")
         home_d = workdir / "d"
@@ -231,12 +243,12 @@ def main() -> int:
         before_marker = hashlib.sha256(marker_file.read_bytes()).hexdigest()
         before_d = siblings_checksum(home_d)
         result = install(home_d)
-        check(result.returncode != 0,
-              "refuses (nonzero exit) rather than merging into unrelated content")
-        check(hashlib.sha256(marker_file.read_bytes()).hexdigest() == before_marker,
-              "the colliding directory's own content is untouched")
-        check(before_d == siblings_checksum(home_d),
-              "sibling skills byte-identical even in the refusal case")
+        check("refuses (nonzero exit) rather than merging into unrelated content",
+              result.returncode != 0)
+        check("the colliding directory's own content is untouched",
+              hashlib.sha256(marker_file.read_bytes()).hexdigest() == before_marker)
+        check("sibling skills byte-identical even in the refusal case",
+              before_d == siblings_checksum(home_d))
 
         print("bonus: the literal published command string, where a shell exists")
         check_matches_published_command(workdir)
@@ -244,10 +256,10 @@ def main() -> int:
         shutil.rmtree(workdir, ignore_errors=True)
 
     print()
-    if _fails == 0:
-        print(f"{_checks} checks passed.")
+    if tally.failures == 0:
+        print(f"{tally.total} checks passed.")
         return 0
-    print(f"{_fails} of {_checks} checks FAILED.")
+    print(f"{tally.failures} of {tally.total} checks FAILED.")
     return 1
 
 

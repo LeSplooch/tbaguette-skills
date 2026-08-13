@@ -87,7 +87,8 @@ def _build_into(output_dir: Path, content: dict, base_path: str) -> None:
     for skill in skills.values():
         prev_skill, next_skill, siblings = _prev_next_and_siblings(skill, categories, skills)
         html = templates.render_skill_page(
-            skill, prev_skill, next_skill, siblings, categories, base_path
+            skill, prev_skill=prev_skill, next_skill=next_skill, siblings=siblings,
+            categories=categories, base_path=base_path,
         )
         _write(output_dir / "skills" / skill["slug"] / "index.html", html)
 

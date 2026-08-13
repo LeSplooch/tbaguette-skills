@@ -152,13 +152,11 @@ def _is_token_start(text: str, i: int) -> bool:
     text (operators, punctuation, whitespace) isn't emitted one character at
     a time."""
     ch = text[i]
-    if ch in "#'\"@":
-        return True
-    if ch in _IDENT_CHARS:
-        return True
-    if ch == "." and i + 1 < len(text) and text[i + 1] in _DIGIT_CHARS:
-        return True
-    return False
+    return (
+        ch in "#'\"@"
+        or ch in _IDENT_CHARS
+        or (ch == "." and i + 1 < len(text) and text[i + 1] in _DIGIT_CHARS)
+    )
 
 
 def _tokenize(text: str) -> list[tuple[str | None, str]]:
@@ -238,7 +236,7 @@ def highlight_source(source: str) -> list[str]:
     embedded newline and re-wrapped in its own <span> per line, since each
     line becomes its own list item in the rendered code block and a single
     <span> can't straddle two of those."""
-    core = source[:-1] if source.endswith("\n") else source
+    core = source.removesuffix("\n")
     tokens = _tokenize(core)
 
     lines: list[list[tuple[str | None, str]]] = [[]]

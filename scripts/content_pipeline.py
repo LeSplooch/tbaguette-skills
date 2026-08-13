@@ -565,7 +565,7 @@ def _render_markdown_link(
     resolve_relative_link: Callable[[str], str | None] | None,
 ) -> str:
     rendered_text = render_inline_markdown(link_text, resolve_relative_link)
-    if href.startswith("http://") or href.startswith("https://"):
+    if href.startswith(("http://", "https://")):
         return f'<a href="{escape_html(href)}">{rendered_text}</a>'
 
     resolved_href = resolve_relative_link(href) if resolve_relative_link else None
@@ -663,15 +663,12 @@ def _is_block_start(lines: list[str], index: int) -> bool:
     directly followed by a list, and mid-item wrapped continuation text).
     """
     line = lines[index]
-    if _HEADING_RE.match(line):
-        return True
-    if _FENCE_RE.match(line.strip()):
-        return True
-    if _is_table_start(lines, index):
-        return True
-    if _LIST_ITEM_RE.match(line):
-        return True
-    return False
+    return bool(
+        _HEADING_RE.match(line)
+        or _FENCE_RE.match(line.strip())
+        or _is_table_start(lines, index)
+        or _LIST_ITEM_RE.match(line)
+    )
 
 
 def _consume_heading(
@@ -754,11 +751,7 @@ def _split_table_row(line: str) -> list[str]:
     the backslash-escape to keep it from being read as extra columns; a
     naive split('|') breaks those rows into the wrong number of cells.
     """
-    trimmed = line.strip()
-    if trimmed.startswith("|"):
-        trimmed = trimmed[1:]
-    if trimmed.endswith("|"):
-        trimmed = trimmed[:-1]
+    trimmed = line.strip().removeprefix("|").removesuffix("|")
     cells = _UNESCAPED_PIPE_RE.split(trimmed)
     return [cell.strip().replace("\\|", "|") for cell in cells]
 

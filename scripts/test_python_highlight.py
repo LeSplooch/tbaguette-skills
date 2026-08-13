@@ -22,17 +22,11 @@ import re as _re
 from html import unescape as _unescape
 from pathlib import Path
 
+from checker import Checker
 from python_highlight import highlight_source
 
-_checks_run = 0
-
-
-def check(label: str, condition: bool) -> None:
-    global _checks_run
-    _checks_run += 1
-    if not condition:
-        raise AssertionError(f"FAILED: {label}")
-    print(f"  ok  {label}")
+checker = Checker()
+check = checker.check
 
 
 def _strip_markup(html_lines: list[str], original: str) -> str:
@@ -175,7 +169,7 @@ def main() -> None:
           "the round trip and is colored as one string",
           any('class="tok-string">f&quot;' in h for h in lines))
 
-    print(f"\n{_checks_run} checks passed.")
+    print(f"\n{checker.total} checks passed.")
 
 
 if __name__ == "__main__":

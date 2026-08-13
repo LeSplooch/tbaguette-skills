@@ -191,24 +191,36 @@
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-keyword">import</span> tempfile</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-keyword">from</span> pathlib <span class="tok-keyword">import</span> Path</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">sys.path.insert(<span class="tok-number">0</span>, str(Path(__file__).resolve().parent))</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-keyword">from</span> templates <span class="tok-keyword">import</span> INSTALL_COMMAND  <span class="tok-comment"># noqa: E402</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-keyword">from</span> templates <span class="tok-keyword">import</span> INSTALL_COMMAND</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">REPO_URL = <span class="tok-string">&quot;https://github.com/LeSplooch/tbaguette-skills.git&quot;</span></span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">_checks = <span class="tok-number">0</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">_fails = <span class="tok-number">0</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-keyword">class</span> Tally:</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-string">&quot;&quot;&quot;Accumulates check() results instead of raising on the first failure —</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    deliberately different from checker.Checker&#x27;s fail-fast style (used by</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    this project&#x27;s other plain assert-based test files). This file&#x27;s whole</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    point is comparing results across four independent scenarios, and across</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    several shells in the bonus check; stopping at the first failure would</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    hide whether everything else still held, which is exactly the question</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    a report of &quot;3 of 24 failed, here&#x27;s which three&quot; answers and a bare</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-string">    traceback from the first one doesn&#x27;t.&quot;&quot;&quot;</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">def</span> __init__(self) -&gt; <span class="tok-const">None</span>:</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        self.total = <span class="tok-number">0</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        self.failures = <span class="tok-number">0</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">def</span> check(self, label: str, condition: bool) -&gt; <span class="tok-const">None</span>:</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        self.total += <span class="tok-number">1</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        <span class="tok-keyword">if</span> condition:</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">            print(<span class="tok-string">f&quot;  ok  {label}&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        <span class="tok-keyword">else</span>:</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">            print(<span class="tok-string">f&quot;  FAIL  {label}&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">            self.failures += <span class="tok-number">1</span></span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-keyword">def</span> check(condition: bool, label: str) -&gt; <span class="tok-const">None</span>:</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">global</span> _checks, _fails</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    _checks += <span class="tok-number">1</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">if</span> condition:</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        print(<span class="tok-string">f&quot;  ok  {label}&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">else</span>:</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        print(<span class="tok-string">f&quot;  FAIL  {label}&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        _fails += <span class="tok-number">1</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">tally = Tally()</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">check = tally.check</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"><span class="tok-keyword">def</span> install(home: Path) -&gt; subprocess.CompletedProcess:</span></li>
@@ -220,11 +232,11 @@
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">if</span> (target / <span class="tok-string">&quot;.git&quot;</span>).is_dir():</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        <span class="tok-keyword">return</span> subprocess.run(</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">            [<span class="tok-string">&quot;git&quot;</span>, <span class="tok-string">&quot;-C&quot;</span>, str(target), <span class="tok-string">&quot;pull&quot;</span>],</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">            capture_output=<span class="tok-const">True</span>, text=<span class="tok-const">True</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">            capture_output=<span class="tok-const">True</span>, text=<span class="tok-const">True</span>, check=<span class="tok-const">False</span>,</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        )</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">return</span> subprocess.run(</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        [<span class="tok-string">&quot;git&quot;</span>, <span class="tok-string">&quot;clone&quot;</span>, REPO_URL, str(target)],</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        capture_output=<span class="tok-const">True</span>, text=<span class="tok-const">True</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        capture_output=<span class="tok-const">True</span>, text=<span class="tok-const">True</span>, check=<span class="tok-const">False</span>,</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">    )</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
@@ -303,15 +315,15 @@
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        env = {**os.environ, <span class="tok-string">&quot;HOME&quot;</span>: str(home)}</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        result = subprocess.run(</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">            [shell, <span class="tok-string">&quot;-c&quot;</span>, INSTALL_COMMAND], env=env, capture_output=<span class="tok-const">True</span>, text=<span class="tok-const">True</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">            [shell, <span class="tok-string">&quot;-c&quot;</span>, INSTALL_COMMAND], env=env, capture_output=<span class="tok-const">True</span>, text=<span class="tok-const">True</span>, check=<span class="tok-const">False</span>,</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        )</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(result.returncode == <span class="tok-number">0</span>,</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">f&quot;the literal published command exits 0 under {shell_name}&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check((home / <span class="tok-string">&quot;.claude&quot;</span> / <span class="tok-string">&quot;skills&quot;</span> / <span class="tok-string">&quot;TBaguette&quot;</span> / <span class="tok-string">&quot;README.md&quot;</span>).is_file(),</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">f&quot;...and actually installs something, under {shell_name}&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(before == siblings_checksum(home),</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">f&quot;...without touching the sibling skills under {shell_name}, using &quot;</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;the exact string published on the site, not a reimplementation of it&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">f&quot;the literal published command exits 0 under {shell_name}&quot;</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              result.returncode == <span class="tok-number">0</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">f&quot;...and actually installs something, under {shell_name}&quot;</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              (home / <span class="tok-string">&quot;.claude&quot;</span> / <span class="tok-string">&quot;skills&quot;</span> / <span class="tok-string">&quot;TBaguette&quot;</span> / <span class="tok-string">&quot;README.md&quot;</span>).is_file())</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">f&quot;...without touching the sibling skills under {shell_name}, using &quot;</span></span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;the exact string published on the site, not a reimplementation of it&quot;</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              before == siblings_checksum(home))</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">if</span> <span class="tok-keyword">not</span> tested_any:</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        print(<span class="tok-string">&quot;  (skipped entirely: no POSIX-ish shell on PATH — install() above &quot;</span></span></li>
@@ -327,25 +339,25 @@
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        seed_sibling_skills(home_a)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        before_a = siblings_checksum(home_a)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        result = install(home_a)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(result.returncode == <span class="tok-number">0</span>, <span class="tok-string">&quot;clone exits 0&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check((home_a / <span class="tok-string">&quot;.claude&quot;</span> / <span class="tok-string">&quot;skills&quot;</span> / <span class="tok-string">&quot;TBaguette&quot;</span> / <span class="tok-string">&quot;README.md&quot;</span>).is_file(),</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;TBaguette content actually present&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(before_a == siblings_checksum(home_a),</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;sibling skills byte-identical after install&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">&quot;clone exits 0&quot;</span>, result.returncode == <span class="tok-number">0</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">&quot;TBaguette content actually present&quot;</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              (home_a / <span class="tok-string">&quot;.claude&quot;</span> / <span class="tok-string">&quot;skills&quot;</span> / <span class="tok-string">&quot;TBaguette&quot;</span> / <span class="tok-string">&quot;README.md&quot;</span>).is_file())</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">&quot;sibling skills byte-identical after install&quot;</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              before_a == siblings_checksum(home_a))</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        print(<span class="tok-string">&quot;scenario B: re-run when already installed (must update, not error)&quot;</span>)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        home_b = home_a  <span class="tok-comment"># continues from A, which already installed TBaguette</span></span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        before_b = siblings_checksum(home_b)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        result = install(home_b)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        combined_output = (result.stdout <span class="tok-keyword">or</span> <span class="tok-string">&quot;&quot;</span>) + (result.stderr <span class="tok-keyword">or</span> <span class="tok-string">&quot;&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(result.returncode == <span class="tok-number">0</span>, <span class="tok-string">&quot;re-run exits 0 (does not error)&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">&quot;re-run exits 0 (does not error)&quot;</span>, result.returncode == <span class="tok-number">0</span>)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">            <span class="tok-string">&quot;re-run reports a pull, not a clone-refused error&quot;</span>,</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">            any(marker <span class="tok-keyword">in</span> combined_output <span class="tok-keyword">for</span> marker <span class="tok-keyword">in</span></span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">                (<span class="tok-string">&quot;Already up to date&quot;</span>, <span class="tok-string">&quot;Updating&quot;</span>, <span class="tok-string">&quot;Fast-forward&quot;</span>)),</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">            <span class="tok-string">&quot;re-run reports a pull, not a clone-refused error&quot;</span>,</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        )</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(before_b == siblings_checksum(home_b),</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;sibling skills still byte-identical after re-run&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">&quot;sibling skills still byte-identical after re-run&quot;</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              before_b == siblings_checksum(home_b))</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        print(<span class="tok-string">&quot;scenario C: an empty pre-existing TBaguette directory&quot;</span>)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        home_c = workdir / <span class="tok-string">&quot;c&quot;</span></span></li>
@@ -353,10 +365,10 @@
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        seed_sibling_skills(home_c)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        before_c = siblings_checksum(home_c)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        result = install(home_c)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(result.returncode == <span class="tok-number">0</span>, <span class="tok-string">&quot;clone into empty existing dir exits 0&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check((home_c / <span class="tok-string">&quot;.claude&quot;</span> / <span class="tok-string">&quot;skills&quot;</span> / <span class="tok-string">&quot;TBaguette&quot;</span> / <span class="tok-string">&quot;README.md&quot;</span>).is_file(),</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;TBaguette content actually present&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(before_c == siblings_checksum(home_c), <span class="tok-string">&quot;sibling skills byte-identical&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">&quot;clone into empty existing dir exits 0&quot;</span>, result.returncode == <span class="tok-number">0</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">&quot;TBaguette content actually present&quot;</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              (home_c / <span class="tok-string">&quot;.claude&quot;</span> / <span class="tok-string">&quot;skills&quot;</span> / <span class="tok-string">&quot;TBaguette&quot;</span> / <span class="tok-string">&quot;README.md&quot;</span>).is_file())</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">&quot;sibling skills byte-identical&quot;</span>, before_c == siblings_checksum(home_c))</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        print(<span class="tok-string">&quot;scenario D: a non-empty, non-git TBaguette directory (real collision)&quot;</span>)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        home_d = workdir / <span class="tok-string">&quot;d&quot;</span></span></li>
@@ -370,12 +382,12 @@
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        before_marker = hashlib.sha256(marker_file.read_bytes()).hexdigest()</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        before_d = siblings_checksum(home_d)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        result = install(home_d)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(result.returncode != <span class="tok-number">0</span>,</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;refuses (nonzero exit) rather than merging into unrelated content&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(hashlib.sha256(marker_file.read_bytes()).hexdigest() == before_marker,</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;the colliding directory&#x27;s own content is untouched&quot;</span>)</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(before_d == siblings_checksum(home_d),</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">              <span class="tok-string">&quot;sibling skills byte-identical even in the refusal case&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">&quot;refuses (nonzero exit) rather than merging into unrelated content&quot;</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              result.returncode != <span class="tok-number">0</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">&quot;the colliding directory&#x27;s own content is untouched&quot;</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              hashlib.sha256(marker_file.read_bytes()).hexdigest() == before_marker)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        check(<span class="tok-string">&quot;sibling skills byte-identical even in the refusal case&quot;</span>,</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">              before_d == siblings_checksum(home_d))</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        print(<span class="tok-string">&quot;bonus: the literal published command string, where a shell exists&quot;</span>)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        check_matches_published_command(workdir)</span></li>
@@ -383,10 +395,10 @@
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        shutil.rmtree(workdir, ignore_errors=<span class="tok-const">True</span>)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">    print()</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">if</span> _fails == <span class="tok-number">0</span>:</span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">        print(<span class="tok-string">f&quot;{_checks} checks passed.&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">if</span> tally.failures == <span class="tok-number">0</span>:</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">        print(<span class="tok-string">f&quot;{tally.total} checks passed.&quot;</span>)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">        <span class="tok-keyword">return</span> <span class="tok-number">0</span></span></li>
-<li><span class="code-block__line-number"></span><span class="code-block__line-code">    print(<span class="tok-string">f&quot;{_fails} of {_checks} checks FAILED.&quot;</span>)</span></li>
+<li><span class="code-block__line-number"></span><span class="code-block__line-code">    print(<span class="tok-string">f&quot;{tally.failures} of {tally.total} checks FAILED.&quot;</span>)</span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code">    <span class="tok-keyword">return</span> <span class="tok-number">1</span></span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>
 <li><span class="code-block__line-number"></span><span class="code-block__line-code"> </span></li>

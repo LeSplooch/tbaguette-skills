@@ -10,6 +10,7 @@ Usage:
 
 from pathlib import Path
 
+from checker import Checker
 from templates import (
     INSTALL_COMMAND,
     INSTALL_COMMAND_CMD,
@@ -76,15 +77,8 @@ FIXTURE = {
 
 PREVIEW_DIR = Path(__file__).resolve().parent.parent / "_preview"
 
-_checks_run = 0
-
-
-def check(label: str, condition: bool) -> None:
-    global _checks_run
-    _checks_run += 1
-    if not condition:
-        raise AssertionError(f"FAILED: {label}")
-    print(f"  ok  {label}")
+checker = Checker()
+check = checker.check
 
 
 def write_preview(filename: str, html: str) -> Path:
@@ -122,7 +116,7 @@ def check_escaping() -> None:
     check("index: escaped name form is present", "&lt;em&gt;" in index_html)
     check("index: & in a summary field is escaped", "bold-looking&lt;/b&gt; text &amp; ampersands" in index_html)
 
-    page_html = render_skill_page(skill, None, None, [], categories)
+    page_html = render_skill_page(skill, prev_skill=None, next_skill=None, siblings=[], categories=categories)
     check("page: raw <script> from a description field never appears unescaped", "<script>alert(1)</script>" not in page_html)
     check("page: escaped description form is present", "&lt;script&gt;alert(1)&lt;/script&gt;" in page_html)
     check("page: body_html's own tags are NOT double-escaped (verbatim-injection contract)", "<p>pre-rendered, injected verbatim on purpose</p>" in page_html)
@@ -147,7 +141,9 @@ def check_base_path() -> None:
     check("un-prefixed root-relative form is absent once base_path is set", '"/assets/styles.css"' not in index_html)
 
     formidable = skills["formidable"]
-    page_html = render_skill_page(formidable, None, None, [], categories, base_path=base)
+    page_html = render_skill_page(
+        formidable, prev_skill=None, next_skill=None, siblings=[], categories=categories, base_path=base
+    )
     check("prefixed breadcrumb home link", f'href="{base}/"' in page_html)
     check("prefixed icon sprite reference", f'{base}/assets/icons.svg#' in page_html)
     print("  base_path check passed")
@@ -288,7 +284,9 @@ def main() -> None:
     # real empty state, not a hypothetical one, so it's worth its own file.
     print("render_skill_page (formidable)")
     formidable = skills["formidable"]
-    formidable_html = render_skill_page(formidable, None, None, [], categories)
+    formidable_html = render_skill_page(
+        formidable, prev_skill=None, next_skill=None, siblings=[], categories=categories
+    )
     skill_path = write_preview("skill.html", formidable_html)
     check("non-empty", len(formidable_html) > 0)
     check("looks like a document", "<html" in formidable_html)
@@ -317,7 +315,9 @@ def main() -> None:
     ftt = skills["flaky-test-triage"]
     testing_siblings = [dtd, ftt]
 
-    dtd_html = render_skill_page(dtd, None, ftt, testing_siblings, categories)
+    dtd_html = render_skill_page(
+        dtd, prev_skill=None, next_skill=ftt, siblings=testing_siblings, categories=categories
+    )
     dtd_path = write_preview("skill-testing-1.html", dtd_html)
     check("table from body_html is present", "<table>" in dtd_html)
     check("next-only: has a next link", 'prevnext__link--next' in dtd_html)
@@ -325,7 +325,9 @@ def main() -> None:
     check("see-also excludes self, includes sibling", "flaky-test-triage" in dtd_html)
     print(f"  wrote {dtd_path}")
 
-    ftt_html = render_skill_page(ftt, dtd, None, testing_siblings, categories)
+    ftt_html = render_skill_page(
+        ftt, prev_skill=dtd, next_skill=None, siblings=testing_siblings, categories=categories
+    )
     ftt_path = write_preview("skill-testing-2.html", ftt_html)
     check("prev-only: has a previous label", ">Previous<" in ftt_html)
     check("prev-only: has no next-modifier link", 'prevnext__link--next' not in ftt_html)
@@ -336,7 +338,7 @@ def main() -> None:
     check_base_path()
     check_verify_install_page()
 
-    print(f"\n{_checks_run} checks passed.")
+    print(f"\n{checker.total} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")
     print("Serve from the project root (e.g. `python3 -m http.server 8000`) and open:")
     print("  /_preview/index.html")

@@ -9,7 +9,7 @@ Public API — the contract the integration step (``generate.py``) calls once
 content is available:
 
     render_index(categories, skills, base_path="") -> str
-    render_skill_page(skill, prev_skill, next_skill, siblings, categories,
+    render_skill_page(skill, *, prev_skill, next_skill, siblings, categories,
                        base_path="") -> str
 
 Both are pure functions of their arguments: no file I/O, no network, no
@@ -529,7 +529,7 @@ def _render_see_also(skill: dict, siblings: list[dict], base_path: str = "") -> 
 </div>"""
 
 
-def render_skill_page(skill: dict, prev_skill: dict | None, next_skill: dict | None,
+def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict | None,
                        siblings: list[dict], categories: list[dict],
                        base_path: str = "") -> str:
     """Full HTML document string for one skill's page (siblings = other skills

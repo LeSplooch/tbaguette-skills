@@ -16,16 +16,10 @@ import tempfile
 from pathlib import Path
 
 import generate
+from checker import Checker
 
-_checks_run = 0
-
-
-def check(label: str, condition: bool) -> None:
-    global _checks_run
-    _checks_run += 1
-    if not condition:
-        raise AssertionError(f"FAILED: {label}")
-    print(f"  ok  {label}")
+checker = Checker()
+check = checker.check
 
 
 def main() -> None:
@@ -105,7 +99,7 @@ def main() -> None:
     finally:
         shutil.rmtree(tmp_root, ignore_errors=True)
 
-    print(f"\n{_checks_run} checks passed.")
+    print(f"\n{checker.total} checks passed.")
 
 
 if __name__ == "__main__":
