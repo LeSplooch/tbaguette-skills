@@ -1,52 +1,46 @@
-# La Boulangerie TBaguette
+# TBaguette
 
-A static showcase-and-reference site for the [TBaguette](https://github.com) skills
-plugin — 64 project-, stack-, and language-agnostic Claude Code skills, plus
-`formidable`, a design-craft skill covering every UI stack.
+65 skills for [Claude Code](https://claude.com/claude-code) — judgment calls, code
+comprehension, change discipline, testing, debugging, systems design, defensive
+security, communication, and tooling. Every one is project-agnostic, stack-agnostic,
+and language-agnostic, so the same skill works whether you're in a Rust firmware repo
+or a Ruby monolith.
 
-This site doubles as a live test of the skills it showcases: it was built by agents
-instructed to actually use `TBaguette:formidable`, `TBaguette:designing-apis`,
-`TBaguette:naming-things`, `TBaguette:handling-untrusted-input`, and others while
-doing the work, not just describe them.
+**[Browse them all → lesplooch.github.io/tbaguette-skills](https://lesplooch.github.io/tbaguette-skills/)**
 
-## Why it looks like a bakery
+That's the fastest way to see what's actually in here — searchable, organized by
+category, every skill readable in full.
 
-"Sumptuous" was the brief. This is the "well made" reading of it: a bakery concept
-carried through brand, palette, and type — not through puns on every category name or
-literal bread clip-art. See `docs/superpowers/specs/2026-08-13-tbaguette-showcase-design.md`
-for the full design rationale, locked palette/type values, and content schema.
-
-## Structure
-
-```
-index.html              generated — landing page
-skills/<slug>/index.html generated — one page per skill, 64 of them
-assets/styles.css        hand-authored — the whole design system
-assets/site.js           hand-authored — search/filter, theme toggle, tabs
-assets/icons.svg         hand-authored — line-mark sprite
-scripts/content_pipeline.py  parses ~/.claude/skills/TBaguette/skills/*/SKILL.md → content.json
-scripts/templates.py         renders content.json → the HTML pages
-scripts/generate.py          orchestrator: runs both, writes the site
-```
-
-`index.html` and everything under `skills/` are generated output — each carries a
-"do not hand-edit" header comment. The actual source of truth is the skill files
-themselves, under `~/.claude/skills/TBaguette/`.
-
-## Regenerating
+## Install
 
 ```bash
-python3 scripts/generate.py
+git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette
 ```
 
-Stdlib only — no `pip install`, no npm, no build tool. Re-run this after editing any
-TBaguette skill to pick up the change.
+Restart Claude Code (or run `/reload-plugins`). It loads as the `TBaguette@skills-dir`
+plugin — invoke any skill directly (`TBaguette:formidable`, `TBaguette:knowing-when-to-stop`, ...)
+or let them trigger automatically when your situation matches.
 
-## Viewing
+## What's in it
+
+- **`formidable`** — design craft for every UI stack: web, native mobile, desktop,
+  terminal, CLI output, game HUD, embedded/e-ink, XR, email, print, voice, dense data.
+- **Judgment and meta** — calibrating confidence, red-teaming your own work, knowing
+  when to stop, and `karen-and-the-manager`, a persona-forced pass that refuses to be
+  satisfied until it's found everything.
+- **Reading code, landing changes, testing, debugging, designing systems, defensive
+  security, communicating, environment and tooling** — 8 more categories, 57 more
+  skills. Full breakdown in [`CATALOG.md`](CATALOG.md) or, better, on the site above.
+
+## This repo is also the site's source
+
+`docs/` is the generated static site (GitHub Pages serves it straight from there).
+`skills/` is the actual plugin content. Edit a skill, then:
 
 ```bash
-python3 -m http.server 8000
+python3 scripts/generate.py --base-path /tbaguette-skills
 ```
 
-then open `http://localhost:8000/`. Root-relative asset paths mean it needs to be
-served, not opened directly via `file://`.
+regenerates the whole site — stdlib only, no install step. Design rationale — the
+palette, the content schema, why it looks like a bakery — is in
+[`superpowers/specs/2026-08-13-tbaguette-showcase-design.md`](superpowers/specs/2026-08-13-tbaguette-showcase-design.md).
