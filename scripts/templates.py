@@ -331,7 +331,10 @@ def _render_hero(skill_count: int, category_count: int, base_path: str = "") -> 
     lede = (
         f"{skill_count} Claude Code skills for the craft between the ticket and the "
         f"commit, across {category_count} categories — findable by name, browsable "
-        "below, and written like something a colleague actually handed you."
+        "below, and written like something a colleague actually handed you. Grown "
+        "out of my own projects over time, this collection is created and updated "
+        "automatically — and often — by Claude Opus, always its latest version, "
+        "as I code."
     )
     return f"""<section class="hero">
   <div class="container">
