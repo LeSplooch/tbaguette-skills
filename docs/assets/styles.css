@@ -1559,3 +1559,64 @@ code {
 @media (max-width: 420px) {
   .prevnext__link--next { text-align: left; }
 }
+
+/* ---------------------------------------------------------------------------
+   18. Update-check modal — reload-only, centered, blurred backdrop
+   ------------------------------------------------------------------------- */
+
+.update-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: rgb(0 0 0 / 45%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.update-modal {
+  width: 100%;
+  max-width: 24rem;
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 52px -18px rgb(0 0 0 / 45%);
+  text-align: center;
+}
+
+.update-modal__title {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-4);
+  font-weight: 620;
+  color: var(--text-primary);
+}
+
+.update-modal__body {
+  margin: 0 0 var(--space-5);
+  color: var(--text-secondary);
+}
+
+.update-modal__reload {
+  padding: var(--space-3) var(--space-6);
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--accent-solid);
+  color: var(--text-on-accent-solid);
+  font-family: var(--font-body);
+  font-size: var(--text-2);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--duration-micro) var(--ease-out);
+}
+
+.update-modal__reload:hover { background: var(--accent-solid-hover); }
+
+.update-modal__reload:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}

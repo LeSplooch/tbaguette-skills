@@ -1,6 +1,6 @@
 /*
  * La Boulangerie TBaguette — site.js
- * Vanilla JS, no dependencies. Five independent features, each a no-op if
+ * Vanilla JS, no dependencies. Seven independent features, each a no-op if
  * its markup isn't on the current page:
  *   - theme toggle   (every page)
  *   - search/filter  (landing page only)
@@ -9,6 +9,11 @@
  *   - copy install command (landing page only; one button per platform tab)
  *   - header "Updated" time (every page — formats the baked-in UTC instant
  *                             as the visitor's local time)
+ *   - site update check (every page — polls docs/version.txt every 10-12s;
+ *                         on a mismatch, shows a reload-only modal)
+ *   - post-reload scroll restore (every page — companion to the update
+ *                                  check; restores scroll position after
+ *                                  the reload it triggered)
  * Loaded with `defer`, so the DOM is fully parsed before any of this runs —
  * no DOMContentLoaded wrapper needed.
  */
@@ -341,9 +346,115 @@
     focusPanelFromHash();
   }
 
+  // -------------------------------------------------------------------
+  // Site update check — polls a tiny generated file for a newer build,
+  // then prompts a reload. Reload-only by design: no dismiss/snooze/Esc/
+  // backdrop-click, since the point is to not leave a visitor on a stale
+  // page. Scroll position is saved before reloading and restored after,
+  // via initScrollRestore() below.
+  // -------------------------------------------------------------------
+
+  var SCROLL_RESTORE_KEY = 'tbaguette-reload-scroll-y';
+  var UPDATE_POLL_MIN_MS = 10000;
+  var UPDATE_POLL_MAX_MS = 12000;
+
+  function showUpdateModal() {
+    if (document.querySelector('.update-modal-overlay')) return;
+
+    var overlay = document.createElement('div');
+    overlay.className = 'update-modal-overlay';
+    overlay.innerHTML =
+      '<div class="update-modal" role="alertdialog" aria-modal="true" ' +
+      'aria-labelledby="update-modal-title" aria-describedby="update-modal-body">' +
+      '<p class="update-modal__title" id="update-modal-title">New version available</p>' +
+      '<p class="update-modal__body" id="update-modal-body">This page has been updated. Reload to see the latest.</p>' +
+      '<button class="update-modal__reload" type="button">Reload</button>' +
+      '</div>';
+
+    // Genuinely modal, not just visually on top: everything already in
+    // <body> (skip link, header, main, footer) becomes untabbable and
+    // unclickable. The overlay itself is appended after, so it's never
+    // included in this pass.
+    toArray(document.body.children).forEach(function (el) {
+      el.setAttribute('inert', '');
+    });
+    document.body.appendChild(overlay);
+
+    var reloadButton = overlay.querySelector('.update-modal__reload');
+    reloadButton.addEventListener('click', function () {
+      try {
+        sessionStorage.setItem(SCROLL_RESTORE_KEY, String(window.scrollY));
+      } catch (error) {
+        // Private browsing / storage disabled: reload still happens, it
+        // just won't restore scroll position.
+      }
+      window.location.reload();
+    });
+    reloadButton.focus();
+  }
+
+  function initVersionCheck() {
+    var timeEl = document.querySelector('[data-format-updated]');
+    if (!timeEl) return;
+    var versionUrl = timeEl.getAttribute('data-version-url');
+    var initialVersion = timeEl.getAttribute('datetime');
+    if (!versionUrl || !initialVersion || !window.fetch) return;
+
+    function scheduleNext() {
+      var delay = UPDATE_POLL_MIN_MS + Math.random() * (UPDATE_POLL_MAX_MS - UPDATE_POLL_MIN_MS);
+      setTimeout(poll, delay);
+    }
+
+    function poll() {
+      // Skip the network call while backgrounded; the timer chain keeps
+      // running, so a refocused tab notices within one interval.
+      if (document.hidden) {
+        scheduleNext();
+        return;
+      }
+      // cache: 'no-store' bypasses the browser's own HTTP cache; the ?t=
+      // query param is belt-and-suspenders against any intermediate cache
+      // that doesn't honor that — GitHub Pages' CDN headers aren't
+      // something this project controls.
+      var bustedUrl = versionUrl + (versionUrl.indexOf('?') === -1 ? '?' : '&') + 't=' + Date.now();
+      fetch(bustedUrl, { cache: 'no-store' }).then(function (response) {
+        if (!response.ok) throw new Error('version check failed: ' + response.status);
+        return response.text();
+      }).then(function (text) {
+        var latest = text.trim();
+        if (latest && latest !== initialVersion) {
+          showUpdateModal();
+        } else {
+          scheduleNext();
+        }
+      }).catch(function () {
+        // Offline / transient failure: try again next cycle, no error
+        // surfaced to the visitor.
+        scheduleNext();
+      });
+    }
+
+    scheduleNext();
+  }
+
+  function initScrollRestore() {
+    var saved;
+    try {
+      saved = sessionStorage.getItem(SCROLL_RESTORE_KEY);
+      if (saved !== null) sessionStorage.removeItem(SCROLL_RESTORE_KEY);
+    } catch (error) {
+      return;
+    }
+    if (saved === null) return;
+    var y = parseInt(saved, 10);
+    if (!isNaN(y)) window.scrollTo(0, y);
+  }
+
   initThemeToggle();
   initSearch();
   initInstallCopy();
   initTabs();
   initUpdatedTime();
+  initScrollRestore();
+  initVersionCheck();
 })();
