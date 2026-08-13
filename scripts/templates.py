@@ -213,6 +213,11 @@ def _render_install(base_path: str = "") -> str:
         <span data-copy-label>Copy</span>
       </button>
     </div>
+    <p class="install-frame__note">
+      {_icon("icon-check", base_path=base_path)}
+      <span>Only ever touches this folder — verified against your other skills, not
+      just claimed. <a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/scripts/test_install_command.sh">See how</a>.</span>
+    </p>
   </div>
 </div>"""
 

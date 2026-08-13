@@ -549,6 +549,38 @@ code {
 
 .install-frame__body { padding: var(--space-5); }
 
+.install-frame__note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.install-frame__note .icon {
+  flex-shrink: 0;
+  width: 1.1em;
+  height: 1.1em;
+  margin-top: 0.15em;
+  color: var(--text-accent);
+}
+
+.install-frame__note a {
+  color: var(--text-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--text-accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  border-radius: 3px;
+  transition: text-decoration-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.install-frame__note a:hover {
+  text-decoration-color: currentColor;
+  background: color-mix(in oklch, var(--text-accent) 12%, transparent);
+}
+
 .install {
   display: flex;
   align-items: stretch;

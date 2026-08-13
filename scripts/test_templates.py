@@ -184,6 +184,12 @@ def main() -> None:
           "headers elsewhere on the page, so this checks the label's own slice, not "
           "just presence anywhere)",
           '#icon-crust' in index_html[label_start:label_end])
+    check("verification note sits after the command and before the lede, inside the frame",
+          index_html.index('id="install-command"') < index_html.index("install-frame__note")
+          < index_html.index("hero__lede"))
+    check("verification note links to the actual test a visitor can go read",
+          'href="https://github.com/LeSplooch/tbaguette-skills/blob/master/scripts/test_install_command.sh"'
+          in index_html)
     print(f"  wrote {index_path}")
 
     # --- render_skill_page: formidable (the interesting one) --------------
