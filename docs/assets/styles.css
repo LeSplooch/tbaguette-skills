@@ -22,7 +22,8 @@
   13. Prev/next + see-also
   14. Footer
   15. Motion + reduced-motion
-  16. Responsive notes (fluid by default; hard breakpoints only where noted)
+  16. Shell code block (install-verification page: line numbers, syntax tokens)
+  17. Responsive notes (fluid by default; hard breakpoints only where noted)
 */
 
 /* ---------------------------------------------------------------------------
@@ -163,6 +164,16 @@
   /* usage: shadow color mix-ins */
   --shadow-ink: 20 10% 3%;
 
+  /* usage: shell syntax highlighting on the install-verification page.
+     Each independently verified >=4.5:1 against --surface (the code
+     block's own background). --code-var deliberately reuses --text-accent
+     rather than adding a seventh hue — one gold thread running through
+     variables everywhere on the site, not a separate code-only accent. */
+  --code-comment: #a08868;
+  --code-string: #e2916a;
+  --code-keyword: #a7b98a;
+  --code-cmdsub: #d4a5a5;
+
   /* --- space: 4px base steps, ordinal (never t-shirt sizes — see naming-things) --- */
   --space-1: 0.25rem;   /* 4px  */
   --space-2: 0.5rem;    /* 8px  */
@@ -230,6 +241,11 @@
   --border-strong: rgb(36 26 18 / 20%);
   --focus-ring: var(--gold-700);
   --shadow-ink: 30 25% 14%;
+
+  --code-comment: #6f5b3e;
+  --code-string: #96461f;
+  --code-keyword: #4c5c34;
+  --code-cmdsub: #8f4a4a;
 }
 
 /* ---------------------------------------------------------------------------
@@ -1206,7 +1222,81 @@ code {
 }
 
 /* ---------------------------------------------------------------------------
-   16. Responsive
+   16. Shell code block — install-verification page
+   One scroll container for the whole block, not one per line, so a long
+   line's horizontal scroll stays in sync with every other line rather than
+   each drifting independently. The line-number gutter is sticky within
+   that same container, so numbers stay pinned to the left edge while the
+   code scrolls under them — a real editor's gutter behavior, no JS.
+   ------------------------------------------------------------------------- */
+
+.code-block {
+  margin-top: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.code-block__scroll {
+  overflow-x: auto;
+  padding-block: var(--space-4);
+  border-radius: inherit;
+}
+
+.code-block__lines {
+  list-style: none;
+  counter-reset: line;
+  margin: 0;
+  padding: 0;
+  width: max-content;
+  min-width: 100%;
+  font-family: var(--font-mono);
+  font-size: var(--text-2);
+  line-height: 1.7;
+}
+
+.code-block__lines li {
+  counter-increment: line;
+  display: flex;
+}
+
+.code-block__line-number {
+  position: sticky;
+  left: 0;
+  flex-shrink: 0;
+  width: 3em;
+  padding-inline: var(--space-3) var(--space-4);
+  text-align: right;
+  color: var(--text-secondary);
+  opacity: 0.55;
+  background: var(--surface);
+  user-select: none;
+  transition: background-color var(--duration-micro) var(--ease-out);
+}
+
+.code-block__line-number::before { content: counter(line); }
+
+.code-block__line-code {
+  padding-inline-end: var(--space-6);
+  white-space: pre;
+  transition: background-color var(--duration-micro) var(--ease-out);
+}
+
+.code-block__lines li:hover .code-block__line-number,
+.code-block__lines li:hover .code-block__line-code {
+  background: var(--surface-hover);
+}
+
+/* Comments recede via italic as a second channel, not color alone — the
+   one place on this page that isn't purely a color distinction. */
+.tok-comment { color: var(--code-comment); font-style: italic; }
+.tok-string { color: var(--code-string); }
+.tok-cmdsub { color: var(--code-cmdsub); }
+.tok-keyword { color: var(--code-keyword); }
+.tok-var { color: var(--text-accent); }
+
+/* ---------------------------------------------------------------------------
+   17. Responsive
    Layout is fluid by default (clamp() type, auto-fill grid, flex-wrap) so most
    widths need no explicit rule. The few true reorganizations are declared
    locally above (footer to two columns at 720px, container padding at 640px).

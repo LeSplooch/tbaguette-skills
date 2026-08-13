@@ -10,7 +10,14 @@ Usage:
 
 from pathlib import Path
 
-from templates import INSTALL_COMMAND, escape_html, render_index, render_skill_page
+from templates import (
+    INSTALL_COMMAND,
+    INSTALL_TEST_GITHUB_URL,
+    escape_html,
+    render_index,
+    render_skill_page,
+    render_verify_install_page,
+)
 
 # ---------------------------------------------------------------------------
 # The fixture from the original design brief. Only additive edits belong
@@ -144,6 +151,42 @@ def check_base_path() -> None:
     print("  base_path check passed")
 
 
+def check_verify_install_page() -> None:
+    """render_verify_install_page against the real, highlighted source of
+    test_install_command.sh — not a synthetic snippet, since the whole point
+    of this page is displaying that exact file. Import is deferred to here
+    (rather than the top of the file, next to the other imports) only
+    because shell_highlight is this module's own sibling under active
+    development in the same change; the import itself is otherwise ordinary."""
+    print("verify-install page check")
+    from shell_highlight import highlight_source
+
+    real_source = (Path(__file__).resolve().parent / "test_install_command.sh").read_text(encoding="utf-8")
+    lines = highlight_source(real_source)
+    categories = FIXTURE["categories"]
+
+    html = render_verify_install_page(lines, categories)
+    check("looks like a document", "<html" in html)
+    check("title names what the page proves", "only touches one folder" in html)
+    check("links out to the real file on GitHub as provenance",
+          f'href="{INSTALL_TEST_GITHUB_URL}"' in html)
+    check("renders one list item per source line",
+          html.count('<li><span class="code-block__line-number">')
+          == len(real_source.splitlines()))
+    check("at least one comment span made it through from the real file",
+          'class="tok-comment"' in html)
+    check("at least one string span made it through from the real file",
+          'class="tok-string"' in html)
+
+    base = "/tbaguette-skills"
+    prefixed = render_verify_install_page(lines, categories, base_path=base)
+    check("code block content is base_path-independent (no hrefs inside code lines)",
+          prefixed.count('class="code-block__line-code"')
+          == html.count('class="code-block__line-code"'))
+    check("but the page chrome around it is still prefixed like every other page",
+          f'"{base}/assets/styles.css"' in prefixed)
+
+
 def main() -> None:
     categories = FIXTURE["categories"]
     skills = FIXTURE["skills"]
@@ -187,9 +230,8 @@ def main() -> None:
     check("verification note sits after the command and before the lede, inside the frame",
           index_html.index('id="install-command"') < index_html.index("install-frame__note")
           < index_html.index("hero__lede"))
-    check("verification note links to the actual test a visitor can go read",
-          'href="https://github.com/LeSplooch/tbaguette-skills/blob/master/scripts/test_install_command.sh"'
-          in index_html)
+    check("verification note links to the on-site explanation page, base_path-prefixed",
+          'href="/verify-install/"' in index_html)
     print(f"  wrote {index_path}")
 
     # --- render_skill_page: formidable (the interesting one) --------------
@@ -244,6 +286,7 @@ def main() -> None:
 
     check_escaping()
     check_base_path()
+    check_verify_install_page()
 
     print(f"\n{_checks_run} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")

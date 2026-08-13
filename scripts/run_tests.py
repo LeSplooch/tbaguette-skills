@@ -31,6 +31,7 @@ SUITES = [
     ("content_pipeline.py (unittest)",
      [sys.executable, "-m", "unittest", "test_content_pipeline", "-v"]),
     ("templates.py", [sys.executable, "test_templates.py"]),
+    ("shell_highlight.py", [sys.executable, "test_shell_highlight.py"]),
     ("generate.py integration", [sys.executable, "test_generate.py"]),
     # The only suite that hits the network (clones the real, published repo
     # from GitHub several times against throwaway HOME directories) — a

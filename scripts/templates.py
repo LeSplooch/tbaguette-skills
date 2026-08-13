@@ -216,7 +216,7 @@ def _render_install(base_path: str = "") -> str:
     <p class="install-frame__note">
       {_icon("icon-check", base_path=base_path)}
       <span>Only ever touches this folder — verified against your other skills, not
-      just claimed. <a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/scripts/test_install_command.sh">See how</a>.</span>
+      just claimed. <a href="{base_path}/verify-install/">See how</a>.</span>
     </p>
   </div>
 </div>"""
@@ -481,6 +481,133 @@ def render_skill_page(skill: dict, prev_skill: dict | None, next_skill: dict | N
     return _render_document(
         title=f"{name} — {category_title} — La Boulangerie TBaguette",
         meta_description=summary,
+        body_class="page-skill",
+        main_html=main_html,
+        categories=categories,
+        base_path=base_path,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Install verification page
+# ---------------------------------------------------------------------------
+
+INSTALL_TEST_SOURCE_PATH = "scripts/test_install_command.sh"
+INSTALL_TEST_GITHUB_URL = (
+    "https://github.com/LeSplooch/tbaguette-skills/blob/master/"
+    + INSTALL_TEST_SOURCE_PATH
+)
+
+
+def _render_code_block(highlighted_lines: list[str]) -> str:
+    rows = _join(*(
+        f'<li><span class="code-block__line-number"></span>'
+        f'<span class="code-block__line-code">{line or " "}</span></li>'
+        for line in highlighted_lines
+    ))
+    return f"""<div class="code-block">
+  <div class="code-block__scroll">
+    <ol class="code-block__lines">
+{rows}
+    </ol>
+  </div>
+</div>"""
+
+
+def render_verify_install_page(highlighted_lines: list[str], categories: list[dict],
+                                base_path: str = "") -> str:
+    """Full HTML document for the page linked from the install frame's
+    "See how" — the actual explanation plus the actual test source,
+    syntax-highlighted. highlighted_lines is pre-rendered HTML per line
+    (see shell_highlight.py), injected verbatim, same verbatim-injection
+    contract as skill body_html elsewhere in this module."""
+    breadcrumb = f"""<nav class="container breadcrumb" aria-label="Breadcrumb">
+  <a href="{base_path}/">Home</a>
+  <span class="breadcrumb__sep" aria-hidden="true">/</span>
+  <span class="breadcrumb__current" aria-current="page">Install verification</span>
+</nav>"""
+
+    article = f"""<article class="container skill-article">
+  <div class="skill-article__head">
+    <h1 class="skill-article__title">The install command only touches one folder</h1>
+    <p class="lede">A <code>git clone</code> into <code>~/.claude/skills/TBaguette</code>
+    sits right next to whatever else already lives under
+    <code>~/.claude/skills/</code> — other skills, other plugins, things you
+    already trust. It's a fair question whether installing this one could touch
+    any of that. It can't. This page is why, and the actual test that proves it,
+    not a claim restated in different words.</p>
+  </div>
+
+  <div class="prose">
+    <h2 id="what-it-does">What the command does</h2>
+    <p>The published command checks for an existing clone before doing anything:
+    if <code>~/.claude/skills/TBaguette/.git</code> already exists, it runs
+    <code>git pull</code> in place; otherwise it runs <code>git clone</code>. The
+    first run installs. Every run after that updates. Neither branch ever
+    reads or writes anywhere else.</p>
+
+    <h2 id="why-it-cant-reach-anything-else">Why it can't reach anything else</h2>
+    <p>Both branches are scoped to the single path
+    <code>~/.claude/skills/TBaguette</code> by construction — a
+    <code>git clone</code> or <code>git pull</code> targeting that path has no
+    mechanism to write outside it. The one case worth naming explicitly is a
+    real collision: something else already sitting at that exact path, that
+    isn't a clone of this repo. <code>git clone</code> refuses outright when its
+    target already exists and is non-empty — it does not merge, does not
+    overwrite, does not ask. It fails loudly and leaves whatever was there
+    exactly as it was. That refusal is git's own behavior, not something this
+    project added on top.</p>
+
+    <h2 id="four-scenarios">Four scenarios, not one</h2>
+    <p>A single happy-path test would only prove the command works when
+    nothing is in its way, which is the one case nobody actually worried
+    about. The real test runs four scenarios, each against a throwaway
+    <code>HOME</code> directory seeded with fake sibling skills and plugins
+    alongside <code>TBaguette</code>, checksummed before and after:</p>
+    <ul>
+      <li><strong>A — fresh install.</strong> Nothing at that path yet. Confirms
+      the clone succeeds and the siblings are untouched.</li>
+      <li><strong>B — running it again.</strong> Continues from A. Confirms the
+      second run updates in place (<code>git pull</code>) instead of erroring
+      the way a bare <code>git clone</code> would, and that the siblings are
+      still untouched.</li>
+      <li><strong>C — an empty directory already named <code>TBaguette</code>.</strong>
+      Confirms <code>git clone</code> is willing to use an empty directory
+      that happens to already exist, and that siblings survive.</li>
+      <li><strong>D — the real collision.</strong> A non-empty, non-git
+      directory already sitting at that exact path, with its own unrelated
+      content. Confirms the command refuses rather than merging into it —
+      and that both the colliding directory's own content and every sibling
+      skill survive the refusal.</li>
+    </ul>
+    <p>All twelve checks across those four scenarios pass before this site is
+    ever deployed — <code>run_tests.py</code> runs this alongside everything
+    else, not as a separate manual step someone has to remember.</p>
+
+    <h2 id="the-test-itself">The test itself</h2>
+    <p>This is <a href="{INSTALL_TEST_GITHUB_URL}">{INSTALL_TEST_SOURCE_PATH}</a>,
+    unedited — the same file the test suite actually runs, not a
+    representative excerpt.</p>
+  </div>
+
+  {_render_code_block(highlighted_lines)}
+
+  <div class="prose">
+    <h2 id="run-it-yourself">Run it yourself</h2>
+    <p>Clone the repo and run <code>bash scripts/test_install_command.sh</code>
+    directly, or <code>python3 scripts/run_tests.py</code> for the full suite
+    this page's claims are checked against.</p>
+  </div>
+</article>"""
+
+    main_html = _join(breadcrumb, article)
+    return _render_document(
+        title="The install command only touches one folder — La Boulangerie TBaguette",
+        meta_description=(
+            "How the TBaguette install command is verified never to alter, "
+            "overwrite, or merge into any other skill or plugin you already "
+            "have — with the actual test source, not just a claim."
+        ),
         body_class="page-skill",
         main_html=main_html,
         categories=categories,
