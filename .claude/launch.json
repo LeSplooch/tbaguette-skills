@@ -6,6 +6,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8842", "--directory", "docs"],
       "port": 8842
+    },
+    {
+      "name": "docs-preview-verify",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8843", "--directory", "docs"],
+      "port": 8843
     }
   ]
 }

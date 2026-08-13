@@ -44,7 +44,7 @@ No new files except this plan and the spec it implements.
 **Interfaces:**
 - Produces: `docs/version.txt`, plain text, content is exactly `last_updated_utc` (e.g. `2026-08-13T19:42:07+00:00`) with no header/prefix — Task 2's client code and Task 3's polling code both depend on this being a bare, directly-comparable string.
 
-- [ ] **Step 1: Write the failing checks**
+- [x] **Step 1: Write the failing checks**
 
 Open `scripts/test_generate.py`. Add `import re` to the imports at the top (alongside the existing `import shutil` etc.).
 
@@ -112,12 +112,12 @@ Immediately after it, add:
         )
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `python3 scripts/test_generate.py`
 Expected: FAIL — `version.txt exists after generation` (and everything depending on it) fails, because `generate.py` doesn't write that file yet.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 In `scripts/generate.py`, inside `_build_into()`, find the end of the function:
 
@@ -152,12 +152,12 @@ Change to:
 
 (No other change needed — the swap loop already handles files and directories generically via `.is_dir()` checks, and `version.txt` is a plain file like `index.html`.)
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `python3 scripts/test_generate.py`
 Expected: PASS, all checks including the new ones.
 
-- [ ] **Step 5: Run the full suite and commit**
+- [x] **Step 5: Run the full suite and commit**
 
 Run: `python3 scripts/run_tests.py`
 Expected: all suites pass.
@@ -183,7 +183,7 @@ timestamp out of it."
 - Consumes: nothing new — uses the `base_path` already threaded through `_render_header`/`_render_document`.
 - Produces: every page's `<time data-format-updated>` element gains `data-version-url="{base_path}/version.txt"`. Task 3's `initVersionCheck()` depends on this exact attribute name and on it living on the same element as `data-format-updated`.
 
-- [ ] **Step 1: Write the failing checks**
+- [x] **Step 1: Write the failing checks**
 
 Open `scripts/test_templates.py`. In `check_header_and_badges()`, find:
 
@@ -225,12 +225,12 @@ Immediately after it, add:
           f'data-version-url="{base}/version.txt"' in page_html)
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `python3 scripts/test_templates.py`
 Expected: FAIL — the three new `data-version-url` checks fail, since `templates.py` doesn't emit that attribute yet.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 In `scripts/templates.py`, find:
 
@@ -280,12 +280,12 @@ def _render_header(base_path: str = "", last_updated_utc: str = "") -> str:
 
 (`base_path` is not HTML-escaped here, matching every other `{base_path}/...` href in this file, e.g. `_render_head`'s `href="{base_path}/assets/favicon.svg"` — it's a trusted internal constant, either `""` or `"/tbaguette-skills"`, never external input.)
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `python3 scripts/test_templates.py`
 Expected: PASS, all checks including the new ones.
 
-- [ ] **Step 5: Run the full suite and commit**
+- [x] **Step 5: Run the full suite and commit**
 
 Run: `python3 scripts/run_tests.py`
 Expected: all suites pass.
@@ -312,7 +312,7 @@ target off the one element it already knows how to find."
 
 No automated test — this project has no JS test tooling by design (stdlib-only, zero-install-step). Verified manually in Step 3.
 
-- [ ] **Step 1: Update the file's own doc comment**
+- [x] **Step 1: Update the file's own doc comment**
 
 Open `docs/assets/site.js`. Find the top-of-file comment:
 
@@ -357,7 +357,7 @@ Replace with:
  */
 ```
 
-- [ ] **Step 2: Add the new functions**
+- [x] **Step 2: Add the new functions**
 
 Find the end of the IIFE — the block of `init*()` calls followed by the closing `})();`:
 
@@ -487,7 +487,7 @@ Replace with (new functions above the calls, two new calls added):
 })();
 ```
 
-- [ ] **Step 3: Manually verify**
+- [x] **Step 3: Manually verify**
 
 Start the local preview server (already configured in `.claude/launch.json` as `docs-preview`, `python3 -m http.server 8842 --directory docs`) and open `http://localhost:8842/`.
 
@@ -498,7 +498,7 @@ Start the local preview server (already configured in `.claude/launch.json` as `
 5. Scroll down the page before the modal would trigger next time; repeat steps 2-3; click "Reload"; confirm the page reloads and lands back at the same scroll position rather than the top.
 6. Revert `docs/version.txt` back to its real generated content afterward (re-run `python3 scripts/generate.py` locally, or restore via `git checkout -- docs/version.txt`) so the working tree isn't left with a hand-edited generated file.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add docs/assets/site.js
@@ -523,7 +523,7 @@ dumped back at the top."
 
 No automated test — same reasoning as Task 3. Verified manually in Step 2.
 
-- [ ] **Step 1: Add the CSS**
+- [x] **Step 1: Add the CSS**
 
 Append to `docs/assets/styles.css` (end of file, in its own clearly-labeled section, following the file's existing numbered-section-comment convention):
 
@@ -592,7 +592,7 @@ Append to `docs/assets/styles.css` (end of file, in its own clearly-labeled sect
 
 (No `@media (prefers-reduced-motion)` guard needed — the only motion here is the `background-color` transition on hover, not an entrance/exit animation. If a future change adds an open/close transition to `.update-modal-overlay`, gate that specific addition behind `prefers-reduced-motion`, matching `prefersReducedMotion()`'s existing use in `site.js`.)
 
-- [ ] **Step 2: Manually verify**
+- [x] **Step 2: Manually verify**
 
 With the `docs-preview` server still running (see Task 3, Step 3):
 
@@ -602,7 +602,7 @@ With the `docs-preview` server still running (see Task 3, Step 3):
 4. Toggle the site's light/dark theme control, reload, and re-trigger the modal in both themes — confirm text stays legible (dark text on the light "flour" theme's card, light text on the dark "crust" theme's card) and the Reload button's accent color and hover state both look correct.
 5. Revert `docs/version.txt` afterward, same as Task 3 Step 3.
 
-- [ ] **Step 3: Run the full test suite one more time, then commit**
+- [x] **Step 3: Run the full test suite one more time, then commit**
 
 Run: `python3 scripts/run_tests.py`
 Expected: all suites pass (this task doesn't touch Python, but confirms nothing else regressed).
