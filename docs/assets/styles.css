@@ -286,6 +286,37 @@ table { border-collapse: collapse; }
   color: var(--text-on-accent-solid);
 }
 
+/* Custom scrollbars, everywhere a box scrolls — the page and every inner
+   overflow container alike (the install command, wide tables in prose).
+   Firefox via the standard properties on the root; WebKit via the unscoped
+   pseudo-elements below, which is why they carry no selector prefix. Resting
+   thumb is a raised-surface tone, quiet but visible against the page; it
+   goes to the accent on hover/active, matching the same at-rest/interactive
+   language every other control on this site already uses. */
+html {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-hover) transparent;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+
+::-webkit-scrollbar-track { background: transparent; }
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--surface-hover);
+  border: 2px solid transparent;
+  border-radius: var(--radius-full);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--accent);
+}
+
+::-webkit-scrollbar-corner { background: transparent; }
+
 /* ---------------------------------------------------------------------------
    4. Utilities
    ------------------------------------------------------------------------- */
