@@ -1,6 +1,6 @@
 # TBaguette
 
-65 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+66 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -135,6 +135,7 @@ TBaguette skill hands off to a neighbour.
 | `reproducible-environments` | The "works on my machine" taxonomy; verifying by building twice |
 | `designing-ci-pipelines` | Cost-to-signal ordering; cache correctness; required vs advisory |
 | `upgrading-dependencies` | Routine and cheap, or one forced upgrade during an incident |
+| `keeping-tbaguette-current` | Checks the installed TBaguette plugin against the published repo, updates it if it can fast-forward cleanly, keeps a local changelog |
 | `automating-repetition` | When a manual sequence should become a tool, and when it should not |
 | `dispatching-parallel-agents` † · `subagent-driven-development` † | Delegation patterns |
 | `writing-skills` † · `using-superpowers` † | Authoring and using skills |

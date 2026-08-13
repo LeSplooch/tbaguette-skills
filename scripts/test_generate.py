@@ -1,7 +1,7 @@
 """Integration test for generate.py — the seam content_pipeline.py and
 templates.py were each tested against in isolation (against a hand-written
 fixture, before either could see the other's real output), now exercised
-together against the real, embedded, 65-skill corpus. Catches exactly the
+together against the real, embedded, 66-skill corpus. Catches exactly the
 class of contract drift a review of this project flagged as previously
 untested: two halves individually correct, never proven correct together.
 
