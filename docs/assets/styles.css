@@ -22,7 +22,7 @@
   13. Prev/next + see-also
   14. Footer
   15. Motion + reduced-motion
-  16. Shell code block (install-verification page: line numbers, syntax tokens)
+  16. Code block (install-verification page: line numbers, syntax tokens)
   17. Responsive notes (fluid by default; hard breakpoints only where noted)
 */
 
@@ -164,15 +164,16 @@
   /* usage: shadow color mix-ins */
   --shadow-ink: 20 10% 3%;
 
-  /* usage: shell syntax highlighting on the install-verification page.
+  /* usage: Python syntax highlighting on the install-verification page.
      Each independently verified >=4.5:1 against --surface (the code
-     block's own background). --code-var deliberately reuses --text-accent
-     rather than adding a seventh hue — one gold thread running through
-     variables everywhere on the site, not a separate code-only accent. */
+     block's own background). .tok-number (numeric literals) deliberately
+     reuses --text-accent directly rather than adding a seventh hue — one
+     gold thread running through variables everywhere on the site, not a
+     separate code-only accent. */
   --code-comment: #a08868;
   --code-string: #e2916a;
   --code-keyword: #a7b98a;
-  --code-cmdsub: #d4a5a5;
+  --code-const: #d4a5a5;
 
   /* --- space: 4px base steps, ordinal (never t-shirt sizes — see naming-things) --- */
   --space-1: 0.25rem;   /* 4px  */
@@ -245,7 +246,7 @@
   --code-comment: #6f5b3e;
   --code-string: #96461f;
   --code-keyword: #4c5c34;
-  --code-cmdsub: #8f4a4a;
+  --code-const: #8f4a4a;
 }
 
 /* ---------------------------------------------------------------------------
@@ -1222,7 +1223,7 @@ code {
 }
 
 /* ---------------------------------------------------------------------------
-   16. Shell code block — install-verification page
+   16. Code block — install-verification page
    One scroll container for the whole block, not one per line, so a long
    line's horizontal scroll stays in sync with every other line rather than
    each drifting independently. The line-number gutter is sticky within
@@ -1291,9 +1292,9 @@ code {
    one place on this page that isn't purely a color distinction. */
 .tok-comment { color: var(--code-comment); font-style: italic; }
 .tok-string { color: var(--code-string); }
-.tok-cmdsub { color: var(--code-cmdsub); }
+.tok-const { color: var(--code-const); }
 .tok-keyword { color: var(--code-keyword); }
-.tok-var { color: var(--text-accent); }
+.tok-number { color: var(--text-accent); }
 
 /* ---------------------------------------------------------------------------
    17. Responsive

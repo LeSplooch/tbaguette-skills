@@ -25,9 +25,11 @@ later to pull updates in place.
 This only ever touches `~/.claude/skills/TBaguette` — it cannot alter, merge into, or
 overwrite any other skill or plugin you already have. `git clone` refuses outright if that
 exact path already exists and isn't empty or a clone of this repo, so a name collision
-fails loudly instead of silently overwriting something. `scripts/test_install_command.sh`
-proves this against four scenarios (fresh install, re-run, an empty pre-existing directory,
-and a real collision) — it's part of `run_tests.py`, not just asserted here.
+fails loudly instead of silently overwriting something. `scripts/test_install_command.py`
+(stdlib-only Python, no bash required) proves this against four scenarios (fresh install,
+re-run, an empty pre-existing directory, and a real collision) — it's part of
+`run_tests.py`, not just asserted here. Read the walkthrough and the exact source at
+[lesplooch.github.io/tbaguette-skills/verify-install](https://lesplooch.github.io/tbaguette-skills/verify-install/).
 
 ## What's in it
 

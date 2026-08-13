@@ -183,7 +183,7 @@ def _render_document(*, title: str, meta_description: str, body_class: str,
 # Clones on first run; pulls in place on every run after, rather than
 # erroring on "destination already exists" the way a bare `git clone` does.
 # Safe either way: git itself refuses to clone into a non-empty directory it
-# doesn't own (proven — see scripts/test_install_command.sh), so this can
+# doesn't own (proven — see scripts/test_install_command.py), so this can
 # never overwrite unrelated content some other skill or plugin happens to
 # have at the same path, only ever update its own prior clone.
 INSTALL_COMMAND = (
@@ -492,7 +492,7 @@ def render_skill_page(skill: dict, prev_skill: dict | None, next_skill: dict | N
 # Install verification page
 # ---------------------------------------------------------------------------
 
-INSTALL_TEST_SOURCE_PATH = "scripts/test_install_command.sh"
+INSTALL_TEST_SOURCE_PATH = "scripts/test_install_command.py"
 INSTALL_TEST_GITHUB_URL = (
     "https://github.com/LeSplooch/tbaguette-skills/blob/master/"
     + INSTALL_TEST_SOURCE_PATH
@@ -519,7 +519,7 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
     """Full HTML document for the page linked from the install frame's
     "See how" — the actual explanation plus the actual test source,
     syntax-highlighted. highlighted_lines is pre-rendered HTML per line
-    (see shell_highlight.py), injected verbatim, same verbatim-injection
+    (see python_highlight.py), injected verbatim, same verbatim-injection
     contract as skill body_html elsewhere in this module."""
     breadcrumb = f"""<nav class="container breadcrumb" aria-label="Breadcrumb">
   <a href="{base_path}/">Home</a>
@@ -581,8 +581,12 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
       skill survive the refusal.</li>
     </ul>
     <p>All twelve checks across those four scenarios pass before this site is
-    ever deployed — <code>run_tests.py</code> runs this alongside everything
-    else, not as a separate manual step someone has to remember.</p>
+    ever deployed — plus three more that run the exact command string
+    published above, word for word, through a real shell on any system that
+    has one, rather than trusting that this page's Python reimplementation
+    of it stayed faithful to what actually ships. <code>run_tests.py</code>
+    runs all fifteen alongside everything else, not as a separate manual
+    step someone has to remember.</p>
 
     <h2 id="the-test-itself">The test itself</h2>
     <p>This is <a href="{INSTALL_TEST_GITHUB_URL}">{INSTALL_TEST_SOURCE_PATH}</a>,
@@ -594,9 +598,11 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
 
   <div class="prose">
     <h2 id="run-it-yourself">Run it yourself</h2>
-    <p>Clone the repo and run <code>bash scripts/test_install_command.sh</code>
+    <p>Clone the repo and run <code>python3 scripts/test_install_command.py</code>
     directly, or <code>python3 scripts/run_tests.py</code> for the full suite
-    this page's claims are checked against.</p>
+    this page's claims are checked against. Standard-library Python only —
+    no bash required, since it isn't guaranteed to exist on every system this
+    might run on.</p>
   </div>
 </article>"""
 

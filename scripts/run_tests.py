@@ -31,14 +31,14 @@ SUITES = [
     ("content_pipeline.py (unittest)",
      [sys.executable, "-m", "unittest", "test_content_pipeline", "-v"]),
     ("templates.py", [sys.executable, "test_templates.py"]),
-    ("shell_highlight.py", [sys.executable, "test_shell_highlight.py"]),
+    ("python_highlight.py", [sys.executable, "test_python_highlight.py"]),
     ("generate.py integration", [sys.executable, "test_generate.py"]),
     # The only suite that hits the network (clones the real, published repo
     # from GitHub several times against throwaway HOME directories) — a
     # flaky connection can fail this one without meaning anything else is
     # broken. Everything it proves is otherwise untested: that the install
     # command on the live site can never alter a user's other skills.
-    ("install command safety (bash)", ["bash", "test_install_command.sh"]),
+    ("install command safety", [sys.executable, "test_install_command.py"]),
 ]
 
 # Covers both runner styles in this repo: the plain assert-based one prints

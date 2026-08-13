@@ -153,15 +153,15 @@ def check_base_path() -> None:
 
 def check_verify_install_page() -> None:
     """render_verify_install_page against the real, highlighted source of
-    test_install_command.sh — not a synthetic snippet, since the whole point
+    test_install_command.py — not a synthetic snippet, since the whole point
     of this page is displaying that exact file. Import is deferred to here
     (rather than the top of the file, next to the other imports) only
-    because shell_highlight is this module's own sibling under active
+    because python_highlight is this module's own sibling under active
     development in the same change; the import itself is otherwise ordinary."""
     print("verify-install page check")
-    from shell_highlight import highlight_source
+    from python_highlight import highlight_source
 
-    real_source = (Path(__file__).resolve().parent / "test_install_command.sh").read_text(encoding="utf-8")
+    real_source = (Path(__file__).resolve().parent / "test_install_command.py").read_text(encoding="utf-8")
     lines = highlight_source(real_source)
     categories = FIXTURE["categories"]
 
