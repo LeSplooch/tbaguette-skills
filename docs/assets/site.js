@@ -1,12 +1,14 @@
 /*
  * La Boulangerie TBaguette — site.js
- * Vanilla JS, no dependencies. Four independent features, each a no-op if
+ * Vanilla JS, no dependencies. Five independent features, each a no-op if
  * its markup isn't on the current page:
  *   - theme toggle   (every page)
  *   - search/filter  (landing page only)
  *   - tabs           (formidable's skill page's Stacks/Commands; the
  *                      landing page's install-command platform picker)
  *   - copy install command (landing page only; one button per platform tab)
+ *   - header "Updated" time (every page — formats the baked-in UTC instant
+ *                             as the visitor's local time)
  * Loaded with `defer`, so the DOM is fully parsed before any of this runs —
  * no DOMContentLoaded wrapper needed.
  */
@@ -36,6 +38,40 @@
     }
     var legacy = window.navigator.platform || window.navigator.userAgent || '';
     return /win/i.test(legacy);
+  }
+
+  // -------------------------------------------------------------------
+  // Header "Updated" time — the server bakes in one UTC instant; this
+  // renders it in both the visitor's own local time and UTC, since the
+  // visitor's timezone is only knowable in the browser, never at build
+  // time. Left as the server-rendered plain-UTC fallback if Intl isn't
+  // available or the timestamp fails to parse — never blanked out.
+  // -------------------------------------------------------------------
+
+  function initUpdatedTime() {
+    var els = toArray(document.querySelectorAll('[data-format-updated]'));
+    if (!els.length) return;
+    if (!window.Intl || !window.Intl.DateTimeFormat) return;
+
+    els.forEach(function (el) {
+      var iso = el.getAttribute('datetime');
+      if (!iso) return;
+      var when = new Date(iso);
+      if (isNaN(when.getTime())) return;
+
+      try {
+        var local = new Intl.DateTimeFormat(undefined, {
+          dateStyle: 'medium', timeStyle: 'short'
+        }).format(when);
+        var utc = new Intl.DateTimeFormat(undefined, {
+          hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC'
+        }).format(when);
+        el.textContent = local + ' your time · ' + utc + ' UTC';
+      } catch (error) {
+        // Unsupported options or timeZone in this browser: leave the
+        // server-rendered plain-UTC fallback text in place.
+      }
+    });
   }
 
   // -------------------------------------------------------------------
@@ -309,4 +345,5 @@
   initSearch();
   initInstallCopy();
   initTabs();
+  initUpdatedTime();
 })();

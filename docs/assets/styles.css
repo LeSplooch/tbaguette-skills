@@ -13,9 +13,9 @@
   4. Utilities (visually-hidden, skip-link, container, measure)
   5. Type
   6. Icons
-  7. Header / wordmark / theme toggle
+  7. Header / wordmark / theme toggle / updated-time
   8. Hero + search
-  9. Category sections + card grid + card
+  9. Category sections + card grid + card (incl. change-badge: new/updated)
   10. Breadcrumb
   11. Article: lede, prose, tables, code, lists
   12. Tabs (formidable)
@@ -428,36 +428,114 @@ code {
 }
 
 /* ---------------------------------------------------------------------------
-   7. Header / wordmark / theme toggle
+   7. Header / wordmark / theme toggle / updated-time
    ------------------------------------------------------------------------- */
 
 .site-header {
   position: relative;
   z-index: 10;
+  isolation: isolate;
+}
+
+/* A separate layer behind .site-header__inner rather than background on the
+   header itself, so the gradients can bleed past the container's own edges
+   without a second wrapping element in the markup. */
+.site-header__band {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(140% 220% at 6% 0%,
+      color-mix(in oklch, var(--accent) 20%, transparent),
+      transparent 65%),
+    radial-gradient(90% 160% at 100% 0%,
+      color-mix(in oklch, var(--accent) 12%, transparent),
+      transparent 60%),
+    var(--bg-deep);
+}
+
+/* The "gilded rule": a soft gold line along the header's bottom edge that
+   fades at both ends rather than running hard edge-to-edge — a considered
+   accent, not a ruler line underneath a form. */
+.site-header__band::after {
+  content: '';
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent,
+    color-mix(in oklch, var(--accent) 65%, transparent) 25%,
+    color-mix(in oklch, var(--accent) 65%, transparent) 75%,
+    transparent);
 }
 
 .site-header__inner {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
+  row-gap: var(--space-3);
   padding-block: var(--space-5);
 }
 
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   font-family: var(--font-display);
   font-optical-sizing: auto;
-  font-weight: 650;
-  font-size: var(--text-4);
-  letter-spacing: -0.01em;
+  font-weight: 680;
+  font-size: clamp(var(--text-4), 0.95rem + 1.1vw, var(--text-5));
+  letter-spacing: -0.015em;
   color: var(--text-primary);
   border-radius: var(--radius-sm);
+  text-shadow: 0 2px 20px color-mix(in oklch, var(--accent) 30%, transparent);
+  transition: color var(--duration-micro) var(--ease-out),
+              text-shadow var(--duration-enter) var(--ease-out);
 }
 
-.wordmark:hover { color: var(--text-accent); }
+.wordmark:hover {
+  color: var(--text-accent);
+  text-shadow: 0 2px 28px color-mix(in oklch, var(--accent) 50%, transparent);
+}
+
+.wordmark__icon {
+  width: 1.35em;
+  height: 1.35em;
+  color: var(--accent);
+  filter: drop-shadow(0 1px 6px color-mix(in oklch, var(--accent) 45%, transparent));
+}
+
+.site-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.site-header__updated {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.site-header__updated-label {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-accent);
+}
+
+.site-header__updated-value { font-variant-numeric: tabular-nums; }
 
 .theme-toggle {
   position: relative;
+  flex-shrink: 0;
   display: grid;
   place-items: center;
   width: 2.75rem;
@@ -801,6 +879,13 @@ code {
   outline-offset: 4px;
 }
 
+.card__name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
 .card__name {
   font-family: var(--font-mono);
   font-size: var(--text-4);
@@ -850,6 +935,70 @@ code {
   transform: translateX(3px);
 }
 
+/* "New"/"Updated" — set by generate.py from a real git status check (see
+   its _changed_skill_slugs), shown next to a skill's name on its card
+   (.card__name-row) and again on its own page (.skill-article__title-row).
+   --new reuses --accent-solid/--text-on-accent-solid deliberately: those
+   two are the one pairing this site intentionally keeps identical in both
+   themes (see their token comments) — a foil-stamped "new" reads the same
+   whether the page is light or dark, which is exactly the point of a badge
+   meant to catch the eye first. --updated is calmer on purpose: still
+   using the brand accent, but outlined rather than solid-filled, so two
+   badges next to each other read as different weights of news, not two
+   equally loud alerts. */
+.change-badge {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25em 0.65em;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.change-badge--new {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border: 1px solid var(--accent-solid);
+}
+
+.change-badge--updated {
+  color: var(--text-accent);
+  background: transparent;
+  border: 1px solid var(--accent);
+}
+
+/* The "shiny" part: a soft diagonal highlight sweeps across once, shortly
+   after the page settles, rather than looping forever — a one-time glint
+   reads as polish, a looping shimmer reads as nagging. Skipped entirely
+   under reduced motion, per this site's motion rule (section 15). */
+.change-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg,
+    transparent 35%,
+    color-mix(in oklch, white 70%, transparent) 50%,
+    transparent 65%);
+  transform: translateX(-120%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .change-badge::after {
+    animation: badge-shine var(--duration-view) var(--ease-out) 700ms 1 forwards;
+  }
+}
+
+@keyframes badge-shine {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(120%); }
+}
+
 /* ---------------------------------------------------------------------------
    10. Breadcrumb
    ------------------------------------------------------------------------- */
@@ -882,6 +1031,13 @@ code {
 .skill-article { padding-block: var(--space-6) var(--space-9); }
 
 .skill-article__head { max-width: var(--measure-prose); }
+
+.skill-article__title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
 
 .skill-article__title {
   font-family: var(--font-mono);

@@ -196,6 +196,56 @@ def check_verify_install_page() -> None:
           f'"{base}/assets/styles.css"' in prefixed)
 
 
+def check_header_and_badges() -> None:
+    """Dedicated fixture: the main FIXTURE's skills carry no change_status
+    key at all, matching the common case (most page loads carry zero
+    badges) — deliberately not exercising this path, which is exactly why
+    it needs its own small fixture rather than piggybacking on FIXTURE."""
+    print("header datetime + change-badge check")
+    categories = [{"slug": "cat", "title": "Cat", "skill_slugs": ["fresh", "revised", "untouched"]}]
+    base_skill = {
+        "category_slug": "cat", "category_title": "Cat",
+        "description": "d", "summary": "s", "body_html": "<p>x</p>", "is_formidable": False,
+    }
+    skills = {
+        "fresh": {**base_skill, "slug": "fresh", "name": "fresh", "change_status": "new"},
+        "revised": {**base_skill, "slug": "revised", "name": "revised", "change_status": "updated"},
+        "untouched": {**base_skill, "slug": "untouched", "name": "untouched"},
+    }
+
+    iso = "2026-08-13T19:42:07+00:00"
+    html = render_index(categories, skills, last_updated_utc=iso)
+
+    check("header carries the baked-in datetime attribute", f'datetime="{iso}"' in html)
+    check("header's no-JS fallback text is a real, readable UTC string",
+          "2026-08-13T19:42:07Z UTC" in html)
+    check("header time element is wired for site.js to find and reformat",
+          "data-format-updated" in html)
+    check("wordmark carries its decorative wheat mark", "#icon-wheat" in html)
+
+    check("exactly two change-badges rendered (fresh and revised only, not untouched)",
+          html.count('class="change-badge') == 2)
+    check('"new" skill gets the New badge',
+          'change-badge change-badge--new">New</span>' in html)
+    check('"updated" skill gets the Updated badge',
+          'change-badge change-badge--updated">Updated</span>' in html)
+
+    no_time_html = render_index(categories, skills)
+    check("with no last_updated_utc passed, the updated-time element is omitted "
+          "entirely rather than left blank",
+          "site-header__updated" not in no_time_html)
+
+    fresh_page_html = render_skill_page(
+        skills["fresh"], prev_skill=None, next_skill=None, siblings=[], categories=categories,
+    )
+    check("the skill's own page shows the same badge next to its title",
+          'change-badge change-badge--new">New</span>' in fresh_page_html)
+    check("badge sits inside the title row specifically, not the tag/description area",
+          fresh_page_html.index("skill-article__title-row")
+          < fresh_page_html.index("change-badge")
+          < fresh_page_html.index("skill-article__tag"))
+
+
 def main() -> None:
     categories = FIXTURE["categories"]
     skills = FIXTURE["skills"]
@@ -337,6 +387,7 @@ def main() -> None:
     check_escaping()
     check_base_path()
     check_verify_install_page()
+    check_header_and_badges()
 
     print(f"\n{checker.total} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")

@@ -122,14 +122,37 @@ def _render_head(*, title: str, meta_description: str, base_path: str = "") -> s
 <script>{_THEME_BOOTSTRAP_JS}</script>"""
 
 
-def _render_header(base_path: str = "") -> str:
+def _render_updated_time(last_updated_utc: str) -> str:
+    # last_updated_utc is a UTC instant baked in at generation time (see
+    # generate.py's own docstring on why it must be the very last step
+    # before commit for this to be honest). Rendered here as a plain UTC
+    # string so the page still says something true with JS disabled;
+    # site.js's initUpdatedTime() replaces the text with both the visitor's
+    # local time and UTC once it runs, since the visitor's own timezone
+    # can't be known at build time.
+    fallback = escape_html(last_updated_utc.replace("+00:00", "Z")) + " UTC"
+    return f"""<p class="site-header__updated">
+      <span class="site-header__updated-label">Updated</span>
+      <time class="site-header__updated-value" datetime="{escape_html(last_updated_utc)}" data-format-updated>{fallback}</time>
+    </p>"""
+
+
+def _render_header(base_path: str = "", last_updated_utc: str = "") -> str:
+    updated_html = _render_updated_time(last_updated_utc) if last_updated_utc else ""
     return f"""<header class="site-header">
+  <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
-    <a class="wordmark" href="{base_path}/">TBaguette</a>
-    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
-      {_icon("icon-sun", css_class="icon theme-toggle__icon theme-toggle__icon--sun", base_path=base_path)}
-      {_icon("icon-moon", css_class="icon theme-toggle__icon theme-toggle__icon--moon", base_path=base_path)}
-    </button>
+    <a class="wordmark" href="{base_path}/">
+      {_icon("icon-wheat", css_class="icon wordmark__icon", base_path=base_path)}
+      <span class="wordmark__text">TBaguette</span>
+    </a>
+    <div class="site-header__actions">
+      {updated_html}
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
+        {_icon("icon-sun", css_class="icon theme-toggle__icon theme-toggle__icon--sun", base_path=base_path)}
+        {_icon("icon-moon", css_class="icon theme-toggle__icon theme-toggle__icon--moon", base_path=base_path)}
+      </button>
+    </div>
   </div>
 </header>"""
 
@@ -156,7 +179,7 @@ def _render_footer(categories: list[dict], base_path: str = "") -> str:
 
 def _render_document(*, title: str, meta_description: str, body_class: str,
                       main_html: str, categories: list[dict],
-                      base_path: str = "") -> str:
+                      base_path: str = "", last_updated_utc: str = "") -> str:
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -164,7 +187,7 @@ def _render_document(*, title: str, meta_description: str, body_class: str,
 </head>
 <body class="{body_class}">
 <a class="skip-link" href="#main">Skip to content</a>
-{_render_header(base_path)}
+{_render_header(base_path, last_updated_utc)}
 <main id="main">
 {main_html}
 </main>
@@ -331,9 +354,24 @@ def _render_search_empty_state(skill_count: int) -> str:
 </p>"""
 
 
+def _render_change_badge(status: str | None) -> str:
+    """"New"/"Updated" — set on a skill dict by generate.py from a real git
+    status check, not guessed here. Empty string (renders as nothing) for
+    every skill not touched by the update currently being shipped, which is
+    the common case — most page loads carry zero of these."""
+    if status not in ("new", "updated"):
+        return ""
+    label = "New" if status == "new" else "Updated"
+    return f'<span class="change-badge change-badge--{status}">{label}</span>'
+
+
 def _render_skill_card(skill: dict, base_path: str = "") -> str:
+    badge = _render_change_badge(skill.get("change_status"))
     return f"""<a class="card" href="{_skill_href(skill, base_path)}" data-search-card data-search-terms="{_search_haystack(skill)}">
-  <span class="card__name">{escape_html(skill['name'])}</span>
+  <span class="card__name-row">
+    <span class="card__name">{escape_html(skill['name'])}</span>
+    {badge}
+  </span>
   <p class="card__summary">{escape_html(skill.get('summary', ''))}</p>
   <span class="card__foot">
     <span class="tag">{escape_html(skill.get('category_title', ''))}</span>
@@ -366,7 +404,8 @@ def _render_category_section(category: dict, skills: dict, icon_index: int,
 </section>"""
 
 
-def render_index(categories: list[dict], skills: dict, base_path: str = "") -> str:
+def render_index(categories: list[dict], skills: dict, base_path: str = "",
+                  last_updated_utc: str = "") -> str:
     """Full HTML document string for the landing page."""
     sections = _join(*(
         _render_category_section(cat, skills, i, base_path)
@@ -390,6 +429,7 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "") -> s
         main_html=main_html,
         categories=categories,
         base_path=base_path,
+        last_updated_utc=last_updated_utc,
     )
 
 
@@ -409,8 +449,12 @@ def _render_breadcrumb(skill: dict, base_path: str = "") -> str:
 
 
 def _render_skill_head(skill: dict) -> str:
+    badge = _render_change_badge(skill.get("change_status"))
     return f"""<div class="skill-article__head">
-  <h1 class="skill-article__title">{escape_html(skill['name'])}</h1>
+  <div class="skill-article__title-row">
+    <h1 class="skill-article__title">{escape_html(skill['name'])}</h1>
+    {badge}
+  </div>
   <span class="tag skill-article__tag">{escape_html(skill.get('category_title', ''))}</span>
   <p class="lede">{escape_html(skill.get('description', ''))}</p>
 </div>"""
@@ -531,7 +575,7 @@ def _render_see_also(skill: dict, siblings: list[dict], base_path: str = "") -> 
 
 def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict | None,
                        siblings: list[dict], categories: list[dict],
-                       base_path: str = "") -> str:
+                       base_path: str = "", last_updated_utc: str = "") -> str:
     """Full HTML document string for one skill's page (siblings = other skills
     in the same category, for a 'see also' list; categories = full category
     list, for nav)."""
@@ -558,6 +602,7 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
         main_html=main_html,
         categories=categories,
         base_path=base_path,
+        last_updated_utc=last_updated_utc,
     )
 
 
@@ -588,7 +633,7 @@ def _render_code_block(highlighted_lines: list[str]) -> str:
 
 
 def render_verify_install_page(highlighted_lines: list[str], categories: list[dict],
-                                base_path: str = "") -> str:
+                                base_path: str = "", last_updated_utc: str = "") -> str:
     """Full HTML document for the page linked from the install frame's
     "See how" — the actual explanation plus the actual test source,
     syntax-highlighted. highlighted_lines is pre-rendered HTML per line
@@ -726,4 +771,5 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
         main_html=main_html,
         categories=categories,
         base_path=base_path,
+        last_updated_utc=last_updated_utc,
     )

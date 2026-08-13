@@ -18,12 +18,22 @@
 <body class="page-skill">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
+  <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
-    <a class="wordmark" href="/tbaguette-skills/">TBaguette</a>
-    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
-      <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-      <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
-    </button>
+    <a class="wordmark" href="/tbaguette-skills/">
+      <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <span class="wordmark__text">TBaguette</span>
+    </a>
+    <div class="site-header__actions">
+      <p class="site-header__updated">
+      <span class="site-header__updated-label">Updated</span>
+      <time class="site-header__updated-value" datetime="2026-08-13T13:56:17+00:00" data-format-updated>2026-08-13T13:56:17Z UTC</time>
+    </p>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+      </button>
+    </div>
   </div>
 </header>
 <main id="main">
@@ -35,7 +45,10 @@
   <span class="breadcrumb__current" aria-current="page">writing-postmortems</span>
 </nav>
 <article class="container skill-article"><div class="skill-article__head">
-  <h1 class="skill-article__title">writing-postmortems</h1>
+  <div class="skill-article__title-row">
+    <h1 class="skill-article__title">writing-postmortems</h1>
+    
+  </div>
   <span class="tag skill-article__tag">Communicating</span>
   <p class="lede">Use when writing an incident review or postmortem after an outage, degradation, data loss, failed deploy, or security event; when building a timeline, arguing about root cause, or drafting follow-up actions; when a draft is drifting toward blaming a person or converging on a single cause; or when deciding what to publish externally. Covers blameless analysis, contributing factors, detection and mitigation timing, and action item ownership.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>

@@ -18,12 +18,22 @@
 <body class="page-skill">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
+  <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
-    <a class="wordmark" href="/tbaguette-skills/">TBaguette</a>
-    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
-      <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-      <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
-    </button>
+    <a class="wordmark" href="/tbaguette-skills/">
+      <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <span class="wordmark__text">TBaguette</span>
+    </a>
+    <div class="site-header__actions">
+      <p class="site-header__updated">
+      <span class="site-header__updated-label">Updated</span>
+      <time class="site-header__updated-value" datetime="2026-08-13T13:56:17+00:00" data-format-updated>2026-08-13T13:56:17Z UTC</time>
+    </p>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+      </button>
+    </div>
   </div>
 </header>
 <main id="main">
@@ -35,7 +45,10 @@
   <span class="breadcrumb__current" aria-current="page">formidable</span>
 </nav>
 <article class="container skill-article"><div class="skill-article__head">
-  <h1 class="skill-article__title">formidable</h1>
+  <div class="skill-article__title-row">
+    <h1 class="skill-article__title">formidable</h1>
+    
+  </div>
   <span class="tag skill-article__tag">UI and design</span>
   <p class="lede">Use when designing, redesigning, critiquing, auditing, polishing, or hardening any user interface on any stack — web, native mobile, desktop, terminal or TUI, CLI output, game HUD, embedded and e-ink displays, XR and spatial, email, print and PDF, or voice and chat. Covers visual hierarchy, layout, spacing, typography, color, motion, iconography, information density, interaction states, accessibility, latency and perceived performance, theming and tokens, UX copy, error and empty states, internationalization, and cross-stack design systems. Also use when an interface feels generic, bland, cluttered, dated, or inconsistent, or when a design must be carried faithfully from one stack to another.</p>
 </div><div class="prose"><p>Design that earns to be called out-of-distribution craft — on <strong>any</strong> surface a human looks at, not just a browser window. Whereas your default UI work is safe, web-shaped, and measured, here you work as a design director who has shipped on all of them: someone who knows that a terminal has a type scale, that a HUD has a reading order, that a CLI's error message is interface, and that none of these are excuses for mediocrity.</p>
