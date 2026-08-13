@@ -1,10 +1,11 @@
 /*
  * La Boulangerie TBaguette — site.js
- * Vanilla JS, no dependencies. Three independent features, each a no-op if
+ * Vanilla JS, no dependencies. Four independent features, each a no-op if
  * its markup isn't on the current page:
  *   - theme toggle   (every page)
  *   - search/filter  (landing page only)
  *   - tabs           (formidable's skill page only)
+ *   - copy install command (landing page only)
  * Loaded with `defer`, so the DOM is fully parsed before any of this runs —
  * no DOMContentLoaded wrapper needed.
  */
@@ -134,6 +135,57 @@
   }
 
   // -------------------------------------------------------------------
+  // Copy install command
+  // -------------------------------------------------------------------
+
+  function initInstallCopy() {
+    var button = document.querySelector('[data-copy-target]');
+    if (!button) return;
+
+    var target = document.getElementById(button.getAttribute('data-copy-target'));
+    var label = button.querySelector('[data-copy-label]');
+    if (!target || !label) return;
+
+    var defaultLabel = label.textContent;
+    var resetTimer = null;
+
+    function showCopied() {
+      button.classList.add('is-copied');
+      label.textContent = 'Copied!';
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(function () {
+        button.classList.remove('is-copied');
+        label.textContent = defaultLabel;
+      }, 1600);
+    }
+
+    function fallbackCopy(text) {
+      var scratch = document.createElement('textarea');
+      scratch.value = text;
+      scratch.setAttribute('readonly', '');
+      scratch.style.position = 'fixed';
+      scratch.style.opacity = '0';
+      document.body.appendChild(scratch);
+      scratch.select();
+      try { document.execCommand('copy'); } catch (err) { /* nothing left to try */ }
+      document.body.removeChild(scratch);
+    }
+
+    button.addEventListener('click', function () {
+      var text = target.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showCopied, function () {
+          fallbackCopy(text);
+          showCopied();
+        });
+      } else {
+        fallbackCopy(text);
+        showCopied();
+      }
+    });
+  }
+
+  // -------------------------------------------------------------------
   // Tabs (formidable's stacks / commands groups)
   // -------------------------------------------------------------------
 
@@ -218,5 +270,6 @@
 
   initThemeToggle();
   initSearch();
+  initInstallCopy();
   initTabs();
 })();

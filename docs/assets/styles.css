@@ -472,6 +472,71 @@ code {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.install {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  max-width: 34rem;
+  opacity: 0;
+  animation: hero-rise var(--duration-view) var(--ease-out) 40ms forwards;
+}
+
+.install__command {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: var(--text-2);
+  white-space: nowrap;
+}
+
+.install__copy {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  transition: border-color var(--duration-micro) var(--ease-out),
+              color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.install__copy:hover {
+  color: var(--text-accent);
+  border-color: var(--border-strong);
+  background: var(--surface);
+}
+
+.install__copy-icons {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.install__copy-icon {
+  grid-area: 1 / 1;
+  transition: opacity var(--duration-micro) var(--ease-out),
+              transform var(--duration-micro) var(--ease-out);
+}
+
+.install__copy-icon--check { opacity: 0; transform: scale(0.6); }
+
+.install__copy.is-copied .install__copy-icon--copy { opacity: 0; transform: scale(0.6); }
+.install__copy.is-copied .install__copy-icon--check { opacity: 1; transform: none; color: var(--text-accent); }
+.install__copy.is-copied { color: var(--text-accent); border-color: var(--border-strong); }
+
 .search {
   margin-top: var(--space-7);
   max-width: 34rem;

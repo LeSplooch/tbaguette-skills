@@ -2,7 +2,7 @@
 
 `python3 -m unittest discover` only finds test_content_pipeline.py's
 TestCase-based tests (42 checks) — it silently never runs test_templates.py
-(56 checks) or test_generate.py (16 checks), since both use a plain
+(59 checks) or test_generate.py (16 checks), since both use a plain
 assert-based runner rather than unittest, and `discover` has no way to know
 they exist. That gap is exactly how a real bug shipped once in this repo
 with a green "OK" on record: the suite that would have caught it was never
@@ -24,7 +24,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 SUITES = [
     ("content_pipeline.py (unittest, 42 checks)",
      [sys.executable, "-m", "unittest", "test_content_pipeline", "-v"]),
-    ("templates.py (56 checks)", [sys.executable, "test_templates.py"]),
+    ("templates.py (59 checks)", [sys.executable, "test_templates.py"]),
     ("generate.py integration (16 checks)", [sys.executable, "test_generate.py"]),
 ]
 

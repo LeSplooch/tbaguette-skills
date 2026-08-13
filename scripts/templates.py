@@ -180,6 +180,27 @@ def _render_document(*, title: str, meta_description: str, body_class: str,
 # ---------------------------------------------------------------------------
 
 
+INSTALL_COMMAND = (
+    "git clone https://github.com/LeSplooch/tbaguette-skills.git "
+    "~/.claude/skills/TBaguette"
+)
+
+
+def _render_install(base_path: str = "") -> str:
+    command = escape_html(INSTALL_COMMAND)
+    return f"""<div class="install">
+  <code class="install__command" id="install-command">{command}</code>
+  <button class="install__copy" type="button" data-copy-target="install-command"
+          aria-label="Copy install command">
+    <span class="install__copy-icons">
+      <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-copy"></use></svg>
+      <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-check"></use></svg>
+    </span>
+    <span data-copy-label>Copy</span>
+  </button>
+</div>"""
+
+
 def _render_hero(skill_count: int, category_count: int, base_path: str = "") -> str:
     lede = (
         f"{skill_count} Claude Code skills for the craft between the ticket and the "
@@ -189,6 +210,7 @@ def _render_hero(skill_count: int, category_count: int, base_path: str = "") -> 
     return f"""<section class="hero">
   <div class="container">
     <h1 class="hero__headline">An atelier for the way you build.</h1>
+    {_render_install(base_path)}
     <p class="hero__lede">{escape_html(lede)}</p>
     {_render_search_field(base_path)}
   </div>
