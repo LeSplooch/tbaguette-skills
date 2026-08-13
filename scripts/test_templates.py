@@ -168,6 +168,15 @@ def main() -> None:
           index_html.index("hero__headline") < index_html.index('id="install-command"')
           < index_html.index("hero__lede"))
     check("has a copy button wired to the install command", 'data-copy-target="install-command"' in index_html)
+    check("install command is wrapped in its labeled frame",
+          index_html.index("install-frame") < index_html.index("Install TBaguette")
+          < index_html.index('id="install-command"'))
+    label_start = index_html.index('install-frame__label')
+    label_end = index_html.index('</p>', label_start)
+    check("frame label itself carries an icon (icon-crust also appears in category "
+          "headers elsewhere on the page, so this checks the label's own slice, not "
+          "just presence anywhere)",
+          '#icon-crust' in index_html[label_start:label_end])
     print(f"  wrote {index_path}")
 
     # --- render_skill_page: formidable (the interesting one) --------------

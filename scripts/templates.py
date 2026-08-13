@@ -188,16 +188,24 @@ INSTALL_COMMAND = (
 
 def _render_install(base_path: str = "") -> str:
     command = escape_html(INSTALL_COMMAND)
-    return f"""<div class="install">
-  <code class="install__command" id="install-command">{command}</code>
-  <button class="install__copy" type="button" data-copy-target="install-command"
-          aria-label="Copy install command">
-    <span class="install__copy-icons">
-      <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-copy"></use></svg>
-      <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-check"></use></svg>
-    </span>
-    <span data-copy-label>Copy</span>
-  </button>
+    return f"""<div class="install-frame">
+  <p class="install-frame__label">
+    {_icon("icon-crust", base_path=base_path)}
+    Install TBaguette&rsquo;s skills
+  </p>
+  <div class="install-frame__body">
+    <div class="install">
+      <code class="install__command" id="install-command">{command}</code>
+      <button class="install__copy" type="button" data-copy-target="install-command"
+              aria-label="Copy install command">
+        <span class="install__copy-icons">
+          <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-copy"></use></svg>
+          <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-check"></use></svg>
+        </span>
+        <span data-copy-label>Copy</span>
+      </button>
+    </div>
+  </div>
 </div>"""
 
 

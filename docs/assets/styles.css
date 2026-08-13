@@ -472,14 +472,56 @@ code {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.install-frame {
+  margin-top: var(--space-6);
+  max-width: 34rem;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid color-mix(in oklch, var(--accent) 42%, transparent);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 12%, transparent),
+    0 20px 44px -20px color-mix(in oklch, var(--accent) 70%, transparent);
+  opacity: 0;
+  animation: hero-rise var(--duration-view) var(--ease-out) 40ms forwards;
+  transition: border-color var(--duration-enter) var(--ease-out),
+              box-shadow var(--duration-enter) var(--ease-out);
+}
+
+.install-frame:focus-within {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 25%, transparent),
+    0 24px 52px -18px color-mix(in oklch, var(--accent) 85%, transparent);
+}
+
+.install-frame__label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  background:
+    radial-gradient(120% 180% at 0% 0%,
+      color-mix(in oklch, var(--accent) 18%, transparent),
+      transparent 70%),
+    var(--surface-hover);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: var(--text-3);
+  font-weight: 620;
+  color: var(--text-primary);
+}
+
+.install-frame__label .icon { width: 1.15em; height: 1.15em; color: var(--text-accent); }
+
+.install-frame__body { padding: var(--space-5); }
+
 .install {
   display: flex;
   align-items: stretch;
   gap: var(--space-2);
-  margin-top: var(--space-6);
-  max-width: 34rem;
-  opacity: 0;
-  animation: hero-rise var(--duration-view) var(--ease-out) 40ms forwards;
 }
 
 .install__command {
