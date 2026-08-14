@@ -283,9 +283,7 @@ INSTALL_PROMPT = """Install (or update) the TBaguette skills plugin for Claude C
 5. After a successful clone or pull, confirm <target>/CATALOG.md and
    <target>/skills/ both exist, so "it worked" is checked, not assumed.
 6. Tell me to restart Claude Code (or run /reload-plugins) — skills then
-   invoke as TBaguette:skill-name.
-7. This only works for Claude Code. The Claude Desktop app and claude.ai
-   chat load skills from my account instead of this folder."""
+   invoke as TBaguette:skill-name."""
 
 
 def _render_install(base_path: str = "") -> str:
