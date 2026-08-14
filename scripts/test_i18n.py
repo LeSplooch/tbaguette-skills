@@ -244,6 +244,69 @@ def check_rtl_css_pass() -> None:
           '<div class="code-block" dir="ltr">' in templates_src)
 
 
+def check_language_switcher_css() -> None:
+    """The language switcher is the one new piece of chrome the i18n work
+    adds, and it shipped with literally zero CSS: none of its four class
+    names appeared anywhere in styles.css. A native unstyled <details>
+    expands in normal flow, so opening it inflated the header from ~140px
+    to ~620px and pushed the whole page down, on every page of all 16
+    locales.
+
+    Asserting the selectors merely *exist* would repeat the weakness the
+    final review called out in Task 9's RTL checks, so each check below
+    pins the property that actually does the work -- above all the
+    absolute positioning, which is the entire difference between a popover
+    and a header that grows by 480px."""
+    print("language switcher CSS")
+    css_path = Path(__file__).resolve().parent.parent / "docs" / "assets" / "styles.css"
+    css = css_path.read_text(encoding="utf-8")
+
+    def rule_body(selector: str) -> str:
+        start = css.index(selector + " {")
+        return css[start:css.index("}", start)]
+
+    for selector in (".language-switcher", ".language-switcher__summary",
+                     ".language-switcher__list", ".language-switcher__link"):
+        check(f"{selector} has a rule at all (all four shipped unstyled)",
+              selector + " {" in css)
+
+    switcher = rule_body(".language-switcher")
+    check("the <details> establishes a containing block, so the panel can "
+          "anchor to it rather than to the page",
+          "position: relative" in switcher)
+
+    panel = rule_body(".language-switcher__list")
+    check("the open panel is OUT OF NORMAL FLOW -- the whole bug was a "
+          "16-item list expanding in flow and inflating the header",
+          "position: absolute" in panel)
+    check("...and is anchored with the logical inset-inline-end, not a "
+          "physical right, so /ar/ mirrors without a [dir=\"rtl\"] override",
+          "inset-inline-end" in panel and "right:" not in panel)
+    check("...and stacks above the header band rather than behind it",
+          "z-index" in panel)
+    check("...and drops the <ul>'s bullets and default indent",
+          "list-style: none" in panel)
+    check("...and scrolls rather than running off a short viewport, since "
+          "16 entries overflow one",
+          "overflow-y: auto" in panel and "max-height" in panel)
+
+    summary = rule_body(".language-switcher__summary")
+    check("the summary drops the native disclosure triangle",
+          "list-style: none" in summary)
+    check("...including on WebKit/Blink, which ignores list-style on a "
+          "summary and needs the pseudo-element reset too",
+          ".language-switcher__summary::-webkit-details-marker" in css)
+
+    check("the current locale, marked aria-current in the markup, gets a "
+          "visible treatment too -- it was announced but indistinguishable",
+          ".language-switcher__link[aria-current]" in css)
+
+    check("the switcher's transitions are covered by the reduced-motion "
+          "block, like every other transitioned element on the site",
+          ".language-switcher__summary, .language-switcher__summary::after"
+          in css[css.index("@media (prefers-reduced-motion: reduce)"):])
+
+
 def check_i18n_status() -> None:
     print("i18n_status")
     import i18n_status
@@ -328,6 +391,7 @@ def main() -> None:
     check_full_locale_build()
     check_locale_count_gate()
     check_rtl_css_pass()
+    check_language_switcher_css()
     check_i18n_status()
     check_real_i18n_content_key_parity()
     print(f"\n{checker.total} checks passed.")

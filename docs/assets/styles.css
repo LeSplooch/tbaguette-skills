@@ -615,6 +615,122 @@ code {
 
 .site-header__updated-value { font-variant-numeric: tabular-nums; }
 
+/* Language switcher — a native <details> styled as a popover.
+   The whole point of the absolute positioning below is that an unstyled
+   <details> expands in normal flow: with 16 locales that inflated the
+   header from ~140px to ~620px on open and pushed the entire page down,
+   while .site-header__inner's align-items: center dragged the theme
+   toggle and the timestamp to the vertical middle of the open list.
+   Taking the list out of flow is the fix; everything else here is making
+   it look like it belongs to the rest of the header.
+
+   Positioned entirely with logical properties (inset-inline-end,
+   padding-inline, text-align: start) rather than left/right, so /ar/
+   mirrors for free: the panel's trailing edge pins to the summary's
+   trailing edge, which is the right edge in LTR and the left edge in RTL,
+   and the panel grows inward from the header edge in both. No
+   [dir="rtl"] override needed, and none is wanted — an override here
+   would be a second place to keep in sync. */
+.language-switcher {
+  position: relative;
+  flex-shrink: 0;
+  font-size: var(--text-2);
+}
+
+.language-switcher__summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  /* Both lines are needed to drop the native disclosure triangle:
+     list-style covers Firefox and current Chrome, the pseudo-element
+     covers older WebKit/Blink, which ignores list-style on a summary. */
+  list-style: none;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.language-switcher__summary::-webkit-details-marker { display: none; }
+
+.language-switcher__summary:hover {
+  color: var(--text-accent);
+  border-color: var(--border-strong);
+  background: var(--surface);
+}
+
+/* A chevron drawn from two borders rather than a glyph or a sprite icon:
+   this rule set is CSS-only by design (the markup it styles is already
+   generated and shipped in 16 locales), so it cannot add an <svg> use
+   element. Rotating a square's two adjacent borders points it down when
+   closed and up when open, and because it points along the block axis
+   rather than the inline one, it needs no RTL treatment. */
+.language-switcher__summary::after {
+  content: '';
+  width: 0.375rem;
+  height: 0.375rem;
+  border-inline-end: 1.5px solid currentColor;
+  border-block-end: 1.5px solid currentColor;
+  transform: translateY(-1px) rotate(45deg);
+  transition: transform var(--duration-micro) var(--ease-out);
+}
+
+.language-switcher[open] .language-switcher__summary::after {
+  transform: translateY(1px) rotate(225deg);
+}
+
+.language-switcher__list {
+  position: absolute;
+  z-index: 20;
+  inset-block-start: calc(100% + var(--space-2));
+  inset-inline-end: 0;
+  min-width: 100%;
+  /* 16 entries overrun a short viewport, so the panel scrolls rather than
+     running off the bottom of the screen. overscroll-behavior stops that
+     scroll from chaining to the page once the list hits its end. */
+  max-height: min(60vh, 22rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: var(--space-2);
+  /* The <ul> is a real list; without this it keeps bullets and the
+     browser's default inline-start indent inside the panel. */
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: 0 18px 40px -16px hsl(var(--shadow-ink) / 0.65);
+}
+
+.language-switcher__link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  text-align: start;
+  white-space: nowrap;
+  transition: color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.language-switcher__link:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+/* The switcher marks the page's own locale with aria-current="true". That
+   was announced but invisible, so the current language was
+   indistinguishable from the other fifteen. */
+.language-switcher__link[aria-current] {
+  color: var(--text-accent);
+  font-weight: 600;
+}
+
 .theme-toggle {
   position: relative;
   flex-shrink: 0;
@@ -1534,7 +1650,9 @@ code {
 
   .card, .theme-toggle__icon, .search__field, .tabs__tab,
   .prevnext__link, .see-also__name, .site-footer__categories a,
-  .skip-link, .prose a, .prose tbody tr {
+  .skip-link, .prose a, .prose tbody tr,
+  .language-switcher__summary, .language-switcher__summary::after,
+  .language-switcher__link {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }

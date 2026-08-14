@@ -1,6 +1,6 @@
 /*
  * La Boulangerie TBaguette — site.js
- * Vanilla JS, no dependencies. Seven independent features, each a no-op if
+ * Vanilla JS, no dependencies. Eight independent features, each a no-op if
  * its markup isn't on the current page:
  *   - theme toggle   (every page)
  *   - search/filter  (landing page only)
@@ -9,6 +9,9 @@
  *   - copy install command (landing page only; one button per platform tab)
  *   - header "Updated" time (every page — formats the baked-in UTC instant
  *                             as the visitor's local time)
+ *   - language switcher dismissal (every page — Escape / outside click on
+ *                                   the native <details>; opening and
+ *                                   closing it needs no JS)
  *   - site update check (every page — polls docs/version.txt every 10-12s;
  *                         on a mismatch, shows a reload-only modal)
  *   - post-reload scroll restore (every page — companion to the update
@@ -506,6 +509,36 @@
     scheduleNext();
   }
 
+  // -------------------------------------------------------------------
+  // Language switcher — the panel is a native <details>, so it opens,
+  // closes, and is keyboard-reachable with no JS at all, and the CSS
+  // takes it out of flow so it overlays rather than pushing the header.
+  // The one behaviour a bare <details> lacks is dismissal: it stays open
+  // until its own summary is clicked again, which for a popover anchored
+  // in site chrome reads as stuck. This adds only that.
+  // -------------------------------------------------------------------
+
+  function initLanguageSwitcher() {
+    var details = document.querySelector('.language-switcher');
+    if (!details) return;
+
+    document.addEventListener('click', function (event) {
+      // contains() covers the summary itself, so clicking it still
+      // toggles normally instead of being closed out from under the
+      // browser's own default handling.
+      if (details.open && !details.contains(event.target)) details.open = false;
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape' || !details.open) return;
+      details.open = false;
+      // Escape moved focus nowhere on its own; without this it would be
+      // left on a link inside a panel that no longer exists.
+      var summary = details.querySelector('summary');
+      if (summary) summary.focus();
+    });
+  }
+
   function initScrollRestore() {
     var saved;
     try {
@@ -524,6 +557,7 @@
   initInstallCopy();
   initTabs();
   initUpdatedTime();
+  initLanguageSwitcher();
   initScrollRestore();
   initVersionCheck();
 })();
