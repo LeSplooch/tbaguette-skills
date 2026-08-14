@@ -17,6 +17,7 @@
   "search_status_partial_template": "Correspondances : {shown} sur {total}.",
   "search_empty_query_open": "« ",
   "search_empty_query_close": " »",
+  "sentence_end": ".",
   "category_count_singular": "compétence",
   "category_count_plural": "compétences",
   "install_frame_label_template": "Installer les compétences de {brand}",

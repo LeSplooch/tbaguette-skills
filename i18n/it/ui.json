@@ -17,6 +17,7 @@
   "search_status_partial_template": "Corrispondenze: {shown} skill su {total}.",
   "search_empty_query_open": "«",
   "search_empty_query_close": "»",
+  "sentence_end": ".",
   "category_count_singular": "skill",
   "category_count_plural": "skill",
   "install_frame_label_template": "Installa le skill di {brand}",

@@ -517,6 +517,62 @@ def check_i18n_quote_glyphs() -> None:
           'data-i18n-quote-close="TEST-CLOSE"' in html_custom)
 
 
+def check_i18n_sentence_end() -> None:
+    """_render_install (the "verified... See how." note) and
+    _render_search_empty_state (the 'No skills match "x".' empty state)
+    each had a bare ASCII '.' sitting in the f-string literal itself,
+    outside any Strings field, applied unconditionally regardless of
+    locale. Same bug class as check_i18n_quote_glyphs above (f8b726cc),
+    same fix shape: thread a new Strings field (sentence_end) through both
+    call sites instead of hardcoding the literal.
+
+    This was invisible for the six Latin/Cyrillic-script locales shipped
+    so far -- a period is correct sentence-final punctuation for all of
+    French/Spanish/German/Italian/Portuguese/Russian -- but wrong for
+    Chinese, which ends a declarative sentence with the full-width
+    ideographic full stop 。instead, producing a half-width "." visibly
+    glued onto otherwise full-width-punctuated Chinese prose.
+
+    The source-text checks below read templates.py's own source and fail
+    with a clean, readable assertion before the fix. The render-based
+    checks further down would instead crash on a raw TypeError before the
+    fix (dataclasses.replace(ENGLISH_STRINGS, sentence_end=...) can't set
+    a field that doesn't exist yet on Strings) -- ordered second on
+    purpose, so the source-text checks are what actually reports red
+    first.
+    """
+    import dataclasses
+
+    templates_src = Path(__file__).resolve().with_name("templates.py").read_text(encoding="utf-8")
+    check("_render_install's install_note_see_how line no longer hardcodes "
+          "a bare '.' right after </a> (must come from strings.sentence_end "
+          "instead)",
+          "{escape_html(strings.install_note_see_how)}</a>.</span>" not in templates_src)
+    check("_render_search_empty_state's line no longer hardcodes a bare "
+          "'.' right after the search-query </span>",
+          "data-search-empty-query></span>." not in templates_src)
+
+    html_en = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path="")
+    check("default English render still ends the install note with a "
+          "literal '.' after \"See how\" (sentence_end defaults to '.', so "
+          "English output is unchanged)",
+          "See how</a>." in html_en)
+    check("default English render still ends the search empty state with "
+          "a literal '.' right after the query span",
+          "data-search-empty-query></span>." in html_en)
+
+    custom_strings = dataclasses.replace(ENGLISH_STRINGS, sentence_end="★")
+    html_custom = render_index(
+        FIXTURE["categories"], FIXTURE["skills"], base_path="", strings=custom_strings,
+    )
+    check("a Strings instance with a custom sentence_end renders it at the "
+          "install note site instead of a hardcoded '.'",
+          "See how</a>★" in html_custom and "See how</a>." not in html_custom)
+    check("...and at the search empty-state site too",
+          "data-search-empty-query></span>★" in html_custom
+          and "data-search-empty-query></span>." not in html_custom)
+
+
 def main() -> None:
     categories = FIXTURE["categories"]
     skills = FIXTURE["skills"]
@@ -674,6 +730,7 @@ def main() -> None:
     check_i18n_fallback_banner()
     check_i18n_multiword_heading_id()
     check_i18n_quote_glyphs()
+    check_i18n_sentence_end()
 
     print(f"\n{checker.total} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")

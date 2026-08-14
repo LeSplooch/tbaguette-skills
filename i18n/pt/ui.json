@@ -17,6 +17,7 @@
   "search_status_partial_template": "{shown} de {total} skills correspondem.",
   "search_empty_query_open": "“",
   "search_empty_query_close": "”",
+  "sentence_end": ".",
   "category_count_singular": "skill",
   "category_count_plural": "skills",
   "install_frame_label_template": "Instalar as skills do {brand}",

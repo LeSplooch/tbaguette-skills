@@ -17,6 +17,7 @@
   "search_status_partial_template": "Treffer: {shown} von {total} Skills.",
   "search_empty_query_open": "„",
   "search_empty_query_close": "“",
+  "sentence_end": ".",
   "category_count_singular": "Skill",
   "category_count_plural": "Skills",
   "install_frame_label_template": "{brand}-Skills installieren",

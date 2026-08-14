@@ -17,6 +17,7 @@
   "search_status_partial_template": "Совпадений: {shown} из {total} навыков.",
   "search_empty_query_open": "«",
   "search_empty_query_close": "»",
+  "sentence_end": ".",
   "category_count_singular": "навык",
   "category_count_plural": "навыков",
   "install_frame_label_template": "Установить навыки {brand}",

@@ -83,6 +83,7 @@ class Strings:
     search_status_partial_template: str
     search_empty_query_open: str
     search_empty_query_close: str
+    sentence_end: str
     category_count_singular: str
     category_count_plural: str
     install_frame_label_template: str
@@ -144,6 +145,7 @@ ENGLISH_STRINGS = Strings(
     search_status_partial_template="{shown} of {total} skills match.",
     search_empty_query_open="“",
     search_empty_query_close="”",
+    sentence_end=".",
     category_count_singular="skill",
     category_count_plural="skills",
     install_frame_label_template="Install {brand}’s skills",
@@ -730,7 +732,7 @@ def _render_install(base_path: str = "", *,
     </div>
     <p class="install-frame__note">
       {_icon("icon-check", base_path=base_path)}
-      <span>{escape_html(strings.install_note_verified_text)} <a href="{_locale_url(locale, base_path, 'verify-install/')}">{escape_html(strings.install_note_see_how)}</a>.</span>
+      <span>{escape_html(strings.install_note_verified_text)} <a href="{_locale_url(locale, base_path, 'verify-install/')}">{escape_html(strings.install_note_see_how)}</a>{escape_html(strings.sentence_end)}</span>
     </p>
     <p class="install-frame__note">
       {_icon("icon-check", base_path=base_path)}
@@ -772,7 +774,7 @@ def _render_search_field(base_path: str = "", strings: Strings = ENGLISH_STRINGS
 def _render_search_empty_state(skill_count: int, strings: Strings = ENGLISH_STRINGS) -> str:
     suffix = strings.search_no_match_suffix_template.format(skill_count=skill_count)
     return f"""<p class="search__empty container" data-search-empty hidden>
-  {escape_html(strings.search_no_match_prefix)} <span class="search__empty-query" data-search-empty-query></span>.
+  {escape_html(strings.search_no_match_prefix)} <span class="search__empty-query" data-search-empty-query></span>{escape_html(strings.sentence_end)}
   <button type="button" data-search-reset>{escape_html(strings.search_reset_button)}</button> {escape_html(suffix)}
 </p>"""
 

@@ -17,6 +17,7 @@
   "search_status_partial_template": "{total} 个技能中有 {shown} 个匹配。",
   "search_empty_query_open": "“",
   "search_empty_query_close": "”",
+  "sentence_end": "。",
   "category_count_singular": "个技能",
   "category_count_plural": "个技能",
   "install_frame_label_template": "安装 {brand} 技能",

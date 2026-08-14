@@ -17,6 +17,7 @@
   "search_status_partial_template": "Coinciden {shown} de {total} habilidades.",
   "search_empty_query_open": "«",
   "search_empty_query_close": "»",
+  "sentence_end": ".",
   "category_count_singular": "habilidad",
   "category_count_plural": "habilidades",
   "install_frame_label_template": "Instalar las habilidades de {brand}",
