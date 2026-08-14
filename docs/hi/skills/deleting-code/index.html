@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">बदलाव ज़मीन पर उतारना</span>
   <p class="lede">जब ऐसा कोड, फ़ीचर, एंडपॉइंट, कॉन्फ़िग कुंजी, कॉलम या डिपेंडेंसी हटानी हो जो इस्तेमाल में नहीं दिखती, जब तय करना हो कि कोई चीज़ सचमुच मर चुकी है या नहीं, जब किसी डेप्रिकेशन के लिए हटाने का रास्ता और तारीख़ तय करनी हो, जब कोड कमेंट करके छोड़ दिया गया हो या “क्या पता कब काम आ जाए” कहकर रखा गया हो, या जब किसी चीज़ को बुलाने वाले सब रिपॉजिटरी के भीतर से दिखते ही न हों, तब इस्तेमाल करें। इसमें यह साबित करना कि चीज़ सचमुच मरी हुई है, डेप्रिकेशन का क्रम, और साथ में टेस्ट तथा कॉन्फ़िग भी हटाना शामिल हैं।</p>
-</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Deletion is the highest-leverage change available and the one people make on the thinnest evidence. The question is never &quot;does anything call this&quot; — it is &quot;what would constitute proof that nothing does&quot;, and a clean search is not proof.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Removing a feature, endpoint, flag, module, table column, or dependency</li><li>Something looks unused and you are about to trust a search that found nothing</li><li>A deprecation has been in place for a while with no removal date attached</li><li>Code was commented out rather than removed, or kept because it &quot;might be useful&quot;</li><li>Not for: removing an old implementation as the final phase of a replacement — see <code>incremental-migration</code>. Not for judging whether historical code is load-bearing — see <code>code-archaeology</code>.</li></ul>

@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">बदलाव ज़मीन पर उतारना</span>
   <p class="lede">जब पहले से इस्तेमाल में चल रहे किसी सिस्टम, लाइब्रेरी, API, स्टोरेज इंजन या डेटा फ़ॉर्मैट को बदलना हो, जब बदलाव इतना बड़ा हो कि एक ही रिलीज़ में न उतरे, जब पुराने रास्ते से नए रास्ते पर कटओवर की योजना बनानी हो, जब पुराना और नया दोनों अमल में हों और कोई भी पूरा न हुआ हो, जब बदलाव सैकड़ों कॉल साइट को छूता हो, या जब रोलबैक करने पर नए रास्ते का लिखा डेटा पुराना रास्ता पढ़ ही न सके, तब इस्तेमाल करें।</p>
-</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Any large replacement ships as a sequence of individually deployable, individually revertible steps. The big-bang cutover is a plan that assumes you will not be interrupted, that nothing will be discovered mid-flight, and that rollback is a button — and all three assumptions fail together, at the worst moment.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Replacing a subsystem, dependency, protocol, or storage layer that has live traffic</li><li>A change whose full form would touch more code than can be reviewed or reverted at once</li><li>Two implementations are already live and the second one has stopped advancing</li><li>Deciding when it is safe to cut over from an old path to a new one</li><li>Not for: the internals of a data backfill or a schema version sequence — see <code>data-migrations</code> and <code>schema-evolution</code>. Not for the toggle mechanism itself — see <code>feature-flagging</code>.</li></ul>

@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Mis à jour</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Langue: Français</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Tests</span>
   <p class="lede">À utiliser quand les tests par l’exemple ne couvrent que les cas auxquels quelqu’un a pensé, quand on teste des parseurs, des sérialiseurs, des encodeurs, des tris, des comparateurs, de l’arithmétique, des caches ou des structures de données, quand un bug arrive par une entrée que personne n’avait anticipée, quand on remplace une implémentation par une autre qui doit lui être équivalente, ou quand on sort le fuzzing, les générateurs, la réduction des contre-exemples, les invariants ou les tests d’aller-retour. Pas pour un comportement spécifié uniquement sous forme de table de cas.</p>
-</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>An example test asserts what one input produces. A property asserts a relationship that holds for every input, then lets a generator hunt for the counterexample. The generator finds the inputs you would never have written down — which is exactly where the bugs are.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>The specification is a <strong>rule</strong>, not a list: &quot;parsing undoes printing&quot;, &quot;the result is always sorted&quot;, &quot;cost never decreases when items are added&quot;.</li><li>Input has structure with a large or unbounded space: text, numbers, collections, trees, wire formats, dates.</li><li>Replacing, porting, or optimizing an implementation that must agree with the old one.</li><li>Handling untrusted or externally-supplied input, where &quot;never crashes&quot; is itself a requirement.</li><li>Not for: behavior whose whole specification is a table of cases (tax brackets, status-code mappings, business rules enumerated by a stakeholder). Writing a property there just restates the table twice.</li><li>Not for: the red-green-refactor cycle, owned by <code>test-driven-development</code>.</li></ul>

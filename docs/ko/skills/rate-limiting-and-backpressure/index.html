@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">시스템 설계</span>
   <p class="lede">시스템이 감당할 수 있는 것보다 많은 부하를 받고 있을 때, 스로틀링이나 할당량, 429 응답을 설계할 때, 큐가 계속 자라거나 몇 시간 늦게야 비워질 때, 재시도가 부분 장애를 전면 장애로 키울 때, 커넥션이나 스레드 풀이 고갈될 때, 요청이 실패하는 대신 지연 시간이 올라갈 때, 부하를 버릴지 큐에 쌓을지 생산자를 늦출지 고를 때 사용합니다.</p>
-</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>When demand exceeds capacity, the only question is which work fails and how quickly it finds out. A system with no explicit answer still answers: it queues everything, latency grows without bound, and every caller times out on work that will be completed and then discarded. Choosing the victim deliberately is the entire discipline.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>One caller, tenant, or job is degrading the service for everyone</li><li>Designing quotas, throttles, or the response a caller gets when over the limit</li><li>A queue whose depth grows through the day, or that drains long after the traffic ended</li><li>Timeouts, pool exhaustion, or a cascading failure spreading between services</li><li>Retry behavior amplifying a partial failure — error rate rising after a dependency starts recovering</li><li>Not for: capacity planning and scaling decisions; this covers what happens in the window where capacity is already insufficient</li></ul>

@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">테스트</span>
   <p class="lede">결함이 보고되었거나 재현되었거나 고쳐졌을 때, 프로덕션 장애나 핫픽스에 대한 테스트를 쓸 때, 예전에 고쳤던 버그가 되돌아왔을 때, 같은 결함이 다시 나타나지 못하도록 무엇을 단언할지 정할 때 사용합니다. 어느 계층에 둘지 고르기, 결함의 이름을 따 테스트 이름 짓기, 단언의 범위 잡기, 수정이 들어간 뒤에도 그 테스트를 남길지를 다룹니다.</p>
-</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A test that has never failed for the reason it claims to guard is decoration. The defect is the specification: it names an assumption the code violated, and the test's job is to make that assumption cost nothing to hold forever.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A defect has been reproduced and is about to be fixed.</li><li>A hotfix shipped without a test and needs one added behind it.</li><li>A bug that was fixed before has reappeared, meaning the previous guard was absent, deleted, or scoped wrong.</li><li>A production incident is being written up and needs a permanent guard, not an action item.</li><li>Not for: turning a vague report into an on-demand failure — that is <code>reproducing-bugs</code>.</li><li>Not for: finding the root cause — that is <code>systematic-debugging</code>. Write this test after the cause is known, or the test pins the symptom.</li></ul>

@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Обновлено</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Язык: Русский</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Проектирование систем</span>
   <p class="lede">Применяйте, когда у чего-то есть жизненный цикл — заказ, задача, соединение, загрузка, сессия, подписка, устройство, шаг рабочего процесса — или когда одну сущность описывают несколько булевых полей и флагов. Также при полях статуса, невозможных сочетаниях флагов, записях, навсегда застрявших в одном статусе, необъяснимых сменах состояния, падении на середине перехода, таймаутах и отмене, а также при добавлении или переименовании состояния, которое уже сохранено в хранилище.</p>
-</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Three booleans encode eight combinations; if only five are real, you shipped three bugs and no way to detect them. Name the states, enumerate the transitions, and make the forbidden ones observable failures rather than silent no-ops.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Anything with a lifecycle, or any entity carrying three or more flags that qualify each other.</li><li>Conditions like <code>isLoading &amp;&amp; !hasError &amp;&amp; data != null</code> appearing in more than one place.</li><li>Symptoms: &quot;how did it get into this state?&quot;, rows stuck in <code>processing</code> forever, duplicate side effects after a reload, a cancelled item that still gets processed.</li><li>Adding a state, or renaming one, in something already persisted.</li><li>Not for: rewriting existing stored rows once the states change (data-migrations), or the wire compatibility rules for the state field (schema-evolution).</li></ul>

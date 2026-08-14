@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">调试与性能</span>
   <p class="lede">在以下情况下使用：需要读懂一次崩溃、异常、panic、traceback、核心转储或错误日志；栈顶那一帧落在框架或标准库里面；调用栈被截断、跨了异步、经过压缩混淆、被内联，或者符号已被剥离；或者一个错误带着一串包装过的成因链，或者一组聚合错误。涵盖哪一帧才指向真正的缺陷，以及每一帧分别能证明和不能证明什么。</p>
-</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>The frame that threw is rarely the frame that is wrong. Read for the boundary where code you control handed a value to code you do not, because that is where the defect almost always lives.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A crash, exception, panic, or error log needs to be turned into a specific line of code</li><li>The top of the trace is inside a standard library, framework, or runtime</li><li>The trace is async, truncated, minified, stripped, or full of generated names</li><li>An error message has a &quot;caused by&quot; tail, a suppressed exception, or a list of sub-errors</li><li>The trace has been read once and produced no candidate</li></ul>

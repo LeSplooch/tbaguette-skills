@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">تصميم الأنظمة</span>
   <p class="lede">استخدِمها عند الملء الرجعيّ لبيانات قائمة أو تحويلها أو إعادة ترميزها أو نقلها وهي أكبر من أن تتّسع لها معاملة واحدة، وعندما يجب أن يجتاح سكربت لمرة واحدة ملايين السجلات، وعندما تُقتَل عملية ترحيل في منتصفها ويجب استئنافها دون تطبيق مزدوج، وعندما يجب أن تعمل بموازاة حركة المرور الحيّة، وعندما يسبّب الملء الرجعيّ تزاحمًا على الأقفال أو تأخُّرًا في النسخ المتماثل، أو عندما لا يكون لتغيير البيانات تراجعٌ ممكن.</p>
-</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A long-running data migration is a program that will be interrupted — by a timeout, a deploy, an OOM kill, or a human with a keyboard. The half-run state is not an edge case to handle at the end; it is the state you design for from the first line. Everything else in this skill follows from that.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Backfilling a new field, re-encoding values, splitting or merging records, changing units or formats</li><li>Copying or moving data between stores, tables, collections, topics, buckets, or file layouts</li><li>Any sweep large enough that a single transaction would time out, exhaust memory, or hold locks past a few seconds</li><li>A migration that must run while production writes the same data</li><li>A migration that was killed partway and someone is about to re-run it from the top</li><li>Not for: changing the shape of the contract itself — that is schema evolution, and it decides the order in which the steps below are allowed to happen</li></ul>
@@ -128,11 +128,11 @@
 <ul><li>&quot;It should only take a few minutes&quot; with no count and no per-record measurement</li><li>A single transaction over the whole table</li><li>Running the real thing before a dry run has reported an empty ambiguous bucket</li><li>Re-running from the top after a failure &quot;to be safe&quot;</li><li>Backfilling before dual-write is live</li><li>The rollback plan is &quot;restore from backup&quot; for a store that is still taking writes</li><li>Verification described as &quot;we will spot-check a few afterwards&quot;</li><li>A <code>sleep</code> between batches chosen by intuition instead of a measured load signal</li></ul></div></article>
 <nav class="container prevnext" aria-label="التنقُّل بين المهارات"><a class="prevnext__link" href="/tbaguette-skills/ar/skills/schema-evolution/">
   <span class="prevnext__label">السابق</span>
-  <span class="prevnext__name">← schema-evolution</span>
+  <span class="prevnext__name">→ schema-evolution</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ar/skills/configuration-management/">
   <span class="prevnext__label">التالي</span>
-  <span class="prevnext__name">configuration-management →</span>
+  <span class="prevnext__name">configuration-management ←</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">المزيد في «تصميم الأنظمة»</h2>

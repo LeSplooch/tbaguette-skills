@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">सिस्टम डिज़ाइन करना</span>
   <p class="lede">जब तय करना हो कि क्या-क्या एक साथ रहेगा — मॉड्यूल, पैकेज, क्रेट, लाइब्रेरी, प्रोसेस या सर्विस का बँटवारा; कंपोनेंट अलग करना या मिलाना; किसी वेंडर के SDK को अपने इंटरफ़ेस के पीछे लपेटना; फ़ोल्डरों का ढाँचा दोबारा जमाना — तब इस्तेमाल करें। गोल-गोल घूमती डिपेंडेंसी, सिर्फ़ बढ़ता जाने वाला साझा या common मॉड्यूल, हर फ़ीचर का हर मॉड्यूल को छूना, तय क्रम में ही डिप्लॉय हो सकने वाले कंपोनेंट, और यह सवाल कि किसी चीज़ को अपना अलग प्रोसेस, रिपॉजिटरी या सर्विस मिलनी चाहिए या नहीं — इन पर भी।</p>
-</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A boundary is a promise that two sides can change independently. If they cannot, you paid indirection, serialization, versioning, and cross-boundary debugging and got nothing back.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Deciding module, package, crate, library, or service splits; extracting a component; merging two that never move apart.</li><li>Wrapping a vendor SDK, or reviewing a wrapper that mirrors the vendor exactly.</li><li>Symptoms: every feature touches five modules, circular imports, a <code>common</code> module everyone depends on and nobody owns, deploys that must be ordered, a change needing three coordinated repos.</li><li>Not for: the shape of the interface once the boundary exists (designing-apis), or measuring what currently depends on what (mapping-dependencies).</li></ul>

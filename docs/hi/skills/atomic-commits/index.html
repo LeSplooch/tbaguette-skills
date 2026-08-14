@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">बदलाव ज़मीन पर उतारना</span>
   <p class="lede">जब वर्किंग ट्री में एक-दूसरे से बेमेल कई बदलाव जमा हो जाएँ, जब तय करना हो कि एक कमिट में क्या-क्या आना चाहिए, जब diff में नाम बदलना या फ़ॉर्मैटिंग लॉजिक के बदलाव के साथ घुल-मिल जाए, जब bisect ऐसे कमिट पर आकर रुके जो समझ में आने के लिहाज़ से बहुत बड़ा है, जब revert या बैकपोर्ट ऐसे बदलाव खींच लाए जो किसी ने माँगे ही नहीं थे, या जब रिव्यूअर को diff में असली बदलाव ही न मिले, तब इस्तेमाल करें। इसमें फ़ाइल और हंक के हिसाब से बँटवारा, मशीनी बनाम अर्थ वाला अलगाव, और कमिट की बारीकी शामिल हैं।</p>
-</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>One commit, one decision. A commit is atomic when it builds and passes its tests standing alone, and reverting it removes exactly one choice from the tree — not when it is merely small.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>finishing-a-development-branch</code>.</li></ul>

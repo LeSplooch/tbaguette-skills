@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Обновлено</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Язык: Русский</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Интеграция изменений</span>
   <p class="lede">Применяйте, когда перестраиваете существующий код, не меняя того, что он делает, когда изменение затрагивает сразу много мест вызова, когда тесты ломаются на середине перестройки, когда перед добавлением фичи код нужно прибрать, когда работаете в непокрытом тестами или легаси-коде, или когда тянет переписать вместо того, чтобы преобразовать. Разбирает сохранение поведения, вынос и встраивание, массовые переименования и выбор между рефакторингом и переписыванием.</p>
-</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A refactor changes structure and preserves observable behavior. The instant one diff does both, it is neither reviewable nor revertible, and nobody — including you — can say which half broke.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Restructuring working code so a pending change becomes easy</li><li>A rename, move, or signature change that ripples through many call sites</li><li>Cleaning up code you did not write and cannot fully test yet</li><li>Weighing an incremental restructure against starting over</li><li>Not for: building the safety net in untested code — see <code>characterization-testing</code>. Not for creating a test seam where none exists — see <code>finding-the-seam</code>. Not for restructuring stretched across releases — see <code>incremental-migration</code>.</li></ul>

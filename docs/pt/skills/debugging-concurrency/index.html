@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Atualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Português</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Depuração e desempenho</span>
   <p class="lede">Use quando uma falha depende da temporização, do entrelaçamento de threads ou tarefas, ou da carga, quando um teste passa sozinho mas falha em paralelo, quando surgem um travamento, um deadlock, um livelock, uma atualização perdida ou uma leitura desatualizada sob concorrência, quando adicionar logs ou um depurador faz o sintoma sumir, ou quando é preciso ler um thread dump ou um processo travado. Trata das condições de corrida, do raciocínio happens-before, da reprodução sob estresse e da repetição determinística.</p>
-</div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A concurrency bug is a missing happens-before edge. The symptom is timing; the defect is an ordering constraint you assumed and never established, and no amount of reasoning about &quot;what usually happens first&quot; will find it.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Behavior changes with load, core count, machine speed, or run order</li><li>A hang with no crash, or a value that is occasionally wrong with no error anywhere</li><li>The symptom disappears under a debugger, a profiler, or added logging</li><li>A test passes alone and fails in parallel, or fails only in CI</li><li>A dynamic race detector or thread sanitizer reported something on a passing run</li></ul>

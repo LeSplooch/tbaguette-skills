@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">디버깅과 성능</span>
   <p class="lede">예전에는 동작하던 것이 지금은 깨졌을 때, 범인이 수많은 커밋, 설정 키, 의존성 업그레이드, 데이터 행, 커밋하지 않은 수정 가운데 하나일 때, `git bisect`가 빌드 실패나 불안정한 테스트, 머지가 많은 히스토리에 부딪힐 때, 아예 뒤져 볼 버전 관리가 없을 때 사용합니다. 변화의 모든 축에 대한 이진 탐색과, 사람 손을 타지 않는 bisect 스크립트 작성법을 다룹니다.</p>
-</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Binary search applies to any set of differences you can split in half and test, not just commit history. Bisection converts an unbounded &quot;what broke it&quot; question into ⌈log₂ n⌉ mechanical runs, which is why it beats reading the diff whenever n exceeds about 20.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A known-good state and a known-bad state exist and something between them is the cause</li><li>The diff between them is too large to read, or spans repos you do not control</li><li>A dependency upgrade, config change, or data import preceded the failure</li><li>The working tree has accumulated many edits and one of them breaks the build</li><li>Reading the change set has already failed once</li></ul>

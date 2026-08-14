@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">系统设计</span>
   <p class="lede">在以下情况下使用：要新增一个环境变量、配置项、开关或配置文件条目；密钥和普通配置搅在了一起；某个东西在预发环境好用、到生产就不行；缺失或格式不对的配置在启动几小时之后才以一个 null 或一次崩溃的形式冒出来；要搭一个新环境或新的部署目标；或者要判断某个值该放在代码里、配置里、密钥库里，还是特性开关系统里。</p>
-</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Configuration is what varies between deployments of the same build, and nothing else. A value that does not vary is code that has been moved somewhere it cannot be typed, tested, or found. A value whose disclosure is harmful is a secret and follows different rules entirely. Getting these three categories confused is the source of most deployment surprises.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding a setting, environment variable, toggle, or config file entry</li><li>Standing up a new environment, region, tenant, or deployment target</li><li>A failure that appears only in one environment, or only after some time under load</li><li>Credentials in a repository, a build argument, an image layer, or a log line</li><li>Deciding whether something should be config, a constant, or a runtime feature flag</li><li>Not for: the deployment mechanism itself, or infrastructure provisioning — this is about what the process reads at startup and how it behaves when that is wrong</li></ul>

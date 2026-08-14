@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">시스템 설계</span>
   <p class="lede">주문, 작업, 커넥션, 업로드, 세션, 구독, 기기, 워크플로 단계처럼 무언가에 생애주기가 있을 때, 또는 여러 개의 불리언과 플래그가 하나의 대상을 설명하고 있을 때 사용합니다. 상태 필드, 있을 수 없는 플래그 조합, 어떤 상태에 영원히 걸려 있는 레코드, 설명되지 않는 상태 변화, 전이 도중의 크래시, 타임아웃과 취소, 그리고 이미 저장되어 있는 상태를 추가하거나 이름을 바꾸는 일에도 씁니다.</p>
-</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Three booleans encode eight combinations; if only five are real, you shipped three bugs and no way to detect them. Name the states, enumerate the transitions, and make the forbidden ones observable failures rather than silent no-ops.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Anything with a lifecycle, or any entity carrying three or more flags that qualify each other.</li><li>Conditions like <code>isLoading &amp;&amp; !hasError &amp;&amp; data != null</code> appearing in more than one place.</li><li>Symptoms: &quot;how did it get into this state?&quot;, rows stuck in <code>processing</code> forever, duplicate side effects after a reload, a cancelled item that still gets processed.</li><li>Adding a state, or renaming one, in something already persisted.</li><li>Not for: rewriting existing stored rows once the states change (data-migrations), or the wire compatibility rules for the state field (schema-evolution).</li></ul>

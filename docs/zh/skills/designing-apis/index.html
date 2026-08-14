@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">系统设计</span>
   <p class="lede">在以下情况下使用：要定义一个会被别的代码调用的接口——公开函数或库的入口点、HTTP 或 RPC 端点、IPC 或线上协议消息、插件契约，或者导出的模块边界。涵盖命名与粒度、必填参数与可选参数、默认值、分页与排序、给枚举添加取值、不透明令牌、弃用与下线、版本管理，以及判断一项拟议改动是不是破坏性变更。</p>
-</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>The interface is the only part you cannot refactor later: everything behind it is yours, everything in front belongs to callers you cannot deploy. Design the failure modes, the growth path, and the compatibility promise before the happy path.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding anything another team, process, or version will call: exported function, endpoint, message type, plugin hook, config key.</li><li>Deciding one call versus three; required versus optional; what to return for a collection.</li><li>Adding a field, parameter, enum member, or error code to something already shipped.</li><li>Someone asks &quot;is this change breaking?&quot;</li><li>Not for: choosing a single identifier's wording (naming-things), evolving stored data (schema-evolution), deciding where the boundary belongs at all (drawing-boundaries).</li></ul>

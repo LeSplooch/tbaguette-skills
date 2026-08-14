@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Atualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Português</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Design de sistemas</span>
   <p class="lede">Use quando um trabalho precisa acontecer ao mesmo tempo e a abordagem ainda não foi decidida — threads do sistema operacional, async ou event loops, atores e troca de mensagens, uma fila de jobs durável, paralelismo de dados ou sharding por chave. Serve também para esgotamento de pool de threads, travamentos do event loop, deadlock, crescimento ilimitado de fila, explosões de memória sob carga, picos de latência de cauda, cancelamento que não interrompe o trabalho de fato, estado mutável compartilhado versus troca de mensagens, e a pergunta se vale a pena ser concorrente.</p>
-</div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Pick from workload shape and failure tolerance, never from language fashion. Most concurrency pain is a model-selection error, and no amount of careful locking repairs a model that does not fit the work.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Starting any component that handles more than one thing at once, or adding a background worker, scheduler, or parallel path.</li><li>Deciding shared mutable state versus message passing — a design decision, not an implementation detail.</li><li>Symptoms: latency high while CPU sits idle, p99 far above p50, pool exhaustion, memory climbing until OOM, deadlock that only appears under production load.</li><li>Not for: diagnosing a specific existing race or deadlock (debugging-concurrency), or setting queue bounds and shedding policy once the model is chosen (rate-limiting-and-backpressure).</li></ul>

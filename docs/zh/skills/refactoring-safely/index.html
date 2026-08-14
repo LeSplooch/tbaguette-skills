@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">变更落地</span>
   <p class="lede">在以下情况下使用：要在不改变行为的前提下重整现有代码；一次改动同时牵动许多调用点；重整到一半测试挂了；要先把代码收拾干净才好加新功能；在没有测试的代码或遗留代码里干活；或者忍不住想推倒重写而不是逐步变换。涵盖行为保持、抽取与内联、大规模改名，以及重构还是重写的取舍。</p>
-</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A refactor changes structure and preserves observable behavior. The instant one diff does both, it is neither reviewable nor revertible, and nobody — including you — can say which half broke.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Restructuring working code so a pending change becomes easy</li><li>A rename, move, or signature change that ripples through many call sites</li><li>Cleaning up code you did not write and cannot fully test yet</li><li>Weighing an incremental restructure against starting over</li><li>Not for: building the safety net in untested code — see <code>characterization-testing</code>. Not for creating a test seam where none exists — see <code>finding-the-seam</code>. Not for restructuring stretched across releases — see <code>incremental-migration</code>.</li></ul>

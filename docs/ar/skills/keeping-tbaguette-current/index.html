@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">البيئة والأدوات</span>
   <p class="lede">استخدِمها في مستهلّ كل محادثة، من دون أيّ شرط — لا تُقيَّد بكم مضى على آخر فحص — وكلما سأل المستخدم هل TBaguette محدَّثة، أو ما الذي تغيّر مؤخرًا، أو أراد المزامنة مع أحدث المهارات. تقارن الإضافة المثبَّتة بالمستودع المنشور، وتحدّثها إن أمكن التقديم السريع بنظافة، وتُبلغ بما تغيّر في خلاصة قصيرة سهلة القراءة — لا في سجلّ كوميتات خام.</p>
-</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en"><h2 id="what-this-is">What this is</h2>
+</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en" dir="ltr"><h2 id="what-this-is">What this is</h2>
 <p>The TBaguette plugin, once installed, is a git clone (<code>~/.claude/skills/TBaguette</code>) that only ever moves forward when someone explicitly re-runs the install command. Nothing tells a user it's fallen behind. This skill is that check — and, since checking and then leaving the user to go run a command themselves is half a job, it also applies the update when it's safe to, and tells them what actually changed rather than just &quot;updated.&quot;</p>
 <p>Three things, in order: <strong>check</strong>, <strong>update</strong> (only if safe), <strong>record and report</strong>.</p>
 <h2 id="where-things-live">Where things live</h2>
@@ -154,11 +154,11 @@ Last checked: 2026-08-14T10:03:12Z
 <ul><li><strong>Never rewrites history, never force-pushes</strong> — it only ever fetches and fast-forward merges.</li><li><strong>Never touches anything outside <code>~/.claude/skills/TBaguette</code></strong> and its own log file.</li><li><strong>Never modifies Claude Code settings or installs a hook.</strong> Reliable &quot;every session&quot; triggering the way this skill's own description asks for depends on normal skill matching. A user who wants a harder guarantee can wire up their own <code>SessionStart</code> hook that nudges toward this skill — that's a deliberate, visible choice for them to make about their own global settings, not something installing a plugin should do on their behalf.</li><li><strong>Never discards local changes</strong> to force an update through — see the safety gate above.</li></ul></div></article>
 <nav class="container prevnext" aria-label="التنقُّل بين المهارات"><a class="prevnext__link" href="/tbaguette-skills/ar/skills/upgrading-dependencies/">
   <span class="prevnext__label">السابق</span>
-  <span class="prevnext__name">← upgrading-dependencies</span>
+  <span class="prevnext__name">→ upgrading-dependencies</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ar/skills/automating-repetition/">
   <span class="prevnext__label">التالي</span>
-  <span class="prevnext__name">automating-repetition →</span>
+  <span class="prevnext__name">automating-repetition ←</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">المزيد في «البيئة والأدوات»</h2>

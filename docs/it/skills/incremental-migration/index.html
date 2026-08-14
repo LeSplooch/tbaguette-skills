@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aggiornato</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Lingua: Italiano</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Integrare le modifiche</span>
   <p class="lede">Da usare quando si sostituisce un sistema, una libreria, un’API, un motore di archiviazione o un formato dati già in uso, quando una modifica è troppo grande per entrare in un solo rilascio, quando si pianifica il passaggio dal vecchio percorso a quello nuovo, quando la vecchia e la nuova implementazione sono entrambe attive e nessuna delle due è finita, quando una modifica tocca centinaia di punti di chiamata, o quando un rollback lascerebbe i dati scritti dal nuovo percorso illeggibili per il vecchio.</p>
-</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Any large replacement ships as a sequence of individually deployable, individually revertible steps. The big-bang cutover is a plan that assumes you will not be interrupted, that nothing will be discovered mid-flight, and that rollback is a button — and all three assumptions fail together, at the worst moment.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Replacing a subsystem, dependency, protocol, or storage layer that has live traffic</li><li>A change whose full form would touch more code than can be reviewed or reverted at once</li><li>Two implementations are already live and the second one has stopped advancing</li><li>Deciding when it is safe to cut over from an old path to a new one</li><li>Not for: the internals of a data backfill or a schema version sequence — see <code>data-migrations</code> and <code>schema-evolution</code>. Not for the toggle mechanism itself — see <code>feature-flagging</code>.</li></ul>

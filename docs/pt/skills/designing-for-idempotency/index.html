@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Atualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Português</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Design de sistemas</span>
   <p class="lede">Use quando uma operação pode chegar mais de uma vez — retentativas depois de um timeout de resultado desconhecido, filas at-least-once, reinícios e reentregas no consumidor, webhooks reenviados, botões clicados duas vezes, jobs retomados, ou um crash no meio de uma escrita. Trata das cobranças duplicadas, dos e-mails e notificações duplicados, das chaves de idempotência, das janelas de deduplicação, da segurança das retentativas sob concorrência e das promessas de entrega exactly-once.</p>
-</div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Assume every operation arrives twice. Retries, restarts, redeliveries, and impatient users are the same problem, and exactly-once <em>delivery</em> does not exist — exactly-once <em>effect</em> does, and you build it at the receiver.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Designing any mutating operation reachable over an unreliable channel: network, queue, IPC, or a button a human can press twice.</li><li>A caller timed out and cannot tell whether the work happened.</li><li>A consumer may reprocess after a restart, rebalance, or offset reset.</li><li>Symptoms: duplicate charges, duplicate emails, doubled counters, a value that reverts to an old setting under load.</li><li>Not for: deciding which failures are worth retrying (modeling-errors), or how much retrying the system will absorb (rate-limiting-and-backpressure).</li></ul>

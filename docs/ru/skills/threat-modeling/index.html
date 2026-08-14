@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Обновлено</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Язык: Русский</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Безопасность (защита)</span>
   <p class="lede">Применяйте, когда дизайн вводит новую границу доверия, новый класс чувствительных данных, новую внешнюю интеграцию или изменение в аутентификации либо авторизации, когда разбору дизайна нужен раздел о безопасности, когда спрашивают, что может пойти не так с системой или функцией, или когда рассуждаете об атакующих, поверхности атаки, радиусе поражения и о том, какие риски закрывать первыми. Разбирает STRIDE, границы доверия, потоки данных, уровни возможностей атакующего и ранжирование рисков.</p>
-</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A threat model is a 30–60 minute conversation that produces decisions, not a document. Its output is a list of design changes, mitigations with tests, and explicitly accepted risks with owners. If the design did not change and nothing got a test, the session was theater.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A new trust boundary appears: a new listener, IPC surface, plugin or extension point, tenant, file format you now parse, or a queue you now consume.</li><li>A new class of data enters: credentials, personal data, payment, health, keys, or telemetry that can carry user content.</li><li>A new external integration or an authorization change: third-party API, webhook receiver, identity provider, a new role, a new token type, a session mechanism, or any delegation.</li><li>Before writing the security section of a design doc, so the section reports decisions instead of inventing them.</li><li>Not for: root-causing a specific reported bug; evaluating a package's supply chain (<code>auditing-dependencies</code>); writing the actual permission scopes (<code>least-privilege-design</code>); the input-handling rules themselves (<code>handling-untrusted-input</code>).</li></ul>

@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">تصميم الأنظمة</span>
   <p class="lede">استخدِمها عندما يمكن أن تصل عملية أكثر من مرة — إعادة محاولة بعد مهلة انتهت بنتيجة مجهولة، أو طوابير تسلّم مرة واحدة على الأقل، أو إعادة تشغيل المستهلكين وإعادة التسليم، أو خطّافات ويب مُعادة، أو أزرار نُقِر عليها مرتين، أو مهامّ مستأنَفة، أو انهيار في منتصف عملية كتابة. تتناول الرسوم المكرَّرة، ورسائل البريد والإشعارات المكرَّرة، ومفاتيح عدم التكرار، ونوافذ إزالة التكرار، وأمان إعادة المحاولة تحت التزامن، وادّعاءات التسليم مرة واحدة بالضبط.</p>
-</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Assume every operation arrives twice. Retries, restarts, redeliveries, and impatient users are the same problem, and exactly-once <em>delivery</em> does not exist — exactly-once <em>effect</em> does, and you build it at the receiver.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Designing any mutating operation reachable over an unreliable channel: network, queue, IPC, or a button a human can press twice.</li><li>A caller timed out and cannot tell whether the work happened.</li><li>A consumer may reprocess after a restart, rebalance, or offset reset.</li><li>Symptoms: duplicate charges, duplicate emails, doubled counters, a value that reverts to an old setting under load.</li><li>Not for: deciding which failures are worth retrying (modeling-errors), or how much retrying the system will absorb (rate-limiting-and-backpressure).</li></ul>
@@ -123,11 +123,11 @@
 <ul><li>&quot;The client only sends it once.&quot;</li><li>&quot;We'll dedupe by looking for an existing record with the same fields.&quot;</li><li>&quot;Exactly-once delivery.&quot;</li><li>&quot;Just make it idempotent&quot; with no key named and no store named.</li><li>A create operation with no caller-supplied key.</li><li>Committing the offset, ack, or transaction before the external effect is durable.</li><li>A retry policy written before anyone checked whether the operation is safe to repeat.</li></ul></div></article>
 <nav class="container prevnext" aria-label="التنقُّل بين المهارات"><a class="prevnext__link" href="/tbaguette-skills/ar/skills/modeling-errors/">
   <span class="prevnext__label">السابق</span>
-  <span class="prevnext__name">← modeling-errors</span>
+  <span class="prevnext__name">→ modeling-errors</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ar/skills/choosing-concurrency-model/">
   <span class="prevnext__label">التالي</span>
-  <span class="prevnext__name">choosing-concurrency-model →</span>
+  <span class="prevnext__name">choosing-concurrency-model ←</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">المزيد في «تصميم الأنظمة»</h2>

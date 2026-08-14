@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aggiornato</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Lingua: Italiano</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Debugging e prestazioni</span>
   <p class="lede">Da usare quando qualcosa funzionava prima e adesso è rotto, quando il colpevole è uno tra molti commit, chiavi di configurazione, aggiornamenti di dipendenze, righe di dati o modifiche non committate, quando `git bisect` si scontra con build che falliscono, test instabili o una cronologia piena di merge, o quando non c’è alcun controllo di versione in cui cercare. Tratta la ricerca binaria lungo qualsiasi asse di cambiamento e la scrittura di uno script di bisezione automatico.</p>
-</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Binary search applies to any set of differences you can split in half and test, not just commit history. Bisection converts an unbounded &quot;what broke it&quot; question into ⌈log₂ n⌉ mechanical runs, which is why it beats reading the diff whenever n exceeds about 20.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A known-good state and a known-bad state exist and something between them is the cause</li><li>The diff between them is too large to read, or spans repos you do not control</li><li>A dependency upgrade, config change, or data import preceded the failure</li><li>The working tree has accumulated many edits and one of them breaks the build</li><li>Reading the change set has already failed once</li></ul>

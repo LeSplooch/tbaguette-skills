@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">تصميم الأنظمة</span>
   <p class="lede">استخدِمها عند إضافة ذاكرة تخزين مؤقت أو جدول حفظ للنتائج أو طبقة CDN أو مسار قراءة محسوب مسبقًا، وعندما يبلّغ المستخدمون عن بيانات قديمة أو خاطئة بعد حفظ تغيير، وعند اختيار TTL أو مفتاح تخزين مؤقت، وعندما يُغرق مفتاحٌ ساخن منتهي الصلاحية أو إعادة تشغيل باردة الخادمَ الأصليّ، وعندما يرى مستأجِرٌ أو إعدادٌ محليّ بيانات غيره، أو عندما يغري العمل على زمن الاستجابة بوضع تخزين مؤقت أمام استعلام بطيء.</p>
-</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A cache is a second copy of the truth that is permitted to be wrong. You are buying latency with correctness, and the only real design work is deciding how wrong, for how long, and who is harmed when it happens. &quot;Cached&quot; without a number attached is undefined behavior with a hit-rate graph.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding a cache, memoization layer, edge cache, or precomputed read path, or choosing its TTL, key shape, and invalidation mechanism</li><li>Stale-data reports: saved a change, still see the old value</li><li>The origin collapses when a hot key expires, a node restarts cold, or a deploy flushes everything</li><li>One tenant, locale, or permission level is served another's data</li><li>Not for: a derived store that must always agree with its source — that is replication, not caching, and the last section explains why the distinction decides the design</li></ul>
@@ -134,11 +134,11 @@
 <ul><li>&quot;We will just invalidate it everywhere when it changes&quot;</li><li>Nobody in the room can state the staleness budget in seconds</li><li>The TTL was chosen because it seemed reasonable and has never been revisited against an incident</li><li>A correctness argument that depends on the cache being available</li><li>A cache added before the miss path was profiled, or a key assembled inline in a second place</li><li>&quot;It is only cached for five minutes,&quot; said about permissions, quota, or a balance</li></ul></div></article>
 <nav class="container prevnext" aria-label="التنقُّل بين المهارات"><a class="prevnext__link" href="/tbaguette-skills/ar/skills/drawing-boundaries/">
   <span class="prevnext__label">السابق</span>
-  <span class="prevnext__name">← drawing-boundaries</span>
+  <span class="prevnext__name">→ drawing-boundaries</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ar/skills/schema-evolution/">
   <span class="prevnext__label">التالي</span>
-  <span class="prevnext__name">schema-evolution →</span>
+  <span class="prevnext__name">schema-evolution ←</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">المزيد في «تصميم الأنظمة»</h2>

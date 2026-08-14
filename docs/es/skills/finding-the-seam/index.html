@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Actualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Español</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Lectura de código</span>
   <p class="lede">Úsala cuando hay que decidir en qué punto de una base de código hacer un cambio, cuando un arreglo cabría igual de bien en varios sitios, cuando un diff se está extendiendo por muchos archivos, cuando hay que alterar un comportamiento sin tocar el código que lo contiene, cuando algo no se puede probar sin arrancar el sistema entero, o cuando hace falta un punto de extensión, un adaptador, una envoltura o un punto de inyección para aterrizar un cambio sin riesgo.</p>
-</div><p class="translation-banner" role="note">Esta página todavía no se ha traducido al Español —se muestra la versión en inglés.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Esta página todavía no se ha traducido al Español —se muestra la versión en inglés.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A seam is a place where behavior can be changed without editing the thing whose behavior changes. The question is never &quot;how do I make this work&quot; but &quot;what is the smallest set of observable things I can put at risk to make this work&quot; — and the smallest diff and the smallest blast radius are usually different places.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Two or more plausible sites for the same change, and no obvious reason to prefer one.</li><li>A change is metastasizing across files and something is clearly wrong with the approach.</li><li>Behavior must vary by environment, tenant, platform, or caller.</li><li>A test would require standing up the whole system.</li><li>Not for: enumerating who is affected once the site is chosen (mapping-dependencies), replacing a system over many releases (incremental-migration), or isolating a dependency purely to test it (testing-the-untestable).</li></ul>

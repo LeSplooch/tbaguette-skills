@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">सिस्टम डिज़ाइन करना</span>
   <p class="lede">जब पहले से प्रोडक्शन में चल रहे किसी कॉन्ट्रैक्ट को बदलना हो — डेटाबेस स्कीमा, सीरियलाइज़्ड फ़ॉर्मैट, सेव किए गए दस्तावेज़, API पेलोड या क्यू मैसेज में कोई फ़ील्ड जोड़ना, हटाना, नाम बदलना या टाइप बदलना — तब इस्तेमाल करें। जब रोलिंग डिप्लॉय डीसीरियलाइज़ेशन तोड़ दे, जब पुराने कंज़्यूमर नया डेटा न पढ़ पाएँ, जब नए वर्शन के लिखे डेटा पर रोलबैक फ़ेल हो जाए, जब कोई enum वैल्यू जोड़नी हो, या जब वर्शन बढ़ाने की योजना बनानी हो, तब भी।</p>
-</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Once a contract is in production you no longer own both sides of it. Every change must be safe for readers you cannot redeploy and for data written by writers you cannot recall. The question is never &quot;is this change correct&quot; but &quot;is this change correct while both versions are running, and again while rolling back.&quot;</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding, removing, renaming, retyping, or re-scoping a field in anything persisted or transmitted</li><li>A rolling deploy produces deserialization errors, unknown-field rejections, or missing-column failures</li><li>Adding a value to an enum, status, or any other closed set</li><li>Old messages sit in a queue or a log and will be read by new code, possibly weeks later</li><li>Planning an API or payload version bump, or being asked whether one is needed</li><li>Not for: moving or rewriting the data that already exists — that is a migration, and it is a separate discipline with its own failure modes</li></ul>

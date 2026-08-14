@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Actualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Español</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Pruebas</span>
   <p class="lede">Úsala cuando una prueba consulta el reloj del sistema, duerme, sale a la red, escribe en el sistema de archivos real, lee variables de entorno, genera UUID o valores aleatorios, o depende de la planificación de hilos; cuando una prueba solo falla al cambiar de mes, en otra zona horaria o en una máquina lenta; o cuando hay que elegir entre un fake, un stub, un mock, un spy y una dependencia real dentro de un contenedor. Cubre la inyección de dependencias en las fronteras y la fijación de semillas.</p>
-</div><p class="translation-banner" role="note">Esta página todavía no se ha traducido al Español —se muestra la versión en inglés.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Esta página todavía no se ha traducido al Español —se muestra la versión en inglés.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Nothing is untestable; some things are un-injected. Every source of nondeterminism reaches the code through a specific call, and testing it means owning that call rather than working around it downstream.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Code reads the current time, sleeps, retries with backoff, or expires something.</li><li>Code generates ids, tokens, salts, shuffles, or samples.</li><li>Code opens sockets, resolves DNS, reads files, or reads environment and config.</li><li>Code spawns threads, tasks, or processes and the test's outcome depends on their interleaving.</li><li>A test fails only in another timezone, on the 1st of the month, or on a loaded CI worker.</li><li>Not for: diagnosing a suite that is already intermittently failing — that is <code>flaky-test-triage</code>.</li></ul>

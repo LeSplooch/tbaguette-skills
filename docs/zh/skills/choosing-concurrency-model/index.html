@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">系统设计</span>
   <p class="lede">在以下情况下使用：有些活儿必须同时进行，但用什么方式还没定——操作系统线程、异步或事件循环、Actor 与消息传递、持久化任务队列、数据并行，还是按键分片。也适用于线程池耗尽、事件循环卡住、死锁、队列无界增长、负载下内存暴涨、尾延迟毛刺、取消操作停不掉正在跑的活儿、共享可变状态与消息传递之争，以及到底要不要并发这个问题本身。</p>
-</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Pick from workload shape and failure tolerance, never from language fashion. Most concurrency pain is a model-selection error, and no amount of careful locking repairs a model that does not fit the work.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Starting any component that handles more than one thing at once, or adding a background worker, scheduler, or parallel path.</li><li>Deciding shared mutable state versus message passing — a design decision, not an implementation detail.</li><li>Symptoms: latency high while CPU sits idle, p99 far above p50, pool exhaustion, memory climbing until OOM, deadlock that only appears under production load.</li><li>Not for: diagnosing a specific existing race or deadlock (debugging-concurrency), or setting queue bounds and shedding policy once the model is chosen (rate-limiting-and-backpressure).</li></ul>

@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">系统设计</span>
   <p class="lede">在以下情况下使用：系统收到的负载超过了它能扛住的量；要设计限流、配额或 429 响应；队列一直在涨，或者迟几个小时才排空；重试把一次局部故障放大成了全面宕机；连接池或线程池被耗尽；延迟一路往上爬而请求并不失败；或者要在丢弃负载、把它排进队列和把生产方拖慢之间做选择。</p>
-</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>When demand exceeds capacity, the only question is which work fails and how quickly it finds out. A system with no explicit answer still answers: it queues everything, latency grows without bound, and every caller times out on work that will be completed and then discarded. Choosing the victim deliberately is the entire discipline.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>One caller, tenant, or job is degrading the service for everyone</li><li>Designing quotas, throttles, or the response a caller gets when over the limit</li><li>A queue whose depth grows through the day, or that drains long after the traffic ended</li><li>Timeouts, pool exhaustion, or a cascading failure spreading between services</li><li>Retry behavior amplifying a partial failure — error rate rising after a dependency starts recovering</li><li>Not for: capacity planning and scaling decisions; this covers what happens in the window where capacity is already insufficient</li></ul>

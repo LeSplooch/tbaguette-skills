@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">टेस्टिंग</span>
   <p class="lede">जब उदाहरण वाले टेस्ट सिर्फ़ उन्हीं मामलों को छूते हों जो किसी के दिमाग़ में आए थे, जब पार्सर, सीरियलाइज़र, एनकोडर, सॉर्टिंग, कंपैरेटर, अंकगणित, कैश या डेटा स्ट्रक्चर का टेस्ट करना हो, जब ऐसे इनपुट से बग आए जिसकी किसी ने कल्पना ही नहीं की थी, जब एक इम्प्लीमेंटेशन की जगह दूसरा लाना हो और दोनों का जवाब एक होना चाहिए, या जब फ़ज़िंग, जनरेटर, श्रिंकिंग, इन्वेरिएंट या राउंड-ट्रिप जाँच की ओर हाथ बढ़े, तब इस्तेमाल करें। जिस व्यवहार की परिभाषा ही मामलों की एक तालिका हो, उसके लिए नहीं।</p>
-</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>An example test asserts what one input produces. A property asserts a relationship that holds for every input, then lets a generator hunt for the counterexample. The generator finds the inputs you would never have written down — which is exactly where the bugs are.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>The specification is a <strong>rule</strong>, not a list: &quot;parsing undoes printing&quot;, &quot;the result is always sorted&quot;, &quot;cost never decreases when items are added&quot;.</li><li>Input has structure with a large or unbounded space: text, numbers, collections, trees, wire formats, dates.</li><li>Replacing, porting, or optimizing an implementation that must agree with the old one.</li><li>Handling untrusted or externally-supplied input, where &quot;never crashes&quot; is itself a requirement.</li><li>Not for: behavior whose whole specification is a table of cases (tax brackets, status-code mappings, business rules enumerated by a stakeholder). Writing a property there just restates the table twice.</li><li>Not for: the red-green-refactor cycle, owned by <code>test-driven-development</code>.</li></ul>

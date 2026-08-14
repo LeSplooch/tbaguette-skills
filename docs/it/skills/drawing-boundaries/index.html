@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aggiornato</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Lingua: Italiano</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Progettare sistemi</span>
   <p class="lede">Da usare quando si decide che cosa sta insieme a che cosa — divisioni in moduli, pacchetti, crate, librerie, processi o servizi; l’estrazione o la fusione di componenti; l’SDK di un fornitore avvolto dietro un’interfaccia che controlli tu; la ristrutturazione della disposizione delle cartelle. Vale anche per le dipendenze circolari, un modulo shared o common che non fa che crescere, ogni funzionalità che tocca ogni modulo, componenti che devono essere rilasciati in un ordine fisso, e la domanda se qualcosa meriti un processo, un repository o un servizio tutto suo.</p>
-</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A boundary is a promise that two sides can change independently. If they cannot, you paid indirection, serialization, versioning, and cross-boundary debugging and got nothing back.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Deciding module, package, crate, library, or service splits; extracting a component; merging two that never move apart.</li><li>Wrapping a vendor SDK, or reviewing a wrapper that mirrors the vendor exactly.</li><li>Symptoms: every feature touches five modules, circular imports, a <code>common</code> module everyone depends on and nobody owns, deploys that must be ordered, a change needing three coordinated repos.</li><li>Not for: the shape of the interface once the boundary exists (designing-apis), or measuring what currently depends on what (mapping-dependencies).</li></ul>

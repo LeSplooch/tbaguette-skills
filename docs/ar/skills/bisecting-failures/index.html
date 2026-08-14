@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">تصحيح الأخطاء والأداء</span>
   <p class="lede">استخدِمها عندما كان شيء يعمل من قبل وصار معطَّلًا الآن، وعندما يكون الجاني واحدًا من كوميتات كثيرة أو مفاتيح إعدادات أو ترقيات تبعيات أو صفوف بيانات أو تعديلات لم تُودَع بعد، وعندما يصطدم `git bisect` بأعطال في البناء أو اختبارات متذبذبة أو تاريخ مثقل بالدمج، أو عندما لا يوجد نظام تحكُّم بالإصدارات للبحث فيه أصلًا. تتناول البحث الثنائيّ على أيّ محور تغيير، وكتابة سكربت bisect يعمل من دون إشراف.</p>
-</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Binary search applies to any set of differences you can split in half and test, not just commit history. Bisection converts an unbounded &quot;what broke it&quot; question into ⌈log₂ n⌉ mechanical runs, which is why it beats reading the diff whenever n exceeds about 20.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A known-good state and a known-bad state exist and something between them is the cause</li><li>The diff between them is too large to read, or spans repos you do not control</li><li>A dependency upgrade, config change, or data import preceded the failure</li><li>The working tree has accumulated many edits and one of them breaks the build</li><li>Reading the change set has already failed once</li></ul>
@@ -132,11 +132,11 @@ esac</code></pre>
 <ul><li>&quot;I'll just read the diff&quot; when the range is more than about 20 commits</li><li>Starting the search without running the test on the good end</li><li>Marking a candidate by hand because &quot;that one obviously isn't it&quot;</li><li>A bisect script with no timeout, or with no path that exits 125</li><li>Accepting the answer without reverting the accused change and confirming the failure disappears</li></ul></div></article>
 <nav class="container prevnext" aria-label="التنقُّل بين المهارات"><a class="prevnext__link" href="/tbaguette-skills/ar/skills/reproducing-bugs/">
   <span class="prevnext__label">السابق</span>
-  <span class="prevnext__name">← reproducing-bugs</span>
+  <span class="prevnext__name">→ reproducing-bugs</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ar/skills/reading-stack-traces/">
   <span class="prevnext__label">التالي</span>
-  <span class="prevnext__name">reading-stack-traces →</span>
+  <span class="prevnext__name">reading-stack-traces ←</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">المزيد في «تصحيح الأخطاء والأداء»</h2>

@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">تصميم الأنظمة</span>
   <p class="lede">استخدِمها عند تغيير عقد قائم في الإنتاج فعلًا — إضافة حقل أو إزالته أو إعادة تسميته أو تغيير نوعه في مخطَّط قاعدة بيانات أو صيغة مُسلسَلة أو مستند مخزَّن أو حمولة واجهة برمجية أو رسالة طابور. وتصلح كذلك عندما يكسر نشرٌ تدريجيّ فكَّ التسلسل، وعندما يعجز المستهلكون القدامى عن قراءة البيانات الجديدة، وعندما يفشل التراجع على بيانات كتبها الإصدار الأحدث، وعند إضافة قيمة إلى نوع تعداديّ، أو عند التخطيط لرفع رقم الإصدار.</p>
-</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Once a contract is in production you no longer own both sides of it. Every change must be safe for readers you cannot redeploy and for data written by writers you cannot recall. The question is never &quot;is this change correct&quot; but &quot;is this change correct while both versions are running, and again while rolling back.&quot;</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding, removing, renaming, retyping, or re-scoping a field in anything persisted or transmitted</li><li>A rolling deploy produces deserialization errors, unknown-field rejections, or missing-column failures</li><li>Adding a value to an enum, status, or any other closed set</li><li>Old messages sit in a queue or a log and will be read by new code, possibly weeks later</li><li>Planning an API or payload version bump, or being asked whether one is needed</li><li>Not for: moving or rewriting the data that already exists — that is a migration, and it is a separate discipline with its own failure modes</li></ul>
@@ -131,11 +131,11 @@
 <ul><li>&quot;Nobody uses that field&quot; without a query, log, or metric proving it</li><li>Add and remove in the same pull request, or steps 4 through 6 in one deploy</li><li>&quot;We will deploy both services at the same time&quot;</li><li>Reusing an identifier because it is free</li><li>Repurposing an existing field because it happens to be unused</li><li>A schema change with no plan for data already written in the old shape</li><li>Treating the strictness of a validator as a substitute for reader tolerance</li></ul></div></article>
 <nav class="container prevnext" aria-label="التنقُّل بين المهارات"><a class="prevnext__link" href="/tbaguette-skills/ar/skills/caching-strategy/">
   <span class="prevnext__label">السابق</span>
-  <span class="prevnext__name">← caching-strategy</span>
+  <span class="prevnext__name">→ caching-strategy</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ar/skills/data-migrations/">
   <span class="prevnext__label">التالي</span>
-  <span class="prevnext__name">data-migrations →</span>
+  <span class="prevnext__name">data-migrations ←</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">المزيد في «تصميم الأنظمة»</h2>

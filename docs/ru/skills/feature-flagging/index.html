@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Обновлено</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Язык: Русский</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Интеграция изменений</span>
   <p class="lede">Применяйте, когда прячете незаконченную работу за переключателем, когда планируете постепенную раскатку, аварийный выключатель или скрытый запуск, невидимый для пользователей, когда закрываете флагом эксперимент или платную возможность, когда старые флаги накопились и никто их не убирает, когда сочетания флагов сделали матрицу тестов неуправляемой, когда откат переключением флага не срабатывает, или когда выбираете между флагом и отдельной веткой либо сборкой.</p>
-</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A flag decouples deploying code from releasing behavior. It is also a permanent branch in the code, in the test matrix, and in the head of whoever is on call — so every flag gets a type, an owner, and an expiry on the day it is created, or it gets rejected.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Shipping incomplete work to production without exposing it</li><li>Ramping a change by percentage or cohort, or needing to disable one without a deploy</li><li>Gating an experiment, a plan tier, a region, or a role</li><li>Cleaning up flags that outlived the feature they guarded</li><li>Not for: moving traffic between two implementations over weeks — the flag is one instrument inside <code>incremental-migration</code>. Not for how configuration is stored, layered, and validated — see <code>configuration-management</code>.</li></ul>

@@ -428,6 +428,55 @@ def check_i18n_fallback_banner() -> None:
     check("an untranslated skill's body is marked lang='en' so a screen reader "
           "doesn't mispronounce English text as French",
           'class="prose" lang="en"' in html_untranslated)
+    check("...and carries an explicit dir='ltr' alongside it, since HTML infers "
+          "direction from dir alone and never from lang",
+          'class="prose" lang="en" dir="ltr"' in html_untranslated)
+
+    # The direction override only matters on an RTL page, which is where it
+    # was missing: all 66 skill bodies are still English-only, so before this
+    # every /ar/skills/* page laid English out as an RTL paragraph and threw
+    # each trailing colon and period to the start of its visual line.
+    ar = locales.get_locale("ar")
+    html_ar_untranslated = render_skill_page(
+        untranslated_skill, prev_skill=None, next_skill=None, siblings=[],
+        categories=FIXTURE["categories"], base_path="", locale=ar,
+    )
+    check("on an RTL page the English fallback body still forces dir='ltr', so it "
+          "does not inherit dir='rtl' from the <html> element",
+          'class="prose" lang="en" dir="ltr"' in html_ar_untranslated)
+    check("...on a page whose own <html> element really is dir='rtl'",
+          '<html lang="ar" dir="rtl">' in html_ar_untranslated)
+
+    # formidable's extras are fallback English too, and sit *outside*
+    # _render_prose -- fixing only the main body left 21 of 24 elements in
+    # the craft floor and 20 of 31 in the first tab panel still laid out RTL
+    # on /ar/skills/formidable/. Found by looking at the page, not the diff.
+    untranslated_formidable = {**FIXTURE["skills"]["formidable"], "translated": False}
+    html_ar_formidable = render_skill_page(
+        untranslated_formidable, prev_skill=None, next_skill=None, siblings=[],
+        categories=FIXTURE["categories"], base_path="", locale=ar,
+    )
+    check("formidable's tab panels carry the same fallback lang/dir as the body",
+          'tabindex="0" lang="en" dir="ltr">' in html_ar_formidable
+          or 'tabindex="0" hidden lang="en" dir="ltr">' in html_ar_formidable)
+    check("...both the visible first panel and the hidden ones",
+          'tabindex="0" lang="en" dir="ltr">' in html_ar_formidable
+          and 'tabindex="0" hidden lang="en" dir="ltr">' in html_ar_formidable)
+    check("formidable's craft-floor prose carries it too",
+          html_ar_formidable.count('<div class="prose" lang="en" dir="ltr">') == 2)
+    check("the translated section headings are NOT swept into the override -- "
+          "they come from Strings and really are in the page's language",
+          'class="formidable-extra__subtitle" lang="en"' not in html_ar_formidable
+          and 'class="formidable-extra" lang="en"' not in html_ar_formidable)
+
+    html_ar_formidable_translated = render_skill_page(
+        {**FIXTURE["skills"]["formidable"], "translated": True},
+        prev_skill=None, next_skill=None, siblings=[],
+        categories=FIXTURE["categories"], base_path="", locale=ar,
+    )
+    check("a fully translated formidable page gets no override on its panels "
+          "either -- translated content follows the page's own direction",
+          'lang="en" dir="ltr"' not in html_ar_formidable_translated)
 
     html_translated = render_skill_page(
         translated_skill, prev_skill=None, next_skill=None, siblings=[],
@@ -437,6 +486,11 @@ def check_i18n_fallback_banner() -> None:
           'class="translation-banner"' not in html_translated)
     check("a translated skill's body carries no lang override",
           'class="prose" lang="en"' not in html_translated)
+    check("...and no direction override either -- a translated body is in the "
+          "page's own language and must follow the page's own direction",
+          'class="prose"><' in html_translated or 'class="prose">' in html_translated)
+    check("...specifically, no dir attribute is emitted on it",
+          'class="prose" dir=' not in html_translated)
 
     html_en = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path="")
     html_default_skill_page = render_skill_page(
@@ -571,6 +625,65 @@ def check_i18n_sentence_end() -> None:
     check("...and at the search empty-state site too",
           "data-search-empty-query></span>★" in html_custom
           and "data-search-empty-query></span>." not in html_custom)
+
+
+def check_i18n_prevnext_arrows() -> None:
+    """← (U+2190) and → (U+2192) lack the Unicode Bidi_Mirrored property, so
+    the bidi algorithm never flips them the way it flips brackets. On an RTL
+    page the prev/next arrows therefore kept pointing the LTR way round --
+    "next" drawn as → when a right-to-left reader advances leftward.
+
+    Bidi does already place each arrow on the correct side unaided, so only
+    the glyph is swapped, never the slot it sits in. A CSS
+    transform: scaleX(-1) (the .card__arrow approach) is not usable here:
+    transform does not apply to non-replaced inline elements, and
+    .prevnext__name is a plain block, not the flex container that blockifies
+    .card__arrow.
+
+    Invisible to the RTL *CSS* pass in test_i18n.py, which can only see CSS
+    properties -- this is a literal character in the markup."""
+    import locales
+
+    dtd = FIXTURE["skills"]["designing-test-data"]
+    ftt = FIXTURE["skills"]["flaky-test-triage"]
+
+    def render(locale):
+        return (
+            render_skill_page(dtd, prev_skill=None, next_skill=ftt, siblings=[],
+                              categories=FIXTURE["categories"], base_path="", locale=locale),
+            render_skill_page(ftt, prev_skill=dtd, next_skill=None, siblings=[],
+                              categories=FIXTURE["categories"], base_path="", locale=locale),
+        )
+
+    en_next, en_prev = render(locales.DEFAULT_LOCALE)
+    check("LTR: the next link points → (unchanged)",
+          'class="prevnext__name">flaky-test-triage →<' in en_next)
+    check("LTR: the prev link points ← (unchanged)",
+          'class="prevnext__name">← designing-test-data<' in en_prev)
+
+    fr_next, fr_prev = render(locales.get_locale("fr"))
+    check("an already-shipped LTR locale is byte-for-byte unaffected by the "
+          "swap (French next link still →)",
+          'class="prevnext__name">flaky-test-triage →<' in fr_next)
+    check("...and French prev still ←",
+          'class="prevnext__name">← designing-test-data<' in fr_prev)
+
+    ar_next, ar_prev = render(locales.get_locale("ar"))
+    check("RTL: the next link points ← -- a right-to-left reader advances "
+          "leftward, so that is the forward direction",
+          'class="prevnext__name">flaky-test-triage ←<' in ar_next)
+    check("RTL: ...and carries no → anywhere in its prev/next nav",
+          "→" not in ar_next[ar_next.index('class="container prevnext"'):])
+    check("RTL: the prev link points → -- backward, for the same reason",
+          'class="prevnext__name">→ designing-test-data<' in ar_prev)
+    check("RTL: ...and carries no ← anywhere in its prev/next nav",
+          "←" not in ar_prev[ar_prev.index('class="container prevnext"'):])
+
+    check("the arrow stays in its existing logical slot on RTL (before the "
+          "name for prev, after it for next) -- bidi already puts it on the "
+          "correct side, so only the glyph needed mirroring",
+          'class="prevnext__name">→ designing-test-data<' in ar_prev
+          and 'class="prevnext__name">flaky-test-triage ←<' in ar_next)
 
 
 def main() -> None:
@@ -731,6 +844,7 @@ def main() -> None:
     check_i18n_multiword_heading_id()
     check_i18n_quote_glyphs()
     check_i18n_sentence_end()
+    check_i18n_prevnext_arrows()
 
     print(f"\n{checker.total} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")

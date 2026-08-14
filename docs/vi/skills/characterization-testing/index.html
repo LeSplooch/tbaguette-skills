@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Language: Tiếng Việt</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Testing</span>
   <p class="lede">Use when changing, refactoring, extracting, porting, or deleting code that has no tests, when the current behavior is unknown or undocumented, when a rewrite must match a legacy component output for output, or when reaching for golden files, approval tests, snapshots, or output diffs. Covers pinning existing behavior, recording known bugs, and retiring the pins.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Tiếng Việt yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">This page hasn’t been translated into Tiếng Việt yet — showing the English version.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A characterization test asserts what the code <em>does</em>, not what it should do. It is a scaffold that makes a refactor observable, and it is the only kind of test whose correct first run is a pass rather than a failure.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>About to change, extract, port, or delete code with no test coverage and no written specification.</li><li>A rewrite must match a legacy component output for output before it may replace it.</li><li>Behavior is known only through the running system, and the people who wrote it are unavailable.</li><li>A dependency or runtime upgrade needs proof that observable output did not move.</li><li>Not for: behavior somebody can actually specify — write the specification as a test instead, via <code>test-driven-development</code>.</li><li>Not for: a known defect — that is <code>regression-test-from-bug</code>. Characterization pins bugs deliberately; it does not fix them.</li></ul>

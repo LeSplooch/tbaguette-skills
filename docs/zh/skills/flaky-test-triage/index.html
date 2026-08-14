@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">测试</span>
   <p class="lede">在以下情况下使用：一个测试重跑就过、只在 CI 里失败、只有整套跑才失败、过了午夜或跨夏令时切换才失败、并行执行时失败，或者在负载高的机器上失败；又或者有人提议用重试、跳过或加长超时把构建刷绿。涵盖间歇性失败、顺序依赖、共享状态、竞态，以及把不稳定的测试隔离出来。</p>
-</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A flaky test is a defect report whose owner has not been determined yet. The defect is in the test roughly half the time and in the product the other half — and the half that lives in the product is a race that users are already hitting at the same rate the test fails.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A test failed, was rerun, and passed, with no code change in between.</li><li>A test passes alone and fails in the suite, or passes in the suite and fails alone.</li><li>Failures cluster on CI, on one worker, at a time of day, or after a DST change.</li><li>Someone is about to add a retry, a skip marker, or a larger timeout.</li><li>The suite is rerun as a matter of routine, and nobody reads the first result.</li><li>Not for: a test that fails every time — that is a deterministic bug, owned by <code>systematic-debugging</code>.</li></ul>

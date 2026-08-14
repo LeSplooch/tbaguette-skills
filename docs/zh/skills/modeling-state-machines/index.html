@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">系统设计</span>
   <p class="lede">在以下情况下使用：某个东西有生命周期——订单、任务、连接、上传、会话、订阅、设备、工作流步骤——或者好几个布尔值和标志位在描述同一件事。也适用于状态字段、不可能出现的标志位组合、永远卡在某个状态上的记录、说不清缘由的状态变化、状态转移到一半崩掉、超时与取消，以及给一个已经落库的状态改名或添加新状态。</p>
-</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Three booleans encode eight combinations; if only five are real, you shipped three bugs and no way to detect them. Name the states, enumerate the transitions, and make the forbidden ones observable failures rather than silent no-ops.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Anything with a lifecycle, or any entity carrying three or more flags that qualify each other.</li><li>Conditions like <code>isLoading &amp;&amp; !hasError &amp;&amp; data != null</code> appearing in more than one place.</li><li>Symptoms: &quot;how did it get into this state?&quot;, rows stuck in <code>processing</code> forever, duplicate side effects after a reload, a cancelled item that still gets processed.</li><li>Adding a state, or renaming one, in something already persisted.</li><li>Not for: rewriting existing stored rows once the states change (data-migrations), or the wire compatibility rules for the state field (schema-evolution).</li></ul>

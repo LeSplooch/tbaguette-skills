@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">变更落地</span>
   <p class="lede">在以下情况下使用：要把没做完的东西藏在一个开关后面；要规划灰度放量、紧急关停开关或暗发布；要用开关圈住一次实验或一项付费权益；老开关越攒越多而没人清理；开关的组合把测试矩阵搞得没法管了；靠翻开关回滚这条路失败了；或者要在开关与另开一个分支或构建之间做选择。</p>
-</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A flag decouples deploying code from releasing behavior. It is also a permanent branch in the code, in the test matrix, and in the head of whoever is on call — so every flag gets a type, an owner, and an expiry on the day it is created, or it gets rejected.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Shipping incomplete work to production without exposing it</li><li>Ramping a change by percentage or cohort, or needing to disable one without a deploy</li><li>Gating an experiment, a plan tier, a region, or a role</li><li>Cleaning up flags that outlived the feature they guarded</li><li>Not for: moving traffic between two implementations over weeks — the flag is one instrument inside <code>incremental-migration</code>. Not for how configuration is stored, layered, and validated — see <code>configuration-management</code>.</li></ul>

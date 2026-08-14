@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">시스템 설계</span>
   <p class="lede">무엇을 로그로 남기고 무엇을 측정하고 무엇을 추적할지 정할 때, 남아 있던 텔레메트리만으로는 장애를 설명할 수 없었을 때, 라벨 카디널리티 탓에 메트릭이나 로그 비용이 튈 때, 알림이나 SLI, SLO를 정의할 때, 요청 ID나 상관관계 ID가 큐나 비동기 경계를 넘으며 사라질 때, 로그가 구조 없는 서식 문자열일 때, 로그 레벨을 고를 때 사용합니다.</p>
-</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>You choose what you will be able to see during an incident before the incident, and no amount of urgency later changes that. Instrumentation added while an outage is running explains the next occurrence, never this one. The bar is not &quot;we have logging&quot; — it is that a specific question you have not thought of yet can be answered in minutes from what is already being emitted.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding logging, metrics, spans, or events to new or existing code</li><li>A postmortem where the honest answer to &quot;why&quot; is &quot;we could not tell&quot;</li><li>Designing an alert, an SLI, or an SLO, or being asked what to alert on</li><li>A telemetry bill jumping without a traffic increase</li><li>A request that crosses a queue, job, or worker boundary and cannot be followed through it</li><li>Not for: reading and interpreting an existing failure signal such as a stack trace — this skill is about what gets emitted in the first place</li></ul>

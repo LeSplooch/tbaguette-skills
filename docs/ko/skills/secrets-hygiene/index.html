@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">보안(방어)</span>
   <p class="lede">API 키나 토큰, 비밀번호, 개인 키, 인증서, 접속 문자열을 다룰 때, 그러니까 서비스나 CI 파이프라인, 컨테이너 이미지, 클라이언트 앱에 하나를 넣을 때, 또는 커밋이나 로그 한 줄, 스크린샷, 티켓, 오류 메시지에서 하나를 발견했을 때 사용합니다. 유출된 자격 증명에 대한 대응, 폐기와 교체, 시크릿 스캐닝, 환경 변수와 dotenv 처리, 저장소를 공개하기 전 점검을 다룹니다.</p>
-</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A secret's only property is that its distribution is controlled, so every surface it has touched is a place it now lives. The measure of a healthy system is not whether secrets have leaked — they have — but whether any credential can be replaced on a Tuesday afternoon, without downtime and without a code change.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding a credential to a service, pipeline, image, device, or client application.</li><li>A key, token, or private key appears in a diff, log, ticket, chat message, screenshot, or exception.</li><li>Standing up CI or a deploy path; making a repository public; onboarding or offboarding someone.</li><li>Any sentence containing &quot;temporarily hardcode&quot;, &quot;just for local dev&quot;, or &quot;it's only a test key&quot;.</li><li>Not for: deciding what a credential should be <em>allowed to do</em> (<code>least-privilege-design</code>); whether a dependency can read your environment (<code>auditing-dependencies</code>).</li></ul>

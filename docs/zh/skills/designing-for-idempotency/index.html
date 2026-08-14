@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">系统设计</span>
   <p class="lede">在以下情况下使用：一个操作有可能到达不止一次——超时后结果未知的重试、at-least-once 队列、消费者重启与重投、被重放的 webhook、被双击的按钮、续跑的任务，或者写到一半崩掉。涵盖重复扣款、重复邮件和通知、幂等键、去重窗口、并发下的重试安全，以及所谓 exactly-once 投递的可信度。</p>
-</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Assume every operation arrives twice. Retries, restarts, redeliveries, and impatient users are the same problem, and exactly-once <em>delivery</em> does not exist — exactly-once <em>effect</em> does, and you build it at the receiver.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Designing any mutating operation reachable over an unreliable channel: network, queue, IPC, or a button a human can press twice.</li><li>A caller timed out and cannot tell whether the work happened.</li><li>A consumer may reprocess after a restart, rebalance, or offset reset.</li><li>Symptoms: duplicate charges, duplicate emails, doubled counters, a value that reverts to an old setting under load.</li><li>Not for: deciding which failures are worth retrying (modeling-errors), or how much retrying the system will absorb (rate-limiting-and-backpressure).</li></ul>

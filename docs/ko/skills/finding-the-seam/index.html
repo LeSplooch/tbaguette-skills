@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">코드 읽기</span>
   <p class="lede">코드베이스의 어디를 고쳐야 할지 정할 때, 고칠 곳이 여러 군데로 그럴듯할 때, diff가 여러 파일로 번져 나갈 때, 그 코드를 소유한 쪽을 건드리지 않고 동작을 바꿔야 할 때, 시스템 전체를 띄우지 않고는 무언가를 테스트할 수 없을 때, 변경을 안전하게 안착시키려고 확장 지점이나 어댑터, 래퍼, 주입 지점이 필요할 때 사용합니다.</p>
-</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A seam is a place where behavior can be changed without editing the thing whose behavior changes. The question is never &quot;how do I make this work&quot; but &quot;what is the smallest set of observable things I can put at risk to make this work&quot; — and the smallest diff and the smallest blast radius are usually different places.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Two or more plausible sites for the same change, and no obvious reason to prefer one.</li><li>A change is metastasizing across files and something is clearly wrong with the approach.</li><li>Behavior must vary by environment, tenant, platform, or caller.</li><li>A test would require standing up the whole system.</li><li>Not for: enumerating who is affected once the site is chosen (mapping-dependencies), replacing a system over many releases (incremental-migration), or isolating a dependency purely to test it (testing-the-untestable).</li></ul>

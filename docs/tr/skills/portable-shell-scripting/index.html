@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Language: Türkçe</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
   <p class="lede">Use when writing or reviewing a shell script, when a script works in one shell but fails in another, when it breaks on filenames with spaces or newlines, or when a failing command does not stop the script. Covers quoting and word splitting, set -e exemptions, lost variable assignments after a pipeline, exit codes and pipeline status, cleanup traps, POSIX sh versus bash-isms, GNU versus BSD tool differences, and when a script has outgrown shell.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Türkçe yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">This page hasn’t been translated into Türkçe yet — showing the English version.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Shell expands text and then splits and globs the result; quoting is not politeness, it is the mechanism that turns that off. <code>set -e</code> is a seatbelt with documented holes rather than error handling, and the shell you tested in is rarely the shell that will run the script.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Writing a script that runs somewhere you do not control: a CI runner, a container image, a BSD or Alpine host, a colleague's laptop</li><li>A script fails only in CI, only on macOS, or only for one person</li><li>Symptoms: <code>[: too many arguments</code>, <code>unbound variable</code>, <code>bad substitution</code>, a loop whose variables are unchanged afterwards, <code>rm</code> treating a filename as an option</li><li>Auditing a script that outgrew its one-off origin</li></ul>

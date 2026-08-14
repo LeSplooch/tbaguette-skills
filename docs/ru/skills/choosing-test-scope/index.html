@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Обновлено</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Язык: Русский</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Тестирование</span>
   <p class="lede">Применяйте, когда решаете, где проверять поведение — в модульном, интеграционном, контрактном или сквозном тесте, когда сквозной набор медленный или ему никто не верит, когда баг проскочил сквозь все слои тестов, когда моки начинают переписывать настоящую зависимость, когда тесты ломаются на рефакторингах, не менявших поведение, или когда спорят о пирамиде тестирования, целевом покрытии и соотношении тестов.</p>
-</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Test each behavior at the highest layer that can fail for exactly one reason. Higher than that and a red test names no cause; lower than that and a green test proves nothing about the shipped system.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding coverage and unsure whether it belongs in a unit, integration, contract, or end-to-end test.</li><li>The end-to-end suite takes long enough that people rerun it instead of reading it.</li><li>A defect reached production while every layer of tests was green.</li><li>A double has grown enough conditional logic that it is a second implementation of a dependency.</li><li>Tests break during a refactor that changed no observable behavior.</li><li>Someone is proposing a coverage percentage or a pyramid ratio as a target.</li><li>Not for: how to make a chosen layer deterministic — that is <code>testing-the-untestable</code>.</li></ul>

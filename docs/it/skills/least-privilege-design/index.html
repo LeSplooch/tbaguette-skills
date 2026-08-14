@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aggiornato</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Lingua: Italiano</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Sicurezza (difensiva)</span>
   <p class="lede">Da usare quando si crea o si rivede un ruolo, un account di servizio, una chiave API, l’ambito di un token, una policy IAM o RBAC o una lista di controllo degli accessi, quando un componente ha bisogno di accedere a qualcosa di nuovo, quando una stessa credenziale è condivisa tra servizi o ambienti, quando un servizio agisce per conto di chi lo chiama, o quando si ragiona su raggio d’impatto, escalation di privilegi, caratteri jolly nelle policy, sandboxing, traffico di rete in uscita e separazione dei compiti.</p>
-</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Least privilege is the property that decides what a bug costs. Every other control is probabilistic — this one is deterministic: it bounds the damage of the compromise you did not detect. Design for the assumption that some component will be fully controlled by an attacker, and choose which ones can afford that.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Creating a role, service account, key, token scope, policy, or access control entry, or a component needs access to something it did not previously reach.</li><li>Designing service-to-service authentication, or any path where a service acts on a caller's request.</li><li>Reviewing existing permissions, an over-broad policy, a wildcard, or a credential shared across services or environments; deciding what a build or pipeline may reach; designing irreversible or money-moving operations.</li><li>Not for: where the credential is stored and how it is rotated (<code>secrets-hygiene</code>); whether the boundary should exist at all (<code>threat-modeling</code>).</li></ul>

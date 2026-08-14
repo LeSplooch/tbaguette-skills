@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Mis à jour</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Langue: Français</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Intégration des changements</span>
   <p class="lede">À utiliser quand on restructure du code existant sans changer ce qu’il fait, quand un changement touche de nombreux sites d’appel d’un coup, quand des tests cassent au milieu d’une restructuration, quand il faut nettoyer du code avant de pouvoir ajouter une fonctionnalité, quand on travaille dans du code non testé ou hérité, ou quand on est tenté de réécrire plutôt que de transformer. Couvre la préservation du comportement, l’extraction et l’inlining, les renommages à grande échelle, et le choix entre refactorisation et réécriture.</p>
-</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A refactor changes structure and preserves observable behavior. The instant one diff does both, it is neither reviewable nor revertible, and nobody — including you — can say which half broke.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Restructuring working code so a pending change becomes easy</li><li>A rename, move, or signature change that ripples through many call sites</li><li>Cleaning up code you did not write and cannot fully test yet</li><li>Weighing an incremental restructure against starting over</li><li>Not for: building the safety net in untested code — see <code>characterization-testing</code>. Not for creating a test seam where none exists — see <code>finding-the-seam</code>. Not for restructuring stretched across releases — see <code>incremental-migration</code>.</li></ul>

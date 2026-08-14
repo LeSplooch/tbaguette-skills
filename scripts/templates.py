@@ -898,14 +898,45 @@ def _render_skill_head(skill: dict, strings: Strings = ENGLISH_STRINGS) -> str:
 </div>"""
 
 
-def _render_prose(body_html: str, *, lang: str | None = None) -> str:
+def _render_prose(body_html: str, *, lang: str | None = None,
+                   text_dir: str | None = None) -> str:
     # body_html is pre-rendered, already-escaped HTML from the content
     # pipeline — injected verbatim per contract, same as elsewhere in this
-    # module. lang, when given, overrides the ambient page language for
-    # this one block (used when the body is an untranslated English
-    # fallback on a non-English page — see _render_translation_fallback_banner).
-    lang_attr = f' lang="{escape_html(lang)}"' if lang else ""
-    return f'<div class="prose"{lang_attr}>{body_html}</div>'
+    # module. lang and text_dir, when given, override the ambient page
+    # language *and text direction* for this one block (used when the body is
+    # an untranslated English fallback on a non-English page — see
+    # _render_translation_fallback_banner).
+    #
+    # Both are needed, and text_dir is not inferable from lang: HTML derives
+    # text direction only from an explicit dir attribute, never from lang. On
+    # an RTL page the fallback body would otherwise inherit <html dir="rtl">
+    # and lay out English as an RTL paragraph — every trailing colon, period
+    # and parenthesis jumps to the start of its visual line ("Core
+    # principles:" renders with the colon leading). Since all 66 skill bodies
+    # are still English-only, that was every /ar/skills/* page.
+    #
+    # text_dir is its own parameter rather than being implied by lang's
+    # presence so that a future fallback in some other language carries that
+    # language's own direction instead of a hardcoded "ltr".
+    return f'<div class="prose"{_fallback_attrs(lang, text_dir)}>{body_html}</div>'
+
+
+def _fallback_attrs(lang: str | None, text_dir: str | None) -> str:
+    """The lang/dir pair marking a block as untranslated fallback content.
+
+    Shared by every container that can hold a fallback body: the main prose
+    block, formidable's per-tab panels, and its craft-floor section. They all
+    need it for the same reason and must not drift apart -- the craft floor
+    and the tab panels are English too, and were laying out under dir="rtl"
+    on /ar/skills/formidable/ (21 of 24 elements in the craft floor, 20 of 31
+    in the first tab panel) even after the main body was fixed.
+    """
+    attrs = ""
+    if lang:
+        attrs += f' lang="{escape_html(lang)}"'
+    if text_dir:
+        attrs += f' dir="{escape_html(text_dir)}"'
+    return attrs
 
 
 def _render_translation_fallback_banner(locale: "locales.Locale", strings: Strings) -> str:
@@ -913,7 +944,8 @@ def _render_translation_fallback_banner(locale: "locales.Locale", strings: Strin
     return f'<p class="translation-banner" role="note">{escape_html(message)}</p>'
 
 
-def _render_tab_group(*, heading: str, items: list[dict]) -> str:
+def _render_tab_group(*, heading: str, items: list[dict],
+                       lang: str | None = None, text_dir: str | None = None) -> str:
     if not items:
         return ""
     tabs: list[str] = []
@@ -930,10 +962,13 @@ def _render_tab_group(*, heading: str, items: list[dict]) -> str:
         )
         hidden_attr = "" if i == 0 else " hidden"
         # item["html"] is pre-rendered, already-escaped HTML, same contract
-        # as body_html above — injected verbatim.
+        # as body_html above — injected verbatim. The lang/dir pair goes on
+        # the panel, not on the group, because the group's heading comes from
+        # Strings and really is translated — only the panel body is fallback.
         panels.append(
             f'<div class="tabs__panel" role="tabpanel" id="{item_id}" '
-            f'aria-labelledby="{tab_id}" tabindex="0"{hidden_attr}>{item["html"]}</div>'
+            f'aria-labelledby="{tab_id}" tabindex="0"{hidden_attr}'
+            f'{_fallback_attrs(lang, text_dir)}>{item["html"]}</div>'
         )
     # heading_id via content_pipeline.slugify() rather than a bare
     # heading.lower(): .lower() only ever worked because English's and
@@ -958,7 +993,8 @@ def _render_tab_group(*, heading: str, items: list[dict]) -> str:
 </section>"""
 
 
-def _render_craft_floor(skill: dict, strings: Strings = ENGLISH_STRINGS) -> str:
+def _render_craft_floor(skill: dict, strings: Strings = ENGLISH_STRINGS, *,
+                         lang: str | None = None, text_dir: str | None = None) -> str:
     # Not a tab: craft-floor.md is the quality bar, not a command, and links
     # inside formidable's own body/stack/command content already point at
     # #cmd-craft-floor (the id the content pipeline's link-rewriter produces
@@ -969,17 +1005,22 @@ def _render_craft_floor(skill: dict, strings: Strings = ENGLISH_STRINGS) -> str:
         return ""
     return f"""<section class="formidable-extra__group" id="cmd-craft-floor" aria-labelledby="craft-floor-heading">
   <h2 id="craft-floor-heading" class="formidable-extra__subtitle">{escape_html(strings.formidable_craft_floor_heading)}</h2>
-  <div class="prose">{html}</div>
+  <div class="prose"{_fallback_attrs(lang, text_dir)}>{html}</div>
 </section>"""
 
 
-def _render_formidable_extras(skill: dict, strings: Strings = ENGLISH_STRINGS) -> str:
+def _render_formidable_extras(skill: dict, strings: Strings = ENGLISH_STRINGS, *,
+                               lang: str | None = None, text_dir: str | None = None) -> str:
     if not skill.get("is_formidable"):
         return ""
     groups = _join(
-        _render_tab_group(heading=strings.formidable_stacks_heading, items=skill.get("formidable_stacks") or []),
-        _render_tab_group(heading=strings.formidable_commands_heading, items=skill.get("formidable_commands") or []),
-        _render_craft_floor(skill, strings),
+        _render_tab_group(heading=strings.formidable_stacks_heading,
+                          items=skill.get("formidable_stacks") or [],
+                          lang=lang, text_dir=text_dir),
+        _render_tab_group(heading=strings.formidable_commands_heading,
+                          items=skill.get("formidable_commands") or [],
+                          lang=lang, text_dir=text_dir),
+        _render_craft_floor(skill, strings, lang=lang, text_dir=text_dir),
     )
     if not groups:
         return ""
@@ -994,7 +1035,29 @@ def _render_prevnext_link(skill: dict | None, *, direction: str, base_path: str 
     label = strings.prevnext_previous if direction == "prev" else strings.prevnext_next
     modifier = " prevnext__link--next" if direction == "next" else ""
     name = escape_html(skill["name"])
-    name_html = f"← {name}" if direction == "prev" else f"{name} →"
+    # ← (U+2190) and → (U+2192) do NOT carry the Unicode Bidi_Mirrored
+    # property, so — unlike brackets and parentheses — the bidi algorithm
+    # never flips them for an RTL run. The glyph has to be swapped here.
+    #
+    # Only the glyph, not the position: bidi already places the arrow on the
+    # correct side unaided (measured on /ar/, "{name} →" renders with the
+    # arrow to the *left* of the name, which is where "forward" belongs when
+    # reading right-to-left). What is wrong is purely which way it points —
+    # an RTL reader advances leftward, so "next" must point ← and "previous"
+    # must point →, the mirror of the LTR pairing. Keeping each arrow in its
+    # existing logical slot preserves that already-correct placement.
+    #
+    # Swapping the character rather than mirroring it with CSS
+    # transform: scaleX(-1) — the approach used for .card__arrow — because
+    # transform does not apply to non-replaced inline elements at all
+    # (verified in-browser: translateX(50px) on an inline span moves it 0px).
+    # .card__arrow only works that way because .card__foot is a flex
+    # container, which blockifies it; .prevnext__name is a plain block, so
+    # the same rule here would need a new span *plus* display: inline-block,
+    # and would leave the DOM text saying the opposite of what is drawn.
+    rtl = locale.dir == "rtl"
+    back_arrow, forward_arrow = ("→", "←") if rtl else ("←", "→")
+    name_html = f"{back_arrow} {name}" if direction == "prev" else f"{name} {forward_arrow}"
     return f"""<a class="prevnext__link{modifier}" href="{_skill_href(skill, base_path, locale)}">
   <span class="prevnext__label">{escape_html(label)}</span>
   <span class="prevnext__name">{name_html}</span>
@@ -1045,13 +1108,18 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
     list, for nav)."""
     is_translated = skill.get("translated", True)
     banner = "" if is_translated else _render_translation_fallback_banner(locale, strings)
-    body_lang = None if is_translated else "en"
+    # The untranslated fallback body is the default locale's own content, so
+    # it carries that locale's language *and* direction — both read off
+    # DEFAULT_LOCALE rather than hardcoded, so they cannot drift apart.
+    fallback_locale = locales.DEFAULT_LOCALE
+    body_lang = None if is_translated else fallback_locale.code
+    body_dir = None if is_translated else fallback_locale.dir
     article = (
         '<article class="container skill-article">'
         + _render_skill_head(skill, strings)
         + banner
-        + _render_prose(skill.get("body_html", ""), lang=body_lang)
-        + _render_formidable_extras(skill, strings)
+        + _render_prose(skill.get("body_html", ""), lang=body_lang, text_dir=body_dir)
+        + _render_formidable_extras(skill, strings, lang=body_lang, text_dir=body_dir)
         + "</article>"
     )
     main_html = _join(

@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Language: Tiếng Việt</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Debugging and performance</span>
   <p class="lede">Use when memory, file descriptors, sockets, threads, connections, timers, or event subscriptions grow without bound, when a process is killed for running out of memory or hits a too-many-open-files error, when a periodic restart is what keeps a service alive, when a heap snapshot must be read, or when usage climbs under steady load. Covers growth detection, retention versus allocation, and error-path leaks.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Tiếng Việt yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">This page hasn’t been translated into Tiếng Việt yet — showing the English version.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A leak is retention, not allocation. The allocation site is merely where the object was born; the defect is the reference that outlives its purpose — which is why reading the allocating code almost never finds it. Detect leaks by measuring growth under steady load, never by inspecting source.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A process is killed for memory, hits a descriptor limit, or exhausts a connection pool</li><li>A scheduled restart, or a &quot;just restart it weekly&quot; note, is holding the system up</li><li>Resource usage climbs across hours or days without a corresponding rise in traffic</li><li>Latency degrades steadily after deploy and recovers on restart</li><li>Duplicate side effects appear, multiplying with uptime — a subscription leak wearing a logic bug's clothes</li></ul>

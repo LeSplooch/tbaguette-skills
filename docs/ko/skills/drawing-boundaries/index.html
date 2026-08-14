@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">시스템 설계</span>
   <p class="lede">모듈, 패키지, 크레이트, 라이브러리, 프로세스, 서비스를 어떻게 쪼갤지, 컴포넌트를 떼어낼지 합칠지, 외부 SDK를 내가 소유한 인터페이스 뒤로 감쌀지, 폴더 구조를 다시 짤지처럼 무엇을 한데 묶을지 정할 때 사용합니다. 순환 의존, 커지기만 하는 공용 모듈, 모든 기능이 모든 모듈을 건드리는 상황, 정해진 순서로만 배포되는 컴포넌트, 그리고 어떤 것이 자기만의 프로세스나 저장소, 서비스를 가질 만한지에도 씁니다.</p>
-</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A boundary is a promise that two sides can change independently. If they cannot, you paid indirection, serialization, versioning, and cross-boundary debugging and got nothing back.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Deciding module, package, crate, library, or service splits; extracting a component; merging two that never move apart.</li><li>Wrapping a vendor SDK, or reviewing a wrapper that mirrors the vendor exactly.</li><li>Symptoms: every feature touches five modules, circular imports, a <code>common</code> module everyone depends on and nobody owns, deploys that must be ordered, a change needing three coordinated repos.</li><li>Not for: the shape of the interface once the boundary exists (designing-apis), or measuring what currently depends on what (mapping-dependencies).</li></ul>

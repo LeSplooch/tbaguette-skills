@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">最終更新</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">言語: 日本語</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">環境とツール</span>
   <p class="lede">ビルドやテストがあるマシンでは通り、別のマシンでは落ちるとき、古いタグやリリースをもう再ビルドできないとき、オンボーディングに文書化されていない準備手順が要るとき、どのコミットも変わっていないのにビルドが壊れるとき、同じコミットからの2回のビルドが違う成果物を出すとき、あるいはバージョンマネージャ・コンテナ・密閉されたビルドのどれを取るか決めるときに使います。バージョン固定、lockfile、ツールチェーンの宣言、隔離、決定性を扱います。</p>
-</div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Every &quot;works on my machine&quot; is an input the build consumed without declaring. Reproducibility is not a property you add at the end; it is the count of undeclared inputs reaching zero, and the only way to know that count is to rebuild and compare.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A build, test, or artifact behaves differently on another machine, in CI, or after a clean clone</li><li>The build broke and no commit changed</li><li>You cannot rebuild the artifact a released version was cut from</li><li>Onboarding a person or a new runner takes more than one command</li><li>Choosing an isolation mechanism, or deciding whether the current one is worth its cost</li></ul>

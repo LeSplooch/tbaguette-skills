@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">변경사항 반영하기</span>
   <p class="lede">이미 쓰이고 있는 시스템이나 라이브러리, API, 스토리지 엔진, 데이터 포맷을 교체할 때, 변경이 너무 커서 한 번의 릴리스로는 안착시킬 수 없을 때, 옛 경로에서 새 경로로 넘어가는 전환을 계획할 때, 옛 구현과 새 구현이 둘 다 살아 있고 어느 쪽도 끝나지 않았을 때, 변경이 수백 군데 호출부를 건드릴 때, 롤백하면 새 경로가 쓴 데이터를 옛 경로가 읽지 못하게 될 때 사용합니다.</p>
-</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Any large replacement ships as a sequence of individually deployable, individually revertible steps. The big-bang cutover is a plan that assumes you will not be interrupted, that nothing will be discovered mid-flight, and that rollback is a button — and all three assumptions fail together, at the worst moment.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Replacing a subsystem, dependency, protocol, or storage layer that has live traffic</li><li>A change whose full form would touch more code than can be reviewed or reverted at once</li><li>Two implementations are already live and the second one has stopped advancing</li><li>Deciding when it is safe to cut over from an old path to a new one</li><li>Not for: the internals of a data backfill or a schema version sequence — see <code>data-migrations</code> and <code>schema-evolution</code>. Not for the toggle mechanism itself — see <code>feature-flagging</code>.</li></ul>

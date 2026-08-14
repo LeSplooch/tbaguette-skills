@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Mis à jour</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Langue: Français</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Intégration des changements</span>
   <p class="lede">À utiliser quand une copie de travail a accumulé plusieurs changements sans rapport entre eux, quand il faut décider de ce qui appartient à un même commit, quand un diff mêle un renommage ou un reformatage à un changement de logique, quand un bisect tombe sur un commit trop gros pour être compris, quand un revert ou un backport entraîne des changements que personne n’a demandés, ou quand un relecteur ne retrouve pas le vrai changement dans un diff. Couvre le découpage par fichier et par hunk, la séparation mécanique et sémantique, et la granularité des commits.</p>
-</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>One commit, one decision. A commit is atomic when it builds and passes its tests standing alone, and reverting it removes exactly one choice from the tree — not when it is merely small.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>finishing-a-development-branch</code>.</li></ul>

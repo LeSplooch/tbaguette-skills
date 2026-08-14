@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">कोड पढ़ना</span>
   <p class="lede">जब आँकना हो कि कोई बदलाव क्या तोड़ेगा, नुक़सान का दायरा नापना हो, गोल-गोल घूमते इम्पोर्ट या बिल्ड चक्र का पीछा करना हो, ऐसे मॉड्यूल ढूँढ़ने हों जिन पर बहुत ज़्यादा चीज़ें टिकी हैं, यह जाँचना हो कि लेयरिंग या आर्किटेक्चर के नियम अब भी क़ायम हैं, किसी मॉड्यूल को बाँटने, अलग करने या हटाने की योजना बनानी हो, या जब कोई छोटा-सा स्थानीय बदलाव ऐसी जगह ख़राबी कर बैठा हो जिसने उसका ज़िक्र तक कभी नहीं किया था, तब इस्तेमाल करें।</p>
-</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>The dependency graph in the import statements is one of three graphs, and it is the one least likely to hurt you. Two components with no shared code and one shared table are more tightly coupled than two modules that import each other, because nothing will tell them when they disagree.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Before a signature, schema, or shared-behavior change, to enumerate who notices.</li><li>A cycle blocks a build, a test, an extraction, or a deletion.</li><li>Deciding module boundaries, or whether a proposed split is even possible.</li><li>An incident traced to a component that had no visible link to the change.</li><li>Not for: choosing where to put a change once the graph is known (finding-the-seam), or one value's path (tracing-data-flow).</li></ul>

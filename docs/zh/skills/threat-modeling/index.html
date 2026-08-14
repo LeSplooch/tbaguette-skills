@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">安全（防御）</span>
   <p class="lede">在以下情况下使用：一份设计引入了新的信任边界、新一类敏感数据、新的外部集成，或者改动了认证或授权；一次设计评审需要补上安全这一节；有人问某个系统或功能可能出什么岔子；或者要推敲攻击者、攻击面、影响范围，以及哪些风险该先修。涵盖 STRIDE、信任边界、数据流、攻击者能力分级和风险排序。</p>
-</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A threat model is a 30–60 minute conversation that produces decisions, not a document. Its output is a list of design changes, mitigations with tests, and explicitly accepted risks with owners. If the design did not change and nothing got a test, the session was theater.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A new trust boundary appears: a new listener, IPC surface, plugin or extension point, tenant, file format you now parse, or a queue you now consume.</li><li>A new class of data enters: credentials, personal data, payment, health, keys, or telemetry that can carry user content.</li><li>A new external integration or an authorization change: third-party API, webhook receiver, identity provider, a new role, a new token type, a session mechanism, or any delegation.</li><li>Before writing the security section of a design doc, so the section reports decisions instead of inventing them.</li><li>Not for: root-causing a specific reported bug; evaluating a package's supply chain (<code>auditing-dependencies</code>); writing the actual permission scopes (<code>least-privilege-design</code>); the input-handling rules themselves (<code>handling-untrusted-input</code>).</li></ul>

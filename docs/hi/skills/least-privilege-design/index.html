@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">सुरक्षा (रक्षात्मक)</span>
   <p class="lede">जब कोई रोल, सर्विस अकाउंट, API कुंजी, टोकन का दायरा, IAM या RBAC पॉलिसी, या ऐक्सेस कंट्रोल लिस्ट बनानी या जाँचनी हो, जब किसी कंपोनेंट को किसी नई चीज़ तक पहुँच चाहिए, जब एक ही क्रेडेंशियल कई सर्विस या एनवायरनमेंट में साझा हो, जब कोई सर्विस किसी कॉलर की ओर से काम करे, या जब नुक़सान के दायरे, प्रिविलेज एस्केलेशन, पॉलिसी में वाइल्डकार्ड, सैंडबॉक्सिंग, बाहर जाने वाला नेटवर्क ट्रैफ़िक और ज़िम्मेदारियों के बँटवारे पर सोचना हो, तब इस्तेमाल करें।</p>
-</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Least privilege is the property that decides what a bug costs. Every other control is probabilistic — this one is deterministic: it bounds the damage of the compromise you did not detect. Design for the assumption that some component will be fully controlled by an attacker, and choose which ones can afford that.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Creating a role, service account, key, token scope, policy, or access control entry, or a component needs access to something it did not previously reach.</li><li>Designing service-to-service authentication, or any path where a service acts on a caller's request.</li><li>Reviewing existing permissions, an over-broad policy, a wildcard, or a credential shared across services or environments; deciding what a build or pipeline may reach; designing irreversible or money-moving operations.</li><li>Not for: where the credential is stored and how it is rotated (<code>secrets-hygiene</code>); whether the boundary should exist at all (<code>threat-modeling</code>).</li></ul>

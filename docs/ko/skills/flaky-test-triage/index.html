@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">테스트</span>
   <p class="lede">테스트가 다시 돌리면 통과할 때, CI에서만 실패할 때, 스위트 전체를 돌릴 때만 실패할 때, 자정을 넘기거나 서머타임이 바뀔 때 실패할 때, 병렬 실행에서 실패할 때, 부하가 걸린 머신에서 실패할 때, 또는 누군가 빌드를 초록으로 만들려고 재시도나 건너뛰기, 더 긴 타임아웃을 제안할 때 사용합니다. 간헐적 실패, 순서 의존, 공유 상태, 경쟁 상태, 테스트 격리를 다룹니다.</p>
-</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A flaky test is a defect report whose owner has not been determined yet. The defect is in the test roughly half the time and in the product the other half — and the half that lives in the product is a race that users are already hitting at the same rate the test fails.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A test failed, was rerun, and passed, with no code change in between.</li><li>A test passes alone and fails in the suite, or passes in the suite and fails alone.</li><li>Failures cluster on CI, on one worker, at a time of day, or after a DST change.</li><li>Someone is about to add a retry, a skip marker, or a larger timeout.</li><li>The suite is rerun as a matter of routine, and nobody reads the first result.</li><li>Not for: a test that fails every time — that is a deterministic bug, owned by <code>systematic-debugging</code>.</li></ul>

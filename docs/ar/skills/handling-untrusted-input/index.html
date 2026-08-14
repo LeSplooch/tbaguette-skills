@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">الأمن (الدفاعي)</span>
   <p class="lede">استخدِمها عندما يقبل الكود بيانات من خارج حدود ثقته أو يحلّلها — طلبات، أو ملفات، أو رفعات، أو خطّافات ويب، أو طوابير رسائل، أو إعدادات، أو خدمة داخلية أخرى — وعند بناء استعلام أو أمر أو مسار أو رابط أو قالب أو ترميز يتضمّن متغيّرًا، وعند مراجعة دالّة تنظيف أو تهريب، أو عند التعامل مع فكّ التسلسل، أو اجتياز المسارات، أو الحقن، أو XSS، أو SSRF، أو XXE، أو تطبيع اليونيكود، أو استنزاف موارد المحلّل.</p>
-</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Untrusted means &quot;did not originate inside this trust boundary&quot; — which includes your own database, your own config, and the service your own team wrote. Validity is established once, at the boundary, by constructing a type that cannot hold an invalid value; it is not a check repeated inward and eventually forgotten.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Parsing anything from a request, file, upload, header, filename, queue message, environment, or config.</li><li>Assembling a query, shell command, filesystem path, URL, template, or markup that contains a variable.</li><li>Reviewing code where a function is named <code>sanitize</code>, <code>clean</code>, <code>escape</code>, or <code>isValid</code>, or accepting nested structures, archives, images, or any format with a third-party parser behind it.</li><li>Not for: deciding what privilege the parsing process runs with (<code>least-privilege-design</code>); deciding whether the boundary should exist (<code>threat-modeling</code>).</li></ul>
@@ -138,11 +138,11 @@ GOOD:  let addr = Email::parse(s)?             // Email cannot exist unless pars
 <ul><li>&quot;It was already validated upstream&quot; or &quot;it came from our own database,&quot; with no line of code named.</li><li>Reaching for an escape function when a parameterized API exists.</li><li>Writing a pattern to <em>detect an attack</em> instead of to <em>define acceptance</em>, or adding one more case to a denylist after a report.</li><li>Any string concatenation whose result is parsed by something else.</li><li>A validator whose return type is a boolean.</li><li>Deciding to normalize after the check because the check is cheap.</li></ul></div></article>
 <nav class="container prevnext" aria-label="التنقُّل بين المهارات"><a class="prevnext__link" href="/tbaguette-skills/ar/skills/threat-modeling/">
   <span class="prevnext__label">السابق</span>
-  <span class="prevnext__name">← threat-modeling</span>
+  <span class="prevnext__name">→ threat-modeling</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ar/skills/secrets-hygiene/">
   <span class="prevnext__label">التالي</span>
-  <span class="prevnext__name">secrets-hygiene →</span>
+  <span class="prevnext__name">secrets-hygiene ←</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">المزيد في «الأمن (الدفاعي)»</h2>

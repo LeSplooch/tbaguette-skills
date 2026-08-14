@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Language: Türkçe</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Designing systems</span>
   <p class="lede">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, undiagnosable production incidents, duplicated log noise, and callers parsing error strings.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Türkçe yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">This page hasn’t been translated into Türkçe yet — showing the English version.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Classify the failure before choosing a mechanism. Almost all bad error handling is one mechanism applied uniformly to four kinds of failure that need four different treatments.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding error handling to a new operation, or reviewing a <code>catch</code> you did not write.</li><li>Designing the error side of an interface: what callers can be told, and what they can do about it.</li><li>Symptoms: a subsystem &quot;silently does nothing&quot;, one failure produces four log lines, a retry loop that can never succeed, an incident where nothing recorded what actually failed.</li><li>Not for: the wire-level shape of the error contract at a public boundary (designing-apis), or the safety of the retry itself (designing-for-idempotency).</li></ul>

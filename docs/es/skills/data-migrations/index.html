@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Actualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Español</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Diseño de sistemas</span>
   <p class="lede">Úsala cuando hay que rellenar, transformar, recodificar o mover datos que ya existen y en un volumen demasiado grande para una sola transacción, cuando un script puntual tiene que recorrer millones de registros, cuando una migración se cortó a medias y debe reanudarse sin aplicarse dos veces, cuando tiene que convivir con el tráfico real, cuando un relleno retroactivo provoca contención de bloqueos o retraso de replicación, o cuando un cambio de datos no tiene vuelta atrás.</p>
-</div><p class="translation-banner" role="note">Esta página todavía no se ha traducido al Español —se muestra la versión en inglés.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Esta página todavía no se ha traducido al Español —se muestra la versión en inglés.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A long-running data migration is a program that will be interrupted — by a timeout, a deploy, an OOM kill, or a human with a keyboard. The half-run state is not an edge case to handle at the end; it is the state you design for from the first line. Everything else in this skill follows from that.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Backfilling a new field, re-encoding values, splitting or merging records, changing units or formats</li><li>Copying or moving data between stores, tables, collections, topics, buckets, or file layouts</li><li>Any sweep large enough that a single transaction would time out, exhaust memory, or hold locks past a few seconds</li><li>A migration that must run while production writes the same data</li><li>A migration that was killed partway and someone is about to re-run it from the top</li><li>Not for: changing the shape of the contract itself — that is schema evolution, and it decides the order in which the steps below are allowed to happen</li></ul>

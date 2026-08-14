@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Mis à jour</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Langue: Français</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Intégration des changements</span>
   <p class="lede">À utiliser quand on retire du code, une fonctionnalité, un endpoint, une clé de configuration, une colonne ou une dépendance qui semble inutilisée, quand il faut déterminer si quelque chose est vraiment mort, quand une dépréciation a besoin d’un chemin de suppression et d’une échéance, quand du code a été mis en commentaire ou gardé « au cas où », ou quand on ne voit pas tous les appelants depuis l’intérieur du dépôt. Couvre la preuve qu’un code est mort, les séquences de dépréciation, et la suppression des tests et de la configuration qui vont avec.</p>
-</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Deletion is the highest-leverage change available and the one people make on the thinnest evidence. The question is never &quot;does anything call this&quot; — it is &quot;what would constitute proof that nothing does&quot;, and a clean search is not proof.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Removing a feature, endpoint, flag, module, table column, or dependency</li><li>Something looks unused and you are about to trust a search that found nothing</li><li>A deprecation has been in place for a while with no removal date attached</li><li>Code was commented out rather than removed, or kept because it &quot;might be useful&quot;</li><li>Not for: removing an old implementation as the final phase of a replacement — see <code>incremental-migration</code>. Not for judging whether historical code is load-bearing — see <code>code-archaeology</code>.</li></ul>

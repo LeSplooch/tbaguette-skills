@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Atualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Português</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Design de sistemas</span>
   <p class="lede">Use quando um sistema está recebendo mais carga do que consegue atender, quando se projetam throttling, cotas ou respostas 429, quando uma fila não para de crescer ou só é drenada horas depois, quando as retentativas transformam uma falha parcial em uma queda total, quando um pool de conexões ou de threads se esgota, quando a latência sobe em vez de as requisições falharem, ou quando é preciso escolher entre descartar carga, enfileirá-la e desacelerar quem a produz.</p>
-</div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>When demand exceeds capacity, the only question is which work fails and how quickly it finds out. A system with no explicit answer still answers: it queues everything, latency grows without bound, and every caller times out on work that will be completed and then discarded. Choosing the victim deliberately is the entire discipline.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>One caller, tenant, or job is degrading the service for everyone</li><li>Designing quotas, throttles, or the response a caller gets when over the limit</li><li>A queue whose depth grows through the day, or that drains long after the traffic ended</li><li>Timeouts, pool exhaustion, or a cascading failure spreading between services</li><li>Retry behavior amplifying a partial failure — error rate rising after a dependency starts recovering</li><li>Not for: capacity planning and scaling decisions; this covers what happens in the window where capacity is already insufficient</li></ul>

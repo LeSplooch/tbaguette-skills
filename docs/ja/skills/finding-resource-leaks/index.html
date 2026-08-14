@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">最終更新</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">言語: 日本語</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">デバッグとパフォーマンス</span>
   <p class="lede">メモリ、ファイルディスクリプタ、ソケット、スレッド、コネクション、タイマー、イベント購読が際限なく増えるとき、プロセスがメモリ不足で殺されたり、開いているファイルが多すぎるというエラーに当たったりするとき、定期再起動だけがサービスを生かしているとき、ヒープスナップショットを読まなければならないとき、あるいは負荷が一定なのに使用量が上がり続けるときに使います。増加の検知、確保と保持の区別、エラー経路での漏れを扱います。</p>
-</div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A leak is retention, not allocation. The allocation site is merely where the object was born; the defect is the reference that outlives its purpose — which is why reading the allocating code almost never finds it. Detect leaks by measuring growth under steady load, never by inspecting source.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A process is killed for memory, hits a descriptor limit, or exhausts a connection pool</li><li>A scheduled restart, or a &quot;just restart it weekly&quot; note, is holding the system up</li><li>Resource usage climbs across hours or days without a corresponding rise in traffic</li><li>Latency degrades steadily after deploy and recovers on restart</li><li>Duplicate side effects appear, multiplying with uptime — a subscription leak wearing a logic bug's clothes</li></ul>

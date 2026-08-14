@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">تصميم الأنظمة</span>
   <p class="lede">استخدِمها عندما يجب أن يجري العمل في وقت واحد ولم يُحسَم الأسلوب بعد — خيوط نظام التشغيل، أو البرمجة غير المتزامنة وحلقات الأحداث، أو الفاعلون وتمرير الرسائل، أو طابور مهامّ معمِّر، أو التوازي على البيانات، أو التجزئة بحسب المفتاح. وتصلح كذلك لاستنفاد مجمّع الخيوط، وتعثُّر حلقة الأحداث، والجمود التامّ، ونموّ الطوابير بلا حدّ، وانفجار الذاكرة تحت الحِمل، وقفزات زمن الاستجابة في الذيل، والإلغاء الذي لا يوقف العمل فعلًا، والحالة المشتركة القابلة للتغيير في مقابل تمرير الرسائل، وما إذا كان التزامن ضروريًّا أصلًا.</p>
-</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Pick from workload shape and failure tolerance, never from language fashion. Most concurrency pain is a model-selection error, and no amount of careful locking repairs a model that does not fit the work.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Starting any component that handles more than one thing at once, or adding a background worker, scheduler, or parallel path.</li><li>Deciding shared mutable state versus message passing — a design decision, not an implementation detail.</li><li>Symptoms: latency high while CPU sits idle, p99 far above p50, pool exhaustion, memory climbing until OOM, deadlock that only appears under production load.</li><li>Not for: diagnosing a specific existing race or deadlock (debugging-concurrency), or setting queue bounds and shedding policy once the model is chosen (rate-limiting-and-backpressure).</li></ul>
@@ -120,11 +120,11 @@
 <ul><li>&quot;Let's make it async, it'll be faster&quot; — about CPU-bound work.</li><li>&quot;We'll add a queue&quot; with no bound named.</li><li>&quot;Just add a lock here.&quot;</li><li>&quot;The timeout will handle it.&quot;</li><li>Choosing the model because every example in the language's documentation uses it.</li><li>Being unable to name the owner of each piece of mutable state in one sentence.</li><li>Reaching for concurrency before profiling the sequential version.</li></ul></div></article>
 <nav class="container prevnext" aria-label="التنقُّل بين المهارات"><a class="prevnext__link" href="/tbaguette-skills/ar/skills/designing-for-idempotency/">
   <span class="prevnext__label">السابق</span>
-  <span class="prevnext__name">← designing-for-idempotency</span>
+  <span class="prevnext__name">→ designing-for-idempotency</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ar/skills/modeling-state-machines/">
   <span class="prevnext__label">التالي</span>
-  <span class="prevnext__name">modeling-state-machines →</span>
+  <span class="prevnext__name">modeling-state-machines ←</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">المزيد في «تصميم الأنظمة»</h2>

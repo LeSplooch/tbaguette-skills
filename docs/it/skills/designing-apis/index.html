@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aggiornato</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Lingua: Italiano</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Progettare sistemi</span>
   <p class="lede">Da usare quando si definisce un’interfaccia che altro codice chiamerà — una funzione pubblica o il punto d’ingresso di una libreria, un endpoint HTTP o RPC, un messaggio IPC o di protocollo, il contratto di un plugin o il confine esportato di un modulo. Tratta la denominazione e la granularità, i parametri obbligatori contro quelli facoltativi, i valori predefiniti, la paginazione e l’ordinamento, l’aggiunta di valori a un enum, i token opachi, la deprecazione e il ritiro, il versionamento e il giudizio se una modifica proposta rompa la compatibilità.</p>
-</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>The interface is the only part you cannot refactor later: everything behind it is yours, everything in front belongs to callers you cannot deploy. Design the failure modes, the growth path, and the compatibility promise before the happy path.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding anything another team, process, or version will call: exported function, endpoint, message type, plugin hook, config key.</li><li>Deciding one call versus three; required versus optional; what to return for a collection.</li><li>Adding a field, parameter, enum member, or error code to something already shipped.</li><li>Someone asks &quot;is this change breaking?&quot;</li><li>Not for: choosing a single identifier's wording (naming-things), evolving stored data (schema-evolution), deciding where the boundary belongs at all (drawing-boundaries).</li></ul>

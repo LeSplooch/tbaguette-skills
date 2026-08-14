@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T19:52:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:08Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T19:52:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T19:52:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Language: Türkçe</summary>
@@ -100,7 +100,7 @@
   </div>
   <span class="tag skill-article__tag">Debugging and performance</span>
   <p class="lede">Use when a failure depends on timing, thread or task interleaving, or load, when a test passes alone but fails in parallel, when a hang, deadlock, livelock, lost update, or stale read appears under concurrency, when adding logging or a debugger makes the symptom disappear, or when a thread dump or hung process must be read. Covers races, happens-before reasoning, stress reproduction, and deterministic replay.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Türkçe yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+</div><p class="translation-banner" role="note">This page hasn’t been translated into Türkçe yet — showing the English version.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A concurrency bug is a missing happens-before edge. The symptom is timing; the defect is an ordering constraint you assumed and never established, and no amount of reasoning about &quot;what usually happens first&quot; will find it.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Behavior changes with load, core count, machine speed, or run order</li><li>A hang with no crash, or a value that is occasionally wrong with no error anywhere</li><li>The symptom disappears under a debugger, a profiler, or added logging</li><li>A test passes alone and fails in parallel, or fails only in CI</li><li>A dynamic race detector or thread sanitizer reported something on a passing run</li></ul>
