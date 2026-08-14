@@ -15,6 +15,7 @@ Checks on what rendered, not on what you intended. Run them together in one batc
 - **States** all present: hover or focus, active, disabled, loading, empty, error, selected, and whatever the stack adds.
 - **Copy** in the product's own language. Controls name their action; errors name problem and recovery.
 - **Coverage** — every brief requirement present and findable within seconds.
+- **Magnify before dismissing a reported artifact.** Banding, seams, halos, and half-pixel misalignment are routinely invisible at normal size in a compressed screenshot and obvious at 3–4×. A report you could not reproduce at the reporter's scale has not been reproduced.
 
 ## The reflexes no detector catches
 

@@ -16,6 +16,7 @@ Color is the least reliable channel you have: it is themed by users, inverted by
 - **Elevation reverses:** in light mode, higher surfaces cast shadows; in dark mode, higher surfaces get lighter. Shadows barely exist in the dark.
 - **Saturated colors need desaturating** in dark mode; the same accent that reads confident on white glares on black.
 - Contrast ratios must be verified independently in each theme. Passing in light says nothing about dark.
+- **Large, low-contrast gradients band.** A wide fade toward transparent has almost no color delta per pixel, so the ramp quantizes into visible steps — concentric rings from a radial, stripes from a linear — and a dark surface is precisely where the eye resolves those steps best. The fix is a low-pass, not a color change: give the gradient its own layer and blur that layer. Reaching for a different interpolation space or a different stop sequence usually changes nothing, since fading to transparent scales alpha rather than altering how the ramp interpolates.
 
 ## The second channel
 
