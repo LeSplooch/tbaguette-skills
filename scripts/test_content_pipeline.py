@@ -17,11 +17,14 @@ from __future__ import annotations
 
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import content_pipeline
 from content_pipeline import (
     CATEGORIES,
     build_content,
@@ -480,6 +483,147 @@ class BuildContentIntegrationTests(unittest.TestCase):
     def test_content_is_fully_json_serializable(self):
         serialized = json.dumps(self.content)
         self.assertGreater(len(serialized), 0)
+
+
+class LocaleBuildTests(unittest.TestCase):
+    def test_locale_build_falls_back_to_english_per_file(self):
+        """A locale directory missing a skill's SKILL.md still produces a
+        complete page in English for that skill, translated=False; a locale
+        directory that has the file produces translated=True."""
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            skills_root = tmp_path / "skills"
+            locale_root = tmp_path / "i18n" / "xx"
+
+            alpha_dir = skills_root / "alpha"
+            alpha_dir.mkdir(parents=True)
+            (alpha_dir / "SKILL.md").write_text(
+                "---\nname: alpha\ndescription: English alpha description.\n---\nEnglish alpha body.\n",
+                encoding="utf-8",
+            )
+
+            beta_dir = skills_root / "beta"
+            beta_dir.mkdir(parents=True)
+            (beta_dir / "SKILL.md").write_text(
+                "---\nname: beta\ndescription: English beta description.\n---\nEnglish beta body.\n",
+                encoding="utf-8",
+            )
+
+            # Only beta gets a real translated SKILL.md in the locale dir.
+            locale_beta_dir = locale_root / "skills" / "beta"
+            locale_beta_dir.mkdir(parents=True)
+            (locale_beta_dir / "SKILL.md").write_text(
+                "---\nname: beta\ndescription: XX beta description.\n---\nXX beta body.\n",
+                encoding="utf-8",
+            )
+
+            categories = [{"slug": "test-cat", "title": "Test", "skill_slugs": ["alpha", "beta"]}]
+            with mock.patch.object(content_pipeline, "CATEGORIES", categories):
+                content = content_pipeline.build_content(
+                    str(skills_root), locale="xx", locale_root=str(locale_root)
+                )
+
+            alpha = content["skills"]["alpha"]
+            self.assertFalse(alpha["translated"])
+            self.assertEqual(alpha["description"], "English alpha description.")
+            self.assertIn("English alpha body", alpha["body_html"])
+
+            beta = content["skills"]["beta"]
+            self.assertTrue(beta["translated"])
+            self.assertEqual(beta["description"], "XX beta description.")
+            self.assertIn("XX beta body", beta["body_html"])
+
+    def test_locale_build_description_precedence(self):
+        """descriptions.json translates a card/title ahead of a full
+        SKILL.md; once a real translated SKILL.md exists, its own
+        frontmatter description wins even if descriptions.json still has
+        an entry for that slug."""
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            skills_root = tmp_path / "skills"
+            locale_root = tmp_path / "i18n" / "xx"
+
+            for slug in ("gamma", "delta"):
+                skill_dir = skills_root / slug
+                skill_dir.mkdir(parents=True)
+                (skill_dir / "SKILL.md").write_text(
+                    f"---\nname: {slug}\ndescription: English {slug} description.\n---\nEnglish body.\n",
+                    encoding="utf-8",
+                )
+
+            locale_root.mkdir(parents=True)
+            (locale_root / "descriptions.json").write_text(
+                '{"gamma": "XX gamma description (from descriptions.json).", '
+                '"delta": "XX delta description (should be ignored, SKILL.md wins)."}',
+                encoding="utf-8",
+            )
+            locale_delta_dir = locale_root / "skills" / "delta"
+            locale_delta_dir.mkdir(parents=True)
+            (locale_delta_dir / "SKILL.md").write_text(
+                "---\nname: delta\ndescription: XX delta description (from its own SKILL.md).\n---\nXX delta body.\n",
+                encoding="utf-8",
+            )
+
+            categories = [{"slug": "test-cat", "title": "Test", "skill_slugs": ["gamma", "delta"]}]
+            with mock.patch.object(content_pipeline, "CATEGORIES", categories):
+                content = content_pipeline.build_content(
+                    str(skills_root), locale="xx", locale_root=str(locale_root)
+                )
+
+            gamma = content["skills"]["gamma"]
+            self.assertFalse(gamma["translated"])
+            self.assertEqual(gamma["description"], "XX gamma description (from descriptions.json).")
+
+            delta = content["skills"]["delta"]
+            self.assertTrue(delta["translated"])
+            self.assertEqual(delta["description"], "XX delta description (from its own SKILL.md).")
+
+    def test_locale_build_category_title_fallback(self):
+        """categories.json translates a category title; a category missing
+        from categories.json falls back to the English title."""
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            skills_root = tmp_path / "skills"
+            locale_root = tmp_path / "i18n" / "xx"
+            for slug in ("epsilon",):
+                skill_dir = skills_root / slug
+                skill_dir.mkdir(parents=True)
+                (skill_dir / "SKILL.md").write_text(
+                    f"---\nname: {slug}\ndescription: English description.\n---\nBody.\n",
+                    encoding="utf-8",
+                )
+            locale_root.mkdir(parents=True)
+            (locale_root / "categories.json").write_text(
+                '{"translated-cat": "XX Translated Title"}', encoding="utf-8"
+            )
+
+            categories = [
+                {"slug": "translated-cat", "title": "English Translated Cat", "skill_slugs": ["epsilon"]},
+            ]
+            with mock.patch.object(content_pipeline, "CATEGORIES", categories):
+                content = content_pipeline.build_content(
+                    str(skills_root), locale="xx", locale_root=str(locale_root)
+                )
+            self.assertEqual(content["categories"][0]["title"], "XX Translated Title")
+
+    def test_default_build_has_no_locale_regressions(self):
+        """build_content(skills_root) with no locale args still returns
+        translated=True for every skill (English is trivially "in its own
+        language") and is otherwise unaffected -- the byte-identical-output
+        contract this whole feature is built on."""
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            skills_root = tmp_path / "skills"
+            skill_dir = skills_root / "solo"
+            skill_dir.mkdir(parents=True)
+            (skill_dir / "SKILL.md").write_text(
+                "---\nname: solo\ndescription: Solo description.\n---\nSolo body.\n",
+                encoding="utf-8",
+            )
+            categories = [{"slug": "test-cat", "title": "Test", "skill_slugs": ["solo"]}]
+            with mock.patch.object(content_pipeline, "CATEGORIES", categories):
+                content = content_pipeline.build_content(str(skills_root))
+            self.assertTrue(content["skills"]["solo"]["translated"])
 
 
 if __name__ == "__main__":
