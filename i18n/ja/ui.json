@@ -1,6 +1,7 @@
 {
   "skip_link": "本文へスキップ",
   "header_updated_label": "最終更新",
+  "header_updated_value_template": "現地時間 {local} · UTC {utc}",
   "theme_toggle_switch_to_dark": "ダークテーマに切り替える",
   "theme_toggle_switch_to_light": "ライトテーマに切り替える",
   "language_switcher_label": "言語",

@@ -66,6 +66,7 @@ class Strings:
 
     skip_link: str
     header_updated_label: str
+    header_updated_value_template: str
     theme_toggle_switch_to_dark: str
     theme_toggle_switch_to_light: str
     language_switcher_label: str
@@ -121,6 +122,13 @@ class Strings:
 ENGLISH_STRINGS = Strings(
     skip_link="Skip to content",
     header_updated_label="Updated",
+    # {local} and {utc} are filled in by site.js, not by str.format here --
+    # only the browser knows the visitor's timezone. One template rather
+    # than two glue literals ("… your time · " and " UTC") so a locale can
+    # reorder around both values: zh/ja/ko idiomatically lead with the
+    # label ("当地时间 {local}"), which no amount of translating the glue
+    # in place could express.
+    header_updated_value_template="{local} your time · {utc} UTC",
     theme_toggle_switch_to_dark="Switch to dark theme",
     theme_toggle_switch_to_light="Switch to light theme",
     language_switcher_label="Language",
@@ -530,10 +538,14 @@ def _render_updated_time(last_updated_utc: str, base_path: str = "",
     # can't be known at build time. data-version-url points site.js's
     # initVersionCheck() at the generated docs/version.txt, which always
     # carries this same instant — see scripts/generate.py's _build_into().
+    # data-i18n-updated-template carries the localized glue around the two
+    # times site.js computes; it lives on the <time> element rather than on
+    # <body> because that's the only element that consumes it, and the two
+    # attributes it sits beside are already scoped the same way.
     fallback = escape_html(last_updated_utc.replace("+00:00", "Z")) + " UTC"
     return f"""<p class="site-header__updated">
       <span class="site-header__updated-label">{escape_html(strings.header_updated_label)}</span>
-      <time class="site-header__updated-value" datetime="{escape_html(last_updated_utc)}" data-format-updated data-version-url="{base_path}/version.txt">{fallback}</time>
+      <time class="site-header__updated-value" datetime="{escape_html(last_updated_utc)}" data-format-updated data-version-url="{base_path}/version.txt" data-i18n-updated-template="{escape_html(strings.header_updated_value_template)}">{fallback}</time>
     </p>"""
 
 

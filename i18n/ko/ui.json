@@ -1,6 +1,7 @@
 {
   "skip_link": "본문으로 건너뛰기",
   "header_updated_label": "최종 업데이트",
+  "header_updated_value_template": "현지 시간 {local} · UTC {utc}",
   "theme_toggle_switch_to_dark": "다크 테마로 전환",
   "theme_toggle_switch_to_light": "라이트 테마로 전환",
   "language_switcher_label": "언어",

@@ -1,6 +1,7 @@
 {
   "skip_link": "تخطَّ إلى المحتوى",
   "header_updated_label": "آخر تحديث",
+  "header_updated_value_template": "{local} بالتوقيت المحلي · {utc} UTC",
   "theme_toggle_switch_to_dark": "التبديل إلى السمة الداكنة",
   "theme_toggle_switch_to_light": "التبديل إلى السمة الفاتحة",
   "language_switcher_label": "اللغة",

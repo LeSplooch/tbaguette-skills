@@ -589,6 +589,55 @@ def check_i18n_tab_group_heading_ids_are_translation_independent() -> None:
                             html_multiword)))
 
 
+def check_i18n_updated_time_glue() -> None:
+    """The header timestamp's glue text ('… your time · … UTC') was the last
+    hardcoded English literal in site.js, rendered into every page's header
+    in all 15 non-English locales. It is now one reorderable template on the
+    <time> element, filled in by site.js with the two times only the browser
+    can compute.
+
+    One template rather than two glue literals specifically so a locale can
+    move the label to the front -- asserted below with zh's real value,
+    since a two-literal design would have made that unrepresentable and the
+    test would silently pass anyway."""
+    import dataclasses
+    import re
+
+    # The <time> element only renders when a timestamp is passed -- without
+    # one there is nothing to host the attribute.
+    iso = "2026-08-15T09:00:00+00:00"
+    html_en = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path="",
+                           last_updated_utc=iso)
+    check("the English render carries the glue as a template attribute on "
+          "<time>, not as a literal baked into site.js",
+          'data-i18n-updated-template="{local} your time · {utc} UTC"' in html_en)
+
+    # A caller-supplied catalog must reach the attribute verbatim, including
+    # a label-first word order English can't express.
+    zh_strings = dataclasses.replace(
+        ENGLISH_STRINGS, header_updated_value_template="当地时间 {local} · UTC {utc}"
+    )
+    html_zh = render_index(
+        FIXTURE["categories"], FIXTURE["skills"], base_path="",
+        last_updated_utc=iso, strings=zh_strings,
+    )
+    check("a locale that puts the label before the value renders that exact "
+          "order into the attribute (the reason this is one template and "
+          "not two glue strings)",
+          'data-i18n-updated-template="当地时间 {local} · UTC {utc}"' in html_zh)
+    check("...and the English glue is gone from that page entirely",
+          "your time" not in html_zh)
+
+    # Both placeholders must survive escaping -- site.js's formatTemplate
+    # matches /\{(\w+)\}/, so a mangled brace silently renders the literal
+    # "{local}" into the header instead of a time.
+    attr = re.search(r'data-i18n-updated-template="([^"]*)"', html_en)
+    check("both {local} and {utc} placeholders survive into the rendered "
+          "attribute intact",
+          attr is not None
+          and set(re.findall(r"\{(\w+)\}", attr.group(1))) == {"local", "utc"})
+
+
 def check_i18n_quote_glyphs() -> None:
     """Task 12's own coverage: the search empty-state's quote marks around
     the visitor's live query used to be hardcoded English/typewriter-curly
@@ -900,6 +949,7 @@ def main() -> None:
     check_i18n_verify_install_page()
     check_i18n_fallback_banner()
     check_i18n_tab_group_heading_ids_are_translation_independent()
+    check_i18n_updated_time_glue()
     check_i18n_quote_glyphs()
     check_i18n_sentence_end()
     check_i18n_prevnext_arrows()

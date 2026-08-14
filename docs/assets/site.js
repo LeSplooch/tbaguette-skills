@@ -59,6 +59,29 @@
   // available or the timestamp fails to parse — never blanked out.
   // -------------------------------------------------------------------
 
+  // The page's own language, for Intl — NOT the browser's. Passing
+  // undefined (the old behaviour) formats against whatever the visitor's
+  // browser is set to, so a reader on /ja/ got an English month name in a
+  // Japanese header. Every page sets <html lang> and all 16 values are
+  // valid BCP-47 tags, but a malformed one would make Intl throw
+  // RangeError and cost us the whole formatted timestamp, so an
+  // unparseable tag degrades to the browser default rather than to
+  // nothing. supportedLocalesOf is the cheapest way to ask "would Intl
+  // reject this tag?" without building a formatter: it throws on a
+  // structurally invalid tag, and merely returns [] for a well-formed tag
+  // the browser has no data for — which is fine, Intl falls back on its
+  // own for that case.
+  function pageLocale() {
+    var lang = document.documentElement.getAttribute('lang');
+    if (!lang) return undefined;
+    try {
+      Intl.DateTimeFormat.supportedLocalesOf([lang]);
+      return lang;
+    } catch (error) {
+      return undefined;
+    }
+  }
+
   function initUpdatedTime() {
     var els = toArray(document.querySelectorAll('[data-format-updated]'));
     if (!els.length) return;
@@ -71,13 +94,19 @@
       if (isNaN(when.getTime())) return;
 
       try {
-        var local = new Intl.DateTimeFormat(undefined, {
+        var forLocale = pageLocale();
+        var local = new Intl.DateTimeFormat(forLocale, {
           dateStyle: 'medium', timeStyle: 'short'
         }).format(when);
-        var utc = new Intl.DateTimeFormat(undefined, {
+        var utc = new Intl.DateTimeFormat(forLocale, {
           hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC'
         }).format(when);
-        el.textContent = local + ' your time · ' + utc + ' UTC';
+        // Glue text comes from the page's catalog; the English default
+        // matches ENGLISH_STRINGS.header_updated_value_template so a page
+        // rendered before that field existed still reads correctly.
+        var template = el.getAttribute('data-i18n-updated-template')
+          || '{local} your time · {utc} UTC';
+        el.textContent = formatTemplate(template, { local: local, utc: utc });
       } catch (error) {
         // Unsupported options or timeZone in this browser: leave the
         // server-rendered plain-UTC fallback text in place.

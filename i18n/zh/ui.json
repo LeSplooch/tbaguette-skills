@@ -1,6 +1,7 @@
 {
   "skip_link": "跳到主要内容",
   "header_updated_label": "更新于",
+  "header_updated_value_template": "当地时间 {local} · UTC {utc}",
   "theme_toggle_switch_to_dark": "切换到深色主题",
   "theme_toggle_switch_to_light": "切换到浅色主题",
   "language_switcher_label": "语言",

@@ -1,6 +1,7 @@
 {
   "skip_link": "मुख्य सामग्री पर जाएँ",
   "header_updated_label": "आख़िरी अपडेट",
+  "header_updated_value_template": "{local} स्थानीय समय · {utc} UTC",
   "theme_toggle_switch_to_dark": "डार्क थीम पर जाएँ",
   "theme_toggle_switch_to_light": "लाइट थीम पर जाएँ",
   "language_switcher_label": "भाषा",

@@ -1,6 +1,7 @@
 {
   "skip_link": "Salta al contenuto",
   "header_updated_label": "Aggiornato",
+  "header_updated_value_template": "{local} ora locale · {utc} UTC",
   "theme_toggle_switch_to_dark": "Passa al tema scuro",
   "theme_toggle_switch_to_light": "Passa al tema chiaro",
   "language_switcher_label": "Lingua",

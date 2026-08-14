@@ -1,6 +1,7 @@
 {
   "skip_link": "İçeriğe atla",
   "header_updated_label": "Son güncelleme",
+  "header_updated_value_template": "{local} yerel saatle · {utc} UTC",
   "theme_toggle_switch_to_dark": "Koyu temaya geç",
   "theme_toggle_switch_to_light": "Açık temaya geç",
   "language_switcher_label": "Dil",

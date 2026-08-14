@@ -1,6 +1,7 @@
 {
   "skip_link": "Перейти к содержимому",
   "header_updated_label": "Обновлено",
+  "header_updated_value_template": "{local} по местному времени · {utc} UTC",
   "theme_toggle_switch_to_dark": "Переключиться на тёмную тему",
   "theme_toggle_switch_to_light": "Переключиться на светлую тему",
   "language_switcher_label": "Язык",
