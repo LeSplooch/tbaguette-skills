@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>least-privilege-design — Security (defensive) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…">
+<title>least-privilege-design — Güvenlik (savunma) — TBaguette’s Atelier</title>
+<meta name="description" content="Şu durumlarda kullanın: bir rol, servis hesabı, API anahtarı, token kapsamı…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="least-privilege-design — Security (defensive) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…">
+<meta property="og:title" content="least-privilege-design — Güvenlik (savunma) — TBaguette’s Atelier">
+<meta property="og:description" content="Şu durumlarda kullanın: bir rol, servis hesabı, API anahtarı, token kapsamı…">
 <link rel="canonical" href="/tbaguette-skills/tr/skills/least-privilege-design/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/least-privilege-design/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/least-privilege-design/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
+      data-i18n-copied="Kopyalandı!"
+      data-i18n-no-match="Eşleşen beceri yok."
+      data-i18n-modal-title="Yeni sürüm var"
+      data-i18n-modal-body="Bu sayfa güncellendi. En son hâlini görmek için yeniden yükleyin."
+      data-i18n-modal-reload="Yeniden yükle"
       data-i18n-quote-open="“"
       data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">İçeriğe atla</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T20:56:42+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T20:56:42Z UTC</time>
+      <span class="site-header__updated-label">Son güncelleme</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T21:41:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T21:41:07Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Türkçe</summary>
+  <summary class="language-switcher__summary">Dil: Türkçe</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/least-privilege-design/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/least-privilege-design/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Açık temaya geç"
+              data-i18n-theme-light="Açık temaya geç"
+              data-i18n-theme-dark="Koyu temaya geç">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/tr/">Home</a>
+<nav class="container breadcrumb" aria-label="Gezinti yolu">
+  <a href="/tbaguette-skills/tr/">Ana sayfa</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/tr/#security">Security (defensive)</a>
+  <a href="/tbaguette-skills/tr/#security">Güvenlik (savunma)</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">least-privilege-design</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">least-privilege-design</h1>
     
   </div>
-  <span class="tag skill-article__tag">Security (defensive)</span>
-  <p class="lede">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list, when a component needs access to something new, when one credential is shared across services or environments, when a service acts on a caller&#x27;s behalf, or when reasoning about blast radius, privilege escalation, wildcards in policies, sandboxing, network egress, and separation of duties.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Türkçe yet — showing the English version.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Güvenlik (savunma)</span>
+  <p class="lede">Şu durumlarda kullanın: bir rol, servis hesabı, API anahtarı, token kapsamı, IAM veya RBAC politikası ya da erişim denetim listesi oluştururken veya incelerken; bir bileşenin yeni bir şeye erişmesi gerektiğinde; tek bir kimlik bilgisi servisler ya da ortamlar arasında paylaşıldığında; bir servis bir çağıranın adına hareket ettiğinde; veya etki alanı, ayrıcalık yükseltme, politikalardaki joker karakterler, sandbox, ağ çıkış trafiği ve görevler ayrılığı üzerine düşünürken.</p>
+</div><p class="translation-banner" role="note">Bu sayfanın Türkçe çevirisi henüz yok — İngilizce sürümü gösteriliyor.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Least privilege is the property that decides what a bug costs. Every other control is probabilistic — this one is deterministic: it bounds the damage of the compromise you did not detect. Design for the assumption that some component will be fully controlled by an attacker, and choose which ones can afford that.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Creating a role, service account, key, token scope, policy, or access control entry, or a component needs access to something it did not previously reach.</li><li>Designing service-to-service authentication, or any path where a service acts on a caller's request.</li><li>Reviewing existing permissions, an over-broad policy, a wildcard, or a credential shared across services or environments; deciding what a build or pipeline may reach; designing irreversible or money-moving operations.</li><li>Not for: where the credential is stored and how it is rotated (<code>secrets-hygiene</code>); whether the boundary should exist at all (<code>threat-modeling</code>).</li></ul>
@@ -134,48 +134,48 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>One bug became total compromise</td><td>A shared broadly-scoped credential; the vulnerable component was never the sensitive one</td></tr><tr><td>Permissions were reviewed and are still too broad</td><td>The intended grant was reviewed, not the effective set with inheritance and assumable roles</td></tr><tr><td>Wildcards everywhere, and a dev credential that also works in production</td><td>Permissions derived up front from a design instead of from observed denials; one identity spanning environments</td></tr><tr><td>A &quot;read-only&quot; role can escalate</td><td>It can modify a policy, a pipeline, or a config that something later executes</td></tr><tr><td>An internal service was reached through a user-supplied URL</td><td>The deputy used its own network position; no check on the resolved target</td></tr><tr><td>A token was accepted by the wrong service</td><td>Signature verified, audience not</td></tr><tr><td>The two-person rule was bypassed</td><td>Approval enforced by process, not verified by the executing system</td></tr><tr><td>Temporary elevation became permanent</td><td>Grant with no expiry, and no review comparing grants against use</td></tr><tr><td>A compromised container exfiltrated data over an ordinary connection</td><td>Egress unrestricted, which is the default everywhere</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Give it admin for now, we'll narrow it later&quot; — <em>later</em> has no trigger.</li><li>&quot;It's behind the firewall&quot; / &quot;only our own code calls it.&quot;</li><li>A permission set that has only ever grown, or a wildcard with no written reason next to it.</li><li>Being unable to name the single process that uses a credential.</li><li>A role reviewed by reading its name or its description.</li><li>&quot;The user is authenticated&quot; offered as the answer to an authorization question.</li><li>Any credential with no expiry and no owner.</li><li>Break-glass used more than a few times a year, or a pipeline that can modify its own permissions.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/tr/skills/auditing-dependencies/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Beceriler arasında gezinme"><a class="prevnext__link" href="/tbaguette-skills/tr/skills/auditing-dependencies/">
+  <span class="prevnext__label">Önceki</span>
   <span class="prevnext__name">← auditing-dependencies</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Security (defensive)</h2>
+  <h2 class="see-also__title">“Güvenlik (savunma)” kategorisindeki diğer beceriler</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/threat-modeling/">
       <span class="see-also__name">threat-modeling</span>
-      <span class="see-also__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir tasarım yeni bir güven sınırı, yeni bir hassas veri sınıfı…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
-      <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: kod kendi güven sınırının dışından gelen veriyi kabul ediyor ya da ayrıştırıyorsa — istekler, dosyalar, yüklemeler…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
-      <span class="see-also__summary">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: API anahtarları, token&#x27;ler, parolalar, özel anahtarlar…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>
-      <span class="see-also__summary">Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: üçüncü taraf bir paket ya da kütüphane eklerken, yükseltirken…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> çatısı altında TBaguette&rsquo;s Atelier var — ticket ile commit arasında kalan ve sonunda muhakemeyle verilen kararlar, düzgün tutulmuş bir tezgâh gibi dizilmiş.</p>
+    <nav aria-label="Kategoriler">
+      <p class="site-footer__nav-title">Kategoriler</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/tr/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/tr/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/tr/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/tr/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/tr/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/tr/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/tr/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/tr/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/tr/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/tr/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/tr/#ui-and-design">Arayüz ve tasarım</a></li>
+<li><a href="/tbaguette-skills/tr/#judgment-and-meta">Muhakeme ve meta beceriler</a></li>
+<li><a href="/tbaguette-skills/tr/#reading-code">Kod okuma</a></li>
+<li><a href="/tbaguette-skills/tr/#landing-changes">Değişiklikleri entegre etme</a></li>
+<li><a href="/tbaguette-skills/tr/#testing">Testler</a></li>
+<li><a href="/tbaguette-skills/tr/#debugging-and-performance">Hata ayıklama ve performans</a></li>
+<li><a href="/tbaguette-skills/tr/#designing-systems">Sistem tasarlama</a></li>
+<li><a href="/tbaguette-skills/tr/#security">Güvenlik (savunma)</a></li>
+<li><a href="/tbaguette-skills/tr/#communicating">İletişim</a></li>
+<li><a href="/tbaguette-skills/tr/#environment-and-tooling">Ortam ve araçlar</a></li>
       </ul>
     </nav>
   </div>

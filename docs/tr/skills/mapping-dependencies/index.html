@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mapping-dependencies — Reading code — TBaguette’s Atelier</title>
-<meta name="description" content="Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles…">
+<title>mapping-dependencies — Kod okuma — TBaguette’s Atelier</title>
+<meta name="description" content="Şu durumlarda kullanın: bir değişikliğin neyi bozacağını değerlendirirken, etki alanını tahmin ederken…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="mapping-dependencies — Reading code — TBaguette’s Atelier">
-<meta property="og:description" content="Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles…">
+<meta property="og:title" content="mapping-dependencies — Kod okuma — TBaguette’s Atelier">
+<meta property="og:description" content="Şu durumlarda kullanın: bir değişikliğin neyi bozacağını değerlendirirken, etki alanını tahmin ederken…">
 <link rel="canonical" href="/tbaguette-skills/tr/skills/mapping-dependencies/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/mapping-dependencies/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/mapping-dependencies/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
+      data-i18n-copied="Kopyalandı!"
+      data-i18n-no-match="Eşleşen beceri yok."
+      data-i18n-modal-title="Yeni sürüm var"
+      data-i18n-modal-body="Bu sayfa güncellendi. En son hâlini görmek için yeniden yükleyin."
+      data-i18n-modal-reload="Yeniden yükle"
       data-i18n-quote-open="“"
       data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">İçeriğe atla</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T20:56:42+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T20:56:42Z UTC</time>
+      <span class="site-header__updated-label">Son güncelleme</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T21:41:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T21:41:07Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Türkçe</summary>
+  <summary class="language-switcher__summary">Dil: Türkçe</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/mapping-dependencies/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/mapping-dependencies/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Açık temaya geç"
+              data-i18n-theme-light="Açık temaya geç"
+              data-i18n-theme-dark="Koyu temaya geç">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/tr/">Home</a>
+<nav class="container breadcrumb" aria-label="Gezinti yolu">
+  <a href="/tbaguette-skills/tr/">Ana sayfa</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/tr/#reading-code">Reading code</a>
+  <a href="/tbaguette-skills/tr/#reading-code">Kod okuma</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">mapping-dependencies</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">mapping-dependencies</h1>
     
   </div>
-  <span class="tag skill-article__tag">Reading code</span>
-  <p class="lede">Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles, finding modules with too many dependents, checking whether layering or architecture rules still hold, planning to split, extract, or delete a module, or after a small local change caused a failure in something that never referenced it.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Türkçe yet — showing the English version.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Kod okuma</span>
+  <p class="lede">Şu durumlarda kullanın: bir değişikliğin neyi bozacağını değerlendirirken, etki alanını tahmin ederken, döngüsel import&#x27;ları veya derleme döngülerini kovalarken, çok fazla bağımlısı olan modülleri bulurken, katmanlama ya da mimari kurallarının hâlâ geçerli olup olmadığını kontrol ederken, bir modülü bölmeyi, ayırmayı veya silmeyi planlarken ya da küçük ve yerel bir değişiklik, ona hiç atıfta bulunmayan bir şeyde arızaya yol açtıktan sonra.</p>
+</div><p class="translation-banner" role="note">Bu sayfanın Türkçe çevirisi henüz yok — İngilizce sürümü gösteriliyor.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>The dependency graph in the import statements is one of three graphs, and it is the one least likely to hurt you. Two components with no shared code and one shared table are more tightly coupled than two modules that import each other, because nothing will tell them when they disagree.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Before a signature, schema, or shared-behavior change, to enumerate who notices.</li><li>A cycle blocks a build, a test, an extraction, or a deletion.</li><li>Deciding module boundaries, or whether a proposed split is even possible.</li><li>An incident traced to a component that had no visible link to the change.</li><li>Not for: choosing where to put a change once the graph is known (finding-the-seam), or one value's path (tracing-data-flow).</li></ul>
@@ -125,60 +125,60 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>One-line change, unrelated production failure</td><td>A data-graph edge; no compile edge existed to warn anyone</td></tr><tr><td>The architecture diagram matches nothing</td><td>Drawn once, never enforced; no mechanical layering check</td></tr><tr><td>Cycle &quot;fixed&quot; by moving code between the files</td><td>Edge relabeled, not removed</td></tr><tr><td>Everything depends on a <code>common</code> or <code>shared</code> package</td><td>A package named for indecision accumulated the whole graph</td></tr><tr><td>Deleted an unreferenced module; it broke later</td><td>Runtime-only edge via reflection, config, or a plugin registry</td></tr><tr><td>Refactor stalled on a module that will not extract</td><td>A cycle, discovered at extraction time rather than before planning</td></tr><tr><td>&quot;Only a new field, fully backward compatible&quot;</td><td>Old readers, queued messages, and stored rows are also readers</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Just put it in the shared utilities for now.&quot;</li><li>&quot;Nothing else uses this&quot; — asserted without extracting the graph, including runtime and data edges.</li><li>&quot;It's only an additive change.&quot;</li><li>&quot;The diagram in the wiki shows…&quot;</li><li>&quot;The compiler will catch it&quot; — true only for the compile graph, which is the graph least likely to hurt you.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/tr/skills/code-archaeology/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Beceriler arasında gezinme"><a class="prevnext__link" href="/tbaguette-skills/tr/skills/code-archaeology/">
+  <span class="prevnext__label">Önceki</span>
   <span class="prevnext__name">← code-archaeology</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/tr/skills/finding-the-seam/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Sonraki</span>
   <span class="prevnext__name">finding-the-seam →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Reading code</h2>
+  <h2 class="see-also__title">“Kod okuma” kategorisindeki diğer beceriler</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/orienting-in-unfamiliar-code/">
       <span class="see-also__name">orienting-in-unfamiliar-code</span>
-      <span class="see-also__summary">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir kod tabanını ilk kez açarken, tanımadığınız ya da eskimiş bir depoyu devralırken…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/tracing-data-flow/">
       <span class="see-also__name">tracing-data-flow</span>
-      <span class="see-also__summary">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir değer yanlış, eksik, null…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/code-archaeology/">
       <span class="see-also__name">code-archaeology</span>
-      <span class="see-also__summary">Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: kod açıklamasız duruyorsa ve nedeni önemliyse — tuhaf bir geçici çözüm, sihirli bir sabit…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/finding-the-seam/">
       <span class="see-also__name">finding-the-seam</span>
-      <span class="see-also__summary">Use when deciding where in a codebase to make a change, when a fix could plausibly go in several places…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir kod tabanında değişikliğin nereye yapılacağına karar verirken; bir düzeltme makul biçimde birkaç yere…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/reading-specifications/">
       <span class="see-also__name">reading-specifications</span>
-      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir ticket, issue, hata raporu, RFC, standart…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/naming-things/">
       <span class="see-also__name">naming-things</span>
-      <span class="see-also__summary">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir değişken, fonksiyon, tür, modül, bayrak, yapılandırma anahtarı…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> çatısı altında TBaguette&rsquo;s Atelier var — ticket ile commit arasında kalan ve sonunda muhakemeyle verilen kararlar, düzgün tutulmuş bir tezgâh gibi dizilmiş.</p>
+    <nav aria-label="Kategoriler">
+      <p class="site-footer__nav-title">Kategoriler</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/tr/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/tr/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/tr/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/tr/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/tr/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/tr/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/tr/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/tr/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/tr/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/tr/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/tr/#ui-and-design">Arayüz ve tasarım</a></li>
+<li><a href="/tbaguette-skills/tr/#judgment-and-meta">Muhakeme ve meta beceriler</a></li>
+<li><a href="/tbaguette-skills/tr/#reading-code">Kod okuma</a></li>
+<li><a href="/tbaguette-skills/tr/#landing-changes">Değişiklikleri entegre etme</a></li>
+<li><a href="/tbaguette-skills/tr/#testing">Testler</a></li>
+<li><a href="/tbaguette-skills/tr/#debugging-and-performance">Hata ayıklama ve performans</a></li>
+<li><a href="/tbaguette-skills/tr/#designing-systems">Sistem tasarlama</a></li>
+<li><a href="/tbaguette-skills/tr/#security">Güvenlik (savunma)</a></li>
+<li><a href="/tbaguette-skills/tr/#communicating">İletişim</a></li>
+<li><a href="/tbaguette-skills/tr/#environment-and-tooling">Ortam ve araçlar</a></li>
       </ul>
     </nav>
   </div>

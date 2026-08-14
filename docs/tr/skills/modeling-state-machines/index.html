@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>modeling-state-machines — Designing systems — TBaguette’s Atelier</title>
-<meta name="description" content="Use when something has a lifecycle — order, job, connection, upload, session, subscription, device…">
+<title>modeling-state-machines — Sistem tasarlama — TBaguette’s Atelier</title>
+<meta name="description" content="Şu durumlarda kullanın: bir şeyin yaşam döngüsü varsa — sipariş, iş, bağlantı, yükleme, oturum, abonelik, cihaz…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="modeling-state-machines — Designing systems — TBaguette’s Atelier">
-<meta property="og:description" content="Use when something has a lifecycle — order, job, connection, upload, session, subscription, device…">
+<meta property="og:title" content="modeling-state-machines — Sistem tasarlama — TBaguette’s Atelier">
+<meta property="og:description" content="Şu durumlarda kullanın: bir şeyin yaşam döngüsü varsa — sipariş, iş, bağlantı, yükleme, oturum, abonelik, cihaz…">
 <link rel="canonical" href="/tbaguette-skills/tr/skills/modeling-state-machines/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/modeling-state-machines/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/modeling-state-machines/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
+      data-i18n-copied="Kopyalandı!"
+      data-i18n-no-match="Eşleşen beceri yok."
+      data-i18n-modal-title="Yeni sürüm var"
+      data-i18n-modal-body="Bu sayfa güncellendi. En son hâlini görmek için yeniden yükleyin."
+      data-i18n-modal-reload="Yeniden yükle"
       data-i18n-quote-open="“"
       data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">İçeriğe atla</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T20:56:42+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T20:56:42Z UTC</time>
+      <span class="site-header__updated-label">Son güncelleme</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T21:41:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T21:41:07Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Türkçe</summary>
+  <summary class="language-switcher__summary">Dil: Türkçe</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/modeling-state-machines/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/modeling-state-machines/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Açık temaya geç"
+              data-i18n-theme-light="Açık temaya geç"
+              data-i18n-theme-dark="Koyu temaya geç">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/tr/">Home</a>
+<nav class="container breadcrumb" aria-label="Gezinti yolu">
+  <a href="/tbaguette-skills/tr/">Ana sayfa</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/tr/#designing-systems">Designing systems</a>
+  <a href="/tbaguette-skills/tr/#designing-systems">Sistem tasarlama</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">modeling-state-machines</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">modeling-state-machines</h1>
     
   </div>
-  <span class="tag skill-article__tag">Designing systems</span>
-  <p class="lede">Use when something has a lifecycle — order, job, connection, upload, session, subscription, device, workflow step — or when several booleans and flags describe one thing. Also for status fields, impossible flag combinations, records stuck in a status forever, unexplained state changes, a crash partway through a transition, timeouts and cancellation, and adding or renaming a state that is already persisted.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Türkçe yet — showing the English version.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Sistem tasarlama</span>
+  <p class="lede">Şu durumlarda kullanın: bir şeyin yaşam döngüsü varsa — sipariş, iş, bağlantı, yükleme, oturum, abonelik, cihaz, iş akışı adımı — ya da birkaç boolean ve bayrak tek bir şeyi tarif ediyorsa. Ayrıca durum alanları, imkânsız bayrak kombinasyonları, sonsuza dek bir durumda takılı kalan kayıtlar, açıklanamayan durum değişiklikleri, bir geçişin ortasında yaşanan çökme, zaman aşımları ve iptal, ve zaten kalıcılaştırılmış bir durumu eklemek ya da yeniden adlandırmak için.</p>
+</div><p class="translation-banner" role="note">Bu sayfanın Türkçe çevirisi henüz yok — İngilizce sürümü gösteriliyor.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Three booleans encode eight combinations; if only five are real, you shipped three bugs and no way to detect them. Name the states, enumerate the transitions, and make the forbidden ones observable failures rather than silent no-ops.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Anything with a lifecycle, or any entity carrying three or more flags that qualify each other.</li><li>Conditions like <code>isLoading &amp;&amp; !hasError &amp;&amp; data != null</code> appearing in more than one place.</li><li>Symptoms: &quot;how did it get into this state?&quot;, rows stuck in <code>processing</code> forever, duplicate side effects after a reload, a cancelled item that still gets processed.</li><li>Adding a state, or renaming one, in something already persisted.</li><li>Not for: rewriting existing stored rows once the states change (data-migrations), or the wire compatibility rules for the state field (schema-evolution).</li></ul>
@@ -118,80 +118,80 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;How did it get into this state?&quot;</td><td>No transition log, and the field is assigned in several places</td></tr><tr><td>Two flags contradict each other</td><td>Independent booleans instead of one state</td></tr><tr><td>Cancelled items still get processed</td><td>Forbidden transition silently ignored instead of rejected</td></tr><tr><td>Duplicate emails after a reload or replay</td><td>Side effect attached to a state rather than to a transition</td></tr><tr><td>Rows stuck in <code>processing</code> forever</td><td>A state with no timeout and no exit</td></tr><tr><td>A status rename broke old rows</td><td>Persisted state treated as code instead of data</td></tr><tr><td>Adding a state meant grepping for every switch</td><td>State modeled as a string or int rather than a closed type</td></tr><tr><td>Two workers both advanced the same entity</td><td>Write not conditioned on the expected current state</td></tr><tr><td>UI shows a state the backend does not have</td><td>State duplicated instead of projected</td></tr><tr><td>Expiry never triggers its side effects</td><td>Timeout modeled as a read-time computation</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Just add a boolean for it.&quot;</li><li>&quot;The status is whatever the last event set it to.&quot;</li><li>&quot;We compute expired at read time.&quot;</li><li>&quot;That transition can't happen&quot; — with nothing enforcing it.</li><li>A status column typed as free text.</li><li>Any code outside the transition function assigning the state field.</li><li>A transition table with no <code>—</code> cells.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/tr/skills/choosing-concurrency-model/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Beceriler arasında gezinme"><a class="prevnext__link" href="/tbaguette-skills/tr/skills/choosing-concurrency-model/">
+  <span class="prevnext__label">Önceki</span>
   <span class="prevnext__name">← choosing-concurrency-model</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/tr/skills/drawing-boundaries/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Sonraki</span>
   <span class="prevnext__name">drawing-boundaries →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Designing systems</h2>
+  <h2 class="see-also__title">“Sistem tasarlama” kategorisindeki diğer beceriler</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/designing-apis/">
       <span class="see-also__name">designing-apis</span>
-      <span class="see-also__summary">Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: başka kodun çağıracağı bir arayüz tanımlarken — genel bir fonksiyon ya da kütüphane giriş noktası…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/modeling-errors/">
       <span class="see-also__name">modeling-errors</span>
-      <span class="see-also__summary">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir arızanın nasıl temsil edileceğine ya da ele alınacağına karar verirken — istisnalar…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/designing-for-idempotency/">
       <span class="see-also__name">designing-for-idempotency</span>
-      <span class="see-also__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir işlem birden fazla kez gelebiliyorsa — sonucu bilinmeyen bir zaman aşımından sonraki yeniden denemeler…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/choosing-concurrency-model/">
       <span class="see-also__name">choosing-concurrency-model</span>
-      <span class="see-also__summary">Use when work must happen at the same time and the approach is undecided — OS threads, async or event loops, actors and message passing…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: işlerin aynı anda yürümesi gerekiyorsa ve yaklaşım henüz belli değilse — işletim sistemi iş parçacıkları…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/drawing-boundaries/">
       <span class="see-also__name">drawing-boundaries</span>
-      <span class="see-also__summary">Use when deciding what belongs together — module, package, crate, library, process…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: nelerin bir arada durması gerektiğine karar verirken — modül, paket, crate, kütüphane…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/caching-strategy/">
       <span class="see-also__name">caching-strategy</span>
-      <span class="see-also__summary">Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir önbellek, memoizasyon tablosu…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/schema-evolution/">
       <span class="see-also__name">schema-evolution</span>
-      <span class="see-also__summary">Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: zaten üretimde olan bir sözleşmeyi değiştirirken — bir veritabanı şemasında, serileştirilmiş bir biçimde…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/data-migrations/">
       <span class="see-also__name">data-migrations</span>
-      <span class="see-also__summary">Use when backfilling, transforming, re-encoding, or relocating data that already exists at a size too large for one transaction…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: tek bir veritabanı işlemine sığmayacak kadar büyük, hâlihazırda var olan veriyi geriye dönük doldururken…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/configuration-management/">
       <span class="see-also__name">configuration-management</span>
-      <span class="see-also__summary">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir ortam değişkeni, ayar…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/instrumenting-for-observability/">
       <span class="see-also__name">instrumenting-for-observability</span>
-      <span class="see-also__summary">Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: neyin loglanacağına, ölçüleceğine ya da izleneceğine karar verirken; bir olay…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/rate-limiting-and-backpressure/">
       <span class="see-also__name">rate-limiting-and-backpressure</span>
-      <span class="see-also__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir sistem hizmet edebileceğinden fazla yük alıyorsa; hız kısıtlama…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> çatısı altında TBaguette&rsquo;s Atelier var — ticket ile commit arasında kalan ve sonunda muhakemeyle verilen kararlar, düzgün tutulmuş bir tezgâh gibi dizilmiş.</p>
+    <nav aria-label="Kategoriler">
+      <p class="site-footer__nav-title">Kategoriler</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/tr/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/tr/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/tr/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/tr/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/tr/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/tr/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/tr/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/tr/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/tr/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/tr/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/tr/#ui-and-design">Arayüz ve tasarım</a></li>
+<li><a href="/tbaguette-skills/tr/#judgment-and-meta">Muhakeme ve meta beceriler</a></li>
+<li><a href="/tbaguette-skills/tr/#reading-code">Kod okuma</a></li>
+<li><a href="/tbaguette-skills/tr/#landing-changes">Değişiklikleri entegre etme</a></li>
+<li><a href="/tbaguette-skills/tr/#testing">Testler</a></li>
+<li><a href="/tbaguette-skills/tr/#debugging-and-performance">Hata ayıklama ve performans</a></li>
+<li><a href="/tbaguette-skills/tr/#designing-systems">Sistem tasarlama</a></li>
+<li><a href="/tbaguette-skills/tr/#security">Güvenlik (savunma)</a></li>
+<li><a href="/tbaguette-skills/tr/#communicating">İletişim</a></li>
+<li><a href="/tbaguette-skills/tr/#environment-and-tooling">Ortam ve araçlar</a></li>
       </ul>
     </nav>
   </div>
