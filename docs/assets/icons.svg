@@ -13,6 +13,9 @@
       icon-search                         — search field affordance.
       icon-copy, icon-check               — install-command copy button,
         default and post-copy state.
+      icon-rotate                         — the update modal's Reload
+        button. The one glyph here that carries meaning rather than
+        flavour: the modal's loaf seal is brand, this is the action.
     All symbols share a 0 0 24 24 viewBox so they drop in at a consistent
     optical size wherever used.
   -->
@@ -60,5 +63,15 @@
 
   <symbol id="icon-check" viewBox="0 0 24 24">
     <path d="M5 12.5 L10 17.5 L19 6.5" />
+  </symbol>
+
+  <!-- The arc runs three-quarters of the circle and then keeps going, out of
+       the circle, to land exactly on the corner of the arrowhead bracket. The
+       two subpaths meeting at one shared point (19.5 8) is what makes this
+       read as a single continuous arrow rather than an arc with a chevron
+       parked near it. -->
+  <symbol id="icon-rotate" viewBox="0 0 24 24">
+    <path d="M20 12 A8 8 0 1 1 12 4 C14.24 4 16.38 4.94 17.93 6.4 L19.5 8" />
+    <path d="M19.5 3.5 L19.5 8 L15 8" />
   </symbol>
 </svg>

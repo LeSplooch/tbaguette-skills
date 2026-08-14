@@ -358,17 +358,46 @@
   var UPDATE_POLL_MIN_MS = 10000;
   var UPDATE_POLL_MAX_MS = 12000;
 
+  // Every page paints the wordmark's wheat mark from the shared sprite, so
+  // the sprite's URL — base path and all — is already on the page and does
+  // not need to be threaded through as its own data attribute. Returns ''
+  // if no icon is present, and callers drop their icon rather than emit a
+  // <use> pointing at nothing.
+  function spriteHref(symbolId) {
+    var existing = document.querySelector('svg.icon use');
+    var href = existing ? existing.getAttribute('href') || '' : '';
+    var base = href.split('#')[0];
+    return base ? base + '#' + symbolId : '';
+  }
+
+  function iconMarkup(symbolId) {
+    var href = spriteHref(symbolId);
+    if (!href) return '';
+    return '<svg class="icon" aria-hidden="true"><use href="' + href + '"></use></svg>';
+  }
+
   function showUpdateModal() {
     if (document.querySelector('.update-modal-overlay')) return;
+
+    // The seal is the loaf mark and nothing else, so with no sprite to draw
+    // from it is dropped whole rather than left as an empty gold ring.
+    var sealIcon = iconMarkup('icon-crust');
+    var seal = sealIcon
+      ? '<span class="update-modal__seal" aria-hidden="true">' + sealIcon + '</span>'
+      : '';
 
     var overlay = document.createElement('div');
     overlay.className = 'update-modal-overlay';
     overlay.innerHTML =
       '<div class="update-modal" role="alertdialog" aria-modal="true" ' +
       'aria-labelledby="update-modal-title" aria-describedby="update-modal-body">' +
+      seal +
       '<p class="update-modal__title" id="update-modal-title">New version available</p>' +
       '<p class="update-modal__body" id="update-modal-body">This page has been updated. Reload to see the latest.</p>' +
-      '<button class="update-modal__reload" type="button">Reload</button>' +
+      '<button class="update-modal__reload" type="button">' +
+      iconMarkup('icon-rotate') +
+      '<span>Reload</span>' +
+      '</button>' +
       '</div>';
 
     // Genuinely modal, not just visually on top: everything already in
@@ -382,6 +411,13 @@
 
     var reloadButton = overlay.querySelector('.update-modal__reload');
     reloadButton.addEventListener('click', function () {
+      // A reload is not instant on a cold or slow connection, and the button
+      // is the only thing on screen that can acknowledge the click. Guard on
+      // the same attribute that drives the styling, so a second click during
+      // a slow reload can't stack a second navigation.
+      if (reloadButton.getAttribute('aria-busy') === 'true') return;
+      reloadButton.setAttribute('aria-busy', 'true');
+
       try {
         sessionStorage.setItem(SCROLL_RESTORE_KEY, String(window.scrollY));
       } catch (error) {

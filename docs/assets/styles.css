@@ -173,6 +173,15 @@
   --focus-ring: var(--gold-400);
   /* usage: shadow color mix-ins */
   --shadow-ink: 20 10% 3%;
+  /* usage: the full-screen scrim behind a modal. Deliberately NOT
+     --shadow-ink: that one is tuned *lighter* in the flour theme so cast
+     shadows stay soft on a bright page, which is the opposite of what a
+     scrim needs. Mixed against cream at any sane opacity, a 14%-lightness
+     ink lands on a muddy mid-gray — dark enough to dim the page, not dark
+     enough to read as deliberate. One value for both themes, because a
+     scrim's job (make the card unmistakably foreground) doesn't change
+     with the theme. */
+  --scrim: 24 18% 5%;
 
   /* usage: Python syntax highlighting on the install-verification page.
      Each independently verified >=4.5:1 against --surface (the code
@@ -1578,6 +1587,13 @@ code {
 
 /* ---------------------------------------------------------------------------
    18. Update-check modal — reload-only, centered, blurred backdrop
+
+   The one moment this site interrupts a reader, so it gets the boulangerie's
+   own voice rather than a browser alert's: a gold-sealed card, warm scrim,
+   one obvious action. Two icons doing two different jobs — the loaf in the
+   seal is brand, the rotate arrow on the button is meaning. Nothing here
+   dismisses; that's a deliberate product decision documented in site.js, not
+   an oversight in the styling.
    ------------------------------------------------------------------------- */
 
 .update-modal-overlay {
@@ -1585,54 +1601,252 @@ code {
   inset: 0;
   z-index: 1000;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  /* Not align/justify-center: an overflowing flex item centered that way is
+     clipped at the top edge with no way to scroll back to it. `margin: auto`
+     on the item centers identically and stays reachable. */
+  overflow-y: auto;
   padding: var(--space-4);
-  background: rgb(0 0 0 / 45%);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  /* Warm ink rather than neutral black — a gray scrim over this palette reads
+     as a screenshot of a different site. Deeper than the surrounding page so
+     the card is unmistakably the foreground. */
+  background: hsl(var(--scrim) / 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Gold bloom behind the card, on its own blurred layer. The blur is not for
+   softness — a gradient this large fading to transparent rasterizes as
+   concentric bands, exactly as the header's ambient glow did (see
+   .site-header__band::before). Blurring the stepped ramp is what removes
+   them. */
+.update-modal-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* --accent-solid, not --accent. Everything painted on the scrim is lit
+     against a near-black field in *both* themes, so it wants the fixed foil
+     gold; --accent resolves to the darker gold-700 in flour, which over this
+     scrim subtracts light instead of adding it and the glow just vanishes.
+     Card-side gold (border, gilded rule, seal) stays on --accent, where
+     being theme-aware is exactly what keeps it legible on the card. */
+  background: radial-gradient(44rem 28rem at 50% 46%,
+    color-mix(in oklch, var(--accent-solid) 18%, transparent),
+    transparent 68%);
+  filter: blur(30px);
 }
 
 .update-modal {
+  position: relative;
+  margin: auto;
   width: 100%;
-  max-width: 24rem;
+  max-width: 26rem;
   padding: var(--space-6);
   background: var(--surface);
-  border: 1px solid var(--border-subtle);
+  /* 55%, not the 40% that looked right against the dark theme alone: in
+     flour, --accent is the darker gold-700 and the card under it is cream,
+     so the same alpha that gilds a dark card barely marks a light one. */
+  border: 1px solid color-mix(in oklch, var(--accent) 55%, transparent);
   border-radius: var(--radius-lg);
-  box-shadow: 0 24px 52px -18px rgb(0 0 0 / 45%);
+  /* Same three-layer recipe as .install-frame: hairline gold seat, a real
+     cast shadow from one light direction, and a wide gold ambient so the card
+     looks lit rather than pasted on. */
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 12%, transparent),
+    0 30px 60px -24px hsl(var(--shadow-ink) / 0.75),
+    0 0 80px -28px color-mix(in oklch, var(--accent-solid) 60%, transparent);
   text-align: center;
 }
 
+/* The gilded rule, same gesture as the header's bottom edge — fading at both
+   ends rather than running hard corner to corner. */
+.update-modal::before {
+  content: '';
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent,
+    color-mix(in oklch, var(--accent) 80%, transparent) 22%,
+    color-mix(in oklch, var(--accent) 80%, transparent) 78%,
+    transparent);
+}
+
+.update-modal__seal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0 auto var(--space-5);
+  overflow: hidden;
+  color: var(--text-accent);
+  border: 1px solid color-mix(in oklch, var(--accent) 62%, transparent);
+  border-radius: var(--radius-full);
+  background:
+    radial-gradient(circle at 50% 32%,
+      color-mix(in oklch, var(--accent) 30%, transparent),
+      color-mix(in oklch, var(--accent) 9%, transparent) 72%);
+}
+
+.update-modal__seal .icon {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
 .update-modal__title {
-  margin: 0 0 var(--space-2);
+  margin: 0 0 var(--space-3);
   font-family: var(--font-display);
-  font-size: var(--text-4);
+  font-size: var(--text-5);
   font-weight: 620;
+  line-height: var(--leading-tight);
+  text-wrap: balance;
   color: var(--text-primary);
 }
 
+/* Narrower than the card it sits in, on purpose: two balanced short lines
+   under a one-line title reads as a considered block, where the same words
+   set to the full width give one long line and a two-word orphan. `balance`
+   rather than `pretty` — this is a short block, which is exactly what
+   balance is for, and it keeps a longer translation from stacking ragged. */
 .update-modal__body {
-  margin: 0 0 var(--space-5);
+  margin: 0 auto var(--space-6);
+  max-width: 28ch;
   color: var(--text-secondary);
+  text-wrap: balance;
 }
 
 .update-modal__reload {
-  padding: var(--space-3) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-3) var(--space-5);
   border: none;
   border-radius: var(--radius-md);
   background: var(--accent-solid);
   color: var(--text-on-accent-solid);
   font-family: var(--font-body);
-  font-size: var(--text-2);
+  font-size: var(--text-3);
   font-weight: 600;
   cursor: pointer;
-  transition: background-color var(--duration-micro) var(--ease-out);
+  transition: background-color var(--duration-micro) var(--ease-out),
+              box-shadow var(--duration-micro) var(--ease-out),
+              transform var(--duration-micro) var(--ease-out);
 }
 
-.update-modal__reload:hover { background: var(--accent-solid-hover); }
+.update-modal__reload .icon {
+  width: 1.15em;
+  height: 1.15em;
+}
 
-.update-modal__reload:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
+.update-modal__reload:hover {
+  background: var(--accent-solid-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px -12px color-mix(in oklch, var(--accent) 85%, transparent);
+}
+
+.update-modal__reload:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* No :focus-visible rule here on purpose. The global one in section 3 already
+   paints this exact ring, and its offset is what puts it on --surface rather
+   than on the button's own gold fill — restating it locally would only be a
+   second copy to keep in sync.
+
+   Busy state. The spin is the obvious signal but it cannot be the only one —
+   under reduced motion it never runs. `filter: brightness()` scales the fill
+   and the label together, so the button visibly settles into a held state
+   without the label's contrast against it moving. */
+.update-modal__reload[aria-busy='true'] {
+  cursor: progress;
+  transform: none;
+  filter: brightness(0.94);
+  box-shadow: inset 0 1px 3px hsl(var(--shadow-ink) / 0.35);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .update-modal-overlay {
+    animation: update-overlay-in var(--duration-enter) var(--ease-out);
+  }
+
+  /* Ease out from an already-visible default: the card is fully painted with
+     no animation at all, and this only adds the arrival. Nothing here can
+     leave it stuck invisible. */
+  .update-modal {
+    animation: update-modal-rise var(--duration-view) var(--ease-out) 60ms backwards;
+  }
+
+  /* One glint as the card lands, reusing the change-badge's sweep — a
+     one-time catch of the light, never a loop. */
+  .update-modal__seal::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg,
+      transparent 35%,
+      color-mix(in oklch, white 55%, transparent) 50%,
+      transparent 65%);
+    transform: translateX(-120%);
+    animation: badge-shine var(--duration-view) var(--ease-out) 420ms 1 forwards;
+  }
+
+  .update-modal__reload[aria-busy='true'] .icon {
+    animation: reload-spin 900ms linear infinite;
+  }
+}
+
+@keyframes update-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes update-modal-rise {
+  from { opacity: 0; transform: translateY(14px) scale(0.965); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes reload-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .update-modal__reload {
+    transition-duration: 0.01ms;
+  }
+
+  .update-modal__reload:hover { transform: none; }
+}
+
+/* A forced palette drops box-shadow entirely and overrides background-color,
+   which takes the scrim, the gold seat and the whole lit-card treatment with
+   it — background-image is left alone, so the decorative gradients would
+   survive as stray artifacts on top of system colors. Strip the decoration
+   and put back a real border, which is all that separates card from page
+   there. */
+@media (forced-colors: active) {
+  .update-modal-overlay { background: Canvas; }
+
+  .update-modal-overlay::before,
+  .update-modal::before,
+  .update-modal__seal::after { display: none; }
+
+  .update-modal {
+    background: Canvas;
+    border: 2px solid CanvasText;
+  }
+
+  .update-modal__seal { background: none; }
+
+  .update-modal__reload { border: 1px solid ButtonText; }
+}
+
+@media (max-width: 400px) {
+  .update-modal { padding: var(--space-5); }
 }
