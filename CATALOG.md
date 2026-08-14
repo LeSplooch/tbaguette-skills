@@ -1,6 +1,6 @@
 # TBaguette
 
-66 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+67 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -42,6 +42,7 @@ TBaguette skill hands off to a neighbour.
 | `orienting-in-unfamiliar-code` | The first pass through a codebase nobody present wrote |
 | `tracing-data-flow` | Following one value from source to sink |
 | `code-archaeology` | Recovering intent from history: blame, bisect, pickaxe, reverts |
+| `recovering-agent-context` | What prior AI sessions across every tool already learned here — transcripts, instruction files, dead ends already paid for |
 | `mapping-dependencies` | The real graph; cycles, layering, blast radius |
 | `finding-the-seam` | Where to make a change so the blast radius is smallest |
 | `reading-specifications` | Turning ambiguous prose into testable requirements |
