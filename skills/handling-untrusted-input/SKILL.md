@@ -35,6 +35,7 @@ GOOD:  let addr = Email::parse(s)?             // Email cannot exist unless pars
 - One constructor. If any other code path can build the type, the guarantee is decorative — private constructors, smart-constructor modules, or a package boundary are how this is enforced.
 - Realizations by paradigm: newtypes and refinement types (Rust, Haskell, branded types in TypeScript); value objects with private constructors (Java, C#, Ruby); a struct plus constructor discipline and no exported zero value (Go); a class validating in its initializer with frozen fields (Python); a struct with a `parse_` function returning a status and never a bare pointer (C).
 - The typed value carries the *parsed* form, not the original text — keeping the raw alongside guarantees someone uses the raw. Parse at the outermost layer that understands the format; re-validating deeper in means the type did not carry the guarantee, so fix the type rather than adding the check.
+- **A guard written as a comparison is not a parse, and it is not total over its own input domain.** Every relation involving a floating-point NaN evaluates false, so `value < MINIMUM` and `value <= 0` both decline to reject it, and a clamp assembled from min and max propagates it instead of bounding it. The value then travels layers past its own validation and surfaces as an exception with no visible connection to where it came from. Parsing a number means asserting that it *is* one — finite first, then in range — rather than testing a relation and inferring the rest from it not having fired.
 
 ## Injection is one bug with many names
 
@@ -102,6 +103,7 @@ Client-side validation is a UX feature with zero security value. A gateway or WA
 | Stored values arrive already escaped | Encoding applied on input; the store now holds one context's encoding forever |
 | One request exhausts the service | A parser with no size, depth, count, or time bound — every such default is unbounded |
 | Two accounts collide, or authorization compares unequal-but-equivalent strings | Comparison ran before unicode normalization |
+| A number passed every range check and still broke something far downstream | The checks were relations, and NaN makes every relation false; the guard was never total |
 | A signed blob is fed to the full deserializer | Signature proves origin, not that the origin is honest or the key uncompromised |
 
 ## Red flags
@@ -111,4 +113,5 @@ Client-side validation is a UX feature with zero security value. A gateway or WA
 - Writing a pattern to *detect an attack* instead of to *define acceptance*, or adding one more case to a denylist after a report.
 - Any string concatenation whose result is parsed by something else.
 - A validator whose return type is a boolean.
+- Bounding a float with a minimum and a maximum without first asserting that it is finite.
 - Deciding to normalize after the check because the check is cheap.
