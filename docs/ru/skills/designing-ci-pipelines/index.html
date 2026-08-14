@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>designing-ci-pipelines — Environment and tooling — TBaguette’s Atelier</title>
-<meta name="description" content="Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI…">
+<title>designing-ci-pipelines — Окружение и инструменты — TBaguette’s Atelier</title>
+<meta name="description" content="Применяйте, когда строите или переделываете CI-пайплайн, когда сборка слишком медленная или её результату никто не верит…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="designing-ci-pipelines — Environment and tooling — TBaguette’s Atelier">
-<meta property="og:description" content="Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI…">
+<meta property="og:title" content="designing-ci-pipelines — Окружение и инструменты — TBaguette’s Atelier">
+<meta property="og:description" content="Применяйте, когда строите или переделываете CI-пайплайн, когда сборка слишком медленная или её результату никто не верит…">
 <link rel="canonical" href="/tbaguette-skills/ru/skills/designing-ci-pipelines/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/designing-ci-pipelines/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/designing-ci-pipelines/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Скопировано!"
+      data-i18n-no-match="Совпадений нет."
+      data-i18n-modal-title="Доступна новая версия"
+      data-i18n-modal-body="Эта страница обновилась. Перезагрузите её, чтобы увидеть свежую версию."
+      data-i18n-modal-reload="Перезагрузить"
+      data-i18n-quote-open="«"
+      data-i18n-quote-close="»">
+<a class="skip-link" href="#main">Перейти к содержимому</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T08:34:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T08:34:53Z UTC</time>
+      <span class="site-header__updated-label">Обновлено</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T09:20:48+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T09:20:48Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Русский</summary>
+  <summary class="language-switcher__summary">Язык: Русский</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/designing-ci-pipelines/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/designing-ci-pipelines/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Переключиться на светлую тему"
+              data-i18n-theme-light="Переключиться на светлую тему"
+              data-i18n-theme-dark="Переключиться на тёмную тему">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/ru/">Home</a>
+<nav class="container breadcrumb" aria-label="Навигационная цепочка">
+  <a href="/tbaguette-skills/ru/">Главная</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/ru/#environment-and-tooling">Environment and tooling</a>
+  <a href="/tbaguette-skills/ru/#environment-and-tooling">Окружение и инструменты</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">designing-ci-pipelines</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">designing-ci-pipelines</h1>
     
   </div>
-  <span class="tag skill-article__tag">Environment and tooling</span>
-  <p class="lede">Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI, when a stale cache produces a wrong result, when deciding which checks block a merge, when retries are proposed to make a build green, or when a pull request from a fork needs access it must not have. Covers stage ordering, feedback budgets, cache keys, required versus advisory checks, and runner permissions.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Русский yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Окружение и инструменты</span>
+  <p class="lede">Применяйте, когда строите или переделываете CI-пайплайн, когда сборка слишком медленная или её результату никто не верит, когда проверка падает только в CI, когда устаревший кэш даёт неверный результат, когда решаете, какие проверки блокируют слияние, когда ради зелёной сборки предлагают повторные попытки, или когда пул-реквесту из форка нужен доступ, которого у него быть не должно. Разбирает порядок стадий, бюджеты обратной связи, ключи кэша, блокирующие и рекомендательные проверки и права раннеров.</p>
+</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>A pipeline is a product whose user is a person waiting, and its budget is their attention. Every design choice is a trade against two failure states: feedback so slow that people stop waiting for it, and results so unreliable that people stop reading them.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Creating a pipeline, adding a stage, or reworking one that has grown organically</li><li>Feedback takes long enough that people context-switch away from the change</li><li>People rerun a red build before reading it, or merge with a failing check</li><li>A failure reproduces only on the runner</li><li>Deciding whether a new check blocks merges, and what a fork's pull request is allowed to touch</li></ul>
@@ -128,56 +128,56 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;It only fails in CI&quot;</td><td>an undeclared environment difference, or a stale cache entry</td></tr><tr><td>A green build shipped a broken artifact</td><td>the cache key omitted an input, so a stale entry was reused</td></tr><tr><td>Nobody reads pipeline output any more</td><td>advisory checks with no expiry taught everyone that red is survivable</td></tr><tr><td>Flake count flat for months</td><td>retries made flakes invisible, so nothing was ever owned or fixed</td></tr><tr><td>&quot;Fix CI&quot; commits accumulate on the default branch</td><td>no stage can be run locally; pushing is the only way to test</td></tr><tr><td>40-minute pull-request pipeline</td><td>stages ordered by history rather than cost-to-signal</td></tr><tr><td>More runners did not help</td><td>the critical path is serial, or the cache misses every run</td></tr><tr><td>A secret leaked through a pull request</td><td>a fork's PR ran with the same permissions as a branch PR</td></tr><tr><td>The same failure gets debugged twice</td><td>logs omitted the command and the resolved versions</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Just hit rerun&quot; as the standard response to red</li><li>Adding a retry, a sleep, or a longer timeout to make a specific test pass</li><li>A cache key that does not include the toolchain version</li><li>Logic accumulating in pipeline configuration that exists nowhere a developer can run</li><li>A check that has been advisory for more than a month</li><li>Any job holding secrets that executes code from a fork</li><li>&quot;The build is red, but it's unrelated&quot; said more than once in a week — trust is already gone, and a real failure will be rerun rather than read</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/ru/skills/reproducible-environments/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Навигация по навыкам"><a class="prevnext__link" href="/tbaguette-skills/ru/skills/reproducible-environments/">
+  <span class="prevnext__label">Предыдущий</span>
   <span class="prevnext__name">← reproducible-environments</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ru/skills/upgrading-dependencies/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Следующий</span>
   <span class="prevnext__name">upgrading-dependencies →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Environment and tooling</h2>
+  <h2 class="see-also__title">Ещё в категории «Окружение и инструменты»</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/portable-shell-scripting/">
       <span class="see-also__name">portable-shell-scripting</span>
-      <span class="see-also__summary">Use when writing or reviewing a shell script, when a script works in one shell but fails in another…</span>
+      <span class="see-also__summary">Применяйте, когда пишете или просматриваете шелл-скрипт, когда скрипт работает в одной оболочке и падает в другой…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/reproducible-environments/">
       <span class="see-also__name">reproducible-environments</span>
-      <span class="see-also__summary">Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt…</span>
+      <span class="see-also__summary">Применяйте, когда сборка или тест проходят на одной машине и падают на другой, когда старый тег или релиз больше не собирается…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/upgrading-dependencies/">
       <span class="see-also__name">upgrading-dependencies</span>
-      <span class="see-also__summary">Use when dependency versions have fallen behind, when a security advisory names a package in use…</span>
+      <span class="see-also__summary">Применяйте, когда версии зависимостей отстали, когда в бюллетене безопасности назван используемый пакет…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/keeping-tbaguette-current/">
       <span class="see-also__name">keeping-tbaguette-current</span>
-      <span class="see-also__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</span>
+      <span class="see-also__summary">Применяйте в начале каждого разговора, безусловно — не оглядываясь на то, сколько прошло с прошлой проверки, — и всякий раз…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/automating-repetition/">
       <span class="see-also__name">automating-repetition</span>
-      <span class="see-also__summary">Use when a manual sequence has been repeated often enough to consider scripting it…</span>
+      <span class="see-also__summary">Применяйте, когда ручная последовательность повторялась достаточно часто, чтобы задуматься о скрипте, когда нужно решить…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> — дом для TBaguette&rsquo;s Atelier: решения между тикетом и коммитом, которые приходится принимать на своё усмотрение, разложены здесь, как на хорошо прибранном верстаке.</p>
+    <nav aria-label="Категории">
+      <p class="site-footer__nav-title">Категории</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/ru/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/ru/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/ru/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/ru/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/ru/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/ru/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/ru/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/ru/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/ru/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/ru/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/ru/#ui-and-design">Интерфейс и дизайн</a></li>
+<li><a href="/tbaguette-skills/ru/#judgment-and-meta">Суждение и мета</a></li>
+<li><a href="/tbaguette-skills/ru/#reading-code">Чтение кода</a></li>
+<li><a href="/tbaguette-skills/ru/#landing-changes">Интеграция изменений</a></li>
+<li><a href="/tbaguette-skills/ru/#testing">Тестирование</a></li>
+<li><a href="/tbaguette-skills/ru/#debugging-and-performance">Отладка и производительность</a></li>
+<li><a href="/tbaguette-skills/ru/#designing-systems">Проектирование систем</a></li>
+<li><a href="/tbaguette-skills/ru/#security">Безопасность (защита)</a></li>
+<li><a href="/tbaguette-skills/ru/#communicating">Коммуникация</a></li>
+<li><a href="/tbaguette-skills/ru/#environment-and-tooling">Окружение и инструменты</a></li>
       </ul>
     </nav>
   </div>

@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>modeling-errors — Designing systems — TBaguette’s Atelier</title>
-<meta name="description" content="Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…">
+<title>modeling-errors — Проектирование систем — TBaguette’s Atelier</title>
+<meta name="description" content="Применяйте, когда решаете, как представлять и обрабатывать сбой — выбор между исключениями, типами Result или Either, кодами ошибок…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="modeling-errors — Designing systems — TBaguette’s Atelier">
-<meta property="og:description" content="Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…">
+<meta property="og:title" content="modeling-errors — Проектирование систем — TBaguette’s Atelier">
+<meta property="og:description" content="Применяйте, когда решаете, как представлять и обрабатывать сбой — выбор между исключениями, типами Result или Either, кодами ошибок…">
 <link rel="canonical" href="/tbaguette-skills/ru/skills/modeling-errors/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/modeling-errors/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/modeling-errors/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Скопировано!"
+      data-i18n-no-match="Совпадений нет."
+      data-i18n-modal-title="Доступна новая версия"
+      data-i18n-modal-body="Эта страница обновилась. Перезагрузите её, чтобы увидеть свежую версию."
+      data-i18n-modal-reload="Перезагрузить"
+      data-i18n-quote-open="«"
+      data-i18n-quote-close="»">
+<a class="skip-link" href="#main">Перейти к содержимому</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T08:34:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T08:34:53Z UTC</time>
+      <span class="site-header__updated-label">Обновлено</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T09:20:48+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T09:20:48Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Русский</summary>
+  <summary class="language-switcher__summary">Язык: Русский</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/modeling-errors/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/modeling-errors/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Переключиться на светлую тему"
+              data-i18n-theme-light="Переключиться на светлую тему"
+              data-i18n-theme-dark="Переключиться на тёмную тему">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/ru/">Home</a>
+<nav class="container breadcrumb" aria-label="Навигационная цепочка">
+  <a href="/tbaguette-skills/ru/">Главная</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/ru/#designing-systems">Designing systems</a>
+  <a href="/tbaguette-skills/ru/#designing-systems">Проектирование систем</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">modeling-errors</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">modeling-errors</h1>
     
   </div>
-  <span class="tag skill-article__tag">Designing systems</span>
-  <p class="lede">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, undiagnosable production incidents, duplicated log noise, and callers parsing error strings.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Русский yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Проектирование систем</span>
+  <p class="lede">Применяйте, когда решаете, как представлять и обрабатывать сбой — выбор между исключениями, типами Result или Either, кодами ошибок, паниками и супервизорами; написание блока catch, rescue или recover; проектирование типа ошибки или контракта ошибок; решение о том, обернуть ли, залогировать, пробросить дальше, повторить или проглотить. Также при молчаливых сбоях, проглоченных исключениях, недиагностируемых инцидентах на проде, дублирующемся шуме в логах и вызывающем коде, который разбирает текст ошибки.</p>
+</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>Classify the failure before choosing a mechanism. Almost all bad error handling is one mechanism applied uniformly to four kinds of failure that need four different treatments.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding error handling to a new operation, or reviewing a <code>catch</code> you did not write.</li><li>Designing the error side of an interface: what callers can be told, and what they can do about it.</li><li>Symptoms: a subsystem &quot;silently does nothing&quot;, one failure produces four log lines, a retry loop that can never succeed, an incident where nothing recorded what actually failed.</li><li>Not for: the wire-level shape of the error contract at a public boundary (designing-apis), or the safety of the retry itself (designing-for-idempotency).</li></ul>
@@ -121,80 +121,80 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>One failure appears four times in the logs at four layers</td><td>Log-and-rethrow instead of logging once at the boundary</td></tr><tr><td>An incident with no record of which call failed</td><td>Broad catch low in the stack substituting a default</td></tr><tr><td>Retry loop burns quota and never succeeds</td><td>Non-retryable class retried; no retryable marker in the error</td></tr><tr><td>&quot;It just returns empty&quot;</td><td>Not-found modeled as an empty collection; caller cannot distinguish</td></tr><tr><td>Callers parse error message text</td><td>No stable code in the contract</td></tr><tr><td>Bug reproduces only in production and leaves no trace</td><td>Programmer error caught by a generic handler</td></tr><tr><td>Wrap chain reads &quot;failed to process: failed to handle: failed to run&quot;</td><td>Wrapping with verbs instead of nouns</td></tr><tr><td>One bad message kills the whole consumer</td><td>Error boundary at process granularity instead of per-message</td></tr><tr><td>Load spike during a partial outage</td><td>Retries nested at multiple layers, multiplying attempts</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Catch everything here so it doesn't crash.&quot;</li><li>&quot;Log it and continue.&quot;</li><li>&quot;Return null on failure and let the caller figure it out.&quot;</li><li>&quot;That can never happen&quot; — written next to the code that handles it happening.</li><li>&quot;Add a retry&quot; as the first response to a flake, before classifying it.</li><li>A catch block whose body is empty, or contains only a log statement.</li><li>An error type with one variant and a string.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/ru/skills/designing-apis/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Навигация по навыкам"><a class="prevnext__link" href="/tbaguette-skills/ru/skills/designing-apis/">
+  <span class="prevnext__label">Предыдущий</span>
   <span class="prevnext__name">← designing-apis</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ru/skills/designing-for-idempotency/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Следующий</span>
   <span class="prevnext__name">designing-for-idempotency →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Designing systems</h2>
+  <h2 class="see-also__title">Ещё в категории «Проектирование систем»</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/designing-apis/">
       <span class="see-also__name">designing-apis</span>
-      <span class="see-also__summary">Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint…</span>
+      <span class="see-also__summary">Применяйте, когда определяете интерфейс, который будет вызывать чужой код, — публичную функцию или точку входа библиотеки…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/designing-for-idempotency/">
       <span class="see-also__name">designing-for-idempotency</span>
-      <span class="see-also__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</span>
+      <span class="see-also__summary">Применяйте, когда операция может прийти больше одного раза — повторы после таймаута с неизвестным исходом, очереди «хотя бы один раз»…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/choosing-concurrency-model/">
       <span class="see-also__name">choosing-concurrency-model</span>
-      <span class="see-also__summary">Use when work must happen at the same time and the approach is undecided — OS threads, async or event loops, actors and message passing…</span>
+      <span class="see-also__summary">Применяйте, когда работа должна идти одновременно, а подход ещё не выбран — потоки ОС, асинхронность и циклы событий…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/modeling-state-machines/">
       <span class="see-also__name">modeling-state-machines</span>
-      <span class="see-also__summary">Use when something has a lifecycle — order, job, connection, upload, session, subscription, device…</span>
+      <span class="see-also__summary">Применяйте, когда у чего-то есть жизненный цикл — заказ, задача, соединение, загрузка, сессия, подписка, устройство…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/drawing-boundaries/">
       <span class="see-also__name">drawing-boundaries</span>
-      <span class="see-also__summary">Use when deciding what belongs together — module, package, crate, library, process…</span>
+      <span class="see-also__summary">Применяйте, когда решаете, что должно лежать вместе — разбиение на модули, пакеты, крейты, библиотеки…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/caching-strategy/">
       <span class="see-also__name">caching-strategy</span>
-      <span class="see-also__summary">Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change…</span>
+      <span class="see-also__summary">Применяйте, когда добавляете кэш, таблицу мемоизации, слой CDN или предвычисленный путь чтения…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/schema-evolution/">
       <span class="see-also__name">schema-evolution</span>
-      <span class="see-also__summary">Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema…</span>
+      <span class="see-also__summary">Применяйте, когда меняете контракт, который уже в проде, — добавляете, удаляете…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/data-migrations/">
       <span class="see-also__name">data-migrations</span>
-      <span class="see-also__summary">Use when backfilling, transforming, re-encoding, or relocating data that already exists at a size too large for one transaction…</span>
+      <span class="see-also__summary">Применяйте, когда дозаполняете, преобразуете, перекодируете или переносите уже существующие данные объёмом…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/configuration-management/">
       <span class="see-also__name">configuration-management</span>
-      <span class="see-also__summary">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together…</span>
+      <span class="see-also__summary">Применяйте, когда добавляете переменную окружения, настройку, переключатель или запись в конфиге, когда секреты перепутаны с конфигурацией…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/instrumenting-for-observability/">
       <span class="see-also__name">instrumenting-for-observability</span>
-      <span class="see-also__summary">Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed…</span>
+      <span class="see-also__summary">Применяйте, когда решаете, что логировать, измерять или трассировать, когда инцидент не удалось объяснить по имевшейся телеметрии…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/rate-limiting-and-backpressure/">
       <span class="see-also__name">rate-limiting-and-backpressure</span>
-      <span class="see-also__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</span>
+      <span class="see-also__summary">Применяйте, когда система получает больше нагрузки, чем может обслужить, когда проектируете троттлинг, квоты или ответы 429…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> — дом для TBaguette&rsquo;s Atelier: решения между тикетом и коммитом, которые приходится принимать на своё усмотрение, разложены здесь, как на хорошо прибранном верстаке.</p>
+    <nav aria-label="Категории">
+      <p class="site-footer__nav-title">Категории</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/ru/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/ru/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/ru/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/ru/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/ru/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/ru/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/ru/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/ru/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/ru/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/ru/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/ru/#ui-and-design">Интерфейс и дизайн</a></li>
+<li><a href="/tbaguette-skills/ru/#judgment-and-meta">Суждение и мета</a></li>
+<li><a href="/tbaguette-skills/ru/#reading-code">Чтение кода</a></li>
+<li><a href="/tbaguette-skills/ru/#landing-changes">Интеграция изменений</a></li>
+<li><a href="/tbaguette-skills/ru/#testing">Тестирование</a></li>
+<li><a href="/tbaguette-skills/ru/#debugging-and-performance">Отладка и производительность</a></li>
+<li><a href="/tbaguette-skills/ru/#designing-systems">Проектирование систем</a></li>
+<li><a href="/tbaguette-skills/ru/#security">Безопасность (защита)</a></li>
+<li><a href="/tbaguette-skills/ru/#communicating">Коммуникация</a></li>
+<li><a href="/tbaguette-skills/ru/#environment-and-tooling">Окружение и инструменты</a></li>
       </ul>
     </nav>
   </div>

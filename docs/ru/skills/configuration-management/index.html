@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>configuration-management — Designing systems — TBaguette’s Atelier</title>
-<meta name="description" content="Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together…">
+<title>configuration-management — Проектирование систем — TBaguette’s Atelier</title>
+<meta name="description" content="Применяйте, когда добавляете переменную окружения, настройку, переключатель или запись в конфиге, когда секреты перепутаны с конфигурацией…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="configuration-management — Designing systems — TBaguette’s Atelier">
-<meta property="og:description" content="Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together…">
+<meta property="og:title" content="configuration-management — Проектирование систем — TBaguette’s Atelier">
+<meta property="og:description" content="Применяйте, когда добавляете переменную окружения, настройку, переключатель или запись в конфиге, когда секреты перепутаны с конфигурацией…">
 <link rel="canonical" href="/tbaguette-skills/ru/skills/configuration-management/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/configuration-management/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/configuration-management/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Скопировано!"
+      data-i18n-no-match="Совпадений нет."
+      data-i18n-modal-title="Доступна новая версия"
+      data-i18n-modal-body="Эта страница обновилась. Перезагрузите её, чтобы увидеть свежую версию."
+      data-i18n-modal-reload="Перезагрузить"
+      data-i18n-quote-open="«"
+      data-i18n-quote-close="»">
+<a class="skip-link" href="#main">Перейти к содержимому</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T08:34:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T08:34:53Z UTC</time>
+      <span class="site-header__updated-label">Обновлено</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T09:20:48+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T09:20:48Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Русский</summary>
+  <summary class="language-switcher__summary">Язык: Русский</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/configuration-management/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/configuration-management/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Переключиться на светлую тему"
+              data-i18n-theme-light="Переключиться на светлую тему"
+              data-i18n-theme-dark="Переключиться на тёмную тему">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/ru/">Home</a>
+<nav class="container breadcrumb" aria-label="Навигационная цепочка">
+  <a href="/tbaguette-skills/ru/">Главная</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/ru/#designing-systems">Designing systems</a>
+  <a href="/tbaguette-skills/ru/#designing-systems">Проектирование систем</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">configuration-management</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">configuration-management</h1>
     
   </div>
-  <span class="tag skill-article__tag">Designing systems</span>
-  <p class="lede">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together, when something works in staging but not in production, when a missing or malformed setting surfaces as a null or a crash hours after startup, when standing up a new environment or deployment target, or when deciding whether a value belongs in code, config, a secret store, or a feature flag system.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Русский yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Проектирование систем</span>
+  <p class="lede">Применяйте, когда добавляете переменную окружения, настройку, переключатель или запись в конфиге, когда секреты перепутаны с конфигурацией, когда в стейджинге работает, а в проде нет, когда пропущенная или битая настройка всплывает как null или падение спустя часы после старта, когда поднимаете новое окружение или новую площадку для деплоя, или когда решаете, где место значению — в коде, конфиге, хранилище секретов или системе фича-флагов.</p>
+</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>Configuration is what varies between deployments of the same build, and nothing else. A value that does not vary is code that has been moved somewhere it cannot be typed, tested, or found. A value whose disclosure is harmful is a secret and follows different rules entirely. Getting these three categories confused is the source of most deployment surprises.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding a setting, environment variable, toggle, or config file entry</li><li>Standing up a new environment, region, tenant, or deployment target</li><li>A failure that appears only in one environment, or only after some time under load</li><li>Credentials in a repository, a build argument, an image layer, or a log line</li><li>Deciding whether something should be config, a constant, or a runtime feature flag</li><li>Not for: the deployment mechanism itself, or infrastructure provisioning — this is about what the process reads at startup and how it behaves when that is wrong</li></ul>
@@ -132,80 +132,80 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Null or type error hours after a clean startup</td><td>Config read lazily at the call site instead of validated at boot</td></tr><tr><td>A changed setting has no effect</td><td>Two sources resolve the same key with undeclared precedence, or the process caches a value read once</td></tr><tr><td>Works in staging, fails in production</td><td>A value present in one environment and absent in the other, with a silent default filling the gap</td></tr><tr><td>Service starts and passes health checks against the wrong dependency</td><td>A typo fell back to a default endpoint instead of failing</td></tr><tr><td>Secret in a log, crash dump, or support bundle</td><td>Redaction by denylist of suspicious-looking names</td></tr><tr><td>Rotating a credential needs a code change and a release</td><td>Secret embedded at build time rather than injected at runtime</td></tr><tr><td>Config file grows to hundreds of keys nobody can explain</td><td>Values that never vary by deployment were moved out of code</td></tr><tr><td>Cannot reproduce a production issue locally</td><td>No way to dump the effective config, so the two configurations were never compared</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It will just use the default&quot; as an answer to a missing required value</li><li>A new setting added without a validation rule and without a documented default</li><li>Reading an environment variable outside the loader</li><li>Copying a production secret into a local file, a ticket, or a chat message to reproduce something</li><li>A boolean setting that has been flipped more than once during an incident and still lives in a config file</li><li>Environment-specific code branches instead of environment-specific values</li><li>Nobody can state where a running value came from</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/ru/skills/data-migrations/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Навигация по навыкам"><a class="prevnext__link" href="/tbaguette-skills/ru/skills/data-migrations/">
+  <span class="prevnext__label">Предыдущий</span>
   <span class="prevnext__name">← data-migrations</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ru/skills/instrumenting-for-observability/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Следующий</span>
   <span class="prevnext__name">instrumenting-for-observability →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Designing systems</h2>
+  <h2 class="see-also__title">Ещё в категории «Проектирование систем»</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/designing-apis/">
       <span class="see-also__name">designing-apis</span>
-      <span class="see-also__summary">Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint…</span>
+      <span class="see-also__summary">Применяйте, когда определяете интерфейс, который будет вызывать чужой код, — публичную функцию или точку входа библиотеки…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/modeling-errors/">
       <span class="see-also__name">modeling-errors</span>
-      <span class="see-also__summary">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…</span>
+      <span class="see-also__summary">Применяйте, когда решаете, как представлять и обрабатывать сбой — выбор между исключениями, типами Result или Either, кодами ошибок…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/designing-for-idempotency/">
       <span class="see-also__name">designing-for-idempotency</span>
-      <span class="see-also__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</span>
+      <span class="see-also__summary">Применяйте, когда операция может прийти больше одного раза — повторы после таймаута с неизвестным исходом, очереди «хотя бы один раз»…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/choosing-concurrency-model/">
       <span class="see-also__name">choosing-concurrency-model</span>
-      <span class="see-also__summary">Use when work must happen at the same time and the approach is undecided — OS threads, async or event loops, actors and message passing…</span>
+      <span class="see-also__summary">Применяйте, когда работа должна идти одновременно, а подход ещё не выбран — потоки ОС, асинхронность и циклы событий…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/modeling-state-machines/">
       <span class="see-also__name">modeling-state-machines</span>
-      <span class="see-also__summary">Use when something has a lifecycle — order, job, connection, upload, session, subscription, device…</span>
+      <span class="see-also__summary">Применяйте, когда у чего-то есть жизненный цикл — заказ, задача, соединение, загрузка, сессия, подписка, устройство…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/drawing-boundaries/">
       <span class="see-also__name">drawing-boundaries</span>
-      <span class="see-also__summary">Use when deciding what belongs together — module, package, crate, library, process…</span>
+      <span class="see-also__summary">Применяйте, когда решаете, что должно лежать вместе — разбиение на модули, пакеты, крейты, библиотеки…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/caching-strategy/">
       <span class="see-also__name">caching-strategy</span>
-      <span class="see-also__summary">Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change…</span>
+      <span class="see-also__summary">Применяйте, когда добавляете кэш, таблицу мемоизации, слой CDN или предвычисленный путь чтения…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/schema-evolution/">
       <span class="see-also__name">schema-evolution</span>
-      <span class="see-also__summary">Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema…</span>
+      <span class="see-also__summary">Применяйте, когда меняете контракт, который уже в проде, — добавляете, удаляете…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/data-migrations/">
       <span class="see-also__name">data-migrations</span>
-      <span class="see-also__summary">Use when backfilling, transforming, re-encoding, or relocating data that already exists at a size too large for one transaction…</span>
+      <span class="see-also__summary">Применяйте, когда дозаполняете, преобразуете, перекодируете или переносите уже существующие данные объёмом…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/instrumenting-for-observability/">
       <span class="see-also__name">instrumenting-for-observability</span>
-      <span class="see-also__summary">Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed…</span>
+      <span class="see-also__summary">Применяйте, когда решаете, что логировать, измерять или трассировать, когда инцидент не удалось объяснить по имевшейся телеметрии…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/rate-limiting-and-backpressure/">
       <span class="see-also__name">rate-limiting-and-backpressure</span>
-      <span class="see-also__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</span>
+      <span class="see-also__summary">Применяйте, когда система получает больше нагрузки, чем может обслужить, когда проектируете троттлинг, квоты или ответы 429…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> — дом для TBaguette&rsquo;s Atelier: решения между тикетом и коммитом, которые приходится принимать на своё усмотрение, разложены здесь, как на хорошо прибранном верстаке.</p>
+    <nav aria-label="Категории">
+      <p class="site-footer__nav-title">Категории</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/ru/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/ru/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/ru/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/ru/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/ru/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/ru/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/ru/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/ru/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/ru/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/ru/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/ru/#ui-and-design">Интерфейс и дизайн</a></li>
+<li><a href="/tbaguette-skills/ru/#judgment-and-meta">Суждение и мета</a></li>
+<li><a href="/tbaguette-skills/ru/#reading-code">Чтение кода</a></li>
+<li><a href="/tbaguette-skills/ru/#landing-changes">Интеграция изменений</a></li>
+<li><a href="/tbaguette-skills/ru/#testing">Тестирование</a></li>
+<li><a href="/tbaguette-skills/ru/#debugging-and-performance">Отладка и производительность</a></li>
+<li><a href="/tbaguette-skills/ru/#designing-systems">Проектирование систем</a></li>
+<li><a href="/tbaguette-skills/ru/#security">Безопасность (защита)</a></li>
+<li><a href="/tbaguette-skills/ru/#communicating">Коммуникация</a></li>
+<li><a href="/tbaguette-skills/ru/#environment-and-tooling">Окружение и инструменты</a></li>
       </ul>
     </nav>
   </div>

@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mapping-dependencies — Reading code — TBaguette’s Atelier</title>
-<meta name="description" content="Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles…">
+<title>mapping-dependencies — Чтение кода — TBaguette’s Atelier</title>
+<meta name="description" content="Применяйте, когда оцениваете, что сломает изменение, прикидываете радиус поражения, ловите циклические импорты или циклы сборки…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="mapping-dependencies — Reading code — TBaguette’s Atelier">
-<meta property="og:description" content="Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles…">
+<meta property="og:title" content="mapping-dependencies — Чтение кода — TBaguette’s Atelier">
+<meta property="og:description" content="Применяйте, когда оцениваете, что сломает изменение, прикидываете радиус поражения, ловите циклические импорты или циклы сборки…">
 <link rel="canonical" href="/tbaguette-skills/ru/skills/mapping-dependencies/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/mapping-dependencies/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/mapping-dependencies/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Скопировано!"
+      data-i18n-no-match="Совпадений нет."
+      data-i18n-modal-title="Доступна новая версия"
+      data-i18n-modal-body="Эта страница обновилась. Перезагрузите её, чтобы увидеть свежую версию."
+      data-i18n-modal-reload="Перезагрузить"
+      data-i18n-quote-open="«"
+      data-i18n-quote-close="»">
+<a class="skip-link" href="#main">Перейти к содержимому</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T08:34:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T08:34:53Z UTC</time>
+      <span class="site-header__updated-label">Обновлено</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T09:20:48+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T09:20:48Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Русский</summary>
+  <summary class="language-switcher__summary">Язык: Русский</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/mapping-dependencies/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/mapping-dependencies/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Переключиться на светлую тему"
+              data-i18n-theme-light="Переключиться на светлую тему"
+              data-i18n-theme-dark="Переключиться на тёмную тему">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/ru/">Home</a>
+<nav class="container breadcrumb" aria-label="Навигационная цепочка">
+  <a href="/tbaguette-skills/ru/">Главная</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/ru/#reading-code">Reading code</a>
+  <a href="/tbaguette-skills/ru/#reading-code">Чтение кода</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">mapping-dependencies</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">mapping-dependencies</h1>
     
   </div>
-  <span class="tag skill-article__tag">Reading code</span>
-  <p class="lede">Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles, finding modules with too many dependents, checking whether layering or architecture rules still hold, planning to split, extract, or delete a module, or after a small local change caused a failure in something that never referenced it.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Русский yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Чтение кода</span>
+  <p class="lede">Применяйте, когда оцениваете, что сломает изменение, прикидываете радиус поражения, ловите циклические импорты или циклы сборки, ищете модули со слишком большим числом зависящих от них, проверяете, держатся ли ещё правила слоёв и архитектуры, планируете разделить, вынести или удалить модуль, или когда небольшая локальная правка уронила то, что на неё нигде не ссылалось.</p>
+</div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>The dependency graph in the import statements is one of three graphs, and it is the one least likely to hurt you. Two components with no shared code and one shared table are more tightly coupled than two modules that import each other, because nothing will tell them when they disagree.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Before a signature, schema, or shared-behavior change, to enumerate who notices.</li><li>A cycle blocks a build, a test, an extraction, or a deletion.</li><li>Deciding module boundaries, or whether a proposed split is even possible.</li><li>An incident traced to a component that had no visible link to the change.</li><li>Not for: choosing where to put a change once the graph is known (finding-the-seam), or one value's path (tracing-data-flow).</li></ul>
@@ -125,60 +125,60 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>One-line change, unrelated production failure</td><td>A data-graph edge; no compile edge existed to warn anyone</td></tr><tr><td>The architecture diagram matches nothing</td><td>Drawn once, never enforced; no mechanical layering check</td></tr><tr><td>Cycle &quot;fixed&quot; by moving code between the files</td><td>Edge relabeled, not removed</td></tr><tr><td>Everything depends on a <code>common</code> or <code>shared</code> package</td><td>A package named for indecision accumulated the whole graph</td></tr><tr><td>Deleted an unreferenced module; it broke later</td><td>Runtime-only edge via reflection, config, or a plugin registry</td></tr><tr><td>Refactor stalled on a module that will not extract</td><td>A cycle, discovered at extraction time rather than before planning</td></tr><tr><td>&quot;Only a new field, fully backward compatible&quot;</td><td>Old readers, queued messages, and stored rows are also readers</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Just put it in the shared utilities for now.&quot;</li><li>&quot;Nothing else uses this&quot; — asserted without extracting the graph, including runtime and data edges.</li><li>&quot;It's only an additive change.&quot;</li><li>&quot;The diagram in the wiki shows…&quot;</li><li>&quot;The compiler will catch it&quot; — true only for the compile graph, which is the graph least likely to hurt you.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/ru/skills/code-archaeology/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Навигация по навыкам"><a class="prevnext__link" href="/tbaguette-skills/ru/skills/code-archaeology/">
+  <span class="prevnext__label">Предыдущий</span>
   <span class="prevnext__name">← code-archaeology</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ru/skills/finding-the-seam/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Следующий</span>
   <span class="prevnext__name">finding-the-seam →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Reading code</h2>
+  <h2 class="see-also__title">Ещё в категории «Чтение кода»</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/orienting-in-unfamiliar-code/">
       <span class="see-also__name">orienting-in-unfamiliar-code</span>
-      <span class="see-also__summary">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project…</span>
+      <span class="see-also__summary">Применяйте, когда открываете кодовую базу впервые, получаете в наследство незнакомый или легаси-репозиторий…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/tracing-data-flow/">
       <span class="see-also__name">tracing-data-flow</span>
-      <span class="see-also__summary">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…</span>
+      <span class="see-also__summary">Применяйте, когда значение неверно, отсутствует, равно null, пусто или неожиданно взято по умолчанию, а откуда оно взялось — непонятно…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/code-archaeology/">
       <span class="see-also__name">code-archaeology</span>
-      <span class="see-also__summary">Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify…</span>
+      <span class="see-also__summary">Применяйте, когда код есть, а объяснения нет, и причина важна — странный обходной путь, магическая константа, условие…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/finding-the-seam/">
       <span class="see-also__name">finding-the-seam</span>
-      <span class="see-also__summary">Use when deciding where in a codebase to make a change, when a fix could plausibly go in several places…</span>
+      <span class="see-also__summary">Применяйте, когда решаете, в каком месте кодовой базы вносить изменение, когда правку правдоподобно можно положить в несколько мест…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/reading-specifications/">
       <span class="see-also__name">reading-specifications</span>
-      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
+      <span class="see-also__summary">Применяйте, когда превращаете тикет, issue, баг-репорт, RFC, стандарт, проектный документ или просьбу пользователя в работу…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ru/skills/naming-things/">
       <span class="see-also__name">naming-things</span>
-      <span class="see-also__summary">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…</span>
+      <span class="see-also__summary">Применяйте, когда выбираете идентификатор для переменной, функции, типа, модуля, флага, ключа конфигурации, таблицы или события…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> — дом для TBaguette&rsquo;s Atelier: решения между тикетом и коммитом, которые приходится принимать на своё усмотрение, разложены здесь, как на хорошо прибранном верстаке.</p>
+    <nav aria-label="Категории">
+      <p class="site-footer__nav-title">Категории</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/ru/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/ru/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/ru/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/ru/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/ru/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/ru/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/ru/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/ru/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/ru/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/ru/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/ru/#ui-and-design">Интерфейс и дизайн</a></li>
+<li><a href="/tbaguette-skills/ru/#judgment-and-meta">Суждение и мета</a></li>
+<li><a href="/tbaguette-skills/ru/#reading-code">Чтение кода</a></li>
+<li><a href="/tbaguette-skills/ru/#landing-changes">Интеграция изменений</a></li>
+<li><a href="/tbaguette-skills/ru/#testing">Тестирование</a></li>
+<li><a href="/tbaguette-skills/ru/#debugging-and-performance">Отладка и производительность</a></li>
+<li><a href="/tbaguette-skills/ru/#designing-systems">Проектирование систем</a></li>
+<li><a href="/tbaguette-skills/ru/#security">Безопасность (защита)</a></li>
+<li><a href="/tbaguette-skills/ru/#communicating">Коммуникация</a></li>
+<li><a href="/tbaguette-skills/ru/#environment-and-tooling">Окружение и инструменты</a></li>
       </ul>
     </nav>
   </div>
