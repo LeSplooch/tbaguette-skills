@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>portable-shell-scripting — Environment and tooling — TBaguette’s Atelier</title>
-<meta name="description" content="Use when writing or reviewing a shell script, when a script works in one shell but fails in another…">
+<meta name="description" content="À utiliser quand on écrit ou relit un script shell, quand un script marche dans un shell et échoue dans un autre…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="portable-shell-scripting — Environment and tooling — TBaguette’s Atelier">
-<meta property="og:description" content="Use when writing or reviewing a shell script, when a script works in one shell but fails in another…">
+<meta property="og:description" content="À utiliser quand on écrit ou relit un script shell, quand un script marche dans un shell et échoue dans un autre…">
 <link rel="canonical" href="/tbaguette-skills/fr/skills/portable-shell-scripting/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/portable-shell-scripting/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/portable-shell-scripting/">
@@ -34,12 +34,12 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Copié !"
+      data-i18n-no-match="Aucune compétence ne correspond."
+      data-i18n-modal-title="Nouvelle version disponible"
+      data-i18n-modal-body="Cette page a été mise à jour. Rechargez-la pour voir la dernière version."
+      data-i18n-modal-reload="Recharger">
+<a class="skip-link" href="#main">Passer au contenu</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -49,11 +49,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T04:28:01+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T04:28:01Z UTC</time>
+      <span class="site-header__updated-label">Mis à jour</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T04:53:59+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T04:53:59Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Français</summary>
+  <summary class="language-switcher__summary">Langue: Français</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/portable-shell-scripting/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/portable-shell-scripting/" aria-current="true">Français</a></li>
@@ -74,9 +74,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Passer au thème clair"
+              data-i18n-theme-light="Passer au thème clair"
+              data-i18n-theme-dark="Passer au thème sombre">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -84,8 +84,8 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/fr/">Home</a>
+<nav class="container breadcrumb" aria-label="Fil d’Ariane">
+  <a href="/tbaguette-skills/fr/">Accueil</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <a href="/tbaguette-skills/fr/#environment-and-tooling">Environment and tooling</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
@@ -97,8 +97,8 @@
     
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
-  <p class="lede">Use when writing or reviewing a shell script, when a script works in one shell but fails in another, when it breaks on filenames with spaces or newlines, or when a failing command does not stop the script. Covers quoting and word splitting, set -e exemptions, lost variable assignments after a pipeline, exit codes and pipeline status, cleanup traps, POSIX sh versus bash-isms, GNU versus BSD tool differences, and when a script has outgrown shell.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Français yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <p class="lede">À utiliser quand on écrit ou relit un script shell, quand un script marche dans un shell et échoue dans un autre, quand il casse sur des noms de fichiers contenant des espaces ou des retours à la ligne, ou quand une commande en échec n’arrête pas le script. Couvre la protection par guillemets et le découpage en mots, les exceptions à set -e, les affectations de variables perdues après un pipeline, les codes de sortie et le statut d’un pipeline, les traps de nettoyage, sh POSIX face aux bashismes, les différences entre outils GNU et BSD, et le moment où un script a dépassé ce que le shell peut porter.</p>
+</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>Shell expands text and then splits and globs the result; quoting is not politeness, it is the mechanism that turns that off. <code>set -e</code> is a seatbelt with documented holes rather than error handling, and the shell you tested in is rarely the shell that will run the script.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Writing a script that runs somewhere you do not control: a CI runner, a container image, a BSD or Alpine host, a colleague's laptop</li><li>A script fails only in CI, only on macOS, or only for one person</li><li>Symptoms: <code>[: too many arguments</code>, <code>unbound variable</code>, <code>bad substitution</code>, a loop whose variables are unchanged afterwards, <code>rm</code> treating a filename as an option</li><li>Auditing a script that outgrew its one-off origin</li></ul>
@@ -136,52 +136,52 @@ trap 'cleanup; exit 143' TERM HUP</code></pre>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Works locally, <code>bad substitution</code> in CI</td><td>bash syntax under a <code>#!/bin/sh</code> shebang; CI's <code>sh</code> is dash</td></tr><tr><td>Script continues past an obvious failure</td><td>an errexit exemption — the failure sat in a function called from <code>if</code>, or upstream of a pipe</td></tr><tr><td>Counter is 0 after a <code>while read</code> loop</td><td>the loop body ran in a subshell on the right-hand side of a pipe</td></tr><tr><td>Loop runs once with a literal <code>*.txt</code></td><td>the glob matched nothing and POSIX left the pattern unexpanded</td></tr><tr><td><code>[: too many arguments</code></td><td>an unquoted variable that was empty or contained spaces inside <code>[ ]</code></td></tr><tr><td>Cleanup deleted the wrong tree</td><td>unquoted path, or an unset variable expanding to nothing with no <code>set -u</code></td></tr><tr><td>Trailing newlines missing from captured output</td><td><code>$(…)</code> strips every trailing newline; append a sentinel and remove it</td></tr><tr><td>Fails on exactly one machine</td><td>GNU versus BSD flags for <code>sed</code>, <code>date</code>, <code>readlink</code>, or <code>stat</code></td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It works on my machine&quot; about anything carrying a <code>#!/bin/sh</code> shebang</li><li>Reaching for <code>ls | while read</code>, <code>for f in $(find …)</code>, or <code>eval</code> on a constructed string</li><li>A second level of quoting inside <code>ssh</code>, <code>sudo sh -c</code>, or a generated command line</li><li>Adding <code>|| true</code> to silence a failure rather than to declare it non-fatal</li><li>The script now holds arrays of records, parses JSON or CSV with <code>sed</code>, retries with backoff, or passes 200 lines — it has outgrown shell and should become a program in a language with data structures and a test runner</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/fr/skills/reproducible-environments/">
-  <span class="prevnext__label">Next</span>
+<nav class="container prevnext" aria-label="Navigation entre les compétences"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/fr/skills/reproducible-environments/">
+  <span class="prevnext__label">Suivant</span>
   <span class="prevnext__name">reproducible-environments →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Environment and tooling</h2>
+  <h2 class="see-also__title">Dans la même catégorie : Environment and tooling</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/reproducible-environments/">
       <span class="see-also__name">reproducible-environments</span>
-      <span class="see-also__summary">Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt…</span>
+      <span class="see-also__summary">À utiliser quand un build ou un test passe sur une machine et échoue sur une autre…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/designing-ci-pipelines/">
       <span class="see-also__name">designing-ci-pipelines</span>
-      <span class="see-also__summary">Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI…</span>
+      <span class="see-also__summary">À utiliser quand on construit ou remanie un pipeline de CI, quand le build est trop lent ou que personne ne se fie à son résultat…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/upgrading-dependencies/">
       <span class="see-also__name">upgrading-dependencies</span>
-      <span class="see-also__summary">Use when dependency versions have fallen behind, when a security advisory names a package in use…</span>
+      <span class="see-also__summary">À utiliser quand les versions des dépendances ont pris du retard, quand un bulletin de sécurité nomme un paquet utilisé…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/keeping-tbaguette-current/">
       <span class="see-also__name">keeping-tbaguette-current</span>
-      <span class="see-also__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</span>
+      <span class="see-also__summary">À utiliser au début de chaque conversation…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/automating-repetition/">
       <span class="see-also__name">automating-repetition</span>
-      <span class="see-also__summary">Use when a manual sequence has been repeated often enough to consider scripting it…</span>
+      <span class="see-also__summary">À utiliser quand une séquence manuelle a été répétée assez souvent pour envisager de la scripter…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> abrite TBaguette&rsquo;s Atelier — les arbitrages qui se jouent entre le ticket et le commit, rangés comme sur un établi bien tenu.</p>
+    <nav aria-label="Catégories">
+      <p class="site-footer__nav-title">Catégories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/fr/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/fr/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/fr/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/fr/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/fr/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/fr/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/fr/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/fr/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/fr/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/fr/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/fr/#ui-and-design">UI et design</a></li>
+<li><a href="/tbaguette-skills/fr/#judgment-and-meta">Jugement et méta</a></li>
+<li><a href="/tbaguette-skills/fr/#reading-code">Lecture de code</a></li>
+<li><a href="/tbaguette-skills/fr/#landing-changes">Intégration des changements</a></li>
+<li><a href="/tbaguette-skills/fr/#testing">Tests</a></li>
+<li><a href="/tbaguette-skills/fr/#debugging-and-performance">Débogage et performance</a></li>
+<li><a href="/tbaguette-skills/fr/#designing-systems">Conception de systèmes</a></li>
+<li><a href="/tbaguette-skills/fr/#security">Sécurité (défensive)</a></li>
+<li><a href="/tbaguette-skills/fr/#communicating">Communication</a></li>
+<li><a href="/tbaguette-skills/fr/#environment-and-tooling">Environnement et outillage</a></li>
       </ul>
     </nav>
   </div>

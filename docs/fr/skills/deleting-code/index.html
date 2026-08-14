@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>deleting-code — Landing changes — TBaguette’s Atelier</title>
-<meta name="description" content="Use when removing code, a feature, an endpoint, a config key, a column, or a dependency that appears unused…">
+<meta name="description" content="À utiliser quand on retire du code, une fonctionnalité, un endpoint, une clé de configuration…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="deleting-code — Landing changes — TBaguette’s Atelier">
-<meta property="og:description" content="Use when removing code, a feature, an endpoint, a config key, a column, or a dependency that appears unused…">
+<meta property="og:description" content="À utiliser quand on retire du code, une fonctionnalité, un endpoint, une clé de configuration…">
 <link rel="canonical" href="/tbaguette-skills/fr/skills/deleting-code/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/deleting-code/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/deleting-code/">
@@ -34,12 +34,12 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Copié !"
+      data-i18n-no-match="Aucune compétence ne correspond."
+      data-i18n-modal-title="Nouvelle version disponible"
+      data-i18n-modal-body="Cette page a été mise à jour. Rechargez-la pour voir la dernière version."
+      data-i18n-modal-reload="Recharger">
+<a class="skip-link" href="#main">Passer au contenu</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -49,11 +49,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T04:28:01+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T04:28:01Z UTC</time>
+      <span class="site-header__updated-label">Mis à jour</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T04:53:59+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T04:53:59Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Français</summary>
+  <summary class="language-switcher__summary">Langue: Français</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/deleting-code/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/deleting-code/" aria-current="true">Français</a></li>
@@ -74,9 +74,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Passer au thème clair"
+              data-i18n-theme-light="Passer au thème clair"
+              data-i18n-theme-dark="Passer au thème sombre">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -84,8 +84,8 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/fr/">Home</a>
+<nav class="container breadcrumb" aria-label="Fil d’Ariane">
+  <a href="/tbaguette-skills/fr/">Accueil</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <a href="/tbaguette-skills/fr/#landing-changes">Landing changes</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
@@ -97,8 +97,8 @@
     
   </div>
   <span class="tag skill-article__tag">Landing changes</span>
-  <p class="lede">Use when removing code, a feature, an endpoint, a config key, a column, or a dependency that appears unused, when deciding whether something is genuinely dead, when a deprecation needs a removal path and a deadline, when code has been commented out or kept &quot;just in case&quot;, or when the callers of something cannot all be seen from inside the repository. Covers proving deadness, deprecation sequences, and removing tests and config alongside.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Français yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <p class="lede">À utiliser quand on retire du code, une fonctionnalité, un endpoint, une clé de configuration, une colonne ou une dépendance qui semble inutilisée, quand il faut déterminer si quelque chose est vraiment mort, quand une dépréciation a besoin d’un chemin de suppression et d’une échéance, quand du code a été mis en commentaire ou gardé « au cas où », ou quand on ne voit pas tous les appelants depuis l’intérieur du dépôt. Couvre la preuve qu’un code est mort, les séquences de dépréciation, et la suppression des tests et de la configuration qui vont avec.</p>
+</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>Deletion is the highest-leverage change available and the one people make on the thinnest evidence. The question is never &quot;does anything call this&quot; — it is &quot;what would constitute proof that nothing does&quot;, and a clean search is not proof.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Removing a feature, endpoint, flag, module, table column, or dependency</li><li>Something looks unused and you are about to trust a search that found nothing</li><li>A deprecation has been in place for a while with no removal date attached</li><li>Code was commented out rather than removed, or kept because it &quot;might be useful&quot;</li><li>Not for: removing an old implementation as the final phase of a replacement — see <code>incremental-migration</code>. Not for judging whether historical code is load-bearing — see <code>code-archaeology</code>.</li></ul>
@@ -123,60 +123,60 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;No references found&quot;, then a production break</td><td>Searched code only — not config, data, telemetry, or external callers</td></tr><tr><td>Feature deleted, its tests still green and still running</td><td>Tests were never in the deletion's scope</td></tr><tr><td>Code commented out &quot;temporarily&quot; three years ago</td><td>Nobody was willing to own the decision, so it was deferred into the file</td></tr><tr><td>Deprecation warning present for years</td><td>No removal date was ever attached to it</td></tr><tr><td>A dashboard went blank after a cleanup</td><td>A log line or metric name was treated as internal</td></tr><tr><td>Delete reverted, and the feature comes back broken</td><td>Deletion was bundled with unrelated changes, so the revert was not clean</td></tr><tr><td>Dead code keeps being updated by refactors</td><td>It looks alive because it is maintained, and it is maintained because it looks alive</td></tr><tr><td>Old implementation kept &quot;for reference&quot; beside the new one</td><td>Reference material stored in the build instead of in history</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Let's keep it, it might be useful later&quot;</li><li>&quot;I will comment it out just in case&quot;</li><li>&quot;Nobody uses this&quot; with no counter behind it</li><li>&quot;We can always get it back from history&quot; used as the reason not to write a findable commit message</li><li>Deleting bundled with a release, or right before nobody is watching</li><li>Deleting something because a search was clean, when the stack uses reflection, plugins, or configuration-driven dispatch</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/fr/skills/refactoring-safely/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navigation entre les compétences"><a class="prevnext__link" href="/tbaguette-skills/fr/skills/refactoring-safely/">
+  <span class="prevnext__label">Précédent</span>
   <span class="prevnext__name">← refactoring-safely</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/fr/skills/feature-flagging/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Suivant</span>
   <span class="prevnext__name">feature-flagging →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Landing changes</h2>
+  <h2 class="see-also__title">Dans la même catégorie : Landing changes</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/atomic-commits/">
       <span class="see-also__name">atomic-commits</span>
-      <span class="see-also__summary">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit…</span>
+      <span class="see-also__summary">À utiliser quand une copie de travail a accumulé plusieurs changements sans rapport entre eux…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/writing-commit-messages/">
       <span class="see-also__name">writing-commit-messages</span>
-      <span class="see-also__summary">Use when writing or rewriting a commit message, when drafting a subject line, when a history reads as &quot;fix&quot;, &quot;wip&quot;…</span>
+      <span class="see-also__summary">À utiliser quand on écrit ou réécrit un message de commit, quand on rédige une ligne d’objet, quand un historique se résume à « fix »…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/incremental-migration/">
       <span class="see-also__name">incremental-migration</span>
-      <span class="see-also__summary">Use when replacing a system, library, API, storage engine, or data format that is already in use…</span>
+      <span class="see-also__summary">À utiliser quand on remplace un système, une bibliothèque, une API, un moteur de stockage ou un format de données déjà en service…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/refactoring-safely/">
       <span class="see-also__name">refactoring-safely</span>
-      <span class="see-also__summary">Use when restructuring existing code without changing what it does, when a change touches many call sites at once…</span>
+      <span class="see-also__summary">À utiliser quand on restructure du code existant sans changer ce qu’il fait…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/feature-flagging/">
       <span class="see-also__name">feature-flagging</span>
-      <span class="see-also__summary">Use when hiding unfinished work behind a toggle, when planning a gradual rollout, a kill switch, or a dark launch…</span>
+      <span class="see-also__summary">À utiliser quand on cache du travail inachevé derrière un interrupteur, quand on prévoit un déploiement progressif…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/resolving-merge-conflicts/">
       <span class="see-also__name">resolving-merge-conflicts</span>
-      <span class="see-also__summary">Use when a merge or rebase reports conflicts, when a long-lived branch has diverged and integration looks painful…</span>
+      <span class="see-also__summary">À utiliser quand un merge ou un rebase signale des conflits…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> abrite TBaguette&rsquo;s Atelier — les arbitrages qui se jouent entre le ticket et le commit, rangés comme sur un établi bien tenu.</p>
+    <nav aria-label="Catégories">
+      <p class="site-footer__nav-title">Catégories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/fr/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/fr/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/fr/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/fr/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/fr/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/fr/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/fr/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/fr/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/fr/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/fr/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/fr/#ui-and-design">UI et design</a></li>
+<li><a href="/tbaguette-skills/fr/#judgment-and-meta">Jugement et méta</a></li>
+<li><a href="/tbaguette-skills/fr/#reading-code">Lecture de code</a></li>
+<li><a href="/tbaguette-skills/fr/#landing-changes">Intégration des changements</a></li>
+<li><a href="/tbaguette-skills/fr/#testing">Tests</a></li>
+<li><a href="/tbaguette-skills/fr/#debugging-and-performance">Débogage et performance</a></li>
+<li><a href="/tbaguette-skills/fr/#designing-systems">Conception de systèmes</a></li>
+<li><a href="/tbaguette-skills/fr/#security">Sécurité (défensive)</a></li>
+<li><a href="/tbaguette-skills/fr/#communicating">Communication</a></li>
+<li><a href="/tbaguette-skills/fr/#environment-and-tooling">Environnement et outillage</a></li>
       </ul>
     </nav>
   </div>

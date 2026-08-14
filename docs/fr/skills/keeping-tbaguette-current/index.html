@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>keeping-tbaguette-current — Environment and tooling — TBaguette’s Atelier</title>
-<meta name="description" content="Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…">
+<meta name="description" content="À utiliser au début de chaque conversation…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="keeping-tbaguette-current — Environment and tooling — TBaguette’s Atelier">
-<meta property="og:description" content="Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…">
+<meta property="og:description" content="À utiliser au début de chaque conversation…">
 <link rel="canonical" href="/tbaguette-skills/fr/skills/keeping-tbaguette-current/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/keeping-tbaguette-current/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/keeping-tbaguette-current/">
@@ -34,12 +34,12 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Copié !"
+      data-i18n-no-match="Aucune compétence ne correspond."
+      data-i18n-modal-title="Nouvelle version disponible"
+      data-i18n-modal-body="Cette page a été mise à jour. Rechargez-la pour voir la dernière version."
+      data-i18n-modal-reload="Recharger">
+<a class="skip-link" href="#main">Passer au contenu</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -49,11 +49,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T04:28:01+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T04:28:01Z UTC</time>
+      <span class="site-header__updated-label">Mis à jour</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T04:53:59+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T04:53:59Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Français</summary>
+  <summary class="language-switcher__summary">Langue: Français</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/keeping-tbaguette-current/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/keeping-tbaguette-current/" aria-current="true">Français</a></li>
@@ -74,9 +74,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Passer au thème clair"
+              data-i18n-theme-light="Passer au thème clair"
+              data-i18n-theme-dark="Passer au thème sombre">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -84,8 +84,8 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/fr/">Home</a>
+<nav class="container breadcrumb" aria-label="Fil d’Ariane">
+  <a href="/tbaguette-skills/fr/">Accueil</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <a href="/tbaguette-skills/fr/#environment-and-tooling">Environment and tooling</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
@@ -97,8 +97,8 @@
     
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
-  <p class="lede">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user asks whether TBaguette is current, what changed recently, or wants to sync to the latest skills. Checks the installed plugin against the published repo, updates it if it can fast-forward cleanly, and reports what changed in a short, readable summary — never a raw commit log.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Français yet — showing the English version.</p><div class="prose" lang="en"><h2 id="what-this-is">What this is</h2>
+  <p class="lede">À utiliser au début de chaque conversation, sans condition — sans tenir compte du temps écoulé depuis la dernière vérification — et chaque fois que l’utilisateur demande si TBaguette est à jour, ce qui a changé récemment, ou veut se synchroniser sur les dernières compétences. Compare le plugin installé au dépôt publié, le met à jour s’il peut avancer proprement en fast-forward, et rend compte de ce qui a changé en un résumé court et lisible — jamais un journal de commits brut.</p>
+</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en"><h2 id="what-this-is">What this is</h2>
 <p>The TBaguette plugin, once installed, is a git clone (<code>~/.claude/skills/TBaguette</code>) that only ever moves forward when someone explicitly re-runs the install command. Nothing tells a user it's fallen behind. This skill is that check — and, since checking and then leaving the user to go run a command themselves is half a job, it also applies the update when it's safe to, and tells them what actually changed rather than just &quot;updated.&quot;</p>
 <p>Three things, in order: <strong>check</strong>, <strong>update</strong> (only if safe), <strong>record and report</strong>.</p>
 <h2 id="where-things-live">Where things live</h2>
@@ -150,56 +150,56 @@ Last checked: 2026-08-14T10:03:12Z
 <p>This is what turns &quot;did I update recently, and to what&quot; from a question only <code>git log</code> inside a specific clone can answer into something readable on its own, going back as far as this skill has been running.</p>
 <h2 id="what-this-skill-deliberately-does-not-do">What this skill deliberately does not do</h2>
 <ul><li><strong>Never rewrites history, never force-pushes</strong> — it only ever fetches and fast-forward merges.</li><li><strong>Never touches anything outside <code>~/.claude/skills/TBaguette</code></strong> and its own log file.</li><li><strong>Never modifies Claude Code settings or installs a hook.</strong> Reliable &quot;every session&quot; triggering the way this skill's own description asks for depends on normal skill matching. A user who wants a harder guarantee can wire up their own <code>SessionStart</code> hook that nudges toward this skill — that's a deliberate, visible choice for them to make about their own global settings, not something installing a plugin should do on their behalf.</li><li><strong>Never discards local changes</strong> to force an update through — see the safety gate above.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/fr/skills/upgrading-dependencies/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navigation entre les compétences"><a class="prevnext__link" href="/tbaguette-skills/fr/skills/upgrading-dependencies/">
+  <span class="prevnext__label">Précédent</span>
   <span class="prevnext__name">← upgrading-dependencies</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/fr/skills/automating-repetition/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Suivant</span>
   <span class="prevnext__name">automating-repetition →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Environment and tooling</h2>
+  <h2 class="see-also__title">Dans la même catégorie : Environment and tooling</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/portable-shell-scripting/">
       <span class="see-also__name">portable-shell-scripting</span>
-      <span class="see-also__summary">Use when writing or reviewing a shell script, when a script works in one shell but fails in another…</span>
+      <span class="see-also__summary">À utiliser quand on écrit ou relit un script shell, quand un script marche dans un shell et échoue dans un autre…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/reproducible-environments/">
       <span class="see-also__name">reproducible-environments</span>
-      <span class="see-also__summary">Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt…</span>
+      <span class="see-also__summary">À utiliser quand un build ou un test passe sur une machine et échoue sur une autre…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/designing-ci-pipelines/">
       <span class="see-also__name">designing-ci-pipelines</span>
-      <span class="see-also__summary">Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI…</span>
+      <span class="see-also__summary">À utiliser quand on construit ou remanie un pipeline de CI, quand le build est trop lent ou que personne ne se fie à son résultat…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/upgrading-dependencies/">
       <span class="see-also__name">upgrading-dependencies</span>
-      <span class="see-also__summary">Use when dependency versions have fallen behind, when a security advisory names a package in use…</span>
+      <span class="see-also__summary">À utiliser quand les versions des dépendances ont pris du retard, quand un bulletin de sécurité nomme un paquet utilisé…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/automating-repetition/">
       <span class="see-also__name">automating-repetition</span>
-      <span class="see-also__summary">Use when a manual sequence has been repeated often enough to consider scripting it…</span>
+      <span class="see-also__summary">À utiliser quand une séquence manuelle a été répétée assez souvent pour envisager de la scripter…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> abrite TBaguette&rsquo;s Atelier — les arbitrages qui se jouent entre le ticket et le commit, rangés comme sur un établi bien tenu.</p>
+    <nav aria-label="Catégories">
+      <p class="site-footer__nav-title">Catégories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/fr/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/fr/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/fr/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/fr/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/fr/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/fr/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/fr/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/fr/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/fr/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/fr/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/fr/#ui-and-design">UI et design</a></li>
+<li><a href="/tbaguette-skills/fr/#judgment-and-meta">Jugement et méta</a></li>
+<li><a href="/tbaguette-skills/fr/#reading-code">Lecture de code</a></li>
+<li><a href="/tbaguette-skills/fr/#landing-changes">Intégration des changements</a></li>
+<li><a href="/tbaguette-skills/fr/#testing">Tests</a></li>
+<li><a href="/tbaguette-skills/fr/#debugging-and-performance">Débogage et performance</a></li>
+<li><a href="/tbaguette-skills/fr/#designing-systems">Conception de systèmes</a></li>
+<li><a href="/tbaguette-skills/fr/#security">Sécurité (défensive)</a></li>
+<li><a href="/tbaguette-skills/fr/#communicating">Communication</a></li>
+<li><a href="/tbaguette-skills/fr/#environment-and-tooling">Environnement et outillage</a></li>
       </ul>
     </nav>
   </div>

@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>regression-test-from-bug — Testing — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a defect has been reported, reproduced, or patched, when writing a test for a production incident or hotfix…">
+<meta name="description" content="À utiliser quand un défaut a été signalé, reproduit ou corrigé…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="regression-test-from-bug — Testing — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a defect has been reported, reproduced, or patched, when writing a test for a production incident or hotfix…">
+<meta property="og:description" content="À utiliser quand un défaut a été signalé, reproduit ou corrigé…">
 <link rel="canonical" href="/tbaguette-skills/fr/skills/regression-test-from-bug/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/regression-test-from-bug/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/regression-test-from-bug/">
@@ -34,12 +34,12 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Copié !"
+      data-i18n-no-match="Aucune compétence ne correspond."
+      data-i18n-modal-title="Nouvelle version disponible"
+      data-i18n-modal-body="Cette page a été mise à jour. Rechargez-la pour voir la dernière version."
+      data-i18n-modal-reload="Recharger">
+<a class="skip-link" href="#main">Passer au contenu</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -49,11 +49,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T04:28:01+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T04:28:01Z UTC</time>
+      <span class="site-header__updated-label">Mis à jour</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T04:53:59+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T04:53:59Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Français</summary>
+  <summary class="language-switcher__summary">Langue: Français</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/regression-test-from-bug/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/regression-test-from-bug/" aria-current="true">Français</a></li>
@@ -74,9 +74,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Passer au thème clair"
+              data-i18n-theme-light="Passer au thème clair"
+              data-i18n-theme-dark="Passer au thème sombre">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -84,8 +84,8 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/fr/">Home</a>
+<nav class="container breadcrumb" aria-label="Fil d’Ariane">
+  <a href="/tbaguette-skills/fr/">Accueil</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <a href="/tbaguette-skills/fr/#testing">Testing</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
@@ -97,8 +97,8 @@
     
   </div>
   <span class="tag skill-article__tag">Testing</span>
-  <p class="lede">Use when a defect has been reported, reproduced, or patched, when writing a test for a production incident or hotfix, when a bug that was fixed before has come back, or when deciding what to assert so the same defect cannot return. Covers choosing the layer, naming the test after the defect, scoping the assertion, and whether to keep the test once the fix lands.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Français yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <p class="lede">À utiliser quand un défaut a été signalé, reproduit ou corrigé, quand on écrit un test pour un incident de production ou un correctif à chaud, quand un bug déjà corrigé est revenu, ou quand il faut décider quelle assertion écrire pour que le même défaut ne puisse pas réapparaître. Couvre le choix de la couche, le nommage du test d’après le défaut, le cadrage de l’assertion, et la question de garder ou non le test une fois le correctif en place.</p>
+</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>A test that has never failed for the reason it claims to guard is decoration. The defect is the specification: it names an assumption the code violated, and the test's job is to make that assumption cost nothing to hold forever.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A defect has been reproduced and is about to be fixed.</li><li>A hotfix shipped without a test and needs one added behind it.</li><li>A bug that was fixed before has reappeared, meaning the previous guard was absent, deleted, or scoped wrong.</li><li>A production incident is being written up and needs a permanent guard, not an action item.</li><li>Not for: turning a vague report into an on-demand failure — that is <code>reproducing-bugs</code>.</li><li>Not for: finding the root cause — that is <code>systematic-debugging</code>. Write this test after the cause is known, or the test pins the symptom.</li></ul>
@@ -118,60 +118,60 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Test written after the fix, passed on the first run</td><td>It was never proven to detect the defect; it may assert something unrelated</td></tr><tr><td>Same bug returns six months later</td><td>The test asserted the instance, not the invariant, and a different call path violated it</td></tr><tr><td>Test asserts &quot;no exception thrown&quot;</td><td>Scoped to the crash rather than the wrong result the crash was hiding</td></tr><tr><td>Test is slow and end-to-end for a pure logic bug</td><td>Step 3 skipped; it was left at the layer where it was first observed</td></tr><tr><td>Test deleted during a refactor</td><td>It sat in a separate folder with a name nobody could connect to a behavior</td></tr><tr><td>Test passes against both the buggy and fixed code</td><td>The setup does not reach the defective path — usually a default that avoids the edge case</td></tr><tr><td>A parallel bug ships in the sibling module</td><td>Only the reported instance was fixed; the class was never enumerated</td></tr><tr><td>Regression suite grows and nobody trusts it</td><td>Tests named after tickets; a red one carries no meaning without the tracker</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;The fix is obvious, the test can come later.&quot;</li><li>&quot;I verified it manually, the test would just repeat that.&quot;</li><li>&quot;I'll write the test after the fix so I know what to assert.&quot;</li><li>&quot;This test is basically covered by the other one.&quot;</li><li>&quot;The refactor broke this old regression test, deleting it.&quot;</li><li>Marking the incident resolved with a follow-up ticket for the test.</li><li>A test whose expected value was copied out of the fixed code's actual output.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/fr/skills/flaky-test-triage/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navigation entre les compétences"><a class="prevnext__link" href="/tbaguette-skills/fr/skills/flaky-test-triage/">
+  <span class="prevnext__label">Précédent</span>
   <span class="prevnext__name">← flaky-test-triage</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/fr/skills/characterization-testing/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Suivant</span>
   <span class="prevnext__name">characterization-testing →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Testing</h2>
+  <h2 class="see-also__title">Dans la même catégorie : Testing</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/designing-test-data/">
       <span class="see-also__name">designing-test-data</span>
-      <span class="see-also__summary">Use when a test&#x27;s setup is longer than its assertions, when fixtures are shared across files…</span>
+      <span class="see-also__summary">À utiliser quand la préparation d’un test est plus longue que ses assertions, quand des fixtures sont partagées entre fichiers…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/property-based-testing/">
       <span class="see-also__name">property-based-testing</span>
-      <span class="see-also__summary">Use when example tests only cover the cases someone thought of, when testing parsers, serializers, encoders, sorting, comparators…</span>
+      <span class="see-also__summary">À utiliser quand les tests par l’exemple ne couvrent que les cas auxquels quelqu’un a pensé, quand on teste des parseurs, des sérialiseurs…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/testing-the-untestable/">
       <span class="see-also__name">testing-the-untestable</span>
-      <span class="see-also__summary">Use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables…</span>
+      <span class="see-also__summary">À utiliser quand un test appelle l’horloge système, dort, sollicite le réseau, écrit sur le vrai système de fichiers…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/flaky-test-triage/">
       <span class="see-also__name">flaky-test-triage</span>
-      <span class="see-also__summary">Use when a test passes on rerun, fails only in CI, fails only when the whole suite runs, fails after midnight or across a DST change…</span>
+      <span class="see-also__summary">À utiliser quand un test passe à la relance, n’échoue qu’en CI, n’échoue que lorsque toute la suite tourne…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/characterization-testing/">
       <span class="see-also__name">characterization-testing</span>
-      <span class="see-also__summary">Use when changing, refactoring, extracting, porting, or deleting code that has no tests…</span>
+      <span class="see-also__summary">À utiliser quand on modifie, refactorise, extrait, porte ou supprime du code sans tests…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/choosing-test-scope/">
       <span class="see-also__name">choosing-test-scope</span>
-      <span class="see-also__summary">Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test…</span>
+      <span class="see-also__summary">À utiliser quand il faut décider si un comportement relève d’un test unitaire, d’intégration, de contrat ou de bout en bout…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> abrite TBaguette&rsquo;s Atelier — les arbitrages qui se jouent entre le ticket et le commit, rangés comme sur un établi bien tenu.</p>
+    <nav aria-label="Catégories">
+      <p class="site-footer__nav-title">Catégories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/fr/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/fr/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/fr/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/fr/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/fr/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/fr/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/fr/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/fr/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/fr/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/fr/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/fr/#ui-and-design">UI et design</a></li>
+<li><a href="/tbaguette-skills/fr/#judgment-and-meta">Jugement et méta</a></li>
+<li><a href="/tbaguette-skills/fr/#reading-code">Lecture de code</a></li>
+<li><a href="/tbaguette-skills/fr/#landing-changes">Intégration des changements</a></li>
+<li><a href="/tbaguette-skills/fr/#testing">Tests</a></li>
+<li><a href="/tbaguette-skills/fr/#debugging-and-performance">Débogage et performance</a></li>
+<li><a href="/tbaguette-skills/fr/#designing-systems">Conception de systèmes</a></li>
+<li><a href="/tbaguette-skills/fr/#security">Sécurité (défensive)</a></li>
+<li><a href="/tbaguette-skills/fr/#communicating">Communication</a></li>
+<li><a href="/tbaguette-skills/fr/#environment-and-tooling">Environnement et outillage</a></li>
       </ul>
     </nav>
   </div>

@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>tracing-data-flow — Reading code — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…">
+<meta name="description" content="À utiliser quand une valeur est fausse, manquante, nulle…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="tracing-data-flow — Reading code — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…">
+<meta property="og:description" content="À utiliser quand une valeur est fausse, manquante, nulle…">
 <link rel="canonical" href="/tbaguette-skills/fr/skills/tracing-data-flow/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/tracing-data-flow/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/tracing-data-flow/">
@@ -34,12 +34,12 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Copié !"
+      data-i18n-no-match="Aucune compétence ne correspond."
+      data-i18n-modal-title="Nouvelle version disponible"
+      data-i18n-modal-body="Cette page a été mise à jour. Rechargez-la pour voir la dernière version."
+      data-i18n-modal-reload="Recharger">
+<a class="skip-link" href="#main">Passer au contenu</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -49,11 +49,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T04:28:01+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T04:28:01Z UTC</time>
+      <span class="site-header__updated-label">Mis à jour</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T04:53:59+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T04:53:59Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Français</summary>
+  <summary class="language-switcher__summary">Langue: Français</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/tracing-data-flow/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/tracing-data-flow/" aria-current="true">Français</a></li>
@@ -74,9 +74,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Passer au thème clair"
+              data-i18n-theme-light="Passer au thème clair"
+              data-i18n-theme-dark="Passer au thème sombre">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -84,8 +84,8 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/fr/">Home</a>
+<nav class="container breadcrumb" aria-label="Fil d’Ariane">
+  <a href="/tbaguette-skills/fr/">Accueil</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <a href="/tbaguette-skills/fr/#reading-code">Reading code</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
@@ -97,8 +97,8 @@
     
   </div>
   <span class="tag skill-article__tag">Reading code</span>
-  <p class="lede">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from, who writes it, or everything it reaches; when following a request payload, identifier, config value, or flag across modules, threads, services, or serialization boundaries; or when searching for a name returns nothing useful and the path seems to vanish.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Français yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <p class="lede">À utiliser quand une valeur est fausse, manquante, nulle, vide ou retombée sans prévenir sur sa valeur par défaut et que son origine n’est pas claire ; quand on cherche d’où vient un champ, qui l’écrit, ou tout ce qu’il atteint ; quand on suit une charge utile de requête, un identifiant, une valeur de configuration ou un drapeau à travers des modules, des threads, des services ou des frontières de sérialisation ; ou quand la recherche d’un nom ne renvoie rien d’utile et que la piste semble s’évanouir.</p>
+</div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>A trace is a written artifact — a chain of file:line hops with what changed at each one. Held in memory it is re-derived every twenty minutes and is wrong by the third hop. The goal is not to understand the module; it is to enumerate every place this value is produced, altered, and read.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A value arrives wrong somewhere far from where it was set.</li><li>Assessing what a field change breaks: every writer and every reader must be named.</li><li>A name appears in two places with no visible path between them.</li><li>Auditing where sensitive or user-supplied data reaches.</li><li>Not for: diagnosing why a system misbehaves when the value is not yet identified (systematic-debugging), or module-level coupling (mapping-dependencies).</li></ul>
@@ -130,60 +130,60 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;Searching found nothing&quot;</td><td>Renamed at a boundary; never left search step 1</td></tr><tr><td>Trace looks complete, behavior still unexplained</td><td>A silent default or an in-place mutation between two hops assumed pure</td></tr><tr><td>Re-deriving the same hops repeatedly</td><td>Chain never written down</td></tr><tr><td>Read all nine implementations</td><td>One log line would have named the one that runs</td></tr><tr><td>Traced one path, another exists</td><td>Backward trace only; never ran the forward pass</td></tr><tr><td>Confident there is exactly one writer</td><td>Never searched the type or the serialized name, only the identifier</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Nothing else could possibly write to this.&quot;</li><li>&quot;The framework must set it somewhere.&quot;</li><li>&quot;I'll read one more file and it will be clear.&quot;</li><li>&quot;It's obviously null because it was never set&quot; — before checking for a default.</li><li>Reading past 15 minutes of dead ends rather than adding one log line.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/fr/skills/orienting-in-unfamiliar-code/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navigation entre les compétences"><a class="prevnext__link" href="/tbaguette-skills/fr/skills/orienting-in-unfamiliar-code/">
+  <span class="prevnext__label">Précédent</span>
   <span class="prevnext__name">← orienting-in-unfamiliar-code</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/fr/skills/code-archaeology/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Suivant</span>
   <span class="prevnext__name">code-archaeology →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Reading code</h2>
+  <h2 class="see-also__title">Dans la même catégorie : Reading code</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/orienting-in-unfamiliar-code/">
       <span class="see-also__name">orienting-in-unfamiliar-code</span>
-      <span class="see-also__summary">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project…</span>
+      <span class="see-also__summary">À utiliser quand on ouvre une base de code pour la première fois, quand on hérite d’un dépôt inconnu ou vieillissant…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/code-archaeology/">
       <span class="see-also__name">code-archaeology</span>
-      <span class="see-also__summary">Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify…</span>
+      <span class="see-also__summary">À utiliser quand du code existe sans explication et que la raison compte — un contournement bizarre, une constante magique…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/mapping-dependencies/">
       <span class="see-also__name">mapping-dependencies</span>
-      <span class="see-also__summary">Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles…</span>
+      <span class="see-also__summary">À utiliser quand on évalue ce qu’un changement va casser, quand on estime le rayon d’impact…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/finding-the-seam/">
       <span class="see-also__name">finding-the-seam</span>
-      <span class="see-also__summary">Use when deciding where in a codebase to make a change, when a fix could plausibly go in several places…</span>
+      <span class="see-also__summary">À utiliser quand il faut décider à quel endroit d’une base de code intervenir…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/reading-specifications/">
       <span class="see-also__name">reading-specifications</span>
-      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
+      <span class="see-also__summary">À utiliser quand on transforme un ticket, une issue, un rapport de bug, une RFC, une norme…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/naming-things/">
       <span class="see-also__name">naming-things</span>
-      <span class="see-also__summary">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…</span>
+      <span class="see-also__summary">À utiliser quand on choisit l’identifiant d’une variable, d’une fonction, d’un type, d’un module, d’un drapeau, d’une clé de configuration…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> abrite TBaguette&rsquo;s Atelier — les arbitrages qui se jouent entre le ticket et le commit, rangés comme sur un établi bien tenu.</p>
+    <nav aria-label="Catégories">
+      <p class="site-footer__nav-title">Catégories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/fr/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/fr/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/fr/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/fr/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/fr/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/fr/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/fr/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/fr/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/fr/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/fr/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/fr/#ui-and-design">UI et design</a></li>
+<li><a href="/tbaguette-skills/fr/#judgment-and-meta">Jugement et méta</a></li>
+<li><a href="/tbaguette-skills/fr/#reading-code">Lecture de code</a></li>
+<li><a href="/tbaguette-skills/fr/#landing-changes">Intégration des changements</a></li>
+<li><a href="/tbaguette-skills/fr/#testing">Tests</a></li>
+<li><a href="/tbaguette-skills/fr/#debugging-and-performance">Débogage et performance</a></li>
+<li><a href="/tbaguette-skills/fr/#designing-systems">Conception de systèmes</a></li>
+<li><a href="/tbaguette-skills/fr/#security">Sécurité (défensive)</a></li>
+<li><a href="/tbaguette-skills/fr/#communicating">Communication</a></li>
+<li><a href="/tbaguette-skills/fr/#environment-and-tooling">Environnement et outillage</a></li>
       </ul>
     </nav>
   </div>

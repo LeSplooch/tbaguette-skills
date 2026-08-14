@@ -245,12 +245,54 @@ def check_i18n_status() -> None:
         shutil.rmtree(tmp_root, ignore_errors=True)
 
 
+def check_real_i18n_content_key_parity() -> None:
+    print("real i18n/ content key parity")
+    project_root = Path(__file__).resolve().parent.parent
+    i18n_root = project_root / "i18n"
+    if not i18n_root.is_dir():
+        print("  (no i18n/ directory yet -- nothing to check)")
+        return
+
+    ui_keys = {f.name for f in dataclasses.fields(templates.Strings)}
+    verify_keys = {f.name for f in dataclasses.fields(templates.VerifyInstallStrings)}
+    real_skill_slugs = set(content_pipeline.list_skill_slugs(project_root / "skills"))
+    real_category_slugs = {c["slug"] for c in content_pipeline.CATEGORIES}
+
+    for locale_dir in sorted(p for p in i18n_root.iterdir() if p.is_dir()):
+        code = locale_dir.name
+
+        ui_json_path = locale_dir / "ui.json"
+        if ui_json_path.is_file():
+            data = json.loads(ui_json_path.read_text(encoding="utf-8"))
+            check(f"i18n/{code}/ui.json has exactly Strings' key set (no missing, no extra)",
+                  set(data.keys()) == ui_keys)
+
+        verify_json_path = locale_dir / "verify-install.json"
+        if verify_json_path.is_file():
+            data = json.loads(verify_json_path.read_text(encoding="utf-8"))
+            check(f"i18n/{code}/verify-install.json has exactly VerifyInstallStrings' key set",
+                  set(data.keys()) == verify_keys)
+
+        descriptions_path = locale_dir / "descriptions.json"
+        if descriptions_path.is_file():
+            data = json.loads(descriptions_path.read_text(encoding="utf-8"))
+            check(f"i18n/{code}/descriptions.json has no unknown skill slugs",
+                  set(data.keys()) <= real_skill_slugs)
+
+        categories_path = locale_dir / "categories.json"
+        if categories_path.is_file():
+            data = json.loads(categories_path.read_text(encoding="utf-8"))
+            check(f"i18n/{code}/categories.json has no unknown category slugs",
+                  set(data.keys()) <= real_category_slugs)
+
+
 def main() -> None:
     check_locale_registry()
     check_full_locale_build()
     check_locale_count_gate()
     check_rtl_css_pass()
     check_i18n_status()
+    check_real_i18n_content_key_parity()
     print(f"\n{checker.total} checks passed.")
 
 
