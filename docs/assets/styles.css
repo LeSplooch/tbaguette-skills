@@ -898,33 +898,40 @@ code {
 /* ---------------------------------------------------------------------------
    8b. "Fresh from the oven" — recently new/updated skills, above the search
 
-   Sits between the lede and the search field, directly under .install-frame,
-   which is the loudest object on the page and must stay that way. So this
-   deliberately does NOT reach for the lit-card treatment: no gold border, no
-   ambient glow, no panel. It earns its place with a gilded rule and a rail of
-   plain surface tiles — a display tray under the shopfront sign, not a second
-   shopfront sign. Rendered only when something is actually fresh (see
+   Sits between the lede and the search field, directly under .install-frame.
+   Its tiles are literally .card — the same component the grid below uses,
+   name/badge/summary/category/arrow and all — rather than a rail-only
+   design, so this rail reads as a preview of that grid and not a second,
+   differently-styled one. "fresh__tile" adds only what a card needs to sit
+   in a rail instead of the grid: sizing, and (below) the rail's own
+   positioning. Rendered only when something is actually fresh (see
    _render_fresh_section), so there is no empty state to style.
 
+   max-width here matches .install-frame's own 46rem on purpose: both sit
+   inside the full-width .container, and without a matching cap this
+   section's horizontal centre (which the coverflow below centres its tiles
+   on) would land at the container's centre — well to the right of where
+   .install-frame and .search, both narrower and left-aligned, actually sit.
+   Matching the wider of the two keeps the rail's centre close to both.
+
    That tray also, wherever motion and space are both welcome, becomes a
-   card stack rather than a flat scroller: one tile on top, full-size and
-   opaque, the rest fanned back beneath it — lower, smaller, dimmer the
-   deeper they sit — cycling the top card to the bottom of the deck on a
-   timer (site.js's initFreshCardStack — the cycling itself needs a clock,
-   which is the one thing CSS alone can't keep, so this is the rare feature
-   here with a JS half). --cs-depth (set inline by templates.py at render
-   time, then kept live by site.js) is each tile's position in the deck, 0
-   at the top; every visual property below is a plain calc() of that one
-   number, so "this tile is now on top" is just writing new depths, not
-   swapping classes. See the gated rule below for the three conditions —
-   motion, width, forced-colors — that all have to hold before it forms;
-   missing any one of them leaves the original flat rail exactly as it was,
-   not a broken stack. A visitor with no JS at all still gets the depths
-   templates.py rendered at build time — a real, if motionless, stack —
-   never the flat rail by accident.
+   coverflow rather than a flat scroller: one tile flat and full-size at
+   centre, its neighbours tilted away and shrinking on each side, stepping
+   sideways on a timer (site.js's initFreshCoverflow — the stepping itself
+   needs a clock, which is the one thing CSS alone can't keep, so this is
+   the rare feature here with a JS half). --cf-offset (set inline by
+   templates.py at render time, then kept live by site.js) is each tile's
+   signed distance from centre; every visual property below is a plain
+   calc() of that one number, so "make tile N active" is just writing new
+   offsets, not swapping classes. See the gated rule below for the three
+   conditions — motion, width, forced-colors — that all have to hold before
+   it forms; missing any one of them leaves the original flat rail exactly
+   as it was, not a broken coverflow. A visitor with no JS at all still gets
+   the offsets templates.py rendered at build time — a real, if motionless,
+   coverflow — never the flat rail by accident.
    ------------------------------------------------------------------------- */
 
-.fresh { margin-top: var(--space-7); }
+.fresh { margin-top: var(--space-7); max-width: 46rem; }
 
 .fresh__head {
   position: relative;
@@ -973,6 +980,46 @@ code {
    label, and a third gold pill next to them flattens the distinction. */
 .fresh__tag { align-self: center; }
 
+/* margin-inline-start: auto is the whole layout: it pushes the pair to the
+   far end of .fresh__head's flex row without needing its own positioning
+   context, and wraps under everything else on a narrow measure instead of
+   overlapping it. [hidden] still needs the attribute selector even though
+   the element also starts with the hidden attribute in markup — browsers
+   already do this by default, but section 15 forces display back on for
+   reduced-motion overrides elsewhere in this file, and repeating the rule
+   locally means this one never depends on cascade order with those. */
+.fresh__nav {
+  display: flex;
+  gap: var(--space-2);
+  margin-inline-start: auto;
+}
+
+.fresh__nav[hidden] { display: none; }
+
+.fresh__nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: var(--text-4);
+  line-height: 1;
+  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.fresh__nav-btn:hover,
+.fresh__nav-btn:focus-visible {
+  color: var(--text-accent);
+  border-color: var(--accent);
+  background: var(--surface-hover);
+}
+
 /* Same scroll-rail mechanics as .tabs__list: horizontal overflow with a
    mask fading the right edge, so a cut-off tile reads as "more this way"
    rather than as a broken layout. With fewer tiles than fill the width,
@@ -989,67 +1036,29 @@ code {
   mask-image: linear-gradient(to right, black calc(100% - 40px), transparent 100%);
 }
 
+/* Sizing and rail membership only — .card (section 9) already supplies the
+   look (background, padding, border, hover lift) now that the tile carries
+   that class too. 17rem matches .card-grid's own minmax() floor, so a rail
+   tile is never smaller than the smallest a grid card is ever allowed to
+   be. */
 .fresh__tile {
   scroll-snap-align: start;
-  flex: 0 0 13rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  /* One hairline of light along the top edge — the same overhead light
-     every other raised surface on this site is lit by, which is what stops
-     a row of flat rectangles reading as placeholders. */
-  box-shadow: inset 0 1px 0 rgb(245 234 217 / 7%);
-  transition: transform var(--duration-enter) var(--ease-out),
-              border-color var(--duration-enter) var(--ease-out),
-              background-color var(--duration-enter) var(--ease-out);
-}
-
-.fresh__tile:hover,
-.fresh__tile:focus-visible {
-  background: var(--surface-hover);
-  border-color: var(--accent);
-  transform: translateY(-2px);
-}
-
-.fresh__name {
-  font-family: var(--font-mono);
-  font-size: var(--text-3);
-  font-weight: 500;
-  color: var(--text-primary);
-  overflow-wrap: anywhere;
-}
-
-/* margin-top: auto pins the timestamp to the bottom, so tiles whose names
-   wrap to two lines still line their times up with the rest of the rail. */
-.fresh__when {
-  margin-top: auto;
-  font-family: var(--font-mono);
-  font-size: var(--text-1);
-  color: var(--text-secondary);
+  flex: 0 0 17rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .fresh { animation: hero-rise var(--duration-view) var(--ease-out) 120ms backwards; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .fresh__tile { transition-duration: 0.01ms; }
-  .fresh__tile:hover, .fresh__tile:focus-visible { transform: none; }
-}
-
-/* A forced palette drops the gradient rule's meaning (background-image
-   survives, but as an arbitrary stripe over system colours) and flattens the
-   tiles' resting/hover borders into one. Give the rule a real border and let
-   the tiles keep a visible edge. */
+/* No .fresh__tile-specific reduced-motion or forced-colors rules here on
+   purpose: now that every tile is a .card, section 9's own .card handling
+   (a plain solid border that forced-colors remaps fine unaided, and the
+   sitewide reduced-motion block that already lists .card) already covers
+   the rail's tiles. Only .fresh__head still needs its own forced-colors
+   rule, for the gradient rule .card never had to begin with. */
 @media (forced-colors: active) {
   .fresh__head::after { display: none; }
   .fresh__head { border-bottom: 1px solid CanvasText; }
-  .fresh__tile { border: 1px solid CanvasText; }
 }
 
 /* Wherever a visitor's browser and stated preferences allow it — motion
@@ -1063,60 +1072,82 @@ code {
   .fresh__rail {
     position: relative;
     display: block;
-    height: 12.5rem;
+    height: 15.5rem;
     perspective: 900px;
     overflow: visible;
     -webkit-mask-image: none;
     mask-image: none;
   }
 
-  /* --cs-depth (set inline by templates.py, kept live by site.js) is the
-     only per-instance number here — everything else is a calc() of it: a
-     card one step deeper sits a little lower, a little further back, a
-     little smaller, and a little dimmer than the one above it, the same
-     four cues a real dropped stack of cards gives for free.
+  /* --cf-offset (set inline by templates.py, kept live by site.js) is the
+     only per-instance number here — everything else is a calc() of it.
+     --cf-abs is the max()-of-itself-and-its-negation trick for absolute
+     value: scale/opacity/stacking care how *far* a tile is from centre,
+     rotation and position care which *side* it's on, so the signed and
+     unsigned forms are each used where they mean something. The per-step
+     magnitudes (140px, 34deg) are deliberately steep — a flat, prominent
+     centre card with neighbours that fall away fast reads as a coverflow;
+     gentler steps just look like a slightly skewed row.
 
-     --cs-transform exists as its own custom property, not inlined straight
+     Selectors here are the type-qualified `a.fresh__tile`, not the bare
+     class, on purpose: since a tile is also a .card, and section 9's
+     .card / .card:hover rules sit later in this file, a same-specificity
+     bare `.fresh__tile` would lose the cascade to them — the coverflow's
+     own transform and transition would be silently overridden by .card's.
+     `a.fresh__tile` outranks `.card` regardless of source order, so this
+     doesn't depend on staying below section 9 in the file.
+
+     --cf-transform exists as its own custom property, not inlined straight
      into `transform`, purely so the :hover/:focus-visible rule below can
      restate the identical value: a plain hover rule setting `transform`
      directly would replace this positioning outright rather than add to
-     it — the trap the ring version's animations sat in two reworks ago,
-     and the reason the coverflow version before this one already carried
-     the same pattern. */
-  .fresh__tile {
+     it — the trap the ring version's animations sat in, two reworks ago.
+
+     width: 17rem is explicit and load-bearing, not tidiness: the base rule
+     sizes .fresh__tile via `flex: 0 0 17rem`, which only means anything
+     while .fresh__rail is still a flex container. The instant this block's
+     `.fresh__rail { display: block }` takes over, flex-basis stops doing
+     anything, and an absolutely positioned box with no explicit width
+     shrink-to-fits — which, for a flex-column card whose summary text has
+     no natural wrap point to fall back to, measured out to the entire
+     remaining width of the rail rather than anything card-shaped. */
+  a.fresh__tile {
     position: absolute;
     left: 50%;
     top: 50%;
-    margin: -4.75rem 0 0 -6.5rem;
-    height: 9.5rem;
+    width: 17rem;
+    margin: -6.75rem 0 0 -8.5rem;
+    height: 13.5rem;
     overflow: hidden;
     flex: none;
     scroll-snap-align: none;
-    --cs-transform:
-      translateY(calc(var(--cs-depth) * 11px))
-      translateZ(calc(var(--cs-depth) * -26px))
-      scale(clamp(0.5, calc(1 - var(--cs-depth) * 0.07), 1));
-    transform: var(--cs-transform);
-    opacity: clamp(0, calc(1 - var(--cs-depth) * 0.24), 1);
-    z-index: max(1, calc(30 - var(--cs-depth)));
-    transition: transform 0.7s var(--ease-out), opacity 0.7s var(--ease-out);
+    --cf-abs: max(var(--cf-offset), calc(var(--cf-offset) * -1));
+    --cf-transform:
+      translateX(clamp(-280px, calc(var(--cf-offset) * 140px), 280px))
+      rotateY(clamp(-38deg, calc(var(--cf-offset) * -34deg), 38deg))
+      scale(clamp(0.55, calc(1 - var(--cf-abs) * 0.19), 1));
+    transform: var(--cf-transform);
+    opacity: clamp(0, calc(1 - var(--cf-abs) * 0.32), 1);
+    z-index: max(1, calc(20 - var(--cf-abs)));
+    transition: transform 0.7s var(--ease-out), opacity 0.7s var(--ease-out),
+                border-color var(--duration-enter) var(--ease-out),
+                background-color var(--duration-enter) var(--ease-out),
+                box-shadow var(--duration-enter) var(--ease-out);
   }
 
-  .fresh__tile:hover,
-  .fresh__tile:focus-visible {
-    background: var(--surface-hover);
-    border-color: var(--accent);
-    transform: var(--cs-transform);
+  a.fresh__tile:hover,
+  a.fresh__tile:focus-visible {
+    transform: var(--cf-transform);
   }
 
   /* WCAG 2.2.2: anything that moves on its own for more than five seconds
      needs a way to stop it, and the tile a keyboard visitor lands on must
-     be legible rather than faded into the deck. Both live in site.js's
-     initFreshCardStack (pause on hover/focus-within; focus also pulls the
-     focused tile to the top, --cs-depth: 0) rather than here, because both
-     are about *when the step timer runs and what it writes*, which CSS has
-     no view into — this block only ever renders whatever depths it is
-     handed, by design. */
+     be legible rather than tilted and dimmed at the edge of the fan. Both
+     live in site.js's initFreshCoverflow (pause on hover/focus-within;
+     focus also recentres the focused tile to --cf-offset: 0) rather than
+     here, because both are about *when the step timer runs and what it
+     writes*, which CSS has no view into — this block only ever renders
+     whatever offsets it is handed, by design. */
 }
 
 /* ---------------------------------------------------------------------------

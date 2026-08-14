@@ -382,41 +382,53 @@ def _render_change_badge(status: str | None, at: str | None = None) -> str:
     return f'<span class="change-badge change-badge--{status}"{stamp}>{label}</span>'
 
 
-def _render_relative_time(at: str | None) -> str:
-    """A machine-readable instant with a readable absolute fallback baked in.
-    site.js rewrites the text to "2 hours ago" where Intl.RelativeTimeFormat
-    exists; without JS the visitor still gets a real date rather than a gap."""
-    if not at:
-        return ""
-    fallback = at[:10]
-    return (
-        f'<time class="fresh__when" datetime="{escape_html(at)}" data-format-relative>'
-        f"{escape_html(fallback)}</time>"
-    )
+def _fresh_signed_offset(index: int, count: int) -> int:
+    """A tile's position relative to the rail's centre, wrapping the short
+    way around rather than counting strictly left-to-right.
+
+    Split evenly around zero — roughly the first half of `shown` lands at
+    0, 1, 2, ... to the right, the second half at -1, -2, ... to the left —
+    so the initial paint (before any JS ever runs, and forever for visitors
+    without it) already reads as a centred fan rather than everything queued
+    up on one side. site.js's coverflow step recomputes this exact formula
+    at runtime as the active tile advances; keeping the two in sync is why
+    it is a plain, restatable rule rather than something baked only here."""
+    if count <= 1:
+        return 0
+    half = count // 2
+    return index if index <= half else index - count
 
 
-def _render_fresh_tile(skill: dict, base_path: str = "", index: int = 0) -> str:
-    """One rail tile. The New/Updated mark is the same .change-badge component
-    the cards below use rather than a rail-specific variant — one badge on the
-    site, filled for new and outlined for updated, so the distinction survives
-    without relying on colour.
+def _render_fresh_tile(skill: dict, base_path: str = "", index: int = 0, count: int = 1) -> str:
+    """One rail tile — the same card content as the grid below
+    (_render_skill_card): name + badge, summary, category tag and arrow.
+    It carries the "card" class alongside "fresh__tile" deliberately, so it
+    inherits that look for free (background, padding, hover lift, the
+    New/Updated badge treatment) instead of duplicating it; "fresh__tile" is
+    only what adds the rail's own positioning on top.
 
-    data-fresh-at sits on the tile itself, so site.js removing a stale element
-    takes the whole tile rather than leaving a headless entry behind.
+    data-fresh-at sits on the tile itself, so site.js removing a stale
+    element takes the whole tile rather than leaving a headless entry
+    behind.
 
-    --cs-depth is this tile's position in the deck — 0 is the top card, and
-    the newest skill starts there, since render order already is the order a
-    fresh burst arrived in. It is inert everywhere that doesn't reference it
-    via var(), so this markup renders identically whether or not the
-    card-stack rule in styles.css ends up applying — a reduced-motion,
-    narrow, or forced-colors visitor gets the same tile, just laid out by
-    the flat rail instead."""
+    --cf-offset is inert everywhere that doesn't reference it via var(), so
+    this markup renders identically whether or not the coverflow rule in
+    styles.css ends up applying — a reduced-motion, narrow, or forced-colors
+    visitor gets the same tile, just laid out by the flat rail instead."""
     at = skill.get("change_at")
     stamp = f' data-fresh-at="{escape_html(at)}"' if at else ""
-    return f"""<a class="fresh__tile" href="{_skill_href(skill, base_path)}"{stamp} style="--cs-depth: {index}">
-  {_render_change_badge(skill.get('change_status'))}
-  <span class="fresh__name">{escape_html(skill['name'])}</span>
-  {_render_relative_time(at)}
+    badge = _render_change_badge(skill.get("change_status"))
+    offset = _fresh_signed_offset(index, count)
+    return f"""<a class="card fresh__tile" href="{_skill_href(skill, base_path)}"{stamp} style="--cf-offset: {offset}">
+  <span class="card__name-row">
+    <span class="card__name">{escape_html(skill['name'])}</span>
+    {badge}
+  </span>
+  <p class="card__summary">{escape_html(skill.get('summary', ''))}</p>
+  <span class="card__foot">
+    <span class="tag">{escape_html(skill.get('category_title', ''))}</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
 </a>"""
 
 
@@ -426,6 +438,9 @@ def _render_fresh_section(fresh_skills: list[dict], base_path: str = "") -> str:
     Renders nothing at all when nothing is fresh. An empty state here would be
     a section whose entire job is to say it has no job — worse than the space
     it would occupy, and the categories below already answer "what is there".
+    Its tiles are the same cards the grid below renders (see
+    _render_fresh_tile) — this rail is a preview of that grid, not a second,
+    differently-designed one.
 
     Capped at FRESH_RAIL_LIMIT because a burst of activity (or, on a young
     repository, its whole history) can put every skill inside the window at
@@ -433,26 +448,38 @@ def _render_fresh_section(fresh_skills: list[dict], base_path: str = "") -> str:
     The cap only bounds this rail: the badges themselves are exhaustive, so
     anything trimmed here is still marked in the grid below.
 
-    Each tile carries its own --cs-depth (see _render_fresh_tile) — a plain
-    custom property, not scoped to any media query itself, so a no-stack
+    Each tile carries its own --cf-offset (see _render_fresh_tile) — a plain
+    custom property, not scoped to any media query itself, so a no-coverflow
     visitor (reduced motion, a narrow viewport, forced-colors, or no JS at
     all) gets exactly the flat scrolling rail this section has always
-    rendered. The card stack only forms where styles.css's gated rule opts
-    in and reads it."""
+    rendered. The coverflow only forms where styles.css's gated rule opts in
+    and reads it."""
     if not fresh_skills:
         return ""
     shown = fresh_skills[:FRESH_RAIL_LIMIT]
+    count = len(shown)
     tiles = _join(*(
-        _render_fresh_tile(skill, base_path, index=i)
+        _render_fresh_tile(skill, base_path, index=i, count=count)
         for i, skill in enumerate(shown)
     ))
+    # hidden by default: only initFreshCoverflow() ever un-hides this, and
+    # only once it has confirmed the exact same three conditions styles.css
+    # gates the coverflow behind. A no-JS visitor, or one who fails any of
+    # those conditions, never sees a control for a carousel that isn't
+    # turning — one tile can't be stepped through at all, so it's skipped
+    # even then.
+    nav = f"""<div class="fresh__nav" data-fresh-nav hidden>
+    <button type="button" class="fresh__nav-btn" data-fresh-prev aria-label="Show previous skill">&lsaquo;</button>
+    <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
+  </div>""" if count > 1 else ""
     return f"""<section class="fresh" aria-labelledby="fresh-title" data-fresh-section>
   <div class="fresh__head">
     {_icon("icon-grain", css_class="icon fresh__icon", base_path=base_path)}
     <h2 class="fresh__title" id="fresh-title">Fresh from the oven</h2>
     <span class="tag fresh__tag">Last 48 hours</span>
+    {nav}
   </div>
-  <div class="fresh__rail" data-fresh-stack>
+  <div class="fresh__rail" data-fresh-coverflow>
 {tiles}
   </div>
 </section>"""
