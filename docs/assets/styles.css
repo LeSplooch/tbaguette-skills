@@ -1132,6 +1132,16 @@ code {
   color: var(--text-secondary);
 }
 
+.translation-banner {
+  margin-top: var(--space-6);
+  max-width: var(--measure-prose);
+  padding: var(--space-4) var(--space-5);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: var(--text-2);
+}
+
 .prose {
   margin-top: var(--space-8);
   max-width: var(--measure-prose);

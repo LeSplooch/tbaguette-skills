@@ -406,6 +406,42 @@ def check_i18n_verify_install_page() -> None:
           '<a href="/fr/">' in html_fr)
 
 
+def check_i18n_fallback_banner() -> None:
+    import locales
+
+    fr = locales.get_locale("fr")
+    untranslated_skill = {**FIXTURE["skills"]["designing-test-data"], "translated": False}
+    translated_skill = {**FIXTURE["skills"]["designing-test-data"], "translated": True}
+
+    html_untranslated = render_skill_page(
+        untranslated_skill, prev_skill=None, next_skill=None, siblings=[],
+        categories=FIXTURE["categories"], base_path="", locale=fr,
+    )
+    check("an untranslated skill's page shows the fallback banner",
+          'class="translation-banner"' in html_untranslated)
+    check("an untranslated skill's body is marked lang='en' so a screen reader "
+          "doesn't mispronounce English text as French",
+          'class="prose" lang="en"' in html_untranslated)
+
+    html_translated = render_skill_page(
+        translated_skill, prev_skill=None, next_skill=None, siblings=[],
+        categories=FIXTURE["categories"], base_path="", locale=fr,
+    )
+    check("a translated skill's page shows no fallback banner",
+          'class="translation-banner"' not in html_translated)
+    check("a translated skill's body carries no lang override",
+          'class="prose" lang="en"' not in html_translated)
+
+    html_en = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path="")
+    html_default_skill_page = render_skill_page(
+        FIXTURE["skills"]["designing-test-data"], prev_skill=None, next_skill=None, siblings=[],
+        categories=FIXTURE["categories"], base_path="",
+    )
+    check("the fixture's own English skills (translated key absent, defaults True) "
+          "never show a banner on the default-locale build",
+          'class="translation-banner"' not in html_default_skill_page)
+
+
 def main() -> None:
     categories = FIXTURE["categories"]
     skills = FIXTURE["skills"]
@@ -560,6 +596,7 @@ def main() -> None:
     check_i18n_document_shell()
     check_i18n_content_links_and_strings()
     check_i18n_verify_install_page()
+    check_i18n_fallback_banner()
 
     print(f"\n{checker.total} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")

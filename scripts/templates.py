@@ -886,11 +886,19 @@ def _render_skill_head(skill: dict, strings: Strings = ENGLISH_STRINGS) -> str:
 </div>"""
 
 
-def _render_prose(body_html: str) -> str:
+def _render_prose(body_html: str, *, lang: str | None = None) -> str:
     # body_html is pre-rendered, already-escaped HTML from the content
-    # pipeline (h2/h3 with ids, p, ul/ol, table, strong, code, a) — injected
-    # verbatim per contract. Do not run it through escape_html.
-    return f'<div class="prose">{body_html}</div>'
+    # pipeline — injected verbatim per contract, same as elsewhere in this
+    # module. lang, when given, overrides the ambient page language for
+    # this one block (used when the body is an untranslated English
+    # fallback on a non-English page — see _render_translation_fallback_banner).
+    lang_attr = f' lang="{escape_html(lang)}"' if lang else ""
+    return f'<div class="prose"{lang_attr}>{body_html}</div>'
+
+
+def _render_translation_fallback_banner(locale: "locales.Locale", strings: Strings) -> str:
+    message = strings.translation_fallback_banner_template.format(language=locale.endonym)
+    return f'<p class="translation-banner" role="note">{escape_html(message)}</p>'
 
 
 def _render_tab_group(*, heading: str, items: list[dict]) -> str:
@@ -1013,10 +1021,14 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
     """Full HTML document string for one skill's page (siblings = other skills
     in the same category, for a 'see also' list; categories = full category
     list, for nav)."""
+    is_translated = skill.get("translated", True)
+    banner = "" if is_translated else _render_translation_fallback_banner(locale, strings)
+    body_lang = None if is_translated else "en"
     article = (
         '<article class="container skill-article">'
         + _render_skill_head(skill, strings)
-        + _render_prose(skill.get("body_html", ""))
+        + banner
+        + _render_prose(skill.get("body_html", ""), lang=body_lang)
         + _render_formidable_extras(skill, strings)
         + "</article>"
     )
