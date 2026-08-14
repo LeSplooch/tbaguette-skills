@@ -625,7 +625,7 @@ code {
    it look like it belongs to the rest of the header.
 
    Positioned entirely with logical properties (inset-inline-end,
-   padding-inline, text-align: start) rather than left/right, so /ar/
+   inset-block-start, text-align: start) rather than left/right, so /ar/
    mirrors for free: the panel's trailing edge pins to the summary's
    trailing edge, which is the right edge in LTR and the left edge in RTL,
    and the panel grows inward from the header edge in both. No
