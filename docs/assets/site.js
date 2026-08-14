@@ -13,6 +13,9 @@
  *                      48h window against the visitor's own clock)
  *   - fresh coverflow (landing page only — steps which rail tile is centred
  *                       on a timer; pauses on hover/focus/manual prev-next)
+ *   - language switcher dismissal (every page — Escape / outside click on
+ *                                   the native <details>; opening and
+ *                                   closing it needs no JS)
  *   - site update check (every page — polls docs/version.txt every 10-12s;
  *                         on a mismatch, shows a reload-only modal)
  *   - post-reload scroll restore (every page — companion to the update
@@ -32,6 +35,12 @@
 
   function toArray(nodeList) {
     return Array.prototype.slice.call(nodeList);
+  }
+
+  function formatTemplate(template, values) {
+    return template.replace(/\{(\w+)\}/g, function (match, key) {
+      return Object.prototype.hasOwnProperty.call(values, key) ? String(values[key]) : match;
+    });
   }
 
   // Best-effort OS sniff, used only to pick a sane default platform tab in
@@ -57,6 +66,29 @@
   // available or the timestamp fails to parse — never blanked out.
   // -------------------------------------------------------------------
 
+  // The page's own language, for Intl — NOT the browser's. Passing
+  // undefined (the old behaviour) formats against whatever the visitor's
+  // browser is set to, so a reader on /ja/ got an English month name in a
+  // Japanese header. Every page sets <html lang> and all 16 values are
+  // valid BCP-47 tags, but a malformed one would make Intl throw
+  // RangeError and cost us the whole formatted timestamp, so an
+  // unparseable tag degrades to the browser default rather than to
+  // nothing. supportedLocalesOf is the cheapest way to ask "would Intl
+  // reject this tag?" without building a formatter: it throws on a
+  // structurally invalid tag, and merely returns [] for a well-formed tag
+  // the browser has no data for — which is fine, Intl falls back on its
+  // own for that case.
+  function pageLocale() {
+    var lang = document.documentElement.getAttribute('lang');
+    if (!lang) return undefined;
+    try {
+      Intl.DateTimeFormat.supportedLocalesOf([lang]);
+      return lang;
+    } catch (error) {
+      return undefined;
+    }
+  }
+
   function initUpdatedTime() {
     var els = toArray(document.querySelectorAll('[data-format-updated]'));
     if (!els.length) return;
@@ -69,13 +101,19 @@
       if (isNaN(when.getTime())) return;
 
       try {
-        var local = new Intl.DateTimeFormat(undefined, {
+        var forLocale = pageLocale();
+        var local = new Intl.DateTimeFormat(forLocale, {
           dateStyle: 'medium', timeStyle: 'short'
         }).format(when);
-        var utc = new Intl.DateTimeFormat(undefined, {
+        var utc = new Intl.DateTimeFormat(forLocale, {
           hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC'
         }).format(when);
-        el.textContent = local + ' your time · ' + utc + ' UTC';
+        // Glue text comes from the page's catalog; the English default
+        // matches ENGLISH_STRINGS.header_updated_value_template so a page
+        // rendered before that field existed still reads correctly.
+        var template = el.getAttribute('data-i18n-updated-template')
+          || '{local} your time · {utc} UTC';
+        el.textContent = formatTemplate(template, { local: local, utc: utc });
       } catch (error) {
         // Unsupported options or timeZone in this browser: leave the
         // server-rendered plain-UTC fallback text in place.
@@ -267,8 +305,10 @@
   function describeToggleTarget(theme) {
     var toggle = document.querySelector('[data-theme-toggle]');
     if (!toggle) return;
-    var targetTheme = theme === 'flour' ? 'dark' : 'light';
-    toggle.setAttribute('aria-label', 'Switch to ' + targetTheme + ' theme');
+    var label = theme === 'flour'
+      ? toggle.getAttribute('data-i18n-theme-dark')
+      : toggle.getAttribute('data-i18n-theme-light');
+    toggle.setAttribute('aria-label', label);
   }
 
   function setTheme(theme) {
@@ -332,7 +372,10 @@
         if (badge) {
           var total = parseInt(badge.getAttribute('data-category-count'), 10);
           var shown = query === '' ? total : stillVisible;
-          badge.textContent = shown + ' ' + (shown === 1 ? 'skill' : 'skills');
+          var noun = shown === 1
+            ? badge.getAttribute('data-i18n-singular')
+            : badge.getAttribute('data-i18n-plural');
+          badge.textContent = shown + ' ' + noun;
         }
       });
 
@@ -342,16 +385,22 @@
       if (emptyState) {
         emptyState.hidden = !showEmptyState;
         if (showEmptyState && emptyQuery) {
-          emptyQuery.textContent = '“' + input.value.trim() + '”';
+          var quoteOpen = document.body.getAttribute('data-i18n-quote-open') || '“';
+          var quoteClose = document.body.getAttribute('data-i18n-quote-close') || '”';
+          emptyQuery.textContent = quoteOpen + input.value.trim() + quoteClose;
         }
       }
 
       if (query === '') {
-        status.textContent = 'Showing all ' + totalCount + ' skills.';
+        status.textContent = formatTemplate(
+          status.getAttribute('data-i18n-showing-all-template'), { count: totalCount }
+        );
       } else if (visibleCount === 0) {
-        status.textContent = 'No skills match.';
+        status.textContent = document.body.getAttribute('data-i18n-no-match');
       } else {
-        status.textContent = visibleCount + ' of ' + totalCount + ' skills match.';
+        status.textContent = formatTemplate(
+          status.getAttribute('data-i18n-partial-template'), { shown: visibleCount, total: totalCount }
+        );
       }
     }
 
@@ -403,7 +452,7 @@
 
       function showCopied() {
         button.classList.add('is-copied');
-        label.textContent = 'Copied!';
+        label.textContent = document.body.getAttribute('data-i18n-copied');
         clearTimeout(resetTimer);
         resetTimer = setTimeout(function () {
           button.classList.remove('is-copied');
@@ -556,26 +605,62 @@
   function showUpdateModal() {
     if (document.querySelector('.update-modal-overlay')) return;
 
-    // The seal is the loaf mark and nothing else, so with no sprite to draw
-    // from it is dropped whole rather than left as an empty gold ring.
-    var sealIcon = iconMarkup('icon-crust');
-    var seal = sealIcon
-      ? '<span class="update-modal__seal" aria-hidden="true">' + sealIcon + '</span>'
-      : '';
+    var title = document.body.getAttribute('data-i18n-modal-title');
+    var body = document.body.getAttribute('data-i18n-modal-body');
+    var reloadLabel = document.body.getAttribute('data-i18n-modal-reload');
 
     var overlay = document.createElement('div');
     overlay.className = 'update-modal-overlay';
-    overlay.innerHTML =
-      '<div class="update-modal" role="alertdialog" aria-modal="true" ' +
-      'aria-labelledby="update-modal-title" aria-describedby="update-modal-body">' +
-      seal +
-      '<p class="update-modal__title" id="update-modal-title">New version available</p>' +
-      '<p class="update-modal__body" id="update-modal-body">This page has been updated. Reload to see the latest.</p>' +
-      '<button class="update-modal__reload" type="button">' +
-      iconMarkup('icon-rotate') +
-      '<span>Reload</span>' +
-      '</button>' +
-      '</div>';
+
+    var modal = document.createElement('div');
+    modal.className = 'update-modal';
+    modal.setAttribute('role', 'alertdialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'update-modal-title');
+    modal.setAttribute('aria-describedby', 'update-modal-body');
+
+    // The seal is the loaf mark and nothing else, so with no sprite to draw
+    // from it is dropped whole rather than left as an empty gold ring. Its
+    // markup comes from this file's own hardcoded icon sprite reference,
+    // not from any localized or otherwise untrusted string, so building it
+    // via innerHTML here (unlike the translated text below) carries no
+    // injection risk.
+    var sealMarkup = iconMarkup('icon-crust');
+    if (sealMarkup) {
+      var seal = document.createElement('span');
+      seal.className = 'update-modal__seal';
+      seal.setAttribute('aria-hidden', 'true');
+      seal.innerHTML = sealMarkup;
+      modal.appendChild(seal);
+    }
+
+    var titleEl = document.createElement('p');
+    titleEl.className = 'update-modal__title';
+    titleEl.id = 'update-modal-title';
+    titleEl.textContent = title;
+
+    var bodyEl = document.createElement('p');
+    bodyEl.className = 'update-modal__body';
+    bodyEl.id = 'update-modal-body';
+    bodyEl.textContent = body;
+
+    var reloadButton = document.createElement('button');
+    reloadButton.className = 'update-modal__reload';
+    reloadButton.type = 'button';
+    var reloadIconMarkup = iconMarkup('icon-rotate');
+    if (reloadIconMarkup) {
+      var reloadIconWrap = document.createElement('span');
+      reloadIconWrap.innerHTML = reloadIconMarkup;
+      reloadButton.appendChild(reloadIconWrap.firstChild);
+    }
+    var reloadLabelEl = document.createElement('span');
+    reloadLabelEl.textContent = reloadLabel;
+    reloadButton.appendChild(reloadLabelEl);
+
+    modal.appendChild(titleEl);
+    modal.appendChild(bodyEl);
+    modal.appendChild(reloadButton);
+    overlay.appendChild(modal);
 
     // Genuinely modal, not just visually on top: everything already in
     // <body> (skip link, header, main, footer) becomes untabbable and
@@ -586,7 +671,6 @@
     });
     document.body.appendChild(overlay);
 
-    var reloadButton = overlay.querySelector('.update-modal__reload');
     reloadButton.addEventListener('click', function () {
       // A reload is not instant on a cold or slow connection, and the button
       // is the only thing on screen that can acknowledge the click. Guard on
@@ -650,6 +734,36 @@
     scheduleNext();
   }
 
+  // -------------------------------------------------------------------
+  // Language switcher — the panel is a native <details>, so it opens,
+  // closes, and is keyboard-reachable with no JS at all, and the CSS
+  // takes it out of flow so it overlays rather than pushing the header.
+  // The one behaviour a bare <details> lacks is dismissal: it stays open
+  // until its own summary is clicked again, which for a popover anchored
+  // in site chrome reads as stuck. This adds only that.
+  // -------------------------------------------------------------------
+
+  function initLanguageSwitcher() {
+    var details = document.querySelector('.language-switcher');
+    if (!details) return;
+
+    document.addEventListener('click', function (event) {
+      // contains() covers the summary itself, so clicking it still
+      // toggles normally instead of being closed out from under the
+      // browser's own default handling.
+      if (details.open && !details.contains(event.target)) details.open = false;
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape' || !details.open) return;
+      details.open = false;
+      // Escape moved focus nowhere on its own; without this it would be
+      // left on a link inside a panel that no longer exists.
+      var summary = details.querySelector('summary');
+      if (summary) summary.focus();
+    });
+  }
+
   function initScrollRestore() {
     var saved;
     try {
@@ -676,6 +790,7 @@
   initInstallCopy();
   initTabs();
   initUpdatedTime();
+  initLanguageSwitcher();
   initScrollRestore();
   initVersionCheck();
 })();

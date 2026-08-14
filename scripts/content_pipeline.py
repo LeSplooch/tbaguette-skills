@@ -177,21 +177,48 @@ SUMMARY_MAX_LENGTH = 140
 ACRONYM_WORDS = {"cli": "CLI", "hud": "HUD", "tui": "TUI", "xr": "XR", "pdf": "PDF"}
 
 
+def _load_json_map(path: Path) -> dict[str, str]:
+    """Load a flat {key: translated string} JSON file, or {} if it doesn't
+    exist -- a locale is allowed to not yet have this file (phase-1
+    sequencing: chrome/descriptions land before every skill body)."""
+    if not path.is_file():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 
 
-def build_content(skills_root: str) -> dict:
+def build_content(
+    skills_root: str, *, locale: str | None = None, locale_root: str | None = None
+) -> dict:
     """Parse every skill under skills_root and assemble the content.json dict.
+
+    With locale=None (the default), behaves exactly as before -- this is
+    the contract every existing caller and test relies on. Passing locale
+    additionally requires locale_root (that language's own leaf directory,
+    e.g. "i18n/fr", the same way skills_root is already the leaf "skills/"
+    directory): every skill file is then looked up under locale_root first,
+    falling back to skills_root file-by-file when the translated file
+    doesn't exist yet -- see build_plain_skill_entry / build_formidable_skill_entry.
 
     Raises ValueError if a skill directory isn't covered by CATEGORIES, or if
     a category lists a skill_slug that doesn't exist on disk -- both would
     mean the locked category grouping in this module has drifted from the
     actual skills library, which should stop the build rather than silently
-    ship a partial site.
+    ship a partial site. Also raises ValueError if locale is given without
+    locale_root, or vice versa -- both must be provided together.
     """
+    if (locale is None) != (locale_root is None):
+        raise ValueError("locale and locale_root must both be given, or neither")
+
     root = Path(skills_root)
+    locale_path = Path(locale_root) if locale_root else None
+    translated_descriptions = _load_json_map(locale_path / "descriptions.json") if locale_path else {}
+    translated_categories = _load_json_map(locale_path / "categories.json") if locale_path else {}
+
     category_by_skill_slug = {
         skill_slug: category
         for category in CATEGORIES
@@ -209,10 +236,19 @@ def build_content(skills_root: str) -> dict:
                 f"listed in any CATEGORIES entry in content_pipeline.py"
             )
         skill_dir = root / slug
+        locale_skill_dir = (locale_path / "skills" / slug) if locale_path else None
+        fallback_description = translated_descriptions.get(slug)
+        category_title = translated_categories.get(category["slug"], category["title"])
         if slug == FORMIDABLE_SLUG:
-            skills[slug] = build_formidable_skill_entry(skill_dir, category)
+            skills[slug] = build_formidable_skill_entry(
+                skill_dir, category, category_title=category_title,
+                locale_skill_dir=locale_skill_dir, fallback_description=fallback_description,
+            )
         else:
-            skills[slug] = build_plain_skill_entry(skill_dir, category)
+            skills[slug] = build_plain_skill_entry(
+                skill_dir, category, category_title=category_title,
+                locale_skill_dir=locale_skill_dir, fallback_description=fallback_description,
+            )
 
     for category in CATEGORIES:
         for slug in category["skill_slugs"]:
@@ -226,7 +262,7 @@ def build_content(skills_root: str) -> dict:
     categories_output = [
         {
             "slug": category["slug"],
-            "title": category["title"],
+            "title": translated_categories.get(category["slug"], category["title"]),
             "skill_slugs": list(category["skill_slugs"]),
         }
         for category in CATEGORIES
@@ -249,39 +285,109 @@ def list_skill_slugs(skills_root: Path) -> list[str]:
 # ---------------------------------------------------------------------------
 
 
-def build_plain_skill_entry(skill_dir: Path, category: dict) -> dict:
-    """Build the schema entry for one of the 63 ordinary (non-formidable) skills."""
-    frontmatter, body = split_frontmatter(read_text(skill_dir / SKILL_FILE_NAME))
-    description = frontmatter["description"]
+def build_plain_skill_entry(
+    skill_dir: Path, category: dict, *,
+    category_title: str | None = None,
+    locale_skill_dir: Path | None = None, fallback_description: str | None = None,
+) -> dict:
+    """Build the schema entry for one of the 63 ordinary (non-formidable) skills.
+
+    locale_skill_dir, when given, is checked for a translated SKILL.md
+    first; missing it falls back to skill_dir (English) and marks the
+    entry translated=False. locale_skill_dir=None (the default, no-locale
+    build) always uses skill_dir and is translated=True -- English is
+    trivially "in its own language," which is what lets templates.py
+    (Task 6) key the fallback banner off this one flag regardless of
+    whether a locale build is happening at all.
+
+    category_title, when given, is the (possibly translated) title to use
+    for this skill's own category_title field -- build_content passes in
+    categories.json's translation here so it reaches every place this
+    field is read (card tag, breadcrumb, see-also heading, <title>), not
+    just the top-level categories list. Falls back to category["title"]
+    (the raw English title) when not given, so any call site that doesn't
+    pass it behaves identically to before this parameter existed.
+    """
+    if locale_skill_dir is None:
+        translated = True
+        source_dir = skill_dir
+    else:
+        translated = (locale_skill_dir / SKILL_FILE_NAME).is_file()
+        source_dir = locale_skill_dir if translated else skill_dir
+
+    frontmatter, body = split_frontmatter(read_text(source_dir / SKILL_FILE_NAME))
+    description = frontmatter["description"] if translated else (fallback_description or frontmatter["description"])
     body_html = render_markdown_body(strip_title_heading(body))
     return {
         "slug": skill_dir.name,
         "name": frontmatter["name"],
         "category_slug": category["slug"],
-        "category_title": category["title"],
+        "category_title": category_title if category_title is not None else category["title"],
         "description": description,
         "summary": summarize_description(description),
         "body_html": body_html,
         "is_formidable": False,
+        "translated": translated,
     }
 
 
-def build_formidable_skill_entry(skill_dir: Path, category: dict) -> dict:
+def build_formidable_skill_entry(
+    skill_dir: Path, category: dict, *,
+    category_title: str | None = None,
+    locale_skill_dir: Path | None = None, fallback_description: str | None = None,
+) -> dict:
     """Build the schema entry for formidable, including its inlined sub-pages.
 
-    formidable is the one multi-file skill: besides its own SKILL.md, its
-    reference/*.md files (commands) and reference/stacks/*.md files (stacks)
-    get rendered as separate {id, title, html} fragments so the site can
-    inline all of them as anchored sections on formidable's single page,
-    rather than spawning 24 more URLs.
+    Per-file fallback extends to every reference/*.md and
+    reference/stacks/*.md file independently, matched by filename (a
+    translated file keeps the exact same name as its English source, per
+    the repo layout convention) -- so one stack file can be translated
+    while another still shows English. The entry's own translated flag is
+    True only when every file (the main SKILL.md plus every reference and
+    stacks file) came from locale_skill_dir; any single missing file makes
+    the whole page read as untranslated for the fallback banner (Task 6) --
+    a coarser signal than per-file, deliberately, since the banner is a
+    single page-level notice, not a per-tab one.
+
+    category_title behaves exactly as documented on build_plain_skill_entry
+    -- the (possibly translated) title threaded into this entry's own
+    category_title field, falling back to category["title"] when omitted.
     """
-    frontmatter, body = split_frontmatter(read_text(skill_dir / SKILL_FILE_NAME))
-    description = frontmatter["description"]
+    if locale_skill_dir is None:
+        main_translated = True
+        main_source_dir = skill_dir
+    else:
+        main_translated = (locale_skill_dir / SKILL_FILE_NAME).is_file()
+        main_source_dir = locale_skill_dir if main_translated else skill_dir
+
+    frontmatter, body = split_frontmatter(read_text(main_source_dir / SKILL_FILE_NAME))
+    description = frontmatter["description"] if main_translated else (fallback_description or frontmatter["description"])
 
     reference_dir = skill_dir / "reference"
     stacks_dir = reference_dir / "stacks"
     stack_paths = sorted(stacks_dir.glob("*.md"))
     reference_paths = sorted(p for p in reference_dir.glob("*.md") if p.is_file())
+
+    locale_reference_dir = (locale_skill_dir / "reference") if locale_skill_dir else None
+    locale_stacks_dir = (locale_reference_dir / "stacks") if locale_reference_dir else None
+
+    def resolve(english_path: Path, locale_dir: Path | None) -> tuple[Path, bool]:
+        if locale_dir is None:
+            return english_path, True
+        candidate = locale_dir / english_path.name
+        return (candidate, True) if candidate.is_file() else (english_path, False)
+
+    all_translated = main_translated
+    resolved_stack_paths: list[Path] = []
+    for path in stack_paths:
+        resolved, ok = resolve(path, locale_stacks_dir)
+        resolved_stack_paths.append(resolved)
+        all_translated = all_translated and ok
+    resolved_reference_paths: list[Path] = []
+    for path in reference_paths:
+        resolved, ok = resolve(path, locale_reference_dir)
+        resolved_reference_paths.append(resolved)
+        all_translated = all_translated and ok
 
     anchor_id_by_filename_stem = {path.stem: f"stack-{path.stem}" for path in stack_paths}
     anchor_id_by_filename_stem.update({path.stem: f"cmd-{path.stem}" for path in reference_paths})
@@ -293,35 +399,33 @@ def build_formidable_skill_entry(skill_dir: Path, category: dict) -> dict:
 
     formidable_stacks = [
         render_formidable_subdocument(path, "stack", resolve_relative_link)
-        for path in stack_paths
+        for path in resolved_stack_paths
     ]
     formidable_commands = [
         render_formidable_subdocument(path, "cmd", resolve_relative_link)
-        for path in reference_paths
-        if path.stem != "craft-floor"  # internal build guidance, not a user command
+        for path in resolved_reference_paths
+        if path.stem != "craft-floor"
     ]
 
     entry = {
         "slug": skill_dir.name,
         "name": frontmatter["name"],
         "category_slug": category["slug"],
-        "category_title": category["title"],
+        "category_title": category_title if category_title is not None else category["title"],
         "description": description,
         "summary": summarize_description(description),
         "body_html": body_html,
         "is_formidable": True,
         "formidable_stacks": formidable_stacks,
         "formidable_commands": formidable_commands,
+        "translated": all_translated,
     }
 
     craft_floor_path = reference_dir / "craft-floor.md"
     if craft_floor_path.is_file():
-        # Optional per the schema ("only add it if trivial") -- it is, since
-        # it's the same render path as every other reference file, just left
-        # out of formidable_commands because it's build guidance, not a
-        # command a site visitor would look up.
+        resolved_craft_floor, _ = resolve(craft_floor_path, locale_reference_dir)
         craft_floor_doc = render_formidable_subdocument(
-            craft_floor_path, "cmd", resolve_relative_link
+            resolved_craft_floor, "cmd", resolve_relative_link
         )
         entry["formidable_craft_floor_html"] = craft_floor_doc["html"]
 
@@ -439,7 +543,58 @@ def read_text(path: Path) -> str:
 # Summary (card teaser) trimming
 # ---------------------------------------------------------------------------
 
-_SENTENCE_START_RE = re.compile(r"^.*?[.!?](?=\s|$)")
+# Sentence-final punctuation. ASCII .!? are ambiguous on their own (an
+# abbreviation, a decimal, an initial) so they only count as a boundary when
+# followed by whitespace or end-of-string -- the existing, unchanged
+# behavior. CJK full-width sentence enders (。ideographic full stop, ！
+# fullwidth exclamation, ？fullwidth question mark) carry no such ambiguity:
+# Chinese and Japanese prose has no spaces between words at all, so the mark
+# itself is always the boundary, with or without anything after it. Confirmed
+# against the real corpus in i18n/zh/descriptions.json, which uses 。
+# exclusively for this role (no ！or ？ appear there, but both are included
+# on the same principle, and this generalizes to Japanese, which shares the
+# same punctuation).
+#
+# ؟ (U+061F arabic question mark) joins them on that same principle. Arabic's
+# sentence-*final* mark is the plain ASCII "." -- confirmed, not assumed: all
+# 66 entries in i18n/ar/descriptions.json end in one, none contain ؟, and
+# i18n/ar/ui.json's sentence_end is "." -- so ؟ is unattested in the corpus
+# this trims today, exactly as ！and ？ were when they were added for Chinese.
+# It is included for the same reason they were: ؟ does appear in real Arabic
+# prose elsewhere in this project (i18n/ar/verify-install.json), and like the
+# full-width marks it carries no abbreviation/decimal ambiguity, so it needs
+# no trailing-whitespace lookahead.
+_SENTENCE_START_RE = re.compile(r"^.*?(?:[.!?](?=\s|$)|[。！？؟])")
+
+# Clause/enumeration-boundary punctuation used as a fallback cut point when
+# the first sentence itself doesn't fit the budget. ASCII "," is the
+# original English-oriented set. The three CJK marks were confirmed against
+# every real "needs a clause cut" entry in i18n/zh/descriptions.json:
+# 、(ideographic/enumeration comma) and ，(fullwidth comma) are the
+# in-clause pause marks, and ；(fullwidth semicolon) is frequently the *only*
+# separator between the "when A; when B; ..." clauses that make up this
+# corpus's descriptions -- e.g. atomic-commits' first sentence has no 、or，
+# at all before the budget, only ；. Dropping any one of these three
+# regresses real entries back to the same bug class this fixes: falling
+# through to the ASCII-space fallback below and cutting on the incidental
+# space inside a Latin loanword (e.g. "diff") instead of a real boundary.
+#
+# ، (U+060C arabic comma) and ؛ (U+061B arabic semicolon) are the same story
+# in a third script. Arabic uses its own Unicode-distinct, visually mirrored
+# marks for clause punctuation and does not use the ASCII ones at all: across
+# the 66 real entries in i18n/ar/descriptions.json, ASCII "," appears 0 times
+# (against 66/66 for French, 66/66 for Russian, 66/66 for Hindi) while ،
+# appears in 64 and ؛ in 12. Every Arabic teaser therefore missed the
+# clause-cut branch entirely and fell through to the word-boundary fallback,
+# stopping mid-thought on a dangling connective ("... أو…", "... or…"). Adding
+# both marks moves 61 of the 66 onto a real clause boundary. ؛ carries its
+# own weight exactly as ；does: it is the only mark before the budget in
+# several entries.
+#
+# Named for what it is rather than for one script: this set is the non-ASCII
+# clause punctuation, whatever the language. A fourth script needing its own
+# marks adds them here and gets the behavior for free, no locale gating.
+_CLAUSE_CHARS = "，、；" + "،؛"
 
 
 def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH) -> str:
@@ -452,6 +607,12 @@ def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH
     (clause boundary) within budget, or fall back to the last word boundary
     -- either way stopping only at a real boundary, never mid-word -- and
     mark the cut with an ellipsis.
+
+    Boundary detection recognizes ASCII, CJK and Arabic punctuation (see
+    _SENTENCE_START_RE and _CLAUSE_CHARS above) so this holds equally for
+    English/Latin/Cyrillic-script descriptions, for Chinese/Japanese ones,
+    which use full-width punctuation and have no spaces between words, and
+    for Arabic, which uses its own mirrored comma and semicolon.
     """
     normalized = " ".join(description.split())
     sentence_match = _SENTENCE_START_RE.match(normalized)
@@ -462,7 +623,7 @@ def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH
 
     budget = max_length - 1  # reserve one character for the ellipsis
     truncated = first_sentence[:budget]
-    comma_cut = truncated.rfind(",")
+    comma_cut = max((truncated.rfind(char) for char in "," + _CLAUSE_CHARS), default=-1)
     space_cut = truncated.rfind(" ")
 
     if comma_cut > budget * 0.3:
@@ -472,7 +633,11 @@ def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH
     else:
         clipped = truncated
 
-    return clipped.rstrip(" ,;:") + "…"
+    # The rstrip set must track _CLAUSE_CHARS or the two disagree: a cut that
+    # lands just after a clause mark leaves it stranded against the ellipsis
+    # ("...،…"). That double-punctuation artifact was on 6 of the 66 Arabic
+    # teasers before ، and ؛ were added here as well as to the cut set.
+    return clipped.rstrip(" ,;:" + _CLAUSE_CHARS + "：") + "…"
 
 
 # ---------------------------------------------------------------------------

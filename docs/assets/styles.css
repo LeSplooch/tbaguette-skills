@@ -318,7 +318,7 @@ button, input {
   border: none;
 }
 
-ul, ol { padding-left: 1.25em; }
+ul, ol { padding-inline-start: 1.25em; }
 li + li { margin-top: var(--space-2); }
 
 table { border-collapse: collapse; }
@@ -389,7 +389,7 @@ html {
   position: absolute;
   z-index: 100;
   top: var(--space-2);
-  left: var(--space-2);
+  inset-inline-start: var(--space-2);
   padding: var(--space-2) var(--space-4);
   background: var(--surface);
   color: var(--text-primary);
@@ -439,12 +439,44 @@ p { margin-top: var(--space-4); }
 
 strong { font-weight: 700; color: var(--text-primary); }
 
+/* direction/unicode-bidi: code is LTR everywhere, on every page, in every
+   language — a shell command or a file path does not become right-to-left
+   because the prose around it is. Without this, a <code> inside Arabic prose
+   inherits dir="rtl" and the bidi algorithm reorders its neutral characters:
+   ~/.claude/skills/TBaguette rendered as claude/skills/TBaguette./~ and
+   /reload-plugins as reload-plugins/ (7 of the 31 inline <code> elements on
+   /ar/verify-install/ were visibly wrong), while the homepage's install
+   command — the site's primary call to action — showed "] d ... [" for
+   "[ -d ... ]".
+
+   Deliberately at the CSS layer, on the element, rather than as a dir="ltr"
+   attribute per call site. A <code> can be authored in three different
+   places (a Python template, a skill's markdown body, or an _html field
+   inside a translator-authored i18n JSON string), and only the first is
+   reachable by reviewing this repo's Python. An element-wide rule is the
+   only version that also covers <code> nobody has written yet.
+
+   isolate, not embed/plaintext/isolate-override. isolate is what HTML's own
+   dir attribute maps to, so this matches the dir="ltr" already on
+   .code-block and .prose-code-block: the run is sealed off in both
+   directions, so neither does surrounding Arabic reorder the code, nor does
+   the code disturb the Arabic around it. embed does not seal it, leaving
+   boundary neutrals to resolve against the outside. plaintext would infer
+   direction from the first strong character and so fall back to the
+   paragraph's RTL for a snippet starting with a neutral (~, /, -), which is
+   exactly the broken case. isolate-override would force RTL text inside a
+   code sample to display left-to-right, corrupting it — isolate keeps the
+   bidi algorithm working correctly *within* the snippet while pinning its
+   base direction to ltr. Inert on the 15 LTR locales, which have no RTL runs
+   for isolation to change. */
 code {
   font-family: var(--font-mono);
   font-size: 0.9em;
   background: var(--surface-hover);
   padding: 0.15em 0.4em;
   border-radius: 6px;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 /* ---------------------------------------------------------------------------
@@ -511,8 +543,7 @@ code {
 .site-header__band::after {
   content: '';
   position: absolute;
-  left: 6%;
-  right: 6%;
+  inset-inline: 6%;
   bottom: 0;
   height: 1px;
   background: linear-gradient(to right,
@@ -594,6 +625,122 @@ code {
 }
 
 .site-header__updated-value { font-variant-numeric: tabular-nums; }
+
+/* Language switcher — a native <details> styled as a popover.
+   The whole point of the absolute positioning below is that an unstyled
+   <details> expands in normal flow: with 16 locales that inflated the
+   header from ~140px to ~620px on open and pushed the entire page down,
+   while .site-header__inner's align-items: center dragged the theme
+   toggle and the timestamp to the vertical middle of the open list.
+   Taking the list out of flow is the fix; everything else here is making
+   it look like it belongs to the rest of the header.
+
+   Positioned entirely with logical properties (inset-inline-end,
+   inset-block-start, text-align: start) rather than left/right, so /ar/
+   mirrors for free: the panel's trailing edge pins to the summary's
+   trailing edge, which is the right edge in LTR and the left edge in RTL,
+   and the panel grows inward from the header edge in both. No
+   [dir="rtl"] override needed, and none is wanted — an override here
+   would be a second place to keep in sync. */
+.language-switcher {
+  position: relative;
+  flex-shrink: 0;
+  font-size: var(--text-2);
+}
+
+.language-switcher__summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  /* Both lines are needed to drop the native disclosure triangle:
+     list-style covers Firefox and current Chrome, the pseudo-element
+     covers older WebKit/Blink, which ignores list-style on a summary. */
+  list-style: none;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.language-switcher__summary::-webkit-details-marker { display: none; }
+
+.language-switcher__summary:hover {
+  color: var(--text-accent);
+  border-color: var(--border-strong);
+  background: var(--surface);
+}
+
+/* A chevron drawn from two borders rather than a glyph or a sprite icon:
+   this rule set is CSS-only by design (the markup it styles is already
+   generated and shipped in 16 locales), so it cannot add an <svg> use
+   element. Rotating a square's two adjacent borders points it down when
+   closed and up when open, and because it points along the block axis
+   rather than the inline one, it needs no RTL treatment. */
+.language-switcher__summary::after {
+  content: '';
+  width: 0.375rem;
+  height: 0.375rem;
+  border-inline-end: 1.5px solid currentColor;
+  border-block-end: 1.5px solid currentColor;
+  transform: translateY(-1px) rotate(45deg);
+  transition: transform var(--duration-micro) var(--ease-out);
+}
+
+.language-switcher[open] .language-switcher__summary::after {
+  transform: translateY(1px) rotate(225deg);
+}
+
+.language-switcher__list {
+  position: absolute;
+  z-index: 20;
+  inset-block-start: calc(100% + var(--space-2));
+  inset-inline-end: 0;
+  min-width: 100%;
+  /* 16 entries overrun a short viewport, so the panel scrolls rather than
+     running off the bottom of the screen. overscroll-behavior stops that
+     scroll from chaining to the page once the list hits its end. */
+  max-height: min(60vh, 22rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: var(--space-2);
+  /* The <ul> is a real list; without this it keeps bullets and the
+     browser's default inline-start indent inside the panel. */
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: 0 18px 40px -16px hsl(var(--shadow-ink) / 0.65);
+}
+
+.language-switcher__link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  text-align: start;
+  white-space: nowrap;
+  transition: color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.language-switcher__link:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+/* The switcher marks the page's own locale with aria-current="true". That
+   was announced but invisible, so the current language was
+   indistinguishable from the other fifteen. */
+.language-switcher__link[aria-current] {
+  color: var(--text-accent);
+  font-weight: 600;
+}
 
 .theme-toggle {
   position: relative;
@@ -1270,6 +1417,15 @@ code {
   transform: translateX(3px);
 }
 
+[dir="rtl"] .card__arrow {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .card:hover .card__arrow,
+[dir="rtl"] .card:focus-visible .card__arrow {
+  transform: scaleX(-1) translateX(3px);
+}
+
 /* "New"/"Updated" — set by generate.py from a real git status check (see
    its _changed_skill_slugs), shown next to a skill's name on its card
    (.card__name-row) and again on its own page (.skill-article__title-row).
@@ -1396,6 +1552,16 @@ code {
   color: var(--text-secondary);
 }
 
+.translation-banner {
+  margin-top: var(--space-6);
+  max-width: var(--measure-prose);
+  padding: var(--space-4) var(--space-5);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: var(--text-2);
+}
+
 .prose {
   margin-top: var(--space-8);
   max-width: var(--measure-prose);
@@ -1411,10 +1577,10 @@ code {
 
 .prose ul, .prose ol {
   margin-top: var(--space-4);
-  padding-left: 1.4em;
+  padding-inline-start: 1.4em;
 }
 
-.prose li { padding-left: 0.2em; }
+.prose li { padding-inline-start: 0.2em; }
 .prose li::marker { color: var(--text-secondary); }
 .prose ul ul, .prose ol ol, .prose ul ol, .prose ol ul { margin-top: var(--space-2); }
 
@@ -1478,7 +1644,7 @@ code {
 
 .prose th, .prose td {
   padding: var(--space-3) var(--space-4);
-  text-align: left;
+  text-align: start;
   vertical-align: top;
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -1526,6 +1692,11 @@ code {
   scroll-snap-type: x proximity;
   -webkit-mask-image: linear-gradient(to right, black calc(100% - 32px), transparent 100%);
   mask-image: linear-gradient(to right, black calc(100% - 32px), transparent 100%);
+}
+
+[dir="rtl"] .tabs__list {
+  -webkit-mask-image: linear-gradient(to left, black calc(100% - 32px), transparent 100%);
+  mask-image: linear-gradient(to left, black calc(100% - 32px), transparent 100%);
 }
 
 .tabs__tab {
@@ -1596,7 +1767,7 @@ code {
   background: var(--surface-hover);
 }
 
-.prevnext__link--next { text-align: right; }
+.prevnext__link--next { text-align: end; }
 
 .prevnext__label {
   display: block;
@@ -1623,11 +1794,11 @@ code {
 .see-also__list {
   margin-top: var(--space-4);
   list-style: none;
-  padding-left: 0;
+  padding-inline-start: 0;
 }
 
 .see-also__list li {
-  padding-left: 0;
+  padding-inline-start: 0;
   border-top: 1px solid var(--border-subtle);
 }
 
@@ -1705,7 +1876,7 @@ code {
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-3);
   list-style: none;
-  padding-left: 0;
+  padding-inline-start: 0;
 }
 
 .site-footer__categories li { margin: 0; padding: 0; }
@@ -1743,7 +1914,9 @@ code {
 
   .card, .theme-toggle__icon, .search__field, .tabs__tab,
   .prevnext__link, .see-also__name, .site-footer__categories a,
-  .skip-link, .prose a, .prose tbody tr {
+  .skip-link, .prose a, .prose tbody tr,
+  .language-switcher__summary, .language-switcher__summary::after,
+  .language-switcher__link {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
@@ -1837,7 +2010,7 @@ code {
    ------------------------------------------------------------------------- */
 
 @media (max-width: 420px) {
-  .prevnext__link--next { text-align: left; }
+  .prevnext__link--next { text-align: start; }
 }
 
 /* ---------------------------------------------------------------------------
