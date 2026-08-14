@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:14:27+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:14:27Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:09:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:09:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -47,7 +47,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">schema-evolution</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-14T12:09:56.591083+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Designing systems</span>
   <p class="lede">Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema, serialized format, stored document, API payload, or queue message. Also when a rolling deploy breaks deserialization, when old consumers cannot read new data, when a rollback fails on data the newer version wrote, when adding an enum value, or when planning a version bump.</p>
@@ -76,6 +76,7 @@
 <p>Every live version is a permanent code path, a test matrix multiplier, and a support obligation. Two versions is a strategy; four is an unfunded liability. Pick a sunset date before shipping v2 and put usage metrics per version behind an alert, because you will not be allowed to delete a version you cannot prove is unused.</p>
 <h2 id="reserve-what-you-remove">Reserve what you remove</h2>
 <p>When a field, column, tag number, or enum ordinal is removed, mark the identifier reserved in the schema and never reuse it. Reuse is a silent data-corruption bug: archived rows, replayed messages, and old backups still carry the old identifier, and a new field wearing the same identifier decodes that data into the wrong meaning with no error. This applies to positional tag numbers, column names in stores that resolve by name, enum ordinals in formats that serialize the integer, and API field names any client may still send. Keep the reservation in the schema file, next to the live fields, where the next person will see it.</p>
+<p>Where a column can be written by more than one kind of source, the provenance is part of the contract and needs its own field rather than a shared one — <code>tracking-data-provenance</code>.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Rollback breaks, forward deploy was clean</td><td>Forward compatibility never tested; old code cannot read new data</td></tr><tr><td>Errors only during the rollout window, then clean</td><td>Two versions ran simultaneously and only one direction was safe</td></tr><tr><td>A field is zero or empty for old records and nobody knows if that is real</td><td>Reader-side default erased the difference between absent and set</td></tr><tr><td>Consumer crashes weeks after a change</td><td>A replayed or long-retained message carried the old shape</td></tr><tr><td>Data decodes into the wrong field with no error</td><td>A removed identifier was reused</td></tr><tr><td>An enum value causes a crash in a downstream service</td><td>Readers had no unknown branch when the value was added</td></tr><tr><td>Off-by-1000 or off-by-hours arithmetic</td><td>Units or timezone semantics changed under an unchanged field name</td></tr><tr><td>The change cannot be applied to the existing store at all</td><td>The field was added as required with no default, over records that predate it</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
@@ -134,6 +135,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">
       <span class="see-also__name">rate-limiting-and-backpressure</span>
       <span class="see-also__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/tracking-data-provenance/">
+      <span class="see-also__name">tracking-data-provenance</span>
+      <span class="see-also__summary">Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted…</span>
     </a></li>
   </ul>
 </div>

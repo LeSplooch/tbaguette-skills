@@ -1,6 +1,6 @@
 # TBaguette
 
-67 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+73 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -32,6 +32,7 @@ TBaguette skill hands off to a neighbour.
 | `managing-scope-drift` | Necessary vs adjacent vs discovered work; silent widening and narrowing |
 | `knowing-when-to-stop` | Diminishing returns, gold-plating, bounded passes, explicit handoff |
 | `karen-and-the-manager` | Persona-forced finishing pass: never-satisfied critique, then a triage pass on it. Invoke right after `knowing-when-to-stop` |
+| `revalidating-decisions` | Separating a decision's principle from its premise; which premises expire with no commit; overturning an old call on evidence |
 | `brainstorming` † | Exploring intent before building |
 | `verification-before-completion` † | Evidence before success claims |
 
@@ -56,6 +57,7 @@ TBaguette skill hands off to a neighbour.
 | `writing-commit-messages` | The subject line as an index entry for a future bisector |
 | `incremental-migration` | Strangler fig, expand–migrate–contract, never big-bang |
 | `refactoring-safely` | Behavior preservation; refactor vs rewrite |
+| `judging-duplication` | What would notice if these stopped differing; duplication as contract vs debt; the rule of three |
 | `deleting-code` | Proving code is dead; deprecation with a deadline |
 | `feature-flagging` | The four flag types, flag debt, combinatorics |
 | `resolving-merge-conflicts` | Resolving by intent; semantic conflicts that never conflict textually |
@@ -73,6 +75,7 @@ TBaguette skill hands off to a neighbour.
 | `regression-test-from-bug` | Fail first, name the test after the defect |
 | `characterization-testing` | Pinning legacy behavior before changing it |
 | `choosing-test-scope` | Unit, integration, contract, end-to-end — and what only each catches |
+| `grounding-test-doubles` | Fixture provenance; capture over compose; one live test per integration; unrecognized shapes must raise |
 | `test-driven-development` † | The red-green-refactor cycle itself |
 
 ## Debugging and performance
@@ -104,6 +107,7 @@ TBaguette skill hands off to a neighbour.
 | `configuration-management` | Config vs code vs secret; fail fast at startup |
 | `instrumenting-for-observability` | Deciding what to emit before the incident |
 | `rate-limiting-and-backpressure` | Shedding vs queueing vs slowing down; retry storms |
+| `tracking-data-provenance` | Observed vs imported vs inferred vs defaulted; confidence laundering; one write path per provenance |
 
 ## Security (defensive)
 
@@ -111,7 +115,9 @@ TBaguette skill hands off to a neighbour.
 |---|---|
 | `threat-modeling` | A model that fits in a design review |
 | `handling-untrusted-input` | Parse don't validate; the injection family as one bug |
+| `validating-numeric-input` | NaN and infinity defeating every comparison; overflow, precision loss, locale ambiguity |
 | `secrets-hygiene` | Where secrets must never be; revoke-then-rotate |
+| `redacting-sensitive-output` | A replacement that quotes the match; allowlist fields over denylist patterns; assert the input is gone |
 | `auditing-dependencies` | Code you ship and did not review; triage by reachability |
 | `least-privilege-design` | Default deny; blast radius as the design metric |
 

@@ -15,6 +15,7 @@
   6. Icons
   7. Header / wordmark / theme toggle / updated-time
   8. Hero + search
+  8b. "Fresh from the oven" rail (recently new/updated skills)
   9. Category sections + card grid + card (incl. change-badge: new/updated)
   10. Breadcrumb
   11. Article: lede, prose, tables, code, lists
@@ -894,6 +895,146 @@ code {
 .search__empty[hidden] { display: none; }
 
 .search__empty-query { color: var(--text-primary); font-weight: 600; }
+
+/* ---------------------------------------------------------------------------
+   8b. "Fresh from the oven" — recently new/updated skills, above the search
+
+   Sits between the lede and the search field, directly under .install-frame,
+   which is the loudest object on the page and must stay that way. So this
+   deliberately does NOT reach for the lit-card treatment: no gold border, no
+   ambient glow, no panel. It earns its place with a gilded rule and a rail of
+   plain surface tiles — a display tray under the shopfront sign, not a second
+   shopfront sign. Rendered only when something is actually fresh (see
+   _render_fresh_section), so there is no empty state to style.
+   ------------------------------------------------------------------------- */
+
+.fresh { margin-top: var(--space-7); }
+
+.fresh__head {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding-bottom: var(--space-3);
+}
+
+/* The gilded rule again — same fading-at-both-ends gesture as the header's
+   bottom edge and the update modal's top, so the three read as one idea
+   rather than three separate horizontal lines. */
+.fresh__head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    color-mix(in oklch, var(--accent) 70%, transparent),
+    color-mix(in oklch, var(--accent) 22%, transparent) 55%,
+    transparent);
+}
+
+/* icon-grain rather than the loaf: icon-crust is already carrying the
+   install frame's label a few hundred pixels up, and the same mark twice in
+   one viewport reads as a repeated element rather than a shared system. */
+.fresh__icon { color: var(--accent); width: 1.75em; height: 1.75em; }
+
+/* margin: 0 is load-bearing, not tidiness: the global h2 rule carries
+   margin-top: var(--space-8), and inside an align-items: center flex row
+   that margin is part of the item's box — the box centres, the text does
+   not, and the heading drops half a line below the icon beside it. */
+.fresh__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-4);
+  font-weight: 620;
+  color: var(--text-primary);
+}
+
+/* Left on the neutral .tag treatment on purpose. Gold in this band belongs
+   to the New/Updated badges, which carry information; the timeframe is a
+   label, and a third gold pill next to them flattens the distinction. */
+.fresh__tag { align-self: center; }
+
+/* Same scroll-rail mechanics as .tabs__list: horizontal overflow with a
+   mask fading the right edge, so a cut-off tile reads as "more this way"
+   rather than as a broken layout. With fewer tiles than fill the width,
+   nothing reaches the fade zone and the mask is invisible — self-correcting,
+   no JS needed to decide whether to draw it. */
+.fresh__rail {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding-block: var(--space-4);
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 40px), transparent 100%);
+  mask-image: linear-gradient(to right, black calc(100% - 40px), transparent 100%);
+}
+
+.fresh__tile {
+  scroll-snap-align: start;
+  flex: 0 0 13rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  /* One hairline of light along the top edge — the same overhead light
+     every other raised surface on this site is lit by, which is what stops
+     a row of flat rectangles reading as placeholders. */
+  box-shadow: inset 0 1px 0 rgb(245 234 217 / 7%);
+  transition: transform var(--duration-enter) var(--ease-out),
+              border-color var(--duration-enter) var(--ease-out),
+              background-color var(--duration-enter) var(--ease-out);
+}
+
+.fresh__tile:hover,
+.fresh__tile:focus-visible {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.fresh__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-3);
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+/* margin-top: auto pins the timestamp to the bottom, so tiles whose names
+   wrap to two lines still line their times up with the rest of the rail. */
+.fresh__when {
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fresh { animation: hero-rise var(--duration-view) var(--ease-out) 120ms backwards; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fresh__tile { transition-duration: 0.01ms; }
+  .fresh__tile:hover, .fresh__tile:focus-visible { transform: none; }
+}
+
+/* A forced palette drops the gradient rule's meaning (background-image
+   survives, but as an arbitrary stripe over system colours) and flattens the
+   tiles' resting/hover borders into one. Give the rule a real border and let
+   the tiles keep a visible edge. */
+@media (forced-colors: active) {
+  .fresh__head::after { display: none; }
+  .fresh__head { border-bottom: 1px solid CanvasText; }
+  .fresh__tile { border: 1px solid CanvasText; }
+}
 
 /* ---------------------------------------------------------------------------
    9. Category sections + card grid + card

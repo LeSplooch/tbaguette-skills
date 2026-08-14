@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:14:27+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:14:27Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:09:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:09:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -47,7 +47,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">instrumenting-for-observability</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-14T12:09:56.591083+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Designing systems</span>
   <p class="lede">Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, or when choosing a log level.</p>
@@ -80,6 +80,7 @@
 <h2 id="slis-from-the-users-experience">SLIs from the user's experience</h2>
 <p>Measure where the user feels it — at the edge or in the client — not where it is convenient to instrument. An SLI is a ratio of good events to valid events, and both halves need a written definition before the alert exists.</p>
 <ul><li>Latency as percentiles with the count beside them (p50, p95, p99). A mean hides the tail, and the tail is the experience being complained about.</li><li>Availability as successful requests over valid requests. Settle the denominator argument up front: a client's own malformed input is usually excluded; your rate limits, timeouts, and capacity rejections are included, because from the user's side those are your failure.</li><li>Alert on symptoms the user can feel, not on causes. CPU, memory, and queue depth are diagnostic panels; the page fires on error ratio and latency breaching the objective, with a burn rate that gives a human time to respond.</li><li>Every incident review ends with one question: what field, counter, or span would have made this obvious in the first minute? Add it before the review is closed, or it will be missing again.</li></ul>
+<p>Deciding what to emit is upstream of making it safe to emit; <code>redacting-sensitive-output</code> covers the second half.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The incident could not be explained afterwards</td><td>Only inputs and crashes were instrumented; the decisions between them were not</td></tr><tr><td>Telemetry bill spikes with flat traffic</td><td>An unbounded label — a path with identifiers, an error string, a user id</td></tr><tr><td>A request cannot be followed past a queue</td><td>Correlation id not carried in the message; consumer starts a new trace</td></tr><tr><td>Alerts fire constantly and are muted</td><td>Alerting on causes and on WARN instead of on user-visible symptoms</td></tr><tr><td>Logs exist but the answer needs a new regular expression</td><td>Values interpolated into message strings instead of emitted as fields</td></tr><tr><td>One failure produces twelve log lines</td><td>Logged at every layer on the way up instead of once at the deciding boundary</td></tr><tr><td>Dashboards look healthy during a customer outage</td><td>Measured at the server, not at the edge; means instead of percentiles</td></tr><tr><td>Secret found in the log index</td><td>Redaction by denylist, or a whole object logged for convenience</td></tr><tr><td>DEBUG is useless because enabling it needs a deploy</td><td>Log level fixed at build time rather than adjustable at runtime</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
@@ -138,6 +139,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">
       <span class="see-also__name">rate-limiting-and-backpressure</span>
       <span class="see-also__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/tracking-data-provenance/">
+      <span class="see-also__name">tracking-data-provenance</span>
+      <span class="see-also__summary">Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted…</span>
     </a></li>
   </ul>
 </div>

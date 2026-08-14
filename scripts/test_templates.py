@@ -10,6 +10,7 @@ Usage:
 
 from pathlib import Path
 
+import templates
 from checker import Checker
 from templates import (
     INSTALL_COMMAND,
@@ -218,9 +219,12 @@ def check_header_and_badges() -> None:
         "category_slug": "cat", "category_title": "Cat",
         "description": "d", "summary": "s", "body_html": "<p>x</p>", "is_formidable": False,
     }
+    stamp = "2026-08-13T18:00:00+00:00"
     skills = {
-        "fresh": {**base_skill, "slug": "fresh", "name": "fresh", "change_status": "new"},
-        "revised": {**base_skill, "slug": "revised", "name": "revised", "change_status": "updated"},
+        "fresh": {**base_skill, "slug": "fresh", "name": "fresh",
+                  "change_status": "new", "change_at": stamp},
+        "revised": {**base_skill, "slug": "revised", "name": "revised",
+                    "change_status": "updated", "change_at": stamp},
         "untouched": {**base_skill, "slug": "untouched", "name": "untouched"},
     }
 
@@ -248,9 +252,19 @@ def check_header_and_badges() -> None:
     check("exactly two change-badges rendered (fresh and revised only, not untouched)",
           html.count('class="change-badge') == 2)
     check('"new" skill gets the New badge',
-          'change-badge change-badge--new">New</span>' in html)
+          'change-badge change-badge--new" data-fresh-at="2026-08-13T18:00:00+00:00">New</span>' in html)
     check('"updated" skill gets the Updated badge',
-          'change-badge change-badge--updated">Updated</span>' in html)
+          'change-badge change-badge--updated" data-fresh-at="2026-08-13T18:00:00+00:00">Updated</span>' in html)
+    # The badge is the only thing site.js has to go on when deciding whether
+    # a statically-built page's 48h claim is still true in the browser. A
+    # badge rendered without its timestamp would be one it can never retire.
+    check("every rendered badge carries the timestamp site.js retires it by",
+          html.count('class="change-badge') == html.count("data-fresh-at="))
+    check("a skill with a status but no timestamp still renders its badge, "
+          "just without the attribute — the badge is the feature, the "
+          "client-side expiry is the enhancement",
+          templates._render_change_badge("new")
+          == '<span class="change-badge change-badge--new">New</span>')
 
     no_time_html = render_index(categories, skills)
     check("with no last_updated_utc passed, the updated-time element is omitted "
@@ -261,13 +275,67 @@ def check_header_and_badges() -> None:
         skills["fresh"], prev_skill=None, next_skill=None, siblings=[], categories=categories,
     )
     check("the skill's own page shows the same badge next to its title",
-          'change-badge change-badge--new">New</span>' in fresh_page_html)
+          'change-badge change-badge--new" data-fresh-at="2026-08-13T18:00:00+00:00">New</span>'
+          in fresh_page_html)
     check("badge sits inside the title row specifically, not the tag/description area",
           fresh_page_html.index("skill-article__title-row")
           < fresh_page_html.index("change-badge")
           < fresh_page_html.index("skill-article__tag"))
     check("a skill page's own <title> ends in TBaguette’s Atelier too",
           "<title>fresh — Cat — TBaguette’s Atelier</title>" in fresh_page_html)
+
+
+def check_fresh_section() -> None:
+    """The "Fresh from the oven" rail: present only when something is fresh,
+    ordered as generate.py handed it over, capped, and sitting above the
+    search field rather than anywhere else on the page."""
+    print("fresh-from-the-oven rail")
+    categories = [{"slug": "cat", "title": "Cat", "skill_slugs": []}]
+    base_skill = {
+        "category_slug": "cat", "category_title": "Cat",
+        "description": "d", "summary": "s", "body_html": "<p>x</p>", "is_formidable": False,
+    }
+
+    def make(slug: str, status: str, at: str) -> dict:
+        return {**base_skill, "slug": slug, "name": slug,
+                "change_status": status, "change_at": at}
+
+    plain = render_index(categories, {})
+    check("nothing fresh renders no rail at all, not an empty-state panel",
+          "data-fresh-section" not in plain and "Fresh from the oven" not in plain)
+
+    newest = make("newest", "new", "2026-08-14T12:00:00+00:00")
+    older = make("older", "updated", "2026-08-13T09:00:00+00:00")
+    html = render_index(categories, {}, fresh_skills=[newest, older])
+
+    check("the rail renders when skills are fresh", "data-fresh-section" in html)
+    check("heading is the section's accessible name, not a bare styled div",
+          'aria-labelledby="fresh-title"' in html and 'id="fresh-title"' in html)
+    check("rail sits above the search field, which is the whole point of it",
+          html.index("data-fresh-section") < html.index("data-search-root"))
+    check("rail sits below the lede rather than above the headline",
+          html.index("hero__headline") < html.index("data-fresh-section"))
+    check("order is preserved exactly as generate.py handed it over — the "
+          "template never re-sorts, since only generate.py knows the real times",
+          html.index(">newest</span>") < html.index(">older</span>"))
+    check("each tile carries the timestamp site.js expires it by",
+          html.count('class="fresh__tile"') == 2
+          and html.count('data-fresh-at="2026-08-14T12:00:00+00:00"') >= 1)
+    check("a tile reuses the shared change-badge rather than a rail-only variant, "
+          "so new-vs-updated stays a fill difference and not a colour-only one",
+          "change-badge change-badge--new" in html
+          and "change-badge change-badge--updated" in html)
+    check("the timestamp ships a readable absolute fallback for no-JS visitors, "
+          "not an empty element waiting to be filled in",
+          '<time class="fresh__when" datetime="2026-08-14T12:00:00+00:00" '
+          'data-format-relative>2026-08-14</time>' in html)
+
+    many = [make(f"s{i:02d}", "new", "2026-08-14T12:00:00+00:00") for i in range(30)]
+    capped = render_index(categories, {}, fresh_skills=many)
+    check("the rail is capped rather than listing an entire burst of activity",
+          capped.count('class="fresh__tile"') == templates.FRESH_RAIL_LIMIT)
+    check("the cap keeps the newest end of the list, not an arbitrary slice",
+          ">s00</span>" in capped and ">s29</span>" not in capped)
 
 
 def main() -> None:
@@ -421,6 +489,7 @@ def main() -> None:
     check_base_path()
     check_verify_install_page()
     check_header_and_badges()
+    check_fresh_section()
 
     print(f"\n{checker.total} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")

@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:14:27+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:14:27Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:09:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:09:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -47,7 +47,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">writing-adrs</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-14T12:09:56.591083+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Communicating</span>
   <p class="lede">Use when recording a technical or architectural decision — picking between technologies, changing a system boundary, adopting or refusing a pattern. Also when a past choice looks wrong and nobody remembers why, when the same argument recurs, when someone asks why the system is built this way, or when deciding whether a choice is worth recording. Covers decision records, ADRs, design docs, rejected alternatives, status, and supersession.</p>
@@ -68,6 +68,7 @@
 <ul><li>Alternatives are legible only while they are still live. After implementation the chosen path looks inevitable, and the rejected ones compress into &quot;we considered some other things&quot;.</li><li>Draft the record at status Proposed and hold the discussion on the draft. Comments on it are the decision process; the merged file is the outcome. This also removes the separate &quot;write it up&quot; task that never happens.</li><li>Order of writing: forces → alternatives → decision → consequences. Writing the decision first turns the alternatives section into justification, which is the same failure in a different order.</li><li>If a record must be reconstructed after the fact, label it retroactive and give the original decision date. Readers weigh a reconstruction differently, and should.</li></ul>
 <h2 id="status-and-supersession-never-edit-history">Status and supersession, never edit history</h2>
 <ul><li>Records are append-only in substance. Fix a typo; never rewrite context, alternatives, or the decision.</li><li>A changed decision produces a <strong>new</strong> record. The old one is marked <code>Superseded by NNNN</code> and stays readable in full. Editing the old record destroys the only evidence of what the team believed and why the belief was reasonable.</li><li>The superseding record's context names the force that changed: &quot;0014 assumed 12k writes/sec peak; sustained peak is now 400k.&quot;</li><li>Deprecated ≠ Superseded. Deprecated means the subject is gone. Superseded means a later decision replaced this one and the subject still exists.</li></ul>
+<p>Marking which forces you do not control is what makes the record cheap to re-check years later; <code>revalidating-decisions</code> is the reader's half of that exchange.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;Why is it built this way?&quot; and nobody knows</td><td>The decision was recorded, the alternatives were not</td></tr><tr><td>Records written after shipping, all reading as obviously correct</td><td>Written once the outcome had reshaped the memory of the options</td></tr><tr><td>Nobody reads the records</td><td>Filed away from the code, or diluted by trivial ones</td></tr><tr><td>The same debate restarts every six months</td><td>No forces recorded, so nobody can tell whether it still applies</td></tr><tr><td>A twelve-page design document</td><td>The decision is buried; a reader cannot extract it in 30 seconds</td></tr><tr><td>Every record's status is Accepted, forever</td><td>No supersession discipline; the set describes a system that no longer exists</td></tr><tr><td>Consequences are all upside</td><td>Written to persuade a reviewer, not to inform a successor</td></tr><tr><td>A reader has to ask the author what the record means</td><td>The record failed its only test</td></tr><tr><td>A decision still binding years after its blocker disappeared</td><td>The forces mixed what the team controls with what a third party does, so nobody knew which one to re-check</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>

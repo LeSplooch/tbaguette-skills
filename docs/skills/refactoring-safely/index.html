@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:14:27+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:14:27Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:09:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:09:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -47,7 +47,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">refactoring-safely</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-14T12:09:56.591083+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Landing changes</span>
   <p class="lede">Use when restructuring existing code without changing what it does, when a change touches many call sites at once, when tests break in the middle of a restructure, when code needs cleaning up before a feature can be added, when working in untested or legacy code, when two near-identical functions look like an obvious deduplication, or when tempted to rewrite rather than transform. Covers behavior preservation, extracting and inlining, large-scale renames, load-bearing duplication, and refactor-versus-rewrite decisions.</p>
@@ -64,11 +64,8 @@
 <table><thead><tr><th>Move</th><th>Preserves when done right</th><th>How it breaks when done in bulk</th></tr></thead><tbody><tr><td>Rename</td><td>Everything, given every reference is updated</td><td>Reflective, string-keyed, cross-language, and config references are invisible to the tool</td></tr><tr><td>Extract function</td><td>Behavior, given captured state is passed faithfully</td><td>Turning captured state into a parameter changes evaluation order and time of read</td></tr><tr><td>Inline</td><td>Behavior, given the callee is pure</td><td>Inlining a side effect changes how often it happens</td></tr><tr><td>Move to another module or type</td><td>Behavior, given initialization order holds</td><td>Import graph, visibility, and static-initialization order all shift</td></tr><tr><td>Introduce parameter</td><td>Behavior, given the default matches current use</td><td>A default chosen for the new caller silently changes every old one</td></tr><tr><td>Replace conditional with dispatch</td><td>Behavior, given the fallback branch is preserved</td><td>The unhandled case that used to fall through now throws</td></tr><tr><td>Merge two near-duplicates</td><td>Behavior, given nothing outside the process can tell them apart</td><td>The difference was the point, and its observer is a signature verifier, a stored format, or a wire peer</td></tr></tbody></table>
 <p>Chained small moves beat one large one because each is mechanically checkable, individually revertible, and individually explainable in a subject line. The composite is none of the three. Where an automated refactoring tool exists for a move, use it — it updates references you would not have found. Where none exists, restrict yourself to transformations precise enough that you could describe the rule and have someone else verify it.</p>
 <h2 id="duplication-that-is-load-bearing">Duplication that is load-bearing</h2>
-<p>Two functions that differ only in a detail are the most obvious cleanup in the file, and merging them can be invisible to every test you currently have. The question before unifying is not &quot;are these the same?&quot; but <strong>&quot;what would notice if they stopped differing?&quot;</strong> When the answer is inside the process, the duplication is debt and merging it is safe. When the answer is outside it — a peer verifying a signature you computed, a format already written to disk, a counterpart that rebuilds the same bytes and compares — the duplication is a contract, and nothing in either file says so. When you cannot determine who observes it, keep the split: the cost of maintaining two functions is bounded and known, and the cost of merging them is neither.</p>
-<p>The tell is that the difference looks small and arbitrary: two encoders disagreeing only about a space and a few delimiter characters, two serializers differing only in field order, two hash inputs differing only in a trailing separator. Arbitrary is what somebody else's specification looks like from inside your codebase. A reference implementation carrying the same split is evidence <em>for</em> the split, not evidence that everyone copies badly.</p>
-<p>What makes the mistake expensive is where the failure lands. Unifying a signing path does not fail where the refactor is; it fails at a third party, as a generic rejection indistinguishable from a bad credential, pointing nowhere near the diff, and often only for the subset of inputs containing the character that used to be treated differently.</p>
-<p>Two pieces of residue when you decide to keep it:</p>
-<ul><li>Put the reason at <strong>both</strong> sites. A comment on one of a pair explains nothing to whoever arrives at the other, and they are the one who will merge them.</li><li>Pin the divergence with a test asserting the two produce <em>different</em> output for the same input, naming the character or field that must differ. It reads like a strange test, and it is the only thing that turns an attempted unification into a local, immediate failure instead of a remote one.</li></ul>
+<p>Before unifying a near-duplicate pair, find out who observes the difference. When the observer sits outside this process — a peer, a wire format, a stored file — the duplication is a contract, and the merge fails there rather than here, long after the diff.</p>
+<p><code>judging-duplication</code> covers making that call.</p>
 <h2 id="before-touching-untested-code">Before touching untested code</h2>
 <p>A refactor without a net is an unverified rewrite of a small region. Establish the net first, and keep the net's construction in its own commit.</p>
 <ul><li><strong>Characterization tests</strong> capture what the code does today, bugs included, without judging correctness. They are change detectors, not correctness tests; delete or rewrite them once real tests exist.</li><li>Where nothing is testable, make the <strong>smallest possible seam</strong> first — parameterize one dependency, extract one interface. That seam change is itself unnetted, so make it tiny, make it with the tool, and review it separately.</li><li>Cover every branch you intend to move. Where you cannot, restrict the work to moves the tool performs mechanically and accept that hand edits in that region are behavior changes by default.</li><li>When tests are genuinely impossible: compare old and new against recorded inputs, checksum a serialized output over a corpus, or lean on compiler-enforced exhaustiveness. All three beat nothing; none beats a test.</li></ul>
@@ -85,9 +82,9 @@
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← incremental-migration</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/deleting-code/">
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/judging-duplication/">
   <span class="prevnext__label">Next</span>
-  <span class="prevnext__name">deleting-code →</span>
+  <span class="prevnext__name">judging-duplication →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Landing changes</h2>
@@ -103,6 +100,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/incremental-migration/">
       <span class="see-also__name">incremental-migration</span>
       <span class="see-also__summary">Use when replacing a system, library, API, storage engine, or data format that is already in use…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/judging-duplication/">
+      <span class="see-also__name">judging-duplication</span>
+      <span class="see-also__summary">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/deleting-code/">
       <span class="see-also__name">deleting-code</span>

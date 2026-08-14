@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:14:27+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:14:27Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:09:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:09:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -47,7 +47,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">deleting-code</h1>
-    
+    <span class="change-badge change-badge--new" data-fresh-at="2026-08-13T05:38:33+02:00">New</span>
   </div>
   <span class="tag skill-article__tag">Landing changes</span>
   <p class="lede">Use when removing code, a feature, an endpoint, a config key, a column, or a dependency that appears unused, when deciding whether something is genuinely dead, when a deprecation needs a removal path and a deadline, when code has been commented out or kept &quot;just in case&quot;, or when the callers of something cannot all be seen from inside the repository. Covers proving deadness, deprecation sequences, and removing tests and config alongside.</p>
@@ -76,9 +76,9 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;No references found&quot;, then a production break</td><td>Searched code only — not config, data, telemetry, or external callers</td></tr><tr><td>Feature deleted, its tests still green and still running</td><td>Tests were never in the deletion's scope</td></tr><tr><td>Code commented out &quot;temporarily&quot; three years ago</td><td>Nobody was willing to own the decision, so it was deferred into the file</td></tr><tr><td>Deprecation warning present for years</td><td>No removal date was ever attached to it</td></tr><tr><td>A dashboard went blank after a cleanup</td><td>A log line or metric name was treated as internal</td></tr><tr><td>Delete reverted, and the feature comes back broken</td><td>Deletion was bundled with unrelated changes, so the revert was not clean</td></tr><tr><td>Dead code keeps being updated by refactors</td><td>It looks alive because it is maintained, and it is maintained because it looks alive</td></tr><tr><td>Old implementation kept &quot;for reference&quot; beside the new one</td><td>Reference material stored in the build instead of in history</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Let's keep it, it might be useful later&quot;</li><li>&quot;I will comment it out just in case&quot;</li><li>&quot;Nobody uses this&quot; with no counter behind it</li><li>&quot;We can always get it back from history&quot; used as the reason not to write a findable commit message</li><li>Deleting bundled with a release, or right before nobody is watching</li><li>Deleting something because a search was clean, when the stack uses reflection, plugins, or configuration-driven dispatch</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/refactoring-safely/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/judging-duplication/">
   <span class="prevnext__label">Previous</span>
-  <span class="prevnext__name">← refactoring-safely</span>
+  <span class="prevnext__name">← judging-duplication</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/feature-flagging/">
   <span class="prevnext__label">Next</span>
@@ -102,6 +102,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/refactoring-safely/">
       <span class="see-also__name">refactoring-safely</span>
       <span class="see-also__summary">Use when restructuring existing code without changing what it does, when a change touches many call sites at once…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/judging-duplication/">
+      <span class="see-also__name">judging-duplication</span>
+      <span class="see-also__summary">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/feature-flagging/">
       <span class="see-also__name">feature-flagging</span>

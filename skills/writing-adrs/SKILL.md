@@ -61,6 +61,8 @@ Volume is diagnostic. More than ~2 per week and the team is recording tasks; few
 - The superseding record's context names the force that changed: "0014 assumed 12k writes/sec peak; sustained peak is now 400k."
 - Deprecated ≠ Superseded. Deprecated means the subject is gone. Superseded means a later decision replaced this one and the subject still exists.
 
+Marking which forces you do not control is what makes the record cheap to re-check years later; `revalidating-decisions` is the reader's half of that exchange.
+
 ## Common mistakes
 
 | Symptom | Real cause |

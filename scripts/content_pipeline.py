@@ -1,6 +1,6 @@
 """Content-extraction pipeline for the TBaguette skills showcase site.
 
-Reads the 67 skill directories under ``~/.claude/skills/TBaguette/skills/``
+Reads the 73 skill directories under ``~/.claude/skills/TBaguette/skills/``
 (each a ``SKILL.md`` with YAML frontmatter and a markdown body; one skill,
 ``formidable``, additionally carries a ``reference/`` tree of stack and
 command reference files) and produces a single JSON-serializable dict that
@@ -49,6 +49,7 @@ CATEGORIES: list[dict] = [
             "managing-scope-drift",
             "knowing-when-to-stop",
             "karen-and-the-manager",
+            "revalidating-decisions",
         ],
     },
     {
@@ -73,6 +74,7 @@ CATEGORIES: list[dict] = [
             "writing-commit-messages",
             "incremental-migration",
             "refactoring-safely",
+            "judging-duplication",
             "deleting-code",
             "feature-flagging",
             "resolving-merge-conflicts",
@@ -89,6 +91,7 @@ CATEGORIES: list[dict] = [
             "regression-test-from-bug",
             "characterization-testing",
             "choosing-test-scope",
+            "grounding-test-doubles",
         ],
     },
     {
@@ -120,6 +123,7 @@ CATEGORIES: list[dict] = [
             "configuration-management",
             "instrumenting-for-observability",
             "rate-limiting-and-backpressure",
+            "tracking-data-provenance",
         ],
     },
     {
@@ -128,7 +132,9 @@ CATEGORIES: list[dict] = [
         "skill_slugs": [
             "threat-modeling",
             "handling-untrusted-input",
+            "validating-numeric-input",
             "secrets-hygiene",
+            "redacting-sensitive-output",
             "auditing-dependencies",
             "least-privilege-design",
         ],
@@ -384,7 +390,7 @@ def split_frontmatter(markdown_text: str) -> tuple[dict[str, str], str]:
     """Split a SKILL.md's YAML frontmatter from its markdown body.
 
     Every SKILL.md in this corpus uses flat, single-line, unquoted
-    `key: value` frontmatter (verified against all 67 files), so this reads
+    `key: value` frontmatter (verified against all 73 files), so this reads
     just enough YAML to get name/description out without a YAML dependency
     -- it is not a general YAML parser.
     """
@@ -440,7 +446,7 @@ def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH
     """Trim a frontmatter description to a clean, <=140-char teaser.
 
     Every description in this corpus is a single long "Use when A, when B,
-    ... or when Z. Covers ..." sentence (all 67 run well past 140 characters,
+    ... or when Z. Covers ..." sentence (all 73 run well past 140 characters,
     the shortest is 339), so this always has real trimming to do. Strategy:
     take the first sentence; if it still doesn't fit, cut at the last comma
     (clause boundary) within budget, or fall back to the last word boundary
@@ -705,7 +711,7 @@ def _dedupe_id(candidate: str, used_ids: set[str]) -> str:
 def _consume_fenced_code_block(lines: list[str], index: int) -> tuple[str, int]:
     """Consume a ``` ... ``` block. Not in the spec's stated subset, but real
 
-    (7 of the 67 files use one, e.g. bisecting-failures.md's bisect script);
+    (7 of the 73 files use one, e.g. bisecting-failures.md's bisect script);
     rendered as a literal, HTML-escaped <pre><code> block with no inline
     markdown processing inside it, so a code sample's own `*` or backticks
     can't be misread as formatting -- this matters concretely, since one

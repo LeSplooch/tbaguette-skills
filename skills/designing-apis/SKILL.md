@@ -25,7 +25,7 @@ The interface is the only part you cannot refactor later: everything behind it i
 - Name the effect, not the mechanism: `cancel`, not `setStatusCancelled`. Mechanism names age badly because the mechanism changes and the name cannot.
 - **A boolean parameter is a design failure at the first one.** `render(true)` is unreadable at the call site and the second flag creates a combinatorial mess. Use a named option type or enum from flag one.
 - Never let a field's meaning depend on another field's value. "If `kind` is A, `payload` is X" is a tagged union; ship it as a discriminated union with a closed shape.
-- **One write path per provenance, not per row shape.** Where fields encode *how strongly* something is believed — an observation count, a hit rate, a confidence, a trust tier — an imported value has different standing from a measured one, and reusing the entry point that means "we observed this" launders the weaker claim into the stronger. Give the imported claim its own operation and usually its own field; once the two share a column, nothing downstream can tell a third party's hypothesis from your own measurement. Then check what reads that field, because an automatic promotion or escalation rule is how laundered provenance turns into authority.
+- **One write path per provenance, not per row shape.** Where a field encodes how strongly something is believed, writing an outside claim through the operation that means "we observed this" erases the distinction permanently — matching row shapes are what make the shortcut tempting, not what make it safe. `tracking-data-provenance` covers the claim taxonomy and the promotion rules that turn a laundered value into authority.
 
 ## Required, optional, and absence
 

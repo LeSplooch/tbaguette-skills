@@ -71,6 +71,8 @@ Use realistic values wherever the code touches encoding, length limits, locale, 
 - Insert bulk data through the store's native path, not the domain layer, when the test is about read behavior — otherwise setup dominates runtime.
 - Past ~1s of setup per test, move to one suite-scoped read-only dataset built once; tests that mutate create their own records instead.
 
+All of the above assumes you own the shape you are building. For a double standing in for something you do not control, the governing question is where its content came from — see `grounding-test-doubles`.
+
 ## Common mistakes
 
 | Symptom | Real cause |

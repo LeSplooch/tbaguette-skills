@@ -49,16 +49,9 @@ Chained small moves beat one large one because each is mechanically checkable, i
 
 ## Duplication that is load-bearing
 
-Two functions that differ only in a detail are the most obvious cleanup in the file, and merging them can be invisible to every test you currently have. The question before unifying is not "are these the same?" but **"what would notice if they stopped differing?"** When the answer is inside the process, the duplication is debt and merging it is safe. When the answer is outside it — a peer verifying a signature you computed, a format already written to disk, a counterpart that rebuilds the same bytes and compares — the duplication is a contract, and nothing in either file says so. When you cannot determine who observes it, keep the split: the cost of maintaining two functions is bounded and known, and the cost of merging them is neither.
+Before unifying a near-duplicate pair, find out who observes the difference. When the observer sits outside this process — a peer, a wire format, a stored file — the duplication is a contract, and the merge fails there rather than here, long after the diff.
 
-The tell is that the difference looks small and arbitrary: two encoders disagreeing only about a space and a few delimiter characters, two serializers differing only in field order, two hash inputs differing only in a trailing separator. Arbitrary is what somebody else's specification looks like from inside your codebase. A reference implementation carrying the same split is evidence *for* the split, not evidence that everyone copies badly.
-
-What makes the mistake expensive is where the failure lands. Unifying a signing path does not fail where the refactor is; it fails at a third party, as a generic rejection indistinguishable from a bad credential, pointing nowhere near the diff, and often only for the subset of inputs containing the character that used to be treated differently.
-
-Two pieces of residue when you decide to keep it:
-
-- Put the reason at **both** sites. A comment on one of a pair explains nothing to whoever arrives at the other, and they are the one who will merge them.
-- Pin the divergence with a test asserting the two produce *different* output for the same input, naming the character or field that must differ. It reads like a strange test, and it is the only thing that turns an attempted unification into a local, immediate failure instead of a remote one.
+`judging-duplication` covers making that call.
 
 ## Before touching untested code
 

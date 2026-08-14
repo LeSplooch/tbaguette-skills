@@ -7,7 +7,7 @@ or directly:
 
 Fixtures are written to look like the real TBaguette skill files rather than
 minimal placeholders ("abc", "foo bar") -- several of them are shaped after
-real constructs found while surveying the 67-skill corpus (escaped pipes in
+real constructs found while surveying the 73-skill corpus (escaped pipes in
 a table cell's inline code, a list item that wraps onto a continuation line
 with no marker, a paragraph directly followed by a list with no blank line),
 because those are exactly the cases a minimal fixture would never exercise.
@@ -435,7 +435,7 @@ class BuildContentIntegrationTests(unittest.TestCase):
         cls.content = build_content(str(REAL_SKILLS_ROOT))
 
     def test_finds_exactly_66_skills(self):
-        self.assertEqual(len(self.content["skills"]), 67)
+        self.assertEqual(len(self.content["skills"]), 73)
 
     def test_ten_categories_in_the_locked_order(self):
         actual_slugs = [c["slug"] for c in self.content["categories"]]
@@ -445,7 +445,7 @@ class BuildContentIntegrationTests(unittest.TestCase):
 
     def test_category_skill_slug_counts_sum_to_66(self):
         total = sum(len(c["skill_slugs"]) for c in self.content["categories"])
-        self.assertEqual(total, 67)
+        self.assertEqual(total, 73)
 
     def test_formidable_entry_has_stacks_commands_and_craft_floor(self):
         formidable = self.content["skills"]["formidable"]

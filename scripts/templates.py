@@ -50,6 +50,10 @@ from html import escape as _escape_html_impl
 # deliberate decorative variety, not an invented semantic assignment.
 _CATEGORY_ICONS = ("icon-wheat", "icon-crust", "icon-grain")
 
+# Most tiles the "Fresh from the oven" rail will show at once. See
+# _render_fresh_section() for why it is capped rather than exhaustive.
+FRESH_RAIL_LIMIT = 12
+
 _THEME_STORAGE_KEY = "tbaguette-theme"
 
 # Runs synchronously in <head>, before first paint, so the stored or
@@ -327,7 +331,8 @@ def _render_install(base_path: str = "") -> str:
 </div>"""
 
 
-def _render_hero(skill_count: int, category_count: int, base_path: str = "") -> str:
+def _render_hero(skill_count: int, category_count: int, base_path: str = "",
+                  fresh_skills: list[dict] | None = None) -> str:
     lede = (
         f"{skill_count} Claude Code skills for the craft between the ticket and the "
         f"commit, across {category_count} categories — findable by name, browsable "
@@ -341,6 +346,7 @@ def _render_hero(skill_count: int, category_count: int, base_path: str = "") -> 
     <h1 class="hero__headline">An atelier for the way you build.</h1>
     {_render_install(base_path)}
     <p class="hero__lede">{escape_html(lede)}</p>
+    {_render_fresh_section(fresh_skills or [], base_path)}
     {_render_search_field(base_path)}
   </div>
 </section>"""
@@ -366,19 +372,83 @@ def _render_search_empty_state(skill_count: int) -> str:
 </p>"""
 
 
-def _render_change_badge(status: str | None) -> str:
-    """"New"/"Updated" — set on a skill dict by generate.py from a real git
-    status check, not guessed here. Empty string (renders as nothing) for
-    every skill not touched by the update currently being shipped, which is
-    the common case — most page loads carry zero of these."""
+def _render_change_badge(status: str | None, at: str | None = None) -> str:
+    """"New"/"Updated" — set on a skill dict by generate.py from real git
+    history, not guessed here. Empty string (renders as nothing) for every
+    skill outside the freshness window, which is the common case once a
+    repository has any age at all.
+
+    data-fresh-at carries the instant the change landed so site.js can retire
+    the badge in the browser. The site is static: without that, a page built
+    one hour before the window closes would keep claiming "New" for as long
+    as a visitor (or a CDN) held onto it."""
     if status not in ("new", "updated"):
         return ""
     label = "New" if status == "new" else "Updated"
-    return f'<span class="change-badge change-badge--{status}">{label}</span>'
+    stamp = f' data-fresh-at="{escape_html(at)}"' if at else ""
+    return f'<span class="change-badge change-badge--{status}"{stamp}>{label}</span>'
+
+
+def _render_relative_time(at: str | None) -> str:
+    """A machine-readable instant with a readable absolute fallback baked in.
+    site.js rewrites the text to "2 hours ago" where Intl.RelativeTimeFormat
+    exists; without JS the visitor still gets a real date rather than a gap."""
+    if not at:
+        return ""
+    fallback = at[:10]
+    return (
+        f'<time class="fresh__when" datetime="{escape_html(at)}" data-format-relative>'
+        f"{escape_html(fallback)}</time>"
+    )
+
+
+def _render_fresh_tile(skill: dict, base_path: str = "") -> str:
+    """One rail tile. The New/Updated mark is the same .change-badge component
+    the cards below use rather than a rail-specific variant — one badge on the
+    site, filled for new and outlined for updated, so the distinction survives
+    without relying on colour.
+
+    data-fresh-at sits on the tile itself, so site.js removing a stale element
+    takes the whole tile rather than leaving a headless entry behind."""
+    at = skill.get("change_at")
+    stamp = f' data-fresh-at="{escape_html(at)}"' if at else ""
+    return f"""<a class="fresh__tile" href="{_skill_href(skill, base_path)}"{stamp}>
+  {_render_change_badge(skill.get('change_status'))}
+  <span class="fresh__name">{escape_html(skill['name'])}</span>
+  {_render_relative_time(at)}
+</a>"""
+
+
+def _render_fresh_section(fresh_skills: list[dict], base_path: str = "") -> str:
+    """The "Fresh from the oven" rail, above the search field.
+
+    Renders nothing at all when nothing is fresh. An empty state here would be
+    a section whose entire job is to say it has no job — worse than the space
+    it would occupy, and the categories below already answer "what is there".
+
+    Capped at FRESH_RAIL_LIMIT because a burst of activity (or, on a young
+    repository, its whole history) can put every skill inside the window at
+    once, and a rail listing everything is just the site again in miniature.
+    The cap only bounds this rail: the badges themselves are exhaustive, so
+    anything trimmed here is still marked in the grid below."""
+    if not fresh_skills:
+        return ""
+    shown = fresh_skills[:FRESH_RAIL_LIMIT]
+    tiles = _join(*(_render_fresh_tile(skill, base_path) for skill in shown))
+    return f"""<section class="fresh" aria-labelledby="fresh-title" data-fresh-section>
+  <div class="fresh__head">
+    {_icon("icon-grain", css_class="icon fresh__icon", base_path=base_path)}
+    <h2 class="fresh__title" id="fresh-title">Fresh from the oven</h2>
+    <span class="tag fresh__tag">Last 48 hours</span>
+  </div>
+  <div class="fresh__rail">
+{tiles}
+  </div>
+</section>"""
 
 
 def _render_skill_card(skill: dict, base_path: str = "") -> str:
-    badge = _render_change_badge(skill.get("change_status"))
+    badge = _render_change_badge(skill.get("change_status"), skill.get("change_at"))
     return f"""<a class="card" href="{_skill_href(skill, base_path)}" data-search-card data-search-terms="{_search_haystack(skill)}">
   <span class="card__name-row">
     <span class="card__name">{escape_html(skill['name'])}</span>
@@ -417,8 +487,11 @@ def _render_category_section(category: dict, skills: dict, icon_index: int,
 
 
 def render_index(categories: list[dict], skills: dict, base_path: str = "",
-                  last_updated_utc: str = "") -> str:
-    """Full HTML document string for the landing page."""
+                  last_updated_utc: str = "",
+                  fresh_skills: list[dict] | None = None) -> str:
+    """Full HTML document string for the landing page. fresh_skills arrives
+    already ordered newest-first from generate.py, which is the only place
+    that can know a change's real timestamp."""
     sections = _join(*(
         _render_category_section(cat, skills, i, base_path)
         for i, cat in enumerate(categories)
@@ -426,7 +499,7 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
     skill_count = len(skills)
     category_count = len(categories)
     main_html = _join(
-        _render_hero(skill_count, category_count, base_path),
+        _render_hero(skill_count, category_count, base_path, fresh_skills),
         _render_search_empty_state(skill_count),
         f'<div data-categories>\n{sections}\n</div>',
     )
@@ -461,7 +534,7 @@ def _render_breadcrumb(skill: dict, base_path: str = "") -> str:
 
 
 def _render_skill_head(skill: dict) -> str:
-    badge = _render_change_badge(skill.get("change_status"))
+    badge = _render_change_badge(skill.get("change_status"), skill.get("change_at"))
     return f"""<div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">{escape_html(skill['name'])}</h1>

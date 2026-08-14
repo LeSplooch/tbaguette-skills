@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:14:27+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:14:27Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:09:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:09:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -47,7 +47,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">secrets-hygiene</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-14T12:09:56.591083+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Security (defensive)</span>
   <p class="lede">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline, container image, or client app, or finding one in a commit, log line, screenshot, ticket, or error message. Covers leaked credential response, revocation and rotation, secret scanning, environment variable and dotenv handling, and pre-publication checks on a repository.</p>
@@ -75,17 +75,18 @@
 <ol><li><strong>Revoke.</strong> Invalidate it at the provider. This is the only step that stops the bleeding. If revoking breaks production, break production — a live leaked credential is the worse outage.</li><li><strong>Rotate.</strong> Issue and distribute the replacement. Deliberately after revocation: make rotation a prerequisite and you will delay revocation by hours.</li><li><strong>Audit for use.</strong> Pull provider access logs for the credential's <em>entire lifetime</em>, not from the moment of discovery — exposure began when it was written, not when it was noticed. Look for unfamiliar sources and for actions the legitimate consumer never performs.</li><li><strong>Purge from history.</strong> Rewrite history and delete artifacts last: it is slow, it forces every clone to be re-cloned, and it does nothing about copies that already exist.</li></ol>
 <p>Starting at step 4 is the common instinct and it is wrong. It feels like undoing the mistake, it removes the visible evidence, and it burns the hours during which the credential still works. It also manufactures a false resolution: the secret is gone from the tip of the branch and still authenticates.</p>
 <p><strong>Any secret that touched a shared surface is burned.</strong> &quot;It was only in a private repo / an internal channel / live for five minutes&quot; is not a control — private repos have forks, integrations, and read tokens, and five minutes is longer than an automated scraper needs. Rotate. The cost of an unnecessary rotation is one drill you owed yourself anyway.</p>
+<p>Keeping a secret out of output that has already received it is a separate discipline with its own failure modes — see <code>redacting-sensitive-output</code>.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The secret was removed in a follow-up commit</td><td>The commit that added it is still reachable; removal from the tip is cosmetic</td></tr><tr><td>Rotation requires a deploy</td><td>The value was captured into a constant or global at process start</td></tr><tr><td>Rotation was scheduled every quarter and never done</td><td>No overlap window, so rotation is an outage and every week is a bad week</td></tr><tr><td>Scanners are clean and a key still leaked</td><td>A custom token format with no recognizable prefix or entropy signature</td></tr><tr><td>Nobody can say which service uses this key</td><td>One credential, many consumers; it cannot be rotated without breaking something unknown</td></tr><tr><td>CI masking failed</td><td>The value was transformed before printing; masks match literals</td></tr><tr><td>An &quot;encrypted&quot; private key sits in the repo</td><td>The decryption key is in the same repo, the same image, or an environment everyone can read</td></tr><tr><td>The leak response began with a history rewrite</td><td>Revocation postponed behind the slowest and least effective step</td></tr><tr><td>Ignore rules treated as the control</td><td>Ignore files do not cover already-tracked files, other surfaces, or anyone's local tooling</td></tr><tr><td>Same key in staging and production</td><td>One credential spanning environments; the weakest environment sets the security of the strongest</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's just a dev key&quot; / &quot;it's a test account&quot;.</li><li>&quot;It's in a private repository.&quot;</li><li>&quot;We'll rotate if we see abuse&quot; — without per-credential telemetry, you will not see it.</li><li>&quot;Hardcode it for now and clean it up before merge.&quot;</li><li>&quot;The CI masking will catch it.&quot;</li><li>Any response that begins by estimating who might have seen it.</li><li>Rewriting history before revoking.</li><li>Nobody can name the owner or the expiry of a production credential.</li><li>A secret pasted into chat &quot;so it can be copied over&quot; — that message is now permanent.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/handling-untrusted-input/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/validating-numeric-input/">
   <span class="prevnext__label">Previous</span>
-  <span class="prevnext__name">← handling-untrusted-input</span>
+  <span class="prevnext__name">← validating-numeric-input</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/auditing-dependencies/">
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/redacting-sensitive-output/">
   <span class="prevnext__label">Next</span>
-  <span class="prevnext__name">auditing-dependencies →</span>
+  <span class="prevnext__name">redacting-sensitive-output →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Security (defensive)</h2>
@@ -97,6 +98,14 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
       <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/validating-numeric-input/">
+      <span class="see-also__name">validating-numeric-input</span>
+      <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/redacting-sensitive-output/">
+      <span class="see-also__name">redacting-sensitive-output</span>
+      <span class="see-also__summary">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>

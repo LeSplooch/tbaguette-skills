@@ -66,13 +66,9 @@ Run `git log -1 --format=%ad -L <a>,<b>:<file>` on the region. Age is the cheape
 
 ## The reason has its own expiry date
 
-Finding the rationale is not the end of the dig. A durable decision record — an ADR, a design doc, a wontfix, a comment saying "we can't do X because Y" — freezes two different things in one sentence: the **principle** its author applied, and the **premise** about the world they applied it to. The principle is usually stable. The premise decays, silently, on a schedule nobody in this repo controls.
+Finding the rationale is not the end of the dig. A record fuses a stable **principle** with a **premise** about the world, and premises held by a vendor, platform, dependency, or protocol expire without any commit touching this repo — so nothing in this skill will show you one moved. Presence of a recorded reason is not evidence it still holds.
 
-Separate the two before treating the record as binding. A stated refusal to work around someone else's access controls is a principle, and it still holds. "There is no supported interface, so the only route is the unsupported one" is a premise about a third party, and third parties ship things. Premises that live outside the codebase — a vendor's capabilities, a dependency's limits, a platform's rules, a protocol version, a legal constraint — are exactly the class that expires with no commit touching the repo, which means no technique in this skill will show you it moved. Re-verifying one is usually a single search, and it is far cheaper than the work the record is currently blocking.
-
-Nothing in the wording distinguishes "we decided against this" from "this was impossible at the time", and the two deserve different responses. A record that was correct when written, is still correctly reasoned, and is wrong now is the ordinary case, not an indictment of its author — worth saying plainly, because the perceived cost of contradicting a colleague's judgment is what keeps expired premises load-bearing for years.
-
-This cuts both ways, and the check is what decides which. A premise that survives re-verification leaves the record stronger than it was, now with a second date on it; the failure is not trusting old records but trusting them untested. When you are the one writing the record, separate the two parts on the way in — see `writing-adrs`.
+`revalidating-decisions` covers the split and the re-check.
 
 ## When history is worthless
 

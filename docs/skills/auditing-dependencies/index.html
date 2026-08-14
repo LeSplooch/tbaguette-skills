@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:14:27+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:14:27Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:09:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:09:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -47,7 +47,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">auditing-dependencies</h1>
-    
+    <span class="change-badge change-badge--new" data-fresh-at="2026-08-13T05:38:33+02:00">New</span>
   </div>
   <span class="tag skill-article__tag">Security (defensive)</span>
   <p class="lede">Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries, when a vulnerability scanner or advisory alert fires and needs triage, when a dependency looks unmaintained, abandoned, or has changed owners, or when weighing supply chain risk, install and postinstall scripts, typosquatting and dependency confusion, vendoring, pinning, mirrors, and provenance.</p>
@@ -85,9 +85,9 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Scanner alerts ignored in bulk</td><td>Triaged by severity rather than reachability; the queue filled with unreachable findings and lost credibility</td></tr><tr><td>&quot;We upgraded&quot; but the vulnerable version is still installed</td><td>Two copies in the tree; the transitive one was never overridden</td></tr><tr><td>Lockfile committed, CI still resolves new versions</td><td>Install not run in frozen/locked mode</td></tr><tr><td>Build breaks when a package is deleted upstream or a registry is down</td><td>The supply chain includes uptime you do not control and no mirror exists</td></tr><tr><td>A one-line utility pulled in a large tree</td><td>Reviewed the direct package, never the resolved graph</td></tr><tr><td>CI compromised through a dependency</td><td>Install ran in a job holding publish or cloud credentials</td></tr><tr><td>The wrong package installed under a plausible name</td><td>Name typed from memory or copied from a search result</td></tr><tr><td>A dependency cannot be removed</td><td>Its types leaked into the domain model; no adapter boundary was ever drawn</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's only a dev dependency&quot; — install hooks run at your privilege regardless of which section lists it.</li><li>Download counts or stars used as the entire review.</li><li>Adding a dependency for something under ~100 lines.</li><li>Spending an hour on reachability analysis when a patch release exists.</li><li>&quot;We'll deal with the unmaintained one when it breaks.&quot;</li><li>A dependency being added during an incident, at speed, from a search result.</li><li>A public registry configured as a fallback for a private namespace.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/secrets-hygiene/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/redacting-sensitive-output/">
   <span class="prevnext__label">Previous</span>
-  <span class="prevnext__name">← secrets-hygiene</span>
+  <span class="prevnext__name">← redacting-sensitive-output</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/least-privilege-design/">
   <span class="prevnext__label">Next</span>
@@ -104,9 +104,17 @@
       <span class="see-also__name">handling-untrusted-input</span>
       <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
     </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/validating-numeric-input/">
+      <span class="see-also__name">validating-numeric-input</span>
+      <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
+    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
       <span class="see-also__summary">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/redacting-sensitive-output/">
+      <span class="see-also__name">redacting-sensitive-output</span>
+      <span class="see-also__summary">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/least-privilege-design/">
       <span class="see-also__name">least-privilege-design</span>

@@ -1,7 +1,7 @@
 """Integration test for generate.py — the seam content_pipeline.py and
 templates.py were each tested against in isolation (against a hand-written
 fixture, before either could see the other's real output), now exercised
-together against the real, embedded, 67-skill corpus. Catches exactly the
+together against the real, embedded, 73-skill corpus. Catches exactly the
 class of contract drift a review of this project flagged as previously
 untested: two halves individually correct, never proven correct together.
 
@@ -11,10 +11,12 @@ Usage:
 
 from __future__ import annotations
 
+import os
 import re
 import shutil
 import subprocess
 import tempfile
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import generate
@@ -103,6 +105,137 @@ def check_changed_skill_slugs() -> None:
     try:
         check("outside any git repo: fails open to no changes, not an exception",
               generate._changed_skill_slugs(non_repo) == {})
+    finally:
+        shutil.rmtree(non_repo, ignore_errors=True)
+
+
+def check_freshness_window() -> None:
+    """_recent_skill_commits()/_fresh_skills() against a real throwaway repo
+    with real, back-dated commits — the whole point is that a badge expires on
+    committer date, and only actual git history proves that parsing works."""
+    print("48-hour freshness window")
+    repo = Path(tempfile.mkdtemp(prefix="tbaguette-freshness-test-"))
+    try:
+        _run_git(["init", "-q"], repo)
+        _run_git(["config", "user.email", "test@example.invalid"], repo)
+        _run_git(["config", "user.name", "Test"], repo)
+
+        now = datetime(2026, 8, 14, 12, 0, 0, tzinfo=timezone.utc)
+
+        # The commits below are deliberately created in an order that has
+        # nothing to do with their dates (9d, 9d, 3h, 5h, 10h, 1h, 9d, 49h).
+        # Real histories look like this after a rebase, a cherry-pick, an
+        # import, clock skew, or two agents committing into one repository.
+        # This is not decoration: an earlier version of _recent_skill_commits
+        # used `git log --since`, which stops walking at the first old-enough
+        # commit, and every check below the "veteran" one failed because half
+        # the history was pruned away.
+
+        def commit_at(message: str, when: datetime) -> None:
+            stamp = when.isoformat()
+            env = {
+                **os.environ,
+                "GIT_AUTHOR_DATE": stamp,
+                "GIT_COMMITTER_DATE": stamp,
+            }
+            subprocess.run(["git", "add", "-A"], cwd=repo, check=True,
+                           capture_output=True, text=True)
+            subprocess.run(["git", "commit", "-q", "-m", message], cwd=repo,
+                           check=True, capture_output=True, text=True, env=env)
+
+        def write(slug: str, text: str) -> None:
+            skill_dir = repo / "skills" / slug
+            skill_dir.mkdir(parents=True, exist_ok=True)
+            (skill_dir / "SKILL.md").write_text(f"---\nname: {slug}\n---\n{text}\n",
+                                                encoding="utf-8")
+
+        # ancient: added 9 days ago, never touched since -> outside the window
+        write("ancient", "Original.")
+        commit_at("add ancient", now - timedelta(days=9))
+
+        # veteran: added 9 days ago, edited 3 hours ago -> Updated, not New
+        write("veteran", "Revised recently.")
+        commit_at("edit veteran... ", now - timedelta(days=9))
+        write("veteran", "Revised again.")
+        commit_at("edit veteran", now - timedelta(hours=3))
+
+        # newborn: added 5 hours ago -> New
+        write("newborn", "Brand new.")
+        commit_at("add newborn", now - timedelta(hours=5))
+
+        # reborn: added 10 hours ago and edited 1 hour ago -> Updated, since
+        # the badge must describe the same event as the timestamp beside it
+        write("reborn", "Created.")
+        commit_at("add reborn", now - timedelta(hours=10))
+        write("reborn", "And edited.")
+        commit_at("edit reborn", now - timedelta(hours=1))
+
+        # stale-edge: edited 49 hours ago -> just outside a 48-hour window
+        write("stale-edge", "Created long ago.")
+        commit_at("add stale-edge", now - timedelta(days=9))
+        write("stale-edge", "Edited just outside the window.")
+        commit_at("edit stale-edge", now - timedelta(hours=49))
+
+        fresh = generate._fresh_skills(repo, now=now)
+
+        check("a skill untouched for nine days carries no badge at all",
+              "ancient" not in fresh)
+        check("an edit 49 hours old has already expired — the boundary is real, "
+              "not 'roughly two days'",
+              "stale-edge" not in fresh)
+        check("a long-lived skill edited inside the window reads Updated",
+              fresh.get("veteran", {}).get("status") == "updated")
+        check("a skill added inside the window reads New",
+              fresh.get("newborn", {}).get("status") == "new")
+        check("a skill added AND then edited inside the window reads Updated: "
+              "the badge describes the same event as the time shown next to "
+              "it, and 'New' beside '1 hour ago' would claim it was created "
+              "an hour ago",
+              fresh.get("reborn", {}).get("status") == "updated")
+        check("that skill is stamped with its most recent touch, not the older "
+              "commit that created it",
+              fresh.get("reborn", {}).get("at", "").startswith("2026-08-14T11:00"))
+
+        # Uncommitted work is what is about to ship: it must show up even
+        # though no commit exists to find it by, which is exactly the state
+        # this project's pre-commit hook generates in.
+        write("ancient", "Edited but not yet committed.")
+        write("pending", "Never committed at all.")
+        fresh_with_worktree = generate._fresh_skills(repo, now=now)
+        check("an uncommitted edit to an otherwise-expired skill brings it back, "
+              "because it is the update currently being shipped",
+              fresh_with_worktree.get("ancient", {}).get("status") == "updated")
+        # newborn was committed as New five hours ago. Editing it now makes
+        # the working tree the newest event, and the working tree's event is
+        # a modification — so the badge has to follow the timestamp down to
+        # "Updated" rather than keeping yesterday's stronger word.
+        write("newborn", "Edited after being created.")
+        check("an uncommitted edit overrides a committed New: the newest event "
+              "is a modification, and the badge tracks the newest event",
+              generate._fresh_skills(repo, now=now)["newborn"]["status"] == "updated")
+        check("a brand-new uncommitted skill directory reads New",
+              fresh_with_worktree.get("pending", {}).get("status") == "new")
+        check("uncommitted work is stamped 'now', so it sorts above every "
+              "commit already in the window",
+              fresh_with_worktree["pending"]["at"] == now.isoformat())
+
+        ordered = generate._fresh_order(
+            {slug: {"slug": slug} for slug in fresh_with_worktree},
+            fresh_with_worktree,
+        )
+        check("_fresh_order returns newest change first",
+              [s["slug"] for s in ordered][:2] == ["ancient", "pending"]
+              or [s["slug"] for s in ordered][:2] == ["pending", "ancient"])
+        check("...and the committed ones follow in recency order behind them",
+              [s["slug"] for s in ordered][2:] == ["reborn", "veteran", "newborn"])
+    finally:
+        shutil.rmtree(repo, ignore_errors=True)
+
+    non_repo = Path(tempfile.mkdtemp(prefix="tbaguette-fresh-not-a-repo-"))
+    try:
+        check("outside any git repo, freshness fails open to nothing fresh "
+              "rather than blocking the build",
+              generate._fresh_skills(non_repo, now=datetime.now(timezone.utc)) == {})
     finally:
         shutil.rmtree(non_repo, ignore_errors=True)
 
@@ -217,6 +350,7 @@ def main() -> None:
         shutil.rmtree(tmp_root, ignore_errors=True)
 
     check_changed_skill_slugs()
+    check_freshness_window()
 
     print(f"\n{checker.total} checks passed.")
 

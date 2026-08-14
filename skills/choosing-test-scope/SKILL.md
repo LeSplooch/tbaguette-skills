@@ -58,13 +58,9 @@ Do test:
 
 ## Where a double's content comes from
 
-A double is exactly as correct as what its author believed while writing it. Composed from a specification, a vendor's reference implementation, or a careful reading of someone else's source, it inherits every misreading in that reading, and it does so invisibly — the suite built on it then agrees with itself forever. A green run against your own fixtures is positive evidence about the fixtures, not about the integration. The two-party version of this is already above: a mock both sides agree on is a shared belief. The one-party version is worse, because there is no second party available to disagree.
+The two-party version is above: a mock both sides agree on is a shared belief, not a check. The one-party version is worse, since no second party exists to disagree — a double and the parser that reads it, written from one document by one person, encode the same misreading and pass forever.
 
-Prefer fixtures **captured from a real response** over fixtures composed from a document. One recorded payload per route, saved verbatim and committed, costs a single live call and is worth more than any amount of careful reading. It still only proves one shape, which is why at least one live test per external integration earns its place too — excluded from the default run, executed on a schedule or before a release — so that both a misreading and a provider's later drift surface as a failing test instead of as a support ticket.
-
-Assume the shape varies wherever you have not actually looked. An envelope that wraps once on most routes and twice on one; a number arriving as bare JSON here, a quoted string there, an empty string when absent; a boolean spelled three ways by three endpoints. None of these are exotic, and all of them survive a suite whose fixtures were written by the same person who wrote the parser.
-
-Make the mismatch loud when it does arrive. A boundary that yields an empty collection for a payload it failed to recognize is indistinguishable from a genuinely empty upstream, and "zero rows" is the easiest wrong answer in the world to accept. An unrecognized shape should raise.
+`grounding-test-doubles` covers fixture provenance and the live test that breaks the tie.
 
 ## Budgets, and the end-to-end death spiral
 

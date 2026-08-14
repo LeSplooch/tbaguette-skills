@@ -53,6 +53,8 @@ Move outward only when a concrete requirement demands it — a divergent scaling
 - **Chatty crossings mean the boundary cuts a cohesive operation.** A loop containing a cross-boundary call, or N calls per user action, is a signal to move the loop across the boundary (one coarse call) or move the boundary.
 - **Merging is a legitimate refactor and badly under-used.** Two modules that always change together and are used by nobody else should be merged, then re-split later along the seam the changes actually revealed.
 
+Before merging two things that look alike, establish that the resemblance is a shared reason rather than a coincidence — `judging-duplication`.
+
 ## Common mistakes
 
 | Symptom | Real cause |

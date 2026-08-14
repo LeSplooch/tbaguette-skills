@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:14:27+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:14:27Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:09:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:09:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -47,7 +47,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">handling-untrusted-input</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-14T12:09:56.591083+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Security (defensive)</span>
   <p class="lede">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config, or another internal service — when building a query, command, path, URL, template, or markup that embeds a variable, when reviewing a sanitize or escape helper, or when handling deserialization, path traversal, injection, XSS, SSRF, XXE, unicode normalization, or parser resource exhaustion.</p>
@@ -63,7 +63,7 @@
 <pre class="prose-code-block"><code>BAD:   if is_valid_email(s) { send(s) }        // s is still a string; the next call site forgets
 GOOD:  let addr = Email::parse(s)?             // Email cannot exist unless parsing succeeded
        send(addr)                              // no re-check possible, none needed</code></pre>
-<ul><li>One constructor. If any other code path can build the type, the guarantee is decorative — private constructors, smart-constructor modules, or a package boundary are how this is enforced.</li><li>Realizations by paradigm: newtypes and refinement types (Rust, Haskell, branded types in TypeScript); value objects with private constructors (Java, C#, Ruby); a struct plus constructor discipline and no exported zero value (Go); a class validating in its initializer with frozen fields (Python); a struct with a <code>parse_</code> function returning a status and never a bare pointer (C).</li><li>The typed value carries the <em>parsed</em> form, not the original text — keeping the raw alongside guarantees someone uses the raw. Parse at the outermost layer that understands the format; re-validating deeper in means the type did not carry the guarantee, so fix the type rather than adding the check.</li><li><strong>A guard written as a comparison is not a parse, and it is not total over its own input domain.</strong> Every relation involving a floating-point NaN evaluates false, so <code>value &lt; MINIMUM</code> and <code>value &lt;= 0</code> both decline to reject it, and a clamp assembled from min and max propagates it instead of bounding it. The value then travels layers past its own validation and surfaces as an exception with no visible connection to where it came from. Parsing a number means asserting that it <em>is</em> one — finite first, then in range — rather than testing a relation and inferring the rest from it not having fired.</li></ul>
+<ul><li>One constructor. If any other code path can build the type, the guarantee is decorative — private constructors, smart-constructor modules, or a package boundary are how this is enforced.</li><li>Realizations by paradigm: newtypes and refinement types (Rust, Haskell, branded types in TypeScript); value objects with private constructors (Java, C#, Ruby); a struct plus constructor discipline and no exported zero value (Go); a class validating in its initializer with frozen fields (Python); a struct with a <code>parse_</code> function returning a status and never a bare pointer (C).</li><li>The typed value carries the <em>parsed</em> form, not the original text — keeping the raw alongside guarantees someone uses the raw. Parse at the outermost layer that understands the format; re-validating deeper in means the type did not carry the guarantee, so fix the type rather than adding the check.</li><li><strong>A guard written as a comparison is not a parse.</strong> A relational check is a denylist over an ordered domain, and floating-point NaN is the member nobody enumerated — it makes every comparison false, so a pair of bounds that looks exhaustive lets it through untouched. Assert the value <em>is</em> a finite number before asking anything about its size. <code>validating-numeric-input</code> covers the rest of that domain.</li></ul>
 <h2 id="injection-is-one-bug-with-many-names">Injection is one bug with many names</h2>
 <p>Never build a string in a language you do not control out of data you do not control. Each destination has a mechanism that keeps data and code separate; use it instead of escaping.</p>
 <table><thead><tr><th>Destination</th><th>The concatenation form</th><th>The separating mechanism</th></tr></thead><tbody><tr><td>Database query</td><td>query text built by concatenation</td><td>parameterized/prepared statements; identifiers cannot be parameterized, so map a caller token through an allowlist to a literal</td></tr><tr><td>OS command</td><td>a shell string</td><td>exec with an argument vector, no shell; if a shell is unavoidable the argument must come from an allowlist</td></tr><tr><td>Filesystem path</td><td>base + user segment</td><td>resolve to absolute, then assert the <em>resolved</em> value is under the base</td></tr><tr><td>Markup / DOM</td><td>interpolation into HTML</td><td>a template engine with contextual auto-escaping; text-content APIs, never raw-HTML APIs</td></tr><tr><td>URL</td><td>string joining</td><td>a URL builder that encodes each component in its own grammar</td></tr><tr><td>Document query languages</td><td>filter built from strings, or a caller-supplied object</td><td>a typed query builder; assert scalar values are scalars, which is what operator injection exploits</td></tr><tr><td>Logs, headers, email</td><td>concatenated fields and format strings</td><td>structured logging with fields, and library APIs that reject control characters — otherwise one newline forges a log entry or splits a header</td></tr><tr><td>Templates / expression languages</td><td>user data used as template <strong>source</strong></td><td>user data may only ever be template <strong>data</strong>; the other way is remote code execution</td></tr></tbody></table>
@@ -73,7 +73,7 @@ GOOD:  let addr = Email::parse(s)?             // Email cannot exist unless pars
 <ul><li>Decode exactly once, then reject any input that still contains encoded sequences. Loop-until-stable decoding is itself a vulnerability, and single-decode filters are what double-encoding is for.</li><li>Paths: resolve to absolute <em>and</em> resolve symlinks, then prefix-compare including the separator — <code>/base</code> matches <code>/base-evil</code>, <code>/base/</code> does not.</li><li>Hosts and URLs: parse with a real URL parser and compare the parsed host. Regex or prefix matching on a URL string is the standard SSRF allowlist bypass. Re-resolve at connect time or bind to the resolved address, since DNS answers change between check and use.</li><li>Unicode: normalize (NFC generally; NFKC where confusables decide identity, as with usernames and hostnames) before uniqueness checks and before any authorization comparison, and case-fold afterwards, locale-independently. Comparisons that decide authorization run on canonical bytes — and constant-time whenever either side is a secret.</li></ul>
 <h2 id="allowlists-and-limits-on-every-parse">Allowlists, and limits on every parse</h2>
 <p>A denylist enumerates what you thought of; the dangerous set is unbounded and grows with every downstream library update. An allowlist enumerates what you support, which is finite and known. Allowlist the <em>value</em> wherever the value space is finite: column names, sort directions, redirect targets, template names, locales, file types. Use a denylist only where the accepted set is genuinely open — free prose — and there the real defense is output encoding, not filtering. If the allowlist must be a pattern, anchor both ends and bound the length.</p>
-<p>Where you do filter, <strong>the replacement must not quote the match</strong>. A redactor that substitutes a marker containing the first N characters of whatever it matched — added for debuggability, or to make a log line useful — reproduces the thing it exists to remove whenever the match is around N characters long, and then hands it to the consumer the filter was protecting. The same trap covers secret masking, PII scrubbing, and profanity filters equally. Test it by asserting the <strong>absence of the input</strong> in the output, never the presence of the marker: the marker is trivially satisfiable while the removal fails, so a test that only looks for it passes against a redactor that redacts nothing.</p>
+<p>Where you do filter, <strong>the replacement must not quote the match</strong> — a redactor that embeds the first N characters of what it matched, for debuggability, reproduces the thing it exists to remove and hands it to the consumer the filter was protecting. Test by asserting the <strong>absence of the input</strong>, never the presence of the marker, which is trivially satisfiable while the removal fails. Applying this across logs, traces, and crash dumps is <code>redacting-sensitive-output</code>.</p>
 <p>Every parser needs four numbers chosen deliberately, because every default is &quot;unbounded&quot;:</p>
 <table><thead><tr><th>Limit</th><th>Starting point</th></tr></thead><tbody><tr><td>Body size</td><td>1 MB for API bodies; uploads on a separate path with their own cap</td></tr><tr><td>Nesting depth</td><td>≤ 32 for JSON/XML/YAML-family structures</td></tr><tr><td>Element count</td><td>≤ 10k entries; also cap archive members, multipart parts, headers, and page size</td></tr><tr><td>Time</td><td>a parse deadline ≤ 1s enforced by the caller, plus a 1–4 KB input bound on any backtracking pattern engine</td></tr><tr><td>Decompression</td><td>absolute output cap plus a ratio cap ≤ 100:1</td></tr></tbody></table>
 <p>Enforce at the streaming layer, before allocation — checking length after reading the body is not a limit. Disable DTD and external entity resolution in every XML-family parser; use the schema-restricted loader in every YAML parser.</p>
@@ -92,9 +92,9 @@ GOOD:  let addr = Email::parse(s)?             // Email cannot exist unless pars
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← threat-modeling</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/secrets-hygiene/">
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/validating-numeric-input/">
   <span class="prevnext__label">Next</span>
-  <span class="prevnext__name">secrets-hygiene →</span>
+  <span class="prevnext__name">validating-numeric-input →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Security (defensive)</h2>
@@ -103,9 +103,17 @@ GOOD:  let addr = Email::parse(s)?             // Email cannot exist unless pars
       <span class="see-also__name">threat-modeling</span>
       <span class="see-also__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</span>
     </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/validating-numeric-input/">
+      <span class="see-also__name">validating-numeric-input</span>
+      <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
+    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
       <span class="see-also__summary">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/redacting-sensitive-output/">
+      <span class="see-also__name">redacting-sensitive-output</span>
+      <span class="see-also__summary">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>

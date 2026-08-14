@@ -27,7 +27,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:14:27+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:14:27Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:09:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:09:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
@@ -47,7 +47,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">drawing-boundaries</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-14T12:09:56.591083+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Designing systems</span>
   <p class="lede">Use when deciding what belongs together — module, package, crate, library, process, or service splits; extracting or merging components; wrapping a vendor SDK behind an interface you own; restructuring a folder layout. Also for circular dependencies, a shared or common module that only grows, every feature touching every module, components that must deploy in a fixed order, and whether something warrants its own process, repository, or service.</p>
@@ -64,6 +64,7 @@
 <p>Move outward only when a concrete requirement demands it — a divergent scaling profile, a fault-isolation requirement, a team or compliance boundary, a different release cadence. &quot;It felt cleaner&quot; does not pay for a network hop. <strong>A boundary drawn as a module can be promoted outward cheaply later; one drawn as a service is very hard to pull back in.</strong> Draw in-process, promote under demand.</p>
 <h2 id="when-not-to-split">When not to split</h2>
 <ul><li><strong>The two sides share a transactional invariant.</strong> If correctness requires both to change atomically, they are one unit; splitting buys a saga and a new class of bugs in exchange for a diagram.</li><li>You have fewer than about three real use cases. The abstraction is a guess, and a wrong boundary costs far more than duplication. Duplicate twice, extract on the third.</li><li><strong>The distributed monolith</strong> is the outcome of splitting without decoupling. Diagnose with four questions: can each side be deployed alone, in either order? Does a schema change require a coordinated release? Does one going down make the other useless rather than degraded? Do they share a database? Two yeses and you have one system with network calls inside it — every cost of distribution, none of the independence.</li><li>A shared database between two components is not a boundary; it is a boundary with a hole in it. The schema is the real interface and nobody versioned it or wrote it down.</li><li><strong>Chatty crossings mean the boundary cuts a cohesive operation.</strong> A loop containing a cross-boundary call, or N calls per user action, is a signal to move the loop across the boundary (one coarse call) or move the boundary.</li><li><strong>Merging is a legitimate refactor and badly under-used.</strong> Two modules that always change together and are used by nobody else should be merged, then re-split later along the seam the changes actually revealed.</li></ul>
+<p>Before merging two things that look alike, establish that the resemblance is a shared reason rather than a coincidence — <code>judging-duplication</code>.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Every feature touches every module</td><td>Split by technical layer instead of by capability</td></tr><tr><td>Circular imports between modules</td><td>Boundary in the wrong place, or a missing third concept</td></tr><tr><td><code>shared</code> / <code>common</code> grows without limit</td><td>A boundary with no owner, used as a dumping ground for anything ambiguous</td></tr><tr><td>Components must be deployed in a fixed order</td><td>Distributed monolith; the interface between them is not versioned</td></tr><tr><td>Vendor types appear throughout the core</td><td>Port defined by the vendor's API rather than by your need</td></tr><tr><td>A &quot;port&quot; with 40 methods</td><td>Mirroring the SDK, so nothing is actually abstracted</td></tr><tr><td>A simple change needs three repos and three reviews</td><td>Ownership boundaries and change boundaries do not line up</td></tr><tr><td>Two services share a table</td><td>The schema is the real interface, and it is unversioned</td></tr><tr><td>N+1 calls across a service boundary</td><td>Boundary cuts through a cohesive operation</td></tr><tr><td>An interface with exactly one implementation, forever</td><td>Extracted before a second use case existed</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
@@ -122,6 +123,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">
       <span class="see-also__name">rate-limiting-and-backpressure</span>
       <span class="see-also__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/tracking-data-provenance/">
+      <span class="see-also__name">tracking-data-provenance</span>
+      <span class="see-also__summary">Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted…</span>
     </a></li>
   </ul>
 </div>

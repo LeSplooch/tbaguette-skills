@@ -9,6 +9,9 @@
  *   - copy install command (landing page only; one button per platform tab)
  *   - header "Updated" time (every page — formats the baked-in UTC instant
  *                             as the visitor's local time)
+ *   - freshness      (every page — re-checks each New/Updated badge's
+ *                      48h window against the visitor's own clock, and
+ *                      formats the fresh rail's timestamps as "3 hours ago")
  *   - site update check (every page — polls docs/version.txt every 10-12s;
  *                         on a mismatch, shows a reload-only modal)
  *   - post-reload scroll restore (every page — companion to the update
@@ -75,6 +78,97 @@
       } catch (error) {
         // Unsupported options or timeZone in this browser: leave the
         // server-rendered plain-UTC fallback text in place.
+      }
+    });
+  }
+
+  // -------------------------------------------------------------------
+  // Freshness — the browser half of the New/Updated window.
+  //
+  // generate.py already dropped anything older than FRESH_WINDOW_HOURS at
+  // build time, but this site is static: a page built an hour before the
+  // window closes keeps claiming "New" for as long as a visitor's tab, or a
+  // CDN, holds onto it. Every element carrying data-fresh-at is re-checked
+  // here against the visitor's own clock, which is what makes "48 hours"
+  // true rather than "48 hours as of whenever this page was built".
+  //
+  // Server-side stays authoritative for no-JS visitors: they see the build's
+  // answer, which is correct at build time and only ever errs toward showing
+  // a badge slightly too long — never toward hiding a real one.
+  // -------------------------------------------------------------------
+
+  var FRESH_WINDOW_MS = 48 * 60 * 60 * 1000;
+
+  function initFreshness() {
+    var stamped = toArray(document.querySelectorAll('[data-fresh-at]'));
+    if (!stamped.length) return;
+    var now = Date.now();
+
+    stamped.forEach(function (el) {
+      var when = new Date(el.getAttribute('data-fresh-at'));
+      // An unparseable timestamp leaves the element exactly as the server
+      // rendered it — a badge that lingers is a far smaller failure than one
+      // that vanishes because a date string had a shape this didn't expect.
+      if (isNaN(when.getTime())) return;
+      if (now - when.getTime() > FRESH_WINDOW_MS) {
+        el.parentNode.removeChild(el);
+      }
+    });
+
+    // The rail's heading and gilded rule are only worth their space if at
+    // least one tile survived; an empty "Fresh from the oven" is a section
+    // announcing it has nothing to announce. querySelectorAll rather than
+    // querySelector: the landing page only ever renders one of these, but
+    // the singular form silently checks the *first* section and leaves any
+    // other one standing empty, which is a trap for whoever adds the second.
+    toArray(document.querySelectorAll('[data-fresh-section]')).forEach(function (section) {
+      if (!section.querySelectorAll('.fresh__tile').length) {
+        section.parentNode.removeChild(section);
+      }
+    });
+  }
+
+  // Absolute dates are the wrong unit for something that expires in 48
+  // hours: "3 hours ago" answers the question the badge raises, "2026-08-14"
+  // makes the reader do the subtraction. Falls back silently to the
+  // server-rendered date where Intl.RelativeTimeFormat is missing.
+  function initRelativeTimes() {
+    var els = toArray(document.querySelectorAll('[data-format-relative]'));
+    if (!els.length) return;
+    if (!window.Intl || !window.Intl.RelativeTimeFormat) return;
+
+    var formatter;
+    try {
+      formatter = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
+    } catch (error) {
+      return;
+    }
+
+    els.forEach(function (el) {
+      var iso = el.getAttribute('datetime');
+      if (!iso) return;
+      var when = new Date(iso);
+      if (isNaN(when.getTime())) return;
+
+      // Elapsed time is measured as a positive magnitude and floored, then
+      // negated for the formatter. Rounding a signed value would round *away*
+      // from zero for negatives — 47 hours becomes "2 days ago" when only one
+      // day has actually passed — and flooring a negative does the same. This
+      // is also why the clamp is here: clock skew, or a commit stamped a few
+      // seconds ahead of a visitor whose clock runs slow, would otherwise
+      // read "in 1 minute" on a panel about things that already happened.
+      var elapsedMinutes = Math.max(0, Math.floor((Date.now() - when.getTime()) / 60000));
+
+      try {
+        if (elapsedMinutes < 60) {
+          el.textContent = formatter.format(-elapsedMinutes, 'minute');
+        } else if (elapsedMinutes < 60 * 24) {
+          el.textContent = formatter.format(-Math.floor(elapsedMinutes / 60), 'hour');
+        } else {
+          el.textContent = formatter.format(-Math.floor(elapsedMinutes / (60 * 24)), 'day');
+        }
+      } catch (error) {
+        // Leave the server-rendered absolute date in place.
       }
     });
   }
@@ -487,6 +581,10 @@
   }
 
   initThemeToggle();
+  // Freshness runs before search: it can remove whole rail tiles, and
+  // initSearch() counts cards to build its "showing all N" status.
+  initFreshness();
+  initRelativeTimes();
   initSearch();
   initInstallCopy();
   initTabs();

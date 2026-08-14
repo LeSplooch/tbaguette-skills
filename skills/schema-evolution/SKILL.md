@@ -86,6 +86,8 @@ Every live version is a permanent code path, a test matrix multiplier, and a sup
 
 When a field, column, tag number, or enum ordinal is removed, mark the identifier reserved in the schema and never reuse it. Reuse is a silent data-corruption bug: archived rows, replayed messages, and old backups still carry the old identifier, and a new field wearing the same identifier decodes that data into the wrong meaning with no error. This applies to positional tag numbers, column names in stores that resolve by name, enum ordinals in formats that serialize the integer, and API field names any client may still send. Keep the reservation in the schema file, next to the live fields, where the next person will see it.
 
+Where a column can be written by more than one kind of source, the provenance is part of the contract and needs its own field rather than a shared one — `tracking-data-provenance`.
+
 ## Common mistakes
 
 | Symptom | Real cause |

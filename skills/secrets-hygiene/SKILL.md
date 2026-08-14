@@ -80,6 +80,8 @@ Starting at step 4 is the common instinct and it is wrong. It feels like undoing
 
 **Any secret that touched a shared surface is burned.** "It was only in a private repo / an internal channel / live for five minutes" is not a control — private repos have forks, integrations, and read tokens, and five minutes is longer than an automated scraper needs. Rotate. The cost of an unnecessary rotation is one drill you owed yourself anyway.
 
+Keeping a secret out of output that has already received it is a separate discipline with its own failure modes — see `redacting-sensitive-output`.
+
 ## Common mistakes
 
 | Symptom | Real cause |

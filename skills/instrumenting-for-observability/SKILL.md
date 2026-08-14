@@ -83,6 +83,8 @@ Measure where the user feels it — at the edge or in the client — not where i
 - Alert on symptoms the user can feel, not on causes. CPU, memory, and queue depth are diagnostic panels; the page fires on error ratio and latency breaching the objective, with a burn rate that gives a human time to respond.
 - Every incident review ends with one question: what field, counter, or span would have made this obvious in the first minute? Add it before the review is closed, or it will be missing again.
 
+Deciding what to emit is upstream of making it safe to emit; `redacting-sensitive-output` covers the second half.
+
 ## Common mistakes
 
 | Symptom | Real cause |
