@@ -1,6 +1,6 @@
 ---
 name: designing-apis
-description: Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint, an IPC or wire message, a plugin contract, or an exported module boundary. Covers naming and granularity, required versus optional parameters, defaults, pagination and ordering, growing an enum, opaque tokens, deprecation and sunset, versioning, and judging whether a proposed change is breaking.
+description: Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint, an IPC or wire message, a plugin contract, or an exported module boundary. Covers naming and granularity, required versus optional parameters, defaults, pagination and ordering, growing an enum, opaque tokens, separating write paths by data provenance, deprecation and sunset, versioning, and judging whether a proposed change is breaking.
 ---
 
 # Designing APIs
@@ -25,6 +25,7 @@ The interface is the only part you cannot refactor later: everything behind it i
 - Name the effect, not the mechanism: `cancel`, not `setStatusCancelled`. Mechanism names age badly because the mechanism changes and the name cannot.
 - **A boolean parameter is a design failure at the first one.** `render(true)` is unreadable at the call site and the second flag creates a combinatorial mess. Use a named option type or enum from flag one.
 - Never let a field's meaning depend on another field's value. "If `kind` is A, `payload` is X" is a tagged union; ship it as a discriminated union with a closed shape.
+- **One write path per provenance, not per row shape.** Where fields encode *how strongly* something is believed — an observation count, a hit rate, a confidence, a trust tier — an imported value has different standing from a measured one, and reusing the entry point that means "we observed this" launders the weaker claim into the stronger. Give the imported claim its own operation and usually its own field; once the two share a column, nothing downstream can tell a third party's hypothesis from your own measurement. Then check what reads that field, because an automatic promotion or escalation rule is how laundered provenance turns into authority.
 
 ## Required, optional, and absence
 
@@ -76,6 +77,7 @@ State three things explicitly: which surface is covered, how long an obsolete th
 | Callers keep getting the call order wrong | Sequencing is a real constraint and belongs inside one call or an explicit state machine |
 | Support asks callers to "check the error text" | No stable error code in the contract |
 | A caller broke when you changed a cursor's format | Token documented as opaque but never made opaque |
+| An outside recommendation trips a threshold meant for first-party evidence | One write path served two provenances, so the row records the value and forgets where it came from |
 
 ## Red flags
 
@@ -85,3 +87,4 @@ State three things explicitly: which surface is covered, how long an obsolete th
 - "Callers shouldn't depend on that."
 - "We'll mark it experimental in the docs."
 - Adding a flag parameter instead of asking whether this is really two operations.
+- Reusing a write path because the row shape matches, without checking that the claim's provenance does.
