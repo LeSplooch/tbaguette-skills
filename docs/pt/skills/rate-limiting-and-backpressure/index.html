@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>rate-limiting-and-backpressure — Designing systems — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…">
+<title>rate-limiting-and-backpressure — Design de sistemas — TBaguette’s Atelier</title>
+<meta name="description" content="Use quando um sistema está recebendo mais carga do que consegue atender, quando se projetam throttling, cotas ou respostas 429…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="rate-limiting-and-backpressure — Designing systems — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…">
+<meta property="og:title" content="rate-limiting-and-backpressure — Design de sistemas — TBaguette’s Atelier">
+<meta property="og:description" content="Use quando um sistema está recebendo mais carga do que consegue atender, quando se projetam throttling, cotas ou respostas 429…">
 <link rel="canonical" href="/tbaguette-skills/pt/skills/rate-limiting-and-backpressure/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/rate-limiting-and-backpressure/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
+      data-i18n-copied="Copiado!"
+      data-i18n-no-match="Nenhuma skill corresponde."
+      data-i18n-modal-title="Nova versão disponível"
+      data-i18n-modal-body="Esta página foi atualizada. Recarregue para ver a versão mais recente."
+      data-i18n-modal-reload="Recarregar"
       data-i18n-quote-open="“"
       data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">Pular para o conteúdo</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T08:04:41+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T08:04:41Z UTC</time>
+      <span class="site-header__updated-label">Atualizado</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T08:34:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T08:34:53Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Português</summary>
+  <summary class="language-switcher__summary">Idioma: Português</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/rate-limiting-and-backpressure/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Mudar para o tema claro"
+              data-i18n-theme-light="Mudar para o tema claro"
+              data-i18n-theme-dark="Mudar para o tema escuro">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/pt/">Home</a>
+<nav class="container breadcrumb" aria-label="Trilha de navegação">
+  <a href="/tbaguette-skills/pt/">Início</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/pt/#designing-systems">Designing systems</a>
+  <a href="/tbaguette-skills/pt/#designing-systems">Design de sistemas</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">rate-limiting-and-backpressure</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">rate-limiting-and-backpressure</h1>
     
   </div>
-  <span class="tag skill-article__tag">Designing systems</span>
-  <p class="lede">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses, when a queue keeps growing or drains hours late, when retries amplify a partial failure into a full outage, when a connection or thread pool is exhausted, when latency climbs instead of requests failing, or when choosing between shedding load, queueing it, and slowing the producer down.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Português yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Design de sistemas</span>
+  <p class="lede">Use quando um sistema está recebendo mais carga do que consegue atender, quando se projetam throttling, cotas ou respostas 429, quando uma fila não para de crescer ou só é drenada horas depois, quando as retentativas transformam uma falha parcial em uma queda total, quando um pool de conexões ou de threads se esgota, quando a latência sobe em vez de as requisições falharem, ou quando é preciso escolher entre descartar carga, enfileirá-la e desacelerar quem a produz.</p>
+</div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>When demand exceeds capacity, the only question is which work fails and how quickly it finds out. A system with no explicit answer still answers: it queues everything, latency grows without bound, and every caller times out on work that will be completed and then discarded. Choosing the victim deliberately is the entire discipline.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>One caller, tenant, or job is degrading the service for everyone</li><li>Designing quotas, throttles, or the response a caller gets when over the limit</li><li>A queue whose depth grows through the day, or that drains long after the traffic ended</li><li>Timeouts, pool exhaustion, or a cascading failure spreading between services</li><li>Retry behavior amplifying a partial failure — error rate rising after a dependency starts recovering</li><li>Not for: capacity planning and scaling decisions; this covers what happens in the window where capacity is already insufficient</li></ul>
@@ -130,76 +130,76 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Latency grows without bound, nothing errors</td><td>Unbounded queue absorbing the overload signal</td></tr><tr><td>Load spikes every 30 seconds after an outage begins</td><td>Backoff without jitter synchronizing all clients</td></tr><tr><td>A dependency recovers and immediately falls over again</td><td>No retry budget or breaker; full retry backlog lands at once</td></tr><tr><td>Pool exhausted though the rate limit was never breached</td><td>Rate limited but not concurrency limited; a slow dependency held every slot</td></tr><tr><td>One tenant degrades everyone despite per-tenant limits</td><td>Sum of per-tenant limits exceeds real capacity; no global backstop</td></tr><tr><td>Legitimate users throttled while abuse continues</td><td>Limiting per IP behind NAT while the attacker rotates addresses</td></tr><tr><td>Queue drains hours after traffic stops</td><td>Work with expired deadlines never discarded</td></tr><tr><td>Rejecting requests does not reduce load</td><td>Shedding after the connection, transaction, or thread is already claimed</td></tr><tr><td>Clients retry into the limit in a tight loop</td><td>No retry hint, no remaining-quota signal, limit undiscoverable in advance</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;We will just make the queue bigger&quot;</li><li>A queue with no maximum size anywhere in the design</li><li>Retries added at a new layer without checking what the layers below already do</li><li>A limit chosen as a round number with no measured capacity behind it</li><li>A breaker that trips on a single failure, or that never half-opens</li><li>Alerting on queue depth but not on queue age</li><li>&quot;The client should not be sending that much&quot; instead of a limit that makes it observable</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/pt/skills/instrumenting-for-observability/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navegação entre skills"><a class="prevnext__link" href="/tbaguette-skills/pt/skills/instrumenting-for-observability/">
+  <span class="prevnext__label">Anterior</span>
   <span class="prevnext__name">← instrumenting-for-observability</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Designing systems</h2>
+  <h2 class="see-also__title">Mais em Design de sistemas</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/designing-apis/">
       <span class="see-also__name">designing-apis</span>
-      <span class="see-also__summary">Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint…</span>
+      <span class="see-also__summary">Use quando for definir uma interface que outro código vai chamar — uma função pública ou o ponto de entrada de uma biblioteca…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/modeling-errors/">
       <span class="see-also__name">modeling-errors</span>
-      <span class="see-also__summary">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…</span>
+      <span class="see-also__summary">Use quando for decidir como uma falha deve ser representada ou tratada — escolhendo entre exceções, tipos result ou either…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/designing-for-idempotency/">
       <span class="see-also__name">designing-for-idempotency</span>
-      <span class="see-also__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</span>
+      <span class="see-also__summary">Use quando uma operação pode chegar mais de uma vez — retentativas depois de um timeout de resultado desconhecido, filas at-least-once…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/choosing-concurrency-model/">
       <span class="see-also__name">choosing-concurrency-model</span>
-      <span class="see-also__summary">Use when work must happen at the same time and the approach is undecided — OS threads, async or event loops, actors and message passing…</span>
+      <span class="see-also__summary">Use quando um trabalho precisa acontecer ao mesmo tempo e a abordagem ainda não foi decidida — threads do sistema operacional…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/modeling-state-machines/">
       <span class="see-also__name">modeling-state-machines</span>
-      <span class="see-also__summary">Use when something has a lifecycle — order, job, connection, upload, session, subscription, device…</span>
+      <span class="see-also__summary">Use quando algo tem um ciclo de vida — um pedido, um job, uma conexão, um upload, uma sessão, uma assinatura, um dispositivo…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/drawing-boundaries/">
       <span class="see-also__name">drawing-boundaries</span>
-      <span class="see-also__summary">Use when deciding what belongs together — module, package, crate, library, process…</span>
+      <span class="see-also__summary">Use quando for decidir o que fica junto de quê — divisões em módulos, pacotes, crates, bibliotecas…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/caching-strategy/">
       <span class="see-also__name">caching-strategy</span>
-      <span class="see-also__summary">Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change…</span>
+      <span class="see-also__summary">Use quando for adicionar um cache, uma tabela de memoização, uma camada de CDN ou um caminho de leitura pré-calculado…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/schema-evolution/">
       <span class="see-also__name">schema-evolution</span>
-      <span class="see-also__summary">Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema…</span>
+      <span class="see-also__summary">Use quando for mudar um contrato que já está em produção — acrescentando, removendo…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/data-migrations/">
       <span class="see-also__name">data-migrations</span>
-      <span class="see-also__summary">Use when backfilling, transforming, re-encoding, or relocating data that already exists at a size too large for one transaction…</span>
+      <span class="see-also__summary">Use quando for fazer backfill, transformar…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/configuration-management/">
       <span class="see-also__name">configuration-management</span>
-      <span class="see-also__summary">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together…</span>
+      <span class="see-also__summary">Use quando for adicionar uma variável de ambiente, uma configuração, um interruptor ou uma entrada em um arquivo de configuração…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/instrumenting-for-observability/">
       <span class="see-also__name">instrumenting-for-observability</span>
-      <span class="see-also__summary">Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed…</span>
+      <span class="see-also__summary">Use quando for decidir o que registrar em log, medir ou rastrear, quando um incidente não pôde ser explicado com a telemetria que existia…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> abriga TBaguette&rsquo;s Atelier — as decisões que dependem de julgamento e ficam entre o ticket e o commit, organizadas como uma bancada de trabalho bem cuidada.</p>
+    <nav aria-label="Categorias">
+      <p class="site-footer__nav-title">Categorias</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/pt/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/pt/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/pt/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/pt/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/pt/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/pt/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/pt/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/pt/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/pt/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/pt/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/pt/#ui-and-design">UI e design</a></li>
+<li><a href="/tbaguette-skills/pt/#judgment-and-meta">Julgamento e meta</a></li>
+<li><a href="/tbaguette-skills/pt/#reading-code">Leitura de código</a></li>
+<li><a href="/tbaguette-skills/pt/#landing-changes">Integração de mudanças</a></li>
+<li><a href="/tbaguette-skills/pt/#testing">Testes</a></li>
+<li><a href="/tbaguette-skills/pt/#debugging-and-performance">Depuração e desempenho</a></li>
+<li><a href="/tbaguette-skills/pt/#designing-systems">Design de sistemas</a></li>
+<li><a href="/tbaguette-skills/pt/#security">Segurança (defensiva)</a></li>
+<li><a href="/tbaguette-skills/pt/#communicating">Comunicação</a></li>
+<li><a href="/tbaguette-skills/pt/#environment-and-tooling">Ambiente e ferramentas</a></li>
       </ul>
     </nav>
   </div>

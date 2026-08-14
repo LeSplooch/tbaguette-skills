@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>writing-postmortems — Communicating — TBaguette’s Atelier</title>
-<meta name="description" content="Use when writing an incident review or postmortem after an outage, degradation, data loss, failed deploy…">
+<title>writing-postmortems — Comunicação — TBaguette’s Atelier</title>
+<meta name="description" content="Use quando for escrever a revisão de um incidente ou um postmortem depois de uma indisponibilidade, uma degradação, uma perda de dados…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="writing-postmortems — Communicating — TBaguette’s Atelier">
-<meta property="og:description" content="Use when writing an incident review or postmortem after an outage, degradation, data loss, failed deploy…">
+<meta property="og:title" content="writing-postmortems — Comunicação — TBaguette’s Atelier">
+<meta property="og:description" content="Use quando for escrever a revisão de um incidente ou um postmortem depois de uma indisponibilidade, uma degradação, uma perda de dados…">
 <link rel="canonical" href="/tbaguette-skills/pt/skills/writing-postmortems/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/writing-postmortems/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/writing-postmortems/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
+      data-i18n-copied="Copiado!"
+      data-i18n-no-match="Nenhuma skill corresponde."
+      data-i18n-modal-title="Nova versão disponível"
+      data-i18n-modal-body="Esta página foi atualizada. Recarregue para ver a versão mais recente."
+      data-i18n-modal-reload="Recarregar"
       data-i18n-quote-open="“"
       data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">Pular para o conteúdo</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T08:04:41+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T08:04:41Z UTC</time>
+      <span class="site-header__updated-label">Atualizado</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T08:34:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T08:34:53Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Português</summary>
+  <summary class="language-switcher__summary">Idioma: Português</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/writing-postmortems/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/writing-postmortems/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Mudar para o tema claro"
+              data-i18n-theme-light="Mudar para o tema claro"
+              data-i18n-theme-dark="Mudar para o tema escuro">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/pt/">Home</a>
+<nav class="container breadcrumb" aria-label="Trilha de navegação">
+  <a href="/tbaguette-skills/pt/">Início</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/pt/#communicating">Communicating</a>
+  <a href="/tbaguette-skills/pt/#communicating">Comunicação</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">writing-postmortems</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">writing-postmortems</h1>
     
   </div>
-  <span class="tag skill-article__tag">Communicating</span>
-  <p class="lede">Use when writing an incident review or postmortem after an outage, degradation, data loss, failed deploy, or security event; when building a timeline, arguing about root cause, or drafting follow-up actions; when a draft is drifting toward blaming a person or converging on a single cause; or when deciding what to publish externally. Covers blameless analysis, contributing factors, detection and mitigation timing, and action item ownership.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Português yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Comunicação</span>
+  <p class="lede">Use quando for escrever a revisão de um incidente ou um postmortem depois de uma indisponibilidade, uma degradação, uma perda de dados, um deploy que falhou ou um evento de segurança; quando se monta uma linha do tempo, se discute a causa raiz ou se rascunham as ações de acompanhamento; quando um rascunho está escorregando para culpar uma pessoa ou convergindo para uma causa única; ou quando é preciso decidir o que publicar externamente. Trata da análise sem busca de culpados, dos fatores contribuintes, dos tempos de detecção e de mitigação e da atribuição de dono às ações.</p>
+</div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>A postmortem is an engineering document about conditions, not an account of who did what. Any sentence in the analysis that ends at a person is unfinished — the unwritten remainder is what made that action reasonable at the time, and that remainder is the only part you can fix.</p>
 <h2 id="when-to-use">When to use</h2>
 <p>Write one for: any customer-visible degradation, any data loss or corruption regardless of size, any security event, any incident where the mitigation was applied without understanding why it worked, and any near-miss caught by luck rather than by a control.</p>
@@ -124,56 +124,56 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The review turns into someone defending a decision</td><td>Actions were stated without stating what was visible at the time</td></tr><tr><td>Last quarter's action items are still open</td><td>Unowned, undated, or too large to finish</td></tr><tr><td>The same class of incident recurs with a new trigger</td><td>The trigger was fixed and the vulnerability was left</td></tr><tr><td>&quot;Root cause: engineer ran the wrong command&quot;</td><td>Investigation stopped at the person; the missing guardrail was the finding</td></tr><tr><td>Twenty pages nobody read</td><td>Narrative padding around a timeline and a factor list that were the whole document</td></tr><tr><td>Every incident produces &quot;add an alert&quot;</td><td>Detection is the only lever the team knows; prevent and mitigate never considered</td></tr><tr><td>Timeline assembled from memory a week later</td><td>Evidence was never captured during the incident</td></tr><tr><td>Leadership asks &quot;was this fast or slow?&quot; and nobody can say</td><td>Only total impact was measured, hiding which interval is broken</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;We just need people to be more careful&quot;</li><li>&quot;The root cause was…&quot; (singular, in a system with more than one moving part)</li><li>&quot;If they had just…&quot;</li><li>An action item with no name beside it</li><li>Writing action items before the timeline is finished</li><li>Concluding that the system worked as designed and nothing needs to change</li><li>Deciding not to write one because &quot;we already know what happened&quot;</li><li>A timeline that starts when the alert fired</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/pt/skills/writing-release-notes/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navegação entre skills"><a class="prevnext__link" href="/tbaguette-skills/pt/skills/writing-release-notes/">
+  <span class="prevnext__label">Anterior</span>
   <span class="prevnext__name">← writing-release-notes</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/pt/skills/reviewing-code-deeply/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Próxima</span>
   <span class="prevnext__name">reviewing-code-deeply →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Communicating</h2>
+  <h2 class="see-also__title">Mais em Comunicação</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/writing-durable-docs/">
       <span class="see-also__name">writing-durable-docs</span>
-      <span class="see-also__summary">Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material…</span>
+      <span class="see-also__summary">Use quando for escrever ou reestruturar documentação — READMEs, guias, referências de API, material de onboarding…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/writing-adrs/">
       <span class="see-also__name">writing-adrs</span>
-      <span class="see-also__summary">Use when recording a technical or architectural decision — picking between technologies, changing a system boundary…</span>
+      <span class="see-also__summary">Use quando for registrar uma decisão técnica ou de arquitetura — a escolha entre tecnologias, a mudança de uma fronteira do sistema…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/writing-release-notes/">
       <span class="see-also__name">writing-release-notes</span>
-      <span class="see-also__summary">Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes…</span>
+      <span class="see-also__summary">Use quando for preparar notas de versão, um changelog…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/reviewing-code-deeply/">
       <span class="see-also__name">reviewing-code-deeply</span>
-      <span class="see-also__summary">Use when reviewing someone else&#x27;s change — a pull request, patch, diff, or commit series — deciding what deserves a comment…</span>
+      <span class="see-also__summary">Use quando for revisar a mudança de outra pessoa — um pull request, um patch…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/pt/skills/explaining-technical-work/">
       <span class="see-also__name">explaining-technical-work</span>
-      <span class="see-also__summary">Use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation…</span>
+      <span class="see-also__summary">Use quando for escrever a explicação de um trabalho técnico para outra pessoa — uma atualização de status…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> abriga TBaguette&rsquo;s Atelier — as decisões que dependem de julgamento e ficam entre o ticket e o commit, organizadas como uma bancada de trabalho bem cuidada.</p>
+    <nav aria-label="Categorias">
+      <p class="site-footer__nav-title">Categorias</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/pt/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/pt/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/pt/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/pt/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/pt/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/pt/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/pt/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/pt/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/pt/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/pt/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/pt/#ui-and-design">UI e design</a></li>
+<li><a href="/tbaguette-skills/pt/#judgment-and-meta">Julgamento e meta</a></li>
+<li><a href="/tbaguette-skills/pt/#reading-code">Leitura de código</a></li>
+<li><a href="/tbaguette-skills/pt/#landing-changes">Integração de mudanças</a></li>
+<li><a href="/tbaguette-skills/pt/#testing">Testes</a></li>
+<li><a href="/tbaguette-skills/pt/#debugging-and-performance">Depuração e desempenho</a></li>
+<li><a href="/tbaguette-skills/pt/#designing-systems">Design de sistemas</a></li>
+<li><a href="/tbaguette-skills/pt/#security">Segurança (defensiva)</a></li>
+<li><a href="/tbaguette-skills/pt/#communicating">Comunicação</a></li>
+<li><a href="/tbaguette-skills/pt/#environment-and-tooling">Ambiente e ferramentas</a></li>
       </ul>
     </nav>
   </div>
