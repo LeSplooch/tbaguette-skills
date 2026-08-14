@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>reading-specifications — 阅读代码 — TBaguette’s Atelier</title>
-<meta name="description" content="在以下情况下使用：要把一张工单、一个 issue、一份缺陷报告、一篇 RFC、一份标准、一份设计文档或用户的一句要求变成实际的活儿；需求含糊、自相矛盾，或者对边界情况只字未提；拿不准是该问一句澄清，还是带着一条写明的假设往下走；要拿捏 MUST、SHOULD 和 MAY…">
+<meta name="description" content="在以下情况下使用：要把一张工单、一个 issue、一份缺陷报告、一篇 RFC、一份标准、一份设计文档或用户的一句要求变成实际的活儿；需求含糊、自相矛盾，或者对边界情况只字未提；拿不准是该问一句澄清，还是带着一条写明的假设往下走；要拿捏 MUST…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="reading-specifications — 阅读代码 — TBaguette’s Atelier">
-<meta property="og:description" content="在以下情况下使用：要把一张工单、一个 issue、一份缺陷报告、一篇 RFC、一份标准、一份设计文档或用户的一句要求变成实际的活儿；需求含糊、自相矛盾，或者对边界情况只字未提；拿不准是该问一句澄清，还是带着一条写明的假设往下走；要拿捏 MUST、SHOULD 和 MAY…">
+<meta property="og:description" content="在以下情况下使用：要把一张工单、一个 issue、一份缺陷报告、一篇 RFC、一份标准、一份设计文档或用户的一句要求变成实际的活儿；需求含糊、自相矛盾，或者对边界情况只字未提；拿不准是该问一句澄清，还是带着一条写明的假设往下走；要拿捏 MUST…">
 <link rel="canonical" href="/tbaguette-skills/zh/skills/reading-specifications/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/reading-specifications/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/reading-specifications/">
@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T12:14:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:14:31Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:45:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:45:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -139,15 +139,15 @@
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/orienting-in-unfamiliar-code/">
       <span class="see-also__name">orienting-in-unfamiliar-code</span>
-      <span class="see-also__summary">在以下情况下使用：第一次打开一个代码库、接手一个陌生或遗留的仓库、加入一个新项目，或者被要求去改一段在场的人谁都没写过的代码。涵盖该从哪里开始读、定位入口点和真正的模块边界、分辨活代码与死代码、找到活儿实际发生的地方，以及把文档里的架构和 import 关系揭示出的架构对上号。</span>
+      <span class="see-also__summary">在以下情况下使用：第一次打开一个代码库、接手一个陌生或遗留的仓库、加入一个新项目，或者被要求去改一段在场的人谁都没写过的代码。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/tracing-data-flow/">
       <span class="see-also__name">tracing-data-flow</span>
-      <span class="see-also__summary">在以下情况下使用：某个值不对、缺失、为…</span>
+      <span class="see-also__summary">在以下情况下使用：某个值不对、缺失、为 null、为空，或者莫名其妙取了默认值，而它的来源说不清楚；要弄明白一个字段从哪儿来、谁在写它、它又流向了哪些地方；要跟着一份请求载荷、一个标识符、一项配置值或一个开关，穿过模块、线程、服务或序列化边界；或者搜一个名字什么有用的都搜不到…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/code-archaeology/">
       <span class="see-also__name">code-archaeology</span>
-      <span class="see-also__summary">在以下情况下使用：某段代码没有任何解释，而它为什么在那里又很要紧——一个古怪的绕行写法、一个魔数、一个谁都说不出理由的条件判断、一条与代码自相矛盾的注释、一个没头没尾的…</span>
+      <span class="see-also__summary">在以下情况下使用：某段代码没有任何解释，而它为什么在那里又很要紧——一个古怪的绕行写法、一个魔数、一个谁都说不出理由的条件判断、一条与代码自相矛盾的注释、一个没头没尾的 TODO，或者一行看上去删掉也没事的代码。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/mapping-dependencies/">
       <span class="see-also__name">mapping-dependencies</span>
@@ -159,7 +159,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/naming-things/">
       <span class="see-also__name">naming-things</span>
-      <span class="see-also__summary">在以下情况下使用：要给一个变量、函数、类型、模块、开关、配置键、数据表或事件取标识符；某个名字有误导性、缩得看不懂、与代码库其余部分风格不一，或者是从它早已不再描述的东西那里继承下来的；要衡量一次改名值不值那个代价；或者代码需要一句注释才能说清某个东西装的是什么、某个函数到底在…</span>
+      <span class="see-also__summary">在以下情况下使用：要给一个变量、函数、类型、模块、开关、配置键、数据表或事件取标识符；某个名字有误导性、缩得看不懂、与代码库其余部分风格不一，或者是从它早已不再描述的东西那里继承下来的；要衡量一次改名值不值那个代价；或者代码需要一句注释才能说清某个东西装的是什么…</span>
     </a></li>
   </ul>
 </div>

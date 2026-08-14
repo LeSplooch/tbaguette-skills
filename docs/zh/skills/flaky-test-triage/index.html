@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>flaky-test-triage — 测试 — TBaguette’s Atelier</title>
-<meta name="description" content="在以下情况下使用：一个测试重跑就过、只在 CI 里失败、只有整套跑才失败、过了午夜或跨夏令时切换才失败、并行执行时失败，或者在负载高的机器上失败；又或者有人提议用重试、跳过或加长超时把构建刷绿。涵盖间歇性失败、顺序依赖、共享状态、竞态，以及把不稳定的测试隔离出来。">
+<meta name="description" content="在以下情况下使用：一个测试重跑就过、只在 CI 里失败、只有整套跑才失败、过了午夜或跨夏令时切换才失败、并行执行时失败，或者在负载高的机器上失败；又或者有人提议用重试、跳过或加长超时把构建刷绿。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="flaky-test-triage — 测试 — TBaguette’s Atelier">
-<meta property="og:description" content="在以下情况下使用：一个测试重跑就过、只在 CI 里失败、只有整套跑才失败、过了午夜或跨夏令时切换才失败、并行执行时失败，或者在负载高的机器上失败；又或者有人提议用重试、跳过或加长超时把构建刷绿。涵盖间歇性失败、顺序依赖、共享状态、竞态，以及把不稳定的测试隔离出来。">
+<meta property="og:description" content="在以下情况下使用：一个测试重跑就过、只在 CI 里失败、只有整套跑才失败、过了午夜或跨夏令时切换才失败、并行执行时失败，或者在负载高的机器上失败；又或者有人提议用重试、跳过或加长超时把构建刷绿。">
 <link rel="canonical" href="/tbaguette-skills/zh/skills/flaky-test-triage/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/flaky-test-triage/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/flaky-test-triage/">
@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T12:14:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:14:31Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:45:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:45:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -136,23 +136,23 @@
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/designing-test-data/">
       <span class="see-also__name">designing-test-data</span>
-      <span class="see-also__summary">在以下情况下使用：一个测试的准备代码比它的断言还长；fixture 被多个文件共用；说不清是哪个准备值导致测试失败；测试单跑能过、按套件顺序跑就挂；或者要构造工厂、builder、object…</span>
+      <span class="see-also__summary">在以下情况下使用：一个测试的准备代码比它的断言还长；fixture 被多个文件共用；说不清是哪个准备值导致测试失败；测试单跑能过、按套件顺序跑就挂；或者要构造工厂、builder、object mother、种子数据，或者为分页和压测准备的大批量数据。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/property-based-testing/">
       <span class="see-also__name">property-based-testing</span>
-      <span class="see-also__summary">在以下情况下使用：示例测试只覆盖了有人想到的那些情况；要测解析器、序列化器、编码器、排序、比较器、算术、缓存或数据结构；一个缺陷来自谁都没料到的输入；要用一套实现替换另一套，而两者必须给出一致的结果；或者打算动用模糊测试、生成器、反例收缩、不变量或往返一致性检查。不适用于只以用…</span>
+      <span class="see-also__summary">在以下情况下使用：示例测试只覆盖了有人想到的那些情况；要测解析器、序列化器、编码器、排序、比较器、算术、缓存或数据结构；一个缺陷来自谁都没料到的输入；要用一套实现替换另一套，而两者必须给出一致的结果；或者打算动用模糊测试、生成器、反例收缩、不变量或往返一致性检查。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/testing-the-untestable/">
       <span class="see-also__name">testing-the-untestable</span>
-      <span class="see-also__summary">在以下情况下使用：一个测试读了系统时钟、睡了一觉、走了网络、写了真实文件系统、读了环境变量、生成了 UUID 或随机值，或者依赖线程调度；一个测试只在月份交界、只在另一个时区、只在慢机器上失败；或者要在 fake、stub、mock、spy…</span>
+      <span class="see-also__summary">在以下情况下使用：一个测试读了系统时钟、睡了一觉、走了网络、写了真实文件系统、读了环境变量、生成了 UUID 或随机值，或者依赖线程调度；一个测试只在月份交界、只在另一个时区、只在慢机器上失败；或者要在 fake、stub、mock、spy 和跑在容器里的真实依赖之间做选择。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/regression-test-from-bug/">
       <span class="see-also__name">regression-test-from-bug</span>
-      <span class="see-also__summary">在以下情况下使用：一个缺陷已被上报、复现或修补；要为一次生产事故或热修复补一个测试；一个修好过的缺陷又回来了；或者要想清楚断言什么，才能让同一个缺陷再也回不来。涵盖测试层次的选择、用缺陷本身给测试命名、断言范围的把握，以及修复落地之后这个测试要不要留着。</span>
+      <span class="see-also__summary">在以下情况下使用：一个缺陷已被上报、复现或修补；要为一次生产事故或热修复补一个测试；一个修好过的缺陷又回来了；或者要想清楚断言什么，才能让同一个缺陷再也回不来。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/characterization-testing/">
       <span class="see-also__name">characterization-testing</span>
-      <span class="see-also__summary">在以下情况下使用：要修改、重构、抽取、移植或删除一段没有测试的代码；当前行为不明或没有文档；一次重写必须在输出上与遗留组件逐条对齐；或者打算动用黄金文件、审批测试、快照或输出 diff。涵盖把现有行为钉住、把已知缺陷如实记录下来，以及事后再把这些钉子拔掉。</span>
+      <span class="see-also__summary">在以下情况下使用：要修改、重构、抽取、移植或删除一段没有测试的代码；当前行为不明或没有文档；一次重写必须在输出上与遗留组件逐条对齐；或者打算动用黄金文件、审批测试、快照或输出 diff。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/choosing-test-scope/">
       <span class="see-also__name">choosing-test-scope</span>

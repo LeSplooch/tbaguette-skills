@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>auditing-dependencies — 安全（防御） — TBaguette’s Atelier</title>
-<meta name="description" content="在以下情况下使用：要添加、升级、替换或移除某个第三方包或库；lockfile 的 diff 多出了传递依赖条目；漏洞扫描器或安全公告告警响了，需要分诊；某个依赖看起来无人维护、已被弃置，或者换了主人；又或者要权衡供应链风险、install 与 postinstall…">
+<meta name="description" content="在以下情况下使用：要添加、升级、替换或移除某个第三方包或库；lockfile 的 diff 多出了传递依赖条目；漏洞扫描器或安全公告告警响了，需要分诊；某个依赖看起来无人维护、已被弃置，或者换了主人；又或者要权衡供应链风险、install 与 postinstall 脚本…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="auditing-dependencies — 安全（防御） — TBaguette’s Atelier">
-<meta property="og:description" content="在以下情况下使用：要添加、升级、替换或移除某个第三方包或库；lockfile 的 diff 多出了传递依赖条目；漏洞扫描器或安全公告告警响了，需要分诊；某个依赖看起来无人维护、已被弃置，或者换了主人；又或者要权衡供应链风险、install 与 postinstall…">
+<meta property="og:description" content="在以下情况下使用：要添加、升级、替换或移除某个第三方包或库；lockfile 的 diff 多出了传递依赖条目；漏洞扫描器或安全公告告警响了，需要分诊；某个依赖看起来无人维护、已被弃置，或者换了主人；又或者要权衡供应链风险、install 与 postinstall 脚本…">
 <link rel="canonical" href="/tbaguette-skills/zh/skills/auditing-dependencies/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/auditing-dependencies/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/auditing-dependencies/">
@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T12:14:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:14:31Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:45:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:45:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -147,19 +147,19 @@
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/threat-modeling/">
       <span class="see-also__name">threat-modeling</span>
-      <span class="see-also__summary">在以下情况下使用：一份设计引入了新的信任边界、新一类敏感数据、新的外部集成，或者改动了认证或授权；一次设计评审需要补上安全这一节；有人问某个系统或功能可能出什么岔子；或者要推敲攻击者、攻击面、影响范围，以及哪些风险该先修。涵盖…</span>
+      <span class="see-also__summary">在以下情况下使用：一份设计引入了新的信任边界、新一类敏感数据、新的外部集成，或者改动了认证或授权；一次设计评审需要补上安全这一节；有人问某个系统或功能可能出什么岔子；或者要推敲攻击者、攻击面、影响范围，以及哪些风险该先修。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
-      <span class="see-also__summary">在以下情况下使用：代码要接收或解析来自自身信任边界之外的数据——请求、文件、上传内容、webhook、消息队列、配置，或者另一个内部服务；要拼出一段嵌入了变量的查询、命令、路径、URL、模板或标记；要评审一个清洗或转义的辅助函数；或者要处理反序列化、路径穿越、注入、XSS、SS…</span>
+      <span class="see-also__summary">在以下情况下使用：代码要接收或解析来自自身信任边界之外的数据——请求、文件、上传内容、webhook、消息队列、配置，或者另一个内部服务；要拼出一段嵌入了变量的查询、命令、路径、URL、模板或标记；要评审一个清洗或转义的辅助函数；或者要处理反序列化、路径穿越、注入、XSS…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
-      <span class="see-also__summary">在以下情况下使用：要处理 API 密钥、令牌、口令、私钥、证书或连接字符串——把其中一个加进某个服务、CI 流水线、容器镜像或客户端应用，又或者在一次提交、一行日志、一张截图、一张工单或一条错误信息里发现了它。涵盖凭据泄露之后的应对、吊销与轮换、密钥扫描、环境变量与…</span>
+      <span class="see-also__summary">在以下情况下使用：要处理 API 密钥、令牌、口令、私钥、证书或连接字符串——把其中一个加进某个服务、CI 流水线、容器镜像或客户端应用，又或者在一次提交、一行日志、一张截图、一张工单或一条错误信息里发现了它。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/least-privilege-design/">
       <span class="see-also__name">least-privilege-design</span>
-      <span class="see-also__summary">在以下情况下使用：要创建或评审一个角色、服务账号、API 密钥、令牌作用域、IAM 或 RBAC…</span>
+      <span class="see-also__summary">在以下情况下使用：要创建或评审一个角色、服务账号、API 密钥、令牌作用域、IAM 或 RBAC 策略，或者一份访问控制列表；某个组件需要访问新的东西；同一份凭据被多个服务或多个环境共用；某个服务以调用方的身份代为行事；或者要推敲影响面、权限提升、策略里的通配符、沙箱…</span>
     </a></li>
   </ul>
 </div>

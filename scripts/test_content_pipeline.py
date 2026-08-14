@@ -45,6 +45,20 @@ from content_pipeline import (
 # repo, since the real corpus they need travels with it.
 REAL_SKILLS_ROOT = Path(__file__).resolve().parent.parent / "skills"
 
+# Real, committed Chinese content -- not a synthetic fixture. Bug A (CJK
+# punctuation-blind summarize_description) was only ever surfaced by this
+# real content in the first place: a hand-written ASCII-only fixture has no
+# way to exercise a full-width 。／，／、／； character at all. Reading the
+# live file directly (rather than hand-copying a string into this module)
+# means these tests stay honest as the content evolves and there's no
+# transcription step that could silently drift from the real string.
+REAL_ZH_DESCRIPTIONS_PATH = Path(__file__).resolve().parent.parent / "i18n" / "zh" / "descriptions.json"
+
+
+def _real_zh_description(slug: str) -> str:
+    data = json.loads(REAL_ZH_DESCRIPTIONS_PATH.read_text(encoding="utf-8"))
+    return data[slug]
+
 
 # ---------------------------------------------------------------------------
 # Fixtures shaped like real skill-file content
@@ -187,6 +201,83 @@ class SummarizeDescriptionTests(unittest.TestCase):
             with self.subTest(skill=skill_dir.name):
                 summary = summarize_description(fields["description"])
                 self.assertLessEqual(len(summary), 140)
+
+    # -- CJK punctuation (Bug A) -------------------------------------------
+    #
+    # Chinese uses full-width sentence-final punctuation (。！？) and has no
+    # spaces between words at all, so the ASCII-only _SENTENCE_START_RE and
+    # the rfind(",")/rfind(" ") clause-cut logic can't see any of the real
+    # boundaries in Chinese prose. Every fixture below is copied live from
+    # the real, committed i18n/zh/descriptions.json via _real_zh_description
+    # rather than a hand-typed placeholder, per this project's own repeated
+    # lesson that synthetic fixtures miss what real translated content
+    # actually triggers.
+
+    def test_cjk_sentence_fitting_within_budget_returns_first_sentence_unchanged(self):
+        # testing-the-untestable's zh description: the first
+        # ideographic-full-stop-terminated sentence is 138 chars (fits the
+        # 140 budget), but the full two-sentence string runs to 160. The
+        # pre-fix regex never matches a CJK string at all (no ASCII
+        # .!?), so it always fell through to treating the *entire*
+        # normalized string as "the first sentence" -- silently including
+        # the second "Covers ..."-equivalent sentence whenever the whole
+        # thing happened to still fit under 140. The fix must recognize 。
+        # as a real sentence boundary and stop there.
+        if not REAL_ZH_DESCRIPTIONS_PATH.is_file():
+            self.skipTest("real i18n/zh/descriptions.json not present")
+        description = _real_zh_description("testing-the-untestable")
+        summary = summarize_description(description)
+        self.assertLessEqual(len(summary), 140)
+        self.assertFalse(summary.endswith("…"))
+        first_sentence_end = description.index("。") + 1
+        self.assertEqual(summary, description[:first_sentence_end])
+
+    def test_cjk_description_needing_clause_cut_stops_at_a_real_cjk_boundary(self):
+        # tracing-data-flow's zh description is the concrete bug report:
+        # pre-fix, this collapses to ~20 characters, because the
+        # regex/rfind calls only recognize ASCII . ! ? , and space, so they
+        # latch onto the single incidental ASCII space inside "为 null" --
+        # a Latin loanword, not a real word boundary -- since it's the
+        # earliest "boundary" of any kind in the whole string. The real
+        # Chinese clause marks (、，；) that a human would actually cut at
+        # appear much later and were invisible to the old code entirely.
+        if not REAL_ZH_DESCRIPTIONS_PATH.is_file():
+            self.skipTest("real i18n/zh/descriptions.json not present")
+        description = _real_zh_description("tracing-data-flow")
+        summary = summarize_description(description)
+        self.assertLessEqual(len(summary), 140)
+        self.assertTrue(summary.endswith("…"))
+        core = summary[:-1]
+        self.assertTrue(description.startswith(core))
+        boundary_char = description[len(core)]
+        self.assertIn(boundary_char, (" ", ",", "，", "、", "；"))
+        # The bug's concrete, reported failure mode was collapsing to ~20
+        # characters -- this is the sharpest possible regression guard for
+        # it (the fixed value is 139).
+        self.assertGreater(len(summary), 100)
+
+    def test_cjk_description_with_only_semicolons_before_budget_still_finds_a_clause(self):
+        # atomic-commits' first sentence uses only ； as a clause separator
+        # anywhere near the front (no ，or 、 appears that early) -- real
+        # content that specifically exercises the semicolon branch. If the
+        # fix omitted ； from the clause-boundary set, this description
+        # would fall through to the ASCII-space fallback and cut on the
+        # incidental space inside the Latin loanword "diff", the same bug
+        # shape as tracing-data-flow, just less severe.
+        if not REAL_ZH_DESCRIPTIONS_PATH.is_file():
+            self.skipTest("real i18n/zh/descriptions.json not present")
+        description = _real_zh_description("atomic-commits")
+        summary = summarize_description(description)
+        self.assertLessEqual(len(summary), 140)
+        self.assertTrue(summary.endswith("…"))
+        core = summary[:-1]
+        self.assertTrue(description.startswith(core))
+        boundary_char = description[len(core)]
+        self.assertIn(boundary_char, (" ", ",", "，", "、", "；"))
+        self.assertFalse(
+            summary.endswith("diff…"),
+            "must not cut on the incidental space inside an English loanword",
+        )
 
 
 # ---------------------------------------------------------------------------

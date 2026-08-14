@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>reading-stack-traces — 调试与性能 — TBaguette’s Atelier</title>
-<meta name="description" content="在以下情况下使用：需要读懂一次崩溃、异常、panic、traceback、核心转储或错误日志；栈顶那一帧落在框架或标准库里面；调用栈被截断、跨了异步、经过压缩混淆、被内联，或者符号已被剥离；或者一个错误带着一串包装过的成因链，或者一组聚合错误。涵盖哪一帧才指向真正的缺陷，以及每…">
+<meta name="description" content="在以下情况下使用：需要读懂一次崩溃、异常、panic、traceback、核心转储或错误日志；栈顶那一帧落在框架或标准库里面；调用栈被截断、跨了异步、经过压缩混淆、被内联，或者符号已被剥离；或者一个错误带着一串包装过的成因链，或者一组聚合错误。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="reading-stack-traces — 调试与性能 — TBaguette’s Atelier">
-<meta property="og:description" content="在以下情况下使用：需要读懂一次崩溃、异常、panic、traceback、核心转储或错误日志；栈顶那一帧落在框架或标准库里面；调用栈被截断、跨了异步、经过压缩混淆、被内联，或者符号已被剥离；或者一个错误带着一串包装过的成因链，或者一组聚合错误。涵盖哪一帧才指向真正的缺陷，以及每…">
+<meta property="og:description" content="在以下情况下使用：需要读懂一次崩溃、异常、panic、traceback、核心转储或错误日志；栈顶那一帧落在框架或标准库里面；调用栈被截断、跨了异步、经过压缩混淆、被内联，或者符号已被剥离；或者一个错误带着一串包装过的成因链，或者一组聚合错误。">
 <link rel="canonical" href="/tbaguette-skills/zh/skills/reading-stack-traces/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/reading-stack-traces/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/reading-stack-traces/">
@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T12:14:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:14:31Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:45:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:45:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -134,15 +134,15 @@
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/reproducing-bugs/">
       <span class="see-also__name">reproducing-bugs</span>
-      <span class="see-also__summary">在以下情况下使用：要把一份缺陷报告变成一个说来就来的失败；某个缺陷在本地复现不出来；它只在生产环境出现，或者只对某一个用户出现；失败是间歇性的，或者只以很低的概率冒头；或者一处修复拿不出证明它有效的测试。涵盖报告里缺失的变量、最小复现、输入规约、复现率，以及用取证取代猜测。</span>
+      <span class="see-also__summary">在以下情况下使用：要把一份缺陷报告变成一个说来就来的失败；某个缺陷在本地复现不出来；它只在生产环境出现，或者只对某一个用户出现；失败是间歇性的，或者只以很低的概率冒头；或者一处修复拿不出证明它有效的测试。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/bisecting-failures/">
       <span class="see-also__name">bisecting-failures</span>
-      <span class="see-also__summary">在以下情况下使用：某个东西以前是好的，现在坏了；罪魁祸首藏在一大堆提交、配置项、依赖升级、数据行或未提交的改动里；`git bisect` 撞上了构建失败、不稳定的测试或者合并密集的历史；或者压根就没有版本控制可供检索。涵盖在任意变化维度上做二分查找，以及编写无人值守的…</span>
+      <span class="see-also__summary">在以下情况下使用：某个东西以前是好的，现在坏了；罪魁祸首藏在一大堆提交、配置项、依赖升级、数据行或未提交的改动里；`git bisect` 撞上了构建失败、不稳定的测试或者合并密集的历史；或者压根就没有版本控制可供检索。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/debugging-concurrency/">
       <span class="see-also__name">debugging-concurrency</span>
-      <span class="see-also__summary">在以下情况下使用：故障取决于时序、线程或任务的交错，或者负载；一个测试单跑能过、并行就挂；并发之下出现卡死、死锁、活锁、更新丢失或读到旧值；一加日志或挂上调试器，症状就消失了；或者需要看懂一份线程转储、一个僵住的进程。涵盖竞态、happens-before…</span>
+      <span class="see-also__summary">在以下情况下使用：故障取决于时序、线程或任务的交错，或者负载；一个测试单跑能过、并行就挂；并发之下出现卡死、死锁、活锁、更新丢失或读到旧值；一加日志或挂上调试器，症状就消失了；或者需要看懂一份线程转储、一个僵住的进程。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/observing-production-safely/">
       <span class="see-also__name">observing-production-safely</span>
@@ -150,11 +150,11 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/performance-profiling/">
       <span class="see-also__name">performance-profiling</span>
-      <span class="see-also__summary">在以下情况下使用：某个东西慢，但原因不明；一项优化需要拿出确实有效的证据；要刻画延迟、吞吐、尾部表现、p95 或 p99；要读懂一张火焰图、一份采样剖析或一组基准测试结果；或者一个微基准报出了不可能的加速比。涵盖基线、目标值、分位数，以及基准测试留下的产物。</span>
+      <span class="see-also__summary">在以下情况下使用：某个东西慢，但原因不明；一项优化需要拿出确实有效的证据；要刻画延迟、吞吐、尾部表现、p95 或 p99；要读懂一张火焰图、一份采样剖析或一组基准测试结果；或者一个微基准报出了不可能的加速比。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/finding-resource-leaks/">
       <span class="see-also__name">finding-resource-leaks</span>
-      <span class="see-also__summary">在以下情况下使用：内存、文件描述符、套接字、线程、连接、定时器或事件订阅无界增长；进程因为内存耗尽被杀，或者撞上“打开文件过多”的错误；靠定期重启才能让服务活着；需要读懂一份堆快照；或者在稳定负载下占用还在往上爬。涵盖增长的识别、持有与分配的区分，以及错误路径上的泄漏。</span>
+      <span class="see-also__summary">在以下情况下使用：内存、文件描述符、套接字、线程、连接、定时器或事件订阅无界增长；进程因为内存耗尽被杀，或者撞上“打开文件过多”的错误；靠定期重启才能让服务活着；需要读懂一份堆快照；或者在稳定负载下占用还在往上爬。</span>
     </a></li>
   </ul>
 </div>

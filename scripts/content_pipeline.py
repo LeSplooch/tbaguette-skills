@@ -536,7 +536,32 @@ def read_text(path: Path) -> str:
 # Summary (card teaser) trimming
 # ---------------------------------------------------------------------------
 
-_SENTENCE_START_RE = re.compile(r"^.*?[.!?](?=\s|$)")
+# Sentence-final punctuation. ASCII .!? are ambiguous on their own (an
+# abbreviation, a decimal, an initial) so they only count as a boundary when
+# followed by whitespace or end-of-string -- the existing, unchanged
+# behavior. CJK full-width sentence enders (。ideographic full stop, ！
+# fullwidth exclamation, ？fullwidth question mark) carry no such ambiguity:
+# Chinese and Japanese prose has no spaces between words at all, so the mark
+# itself is always the boundary, with or without anything after it. Confirmed
+# against the real corpus in i18n/zh/descriptions.json, which uses 。
+# exclusively for this role (no ！or ？ appear there, but both are included
+# on the same principle, and this generalizes to Japanese, which shares the
+# same punctuation).
+_SENTENCE_START_RE = re.compile(r"^.*?(?:[.!?](?=\s|$)|[。！？])")
+
+# Clause/enumeration-boundary punctuation used as a fallback cut point when
+# the first sentence itself doesn't fit the budget. ASCII "," is the
+# original English-oriented set. The three CJK marks were confirmed against
+# every real "needs a clause cut" entry in i18n/zh/descriptions.json:
+# 、(ideographic/enumeration comma) and ，(fullwidth comma) are the
+# in-clause pause marks, and ；(fullwidth semicolon) is frequently the *only*
+# separator between the "when A; when B; ..." clauses that make up this
+# corpus's descriptions -- e.g. atomic-commits' first sentence has no 、or，
+# at all before the budget, only ；. Dropping any one of these three
+# regresses real entries back to the same bug class this fixes: falling
+# through to the ASCII-space fallback below and cutting on the incidental
+# space inside a Latin loanword (e.g. "diff") instead of a real boundary.
+_CJK_CLAUSE_CHARS = "，、；"
 
 
 def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH) -> str:
@@ -549,6 +574,11 @@ def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH
     (clause boundary) within budget, or fall back to the last word boundary
     -- either way stopping only at a real boundary, never mid-word -- and
     mark the cut with an ellipsis.
+
+    Boundary detection recognizes both ASCII and CJK punctuation (see
+    _SENTENCE_START_RE and _CJK_CLAUSE_CHARS above) so this holds equally
+    for English/Latin/Cyrillic-script descriptions and for Chinese/Japanese
+    ones, which use full-width punctuation and have no spaces between words.
     """
     normalized = " ".join(description.split())
     sentence_match = _SENTENCE_START_RE.match(normalized)
@@ -559,7 +589,7 @@ def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH
 
     budget = max_length - 1  # reserve one character for the ellipsis
     truncated = first_sentence[:budget]
-    comma_cut = truncated.rfind(",")
+    comma_cut = max((truncated.rfind(char) for char in "," + _CJK_CLAUSE_CHARS), default=-1)
     space_cut = truncated.rfind(" ")
 
     if comma_cut > budget * 0.3:
@@ -569,7 +599,7 @@ def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH
     else:
         clipped = truncated
 
-    return clipped.rstrip(" ,;:") + "…"
+    return clipped.rstrip(" ,;:" + _CJK_CLAUSE_CHARS + "：") + "…"
 
 
 # ---------------------------------------------------------------------------

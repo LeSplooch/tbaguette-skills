@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>modeling-state-machines — 系统设计 — TBaguette’s Atelier</title>
-<meta name="description" content="在以下情况下使用：某个东西有生命周期——订单、任务、连接、上传、会话、订阅、设备、工作流步骤——或者好几个布尔值和标志位在描述同一件事。也适用于状态字段、不可能出现的标志位组合、永远卡在某个状态上的记录、说不清缘由的状态变化、状态转移到一半崩掉、超时与取消，以及给一个已经落库的…">
+<meta name="description" content="在以下情况下使用：某个东西有生命周期——订单、任务、连接、上传、会话、订阅、设备、工作流步骤——或者好几个布尔值和标志位在描述同一件事。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="modeling-state-machines — 系统设计 — TBaguette’s Atelier">
-<meta property="og:description" content="在以下情况下使用：某个东西有生命周期——订单、任务、连接、上传、会话、订阅、设备、工作流步骤——或者好几个布尔值和标志位在描述同一件事。也适用于状态字段、不可能出现的标志位组合、永远卡在某个状态上的记录、说不清缘由的状态变化、状态转移到一半崩掉、超时与取消，以及给一个已经落库的…">
+<meta property="og:description" content="在以下情况下使用：某个东西有生命周期——订单、任务、连接、上传、会话、订阅、设备、工作流步骤——或者好几个布尔值和标志位在描述同一件事。">
 <link rel="canonical" href="/tbaguette-skills/zh/skills/modeling-state-machines/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/modeling-state-machines/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/modeling-state-machines/">
@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T12:14:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:14:31Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:45:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:45:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -131,23 +131,23 @@
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/designing-apis/">
       <span class="see-also__name">designing-apis</span>
-      <span class="see-also__summary">在以下情况下使用：要定义一个会被别的代码调用的接口——公开函数或库的入口点、HTTP 或 RPC 端点、IPC…</span>
+      <span class="see-also__summary">在以下情况下使用：要定义一个会被别的代码调用的接口——公开函数或库的入口点、HTTP 或 RPC 端点、IPC 或线上协议消息、插件契约，或者导出的模块边界。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/modeling-errors/">
       <span class="see-also__name">modeling-errors</span>
-      <span class="see-also__summary">在以下情况下使用：要决定一次失败该如何表示或处理——在异常、Result 或 Either 类型、错误码、panic 与 supervisor 之间做选择；写一个 catch、rescue 或 recover…</span>
+      <span class="see-also__summary">在以下情况下使用：要决定一次失败该如何表示或处理——在异常、Result 或 Either 类型、错误码、panic 与 supervisor 之间做选择；写一个 catch、rescue 或 recover 块；设计一个错误类型或一份错误契约；决定要包装、记录、重新抛出…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/designing-for-idempotency/">
       <span class="see-also__name">designing-for-idempotency</span>
-      <span class="see-also__summary">在以下情况下使用：一个操作有可能到达不止一次——超时后结果未知的重试、at-least-once 队列、消费者重启与重投、被重放的 webhook、被双击的按钮、续跑的任务，或者写到一半崩掉。涵盖重复扣款、重复邮件和通知、幂等键、去重窗口、并发下的重试安全，以及所谓…</span>
+      <span class="see-also__summary">在以下情况下使用：一个操作有可能到达不止一次——超时后结果未知的重试、at-least-once 队列、消费者重启与重投、被重放的 webhook、被双击的按钮、续跑的任务，或者写到一半崩掉。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/choosing-concurrency-model/">
       <span class="see-also__name">choosing-concurrency-model</span>
-      <span class="see-also__summary">在以下情况下使用：有些活儿必须同时进行，但用什么方式还没定——操作系统线程、异步或事件循环、Actor…</span>
+      <span class="see-also__summary">在以下情况下使用：有些活儿必须同时进行，但用什么方式还没定——操作系统线程、异步或事件循环、Actor 与消息传递、持久化任务队列、数据并行，还是按键分片。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/drawing-boundaries/">
       <span class="see-also__name">drawing-boundaries</span>
-      <span class="see-also__summary">在以下情况下使用：要决定什么东西该放在一起——模块、包、crate、库、进程或服务怎么切；抽出或合并组件；把第三方 SDK 包在一个自己说了算的接口后面；重新组织目录结构。也适用于循环依赖、一个只增不减的 shared 或 common…</span>
+      <span class="see-also__summary">在以下情况下使用：要决定什么东西该放在一起——模块、包、crate、库、进程或服务怎么切；抽出或合并组件；把第三方 SDK 包在一个自己说了算的接口后面；重新组织目录结构。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/caching-strategy/">
       <span class="see-also__name">caching-strategy</span>
@@ -155,7 +155,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/schema-evolution/">
       <span class="see-also__name">schema-evolution</span>
-      <span class="see-also__summary">在以下情况下使用：要改动一份已经在生产里跑着的契约——在数据库 schema、序列化格式、已存文档、API…</span>
+      <span class="see-also__summary">在以下情况下使用：要改动一份已经在生产里跑着的契约——在数据库 schema、序列化格式、已存文档、API 载荷或队列消息里增删字段、改名或换类型。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/data-migrations/">
       <span class="see-also__name">data-migrations</span>
@@ -163,7 +163,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/configuration-management/">
       <span class="see-also__name">configuration-management</span>
-      <span class="see-also__summary">在以下情况下使用：要新增一个环境变量、配置项、开关或配置文件条目；密钥和普通配置搅在了一起；某个东西在预发环境好用、到生产就不行；缺失或格式不对的配置在启动几小时之后才以一个 null…</span>
+      <span class="see-also__summary">在以下情况下使用：要新增一个环境变量、配置项、开关或配置文件条目；密钥和普通配置搅在了一起；某个东西在预发环境好用、到生产就不行；缺失或格式不对的配置在启动几小时之后才以一个 null 或一次崩溃的形式冒出来；要搭一个新环境或新的部署目标；或者要判断某个值该放在代码里、配置里…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/instrumenting-for-observability/">
       <span class="see-also__name">instrumenting-for-observability</span>
