@@ -33,6 +33,7 @@ SUITES = [
     ("templates.py", [sys.executable, "test_templates.py"]),
     ("python_highlight.py", [sys.executable, "test_python_highlight.py"]),
     ("generate.py integration", [sys.executable, "test_generate.py"]),
+    ("i18n", [sys.executable, "test_i18n.py"]),
     # The only suite that hits the network (clones the real, published repo
     # from GitHub several times against throwaway HOME directories) — a
     # flaky connection can fail this one without meaning anything else is
