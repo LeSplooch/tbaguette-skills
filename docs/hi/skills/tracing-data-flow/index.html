@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>tracing-data-flow — Reading code — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…">
+<title>tracing-data-flow — कोड पढ़ना — TBaguette’s Atelier</title>
+<meta name="description" content="जब कोई वैल्यू ग़लत, ग़ायब, null, ख़ाली या बिन बताए डिफ़ॉल्ट पर चली गई हो और उसका स्रोत साफ़ न हो; जब पूछना हो कि कोई फ़ील्ड आती कहाँ से है…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tracing-data-flow — Reading code — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…">
+<meta property="og:title" content="tracing-data-flow — कोड पढ़ना — TBaguette’s Atelier">
+<meta property="og:description" content="जब कोई वैल्यू ग़लत, ग़ायब, null, ख़ाली या बिन बताए डिफ़ॉल्ट पर चली गई हो और उसका स्रोत साफ़ न हो; जब पूछना हो कि कोई फ़ील्ड आती कहाँ से है…">
 <link rel="canonical" href="/tbaguette-skills/hi/skills/tracing-data-flow/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/tracing-data-flow/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/tracing-data-flow/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
+      data-i18n-copied="कॉपी हो गया!"
+      data-i18n-no-match="कोई स्किल मेल नहीं खाती।"
+      data-i18n-modal-title="नया वर्शन उपलब्ध है"
+      data-i18n-modal-body="यह पन्ना अपडेट हो चुका है। सबसे नया देखने के लिए इसे दोबारा लोड करें।"
+      data-i18n-modal-reload="दोबारा लोड करें"
       data-i18n-quote-open="“"
       data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">मुख्य सामग्री पर जाएँ</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T17:06:51+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T17:06:51Z UTC</time>
+      <span class="site-header__updated-label">आख़िरी अपडेट</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T17:54:26+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T17:54:26Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: हिन्दी</summary>
+  <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/tracing-data-flow/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/tracing-data-flow/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="लाइट थीम पर जाएँ"
+              data-i18n-theme-light="लाइट थीम पर जाएँ"
+              data-i18n-theme-dark="डार्क थीम पर जाएँ">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/hi/">Home</a>
+<nav class="container breadcrumb" aria-label="नेविगेशन पथ">
+  <a href="/tbaguette-skills/hi/">होम</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/hi/#reading-code">Reading code</a>
+  <a href="/tbaguette-skills/hi/#reading-code">कोड पढ़ना</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">tracing-data-flow</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">tracing-data-flow</h1>
     
   </div>
-  <span class="tag skill-article__tag">Reading code</span>
-  <p class="lede">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from, who writes it, or everything it reaches; when following a request payload, identifier, config value, or flag across modules, threads, services, or serialization boundaries; or when searching for a name returns nothing useful and the path seems to vanish.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into हिन्दी yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">कोड पढ़ना</span>
+  <p class="lede">जब कोई वैल्यू ग़लत, ग़ायब, null, ख़ाली या बिन बताए डिफ़ॉल्ट पर चली गई हो और उसका स्रोत साफ़ न हो; जब पूछना हो कि कोई फ़ील्ड आती कहाँ से है, लिखता उसे कौन है, या वह पहुँचती कहाँ-कहाँ है; जब किसी रिक्वेस्ट पेलोड, पहचानकर्ता, कॉन्फ़िग वैल्यू या फ़्लैग का पीछा मॉड्यूल, थ्रेड, सर्विस या सीरियलाइज़ेशन की सीमाओं के पार करना हो; या जब किसी नाम को खोजने पर काम का कुछ न मिले और रास्ता ग़ायब-सा लगे, तब इस्तेमाल करें।</p>
+</div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>A trace is a written artifact — a chain of file:line hops with what changed at each one. Held in memory it is re-derived every twenty minutes and is wrong by the third hop. The goal is not to understand the module; it is to enumerate every place this value is produced, altered, and read.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A value arrives wrong somewhere far from where it was set.</li><li>Assessing what a field change breaks: every writer and every reader must be named.</li><li>A name appears in two places with no visible path between them.</li><li>Auditing where sensitive or user-supplied data reaches.</li><li>Not for: diagnosing why a system misbehaves when the value is not yet identified (systematic-debugging), or module-level coupling (mapping-dependencies).</li></ul>
@@ -132,60 +132,60 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;Searching found nothing&quot;</td><td>Renamed at a boundary; never left search step 1</td></tr><tr><td>Trace looks complete, behavior still unexplained</td><td>A silent default or an in-place mutation between two hops assumed pure</td></tr><tr><td>Re-deriving the same hops repeatedly</td><td>Chain never written down</td></tr><tr><td>Read all nine implementations</td><td>One log line would have named the one that runs</td></tr><tr><td>Traced one path, another exists</td><td>Backward trace only; never ran the forward pass</td></tr><tr><td>Confident there is exactly one writer</td><td>Never searched the type or the serialized name, only the identifier</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Nothing else could possibly write to this.&quot;</li><li>&quot;The framework must set it somewhere.&quot;</li><li>&quot;I'll read one more file and it will be clear.&quot;</li><li>&quot;It's obviously null because it was never set&quot; — before checking for a default.</li><li>Reading past 15 minutes of dead ends rather than adding one log line.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/hi/skills/orienting-in-unfamiliar-code/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="स्किल्स के बीच नेविगेशन"><a class="prevnext__link" href="/tbaguette-skills/hi/skills/orienting-in-unfamiliar-code/">
+  <span class="prevnext__label">पिछली</span>
   <span class="prevnext__name">← orienting-in-unfamiliar-code</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/hi/skills/code-archaeology/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">अगली</span>
   <span class="prevnext__name">code-archaeology →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Reading code</h2>
+  <h2 class="see-also__title">“कोड पढ़ना” श्रेणी में और भी</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/hi/skills/orienting-in-unfamiliar-code/">
       <span class="see-also__name">orienting-in-unfamiliar-code</span>
-      <span class="see-also__summary">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project…</span>
+      <span class="see-also__summary">जब कोई कोडबेस पहली बार खोलें, कोई अनजानी या पुरानी रिपॉजिटरी विरासत में मिले, किसी नए प्रोजेक्ट में शामिल हों…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/hi/skills/code-archaeology/">
       <span class="see-also__name">code-archaeology</span>
-      <span class="see-also__summary">Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify…</span>
+      <span class="see-also__summary">जब कोड बिना किसी सफ़ाई के पड़ा हो और वजह मायने रखती हो — कोई अजीब जुगाड़, कोई जादुई कॉन्स्टेंट, ऐसी शर्त जिसे कोई सही नहीं ठहरा पाता…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/hi/skills/mapping-dependencies/">
       <span class="see-also__name">mapping-dependencies</span>
-      <span class="see-also__summary">Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles…</span>
+      <span class="see-also__summary">जब आँकना हो कि कोई बदलाव क्या तोड़ेगा, नुक़सान का दायरा नापना हो, गोल-गोल घूमते इम्पोर्ट या बिल्ड चक्र का पीछा करना हो…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/hi/skills/finding-the-seam/">
       <span class="see-also__name">finding-the-seam</span>
-      <span class="see-also__summary">Use when deciding where in a codebase to make a change, when a fix could plausibly go in several places…</span>
+      <span class="see-also__summary">जब तय करना हो कि कोडबेस में बदलाव कहाँ करना है, जब कोई फ़िक्स कई जगहों पर ठीक-ठाक बैठता दिखे, जब diff कई फ़ाइलों में फैलता जाए…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/hi/skills/reading-specifications/">
       <span class="see-also__name">reading-specifications</span>
-      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
+      <span class="see-also__summary">जब किसी टिकट, इशू, बग रिपोर्ट, RFC, मानक, डिज़ाइन दस्तावेज़ या यूज़र के अनुरोध को असल काम में बदलना हो; जब ज़रूरतें धुँधली हों…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/hi/skills/naming-things/">
       <span class="see-also__name">naming-things</span>
-      <span class="see-also__summary">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…</span>
+      <span class="see-also__summary">जब किसी वेरिएबल, फ़ंक्शन, टाइप, मॉड्यूल, फ़्लैग, कॉन्फ़िग कुंजी, टेबल या इवेंट का नाम चुनना हो; जब कोई नाम भरमाता हो…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> में TBaguette&rsquo;s Atelier का ठिकाना है — टिकट और कमिट के बीच अपने विवेक से लेने पड़ने वाले फ़ैसले, किसी सलीक़ेदार कारीगर की मेज़ की तरह करीने से सजे हुए।</p>
+    <nav aria-label="श्रेणियाँ">
+      <p class="site-footer__nav-title">श्रेणियाँ</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/hi/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/hi/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/hi/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/hi/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/hi/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/hi/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/hi/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/hi/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/hi/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/hi/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/hi/#ui-and-design">UI और डिज़ाइन</a></li>
+<li><a href="/tbaguette-skills/hi/#judgment-and-meta">विवेक और मेटा-स्किल्स</a></li>
+<li><a href="/tbaguette-skills/hi/#reading-code">कोड पढ़ना</a></li>
+<li><a href="/tbaguette-skills/hi/#landing-changes">बदलाव ज़मीन पर उतारना</a></li>
+<li><a href="/tbaguette-skills/hi/#testing">टेस्टिंग</a></li>
+<li><a href="/tbaguette-skills/hi/#debugging-and-performance">डिबगिंग और परफ़ॉर्मेंस</a></li>
+<li><a href="/tbaguette-skills/hi/#designing-systems">सिस्टम डिज़ाइन करना</a></li>
+<li><a href="/tbaguette-skills/hi/#security">सुरक्षा (रक्षात्मक)</a></li>
+<li><a href="/tbaguette-skills/hi/#communicating">बात पहुँचाना</a></li>
+<li><a href="/tbaguette-skills/hi/#environment-and-tooling">एनवायरनमेंट और टूल्स</a></li>
       </ul>
     </nav>
   </div>
