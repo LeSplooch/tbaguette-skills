@@ -13,6 +13,7 @@ Checks on what rendered, not on what you intended. Run them together in one batc
 - **Depth**, where the stack has it, comes from consistent light: one direction, offset plus soft blur. A zero-offset colored halo is decoration.
 - **Motion** is one authored moment, not scattered effects and not the same entrance on every section. Ease out from an already-visible default.
 - **States** all present: hover or focus, active, disabled, loading, empty, error, selected, and whatever the stack adds.
+- **Exactly one focus indicator per focus stop.** Where a wrapper owns a control's visible chrome, the wrapper's focus treatment and a global per-element focus rule both fire and paint two rings — the inner one clipped on the side that sits against a leading icon and bleeding past the wrapper's edge everywhere else. It reads as a bug, not as a state. The inner control opts out explicitly, which then obliges the fallback in [harden.md](harden.md).
 - **Copy** in the product's own language. Controls name their action; errors name problem and recovery.
 - **Coverage** — every brief requirement present and findable within seconds.
 - **Magnify before dismissing a reported artifact.** Banding, seams, halos, and half-pixel misalignment are routinely invisible at normal size in a compressed screenshot and obvious at 3–4×. A report you could not reproduce at the reporter's scale has not been reproduced.

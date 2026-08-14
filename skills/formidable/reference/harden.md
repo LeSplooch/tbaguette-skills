@@ -29,3 +29,4 @@ Every error answers three questions in this order: what happened, what it means 
 - **Every state you cannot reach in the UI, force in code** and screenshot it. Untested states are undesigned states.
 - **Truncation is a decision.** Which end, with what indicator, and with the full value available how. Middle-truncate paths and IDs; end-truncate prose; never truncate a number.
 - **Do not fix by shrinking text.** Auto-shrinking to fit is a failure of layout, and it fails at the next locale.
+- **Silencing a control's default focus ring is a debt payable in high contrast.** Forced-color and high-contrast modes drop shadows entirely and override border colors, so a wrapper's focus treatment built from those simply disappears — and the control you silenced now has no indicator at all, for exactly the users who most depend on one. Restore a real outline under those settings, and check it there rather than assuming.
