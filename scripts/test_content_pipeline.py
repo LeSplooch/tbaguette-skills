@@ -606,6 +606,207 @@ class LocaleBuildTests(unittest.TestCase):
                 )
             self.assertEqual(content["categories"][0]["title"], "XX Translated Title")
 
+    def test_locale_build_formidable_with_mixed_per_file_fallback(self):
+        """Formidable's per-file fallback extends to every reference/*.md and
+        reference/stacks/*.md file independently. The entry's translated flag is
+        False when even one file is untranslated; each fragment's HTML reflects
+        whether that specific file came from the locale dir or fell back to English."""
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            skills_root = tmp_path / "skills"
+            locale_root = tmp_path / "i18n" / "xx"
+
+            # Create English formidable skill with multiple reference files and stacks
+            formidable_dir = skills_root / "formidable"
+            formidable_dir.mkdir(parents=True)
+            (formidable_dir / "SKILL.md").write_text(
+                "---\nname: formidable\ndescription: English formidable description.\n---\nEnglish formidable body.\n",
+                encoding="utf-8",
+            )
+
+            reference_dir = formidable_dir / "reference"
+            reference_dir.mkdir(parents=True)
+            (reference_dir / "shape.md").write_text(
+                "## Shape\nEnglish shape content.\n",
+                encoding="utf-8",
+            )
+            (reference_dir / "craft-floor.md").write_text(
+                "## Craft Floor\nEnglish craft floor content.\n",
+                encoding="utf-8",
+            )
+
+            stacks_dir = reference_dir / "stacks"
+            stacks_dir.mkdir(parents=True)
+            (stacks_dir / "web.md").write_text(
+                "## Web\nEnglish web stack content.\n",
+                encoding="utf-8",
+            )
+            (stacks_dir / "terminal.md").write_text(
+                "## Terminal\nEnglish terminal stack content.\n",
+                encoding="utf-8",
+            )
+
+            # Mixed-translation case: only web.md is translated; everything
+            # else (SKILL.md, shape.md, terminal.md, craft-floor.md)
+            # falls back to English.
+            locale_formidable_dir = locale_root / "skills" / "formidable"
+            locale_formidable_dir.mkdir(parents=True)
+            locale_reference_dir = locale_formidable_dir / "reference"
+            locale_reference_dir.mkdir(parents=True)
+            locale_stacks_dir = locale_reference_dir / "stacks"
+            locale_stacks_dir.mkdir(parents=True)
+
+            # Only translate one stack file
+            (locale_stacks_dir / "web.md").write_text(
+                "## Web\nXX web stack content.\n",
+                encoding="utf-8",
+            )
+            # Intentionally do not create stack-terminal.md, cmd-shape.md, or
+            # craft-floor.md in the locale dir to test fallback.
+
+            categories = [{"slug": "test-cat", "title": "Test", "skill_slugs": ["formidable"]}]
+            with mock.patch.object(content_pipeline, "CATEGORIES", categories):
+                content = content_pipeline.build_content(
+                    str(skills_root), locale="xx", locale_root=str(locale_root)
+                )
+
+            formidable = content["skills"]["formidable"]
+
+            # Overall entry should be translated=False because not all files are
+            # translated (the resolve() closure's all_translated flag is False
+            # after any file fails the is_file() check).
+            self.assertFalse(formidable["translated"])
+
+            # Main SKILL.md fell back to English
+            self.assertEqual(formidable["description"], "English formidable description.")
+            self.assertIn("English formidable body", formidable["body_html"])
+
+            # Each stack fragment's HTML reflects its own translation state
+            web_stack = next(
+                (s for s in formidable["formidable_stacks"] if s["id"] == "stack-web"),
+                None,
+            )
+            self.assertIsNotNone(web_stack)
+            self.assertIn("XX web stack content", web_stack["html"])
+
+            terminal_stack = next(
+                (s for s in formidable["formidable_stacks"] if s["id"] == "stack-terminal"),
+                None,
+            )
+            self.assertIsNotNone(terminal_stack)
+            self.assertIn("English terminal stack content", terminal_stack["html"])
+
+            # Command fragments also reflect their translation state
+            shape_cmd = next(
+                (c for c in formidable["formidable_commands"] if c["id"] == "cmd-shape"),
+                None,
+            )
+            self.assertIsNotNone(shape_cmd)
+            self.assertIn("English shape content", shape_cmd["html"])
+
+            # craft-floor is optional but if present should also fall back
+            self.assertIn("formidable_craft_floor_html", formidable)
+            self.assertIn("English craft floor content", formidable["formidable_craft_floor_html"])
+
+    def test_locale_build_formidable_fully_translated(self):
+        """When all formidable files are translated (SKILL.md, every
+        reference/*.md, every reference/stacks/*.md including craft-floor if
+        present), the entry's translated flag is True and all fragments show
+        translated content."""
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            skills_root = tmp_path / "skills"
+            locale_root = tmp_path / "i18n" / "xx"
+
+            # Create English formidable skill
+            formidable_dir = skills_root / "formidable"
+            formidable_dir.mkdir(parents=True)
+            (formidable_dir / "SKILL.md").write_text(
+                "---\nname: formidable\ndescription: English formidable description.\n---\nEnglish formidable body.\n",
+                encoding="utf-8",
+            )
+
+            reference_dir = formidable_dir / "reference"
+            reference_dir.mkdir(parents=True)
+            (reference_dir / "shape.md").write_text(
+                "## Shape\nEnglish shape content.\n",
+                encoding="utf-8",
+            )
+            (reference_dir / "craft-floor.md").write_text(
+                "## Craft Floor\nEnglish craft floor content.\n",
+                encoding="utf-8",
+            )
+
+            stacks_dir = reference_dir / "stacks"
+            stacks_dir.mkdir(parents=True)
+            (stacks_dir / "web.md").write_text(
+                "## Web\nEnglish web stack content.\n",
+                encoding="utf-8",
+            )
+
+            # Fully translate all files: SKILL.md, shape.md, web.md, craft-floor.md
+            locale_formidable_dir = locale_root / "skills" / "formidable"
+            locale_formidable_dir.mkdir(parents=True)
+            (locale_formidable_dir / "SKILL.md").write_text(
+                "---\nname: formidable\ndescription: XX formidable description.\n---\nXX formidable body.\n",
+                encoding="utf-8",
+            )
+
+            locale_reference_dir = locale_formidable_dir / "reference"
+            locale_reference_dir.mkdir(parents=True)
+            (locale_reference_dir / "shape.md").write_text(
+                "## Shape\nXX shape content.\n",
+                encoding="utf-8",
+            )
+            (locale_reference_dir / "craft-floor.md").write_text(
+                "## Craft Floor\nXX craft floor content.\n",
+                encoding="utf-8",
+            )
+
+            locale_stacks_dir = locale_reference_dir / "stacks"
+            locale_stacks_dir.mkdir(parents=True)
+            (locale_stacks_dir / "web.md").write_text(
+                "## Web\nXX web stack content.\n",
+                encoding="utf-8",
+            )
+
+            categories = [{"slug": "test-cat", "title": "Test", "skill_slugs": ["formidable"]}]
+            with mock.patch.object(content_pipeline, "CATEGORIES", categories):
+                content = content_pipeline.build_content(
+                    str(skills_root), locale="xx", locale_root=str(locale_root)
+                )
+
+            formidable = content["skills"]["formidable"]
+
+            # All files are translated, so overall entry should be translated=True
+            # (the resolve() closure's all_translated flag remains True after all
+            # files pass the is_file() check).
+            self.assertTrue(formidable["translated"])
+
+            # Main SKILL.md is translated
+            self.assertEqual(formidable["description"], "XX formidable description.")
+            self.assertIn("XX formidable body", formidable["body_html"])
+
+            # All stack fragments show translated content
+            web_stack = next(
+                (s for s in formidable["formidable_stacks"] if s["id"] == "stack-web"),
+                None,
+            )
+            self.assertIsNotNone(web_stack)
+            self.assertIn("XX web stack content", web_stack["html"])
+
+            # All command fragments show translated content
+            shape_cmd = next(
+                (c for c in formidable["formidable_commands"] if c["id"] == "cmd-shape"),
+                None,
+            )
+            self.assertIsNotNone(shape_cmd)
+            self.assertIn("XX shape content", shape_cmd["html"])
+
+            # craft-floor also shows translated content
+            self.assertIn("formidable_craft_floor_html", formidable)
+            self.assertIn("XX craft floor content", formidable["formidable_craft_floor_html"])
+
     def test_default_build_has_no_locale_regressions(self):
         """build_content(skills_root) with no locale args still returns
         translated=True for every skill (English is trivially "in its own
