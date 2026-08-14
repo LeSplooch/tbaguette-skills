@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>reproducing-bugs — Debugging and performance — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a bug report must be turned into a failure that happens on demand, when a defect cannot be reproduced locally…">
+<title>reproducing-bugs — 디버깅과 성능 — TBaguette’s Atelier</title>
+<meta name="description" content="버그 리포트를 원할 때마다 일어나는 실패로 바꿔야 할 때, 결함이 로컬에서 재현되지 않을 때, 프로덕션에서만 또는 특정 사용자 한 명에게만 일어날 때, 실패가 간헐적이거나 낮은 확률로만 나타날 때, 수정에 그것을 증명할 테스트가 없을 때 사용합니다.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="reproducing-bugs — Debugging and performance — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a bug report must be turned into a failure that happens on demand, when a defect cannot be reproduced locally…">
+<meta property="og:title" content="reproducing-bugs — 디버깅과 성능 — TBaguette’s Atelier">
+<meta property="og:description" content="버그 리포트를 원할 때마다 일어나는 실패로 바꿔야 할 때, 결함이 로컬에서 재현되지 않을 때, 프로덕션에서만 또는 특정 사용자 한 명에게만 일어날 때, 실패가 간헐적이거나 낮은 확률로만 나타날 때, 수정에 그것을 증명할 테스트가 없을 때 사용합니다.">
 <link rel="canonical" href="/tbaguette-skills/ko/skills/reproducing-bugs/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/reproducing-bugs/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/reproducing-bugs/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
+      data-i18n-copied="복사했습니다"
+      data-i18n-no-match="일치하는 스킬이 없습니다."
+      data-i18n-modal-title="새 버전이 있습니다"
+      data-i18n-modal-body="이 페이지가 업데이트되었습니다. 다시 불러오면 최신 내용을 볼 수 있습니다."
+      data-i18n-modal-reload="다시 불러오기"
       data-i18n-quote-open="“"
       data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">본문으로 건너뛰기</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T14:31:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T14:31:33Z UTC</time>
+      <span class="site-header__updated-label">최종 업데이트</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T16:39:10+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T16:39:10Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: 한국어</summary>
+  <summary class="language-switcher__summary">언어: 한국어</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/reproducing-bugs/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/reproducing-bugs/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="라이트 테마로 전환"
+              data-i18n-theme-light="라이트 테마로 전환"
+              data-i18n-theme-dark="다크 테마로 전환">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/ko/">Home</a>
+<nav class="container breadcrumb" aria-label="탐색 경로">
+  <a href="/tbaguette-skills/ko/">홈</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/ko/#debugging-and-performance">Debugging and performance</a>
+  <a href="/tbaguette-skills/ko/#debugging-and-performance">디버깅과 성능</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">reproducing-bugs</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">reproducing-bugs</h1>
     
   </div>
-  <span class="tag skill-article__tag">Debugging and performance</span>
-  <p class="lede">Use when a bug report must be turned into a failure that happens on demand, when a defect cannot be reproduced locally, when it only occurs in production or for a single user, when a failure is intermittent or shows up at a low rate, or when a fix has no test that proves it. Covers missing report variables, minimal reproductions, input reduction, flake rates, and capturing evidence instead of guessing.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into 한국어 yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">디버깅과 성능</span>
+  <p class="lede">버그 리포트를 원할 때마다 일어나는 실패로 바꿔야 할 때, 결함이 로컬에서 재현되지 않을 때, 프로덕션에서만 또는 특정 사용자 한 명에게만 일어날 때, 실패가 간헐적이거나 낮은 확률로만 나타날 때, 수정에 그것을 증명할 테스트가 없을 때 사용합니다. 리포트에서 빠진 변수, 최소 재현, 입력 줄이기, 실패율, 그리고 추측 대신 증거를 남기는 법을 다룹니다.</p>
+</div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>Until the failure happens on demand, every fix is a guess and every claim of &quot;fixed&quot; is unfalsifiable. The reproduction is the deliverable that makes the rest of debugging possible, and it is the step most bug work skips.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A report describes a failure you have not yet seen with your own eyes</li><li>You are about to change code based on a theory you cannot test</li><li>The failure is described as &quot;sometimes&quot;, &quot;intermittent&quot;, or &quot;flaky&quot;</li><li>It happens in production, on one customer's account, or on one device only</li><li>Someone is about to close a ticket as &quot;cannot reproduce&quot;</li></ul>
@@ -126,56 +126,56 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;Works on my machine&quot;</td><td>six variables changed at once; nobody isolated which</td></tr><tr><td>Closed as cannot-reproduce</td><td>the missing report variable was never requested</td></tr><tr><td>Reproduction needs the full stack</td><td>the code was reduced, the input and environment never were</td></tr><tr><td>Bug returns after the fix</td><td>the reproduction captured a symptom, not the trigger condition</td></tr><tr><td>Reproduction needs a &quot;wait a bit&quot; step</td><td>the trigger is an expiry, timeout, or eviction; parametrize the clock and drive it</td></tr><tr><td>Symptom vanishes under logging or a debugger</td><td>timing-sensitive; observation changed the window</td></tr><tr><td>Ticket says &quot;intermittent&quot;, no number</td><td>nobody measured the rate, which is the most useful single fact available</td></tr><tr><td>Fix verified by one passing run</td><td>at a 5% rate, one pass is 95% likely regardless of the fix</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's obvious what's wrong, I'll just fix it&quot; — then you are shipping an untested hypothesis</li><li>&quot;I can't reproduce it, so it's probably already fixed&quot;</li><li>&quot;It only happens for one user, so it's an edge case&quot; — one user is proof the code path exists</li><li>Reaching for the debugger before the failure is deterministic</li><li>Writing the fix and the test in the same edit</li><li>Reducing the input while also changing the environment</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ko/skills/bisecting-failures/">
-  <span class="prevnext__label">Next</span>
+<nav class="container prevnext" aria-label="스킬 간 이동"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ko/skills/bisecting-failures/">
+  <span class="prevnext__label">다음</span>
   <span class="prevnext__name">bisecting-failures →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Debugging and performance</h2>
+  <h2 class="see-also__title">‘디버깅과 성능’ 카테고리의 다른 스킬</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/ko/skills/bisecting-failures/">
       <span class="see-also__name">bisecting-failures</span>
-      <span class="see-also__summary">Use when something worked before and is broken now, when the culprit is one of many commits, config keys, dependency upgrades, data rows…</span>
+      <span class="see-also__summary">예전에는 동작하던 것이 지금은 깨졌을 때, 범인이 수많은 커밋, 설정 키, 의존성 업그레이드, 데이터 행, 커밋하지 않은 수정 가운데 하나일 때, `git bisect`가 빌드 실패나 불안정한 테스트, 머지가 많은 히스토리에 부딪힐 때…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ko/skills/reading-stack-traces/">
       <span class="see-also__name">reading-stack-traces</span>
-      <span class="see-also__summary">Use when a crash, exception, panic, traceback, core dump, or error log must be interpreted…</span>
+      <span class="see-also__summary">크래시나 예외, 패닉, 트레이스백, 코어 덤프, 오류 로그를 해석해야 할 때, 최상단 프레임이 프레임워크나 표준 라이브러리 안에 있을 때, 트레이스가 잘렸거나 비동기이거나 미니파이되었거나 인라인되었거나 심볼이 벗겨진 상태일 때…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ko/skills/debugging-concurrency/">
       <span class="see-also__name">debugging-concurrency</span>
-      <span class="see-also__summary">Use when a failure depends on timing, thread or task interleaving, or load, when a test passes alone but fails in parallel, when a hang…</span>
+      <span class="see-also__summary">실패가 타이밍이나 스레드·태스크 인터리빙, 부하에 따라 달라질 때, 테스트가 혼자 돌면 통과하는데 병렬로 돌면 실패할 때, 동시성 아래에서 멈춤이나 데드락, 라이브락, 갱신 유실, 오래된 값 읽기가 나타날 때…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ko/skills/observing-production-safely/">
       <span class="see-also__name">observing-production-safely</span>
-      <span class="see-also__summary">Use when diagnosing a live system that users depend on, when the only evidence sits behind production data, when enabling a debug flag…</span>
+      <span class="see-also__summary">사용자가 의존하고 있는 살아 있는 시스템을 진단할 때, 유일한 증거가 프로덕션 데이터 뒤에 있을 때, 돌아가는 서비스에 디버그 플래그나 상세 로깅, 힙 덤프, 프로파일러, 브레이크포인트를 걸 때…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ko/skills/performance-profiling/">
       <span class="see-also__name">performance-profiling</span>
-      <span class="see-also__summary">Use when something is slow and the cause is unknown, when an optimization needs proof that it helped, when latency, throughput…</span>
+      <span class="see-also__summary">무언가가 느린데 원인을 모를 때, 최적화가 실제로 도움이 되었다는 증거가 필요할 때, 지연 시간이나 처리량, 꼬리 구간 동작, p95나 p99를 규명해야 할 때, 플레임 그래프나 샘플링 프로파일, 벤치마크 결과를 읽을 때…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ko/skills/finding-resource-leaks/">
       <span class="see-also__name">finding-resource-leaks</span>
-      <span class="see-also__summary">Use when memory, file descriptors, sockets, threads, connections, timers, or event subscriptions grow without bound…</span>
+      <span class="see-also__summary">메모리나 파일 디스크립터, 소켓, 스레드, 커넥션, 타이머, 이벤트 구독이 끝없이 늘어날 때, 프로세스가 메모리 부족으로 강제 종료되거나 열린 파일이 너무 많다는 오류에 걸릴 때, 주기적인 재시작이 서비스를 겨우 살려 두고 있을 때…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong>는 TBaguette&rsquo;s Atelier가 자리 잡은 곳입니다 — 티켓과 커밋 사이에서 결국 판단으로 결정해야 하는 것들을, 잘 정돈된 작업대처럼 늘어놓았습니다.</p>
+    <nav aria-label="카테고리">
+      <p class="site-footer__nav-title">카테고리</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/ko/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/ko/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/ko/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/ko/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/ko/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/ko/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/ko/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/ko/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/ko/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/ko/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/ko/#ui-and-design">UI와 디자인</a></li>
+<li><a href="/tbaguette-skills/ko/#judgment-and-meta">판단력과 메타 스킬</a></li>
+<li><a href="/tbaguette-skills/ko/#reading-code">코드 읽기</a></li>
+<li><a href="/tbaguette-skills/ko/#landing-changes">변경사항 반영하기</a></li>
+<li><a href="/tbaguette-skills/ko/#testing">테스트</a></li>
+<li><a href="/tbaguette-skills/ko/#debugging-and-performance">디버깅과 성능</a></li>
+<li><a href="/tbaguette-skills/ko/#designing-systems">시스템 설계</a></li>
+<li><a href="/tbaguette-skills/ko/#security">보안(방어)</a></li>
+<li><a href="/tbaguette-skills/ko/#communicating">커뮤니케이션</a></li>
+<li><a href="/tbaguette-skills/ko/#environment-and-tooling">환경과 도구</a></li>
       </ul>
     </nav>
   </div>
