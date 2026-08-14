@@ -67,6 +67,8 @@ Check-then-canonicalize is exploitable because the transformation happens after 
 
 A denylist enumerates what you thought of; the dangerous set is unbounded and grows with every downstream library update. An allowlist enumerates what you support, which is finite and known. Allowlist the *value* wherever the value space is finite: column names, sort directions, redirect targets, template names, locales, file types. Use a denylist only where the accepted set is genuinely open — free prose — and there the real defense is output encoding, not filtering. If the allowlist must be a pattern, anchor both ends and bound the length.
 
+Where you do filter, **the replacement must not quote the match**. A redactor that substitutes a marker containing the first N characters of whatever it matched — added for debuggability, or to make a log line useful — reproduces the thing it exists to remove whenever the match is around N characters long, and then hands it to the consumer the filter was protecting. The same trap covers secret masking, PII scrubbing, and profanity filters equally. Test it by asserting the **absence of the input** in the output, never the presence of the marker: the marker is trivially satisfiable while the removal fails, so a test that only looks for it passes against a redactor that redacts nothing.
+
 Every parser needs four numbers chosen deliberately, because every default is "unbounded":
 
 | Limit | Starting point |
@@ -104,6 +106,7 @@ Client-side validation is a UX feature with zero security value. A gateway or WA
 | One request exhausts the service | A parser with no size, depth, count, or time bound — every such default is unbounded |
 | Two accounts collide, or authorization compares unequal-but-equivalent strings | Comparison ran before unicode normalization |
 | A number passed every range check and still broke something far downstream | The checks were relations, and NaN makes every relation false; the guard was never total |
+| "Redacted" output still contains the string that was matched | The replacement embedded the match for context; the marker was asserted on, the removal never was |
 | A signed blob is fed to the full deserializer | Signature proves origin, not that the origin is honest or the key uncompromised |
 
 ## Red flags
@@ -114,4 +117,5 @@ Client-side validation is a UX feature with zero security value. A gateway or WA
 - Any string concatenation whose result is parsed by something else.
 - A validator whose return type is a boolean.
 - Bounding a float with a minimum and a maximum without first asserting that it is finite.
+- A redaction test that asserts the marker is present rather than that the input is gone.
 - Deciding to normalize after the check because the check is cheap.
