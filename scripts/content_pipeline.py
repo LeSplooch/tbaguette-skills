@@ -547,7 +547,17 @@ def read_text(path: Path) -> str:
 # exclusively for this role (no ！or ？ appear there, but both are included
 # on the same principle, and this generalizes to Japanese, which shares the
 # same punctuation).
-_SENTENCE_START_RE = re.compile(r"^.*?(?:[.!?](?=\s|$)|[。！？])")
+#
+# ؟ (U+061F arabic question mark) joins them on that same principle. Arabic's
+# sentence-*final* mark is the plain ASCII "." -- confirmed, not assumed: all
+# 66 entries in i18n/ar/descriptions.json end in one, none contain ؟, and
+# i18n/ar/ui.json's sentence_end is "." -- so ؟ is unattested in the corpus
+# this trims today, exactly as ！and ？ were when they were added for Chinese.
+# It is included for the same reason they were: ؟ does appear in real Arabic
+# prose elsewhere in this project (i18n/ar/verify-install.json), and like the
+# full-width marks it carries no abbreviation/decimal ambiguity, so it needs
+# no trailing-whitespace lookahead.
+_SENTENCE_START_RE = re.compile(r"^.*?(?:[.!?](?=\s|$)|[。！？؟])")
 
 # Clause/enumeration-boundary punctuation used as a fallback cut point when
 # the first sentence itself doesn't fit the budget. ASCII "," is the
@@ -561,7 +571,23 @@ _SENTENCE_START_RE = re.compile(r"^.*?(?:[.!?](?=\s|$)|[。！？])")
 # regresses real entries back to the same bug class this fixes: falling
 # through to the ASCII-space fallback below and cutting on the incidental
 # space inside a Latin loanword (e.g. "diff") instead of a real boundary.
-_CJK_CLAUSE_CHARS = "，、；"
+#
+# ، (U+060C arabic comma) and ؛ (U+061B arabic semicolon) are the same story
+# in a third script. Arabic uses its own Unicode-distinct, visually mirrored
+# marks for clause punctuation and does not use the ASCII ones at all: across
+# the 66 real entries in i18n/ar/descriptions.json, ASCII "," appears 0 times
+# (against 66/66 for French, 66/66 for Russian, 66/66 for Hindi) while ،
+# appears in 64 and ؛ in 12. Every Arabic teaser therefore missed the
+# clause-cut branch entirely and fell through to the word-boundary fallback,
+# stopping mid-thought on a dangling connective ("... أو…", "... or…"). Adding
+# both marks moves 61 of the 66 onto a real clause boundary. ؛ carries its
+# own weight exactly as ；does: it is the only mark before the budget in
+# several entries.
+#
+# Named for what it is rather than for one script: this set is the non-ASCII
+# clause punctuation, whatever the language. A fourth script needing its own
+# marks adds them here and gets the behavior for free, no locale gating.
+_CLAUSE_CHARS = "，、；" + "،؛"
 
 
 def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH) -> str:
@@ -575,10 +601,11 @@ def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH
     -- either way stopping only at a real boundary, never mid-word -- and
     mark the cut with an ellipsis.
 
-    Boundary detection recognizes both ASCII and CJK punctuation (see
-    _SENTENCE_START_RE and _CJK_CLAUSE_CHARS above) so this holds equally
-    for English/Latin/Cyrillic-script descriptions and for Chinese/Japanese
-    ones, which use full-width punctuation and have no spaces between words.
+    Boundary detection recognizes ASCII, CJK and Arabic punctuation (see
+    _SENTENCE_START_RE and _CLAUSE_CHARS above) so this holds equally for
+    English/Latin/Cyrillic-script descriptions, for Chinese/Japanese ones,
+    which use full-width punctuation and have no spaces between words, and
+    for Arabic, which uses its own mirrored comma and semicolon.
     """
     normalized = " ".join(description.split())
     sentence_match = _SENTENCE_START_RE.match(normalized)
@@ -589,7 +616,7 @@ def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH
 
     budget = max_length - 1  # reserve one character for the ellipsis
     truncated = first_sentence[:budget]
-    comma_cut = max((truncated.rfind(char) for char in "," + _CJK_CLAUSE_CHARS), default=-1)
+    comma_cut = max((truncated.rfind(char) for char in "," + _CLAUSE_CHARS), default=-1)
     space_cut = truncated.rfind(" ")
 
     if comma_cut > budget * 0.3:
@@ -599,7 +626,11 @@ def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH
     else:
         clipped = truncated
 
-    return clipped.rstrip(" ,;:" + _CJK_CLAUSE_CHARS + "：") + "…"
+    # The rstrip set must track _CLAUSE_CHARS or the two disagree: a cut that
+    # lands just after a clause mark leaves it stranded against the ellipsis
+    # ("...،…"). That double-punctuation artifact was on 6 of the 66 Arabic
+    # teasers before ، and ؛ were added here as well as to the cut set.
+    return clipped.rstrip(" ,;:" + _CLAUSE_CHARS + "：") + "…"
 
 
 # ---------------------------------------------------------------------------

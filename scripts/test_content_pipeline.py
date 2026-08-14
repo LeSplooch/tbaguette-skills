@@ -54,10 +54,20 @@ REAL_SKILLS_ROOT = Path(__file__).resolve().parent.parent / "skills"
 # transcription step that could silently drift from the real string.
 REAL_ZH_DESCRIPTIONS_PATH = Path(__file__).resolve().parent.parent / "i18n" / "zh" / "descriptions.json"
 
+# Real, committed Arabic content, for exactly the same reason. Arabic's own
+# clause punctuation (، U+060C, ؛ U+061B) is Unicode-distinct from the ASCII
+# marks and appears nowhere in a hand-typed English fixture, so only the real
+# corpus exercises it -- the same lesson the CJK set above already taught.
+REAL_AR_DESCRIPTIONS_PATH = Path(__file__).resolve().parent.parent / "i18n" / "ar" / "descriptions.json"
+
 
 def _real_zh_description(slug: str) -> str:
     data = json.loads(REAL_ZH_DESCRIPTIONS_PATH.read_text(encoding="utf-8"))
     return data[slug]
+
+
+def _real_ar_descriptions() -> dict:
+    return json.loads(REAL_AR_DESCRIPTIONS_PATH.read_text(encoding="utf-8"))
 
 
 # ---------------------------------------------------------------------------
@@ -278,6 +288,88 @@ class SummarizeDescriptionTests(unittest.TestCase):
             summary.endswith("diff…"),
             "must not cut on the incidental space inside an English loanword",
         )
+
+    # -- Arabic punctuation -------------------------------------------------
+    #
+    # Arabic writes its clause punctuation with ، (U+060C) and ؛ (U+061B),
+    # not the ASCII , and ; -- distinct code points, mirrored glyphs. Before
+    # they were recognized, the clause-cut branch found nothing in any of the
+    # 66 real Arabic descriptions and every teaser fell through to the
+    # word-boundary fallback, stopping mid-thought. All fixtures below come
+    # from the live i18n/ar/descriptions.json, per the CJK lesson above.
+
+    ARABIC_COMMA = "،"
+    ARABIC_SEMICOLON = "؛"
+
+    def test_arabic_corpus_uses_arabic_clause_marks_and_no_ascii_comma(self):
+        # The premise the fix rests on. If a future re-translation started
+        # using ASCII commas this would no longer be the bug being fixed, and
+        # the assertions below would be testing something else by accident.
+        if not REAL_AR_DESCRIPTIONS_PATH.is_file():
+            self.skipTest("real i18n/ar/descriptions.json not present")
+        corpus = _real_ar_descriptions()
+        self.assertEqual(len(corpus), 66)
+        self.assertEqual(
+            [slug for slug, text in corpus.items() if "," in text], [],
+            "no real Arabic description should contain an ASCII comma",
+        )
+        with_arabic_comma = [s for s, t in corpus.items() if self.ARABIC_COMMA in t]
+        self.assertGreater(len(with_arabic_comma), 50)
+
+    def test_arabic_description_cuts_at_a_real_arabic_clause_boundary(self):
+        # calibrating-confidence is the concrete report: pre-fix this stopped
+        # on the bare connective "أو" ("or"), reading as an unfinished
+        # sentence. The cut must land on a real clause mark instead.
+        if not REAL_AR_DESCRIPTIONS_PATH.is_file():
+            self.skipTest("real i18n/ar/descriptions.json not present")
+        description = _real_ar_descriptions()["calibrating-confidence"]
+        summary = summarize_description(description)
+        self.assertLessEqual(len(summary), 140)
+        self.assertTrue(summary.endswith("…"))
+        core = summary[:-1]
+        self.assertTrue(description.startswith(core))
+        self.assertEqual(description[len(core)], self.ARABIC_COMMA)
+        self.assertFalse(
+            core.rstrip().endswith("أو"),
+            "must not stop on the dangling connective 'أو' (or)",
+        )
+
+    def test_arabic_semicolon_alone_is_enough_to_find_a_clause(self):
+        # drawing-boundaries reaches the budget with ؛ as the only clause
+        # mark in the window -- the Arabic counterpart of the ；-only case the
+        # CJK tests cover, and the reason ؛ cannot be dropped from the set.
+        # It is not a lone example: 10 of the 66 entries cut on a ؛, and all
+        # 10 change if it is removed.
+        if not REAL_AR_DESCRIPTIONS_PATH.is_file():
+            self.skipTest("real i18n/ar/descriptions.json not present")
+        description = _real_ar_descriptions()["drawing-boundaries"]
+        truncated = " ".join(description.split())[:139]
+        self.assertNotIn(self.ARABIC_COMMA, truncated,
+                         "fixture must exercise the semicolon branch specifically")
+        self.assertIn(self.ARABIC_SEMICOLON, truncated)
+        summary = summarize_description(description)
+        core = summary[:-1]
+        self.assertEqual(description[len(core)], self.ARABIC_SEMICOLON)
+
+    def test_no_arabic_teaser_strands_a_clause_mark_against_the_ellipsis(self):
+        # The rstrip set has to track the cut set. When it didn't, 6 of the 66
+        # teasers rendered a stray ، immediately before the … .
+        if not REAL_AR_DESCRIPTIONS_PATH.is_file():
+            self.skipTest("real i18n/ar/descriptions.json not present")
+        offenders = []
+        for slug, description in _real_ar_descriptions().items():
+            summary = summarize_description(description)
+            core = summary[:-1] if summary.endswith("…") else summary
+            if core and core[-1] in ",;" + self.ARABIC_COMMA + self.ARABIC_SEMICOLON:
+                offenders.append(slug)
+        self.assertEqual(offenders, [])
+
+    def test_every_real_arabic_teaser_stays_within_budget(self):
+        if not REAL_AR_DESCRIPTIONS_PATH.is_file():
+            self.skipTest("real i18n/ar/descriptions.json not present")
+        for slug, description in _real_ar_descriptions().items():
+            with self.subTest(skill=slug):
+                self.assertLessEqual(len(summarize_description(description)), 140)
 
 
 # ---------------------------------------------------------------------------
