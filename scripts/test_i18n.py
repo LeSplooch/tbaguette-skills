@@ -174,10 +174,37 @@ def check_locale_count_gate() -> None:
             shutil.rmtree(tmp_root, ignore_errors=True)
 
 
+def check_rtl_css_pass() -> None:
+    print("RTL CSS pass")
+    css_path = Path(__file__).resolve().parent.parent / "docs" / "assets" / "styles.css"
+    css = css_path.read_text(encoding="utf-8")
+
+    # The code-block line-number gutter is the one deliberate, documented
+    # exception -- it displays literal source code, which stays LTR on
+    # every page regardless of the surrounding language (see templates.py's
+    # dir="ltr" on .code-block, Task 5) -- so its own left/text-align:right
+    # are correct as physical properties and must NOT be converted.
+    exempt_block_start = css.index(".code-block__line-number {")
+    exempt_block_end = css.index("}", exempt_block_start)
+    css_outside_exemption = css[:exempt_block_start] + css[exempt_block_end:]
+
+    check("no more than the one documented exemption uses a bare 'padding-left'",
+          "padding-left" not in css_outside_exemption)
+    check("no bare 'text-align: left' remains outside the exemption",
+          "text-align: left" not in css_outside_exemption)
+    check("no bare 'text-align: right' remains outside the exemption",
+          "text-align: right" not in css_outside_exemption)
+    check("the card-arrow hover motion has an explicit [dir=\"rtl\"] override",
+          '[dir="rtl"] .card:hover .card__arrow' in css)
+    check("the tab-list scroll-fade mask has an explicit [dir=\"rtl\"] override",
+          '[dir="rtl"] .tabs__list' in css)
+
+
 def main() -> None:
     check_locale_registry()
     check_full_locale_build()
     check_locale_count_gate()
+    check_rtl_css_pass()
     print(f"\n{checker.total} checks passed.")
 
 
