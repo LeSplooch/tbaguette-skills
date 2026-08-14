@@ -330,21 +330,20 @@ def check_fresh_section() -> None:
           '<time class="fresh__when" datetime="2026-08-14T12:00:00+00:00" '
           'data-format-relative>2026-08-14</time>' in html)
 
-    # --- the coverflow: geometry is data, not decoration, so it gets the
-    # same scrutiny as the rest of the tile — a wrong offset is a tile stuck
-    # off in the tilted, dimmed part of the fan, not a cosmetic nit. -------
-    check("the anchor carries --cf-offset directly — no ring or face "
-          "wrapper left over from the previous rework",
-          "fresh__ring" not in html and "fresh__face" not in html)
-    check("the rail carries the JS hook the coverflow step timer looks for",
-          "data-fresh-coverflow" in html)
-    check("first of two tiles sits dead centre",
-          'style="--cf-offset: 0"' in html)
-    check("second of two tiles sits one slot to its right — with only two "
-          "tiles there is no symmetric split, so one side of the fan stays "
-          "empty rather than the tile wrapping all the way around to look "
-          "like it never moved",
-          'style="--cf-offset: 1"' in html)
+    # --- the card stack: depth is data, not decoration, so it gets the same
+    # scrutiny as the rest of the tile — a wrong depth is a tile stuck
+    # invisible at the bottom of the deck, not a cosmetic nit. -------------
+    check("the anchor carries --cs-depth directly — no ring/face wrapper or "
+          "coverflow offset left over from earlier reworks",
+          "fresh__ring" not in html and "fresh__face" not in html
+          and "--cf-offset" not in html)
+    check("the rail carries the JS hook the card-stack step timer looks for",
+          "data-fresh-stack" in html)
+    check("first of two tiles starts on top of the deck",
+          'style="--cs-depth: 0"' in html)
+    check("second of two tiles starts one card down — render order is deck "
+          "order, since only generate.py knows which skill is actually newest",
+          'style="--cs-depth: 1"' in html)
 
     many = [make(f"s{i:02d}", "new", "2026-08-14T12:00:00+00:00") for i in range(30)]
     capped = render_index(categories, {}, fresh_skills=many)
@@ -352,22 +351,11 @@ def check_fresh_section() -> None:
           capped.count('class="fresh__tile"') == templates.FRESH_RAIL_LIMIT)
     check("the cap keeps the newest end of the list, not an arbitrary slice",
           ">s00</span>" in capped and ">s29</span>" not in capped)
-    check("a capped dozen splits evenly either side of centre — the cap "
-          "trims the list before the offset math runs, not after",
-          'style="--cf-offset: 0"' in capped
-          and 'style="--cf-offset: 6"' in capped
-          and 'style="--cf-offset: -1"' in capped)
-
-    check("_fresh_signed_offset: a single tile has nothing to be offset from",
-          templates._fresh_signed_offset(0, 1) == 0)
-    check("_fresh_signed_offset: with only two tiles, the second sits one "
-          "slot over rather than wrapping to look identical to the first",
-          templates._fresh_signed_offset(0, 2) == 0
-          and templates._fresh_signed_offset(1, 2) == 1)
-    check("_fresh_signed_offset: the tile just past halfway in a full dozen "
-          "wraps to the short side instead of swinging the long way round",
-          templates._fresh_signed_offset(7, 12) == -5
-          and templates._fresh_signed_offset(11, 12) == -1)
+    check("a capped dozen keeps depth in render order — the cap trims the "
+          "list before depths are assigned, not after, so depth 0 is the "
+          "newest shown tile and depth 11 the oldest",
+          'style="--cs-depth: 0"' in capped
+          and 'style="--cs-depth: 11"' in capped)
 
 
 def main() -> None:

@@ -909,20 +909,21 @@ code {
    _render_fresh_section), so there is no empty state to style.
 
    That tray also, wherever motion and space are both welcome, becomes a
-   coverflow rather than a flat scroller: one tile flat and full-size at
-   centre, its neighbours tilted away and shrinking on each side, stepping
-   sideways on a timer (site.js's initFreshCoverflow — the stepping itself
-   needs a clock, which is the one thing CSS alone can't keep, so this is
-   the rare feature here with a JS half). --cf-offset (set inline by
-   templates.py at render time, then kept live by site.js) is each tile's
-   signed distance from centre; every visual property below is a plain
-   calc() of that one number, so "make tile N active" is just writing new
-   offsets, not swapping classes. See the gated rule below for the three
-   conditions — motion, width, forced-colors — that all have to hold before
-   it forms; missing any one of them leaves the original flat rail exactly
-   as it was, not a broken coverflow. A visitor with no JS at all still gets
-   the offsets templates.py rendered at build time — a real, if motionless,
-   coverflow — never the flat rail by accident.
+   card stack rather than a flat scroller: one tile on top, full-size and
+   opaque, the rest fanned back beneath it — lower, smaller, dimmer the
+   deeper they sit — cycling the top card to the bottom of the deck on a
+   timer (site.js's initFreshCardStack — the cycling itself needs a clock,
+   which is the one thing CSS alone can't keep, so this is the rare feature
+   here with a JS half). --cs-depth (set inline by templates.py at render
+   time, then kept live by site.js) is each tile's position in the deck, 0
+   at the top; every visual property below is a plain calc() of that one
+   number, so "this tile is now on top" is just writing new depths, not
+   swapping classes. See the gated rule below for the three conditions —
+   motion, width, forced-colors — that all have to hold before it forms;
+   missing any one of them leaves the original flat rail exactly as it was,
+   not a broken stack. A visitor with no JS at all still gets the depths
+   templates.py rendered at build time — a real, if motionless, stack —
+   never the flat rail by accident.
    ------------------------------------------------------------------------- */
 
 .fresh { margin-top: var(--space-7); }
@@ -1055,7 +1056,7 @@ code {
 
 /* Wherever a visitor's browser and stated preferences allow it — motion
    welcome, a viewport with room to spare, no forced system palette — the
-   rail becomes the coverflow described above instead of staying a flat
+   rail becomes the card stack described above instead of staying a flat
    scroller. All three conditions live in one query on purpose: it is the
    single on/off switch for the whole effect, so there is exactly one place
    that decides whether it runs, and every rule above stays a complete,
@@ -1064,26 +1065,26 @@ code {
   .fresh__rail {
     position: relative;
     display: block;
-    height: 11rem;
-    perspective: 1000px;
+    height: 12.5rem;
+    perspective: 900px;
     overflow: visible;
     -webkit-mask-image: none;
     mask-image: none;
   }
 
-  /* --cf-offset (set inline by templates.py, kept live by site.js) is the
-     only per-instance number here — everything else is a calc() of it.
-     --cf-abs is the max()-of-itself-and-its-negation trick for absolute
-     value: scale/opacity/stacking care how *far* a tile is from centre,
-     rotation and position care which *side* it's on, so the signed and
-     unsigned forms are each used where they mean something.
+  /* --cs-depth (set inline by templates.py, kept live by site.js) is the
+     only per-instance number here — everything else is a calc() of it: a
+     card one step deeper sits a little lower, a little further back, a
+     little smaller, and a little dimmer than the one above it, the same
+     four cues a real dropped stack of cards gives for free.
 
-     --cf-transform exists as its own custom property, not inlined straight
+     --cs-transform exists as its own custom property, not inlined straight
      into `transform`, purely so the :hover/:focus-visible rule below can
      restate the identical value: a plain hover rule setting `transform`
      directly would replace this positioning outright rather than add to
-     it, the same trap the previous ring version's animations sat in — see
-     that this rewrite, not just the last one, remembers the lesson. */
+     it — the trap the ring version's animations sat in two reworks ago,
+     and the reason the coverflow version before this one already carried
+     the same pattern. */
   .fresh__tile {
     position: absolute;
     left: 50%;
@@ -1093,14 +1094,13 @@ code {
     overflow: hidden;
     flex: none;
     scroll-snap-align: none;
-    --cf-abs: max(var(--cf-offset), calc(var(--cf-offset) * -1));
-    --cf-transform:
-      translateX(clamp(-260px, calc(var(--cf-offset) * 62px), 260px))
-      rotateY(clamp(-38deg, calc(var(--cf-offset) * -19deg), 38deg))
-      scale(clamp(0.55, calc(1 - var(--cf-abs) * 0.19), 1));
-    transform: var(--cf-transform);
-    opacity: clamp(0, calc(1 - var(--cf-abs) * 0.32), 1);
-    z-index: max(1, calc(20 - var(--cf-abs)));
+    --cs-transform:
+      translateY(calc(var(--cs-depth) * 11px))
+      translateZ(calc(var(--cs-depth) * -26px))
+      scale(clamp(0.5, calc(1 - var(--cs-depth) * 0.07), 1));
+    transform: var(--cs-transform);
+    opacity: clamp(0, calc(1 - var(--cs-depth) * 0.24), 1);
+    z-index: max(1, calc(30 - var(--cs-depth)));
     transition: transform 0.7s var(--ease-out), opacity 0.7s var(--ease-out);
   }
 
@@ -1108,17 +1108,17 @@ code {
   .fresh__tile:focus-visible {
     background: var(--surface-hover);
     border-color: var(--accent);
-    transform: var(--cf-transform);
+    transform: var(--cs-transform);
   }
 
   /* WCAG 2.2.2: anything that moves on its own for more than five seconds
      needs a way to stop it, and the tile a keyboard visitor lands on must
-     be legible rather than off in the tilted, dimmed part of the fan. Both
-     live in site.js's initFreshCoverflow (pause on hover/focus-within;
-     focus also recentres the focused tile to --cf-offset: 0) rather than
-     here, because both are about *when the step timer runs and what it
-     writes*, which CSS has no view into — this block only ever renders
-     whatever offsets it is handed, by design. */
+     be legible rather than faded into the deck. Both live in site.js's
+     initFreshCardStack (pause on hover/focus-within; focus also pulls the
+     focused tile to the top, --cs-depth: 0) rather than here, because both
+     are about *when the step timer runs and what it writes*, which CSS has
+     no view into — this block only ever renders whatever depths it is
+     handed, by design. */
 }
 
 /* ---------------------------------------------------------------------------

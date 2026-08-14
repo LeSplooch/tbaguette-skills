@@ -402,24 +402,7 @@ def _render_relative_time(at: str | None) -> str:
     )
 
 
-def _fresh_signed_offset(index: int, count: int) -> int:
-    """A tile's position relative to the rail's centre, wrapping the short
-    way around rather than counting strictly left-to-right.
-
-    Split evenly around zero — roughly the first half of `shown` lands at
-    0, 1, 2, ... to the right, the second half at -1, -2, ... to the left —
-    so the initial paint (before any JS ever runs, and forever for visitors
-    without it) already reads as a centred fan rather than everything queued
-    up on one side. site.js's coverflow step recomputes this exact formula
-    at runtime as the active tile advances; keeping the two in sync is why
-    it is a plain, restatable rule rather than something baked only here."""
-    if count <= 1:
-        return 0
-    half = count // 2
-    return index if index <= half else index - count
-
-
-def _render_fresh_tile(skill: dict, base_path: str = "", index: int = 0, count: int = 1) -> str:
+def _render_fresh_tile(skill: dict, base_path: str = "", index: int = 0) -> str:
     """One rail tile. The New/Updated mark is the same .change-badge component
     the cards below use rather than a rail-specific variant — one badge on the
     site, filled for new and outlined for updated, so the distinction survives
@@ -428,14 +411,16 @@ def _render_fresh_tile(skill: dict, base_path: str = "", index: int = 0, count: 
     data-fresh-at sits on the tile itself, so site.js removing a stale element
     takes the whole tile rather than leaving a headless entry behind.
 
-    --cf-offset is inert everywhere that doesn't reference it via var(), so
-    this markup renders identically whether or not the coverflow rule in
-    styles.css ends up applying — a reduced-motion, narrow, or forced-colors
-    visitor gets the same tile, just laid out by the flat rail instead."""
+    --cs-depth is this tile's position in the deck — 0 is the top card, and
+    the newest skill starts there, since render order already is the order a
+    fresh burst arrived in. It is inert everywhere that doesn't reference it
+    via var(), so this markup renders identically whether or not the
+    card-stack rule in styles.css ends up applying — a reduced-motion,
+    narrow, or forced-colors visitor gets the same tile, just laid out by
+    the flat rail instead."""
     at = skill.get("change_at")
     stamp = f' data-fresh-at="{escape_html(at)}"' if at else ""
-    offset = _fresh_signed_offset(index, count)
-    return f"""<a class="fresh__tile" href="{_skill_href(skill, base_path)}"{stamp} style="--cf-offset: {offset}">
+    return f"""<a class="fresh__tile" href="{_skill_href(skill, base_path)}"{stamp} style="--cs-depth: {index}">
   {_render_change_badge(skill.get('change_status'))}
   <span class="fresh__name">{escape_html(skill['name'])}</span>
   {_render_relative_time(at)}
@@ -455,18 +440,17 @@ def _render_fresh_section(fresh_skills: list[dict], base_path: str = "") -> str:
     The cap only bounds this rail: the badges themselves are exhaustive, so
     anything trimmed here is still marked in the grid below.
 
-    Each tile carries its own --cf-offset (see _render_fresh_tile) — a plain
-    custom property, not scoped to any media query itself, so a no-coverflow
+    Each tile carries its own --cs-depth (see _render_fresh_tile) — a plain
+    custom property, not scoped to any media query itself, so a no-stack
     visitor (reduced motion, a narrow viewport, forced-colors, or no JS at
     all) gets exactly the flat scrolling rail this section has always
-    rendered. The coverflow only forms where styles.css's gated rule opts in
-    and reads it."""
+    rendered. The card stack only forms where styles.css's gated rule opts
+    in and reads it."""
     if not fresh_skills:
         return ""
     shown = fresh_skills[:FRESH_RAIL_LIMIT]
-    count = len(shown)
     tiles = _join(*(
-        _render_fresh_tile(skill, base_path, index=i, count=count)
+        _render_fresh_tile(skill, base_path, index=i)
         for i, skill in enumerate(shown)
     ))
     return f"""<section class="fresh" aria-labelledby="fresh-title" data-fresh-section>
@@ -475,7 +459,7 @@ def _render_fresh_section(fresh_skills: list[dict], base_path: str = "") -> str:
     <h2 class="fresh__title" id="fresh-title">Fresh from the oven</h2>
     <span class="tag fresh__tag">Last 48 hours</span>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow>
+  <div class="fresh__rail" data-fresh-stack>
 {tiles}
   </div>
 </section>"""
