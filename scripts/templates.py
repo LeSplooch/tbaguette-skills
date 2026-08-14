@@ -259,62 +259,55 @@ INSTALL_COMMAND_CMD = (
     '(git clone https://github.com/LeSplooch/tbaguette-skills.git "%USERPROFILE%\\.claude\\skills\\TBaguette")'
 )
 
-INSTALL_HINT_POSIX = "Works in bash, zsh, or fish — including WSL and Git Bash on Windows."
-INSTALL_HINT_POWERSHELL = "PowerShell 5.1 or 7+, the Windows default terminal since Windows 10."
+INSTALL_PROMPT_HINT = "Paste into a Claude Code conversation — it reads your OS and runs the real commands itself."
 
+# Addressed to Claude, not to a shell — this is what a visitor pastes into a
+# Claude Code conversation instead of running a command themselves. Steps
+# 1-3 restate the exact clone-or-pull branch INSTALL_COMMAND already encodes
+# and test_install_command.py already proves (scenarios A/B/C), just as
+# prose instead of one shell's syntax, so it reads correctly no matter which
+# shell Claude's tool actually runs. Step 4 is the one place this does more
+# than the one-liner: a bare `git clone` just refuses on a real collision
+# (scenario D) — told only "install this," an agent could read that refusal
+# as a problem to solve and reach for rm -rf on its own initiative, so this
+# spells out the refusal explicitly instead of leaving it implicit.
+INSTALL_PROMPT = """Install (or update) the TBaguette skills plugin for Claude Code. Use your shell tool:
 
-def _render_install_panel(*, panel_id: str, tab_id: str, command: str, hint: str,
-                           selected: bool, base_path: str = "") -> str:
-    escaped = escape_html(command)
-    hidden_attr = "" if selected else " hidden"
-    return f"""<div class="tabs__panel install-tabs__panel" role="tabpanel" id="{panel_id}"
-             aria-labelledby="{tab_id}" tabindex="0"{hidden_attr}>
-          <div class="install">
-            <code class="install__command" id="{panel_id}-command">{escaped}</code>
-            <button class="install__copy" type="button" data-copy-target="{panel_id}-command"
-                    aria-label="Copy install command">
-              <span class="install__copy-icons">
-                <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-copy"></use></svg>
-                <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-check"></use></svg>
-              </span>
-              <span data-copy-label>Copy</span>
-            </button>
-          </div>
-          <p class="install__hint">{escape_html(hint)}</p>
-        </div>"""
+1. Target directory: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\\.claude\\skills\\TBaguette).
+2. If <target>/.git exists, update in place: git -C <target> pull.
+3. Else if <target> doesn't exist, or exists and is empty, install fresh:
+   git clone https://github.com/LeSplooch/tbaguette-skills.git <target>.
+4. Else (the directory exists, has content, and is not a git repo) — stop.
+   Do not delete or modify it. Tell me there's a naming collision at that
+   path that needs a manual look.
+5. After a successful clone or pull, confirm <target>/CATALOG.md and
+   <target>/skills/ both exist, so "it worked" is checked, not assumed.
+6. Tell me to restart Claude Code (or run /reload-plugins) — skills then
+   invoke as TBaguette:skill-name.
+7. This only works for Claude Code. The Claude Desktop app and claude.ai
+   chat load skills from my account instead of this folder."""
 
 
 def _render_install(base_path: str = "") -> str:
-    posix_panel = _render_install_panel(
-        panel_id="install-posix", tab_id="tab-install-posix",
-        command=INSTALL_COMMAND, hint=INSTALL_HINT_POSIX,
-        selected=True, base_path=base_path,
-    )
-    powershell_panel = _render_install_panel(
-        panel_id="install-powershell", tab_id="tab-install-powershell",
-        command=INSTALL_COMMAND_POWERSHELL, hint=INSTALL_HINT_POWERSHELL,
-        selected=False, base_path=base_path,
-    )
+    escaped_prompt = escape_html(INSTALL_PROMPT)
     return f"""<div class="install-frame">
   <p class="install-frame__label">
     {_icon("icon-crust", base_path=base_path)}
     Install TBaguette&rsquo;s skills
   </p>
   <div class="install-frame__body">
-    <div class="tabs install-tabs" data-tabs data-autoselect-platform="true">
-      <div class="tabs__list install-tabs__list" role="tablist" aria-label="Choose your platform">
-        <button class="tabs__tab" type="button" role="tab" id="tab-install-posix"
-                aria-controls="install-posix" aria-selected="true" tabindex="0"
-                data-platform="posix">macOS / Linux</button>
-        <button class="tabs__tab" type="button" role="tab" id="tab-install-powershell"
-                aria-controls="install-powershell" aria-selected="false" tabindex="-1"
-                data-platform="windows">Windows (PowerShell)</button>
-      </div>
-      <div class="tabs__panels install-tabs__panels">
-{posix_panel}
-{powershell_panel}
-      </div>
+    <div class="install">
+      <code class="install__command" id="install-prompt-command">{escaped_prompt}</code>
+      <button class="install__copy" type="button" data-copy-target="install-prompt-command"
+              aria-label="Copy install prompt">
+        <span class="install__copy-icons">
+          <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-copy"></use></svg>
+          <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-check"></use></svg>
+        </span>
+        <span data-copy-label>Copy</span>
+      </button>
     </div>
+    <p class="install__hint">{escape_html(INSTALL_PROMPT_HINT)}</p>
     <p class="install-frame__note">
       {_icon("icon-check", base_path=base_path)}
       <span>Only ever touches this folder — verified against your other skills, not

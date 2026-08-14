@@ -16,6 +16,7 @@ from templates import (
     INSTALL_COMMAND,
     INSTALL_COMMAND_CMD,
     INSTALL_COMMAND_POWERSHELL,
+    INSTALL_PROMPT,
     INSTALL_TEST_GITHUB_URL,
     escape_html,
     render_index,
@@ -377,37 +378,32 @@ def main() -> None:
         check(f"contains skill summary for {slug!r}", skill["summary"] in index_html)
         check(f"links to /skills/{slug}/", f'href="/skills/{slug}/"' in index_html)
     check("has a search input", 'data-search-input' in index_html)
-    # Both commands contain && / {} , which escape_html correctly turns into
-    # entity forms — checking for the raw form here would either fail
-    # (proving nothing) or, worse, pass by accident if escaping were ever
-    # silently disabled. Checking the escaped form catches that regression
-    # directly.
-    check("POSIX install command appears, correctly HTML-escaped",
-          escape_html(INSTALL_COMMAND) in index_html)
-    check("raw, un-escaped POSIX command never appears (would mean escaping broke)",
-          INSTALL_COMMAND not in index_html)
-    check("PowerShell install command appears, correctly HTML-escaped",
-          escape_html(INSTALL_COMMAND_POWERSHELL) in index_html)
-    check("raw, un-escaped PowerShell command never appears",
-          INSTALL_COMMAND_POWERSHELL not in index_html)
+    # <target> inside the prompt is the one part of it that needs HTML
+    # escaping (the angle brackets) — checking the escaped form here is a
+    # real assertion, not a vacuous one, precisely because of that.
+    check("install prompt appears, correctly HTML-escaped",
+          escape_html(INSTALL_PROMPT) in index_html)
+    check("raw, un-escaped install prompt never appears (would mean escaping "
+          "broke, or a <target> placeholder leaked through as a real tag)",
+          INSTALL_PROMPT not in index_html)
     check("install frame sits right after the headline, before the lede",
-          index_html.index("hero__headline") < index_html.index('id="install-posix-command"')
+          index_html.index("hero__headline") < index_html.index('id="install-prompt-command"')
           < index_html.index("hero__lede"))
-    check("has a copy button wired to the POSIX command",
-          'data-copy-target="install-posix-command"' in index_html)
-    check("has a separate copy button wired to the PowerShell command",
-          'data-copy-target="install-powershell-command"' in index_html)
+    check("has a copy button wired to the prompt",
+          'data-copy-target="install-prompt-command"' in index_html)
     check("install frame is wrapped in its labeled frame",
           index_html.index("install-frame") < index_html.index("Install TBaguette")
-          < index_html.index('id="install-posix-command"'))
+          < index_html.index('id="install-prompt-command"'))
     label_start = index_html.index('install-frame__label')
     label_end = index_html.index('</p>', label_start)
     check("frame label itself carries an icon (icon-crust also appears in category "
           "headers elsewhere on the page, so this checks the label's own slice, not "
           "just presence anywhere)",
           '#icon-crust' in index_html[label_start:label_end])
-    check("verification note sits after both commands and before the lede, inside the frame",
-          index_html.index('id="install-powershell-command"') < index_html.index("install-frame__note")
+    check("hint tells the visitor to paste this into Claude Code, not run it themselves",
+          "Paste into a Claude Code conversation" in index_html)
+    check("verification note sits after the prompt and before the lede, inside the frame",
+          index_html.index('id="install-prompt-command"') < index_html.index("install-frame__note")
           < index_html.index("hero__lede"))
     check("verification note links to the on-site explanation page, base_path-prefixed",
           'href="/verify-install/"' in index_html)
@@ -420,33 +416,22 @@ def main() -> None:
     check("the Claude-Code-specific note sits after the safety note, before the lede",
           index_html.index("install-frame__note") < index_html.index('Restart Claude Code')
           < index_html.index("hero__lede"))
+    check("no platform-picker tabs remain now that there's a single universal prompt",
+          'data-autoselect-platform' not in index_html and 'tab-install-posix' not in index_html)
 
-    # --- platform picker: two tabs, POSIX shown by default, PowerShell hidden ---
-    print("install platform picker")
-    posix_tab_start = index_html.index('id="tab-install-posix"')
-    posix_tab = index_html[posix_tab_start:index_html.index('</button>', posix_tab_start)]
-    check("POSIX tab starts selected", 'aria-selected="true"' in posix_tab)
-    check("POSIX tab is tagged for the auto-select logic to recognize as the non-Windows option",
-          'data-platform="posix"' in posix_tab)
-
-    ps_tab_start = index_html.index('id="tab-install-powershell"')
-    ps_tab = index_html[ps_tab_start:index_html.index('</button>', ps_tab_start)]
-    check("Windows tab starts unselected", 'aria-selected="false"' in ps_tab)
-    check("Windows tab is tagged for the auto-select logic to find",
-          'data-platform="windows"' in ps_tab)
-
-    ps_panel_start = index_html.index('id="install-powershell"')
-    ps_panel = index_html[ps_panel_start:index_html.index('id="install-powershell-command"')]
-    check("PowerShell panel starts hidden (JS-driven auto-select or a click reveals it)",
-          "hidden" in ps_panel)
-    posix_panel_start = index_html.index('id="install-posix"')
-    posix_panel = index_html[posix_panel_start:index_html.index('id="install-posix-command"')]
-    check("POSIX panel does NOT start hidden — correct even with JS disabled",
-          "hidden" not in posix_panel)
-
-    check("group opts into platform auto-selection", 'data-autoselect-platform="true"' in index_html)
-    check("each platform panel names which shells/versions it covers",
-          "Works in bash, zsh, or fish" in index_html and "PowerShell 5.1 or 7" in index_html)
+    # --- the prompt's embedded facts must not drift from the tested shell
+    # commands (INSTALL_COMMAND covers POSIX + the repo URL, INSTALL_COMMAND_CMD
+    # covers the %USERPROFILE%-style Windows path the prompt also uses) ---
+    print("install prompt drift check")
+    check("prompt's repo URL matches the tested POSIX install command",
+          "https://github.com/LeSplooch/tbaguette-skills.git" in INSTALL_PROMPT
+          and "https://github.com/LeSplooch/tbaguette-skills.git" in INSTALL_COMMAND)
+    check("prompt's POSIX target path matches the tested POSIX install command",
+          "~/.claude/skills/TBaguette" in INSTALL_PROMPT
+          and "~/.claude/skills/TBaguette" in INSTALL_COMMAND)
+    check("prompt's Windows target path matches the tested cmd.exe install command",
+          "%USERPROFILE%\\.claude\\skills\\TBaguette" in INSTALL_PROMPT
+          and "%USERPROFILE%\\.claude\\skills\\TBaguette" in INSTALL_COMMAND_CMD)
     print(f"  wrote {index_path}")
 
     # --- render_skill_page: formidable (the interesting one) --------------

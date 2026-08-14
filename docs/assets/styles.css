@@ -805,15 +805,6 @@ code {
   color: var(--text-secondary);
 }
 
-/* The platform-picker tabs reuse .tabs/.tabs__tab/.tabs__panel wholesale
-   (same component as formidable's Stacks/Commands) but sit inside a small,
-   already-padded card rather than a full article — .tabs__panels' prose
-   sizing (measure-prose max-width, text-3) is the wrong fit here, since a
-   panel holds only a one-line command + hint, not running text. */
-.install-tabs { margin-top: 0; }
-.install-tabs .tabs__panels { margin-top: var(--space-4); }
-.install-tabs .tabs__panel { max-width: none; font-size: inherit; line-height: inherit; }
-
 .search {
   margin-top: var(--space-7);
   max-width: 34rem;
