@@ -30,6 +30,12 @@
     return Array.prototype.slice.call(nodeList);
   }
 
+  function formatTemplate(template, values) {
+    return template.replace(/\{(\w+)\}/g, function (match, key) {
+      return Object.prototype.hasOwnProperty.call(values, key) ? String(values[key]) : match;
+    });
+  }
+
   // Best-effort OS sniff, used only to pick a sane default platform tab in
   // the install frame — never to gate functionality. navigator.platform is
   // deprecated but still broadly supported; userAgentData.platform is its
@@ -90,8 +96,10 @@
   function describeToggleTarget(theme) {
     var toggle = document.querySelector('[data-theme-toggle]');
     if (!toggle) return;
-    var targetTheme = theme === 'flour' ? 'dark' : 'light';
-    toggle.setAttribute('aria-label', 'Switch to ' + targetTheme + ' theme');
+    var label = theme === 'flour'
+      ? toggle.getAttribute('data-i18n-theme-dark')
+      : toggle.getAttribute('data-i18n-theme-light');
+    toggle.setAttribute('aria-label', label);
   }
 
   function setTheme(theme) {
@@ -155,7 +163,10 @@
         if (badge) {
           var total = parseInt(badge.getAttribute('data-category-count'), 10);
           var shown = query === '' ? total : stillVisible;
-          badge.textContent = shown + ' ' + (shown === 1 ? 'skill' : 'skills');
+          var noun = shown === 1
+            ? badge.getAttribute('data-i18n-singular')
+            : badge.getAttribute('data-i18n-plural');
+          badge.textContent = shown + ' ' + noun;
         }
       });
 
@@ -170,11 +181,15 @@
       }
 
       if (query === '') {
-        status.textContent = 'Showing all ' + totalCount + ' skills.';
+        status.textContent = formatTemplate(
+          status.getAttribute('data-i18n-showing-all-template'), { count: totalCount }
+        );
       } else if (visibleCount === 0) {
-        status.textContent = 'No skills match.';
+        status.textContent = document.body.getAttribute('data-i18n-no-match');
       } else {
-        status.textContent = visibleCount + ' of ' + totalCount + ' skills match.';
+        status.textContent = formatTemplate(
+          status.getAttribute('data-i18n-partial-template'), { shown: visibleCount, total: totalCount }
+        );
       }
     }
 
@@ -226,7 +241,7 @@
 
       function showCopied() {
         button.classList.add('is-copied');
-        label.textContent = 'Copied!';
+        label.textContent = document.body.getAttribute('data-i18n-copied');
         clearTimeout(resetTimer);
         resetTimer = setTimeout(function () {
           button.classList.remove('is-copied');
@@ -361,15 +376,39 @@
   function showUpdateModal() {
     if (document.querySelector('.update-modal-overlay')) return;
 
+    var title = document.body.getAttribute('data-i18n-modal-title');
+    var body = document.body.getAttribute('data-i18n-modal-body');
+    var reloadLabel = document.body.getAttribute('data-i18n-modal-reload');
+
     var overlay = document.createElement('div');
     overlay.className = 'update-modal-overlay';
-    overlay.innerHTML =
-      '<div class="update-modal" role="alertdialog" aria-modal="true" ' +
-      'aria-labelledby="update-modal-title" aria-describedby="update-modal-body">' +
-      '<p class="update-modal__title" id="update-modal-title">New version available</p>' +
-      '<p class="update-modal__body" id="update-modal-body">This page has been updated. Reload to see the latest.</p>' +
-      '<button class="update-modal__reload" type="button">Reload</button>' +
-      '</div>';
+
+    var modal = document.createElement('div');
+    modal.className = 'update-modal';
+    modal.setAttribute('role', 'alertdialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'update-modal-title');
+    modal.setAttribute('aria-describedby', 'update-modal-body');
+
+    var titleEl = document.createElement('p');
+    titleEl.className = 'update-modal__title';
+    titleEl.id = 'update-modal-title';
+    titleEl.textContent = title;
+
+    var bodyEl = document.createElement('p');
+    bodyEl.className = 'update-modal__body';
+    bodyEl.id = 'update-modal-body';
+    bodyEl.textContent = body;
+
+    var reloadButton = document.createElement('button');
+    reloadButton.className = 'update-modal__reload';
+    reloadButton.type = 'button';
+    reloadButton.textContent = reloadLabel;
+
+    modal.appendChild(titleEl);
+    modal.appendChild(bodyEl);
+    modal.appendChild(reloadButton);
+    overlay.appendChild(modal);
 
     // Genuinely modal, not just visually on top: everything already in
     // <body> (skip link, header, main, footer) becomes untabbable and
@@ -380,7 +419,6 @@
     });
     document.body.appendChild(overlay);
 
-    var reloadButton = overlay.querySelector('.update-modal__reload');
     reloadButton.addEventListener('click', function () {
       try {
         sessionStorage.setItem(SCROLL_RESTORE_KEY, String(window.scrollY));
