@@ -207,11 +207,50 @@ def check_rtl_css_pass() -> None:
           css.count("to left, black") == 2)
 
 
+def check_i18n_status() -> None:
+    print("i18n_status")
+    import i18n_status
+
+    tmp_root = Path(tempfile.mkdtemp(prefix="tbaguette-i18n-status-test-"))
+    try:
+        skills_root = tmp_root / "skills"
+        _write_skill(skills_root, "alpha", "Alpha description.", "Alpha body.")
+        _write_skill(skills_root, "beta", "Beta description.", "Beta body.")
+        _write_skill(skills_root, "gamma", "Gamma description.", "Gamma body.")
+
+        i18n_root = tmp_root / "i18n"
+        fr_dir = i18n_root / "fr"
+        (fr_dir / "skills" / "alpha").mkdir(parents=True)
+        (fr_dir / "skills" / "alpha" / "SKILL.md").write_text(
+            "---\nname: alpha\ndescription: Alpha en français.\n---\nCorps.\n", encoding="utf-8"
+        )
+        (fr_dir / "ui.json").write_text("{}", encoding="utf-8")
+
+        fr = locales.get_locale("fr")
+        status = i18n_status.locale_status(fr, skills_root, i18n_root)
+        check("counts one of three skills translated", status["translated_count"] == 1)
+        check("total_count reflects the real skill corpus size", status["total_count"] == 3)
+        check("missing_slugs lists exactly the two untranslated skills",
+              set(status["missing_slugs"]) == {"beta", "gamma"})
+        check("has_ui_json is True (the file exists, even though it's an empty stub here)",
+              status["has_ui_json"] is True)
+        check("has_categories_json is False (never created for this fixture)",
+              status["has_categories_json"] is False)
+
+        es = locales.get_locale("es")
+        es_status = i18n_status.locale_status(es, skills_root, i18n_root)
+        check("a locale with no i18n/ directory at all reports zero translated, not an error",
+              es_status["translated_count"] == 0 and es_status["has_ui_json"] is False)
+    finally:
+        shutil.rmtree(tmp_root, ignore_errors=True)
+
+
 def main() -> None:
     check_locale_registry()
     check_full_locale_build()
     check_locale_count_gate()
     check_rtl_css_pass()
+    check_i18n_status()
     print(f"\n{checker.total} checks passed.")
 
 
