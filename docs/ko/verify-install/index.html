@@ -52,7 +52,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T16:39:10+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T16:39:10Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-14T17:06:51+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T17:06:51Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -99,7 +99,7 @@
 
   <div class="prose">
     <h2 id="what-it-does">이 명령어가 하는 일</h2>
-    <p>공개된 명령어는 무언가를 하기 전에 먼저 기존 클론이 있는지부터 확인합니다. <code>~/.claude/skills/TBaguette/.git</code>가 이미 있으면 그 자리에서 <code>git pull</code>을 실행하고, 없으면 <code>git clone</code>을 실행합니다. 처음 한 번은 설치입니다. 그 뒤로는 매번 업데이트입니다. 어느 갈래도 다른 곳을 읽거나 쓰는 일은 없습니다.</p>
+    <p>공개된 명령어는 무언가를 하기 전에 먼저 기존 클론이 있는지부터 확인합니다. <code>~/.claude/skills/TBaguette/.git</code>이 이미 있으면 그 자리에서 <code>git pull</code>을 실행하고, 없으면 <code>git clone</code>을 실행합니다. 처음 한 번은 설치입니다. 그 뒤로는 매번 업데이트입니다. 어느 갈래도 다른 곳을 읽거나 쓰는 일은 없습니다.</p>
 
     <h2 id="why-it-cant-reach-anything-else">다른 어디에도 손이 닿을 수 없는 이유</h2>
     <p>두 갈래 모두 만듦새 자체로 <code>~/.claude/skills/TBaguette</code>라는 단 하나의 경로에 갇혀 있습니다 — 그 경로를 대상으로 하는 <code>git clone</code>이나 <code>git pull</code>에는 애초에 그 바깥으로 쓸 수단이 없습니다. 딱 하나 분명히 짚어 둘 만한 경우는 진짜 충돌입니다. 바로 그 경로에 이미 다른 무언가가 있고, 그것이 이 저장소의 클론이 아닌 경우입니다. <code>git clone</code>은 대상이 이미 있고 비어 있지도 않으면 그냥 거부합니다 — 합치지도, 덮어쓰지도, 물어보지도 않습니다. 요란하게 실패하고, 거기 있던 것을 있던 그대로 놔둡니다. 그 거부는 git 자신의 동작이지 이 프로젝트가 위에 얹은 것이 아닙니다.</p>
