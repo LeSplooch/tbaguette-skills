@@ -81,6 +81,8 @@ class Strings:
     search_status_showing_all_template: str
     search_status_no_match: str
     search_status_partial_template: str
+    search_empty_query_open: str
+    search_empty_query_close: str
     category_count_singular: str
     category_count_plural: str
     install_frame_label_template: str
@@ -140,6 +142,8 @@ ENGLISH_STRINGS = Strings(
     search_status_showing_all_template="Showing all {count} skills.",
     search_status_no_match="No skills match.",
     search_status_partial_template="{shown} of {total} skills match.",
+    search_empty_query_open="“",
+    search_empty_query_close="”",
     category_count_singular="skill",
     category_count_plural="skills",
     install_frame_label_template="Install {brand}’s skills",
@@ -597,7 +601,9 @@ def _render_document(*, title: str, meta_description: str, body_class: str,
       data-i18n-no-match="{escape_html(strings.search_status_no_match)}"
       data-i18n-modal-title="{escape_html(strings.update_modal_title)}"
       data-i18n-modal-body="{escape_html(strings.update_modal_body)}"
-      data-i18n-modal-reload="{escape_html(strings.update_modal_reload_button)}">
+      data-i18n-modal-reload="{escape_html(strings.update_modal_reload_button)}"
+      data-i18n-quote-open="{escape_html(strings.search_empty_query_open)}"
+      data-i18n-quote-close="{escape_html(strings.search_empty_query_close)}">
 <a class="skip-link" href="#main">{escape_html(strings.skip_link)}</a>
 {_render_header(base_path, last_updated_utc, locale=locale, path_suffix=path_suffix, strings=strings)}
 <main id="main">

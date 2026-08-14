@@ -176,7 +176,9 @@
       if (emptyState) {
         emptyState.hidden = !showEmptyState;
         if (showEmptyState && emptyQuery) {
-          emptyQuery.textContent = '“' + input.value.trim() + '”';
+          var quoteOpen = document.body.getAttribute('data-i18n-quote-open') || '“';
+          var quoteClose = document.body.getAttribute('data-i18n-quote-close') || '”';
+          emptyQuery.textContent = quoteOpen + input.value.trim() + quoteClose;
         }
       }
 

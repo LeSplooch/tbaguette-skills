@@ -477,6 +477,46 @@ def check_i18n_multiword_heading_id() -> None:
           aria_match is not None and " " not in aria_match.group(1))
 
 
+def check_i18n_quote_glyphs() -> None:
+    """Task 12's own coverage: the search empty-state's quote marks around
+    the visitor's live query used to be hardcoded English/typewriter-curly
+    quotes ('“'/'”') in site.js regardless of locale. The fix threads
+    them through Strings -> data-i18n-quote-open/-close body attributes,
+    same pattern as data-i18n-copied/-no-match/-modal-* just above them in
+    _render_document.
+
+    escape_html is Python's stdlib html.escape(quote=True), which only
+    escapes & < > " ' -- it has no notion of HTML named entities like
+    &ldquo;/&rdquo; and leaves any other Unicode character, curly quotes
+    included, completely untouched. So the *correct* expectation for the
+    English default is the literal '“'/'”' characters appearing
+    verbatim in the attribute value, not an &ldquo;/&rdquo; entity form."""
+    import dataclasses
+
+    html_en = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path="")
+    check("default English render's data-i18n-quote-open is the literal "
+          "left curly quote (“), unescaped -- escape_html doesn't turn "
+          "arbitrary Unicode into named entities, only & < > \" '",
+          'data-i18n-quote-open="“"' in html_en)
+    check("default English render's data-i18n-quote-close is the literal "
+          "right curly quote (”), unescaped",
+          'data-i18n-quote-close="”"' in html_en)
+
+    custom_strings = dataclasses.replace(
+        ENGLISH_STRINGS,
+        search_empty_query_open="TEST-OPEN",
+        search_empty_query_close="TEST-CLOSE",
+    )
+    html_custom = render_index(
+        FIXTURE["categories"], FIXTURE["skills"], base_path="", strings=custom_strings,
+    )
+    check("a Strings instance with custom open/close quote values renders "
+          "its exact open value into data-i18n-quote-open",
+          'data-i18n-quote-open="TEST-OPEN"' in html_custom)
+    check("...and its exact close value into data-i18n-quote-close",
+          'data-i18n-quote-close="TEST-CLOSE"' in html_custom)
+
+
 def main() -> None:
     categories = FIXTURE["categories"]
     skills = FIXTURE["skills"]
@@ -633,6 +673,7 @@ def main() -> None:
     check_i18n_verify_install_page()
     check_i18n_fallback_banner()
     check_i18n_multiword_heading_id()
+    check_i18n_quote_glyphs()
 
     print(f"\n{checker.total} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")

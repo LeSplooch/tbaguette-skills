@@ -15,6 +15,8 @@
   "search_status_showing_all_template": "Alle {count} Skills werden angezeigt.",
   "search_status_no_match": "Keine Treffer.",
   "search_status_partial_template": "Treffer: {shown} von {total} Skills.",
+  "search_empty_query_open": "„",
+  "search_empty_query_close": "“",
   "category_count_singular": "Skill",
   "category_count_plural": "Skills",
   "install_frame_label_template": "{brand}-Skills installieren",

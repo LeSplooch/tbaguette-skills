@@ -15,6 +15,8 @@
   "search_status_showing_all_template": "Les {count} compétences sont toutes affichées.",
   "search_status_no_match": "Aucune compétence ne correspond.",
   "search_status_partial_template": "Correspondances : {shown} sur {total}.",
+  "search_empty_query_open": "« ",
+  "search_empty_query_close": " »",
   "category_count_singular": "compétence",
   "category_count_plural": "compétences",
   "install_frame_label_template": "Installer les compétences de {brand}",
