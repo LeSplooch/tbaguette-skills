@@ -242,8 +242,8 @@ def _icon(symbol_id: str, *, css_class: str = "icon", base_path: str = "") -> st
     )
 
 
-def _skill_href(skill: dict, base_path: str = "") -> str:
-    return f"{base_path}/skills/{escape_html(skill['slug'])}/"
+def _skill_href(skill: dict, base_path: str = "", locale: "locales.Locale" = locales.DEFAULT_LOCALE) -> str:
+    return _locale_url(locale, base_path, f"skills/{escape_html(skill['slug'])}/")
 
 
 def _search_haystack(skill: dict) -> str:
@@ -478,12 +478,9 @@ INSTALL_COMMAND_CMD = (
     '(git clone https://github.com/LeSplooch/tbaguette-skills.git "%USERPROFILE%\\.claude\\skills\\TBaguette")'
 )
 
-INSTALL_HINT_POSIX = "Works in bash, zsh, or fish — including WSL and Git Bash on Windows."
-INSTALL_HINT_POWERSHELL = "PowerShell 5.1 or 7+, the Windows default terminal since Windows 10."
-
 
 def _render_install_panel(*, panel_id: str, tab_id: str, command: str, hint: str,
-                           selected: bool, base_path: str = "") -> str:
+                           selected: bool, base_path: str = "", strings: Strings = ENGLISH_STRINGS) -> str:
     escaped = escape_html(command)
     hidden_attr = "" if selected else " hidden"
     return f"""<div class="tabs__panel install-tabs__panel" role="tabpanel" id="{panel_id}"
@@ -491,43 +488,45 @@ def _render_install_panel(*, panel_id: str, tab_id: str, command: str, hint: str
           <div class="install">
             <code class="install__command" id="{panel_id}-command">{escaped}</code>
             <button class="install__copy" type="button" data-copy-target="{panel_id}-command"
-                    aria-label="Copy install command">
+                    aria-label="{escape_html(strings.install_copy_aria_label)}">
               <span class="install__copy-icons">
                 <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-copy"></use></svg>
                 <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-check"></use></svg>
               </span>
-              <span data-copy-label>Copy</span>
+              <span data-copy-label>{escape_html(strings.install_copy_label)}</span>
             </button>
           </div>
           <p class="install__hint">{escape_html(hint)}</p>
         </div>"""
 
 
-def _render_install(base_path: str = "") -> str:
+def _render_install(base_path: str = "", strings: Strings = ENGLISH_STRINGS) -> str:
     posix_panel = _render_install_panel(
         panel_id="install-posix", tab_id="tab-install-posix",
-        command=INSTALL_COMMAND, hint=INSTALL_HINT_POSIX,
-        selected=True, base_path=base_path,
+        command=INSTALL_COMMAND, hint=strings.install_hint_posix,
+        selected=True, base_path=base_path, strings=strings,
     )
     powershell_panel = _render_install_panel(
         panel_id="install-powershell", tab_id="tab-install-powershell",
-        command=INSTALL_COMMAND_POWERSHELL, hint=INSTALL_HINT_POWERSHELL,
-        selected=False, base_path=base_path,
+        command=INSTALL_COMMAND_POWERSHELL, hint=strings.install_hint_powershell,
+        selected=False, base_path=base_path, strings=strings,
     )
+    frame_label = strings.install_frame_label_template.format(brand=BRAND_NAME)
+    restart_note_html = strings.install_note_restart_html_template.format(brand=BRAND_NAME)
     return f"""<div class="install-frame">
   <p class="install-frame__label">
     {_icon("icon-crust", base_path=base_path)}
-    Install TBaguette&rsquo;s skills
+    {escape_html(frame_label)}
   </p>
   <div class="install-frame__body">
     <div class="tabs install-tabs" data-tabs data-autoselect-platform="true">
-      <div class="tabs__list install-tabs__list" role="tablist" aria-label="Choose your platform">
+      <div class="tabs__list install-tabs__list" role="tablist" aria-label="{escape_html(strings.install_tab_aria_label)}">
         <button class="tabs__tab" type="button" role="tab" id="tab-install-posix"
                 aria-controls="install-posix" aria-selected="true" tabindex="0"
-                data-platform="posix">macOS / Linux</button>
+                data-platform="posix">{escape_html(strings.install_tab_posix_label)}</button>
         <button class="tabs__tab" type="button" role="tab" id="tab-install-powershell"
                 aria-controls="install-powershell" aria-selected="false" tabindex="-1"
-                data-platform="windows">Windows (PowerShell)</button>
+                data-platform="windows">{escape_html(strings.install_tab_windows_label)}</button>
       </div>
       <div class="tabs__panels install-tabs__panels">
 {posix_panel}
@@ -536,73 +535,68 @@ def _render_install(base_path: str = "") -> str:
     </div>
     <p class="install-frame__note">
       {_icon("icon-check", base_path=base_path)}
-      <span>Only ever touches this folder — verified against your other skills, not
-      just claimed. <a href="{base_path}/verify-install/">See how</a>.</span>
+      <span>{escape_html(strings.install_note_verified_text)} <a href="{base_path}/verify-install/">{escape_html(strings.install_note_see_how)}</a>.</span>
     </p>
     <p class="install-frame__note">
       {_icon("icon-check", base_path=base_path)}
-      <span>Restart Claude Code (or run <code>/reload-plugins</code>), then invoke a
-      skill as <code>TBaguette:skill-name</code>. This is for Claude Code specifically —
-      the Claude Desktop app and claude.ai chat load skills from your account instead of
-      this folder, so cloning here won't make them appear there.</span>
+      <span>{restart_note_html}</span>
     </p>
   </div>
 </div>"""
 
 
-def _render_hero(skill_count: int, category_count: int, base_path: str = "") -> str:
-    lede = (
-        f"{skill_count} Claude Code skills for the craft between the ticket and the "
-        f"commit, across {category_count} categories — findable by name, browsable "
-        "below, and written like something a colleague actually handed you. Grown "
-        "out of my own projects over time, this collection is created and updated "
-        "automatically — and often — by Claude Opus, always its latest version, "
-        "as I code."
-    )
+def _render_hero(skill_count: int, category_count: int, base_path: str = "",
+                  strings: Strings = ENGLISH_STRINGS) -> str:
+    lede = strings.hero_lede_template.format(skill_count=skill_count, category_count=category_count)
     return f"""<section class="hero">
   <div class="container">
-    <h1 class="hero__headline">An atelier for the way you build.</h1>
-    {_render_install(base_path)}
+    <h1 class="hero__headline">{escape_html(strings.hero_headline)}</h1>
+    {_render_install(base_path, strings)}
     <p class="hero__lede">{escape_html(lede)}</p>
-    {_render_search_field(base_path)}
+    {_render_search_field(base_path, strings)}
   </div>
 </section>"""
 
 
-def _render_search_field(base_path: str = "") -> str:
+def _render_search_field(base_path: str = "", strings: Strings = ENGLISH_STRINGS) -> str:
     return f"""<div class="search" data-search-root>
   <div class="search__field">
     <svg class="icon search__icon" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-search"></use></svg>
-    <label class="visually-hidden" for="skill-search">Search skills</label>
+    <label class="visually-hidden" for="skill-search">{escape_html(strings.search_label)}</label>
     <input class="search__input" type="search" id="skill-search" data-search-input
-           placeholder="Search by name, summary, or category…" autocomplete="off">
-    <button class="search__clear" type="button" data-search-clear hidden>Clear</button>
+           placeholder="{escape_html(strings.search_placeholder)}" autocomplete="off">
+    <button class="search__clear" type="button" data-search-clear hidden>{escape_html(strings.search_clear)}</button>
   </div>
-  <p class="search__status" data-search-status aria-live="polite"></p>
+  <p class="search__status" data-search-status aria-live="polite"
+     data-i18n-showing-all-template="{escape_html(strings.search_status_showing_all_template)}"
+     data-i18n-partial-template="{escape_html(strings.search_status_partial_template)}"></p>
 </div>"""
 
 
-def _render_search_empty_state(skill_count: int) -> str:
+def _render_search_empty_state(skill_count: int, strings: Strings = ENGLISH_STRINGS) -> str:
+    suffix = strings.search_no_match_suffix_template.format(skill_count=skill_count)
     return f"""<p class="search__empty container" data-search-empty hidden>
-  No skills match <span class="search__empty-query" data-search-empty-query></span>.
-  <button type="button" data-search-reset>Clear search</button> to see all {skill_count} again.
+  {escape_html(strings.search_no_match_prefix)} <span class="search__empty-query" data-search-empty-query></span>.
+  <button type="button" data-search-reset>{escape_html(strings.search_reset_button)}</button> {escape_html(suffix)}
 </p>"""
 
 
-def _render_change_badge(status: str | None) -> str:
+def _render_change_badge(status: str | None, strings: Strings = ENGLISH_STRINGS) -> str:
     """"New"/"Updated" — set on a skill dict by generate.py from a real git
     status check, not guessed here. Empty string (renders as nothing) for
     every skill not touched by the update currently being shipped, which is
     the common case — most page loads carry zero of these."""
     if status not in ("new", "updated"):
         return ""
-    label = "New" if status == "new" else "Updated"
-    return f'<span class="change-badge change-badge--{status}">{label}</span>'
+    label = strings.change_badge_new if status == "new" else strings.change_badge_updated
+    return f'<span class="change-badge change-badge--{status}">{escape_html(label)}</span>'
 
 
-def _render_skill_card(skill: dict, base_path: str = "") -> str:
-    badge = _render_change_badge(skill.get("change_status"))
-    return f"""<a class="card" href="{_skill_href(skill, base_path)}" data-search-card data-search-terms="{_search_haystack(skill)}">
+def _render_skill_card(skill: dict, base_path: str = "",
+                        locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                        strings: Strings = ENGLISH_STRINGS) -> str:
+    badge = _render_change_badge(skill.get("change_status"), strings)
+    return f"""<a class="card" href="{_skill_href(skill, base_path, locale)}" data-search-card data-search-terms="{_search_haystack(skill)}">
   <span class="card__name-row">
     <span class="card__name">{escape_html(skill['name'])}</span>
     {badge}
@@ -616,21 +610,24 @@ def _render_skill_card(skill: dict, base_path: str = "") -> str:
 
 
 def _render_category_section(category: dict, skills: dict, icon_index: int,
-                              base_path: str = "") -> str:
+                              base_path: str = "", locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                              strings: Strings = ENGLISH_STRINGS) -> str:
     slug = category["slug"]
     skill_slugs = category.get("skill_slugs", [])
     count = len(skill_slugs)
     icon_id = _CATEGORY_ICONS[icon_index % len(_CATEGORY_ICONS)]
     cards = _join(*(
-        _render_skill_card(skills[s], base_path) for s in skill_slugs if s in skills
+        _render_skill_card(skills[s], base_path, locale, strings) for s in skill_slugs if s in skills
     ))
-    noun = "skill" if count == 1 else "skills"
+    noun = strings.category_count_singular if count == 1 else strings.category_count_plural
     return f"""<section class="category-section" id="{escape_html(slug)}" data-category-section>
   <div class="container">
     <div class="category-section__head">
       {_icon(icon_id, css_class="icon category-section__icon", base_path=base_path)}
       <h2 class="category-section__title">{escape_html(category['title'])}</h2>
-      <span class="tag category-section__count" data-category-count="{count}">{count} {noun}</span>
+      <span class="tag category-section__count" data-category-count="{count}"
+            data-i18n-singular="{escape_html(strings.category_count_singular)}"
+            data-i18n-plural="{escape_html(strings.category_count_plural)}">{count} {escape_html(noun)}</span>
     </div>
     <div class="card-grid" data-card-grid>
 {cards}
@@ -645,14 +642,14 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
                   strings: Strings = ENGLISH_STRINGS) -> str:
     """Full HTML document string for the landing page."""
     sections = _join(*(
-        _render_category_section(cat, skills, i, base_path)
+        _render_category_section(cat, skills, i, base_path, locale, strings)
         for i, cat in enumerate(categories)
     ))
     skill_count = len(skills)
     category_count = len(categories)
     main_html = _join(
-        _render_hero(skill_count, category_count, base_path),
-        _render_search_empty_state(skill_count),
+        _render_hero(skill_count, category_count, base_path, strings),
+        _render_search_empty_state(skill_count, strings),
         f'<div data-categories>\n{sections}\n</div>',
     )
     title = f"TBaguette’s Atelier — {strings.index_title_suffix}"
@@ -678,18 +675,21 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
 # ---------------------------------------------------------------------------
 
 
-def _render_breadcrumb(skill: dict, base_path: str = "") -> str:
-    return f"""<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="{base_path}/">Home</a>
+def _render_breadcrumb(skill: dict, base_path: str = "",
+                        locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                        strings: Strings = ENGLISH_STRINGS) -> str:
+    index_url = _locale_url(locale, base_path, "")
+    return f"""<nav class="container breadcrumb" aria-label="{escape_html(strings.breadcrumb_aria_label)}">
+  <a href="{index_url}">{escape_html(strings.breadcrumb_home)}</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="{base_path}/#{escape_html(skill.get('category_slug', ''))}">{escape_html(skill.get('category_title', ''))}</a>
+  <a href="{index_url}#{escape_html(skill.get('category_slug', ''))}">{escape_html(skill.get('category_title', ''))}</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">{escape_html(skill['name'])}</span>
 </nav>"""
 
 
-def _render_skill_head(skill: dict) -> str:
-    badge = _render_change_badge(skill.get("change_status"))
+def _render_skill_head(skill: dict, strings: Strings = ENGLISH_STRINGS) -> str:
+    badge = _render_change_badge(skill.get("change_status"), strings)
     return f"""<div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">{escape_html(skill['name'])}</h1>
@@ -742,7 +742,7 @@ def _render_tab_group(*, heading: str, items: list[dict]) -> str:
 </section>"""
 
 
-def _render_craft_floor(skill: dict) -> str:
+def _render_craft_floor(skill: dict, strings: Strings = ENGLISH_STRINGS) -> str:
     # Not a tab: craft-floor.md is the quality bar, not a command, and links
     # inside formidable's own body/stack/command content already point at
     # #cmd-craft-floor (the id the content pipeline's link-rewriter produces
@@ -752,61 +752,67 @@ def _render_craft_floor(skill: dict) -> str:
     if not html:
         return ""
     return f"""<section class="formidable-extra__group" id="cmd-craft-floor" aria-labelledby="craft-floor-heading">
-  <h2 id="craft-floor-heading" class="formidable-extra__subtitle">Craft floor</h2>
+  <h2 id="craft-floor-heading" class="formidable-extra__subtitle">{escape_html(strings.formidable_craft_floor_heading)}</h2>
   <div class="prose">{html}</div>
 </section>"""
 
 
-def _render_formidable_extras(skill: dict) -> str:
+def _render_formidable_extras(skill: dict, strings: Strings = ENGLISH_STRINGS) -> str:
     if not skill.get("is_formidable"):
         return ""
     groups = _join(
-        _render_tab_group(heading="Stacks", items=skill.get("formidable_stacks") or []),
-        _render_tab_group(heading="Commands", items=skill.get("formidable_commands") or []),
-        _render_craft_floor(skill),
+        _render_tab_group(heading=strings.formidable_stacks_heading, items=skill.get("formidable_stacks") or []),
+        _render_tab_group(heading=strings.formidable_commands_heading, items=skill.get("formidable_commands") or []),
+        _render_craft_floor(skill, strings),
     )
     if not groups:
         return ""
     return f'<div class="formidable-extra">{groups}</div>'
 
 
-def _render_prevnext_link(skill: dict | None, *, direction: str, base_path: str = "") -> str:
+def _render_prevnext_link(skill: dict | None, *, direction: str, base_path: str = "",
+                           locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                           strings: Strings = ENGLISH_STRINGS) -> str:
     if skill is None:
         return ""
-    label = "Previous" if direction == "prev" else "Next"
+    label = strings.prevnext_previous if direction == "prev" else strings.prevnext_next
     modifier = " prevnext__link--next" if direction == "next" else ""
     name = escape_html(skill["name"])
     name_html = f"← {name}" if direction == "prev" else f"{name} →"
-    return f"""<a class="prevnext__link{modifier}" href="{_skill_href(skill, base_path)}">
-  <span class="prevnext__label">{label}</span>
+    return f"""<a class="prevnext__link{modifier}" href="{_skill_href(skill, base_path, locale)}">
+  <span class="prevnext__label">{escape_html(label)}</span>
   <span class="prevnext__name">{name_html}</span>
 </a>"""
 
 
-def _render_prevnext(prev_skill: dict | None, next_skill: dict | None,
-                      base_path: str = "") -> str:
+def _render_prevnext(prev_skill: dict | None, next_skill: dict | None, base_path: str = "",
+                      locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                      strings: Strings = ENGLISH_STRINGS) -> str:
     if prev_skill is None and next_skill is None:
         return ""
     links = _join(
-        _render_prevnext_link(prev_skill, direction="prev", base_path=base_path),
-        _render_prevnext_link(next_skill, direction="next", base_path=base_path),
+        _render_prevnext_link(prev_skill, direction="prev", base_path=base_path, locale=locale, strings=strings),
+        _render_prevnext_link(next_skill, direction="next", base_path=base_path, locale=locale, strings=strings),
     )
-    return f'<nav class="container prevnext" aria-label="Skill navigation">{links}</nav>'
+    return f'<nav class="container prevnext" aria-label="{escape_html(strings.prevnext_aria_label)}">{links}</nav>'
 
 
-def _render_see_also(skill: dict, siblings: list[dict], base_path: str = "") -> str:
+def _render_see_also(skill: dict, siblings: list[dict], base_path: str = "",
+                      locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                      strings: Strings = ENGLISH_STRINGS) -> str:
     others = [s for s in siblings if s.get("slug") != skill.get("slug")]
     if not others:
         return ""
     items = _join(*(
-        f"""<li><a class="see-also__link" href="{_skill_href(s, base_path)}">
+        f"""<li><a class="see-also__link" href="{_skill_href(s, base_path, locale)}">
       <span class="see-also__name">{escape_html(s['name'])}</span>
       <span class="see-also__summary">{escape_html(s.get('summary', ''))}</span>
     </a></li>"""
         for s in others
     ))
+    title = strings.see_also_title_template.format(category=skill.get('category_title', ''))
     return f"""<div class="container see-also">
-  <h2 class="see-also__title">More in {escape_html(skill.get('category_title', ''))}</h2>
+  <h2 class="see-also__title">{escape_html(title)}</h2>
   <ul class="see-also__list">
 {items}
   </ul>
@@ -823,16 +829,16 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
     list, for nav)."""
     article = (
         '<article class="container skill-article">'
-        + _render_skill_head(skill)
+        + _render_skill_head(skill, strings)
         + _render_prose(skill.get("body_html", ""))
-        + _render_formidable_extras(skill)
+        + _render_formidable_extras(skill, strings)
         + "</article>"
     )
     main_html = _join(
-        _render_breadcrumb(skill, base_path),
+        _render_breadcrumb(skill, base_path, locale, strings),
         article,
-        _render_prevnext(prev_skill, next_skill, base_path),
-        _render_see_also(skill, siblings, base_path),
+        _render_prevnext(prev_skill, next_skill, base_path, locale, strings),
+        _render_see_also(skill, siblings, base_path, locale, strings),
     )
     name = skill.get("name", "")
     category_title = skill.get("category_title", "")

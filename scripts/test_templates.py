@@ -12,6 +12,7 @@ from pathlib import Path
 
 from checker import Checker
 from templates import (
+    ENGLISH_STRINGS,
     INSTALL_COMMAND,
     INSTALL_COMMAND_CMD,
     INSTALL_COMMAND_POWERSHELL,
@@ -331,6 +332,44 @@ def check_i18n_document_shell() -> None:
           'aria-current="true"' in html_en)
 
 
+def check_i18n_content_links_and_strings() -> None:
+    """Task 4's own coverage: unlike check_i18n_document_shell above (which
+    only exercises the document shell), this confirms locale actually
+    reaches content-level links -- cards, breadcrumb, prev/next, see-also --
+    that Task 3 deliberately left on their pre-locale signatures."""
+    import locales
+
+    fr = locales.get_locale("fr")
+    fr_strings = ENGLISH_STRINGS  # a real translated Strings isn't built until Task 12; reuse
+                                   # ENGLISH_STRINGS here to isolate this test to *routing*
+                                   # (does a card/breadcrumb/prevnext link land under /fr/?),
+                                   # not translation content, which Task 12 covers separately.
+
+    html_fr = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path="", locale=fr, strings=fr_strings)
+    check("a card on the French index links into /fr/skills/<slug>/, not the English root",
+          'href="/fr/skills/designing-test-data/"' in html_fr)
+
+    html_skill_fr = render_skill_page(
+        FIXTURE["skills"]["designing-test-data"],
+        prev_skill=FIXTURE["skills"]["formidable"], next_skill=FIXTURE["skills"]["flaky-test-triage"],
+        siblings=[FIXTURE["skills"]["designing-test-data"], FIXTURE["skills"]["flaky-test-triage"]],
+        categories=FIXTURE["categories"], base_path="", locale=fr, strings=fr_strings,
+    )
+    check("French skill page's breadcrumb Home link points at /fr/",
+          '<a href="/fr/">' in html_skill_fr)
+    check("French skill page's prev link points into /fr/skills/",
+          '/fr/skills/formidable/' in html_skill_fr)
+    check("French skill page's see-also link points into /fr/skills/",
+          '/fr/skills/flaky-test-triage/' in html_skill_fr)
+
+    html_en_badge = render_index(FIXTURE["categories"], {
+        **FIXTURE["skills"],
+        "formidable": {**FIXTURE["skills"]["formidable"], "change_status": "new"},
+    }, base_path="")
+    check("default-English 'New' badge text still renders (no regression)",
+          '>New<' in html_en_badge)
+
+
 def main() -> None:
     categories = FIXTURE["categories"]
     skills = FIXTURE["skills"]
@@ -483,6 +522,7 @@ def main() -> None:
     check_verify_install_page()
     check_header_and_badges()
     check_i18n_document_shell()
+    check_i18n_content_links_and_strings()
 
     print(f"\n{checker.total} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")
