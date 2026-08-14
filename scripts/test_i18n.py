@@ -196,8 +196,15 @@ def check_rtl_css_pass() -> None:
           "text-align: right" not in css_outside_exemption)
     check("the card-arrow hover motion has an explicit [dir=\"rtl\"] override",
           '[dir="rtl"] .card:hover .card__arrow' in css)
+    check("...and that override uses the correct transform composition "
+          "(scaleX(-1) translateX(3px), not a negated translateX(-3px) which "
+          "would move the glyph the wrong screen-space direction under RTL)",
+          "scaleX(-1) translateX(3px)" in css)
     check("the tab-list scroll-fade mask has an explicit [dir=\"rtl\"] override",
           '[dir="rtl"] .tabs__list' in css)
+    check("...and that override actually points the fade 'to left' on both "
+          "-webkit-mask-image and mask-image (not still 'to right')",
+          css.count("to left, black") == 2)
 
 
 def main() -> None:
