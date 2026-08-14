@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>naming-things — Reading code — TBaguette’s Atelier</title>
-<meta name="description" content="Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…">
+<title>naming-things — Leggere il codice — TBaguette’s Atelier</title>
+<meta name="description" content="Da usare quando si sceglie l’identificatore di una variabile, una funzione, un tipo, un modulo, un flag, una chiave di configurazione…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="naming-things — Reading code — TBaguette’s Atelier">
-<meta property="og:description" content="Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…">
+<meta property="og:title" content="naming-things — Leggere il codice — TBaguette’s Atelier">
+<meta property="og:description" content="Da usare quando si sceglie l’identificatore di una variabile, una funzione, un tipo, un modulo, un flag, una chiave di configurazione…">
 <link rel="canonical" href="/tbaguette-skills/it/skills/naming-things/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/naming-things/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/naming-things/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Copiato!"
+      data-i18n-no-match="Nessuna skill corrisponde."
+      data-i18n-modal-title="Nuova versione disponibile"
+      data-i18n-modal-body="Questa pagina è stata aggiornata. Ricaricala per vedere l’ultima versione."
+      data-i18n-modal-reload="Ricarica"
+      data-i18n-quote-open="«"
+      data-i18n-quote-close="»">
+<a class="skip-link" href="#main">Salta al contenuto</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T07:03:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:03:39Z UTC</time>
+      <span class="site-header__updated-label">Aggiornato</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T07:45:22+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:45:22Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Italiano</summary>
+  <summary class="language-switcher__summary">Lingua: Italiano</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/naming-things/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/naming-things/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Passa al tema chiaro"
+              data-i18n-theme-light="Passa al tema chiaro"
+              data-i18n-theme-dark="Passa al tema scuro">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
+<nav class="container breadcrumb" aria-label="Percorso di navigazione">
   <a href="/tbaguette-skills/it/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/it/#reading-code">Reading code</a>
+  <a href="/tbaguette-skills/it/#reading-code">Leggere il codice</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">naming-things</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">naming-things</h1>
     
   </div>
-  <span class="tag skill-article__tag">Reading code</span>
-  <p class="lede">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading, abbreviated, inconsistent with the rest of the codebase, or inherited from something it no longer describes; when weighing whether a rename is worth its cost; or when code needs a comment to explain what a thing holds or what a function actually does.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Italiano yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Leggere il codice</span>
+  <p class="lede">Da usare quando si sceglie l’identificatore di una variabile, una funzione, un tipo, un modulo, un flag, una chiave di configurazione, una tabella o un evento; quando un nome è fuorviante, abbreviato, incoerente con il resto del codebase o ereditato da qualcosa che non descrive più; quando si soppesa se una rinomina valga il suo costo; o quando il codice ha bisogno di un commento per spiegare che cosa contiene una cosa o che cosa fa davvero una funzione.</p>
+</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>Names are the cheapest documentation to write and the most expensive to change once they reach a wire format, a database column, or another team's code. A name is read hundreds of times at sites that have none of the context of its definition, and it is the only documentation that cannot go stale silently — it goes wrong loudly, in every reader's head.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Introducing any identifier that will outlive the function it appears in.</li><li>A reviewer, a colleague, or you had to explain what something holds.</li><li>The same concept has different names in the API, the database, and the UI.</li><li>Deciding whether a bad name is worth a rename now.</li><li>Not for: mechanics of executing a large rename safely (refactoring-safely), or designing the shape of an interface rather than its vocabulary (designing-apis).</li></ul>
@@ -133,56 +133,56 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>A comment explaining what a variable holds</td><td>The name should have said it</td></tr><tr><td><code>data</code>, <code>info</code>, <code>obj</code>, <code>temp</code>, <code>result2</code></td><td>Naming postponed and never returned to</td></tr><tr><td>A condition reading as a double negative</td><td>Boolean named for the false state</td></tr><tr><td>One concept, three names across layers</td><td>No shared vocabulary; each layer named it locally</td></tr><tr><td>Renamed one occurrence &quot;correctly&quot;</td><td>Added the Nth variant; searchability now worse than before</td></tr><tr><td>A <code>get</code> accessor that makes a network call</td><td>Prefix contract broken; callers put it in a loop</td></tr><tr><td>Rename buried inside a behavior change</td><td>Neither reviewable; the revert takes both</td></tr><tr><td>Five minutes stuck on a name</td><td>The thing is two things</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;I'll name it properly later.&quot;</li><li>&quot;Everyone here knows what that abbreviation means.&quot;</li><li>&quot;It's just a temp variable.&quot;</li><li>&quot;I'll add a comment explaining what it holds.&quot;</li><li>&quot;The existing name is wrong, so I'll use the right one for mine.&quot;</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/it/skills/reading-specifications/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navigazione tra le skill"><a class="prevnext__link" href="/tbaguette-skills/it/skills/reading-specifications/">
+  <span class="prevnext__label">Precedente</span>
   <span class="prevnext__name">← reading-specifications</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Reading code</h2>
+  <h2 class="see-also__title">Altre skill nella categoria Leggere il codice</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/orienting-in-unfamiliar-code/">
       <span class="see-also__name">orienting-in-unfamiliar-code</span>
-      <span class="see-also__summary">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project…</span>
+      <span class="see-also__summary">Da usare quando si apre un codebase per la prima volta, si eredita un repository sconosciuto o legacy, si entra in un nuovo progetto…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/tracing-data-flow/">
       <span class="see-also__name">tracing-data-flow</span>
-      <span class="see-also__summary">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…</span>
+      <span class="see-also__summary">Da usare quando un valore è sbagliato, mancante, null…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/code-archaeology/">
       <span class="see-also__name">code-archaeology</span>
-      <span class="see-also__summary">Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify…</span>
+      <span class="see-also__summary">Da usare quando del codice esiste senza una spiegazione e il motivo conta — un workaround strano, una costante magica…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/mapping-dependencies/">
       <span class="see-also__name">mapping-dependencies</span>
-      <span class="see-also__summary">Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles…</span>
+      <span class="see-also__summary">Da usare quando si valuta che cosa romperà una modifica, si stima il raggio d’impatto, si dà la caccia a import circolari o cicli di build…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/finding-the-seam/">
       <span class="see-also__name">finding-the-seam</span>
-      <span class="see-also__summary">Use when deciding where in a codebase to make a change, when a fix could plausibly go in several places…</span>
+      <span class="see-also__summary">Da usare quando si decide in che punto di un codebase mettere una modifica…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/reading-specifications/">
       <span class="see-also__name">reading-specifications</span>
-      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
+      <span class="see-also__summary">Da usare quando si trasforma in lavoro un ticket, una issue, una segnalazione di bug, un RFC, uno standard…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> ospita TBaguette&rsquo;s Atelier — le scelte di giudizio che stanno tra il ticket e il commit, ordinate come su un banco da lavoro tenuto bene.</p>
+    <nav aria-label="Categorie">
+      <p class="site-footer__nav-title">Categorie</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/it/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/it/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/it/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/it/#landing-changes">Landing changes</a></li>
+<li><a href="/tbaguette-skills/it/#ui-and-design">UI e design</a></li>
+<li><a href="/tbaguette-skills/it/#judgment-and-meta">Giudizio e meta</a></li>
+<li><a href="/tbaguette-skills/it/#reading-code">Leggere il codice</a></li>
+<li><a href="/tbaguette-skills/it/#landing-changes">Integrare le modifiche</a></li>
 <li><a href="/tbaguette-skills/it/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/it/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/it/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/it/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/it/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging e prestazioni</a></li>
+<li><a href="/tbaguette-skills/it/#designing-systems">Progettare sistemi</a></li>
+<li><a href="/tbaguette-skills/it/#security">Sicurezza (difensiva)</a></li>
+<li><a href="/tbaguette-skills/it/#communicating">Comunicare</a></li>
+<li><a href="/tbaguette-skills/it/#environment-and-tooling">Ambiente e strumenti</a></li>
       </ul>
     </nav>
   </div>

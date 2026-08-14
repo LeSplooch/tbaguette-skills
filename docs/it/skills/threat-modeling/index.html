@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>threat-modeling — Security (defensive) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…">
+<title>threat-modeling — Sicurezza (difensiva) — TBaguette’s Atelier</title>
+<meta name="description" content="Da usare quando un design introduce un nuovo confine di fiducia, una nuova categoria di dati sensibili…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="threat-modeling — Security (defensive) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…">
+<meta property="og:title" content="threat-modeling — Sicurezza (difensiva) — TBaguette’s Atelier">
+<meta property="og:description" content="Da usare quando un design introduce un nuovo confine di fiducia, una nuova categoria di dati sensibili…">
 <link rel="canonical" href="/tbaguette-skills/it/skills/threat-modeling/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/threat-modeling/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/threat-modeling/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Copiato!"
+      data-i18n-no-match="Nessuna skill corrisponde."
+      data-i18n-modal-title="Nuova versione disponibile"
+      data-i18n-modal-body="Questa pagina è stata aggiornata. Ricaricala per vedere l’ultima versione."
+      data-i18n-modal-reload="Ricarica"
+      data-i18n-quote-open="«"
+      data-i18n-quote-close="»">
+<a class="skip-link" href="#main">Salta al contenuto</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T07:03:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:03:39Z UTC</time>
+      <span class="site-header__updated-label">Aggiornato</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T07:45:22+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:45:22Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Italiano</summary>
+  <summary class="language-switcher__summary">Lingua: Italiano</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/threat-modeling/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/threat-modeling/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Passa al tema chiaro"
+              data-i18n-theme-light="Passa al tema chiaro"
+              data-i18n-theme-dark="Passa al tema scuro">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
+<nav class="container breadcrumb" aria-label="Percorso di navigazione">
   <a href="/tbaguette-skills/it/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/it/#security">Security (defensive)</a>
+  <a href="/tbaguette-skills/it/#security">Sicurezza (difensiva)</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">threat-modeling</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">threat-modeling</h1>
     
   </div>
-  <span class="tag skill-article__tag">Security (defensive)</span>
-  <p class="lede">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration, or a change to authentication or authorization, when a design review needs a security section, when asked what could go wrong with a system or feature, or when reasoning about attackers, attack surface, blast radius, and which risks to fix first. Covers STRIDE, trust boundaries, data flow, attacker capability tiers, and risk ranking.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Italiano yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Sicurezza (difensiva)</span>
+  <p class="lede">Da usare quando un design introduce un nuovo confine di fiducia, una nuova categoria di dati sensibili, una nuova integrazione esterna o una modifica all’autenticazione o all’autorizzazione, quando una revisione di design ha bisogno di una sezione sulla sicurezza, quando ti chiedono che cosa potrebbe andare storto in un sistema o in una funzionalità, o quando si ragiona su attaccanti, superficie di attacco, raggio d’impatto e su quali rischi correggere per primi. Tratta STRIDE, i confini di fiducia, i flussi di dati, i livelli di capacità degli attaccanti e la classifica dei rischi.</p>
+</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>A threat model is a 30–60 minute conversation that produces decisions, not a document. Its output is a list of design changes, mitigations with tests, and explicitly accepted risks with owners. If the design did not change and nothing got a test, the session was theater.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A new trust boundary appears: a new listener, IPC surface, plugin or extension point, tenant, file format you now parse, or a queue you now consume.</li><li>A new class of data enters: credentials, personal data, payment, health, keys, or telemetry that can carry user content.</li><li>A new external integration or an authorization change: third-party API, webhook receiver, identity provider, a new role, a new token type, a session mechanism, or any delegation.</li><li>Before writing the security section of a design doc, so the section reports decisions instead of inventing them.</li><li>Not for: root-causing a specific reported bug; evaluating a package's supply chain (<code>auditing-dependencies</code>); writing the actual permission scopes (<code>least-privilege-design</code>); the input-handling rules themselves (<code>handling-untrusted-input</code>).</li></ul>
@@ -131,48 +131,48 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>40 threats, zero decisions</td><td>Modeled components instead of boundaries; component enumeration never terminates</td></tr><tr><td>Every threat begins &quot;an attacker gains access and then…&quot;</td><td>No capability tiers; &quot;gains access&quot; is a conclusion being used as a premise</td></tr><tr><td>Ranked by CVSS or a severity label</td><td>A context-free score used in place of reachability in your system</td></tr><tr><td>Long debate on crypto choice, nothing on authorization</td><td>Novel-looking risks crowd out the common ones; broken access control outnumbers crypto flaws by a wide margin</td></tr><tr><td>Mitigation exists, no test</td><td>A mitigation without a test is a comment; the next refactor deletes it silently</td></tr><tr><td>&quot;The gateway will block that&quot;</td><td>Control placed at a layer any direct caller bypasses</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;That's an edge case, no real user would do that&quot; — the attacker is not a user.</li><li>&quot;It's internal-only,&quot; asserted without a check that it is.</li><li>&quot;We authenticate the caller, so we're covered&quot; — authentication answers <em>who</em>, not <em>what on whose behalf</em>.</li><li>&quot;We'll do security after the MVP&quot; — trust boundaries are architecture; they are not retrofitted, and the session that ends with zero design changes has already conceded this.</li><li>Nobody in the room can say which single credential could delete all customer data.</li><li>Exactly one mitigation per threat — defense in depth was never considered.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/it/skills/handling-untrusted-input/">
-  <span class="prevnext__label">Next</span>
+<nav class="container prevnext" aria-label="Navigazione tra le skill"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/it/skills/handling-untrusted-input/">
+  <span class="prevnext__label">Successiva</span>
   <span class="prevnext__name">handling-untrusted-input →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Security (defensive)</h2>
+  <h2 class="see-also__title">Altre skill nella categoria Sicurezza (difensiva)</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
-      <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
+      <span class="see-also__summary">Da usare quando del codice accetta o interpreta dati provenienti da fuori del proprio confine di fiducia — richieste, file, upload…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
-      <span class="see-also__summary">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…</span>
+      <span class="see-also__summary">Da usare quando si maneggiano chiavi API, token, password, chiavi private…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>
-      <span class="see-also__summary">Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries…</span>
+      <span class="see-also__summary">Da usare quando si aggiunge, aggiorna, sostituisce o rimuove un pacchetto o una libreria di terze parti…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/least-privilege-design/">
       <span class="see-also__name">least-privilege-design</span>
-      <span class="see-also__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</span>
+      <span class="see-also__summary">Da usare quando si crea o si rivede un ruolo, un account di servizio, una chiave API, l’ambito di un token…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> ospita TBaguette&rsquo;s Atelier — le scelte di giudizio che stanno tra il ticket e il commit, ordinate come su un banco da lavoro tenuto bene.</p>
+    <nav aria-label="Categorie">
+      <p class="site-footer__nav-title">Categorie</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/it/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/it/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/it/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/it/#landing-changes">Landing changes</a></li>
+<li><a href="/tbaguette-skills/it/#ui-and-design">UI e design</a></li>
+<li><a href="/tbaguette-skills/it/#judgment-and-meta">Giudizio e meta</a></li>
+<li><a href="/tbaguette-skills/it/#reading-code">Leggere il codice</a></li>
+<li><a href="/tbaguette-skills/it/#landing-changes">Integrare le modifiche</a></li>
 <li><a href="/tbaguette-skills/it/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/it/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/it/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/it/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/it/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging e prestazioni</a></li>
+<li><a href="/tbaguette-skills/it/#designing-systems">Progettare sistemi</a></li>
+<li><a href="/tbaguette-skills/it/#security">Sicurezza (difensiva)</a></li>
+<li><a href="/tbaguette-skills/it/#communicating">Comunicare</a></li>
+<li><a href="/tbaguette-skills/it/#environment-and-tooling">Ambiente e strumenti</a></li>
       </ul>
     </nav>
   </div>

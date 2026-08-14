@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>testing-the-untestable — Testing — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables…">
+<meta name="description" content="Da usare quando un test interroga l’orologio di sistema, dorme, va in rete, scrive sul filesystem vero, legge variabili d’ambiente…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="testing-the-untestable — Testing — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables…">
+<meta property="og:description" content="Da usare quando un test interroga l’orologio di sistema, dorme, va in rete, scrive sul filesystem vero, legge variabili d’ambiente…">
 <link rel="canonical" href="/tbaguette-skills/it/skills/testing-the-untestable/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/testing-the-untestable/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/testing-the-untestable/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Copiato!"
+      data-i18n-no-match="Nessuna skill corrisponde."
+      data-i18n-modal-title="Nuova versione disponibile"
+      data-i18n-modal-body="Questa pagina è stata aggiornata. Ricaricala per vedere l’ultima versione."
+      data-i18n-modal-reload="Ricarica"
+      data-i18n-quote-open="«"
+      data-i18n-quote-close="»">
+<a class="skip-link" href="#main">Salta al contenuto</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T07:03:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:03:39Z UTC</time>
+      <span class="site-header__updated-label">Aggiornato</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T07:45:22+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:45:22Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Italiano</summary>
+  <summary class="language-switcher__summary">Lingua: Italiano</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/testing-the-untestable/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/testing-the-untestable/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Passa al tema chiaro"
+              data-i18n-theme-light="Passa al tema chiaro"
+              data-i18n-theme-dark="Passa al tema scuro">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,7 +86,7 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
+<nav class="container breadcrumb" aria-label="Percorso di navigazione">
   <a href="/tbaguette-skills/it/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <a href="/tbaguette-skills/it/#testing">Testing</a>
@@ -99,8 +99,8 @@
     
   </div>
   <span class="tag skill-article__tag">Testing</span>
-  <p class="lede">Use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables, generates UUIDs or random values, or depends on thread scheduling; when a test only fails at month boundaries, in another timezone, or on a slow machine; or when choosing between a fake, stub, mock, spy, and a real dependency in a container. Covers dependency injection at boundaries and seeding.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Italiano yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <p class="lede">Da usare quando un test interroga l’orologio di sistema, dorme, va in rete, scrive sul filesystem vero, legge variabili d’ambiente, genera UUID o valori casuali, o dipende dalla schedulazione dei thread; quando un test fallisce solo a cavallo del cambio di mese, in un altro fuso orario o su una macchina lenta; oppure quando si sceglie tra un fake, uno stub, un mock, uno spy e una dipendenza vera dentro un container. Tratta l’iniezione delle dipendenze ai confini e il seeding dei generatori.</p>
+</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>Nothing is untestable; some things are un-injected. Every source of nondeterminism reaches the code through a specific call, and testing it means owning that call rather than working around it downstream.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Code reads the current time, sleeps, retries with backoff, or expires something.</li><li>Code generates ids, tokens, salts, shuffles, or samples.</li><li>Code opens sockets, resolves DNS, reads files, or reads environment and config.</li><li>Code spawns threads, tasks, or processes and the test's outcome depends on their interleaving.</li><li>A test fails only in another timezone, on the 1st of the month, or on a loaded CI worker.</li><li>Not for: diagnosing a suite that is already intermittently failing — that is <code>flaky-test-triage</code>.</li></ul>
@@ -124,60 +124,60 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Test passes locally, fails in CI</td><td>Ambient timezone, locale, filesystem case-sensitivity, or core count differs</td></tr><tr><td>Test fails once a month or once a year</td><td>Wall clock read directly; month end, leap day, or DST crossed the assertion</td></tr><tr><td>Timeout test takes 30 real seconds</td><td>No fake clock; the test is waiting rather than advancing</td></tr><tr><td>Sleep durations keep being increased</td><td>A race is being masked; the sleep length is now load-bearing</td></tr><tr><td>Reproducing a failure requires the original machine</td><td>Randomness or id generation unseeded and unrecorded</td></tr><tr><td>Everything is mocked and nothing catches bugs</td><td>Seams placed at every call rather than at the boundary; tests assert the mock's script</td></tr><tr><td>Test suite hangs with no output</td><td>Global time-patching froze a library's internal timer</td></tr><tr><td>Passes alone, fails in parallel</td><td>Process-global environment variables, a fixed port, or a shared temp path</td></tr><tr><td>Green tests, broken production query</td><td>An in-memory substitute stood in for a real store with different semantics</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Just add a sleep, it's only 200ms.&quot;</li><li>&quot;It's flaky on CI, bump the timeout.&quot;</li><li>&quot;We can't test that, it hits the network&quot; — the adapter is the thing to test.</li><li>&quot;The mock verifies we call the service correctly&quot; — for behavior no user can observe.</li><li>Setting an environment variable inside a test and restoring it in teardown.</li><li>A test asserting on an id with a pattern match because the id could be anything.</li><li>Retrying a whole test to deal with a race.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/it/skills/property-based-testing/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navigazione tra le skill"><a class="prevnext__link" href="/tbaguette-skills/it/skills/property-based-testing/">
+  <span class="prevnext__label">Precedente</span>
   <span class="prevnext__name">← property-based-testing</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/it/skills/flaky-test-triage/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Successiva</span>
   <span class="prevnext__name">flaky-test-triage →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Testing</h2>
+  <h2 class="see-also__title">Altre skill nella categoria Testing</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/designing-test-data/">
       <span class="see-also__name">designing-test-data</span>
-      <span class="see-also__summary">Use when a test&#x27;s setup is longer than its assertions, when fixtures are shared across files…</span>
+      <span class="see-also__summary">Da usare quando il setup di un test è più lungo delle sue asserzioni, quando le fixture sono condivise tra più file…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/property-based-testing/">
       <span class="see-also__name">property-based-testing</span>
-      <span class="see-also__summary">Use when example tests only cover the cases someone thought of, when testing parsers, serializers, encoders, sorting, comparators…</span>
+      <span class="see-also__summary">Da usare quando i test a esempi coprono solo i casi a cui qualcuno ha pensato, quando si testano parser, serializzatori, codificatori…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/flaky-test-triage/">
       <span class="see-also__name">flaky-test-triage</span>
-      <span class="see-also__summary">Use when a test passes on rerun, fails only in CI, fails only when the whole suite runs, fails after midnight or across a DST change…</span>
+      <span class="see-also__summary">Da usare quando un test passa se rieseguito, fallisce solo in CI, fallisce solo quando gira l’intera suite…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/regression-test-from-bug/">
       <span class="see-also__name">regression-test-from-bug</span>
-      <span class="see-also__summary">Use when a defect has been reported, reproduced, or patched, when writing a test for a production incident or hotfix…</span>
+      <span class="see-also__summary">Da usare quando un difetto è stato segnalato, riprodotto o corretto…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/characterization-testing/">
       <span class="see-also__name">characterization-testing</span>
-      <span class="see-also__summary">Use when changing, refactoring, extracting, porting, or deleting code that has no tests…</span>
+      <span class="see-also__summary">Da usare quando si modifica, rifattorizza, estrae, porta altrove o elimina del codice privo di test…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/choosing-test-scope/">
       <span class="see-also__name">choosing-test-scope</span>
-      <span class="see-also__summary">Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test…</span>
+      <span class="see-also__summary">Da usare quando si decide se un comportamento vada in un test unitario, di integrazione, di contratto o end-to-end…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> ospita TBaguette&rsquo;s Atelier — le scelte di giudizio che stanno tra il ticket e il commit, ordinate come su un banco da lavoro tenuto bene.</p>
+    <nav aria-label="Categorie">
+      <p class="site-footer__nav-title">Categorie</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/it/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/it/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/it/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/it/#landing-changes">Landing changes</a></li>
+<li><a href="/tbaguette-skills/it/#ui-and-design">UI e design</a></li>
+<li><a href="/tbaguette-skills/it/#judgment-and-meta">Giudizio e meta</a></li>
+<li><a href="/tbaguette-skills/it/#reading-code">Leggere il codice</a></li>
+<li><a href="/tbaguette-skills/it/#landing-changes">Integrare le modifiche</a></li>
 <li><a href="/tbaguette-skills/it/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/it/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/it/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/it/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/it/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging e prestazioni</a></li>
+<li><a href="/tbaguette-skills/it/#designing-systems">Progettare sistemi</a></li>
+<li><a href="/tbaguette-skills/it/#security">Sicurezza (difensiva)</a></li>
+<li><a href="/tbaguette-skills/it/#communicating">Comunicare</a></li>
+<li><a href="/tbaguette-skills/it/#environment-and-tooling">Ambiente e strumenti</a></li>
       </ul>
     </nav>
   </div>

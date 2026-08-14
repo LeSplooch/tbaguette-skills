@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>handling-untrusted-input — Security (defensive) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…">
+<title>handling-untrusted-input — Sicurezza (difensiva) — TBaguette’s Atelier</title>
+<meta name="description" content="Da usare quando del codice accetta o interpreta dati provenienti da fuori del proprio confine di fiducia — richieste, file, upload…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="handling-untrusted-input — Security (defensive) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…">
+<meta property="og:title" content="handling-untrusted-input — Sicurezza (difensiva) — TBaguette’s Atelier">
+<meta property="og:description" content="Da usare quando del codice accetta o interpreta dati provenienti da fuori del proprio confine di fiducia — richieste, file, upload…">
 <link rel="canonical" href="/tbaguette-skills/it/skills/handling-untrusted-input/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/handling-untrusted-input/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/handling-untrusted-input/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Copiato!"
+      data-i18n-no-match="Nessuna skill corrisponde."
+      data-i18n-modal-title="Nuova versione disponibile"
+      data-i18n-modal-body="Questa pagina è stata aggiornata. Ricaricala per vedere l’ultima versione."
+      data-i18n-modal-reload="Ricarica"
+      data-i18n-quote-open="«"
+      data-i18n-quote-close="»">
+<a class="skip-link" href="#main">Salta al contenuto</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T07:03:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:03:39Z UTC</time>
+      <span class="site-header__updated-label">Aggiornato</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T07:45:22+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:45:22Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Italiano</summary>
+  <summary class="language-switcher__summary">Lingua: Italiano</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/handling-untrusted-input/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/handling-untrusted-input/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Passa al tema chiaro"
+              data-i18n-theme-light="Passa al tema chiaro"
+              data-i18n-theme-dark="Passa al tema scuro">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
+<nav class="container breadcrumb" aria-label="Percorso di navigazione">
   <a href="/tbaguette-skills/it/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/it/#security">Security (defensive)</a>
+  <a href="/tbaguette-skills/it/#security">Sicurezza (difensiva)</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">handling-untrusted-input</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">handling-untrusted-input</h1>
     
   </div>
-  <span class="tag skill-article__tag">Security (defensive)</span>
-  <p class="lede">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config, or another internal service — when building a query, command, path, URL, template, or markup that embeds a variable, when reviewing a sanitize or escape helper, or when handling deserialization, path traversal, injection, XSS, SSRF, XXE, unicode normalization, or parser resource exhaustion.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Italiano yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Sicurezza (difensiva)</span>
+  <p class="lede">Da usare quando del codice accetta o interpreta dati provenienti da fuori del proprio confine di fiducia — richieste, file, upload, webhook, code di messaggi, configurazione o un altro servizio interno — quando si costruisce una query, un comando, un percorso, un URL, un template o del markup che incorpora una variabile, quando si rivede una funzione di sanificazione o di escape, o quando si ha a che fare con deserializzazione, path traversal, injection, XSS, SSRF, XXE, normalizzazione Unicode o esaurimento delle risorse del parser.</p>
+</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>Untrusted means &quot;did not originate inside this trust boundary&quot; — which includes your own database, your own config, and the service your own team wrote. Validity is established once, at the boundary, by constructing a type that cannot hold an invalid value; it is not a check repeated inward and eventually forgotten.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Parsing anything from a request, file, upload, header, filename, queue message, environment, or config.</li><li>Assembling a query, shell command, filesystem path, URL, template, or markup that contains a variable.</li><li>Reviewing code where a function is named <code>sanitize</code>, <code>clean</code>, <code>escape</code>, or <code>isValid</code>, or accepting nested structures, archives, images, or any format with a third-party parser behind it.</li><li>Not for: deciding what privilege the parsing process runs with (<code>least-privilege-design</code>); deciding whether the boundary should exist (<code>threat-modeling</code>).</li></ul>
@@ -136,52 +136,52 @@ GOOD:  let addr = Email::parse(s)?             // Email cannot exist unless pars
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>A <code>sanitize()</code> helper called at many sites, missing at one</td><td>The validator returned the same type it took, so nothing forces the call</td></tr><tr><td>Escaping added field by field after each report, and close variants of a blocked payload still work</td><td>Each injection treated as its own bug rather than as string assembly of a foreign grammar; the filter is a denylist</td></tr><tr><td>Path check passes, files outside the base are still read</td><td>Check ran before resolution; <code>..</code> and symlinks resolve afterwards</td></tr><tr><td>Stored values arrive already escaped</td><td>Encoding applied on input; the store now holds one context's encoding forever</td></tr><tr><td>One request exhausts the service</td><td>A parser with no size, depth, count, or time bound — every such default is unbounded</td></tr><tr><td>Two accounts collide, or authorization compares unequal-but-equivalent strings</td><td>Comparison ran before unicode normalization</td></tr><tr><td>A signed blob is fed to the full deserializer</td><td>Signature proves origin, not that the origin is honest or the key uncompromised</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It was already validated upstream&quot; or &quot;it came from our own database,&quot; with no line of code named.</li><li>Reaching for an escape function when a parameterized API exists.</li><li>Writing a pattern to <em>detect an attack</em> instead of to <em>define acceptance</em>, or adding one more case to a denylist after a report.</li><li>Any string concatenation whose result is parsed by something else.</li><li>A validator whose return type is a boolean.</li><li>Deciding to normalize after the check because the check is cheap.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/it/skills/threat-modeling/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navigazione tra le skill"><a class="prevnext__link" href="/tbaguette-skills/it/skills/threat-modeling/">
+  <span class="prevnext__label">Precedente</span>
   <span class="prevnext__name">← threat-modeling</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/it/skills/secrets-hygiene/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Successiva</span>
   <span class="prevnext__name">secrets-hygiene →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Security (defensive)</h2>
+  <h2 class="see-also__title">Altre skill nella categoria Sicurezza (difensiva)</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/threat-modeling/">
       <span class="see-also__name">threat-modeling</span>
-      <span class="see-also__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</span>
+      <span class="see-also__summary">Da usare quando un design introduce un nuovo confine di fiducia, una nuova categoria di dati sensibili…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
-      <span class="see-also__summary">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…</span>
+      <span class="see-also__summary">Da usare quando si maneggiano chiavi API, token, password, chiavi private…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>
-      <span class="see-also__summary">Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries…</span>
+      <span class="see-also__summary">Da usare quando si aggiunge, aggiorna, sostituisce o rimuove un pacchetto o una libreria di terze parti…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/least-privilege-design/">
       <span class="see-also__name">least-privilege-design</span>
-      <span class="see-also__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</span>
+      <span class="see-also__summary">Da usare quando si crea o si rivede un ruolo, un account di servizio, una chiave API, l’ambito di un token…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> ospita TBaguette&rsquo;s Atelier — le scelte di giudizio che stanno tra il ticket e il commit, ordinate come su un banco da lavoro tenuto bene.</p>
+    <nav aria-label="Categorie">
+      <p class="site-footer__nav-title">Categorie</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/it/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/it/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/it/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/it/#landing-changes">Landing changes</a></li>
+<li><a href="/tbaguette-skills/it/#ui-and-design">UI e design</a></li>
+<li><a href="/tbaguette-skills/it/#judgment-and-meta">Giudizio e meta</a></li>
+<li><a href="/tbaguette-skills/it/#reading-code">Leggere il codice</a></li>
+<li><a href="/tbaguette-skills/it/#landing-changes">Integrare le modifiche</a></li>
 <li><a href="/tbaguette-skills/it/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/it/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/it/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/it/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/it/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging e prestazioni</a></li>
+<li><a href="/tbaguette-skills/it/#designing-systems">Progettare sistemi</a></li>
+<li><a href="/tbaguette-skills/it/#security">Sicurezza (difensiva)</a></li>
+<li><a href="/tbaguette-skills/it/#communicating">Comunicare</a></li>
+<li><a href="/tbaguette-skills/it/#environment-and-tooling">Ambiente e strumenti</a></li>
       </ul>
     </nav>
   </div>

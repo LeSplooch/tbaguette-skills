@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>secrets-hygiene — Security (defensive) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…">
+<title>secrets-hygiene — Sicurezza (difensiva) — TBaguette’s Atelier</title>
+<meta name="description" content="Da usare quando si maneggiano chiavi API, token, password, chiavi private…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="secrets-hygiene — Security (defensive) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…">
+<meta property="og:title" content="secrets-hygiene — Sicurezza (difensiva) — TBaguette’s Atelier">
+<meta property="og:description" content="Da usare quando si maneggiano chiavi API, token, password, chiavi private…">
 <link rel="canonical" href="/tbaguette-skills/it/skills/secrets-hygiene/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/secrets-hygiene/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/secrets-hygiene/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Copiato!"
+      data-i18n-no-match="Nessuna skill corrisponde."
+      data-i18n-modal-title="Nuova versione disponibile"
+      data-i18n-modal-body="Questa pagina è stata aggiornata. Ricaricala per vedere l’ultima versione."
+      data-i18n-modal-reload="Ricarica"
+      data-i18n-quote-open="«"
+      data-i18n-quote-close="»">
+<a class="skip-link" href="#main">Salta al contenuto</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T07:03:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:03:39Z UTC</time>
+      <span class="site-header__updated-label">Aggiornato</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T07:45:22+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:45:22Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Italiano</summary>
+  <summary class="language-switcher__summary">Lingua: Italiano</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/secrets-hygiene/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/secrets-hygiene/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Passa al tema chiaro"
+              data-i18n-theme-light="Passa al tema chiaro"
+              data-i18n-theme-dark="Passa al tema scuro">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
+<nav class="container breadcrumb" aria-label="Percorso di navigazione">
   <a href="/tbaguette-skills/it/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/it/#security">Security (defensive)</a>
+  <a href="/tbaguette-skills/it/#security">Sicurezza (difensiva)</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">secrets-hygiene</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">secrets-hygiene</h1>
     
   </div>
-  <span class="tag skill-article__tag">Security (defensive)</span>
-  <p class="lede">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline, container image, or client app, or finding one in a commit, log line, screenshot, ticket, or error message. Covers leaked credential response, revocation and rotation, secret scanning, environment variable and dotenv handling, and pre-publication checks on a repository.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Italiano yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Sicurezza (difensiva)</span>
+  <p class="lede">Da usare quando si maneggiano chiavi API, token, password, chiavi private, certificati o stringhe di connessione — aggiungendone uno a un servizio, a una pipeline di CI, a un’immagine container o a un’app client, oppure trovandone uno in un commit, in una riga di log, in uno screenshot, in un ticket o in un messaggio di errore. Tratta la risposta a una credenziale trapelata, la revoca e la rotazione, la scansione alla ricerca di segreti, la gestione delle variabili d’ambiente e dei file dotenv, e i controlli su un repository prima di pubblicarlo.</p>
+</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>A secret's only property is that its distribution is controlled, so every surface it has touched is a place it now lives. The measure of a healthy system is not whether secrets have leaked — they have — but whether any credential can be replaced on a Tuesday afternoon, without downtime and without a code change.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding a credential to a service, pipeline, image, device, or client application.</li><li>A key, token, or private key appears in a diff, log, ticket, chat message, screenshot, or exception.</li><li>Standing up CI or a deploy path; making a repository public; onboarding or offboarding someone.</li><li>Any sentence containing &quot;temporarily hardcode&quot;, &quot;just for local dev&quot;, or &quot;it's only a test key&quot;.</li><li>Not for: deciding what a credential should be <em>allowed to do</em> (<code>least-privilege-design</code>); whether a dependency can read your environment (<code>auditing-dependencies</code>).</li></ul>
@@ -128,52 +128,52 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The secret was removed in a follow-up commit</td><td>The commit that added it is still reachable; removal from the tip is cosmetic</td></tr><tr><td>Rotation requires a deploy</td><td>The value was captured into a constant or global at process start</td></tr><tr><td>Rotation was scheduled every quarter and never done</td><td>No overlap window, so rotation is an outage and every week is a bad week</td></tr><tr><td>Scanners are clean and a key still leaked</td><td>A custom token format with no recognizable prefix or entropy signature</td></tr><tr><td>Nobody can say which service uses this key</td><td>One credential, many consumers; it cannot be rotated without breaking something unknown</td></tr><tr><td>CI masking failed</td><td>The value was transformed before printing; masks match literals</td></tr><tr><td>An &quot;encrypted&quot; private key sits in the repo</td><td>The decryption key is in the same repo, the same image, or an environment everyone can read</td></tr><tr><td>The leak response began with a history rewrite</td><td>Revocation postponed behind the slowest and least effective step</td></tr><tr><td>Ignore rules treated as the control</td><td>Ignore files do not cover already-tracked files, other surfaces, or anyone's local tooling</td></tr><tr><td>Same key in staging and production</td><td>One credential spanning environments; the weakest environment sets the security of the strongest</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's just a dev key&quot; / &quot;it's a test account&quot;.</li><li>&quot;It's in a private repository.&quot;</li><li>&quot;We'll rotate if we see abuse&quot; — without per-credential telemetry, you will not see it.</li><li>&quot;Hardcode it for now and clean it up before merge.&quot;</li><li>&quot;The CI masking will catch it.&quot;</li><li>Any response that begins by estimating who might have seen it.</li><li>Rewriting history before revoking.</li><li>Nobody can name the owner or the expiry of a production credential.</li><li>A secret pasted into chat &quot;so it can be copied over&quot; — that message is now permanent.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/it/skills/handling-untrusted-input/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navigazione tra le skill"><a class="prevnext__link" href="/tbaguette-skills/it/skills/handling-untrusted-input/">
+  <span class="prevnext__label">Precedente</span>
   <span class="prevnext__name">← handling-untrusted-input</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/it/skills/auditing-dependencies/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Successiva</span>
   <span class="prevnext__name">auditing-dependencies →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Security (defensive)</h2>
+  <h2 class="see-also__title">Altre skill nella categoria Sicurezza (difensiva)</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/threat-modeling/">
       <span class="see-also__name">threat-modeling</span>
-      <span class="see-also__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</span>
+      <span class="see-also__summary">Da usare quando un design introduce un nuovo confine di fiducia, una nuova categoria di dati sensibili…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
-      <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
+      <span class="see-also__summary">Da usare quando del codice accetta o interpreta dati provenienti da fuori del proprio confine di fiducia — richieste, file, upload…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>
-      <span class="see-also__summary">Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries…</span>
+      <span class="see-also__summary">Da usare quando si aggiunge, aggiorna, sostituisce o rimuove un pacchetto o una libreria di terze parti…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/least-privilege-design/">
       <span class="see-also__name">least-privilege-design</span>
-      <span class="see-also__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</span>
+      <span class="see-also__summary">Da usare quando si crea o si rivede un ruolo, un account di servizio, una chiave API, l’ambito di un token…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> ospita TBaguette&rsquo;s Atelier — le scelte di giudizio che stanno tra il ticket e il commit, ordinate come su un banco da lavoro tenuto bene.</p>
+    <nav aria-label="Categorie">
+      <p class="site-footer__nav-title">Categorie</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/it/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/it/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/it/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/it/#landing-changes">Landing changes</a></li>
+<li><a href="/tbaguette-skills/it/#ui-and-design">UI e design</a></li>
+<li><a href="/tbaguette-skills/it/#judgment-and-meta">Giudizio e meta</a></li>
+<li><a href="/tbaguette-skills/it/#reading-code">Leggere il codice</a></li>
+<li><a href="/tbaguette-skills/it/#landing-changes">Integrare le modifiche</a></li>
 <li><a href="/tbaguette-skills/it/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/it/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/it/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/it/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/it/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging e prestazioni</a></li>
+<li><a href="/tbaguette-skills/it/#designing-systems">Progettare sistemi</a></li>
+<li><a href="/tbaguette-skills/it/#security">Sicurezza (difensiva)</a></li>
+<li><a href="/tbaguette-skills/it/#communicating">Comunicare</a></li>
+<li><a href="/tbaguette-skills/it/#environment-and-tooling">Ambiente e strumenti</a></li>
       </ul>
     </nav>
   </div>

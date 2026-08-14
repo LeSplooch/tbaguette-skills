@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>incremental-migration — Landing changes — TBaguette’s Atelier</title>
-<meta name="description" content="Use when replacing a system, library, API, storage engine, or data format that is already in use…">
+<title>incremental-migration — Integrare le modifiche — TBaguette’s Atelier</title>
+<meta name="description" content="Da usare quando si sostituisce un sistema, una libreria, un’API, un motore di archiviazione o un formato dati già in uso…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="incremental-migration — Landing changes — TBaguette’s Atelier">
-<meta property="og:description" content="Use when replacing a system, library, API, storage engine, or data format that is already in use…">
+<meta property="og:title" content="incremental-migration — Integrare le modifiche — TBaguette’s Atelier">
+<meta property="og:description" content="Da usare quando si sostituisce un sistema, una libreria, un’API, un motore di archiviazione o un formato dati già in uso…">
 <link rel="canonical" href="/tbaguette-skills/it/skills/incremental-migration/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/incremental-migration/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/incremental-migration/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Copiato!"
+      data-i18n-no-match="Nessuna skill corrisponde."
+      data-i18n-modal-title="Nuova versione disponibile"
+      data-i18n-modal-body="Questa pagina è stata aggiornata. Ricaricala per vedere l’ultima versione."
+      data-i18n-modal-reload="Ricarica"
+      data-i18n-quote-open="«"
+      data-i18n-quote-close="»">
+<a class="skip-link" href="#main">Salta al contenuto</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T07:03:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:03:39Z UTC</time>
+      <span class="site-header__updated-label">Aggiornato</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T07:45:22+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T07:45:22Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Italiano</summary>
+  <summary class="language-switcher__summary">Lingua: Italiano</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/incremental-migration/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/incremental-migration/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Passa al tema chiaro"
+              data-i18n-theme-light="Passa al tema chiaro"
+              data-i18n-theme-dark="Passa al tema scuro">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
+<nav class="container breadcrumb" aria-label="Percorso di navigazione">
   <a href="/tbaguette-skills/it/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/it/#landing-changes">Landing changes</a>
+  <a href="/tbaguette-skills/it/#landing-changes">Integrare le modifiche</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">incremental-migration</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">incremental-migration</h1>
     
   </div>
-  <span class="tag skill-article__tag">Landing changes</span>
-  <p class="lede">Use when replacing a system, library, API, storage engine, or data format that is already in use, when a change is too large to land in one release, when planning a cutover from an old path to a new one, when old and new implementations are both live and neither is finished, when a change touches hundreds of call sites, or when a rollback would leave data written by the new path unreadable by the old.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Italiano yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Integrare le modifiche</span>
+  <p class="lede">Da usare quando si sostituisce un sistema, una libreria, un’API, un motore di archiviazione o un formato dati già in uso, quando una modifica è troppo grande per entrare in un solo rilascio, quando si pianifica il passaggio dal vecchio percorso a quello nuovo, quando la vecchia e la nuova implementazione sono entrambe attive e nessuna delle due è finita, quando una modifica tocca centinaia di punti di chiamata, o quando un rollback lascerebbe i dati scritti dal nuovo percorso illeggibili per il vecchio.</p>
+</div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>Any large replacement ships as a sequence of individually deployable, individually revertible steps. The big-bang cutover is a plan that assumes you will not be interrupted, that nothing will be discovered mid-flight, and that rollback is a button — and all three assumptions fail together, at the worst moment.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Replacing a subsystem, dependency, protocol, or storage layer that has live traffic</li><li>A change whose full form would touch more code than can be reviewed or reverted at once</li><li>Two implementations are already live and the second one has stopped advancing</li><li>Deciding when it is safe to cut over from an old path to a new one</li><li>Not for: the internals of a data backfill or a schema version sequence — see <code>data-migrations</code> and <code>schema-evolution</code>. Not for the toggle mechanism itself — see <code>feature-flagging</code>.</li></ul>
@@ -130,60 +130,60 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;We will switch everything in one release&quot;</td><td>Plan has no state between &quot;old&quot; and &quot;new&quot;, so it has no rollback either</td></tr><tr><td>Rolling back the cutover corrupts or loses data</td><td>Dual-write phase skipped; the old path cannot read what the new one wrote</td></tr><tr><td>Backfill reported done, new path returns different answers</td><td>Backfill verified by completion count instead of by equality</td></tr><tr><td>Shadow comparison drowns in noise, gets muted</td><td>Raw outputs compared without normalizing legitimate divergence</td></tr><tr><td>New path shipped; old one still there a year later</td><td>Contract phase was never scheduled as work</td></tr><tr><td>Unknown callers keep surfacing after cutover</td><td>No runtime counter on the old path before the decision</td></tr><tr><td>Every feature now implemented twice</td><td>The half-migrated state was accepted as the normal working condition</td></tr><tr><td>Migration &quot;90% done&quot; for the third month</td><td>The last 5% was budgeted as a rounding error</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It is cleaner to just do it all at once&quot;</li><li>&quot;We will remove the old path after the launch&quot;</li><li>&quot;Nobody uses the old endpoint&quot; with no counter proving it</li><li>&quot;The migration is basically done&quot; repeated across months</li><li>Deploying a schema change together with the code that requires it</li><li>A migration with no named owner, or with an owner who has left</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/it/skills/writing-commit-messages/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navigazione tra le skill"><a class="prevnext__link" href="/tbaguette-skills/it/skills/writing-commit-messages/">
+  <span class="prevnext__label">Precedente</span>
   <span class="prevnext__name">← writing-commit-messages</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/it/skills/refactoring-safely/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Successiva</span>
   <span class="prevnext__name">refactoring-safely →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Landing changes</h2>
+  <h2 class="see-also__title">Altre skill nella categoria Integrare le modifiche</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/atomic-commits/">
       <span class="see-also__name">atomic-commits</span>
-      <span class="see-also__summary">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit…</span>
+      <span class="see-also__summary">Da usare quando in una working tree si sono accumulate più modifiche senza rapporto tra loro…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/writing-commit-messages/">
       <span class="see-also__name">writing-commit-messages</span>
-      <span class="see-also__summary">Use when writing or rewriting a commit message, when drafting a subject line, when a history reads as &quot;fix&quot;, &quot;wip&quot;…</span>
+      <span class="see-also__summary">Da usare quando si scrive o si riscrive il messaggio di un commit, quando si abbozza la riga di oggetto…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/refactoring-safely/">
       <span class="see-also__name">refactoring-safely</span>
-      <span class="see-also__summary">Use when restructuring existing code without changing what it does, when a change touches many call sites at once…</span>
+      <span class="see-also__summary">Da usare quando si ristruttura del codice esistente senza cambiare quello che fa…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/deleting-code/">
       <span class="see-also__name">deleting-code</span>
-      <span class="see-also__summary">Use when removing code, a feature, an endpoint, a config key, a column, or a dependency that appears unused…</span>
+      <span class="see-also__summary">Da usare quando si rimuove del codice, una funzionalità, un endpoint, una chiave di configurazione…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/feature-flagging/">
       <span class="see-also__name">feature-flagging</span>
-      <span class="see-also__summary">Use when hiding unfinished work behind a toggle, when planning a gradual rollout, a kill switch, or a dark launch…</span>
+      <span class="see-also__summary">Da usare quando si nasconde del lavoro incompiuto dietro un interruttore, quando si pianifica un rilascio graduale…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/resolving-merge-conflicts/">
       <span class="see-also__name">resolving-merge-conflicts</span>
-      <span class="see-also__summary">Use when a merge or rebase reports conflicts, when a long-lived branch has diverged and integration looks painful…</span>
+      <span class="see-also__summary">Da usare quando un merge o un rebase segnala conflitti, quando un branch di lunga durata è divergito e l’integrazione si annuncia dolorosa…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> ospita TBaguette&rsquo;s Atelier — le scelte di giudizio che stanno tra il ticket e il commit, ordinate come su un banco da lavoro tenuto bene.</p>
+    <nav aria-label="Categorie">
+      <p class="site-footer__nav-title">Categorie</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/it/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/it/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/it/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/it/#landing-changes">Landing changes</a></li>
+<li><a href="/tbaguette-skills/it/#ui-and-design">UI e design</a></li>
+<li><a href="/tbaguette-skills/it/#judgment-and-meta">Giudizio e meta</a></li>
+<li><a href="/tbaguette-skills/it/#reading-code">Leggere il codice</a></li>
+<li><a href="/tbaguette-skills/it/#landing-changes">Integrare le modifiche</a></li>
 <li><a href="/tbaguette-skills/it/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/it/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/it/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/it/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/it/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/it/#debugging-and-performance">Debugging e prestazioni</a></li>
+<li><a href="/tbaguette-skills/it/#designing-systems">Progettare sistemi</a></li>
+<li><a href="/tbaguette-skills/it/#security">Sicurezza (difensiva)</a></li>
+<li><a href="/tbaguette-skills/it/#communicating">Comunicare</a></li>
+<li><a href="/tbaguette-skills/it/#environment-and-tooling">Ambiente e strumenti</a></li>
       </ul>
     </nav>
   </div>
