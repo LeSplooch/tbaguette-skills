@@ -348,6 +348,9 @@ def check_i18n_content_links_and_strings() -> None:
     html_fr = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path="", locale=fr, strings=fr_strings)
     check("a card on the French index links into /fr/skills/<slug>/, not the English root",
           'href="/fr/skills/designing-test-data/"' in html_fr)
+    check("French index's install-frame 'See how' link points at the French "
+          "verify-install page, not the English one",
+          'href="/fr/verify-install/"' in html_fr)
 
     html_skill_fr = render_skill_page(
         FIXTURE["skills"]["designing-test-data"],
@@ -368,6 +371,9 @@ def check_i18n_content_links_and_strings() -> None:
     }, base_path="")
     check("default-English 'New' badge text still renders (no regression)",
           '>New<' in html_en_badge)
+    check("default-English index's install-frame 'See how' link is still unprefixed "
+          "(no regression)",
+          'href="/verify-install/"' in html_en_badge)
 
 
 def check_i18n_verify_install_page() -> None:

@@ -687,7 +687,9 @@ def _render_install_panel(*, panel_id: str, tab_id: str, command: str, hint: str
         </div>"""
 
 
-def _render_install(base_path: str = "", strings: Strings = ENGLISH_STRINGS) -> str:
+def _render_install(base_path: str = "", *,
+                     locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                     strings: Strings = ENGLISH_STRINGS) -> str:
     posix_panel = _render_install_panel(
         panel_id="install-posix", tab_id="tab-install-posix",
         command=INSTALL_COMMAND, hint=strings.install_hint_posix,
@@ -722,7 +724,7 @@ def _render_install(base_path: str = "", strings: Strings = ENGLISH_STRINGS) -> 
     </div>
     <p class="install-frame__note">
       {_icon("icon-check", base_path=base_path)}
-      <span>{escape_html(strings.install_note_verified_text)} <a href="{base_path}/verify-install/">{escape_html(strings.install_note_see_how)}</a>.</span>
+      <span>{escape_html(strings.install_note_verified_text)} <a href="{_locale_url(locale, base_path, 'verify-install/')}">{escape_html(strings.install_note_see_how)}</a>.</span>
     </p>
     <p class="install-frame__note">
       {_icon("icon-check", base_path=base_path)}
@@ -732,13 +734,14 @@ def _render_install(base_path: str = "", strings: Strings = ENGLISH_STRINGS) -> 
 </div>"""
 
 
-def _render_hero(skill_count: int, category_count: int, base_path: str = "",
+def _render_hero(skill_count: int, category_count: int, base_path: str = "", *,
+                  locale: "locales.Locale" = locales.DEFAULT_LOCALE,
                   strings: Strings = ENGLISH_STRINGS) -> str:
     lede = strings.hero_lede_template.format(skill_count=skill_count, category_count=category_count)
     return f"""<section class="hero">
   <div class="container">
     <h1 class="hero__headline">{escape_html(strings.hero_headline)}</h1>
-    {_render_install(base_path, strings)}
+    {_render_install(base_path, locale=locale, strings=strings)}
     <p class="hero__lede">{escape_html(lede)}</p>
     {_render_search_field(base_path, strings)}
   </div>
@@ -835,7 +838,7 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
     skill_count = len(skills)
     category_count = len(categories)
     main_html = _join(
-        _render_hero(skill_count, category_count, base_path, strings),
+        _render_hero(skill_count, category_count, base_path, locale=locale, strings=strings),
         _render_search_empty_state(skill_count, strings),
         f'<div data-categories>\n{sections}\n</div>',
     )
