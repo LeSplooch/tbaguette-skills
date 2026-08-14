@@ -1,6 +1,6 @@
 ---
 name: refactoring-safely
-description: Use when restructuring existing code without changing what it does, when a change touches many call sites at once, when tests break in the middle of a restructure, when code needs cleaning up before a feature can be added, when working in untested or legacy code, or when tempted to rewrite rather than transform. Covers behavior preservation, extracting and inlining, large-scale renames, and refactor-versus-rewrite decisions.
+description: Use when restructuring existing code without changing what it does, when a change touches many call sites at once, when tests break in the middle of a restructure, when code needs cleaning up before a feature can be added, when working in untested or legacy code, when two near-identical functions look like an obvious deduplication, or when tempted to rewrite rather than transform. Covers behavior preservation, extracting and inlining, large-scale renames, load-bearing duplication, and refactor-versus-rewrite decisions.
 ---
 
 # Refactoring safely
@@ -43,8 +43,22 @@ Apply a single named move, run the tests, commit. The interval between two green
 | Move to another module or type | Behavior, given initialization order holds | Import graph, visibility, and static-initialization order all shift |
 | Introduce parameter | Behavior, given the default matches current use | A default chosen for the new caller silently changes every old one |
 | Replace conditional with dispatch | Behavior, given the fallback branch is preserved | The unhandled case that used to fall through now throws |
+| Merge two near-duplicates | Behavior, given nothing outside the process can tell them apart | The difference was the point, and its observer is a signature verifier, a stored format, or a wire peer |
 
 Chained small moves beat one large one because each is mechanically checkable, individually revertible, and individually explainable in a subject line. The composite is none of the three. Where an automated refactoring tool exists for a move, use it — it updates references you would not have found. Where none exists, restrict yourself to transformations precise enough that you could describe the rule and have someone else verify it.
+
+## Duplication that is load-bearing
+
+Two functions that differ only in a detail are the most obvious cleanup in the file, and merging them can be invisible to every test you currently have. The question before unifying is not "are these the same?" but **"what would notice if they stopped differing?"** When the answer is inside the process, the duplication is debt and merging it is safe. When the answer is outside it — a peer verifying a signature you computed, a format already written to disk, a counterpart that rebuilds the same bytes and compares — the duplication is a contract, and nothing in either file says so. When you cannot determine who observes it, keep the split: the cost of maintaining two functions is bounded and known, and the cost of merging them is neither.
+
+The tell is that the difference looks small and arbitrary: two encoders disagreeing only about a space and a few delimiter characters, two serializers differing only in field order, two hash inputs differing only in a trailing separator. Arbitrary is what somebody else's specification looks like from inside your codebase. A reference implementation carrying the same split is evidence *for* the split, not evidence that everyone copies badly.
+
+What makes the mistake expensive is where the failure lands. Unifying a signing path does not fail where the refactor is; it fails at a third party, as a generic rejection indistinguishable from a bad credential, pointing nowhere near the diff, and often only for the subset of inputs containing the character that used to be treated differently.
+
+Two pieces of residue when you decide to keep it:
+
+- Put the reason at **both** sites. A comment on one of a pair explains nothing to whoever arrives at the other, and they are the one who will merge them.
+- Pin the divergence with a test asserting the two produce *different* output for the same input, naming the character or field that must differ. It reads like a strange test, and it is the only thing that turns an attempted unification into a local, immediate failure instead of a remote one.
 
 ## Before touching untested code
 
@@ -80,6 +94,7 @@ Rewrites lose because ugly code is dense with undocumented bug fixes: each stran
 | Rewrite 90% done and permanently stuck | The last 10% is the undocumented behavior, and it was never in scope |
 | Refactor abandoned midway; two shapes now coexist | Transformation was too large to finish in one sitting and too large to revert |
 | Reviewer cannot say whether behavior changed | The diff does not distinguish moved lines from edited ones |
+| Deduplicated two similar functions; a counterpart started rejecting the output | The difference was a contract with an outside observer, not copy-paste |
 
 ## Red flags
 
@@ -89,3 +104,4 @@ Rewrites lose because ugly code is dense with undocumented bug fixes: each stran
 - "I will add the tests after the refactor"
 - Editing a test's expected value so a refactor passes
 - Being unable to name, in one phrase, which transformation you are currently applying
+- "These two are identical apart from one character" — said without naming what outside the process compares them
