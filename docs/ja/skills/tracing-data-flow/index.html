@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>tracing-data-flow — Reading code — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…">
+<title>tracing-data-flow — コードを読む — TBaguette’s Atelier</title>
+<meta name="description" content="ある値が間違っている・欠けている・nullである・空である・思いがけずデフォルトになっていて、その出どころがはっきりしないとき、あるフィールドがどこから来るのか、誰が書いているのか、どこまで届くのかを問うとき…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tracing-data-flow — Reading code — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…">
+<meta property="og:title" content="tracing-data-flow — コードを読む — TBaguette’s Atelier">
+<meta property="og:description" content="ある値が間違っている・欠けている・nullである・空である・思いがけずデフォルトになっていて、その出どころがはっきりしないとき、あるフィールドがどこから来るのか、誰が書いているのか、どこまで届くのかを問うとき…">
 <link rel="canonical" href="/tbaguette-skills/ja/skills/tracing-data-flow/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/tracing-data-flow/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/tracing-data-flow/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="コピーしました"
+      data-i18n-no-match="一致するスキルはありません。"
+      data-i18n-modal-title="新しいバージョンがあります"
+      data-i18n-modal-body="このページは更新されました。再読み込みすると最新の内容が表示されます。"
+      data-i18n-modal-reload="再読み込み"
+      data-i18n-quote-open="「"
+      data-i18n-quote-close="」">
+<a class="skip-link" href="#main">本文へスキップ</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T12:46:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:46:53Z UTC</time>
+      <span class="site-header__updated-label">最終更新</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T14:05:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T14:05:33Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: 日本語</summary>
+  <summary class="language-switcher__summary">言語: 日本語</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/tracing-data-flow/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/tracing-data-flow/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="ライトテーマに切り替える"
+              data-i18n-theme-light="ライトテーマに切り替える"
+              data-i18n-theme-dark="ダークテーマに切り替える">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/ja/">Home</a>
+<nav class="container breadcrumb" aria-label="パンくずリスト">
+  <a href="/tbaguette-skills/ja/">ホーム</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/ja/#reading-code">Reading code</a>
+  <a href="/tbaguette-skills/ja/#reading-code">コードを読む</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">tracing-data-flow</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">tracing-data-flow</h1>
     
   </div>
-  <span class="tag skill-article__tag">Reading code</span>
-  <p class="lede">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from, who writes it, or everything it reaches; when following a request payload, identifier, config value, or flag across modules, threads, services, or serialization boundaries; or when searching for a name returns nothing useful and the path seems to vanish.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into 日本語 yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">コードを読む</span>
+  <p class="lede">ある値が間違っている・欠けている・nullである・空である・思いがけずデフォルトになっていて、その出どころがはっきりしないとき、あるフィールドがどこから来るのか、誰が書いているのか、どこまで届くのかを問うとき、リクエストのペイロード・識別子・設定値・フラグをモジュール・スレッド・サービス・シリアライズ境界をまたいで追うとき、あるいは名前で検索しても役に立つものが出てこず、経路が消えてしまったように見えるときに使います。</p>
+</div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>A trace is a written artifact — a chain of file:line hops with what changed at each one. Held in memory it is re-derived every twenty minutes and is wrong by the third hop. The goal is not to understand the module; it is to enumerate every place this value is produced, altered, and read.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A value arrives wrong somewhere far from where it was set.</li><li>Assessing what a field change breaks: every writer and every reader must be named.</li><li>A name appears in two places with no visible path between them.</li><li>Auditing where sensitive or user-supplied data reaches.</li><li>Not for: diagnosing why a system misbehaves when the value is not yet identified (systematic-debugging), or module-level coupling (mapping-dependencies).</li></ul>
@@ -132,60 +132,60 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;Searching found nothing&quot;</td><td>Renamed at a boundary; never left search step 1</td></tr><tr><td>Trace looks complete, behavior still unexplained</td><td>A silent default or an in-place mutation between two hops assumed pure</td></tr><tr><td>Re-deriving the same hops repeatedly</td><td>Chain never written down</td></tr><tr><td>Read all nine implementations</td><td>One log line would have named the one that runs</td></tr><tr><td>Traced one path, another exists</td><td>Backward trace only; never ran the forward pass</td></tr><tr><td>Confident there is exactly one writer</td><td>Never searched the type or the serialized name, only the identifier</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Nothing else could possibly write to this.&quot;</li><li>&quot;The framework must set it somewhere.&quot;</li><li>&quot;I'll read one more file and it will be clear.&quot;</li><li>&quot;It's obviously null because it was never set&quot; — before checking for a default.</li><li>Reading past 15 minutes of dead ends rather than adding one log line.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/ja/skills/orienting-in-unfamiliar-code/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="スキル間のナビゲーション"><a class="prevnext__link" href="/tbaguette-skills/ja/skills/orienting-in-unfamiliar-code/">
+  <span class="prevnext__label">前へ</span>
   <span class="prevnext__name">← orienting-in-unfamiliar-code</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ja/skills/code-archaeology/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">次へ</span>
   <span class="prevnext__name">code-archaeology →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Reading code</h2>
+  <h2 class="see-also__title">「コードを読む」の他のスキル</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/orienting-in-unfamiliar-code/">
       <span class="see-also__name">orienting-in-unfamiliar-code</span>
-      <span class="see-also__summary">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project…</span>
+      <span class="see-also__summary">コードベースを初めて開くとき、見慣れないリポジトリやレガシーなリポジトリを引き継ぐとき、新しいプロジェクトに合流するとき、あるいはその場の誰も書いていないコードの変更を頼まれたときに使います。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/code-archaeology/">
       <span class="see-also__name">code-archaeology</span>
-      <span class="see-also__summary">Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify…</span>
+      <span class="see-also__summary">説明のないコードがあって、その理由が重要なときに使います——妙な回避策、マジックナンバー、誰も正当化できない条件分岐、コードと矛盾するコメント、理由の書かれていないTODO、消しても大丈夫そうに見える1行。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/mapping-dependencies/">
       <span class="see-also__name">mapping-dependencies</span>
-      <span class="see-also__summary">Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles…</span>
+      <span class="see-also__summary">ある変更が何を壊すか見積もるとき、影響範囲を見積もるとき、循環importやビルドの循環を追うとき、依存元が多すぎるモジュールを見つけるとき、レイヤリングやアーキテクチャのルールがまだ守られているか確かめるとき、モジュールの分割・抽出・削除を計画するとき…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/finding-the-seam/">
       <span class="see-also__name">finding-the-seam</span>
-      <span class="see-also__summary">Use when deciding where in a codebase to make a change, when a fix could plausibly go in several places…</span>
+      <span class="see-also__summary">コードベースのどこに変更を入れるか決めるとき、修正の置き場所が何か所もありえるとき、diffが多くのファイルに広がりつつあるとき、そのコードを持っている側を編集せずに挙動を変えなければならないとき、システム全体を起動しないとテストできないものがあるとき…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/reading-specifications/">
       <span class="see-also__name">reading-specifications</span>
-      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
+      <span class="see-also__summary">チケット、issue、バグ報告、RFC、標準、設計文書、ユーザーの一言を実際の仕事に変えるとき、要件が曖昧・矛盾している・エッジケースについて何も言っていないとき、質問して確かめるか、前提を明示したまま進めるか迷うとき、MUST・SHOULD・MAYの重みを読み取るとき…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/naming-things/">
       <span class="see-also__name">naming-things</span>
-      <span class="see-also__summary">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…</span>
+      <span class="see-also__summary">変数、関数、型、モジュール、フラグ、設定キー、テーブル、イベントに識別子を付けるとき、名前が誤解を招く・略しすぎている・コードベースのほかの部分と揃っていない・もう当てはまらないものから引き継がれているとき、改名がそのコストに見合うか量るとき、あるいは何が入っているのか…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong>にはTBaguette&rsquo;s Atelierが入っています——チケットとコミットのあいだにあって、判断で決めるしかないことがらを、きちんと片づいた作業台のように並べたところです。</p>
+    <nav aria-label="カテゴリー">
+      <p class="site-footer__nav-title">カテゴリー</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/ja/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/ja/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/ja/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/ja/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/ja/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/ja/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/ja/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/ja/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/ja/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/ja/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/ja/#ui-and-design">UIとデザイン</a></li>
+<li><a href="/tbaguette-skills/ja/#judgment-and-meta">判断力とメタスキル</a></li>
+<li><a href="/tbaguette-skills/ja/#reading-code">コードを読む</a></li>
+<li><a href="/tbaguette-skills/ja/#landing-changes">変更を着地させる</a></li>
+<li><a href="/tbaguette-skills/ja/#testing">テスト</a></li>
+<li><a href="/tbaguette-skills/ja/#debugging-and-performance">デバッグとパフォーマンス</a></li>
+<li><a href="/tbaguette-skills/ja/#designing-systems">システムを設計する</a></li>
+<li><a href="/tbaguette-skills/ja/#security">セキュリティ（防御）</a></li>
+<li><a href="/tbaguette-skills/ja/#communicating">伝える</a></li>
+<li><a href="/tbaguette-skills/ja/#environment-and-tooling">環境とツール</a></li>
       </ul>
     </nav>
   </div>

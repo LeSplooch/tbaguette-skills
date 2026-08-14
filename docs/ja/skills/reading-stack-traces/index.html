@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>reading-stack-traces — Debugging and performance — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a crash, exception, panic, traceback, core dump, or error log must be interpreted…">
+<title>reading-stack-traces — デバッグとパフォーマンス — TBaguette’s Atelier</title>
+<meta name="description" content="クラッシュ、例外、パニック、トレースバック、コアダンプ、エラーログを読み解かなければならないとき、最上位のフレームがフレームワークや標準ライブラリの中にあるとき…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="reading-stack-traces — Debugging and performance — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a crash, exception, panic, traceback, core dump, or error log must be interpreted…">
+<meta property="og:title" content="reading-stack-traces — デバッグとパフォーマンス — TBaguette’s Atelier">
+<meta property="og:description" content="クラッシュ、例外、パニック、トレースバック、コアダンプ、エラーログを読み解かなければならないとき、最上位のフレームがフレームワークや標準ライブラリの中にあるとき…">
 <link rel="canonical" href="/tbaguette-skills/ja/skills/reading-stack-traces/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/reading-stack-traces/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/reading-stack-traces/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
-      data-i18n-quote-open="“"
-      data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="コピーしました"
+      data-i18n-no-match="一致するスキルはありません。"
+      data-i18n-modal-title="新しいバージョンがあります"
+      data-i18n-modal-body="このページは更新されました。再読み込みすると最新の内容が表示されます。"
+      data-i18n-modal-reload="再読み込み"
+      data-i18n-quote-open="「"
+      data-i18n-quote-close="」">
+<a class="skip-link" href="#main">本文へスキップ</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T12:46:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:46:53Z UTC</time>
+      <span class="site-header__updated-label">最終更新</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T14:05:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T14:05:33Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: 日本語</summary>
+  <summary class="language-switcher__summary">言語: 日本語</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/reading-stack-traces/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/reading-stack-traces/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="ライトテーマに切り替える"
+              data-i18n-theme-light="ライトテーマに切り替える"
+              data-i18n-theme-dark="ダークテーマに切り替える">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/ja/">Home</a>
+<nav class="container breadcrumb" aria-label="パンくずリスト">
+  <a href="/tbaguette-skills/ja/">ホーム</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/ja/#debugging-and-performance">Debugging and performance</a>
+  <a href="/tbaguette-skills/ja/#debugging-and-performance">デバッグとパフォーマンス</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">reading-stack-traces</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">reading-stack-traces</h1>
     
   </div>
-  <span class="tag skill-article__tag">Debugging and performance</span>
-  <p class="lede">Use when a crash, exception, panic, traceback, core dump, or error log must be interpreted, when the top frame sits inside a framework or standard library, when a trace is truncated, async, minified, inlined, or symbol-stripped, or when an error carries a wrapped cause chain or a list of aggregate errors. Covers which frame identifies the defect and what each frame does and does not prove.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into 日本語 yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">デバッグとパフォーマンス</span>
+  <p class="lede">クラッシュ、例外、パニック、トレースバック、コアダンプ、エラーログを読み解かなければならないとき、最上位のフレームがフレームワークや標準ライブラリの中にあるとき、トレースが切り詰められている・非同期をまたいでいる・minifyされている・インライン化されている・シンボルが剥がされているとき、あるいはエラーが包まれた原因の連鎖や集約エラーの一覧を抱えているときに使います。どのフレームが欠陥を指しているのか、そして各フレームが何を証明し何を証明しないのかを扱います。</p>
+</div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>The frame that threw is rarely the frame that is wrong. Read for the boundary where code you control handed a value to code you do not, because that is where the defect almost always lives.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A crash, exception, panic, or error log needs to be turned into a specific line of code</li><li>The top of the trace is inside a standard library, framework, or runtime</li><li>The trace is async, truncated, minified, stripped, or full of generated names</li><li>An error message has a &quot;caused by&quot; tail, a suppressed exception, or a list of sub-errors</li><li>The trace has been read once and produced no candidate</li></ul>
@@ -121,60 +121,60 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Fixed the top frame, bug persists</td><td>the top frame was the victim; the defect was at the boundary below it</td></tr><tr><td>&quot;The framework is broken&quot;</td><td>a contract was violated at the call site; framework bugs are rarer than the ratio of blame suggests</td></tr><tr><td>Cause chain never read</td><td>log format truncated it, or only the first line was pasted</td></tr><tr><td>Line number points at unrelated code</td><td>trace came from a different build than the source open in the editor</td></tr><tr><td>Async trace declared useless</td><td>async stack capture was never enabled, or no correlation id was propagated</td></tr><tr><td>Aggregate error debugged from entry one</td><td>entry one was the first cancellation, not the first failure</td></tr><tr><td>Symbolicated names look wrong</td><td>symbol file does not match the binary</td></tr><tr><td>Trace pasted into the ticket, nothing else</td><td>the message and the boundary frame were never extracted into a sentence</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>Reading only the first line of the error</li><li>Copying a trace into a search engine before locating the boundary frame</li><li>Concluding &quot;null pointer&quot; without asking which of the several values on that line was null</li><li>Believing an absent frame proves code did not run</li><li>Reasoning about optimized-build line numbers as if they were exact</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/ja/skills/bisecting-failures/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="スキル間のナビゲーション"><a class="prevnext__link" href="/tbaguette-skills/ja/skills/bisecting-failures/">
+  <span class="prevnext__label">前へ</span>
   <span class="prevnext__name">← bisecting-failures</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ja/skills/debugging-concurrency/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">次へ</span>
   <span class="prevnext__name">debugging-concurrency →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Debugging and performance</h2>
+  <h2 class="see-also__title">「デバッグとパフォーマンス」の他のスキル</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/reproducing-bugs/">
       <span class="see-also__name">reproducing-bugs</span>
-      <span class="see-also__summary">Use when a bug report must be turned into a failure that happens on demand, when a defect cannot be reproduced locally…</span>
+      <span class="see-also__summary">バグ報告を、いつでも起こせる失敗に変えなければならないとき、手元で欠陥を再現できないとき、本番でしか、あるいは特定の1ユーザーにしか起きないとき、失敗が断続的だったり低い確率でしか現れなかったりするとき、あるいは修正にそれを証明するテストが付いていないときに使います。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/bisecting-failures/">
       <span class="see-also__name">bisecting-failures</span>
-      <span class="see-also__summary">Use when something worked before and is broken now, when the culprit is one of many commits, config keys, dependency upgrades, data rows…</span>
+      <span class="see-also__summary">前は動いていたものが今は壊れているとき、犯人が多数のコミット・設定キー・依存のアップグレード・データ行・未コミットの編集のどれかであるとき、`git bisect`がビルド失敗・不安定なテスト・マージだらけの履歴にぶつかるとき…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/debugging-concurrency/">
       <span class="see-also__name">debugging-concurrency</span>
-      <span class="see-also__summary">Use when a failure depends on timing, thread or task interleaving, or load, when a test passes alone but fails in parallel, when a hang…</span>
+      <span class="see-also__summary">失敗がタイミングやスレッド・タスクのインターリーブ、あるいは負荷に左右されるとき、単体では通るテストが並列だと落ちるとき、並行実行下でハング・デッドロック・ライブロック・更新の消失・古い値の読み取りが現れるとき、ログやデバッガを足すと症状が消えるとき…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/observing-production-safely/">
       <span class="see-also__name">observing-production-safely</span>
-      <span class="see-also__summary">Use when diagnosing a live system that users depend on, when the only evidence sits behind production data, when enabling a debug flag…</span>
+      <span class="see-also__summary">ユーザーが頼っている稼働中のシステムを診断するとき、唯一の証拠が本番データの向こうにあるとき、動いているサービスに対してデバッグフラグ・詳細ログ・ヒープダンプ・プロファイラ・ブレークポイントを有効にするとき、仮説を試すために本番の状態を変えたくなったとき…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/performance-profiling/">
       <span class="see-also__name">performance-profiling</span>
-      <span class="see-also__summary">Use when something is slow and the cause is unknown, when an optimization needs proof that it helped, when latency, throughput…</span>
+      <span class="see-also__summary">何かが遅くて原因がわからないとき、最適化が効いたという証拠が要るとき、レイテンシ・スループット・裾の挙動・p95やp99を特徴づけなければならないとき、フレームグラフ・サンプリングプロファイル・ベンチマーク結果を読むとき…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/finding-resource-leaks/">
       <span class="see-also__name">finding-resource-leaks</span>
-      <span class="see-also__summary">Use when memory, file descriptors, sockets, threads, connections, timers, or event subscriptions grow without bound…</span>
+      <span class="see-also__summary">メモリ、ファイルディスクリプタ、ソケット、スレッド、コネクション、タイマー、イベント購読が際限なく増えるとき、プロセスがメモリ不足で殺されたり、開いているファイルが多すぎるというエラーに当たったりするとき、定期再起動だけがサービスを生かしているとき…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong>にはTBaguette&rsquo;s Atelierが入っています——チケットとコミットのあいだにあって、判断で決めるしかないことがらを、きちんと片づいた作業台のように並べたところです。</p>
+    <nav aria-label="カテゴリー">
+      <p class="site-footer__nav-title">カテゴリー</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/ja/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/ja/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/ja/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/ja/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/ja/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/ja/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/ja/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/ja/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/ja/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/ja/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/ja/#ui-and-design">UIとデザイン</a></li>
+<li><a href="/tbaguette-skills/ja/#judgment-and-meta">判断力とメタスキル</a></li>
+<li><a href="/tbaguette-skills/ja/#reading-code">コードを読む</a></li>
+<li><a href="/tbaguette-skills/ja/#landing-changes">変更を着地させる</a></li>
+<li><a href="/tbaguette-skills/ja/#testing">テスト</a></li>
+<li><a href="/tbaguette-skills/ja/#debugging-and-performance">デバッグとパフォーマンス</a></li>
+<li><a href="/tbaguette-skills/ja/#designing-systems">システムを設計する</a></li>
+<li><a href="/tbaguette-skills/ja/#security">セキュリティ（防御）</a></li>
+<li><a href="/tbaguette-skills/ja/#communicating">伝える</a></li>
+<li><a href="/tbaguette-skills/ja/#environment-and-tooling">環境とツール</a></li>
       </ul>
     </nav>
   </div>
