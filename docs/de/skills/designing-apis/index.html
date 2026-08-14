@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>designing-apis — Designing systems — TBaguette’s Atelier</title>
-<meta name="description" content="Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint…">
+<title>designing-apis — Systeme entwerfen — TBaguette’s Atelier</title>
+<meta name="description" content="Einsetzen, wenn eine Schnittstelle definiert wird…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="designing-apis — Designing systems — TBaguette’s Atelier">
-<meta property="og:description" content="Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint…">
+<meta property="og:title" content="designing-apis — Systeme entwerfen — TBaguette’s Atelier">
+<meta property="og:description" content="Einsetzen, wenn eine Schnittstelle definiert wird…">
 <link rel="canonical" href="/tbaguette-skills/de/skills/designing-apis/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/designing-apis/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/designing-apis/">
@@ -34,12 +34,12 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="Kopiert!"
+      data-i18n-no-match="Keine Treffer."
+      data-i18n-modal-title="Neue Version verfügbar"
+      data-i18n-modal-body="Diese Seite wurde aktualisiert. Lade sie neu, um den aktuellen Stand zu sehen."
+      data-i18n-modal-reload="Neu laden">
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -49,11 +49,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T06:21:58+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T06:21:58Z UTC</time>
+      <span class="site-header__updated-label">Aktualisiert</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T06:49:43+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T06:49:43Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Deutsch</summary>
+  <summary class="language-switcher__summary">Sprache: Deutsch</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/designing-apis/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/designing-apis/">Français</a></li>
@@ -74,9 +74,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Zum hellen Design wechseln"
+              data-i18n-theme-light="Zum hellen Design wechseln"
+              data-i18n-theme-dark="Zum dunklen Design wechseln">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -84,10 +84,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/de/">Home</a>
+<nav class="container breadcrumb" aria-label="Brotkrümelnavigation">
+  <a href="/tbaguette-skills/de/">Startseite</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/de/#designing-systems">Designing systems</a>
+  <a href="/tbaguette-skills/de/#designing-systems">Systeme entwerfen</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">designing-apis</span>
 </nav>
@@ -96,9 +96,9 @@
     <h1 class="skill-article__title">designing-apis</h1>
     
   </div>
-  <span class="tag skill-article__tag">Designing systems</span>
-  <p class="lede">Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint, an IPC or wire message, a plugin contract, or an exported module boundary. Covers naming and granularity, required versus optional parameters, defaults, pagination and ordering, growing an enum, opaque tokens, deprecation and sunset, versioning, and judging whether a proposed change is breaking.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Deutsch yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Systeme entwerfen</span>
+  <p class="lede">Einsetzen, wenn eine Schnittstelle definiert wird, die anderer Code aufrufen wird — eine öffentliche Funktion oder ein Einstiegspunkt einer Bibliothek, ein HTTP- oder RPC-Endpunkt, eine IPC- oder Wire-Nachricht, ein Plugin-Vertrag oder eine exportierte Modulgrenze. Behandelt Benennung und Granularität, erforderliche gegenüber optionalen Parametern, Standardwerte, Paginierung und Sortierung, das Erweitern eines Enums, undurchsichtige Tokens, Deprecation und Abschaltung, Versionierung sowie die Beurteilung, ob eine vorgeschlagene Änderung die Kompatibilität bricht.</p>
+</div><p class="translation-banner" role="note">Diese Seite ist noch nicht auf Deutsch übersetzt — hier die englische Version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>The interface is the only part you cannot refactor later: everything behind it is yours, everything in front belongs to callers you cannot deploy. Design the failure modes, the growth path, and the compatibility promise before the happy path.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding anything another team, process, or version will call: exported function, endpoint, message type, plugin hook, config key.</li><li>Deciding one call versus three; required versus optional; what to return for a collection.</li><li>Adding a field, parameter, enum member, or error code to something already shipped.</li><li>Someone asks &quot;is this change breaking?&quot;</li><li>Not for: choosing a single identifier's wording (naming-things), evolving stored data (schema-evolution), deciding where the boundary belongs at all (drawing-boundaries).</li></ul>
@@ -118,76 +118,76 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Every new feature adds another boolean parameter</td><td>Options never modeled as a type; the first flag set the pattern</td></tr><tr><td>Every caller wraps the API in the same helper</td><td>Wrong granularity — their helper is the API you should have shipped</td></tr><tr><td>Adding an optional field broke old clients</td><td>Contract never stated unknown-field tolerance, so parsers were strict</td></tr><tr><td>A new enum member crashed the fleet</td><td>Member added before tolerant clients were deployed</td></tr><tr><td>&quot;Page 2 and page 3 both contained item X&quot;</td><td>Non-total ordering under pagination</td></tr><tr><td>v2 quietly returns fewer results than v1</td><td>Unbounded collection in v1; adding a limit is breaking regardless of the version label</td></tr><tr><td>Callers keep getting the call order wrong</td><td>Sequencing is a real constraint and belongs inside one call or an explicit state machine</td></tr><tr><td>Support asks callers to &quot;check the error text&quot;</td><td>No stable error code in the contract</td></tr><tr><td>A caller broke when you changed a cursor's format</td><td>Token documented as opaque but never made opaque</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;We'll add pagination when it gets big.&quot;</li><li>&quot;It's internal, we can change it later&quot; — about something whose callers you do not deploy.</li><li>&quot;Just return null for now.&quot;</li><li>&quot;Callers shouldn't depend on that.&quot;</li><li>&quot;We'll mark it experimental in the docs.&quot;</li><li>Adding a flag parameter instead of asking whether this is really two operations.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/de/skills/modeling-errors/">
-  <span class="prevnext__label">Next</span>
+<nav class="container prevnext" aria-label="Navigation zwischen Skills"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/de/skills/modeling-errors/">
+  <span class="prevnext__label">Weiter</span>
   <span class="prevnext__name">modeling-errors →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Designing systems</h2>
+  <h2 class="see-also__title">Mehr aus der Kategorie Systeme entwerfen</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/modeling-errors/">
       <span class="see-also__name">modeling-errors</span>
-      <span class="see-also__summary">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…</span>
+      <span class="see-also__summary">Einsetzen, wenn zu entscheiden ist, wie ein Fehlschlag dargestellt oder behandelt wird — die Wahl zwischen Exceptions…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/designing-for-idempotency/">
       <span class="see-also__name">designing-for-idempotency</span>
-      <span class="see-also__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</span>
+      <span class="see-also__summary">Einsetzen, wenn eine Operation mehr als einmal ankommen kann — Retries nach einem Timeout mit unbekanntem Ausgang, At-least-once-Queues…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/choosing-concurrency-model/">
       <span class="see-also__name">choosing-concurrency-model</span>
-      <span class="see-also__summary">Use when work must happen at the same time and the approach is undecided — OS threads, async or event loops, actors and message passing…</span>
+      <span class="see-also__summary">Einsetzen, wenn Arbeit gleichzeitig ablaufen muss und der Ansatz noch offen ist — Betriebssystem-Threads, Async oder Event-Loops…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/modeling-state-machines/">
       <span class="see-also__name">modeling-state-machines</span>
-      <span class="see-also__summary">Use when something has a lifecycle — order, job, connection, upload, session, subscription, device…</span>
+      <span class="see-also__summary">Einsetzen, wenn etwas einen Lebenszyklus hat — Bestellung, Job, Verbindung, Upload, Sitzung, Abonnement, Gerät…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/drawing-boundaries/">
       <span class="see-also__name">drawing-boundaries</span>
-      <span class="see-also__summary">Use when deciding what belongs together — module, package, crate, library, process…</span>
+      <span class="see-also__summary">Einsetzen, wenn zu entscheiden ist, was zusammengehört — Aufteilungen in Module, Pakete, Crates, Bibliotheken…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/caching-strategy/">
       <span class="see-also__name">caching-strategy</span>
-      <span class="see-also__summary">Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change…</span>
+      <span class="see-also__summary">Einsetzen, wenn ein Cache, eine Memo-Tabelle, eine CDN-Schicht oder ein vorberechneter Lesepfad hinzukommt…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/schema-evolution/">
       <span class="see-also__name">schema-evolution</span>
-      <span class="see-also__summary">Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema…</span>
+      <span class="see-also__summary">Einsetzen, wenn ein Vertrag geändert wird, der bereits in Produktion ist — ein Feld in einem Datenbankschema, einem serialisierten Format…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/data-migrations/">
       <span class="see-also__name">data-migrations</span>
-      <span class="see-also__summary">Use when backfilling, transforming, re-encoding, or relocating data that already exists at a size too large for one transaction…</span>
+      <span class="see-also__summary">Einsetzen, wenn vorhandene Daten nachgefüllt, umgewandelt…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/configuration-management/">
       <span class="see-also__name">configuration-management</span>
-      <span class="see-also__summary">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together…</span>
+      <span class="see-also__summary">Einsetzen, wenn eine Umgebungsvariable, eine Einstellung, ein Schalter oder ein Eintrag in einer Konfigurationsdatei hinzukommt…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/instrumenting-for-observability/">
       <span class="see-also__name">instrumenting-for-observability</span>
-      <span class="see-also__summary">Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed…</span>
+      <span class="see-also__summary">Einsetzen, wenn zu entscheiden ist, was geloggt, gemessen oder in Traces erfasst wird…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/rate-limiting-and-backpressure/">
       <span class="see-also__name">rate-limiting-and-backpressure</span>
-      <span class="see-also__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</span>
+      <span class="see-also__summary">Einsetzen, wenn ein System mehr Last bekommt, als es bedienen kann, wenn Drosselung, Kontingente oder 429-Antworten entworfen werden…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> beherbergt TBaguette&rsquo;s Atelier — die Ermessensentscheidungen zwischen Ticket und Commit, aufgeräumt wie eine ordentliche Werkbank.</p>
+    <nav aria-label="Kategorien">
+      <p class="site-footer__nav-title">Kategorien</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/de/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/de/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/de/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/de/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/de/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/de/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/de/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/de/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/de/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/de/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/de/#ui-and-design">UI und Design</a></li>
+<li><a href="/tbaguette-skills/de/#judgment-and-meta">Urteilsvermögen und Meta</a></li>
+<li><a href="/tbaguette-skills/de/#reading-code">Code lesen</a></li>
+<li><a href="/tbaguette-skills/de/#landing-changes">Änderungen einbringen</a></li>
+<li><a href="/tbaguette-skills/de/#testing">Testen</a></li>
+<li><a href="/tbaguette-skills/de/#debugging-and-performance">Debugging und Performance</a></li>
+<li><a href="/tbaguette-skills/de/#designing-systems">Systeme entwerfen</a></li>
+<li><a href="/tbaguette-skills/de/#security">Sicherheit (defensiv)</a></li>
+<li><a href="/tbaguette-skills/de/#communicating">Kommunizieren</a></li>
+<li><a href="/tbaguette-skills/de/#environment-and-tooling">Umgebung und Werkzeuge</a></li>
       </ul>
     </nav>
   </div>
