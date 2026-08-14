@@ -330,23 +330,21 @@ def check_fresh_section() -> None:
           '<time class="fresh__when" datetime="2026-08-14T12:00:00+00:00" '
           'data-format-relative>2026-08-14</time>' in html)
 
-    # --- the 3D ring: geometry is data, not decoration, so it gets the same
-    # scrutiny as the rest of the tile — a wrong angle or delay is a visible
-    # gap or a stuck tile, not a cosmetic nit. ------------------------------
-    check("tiles sit inside a ring wrapper carrying the shared radius",
-          '<div class="fresh__ring" style="--fresh-radius:' in html)
-    check("the visible card is a nested face, not the anchor itself — the "
-          "anchor is only ever the 3D ring's placement slot",
-          html.count('class="fresh__face"') == 2)
-    check("first tile takes the ring's zero angle and zero delay — it is "
-          "already front-and-centre before the ring ever turns",
-          'style="--fresh-angle: 0deg"' in html
-          and 'style="animation-delay: 0s"' in html)
-    check("second of two tiles sits opposite the first (180deg) with a "
-          "half-cycle negative delay, so the shared fresh-focus loop reaches "
-          "it exactly when the ring has carried it to the front",
-          'style="--fresh-angle: 180deg"' in html
-          and 'style="animation-delay: -18s"' in html)
+    # --- the coverflow: geometry is data, not decoration, so it gets the
+    # same scrutiny as the rest of the tile — a wrong offset is a tile stuck
+    # off in the tilted, dimmed part of the fan, not a cosmetic nit. -------
+    check("the anchor carries --cf-offset directly — no ring or face "
+          "wrapper left over from the previous rework",
+          "fresh__ring" not in html and "fresh__face" not in html)
+    check("the rail carries the JS hook the coverflow step timer looks for",
+          "data-fresh-coverflow" in html)
+    check("first of two tiles sits dead centre",
+          'style="--cf-offset: 0"' in html)
+    check("second of two tiles sits one slot to its right — with only two "
+          "tiles there is no symmetric split, so one side of the fan stays "
+          "empty rather than the tile wrapping all the way around to look "
+          "like it never moved",
+          'style="--cf-offset: 1"' in html)
 
     many = [make(f"s{i:02d}", "new", "2026-08-14T12:00:00+00:00") for i in range(30)]
     capped = render_index(categories, {}, fresh_skills=many)
@@ -354,23 +352,22 @@ def check_fresh_section() -> None:
           capped.count('class="fresh__tile"') == templates.FRESH_RAIL_LIMIT)
     check("the cap keeps the newest end of the list, not an arbitrary slice",
           ">s00</span>" in capped and ">s29</span>" not in capped)
-    check("a capped burst still spaces every shown tile evenly around the "
-          "ring — the cap trims the list before the angle math runs, not after",
-          'style="--fresh-angle: 0deg"' in capped
-          and 'style="--fresh-angle: 330deg"' in capped)
+    check("a capped dozen splits evenly either side of centre — the cap "
+          "trims the list before the offset math runs, not after",
+          'style="--cf-offset: 0"' in capped
+          and 'style="--cf-offset: 6"' in capped
+          and 'style="--cf-offset: -1"' in capped)
 
-    check("_fresh_ring_radius: a single tile orbits nothing — it just turns "
-          "in place",
-          templates._fresh_ring_radius(1) == 0 and templates._fresh_ring_radius(0) == 0)
-    check("_fresh_ring_radius: a small burst clamps to the floor rather than "
-          "collapsing toward the ring's centre",
-          templates._fresh_ring_radius(2) == templates.FRESH_RING_RADIUS_MIN)
-    check("_fresh_ring_radius: a full rail clamps to the ceiling rather than "
-          "swinging past the section's available width",
-          templates._fresh_ring_radius(templates.FRESH_RAIL_LIMIT) == templates.FRESH_RING_RADIUS_MAX)
-    check("_fresh_ring_radius: a mid-sized ring lands strictly between the "
-          "two clamps under its own math, not pinned to either one",
-          templates.FRESH_RING_RADIUS_MIN < templates._fresh_ring_radius(6) < templates.FRESH_RING_RADIUS_MAX)
+    check("_fresh_signed_offset: a single tile has nothing to be offset from",
+          templates._fresh_signed_offset(0, 1) == 0)
+    check("_fresh_signed_offset: with only two tiles, the second sits one "
+          "slot over rather than wrapping to look identical to the first",
+          templates._fresh_signed_offset(0, 2) == 0
+          and templates._fresh_signed_offset(1, 2) == 1)
+    check("_fresh_signed_offset: the tile just past halfway in a full dozen "
+          "wraps to the short side instead of swinging the long way round",
+          templates._fresh_signed_offset(7, 12) == -5
+          and templates._fresh_signed_offset(11, 12) == -1)
 
 
 def main() -> None:

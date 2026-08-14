@@ -1,6 +1,6 @@
 /*
  * La Boulangerie TBaguette — site.js
- * Vanilla JS, no dependencies. Seven independent features, each a no-op if
+ * Vanilla JS, no dependencies. Eight independent features, each a no-op if
  * its markup isn't on the current page:
  *   - theme toggle   (every page)
  *   - search/filter  (landing page only)
@@ -12,6 +12,8 @@
  *   - freshness      (every page — re-checks each New/Updated badge's
  *                      48h window against the visitor's own clock, and
  *                      formats the fresh rail's timestamps as "3 hours ago")
+ *   - fresh coverflow (landing page only — steps which rail tile is centred
+ *                       on a timer; pauses on hover/focus)
  *   - site update check (every page — polls docs/version.txt every 10-12s;
  *                         on a mismatch, shows a reload-only modal)
  *   - post-reload scroll restore (every page — companion to the update
@@ -171,6 +173,87 @@
         // Leave the server-rendered absolute date in place.
       }
     });
+  }
+
+  // -------------------------------------------------------------------
+  // Fresh coverflow — the browser half of the "Fresh from the oven" rail.
+  //
+  // templates.py renders every tile with a --cf-offset custom property
+  // (its signed distance from the rail's centre) and styles.css turns that
+  // into position, tilt, scale, and opacity — but only one offset layout
+  // is ever "current", and which one that is changes on a clock, the one
+  // thing CSS alone can't keep on a static site. This is that clock: every
+  // FRESH_COVERFLOW_STEP_MS it advances which tile is centred and rewrites
+  // every tile's --cf-offset to match. freshSignedOffset() restates
+  // templates.py's _fresh_signed_offset() rather than sharing it — there is
+  // no build step joining this file to that one — so the two are kept
+  // deliberately parallel; a change to one's wraparound rule needs the
+  // same change made here.
+  //
+  // A no-JS visitor never runs this function and simply keeps the offsets
+  // the server rendered — a real, if motionless, coverflow, not a fallback.
+  // -------------------------------------------------------------------
+
+  var FRESH_COVERFLOW_STEP_MS = 3000;
+
+  function freshSignedOffset(index, activeIndex, count) {
+    if (count <= 1) return 0;
+    var diff = ((index - activeIndex) % count + count) % count;
+    return diff > count / 2 ? diff - count : diff;
+  }
+
+  function initFreshCoverflow() {
+    var rail = document.querySelector('[data-fresh-coverflow]');
+    if (!rail) return;
+    var tiles = toArray(rail.querySelectorAll('.fresh__tile'));
+    if (tiles.length < 2) return;
+
+    // The same three conditions styles.css gates the coverflow rule
+    // behind: this function only ever drives a property that rule reads,
+    // so running it where that rule never applies would just rewrite
+    // --cf-offset every few seconds for nothing to consume.
+    if (prefersReducedMotion()) return;
+    if (window.matchMedia && window.matchMedia('(max-width: 639px)').matches) return;
+    if (window.matchMedia && window.matchMedia('(forced-colors: active)').matches) return;
+
+    var count = tiles.length;
+    var activeIndex = 0;
+    var paused = false;
+
+    function layout() {
+      tiles.forEach(function (tile, i) {
+        tile.style.setProperty('--cf-offset', freshSignedOffset(i, activeIndex, count));
+      });
+    }
+
+    function step() {
+      if (paused) return;
+      activeIndex = (activeIndex + 1) % count;
+      layout();
+    }
+
+    // WCAG 2.2.2: anything that moves on its own for more than five seconds
+    // needs a way to stop it. Hovering or tabbing into the rail is that way
+    // — the interval keeps firing but simply stops rewriting offsets, so
+    // resuming afterwards continues from the same tile rather than jumping.
+    rail.addEventListener('mouseenter', function () { paused = true; });
+    rail.addEventListener('mouseleave', function () { paused = false; });
+    rail.addEventListener('focusin', function (event) {
+      paused = true;
+      // Recentre on whichever tile actually received focus, rather than
+      // leaving it frozen wherever the step timer last put it — a keyboard
+      // visitor's own tile should be the flat, full-size, opaque one, not
+      // whichever one the clock happened to choose.
+      var index = tiles.indexOf(event.target);
+      if (index !== -1 && index !== activeIndex) {
+        activeIndex = index;
+        layout();
+      }
+    });
+    rail.addEventListener('focusout', function () { paused = false; });
+
+    layout();
+    window.setInterval(step, FRESH_COVERFLOW_STEP_MS);
   }
 
   // -------------------------------------------------------------------
@@ -582,8 +665,13 @@
 
   initThemeToggle();
   // Freshness runs before search: it can remove whole rail tiles, and
-  // initSearch() counts cards to build its "showing all N" status.
+  // initSearch() counts cards to build its "showing all N" status. It also
+  // has to run before initFreshCoverflow(), for the same shape of reason —
+  // the coverflow's tile count needs to be whatever survived expiry, not
+  // whatever the server happened to render before this visitor's clock had
+  // a say.
   initFreshness();
+  initFreshCoverflow();
   initRelativeTimes();
   initSearch();
   initInstallCopy();

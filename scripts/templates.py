@@ -39,7 +39,6 @@ vocabulary for "make this safe to interpolate" across both halves of the
 generator.
 """
 
-import math
 from html import escape as _escape_html_impl
 
 # ---------------------------------------------------------------------------
@@ -54,17 +53,6 @@ _CATEGORY_ICONS = ("icon-wheat", "icon-crust", "icon-grain")
 # Most tiles the "Fresh from the oven" rail will show at once. See
 # _render_fresh_section() for why it is capped rather than exhaustive.
 FRESH_RAIL_LIMIT = 12
-
-# The rail doubles as a slowly-revolving 3D ring wherever the visitor's
-# browser and stated preferences allow it (see styles.css, the media query
-# gating .fresh__ring). These three constants are the geometry and timing
-# CSS builds that ring from — computed once here in Python, in one place,
-# rather than re-derived in CSS with calc() and custom properties, since
-# Python already has real trigonometry and CSS var() arithmetic does not.
-FRESH_TILE_WIDTH_PX = 208  # matches the 13rem tile footprint in styles.css
-FRESH_RING_RADIUS_MIN = 130
-FRESH_RING_RADIUS_MAX = 240
-FRESH_CAROUSEL_CYCLE_S = 36  # one full revolution; must match styles.css
 
 _THEME_STORAGE_KEY = "tbaguette-theme"
 
@@ -414,30 +402,21 @@ def _render_relative_time(at: str | None) -> str:
     )
 
 
-def _fmt_deg_or_s(value: float) -> str:
-    """A float as a plain CSS number: at most 2 decimals, no trailing zeros,
-    and no `-0` — round(-0.0, 2) is still -0.0 in Python, and `-0deg`/`-0s`
-    in generated markup would read as a bug to whoever finds it in the
-    source. `+ 0.0` folds -0.0 to 0.0 (IEEE 754: -0.0 + 0.0 == 0.0)."""
-    return f"{round(value, 2) + 0.0:g}"
+def _fresh_signed_offset(index: int, count: int) -> int:
+    """A tile's position relative to the rail's centre, wrapping the short
+    way around rather than counting strictly left-to-right.
 
-
-def _fresh_ring_radius(count: int) -> int:
-    """How far the ring's tiles sit from its centre, in px.
-
-    A single tile has nothing to orbit — it just turns in place, so radius 0
-    is correct, not a degenerate case. From two tiles up, the radius is
-    whatever keeps adjacent tile edges just clear of each other on a circle
-    of `count` evenly-spaced slots (half the tile width, over tan of half the
-    slot angle). Clamped on both ends: the lower bound keeps a small burst
-    (2-3 tiles) from collapsing to a sliver: the upper bound keeps a large
-    one (FRESH_RAIL_LIMIT tiles) from swinging wider than the section has
-    room for. Real carousels overlap slightly in 3D as they turn — that
-    reads as depth, not as a layout bug."""
+    Split evenly around zero — roughly the first half of `shown` lands at
+    0, 1, 2, ... to the right, the second half at -1, -2, ... to the left —
+    so the initial paint (before any JS ever runs, and forever for visitors
+    without it) already reads as a centred fan rather than everything queued
+    up on one side. site.js's coverflow step recomputes this exact formula
+    at runtime as the active tile advances; keeping the two in sync is why
+    it is a plain, restatable rule rather than something baked only here."""
     if count <= 1:
         return 0
-    raw = FRESH_TILE_WIDTH_PX / (2 * math.tan(math.pi / count))
-    return max(FRESH_RING_RADIUS_MIN, min(FRESH_RING_RADIUS_MAX, round(raw)))
+    half = count // 2
+    return index if index <= half else index - count
 
 
 def _render_fresh_tile(skill: dict, base_path: str = "", index: int = 0, count: int = 1) -> str:
@@ -449,30 +428,17 @@ def _render_fresh_tile(skill: dict, base_path: str = "", index: int = 0, count: 
     data-fresh-at sits on the tile itself, so site.js removing a stale element
     takes the whole tile rather than leaving a headless entry behind.
 
-    The visible card is a nested .fresh__face, not the <a> itself: wherever
-    the 3D ring is active, .fresh__tile becomes an invisible placement anchor
-    (position + this tile's slot angle) and .fresh__face is what actually
-    turns, dims, and sharpens as it passes through the front of the ring —
-    two different jobs that a single element can't hold at once, since an
-    element's animated transform always replaces any static transform it also
-    carries (see styles.css). --fresh-angle is inert everywhere that doesn't
-    reference it via var(), so this markup is identical whether or not the 3D
-    rule ends up applying.
-
-    animation-delay is set inline in real seconds (not a var()) because it's
-    harmless even where no animation ever runs — an unused delay on a
-    dormant animation-name paints nothing — so it doesn't need the same
-    conditional indirection as the angle."""
+    --cf-offset is inert everywhere that doesn't reference it via var(), so
+    this markup renders identically whether or not the coverflow rule in
+    styles.css ends up applying — a reduced-motion, narrow, or forced-colors
+    visitor gets the same tile, just laid out by the flat rail instead."""
     at = skill.get("change_at")
     stamp = f' data-fresh-at="{escape_html(at)}"' if at else ""
-    angle_deg = _fmt_deg_or_s(index * 360 / count if count else 0)
-    delay_s = _fmt_deg_or_s(-(index / count) * FRESH_CAROUSEL_CYCLE_S if count else 0)
-    return f"""<a class="fresh__tile" href="{_skill_href(skill, base_path)}"{stamp} style="--fresh-angle: {angle_deg}deg">
-  <span class="fresh__face" style="animation-delay: {delay_s}s">
-    {_render_change_badge(skill.get('change_status'))}
-    <span class="fresh__name">{escape_html(skill['name'])}</span>
-    {_render_relative_time(at)}
-  </span>
+    offset = _fresh_signed_offset(index, count)
+    return f"""<a class="fresh__tile" href="{_skill_href(skill, base_path)}"{stamp} style="--cf-offset: {offset}">
+  {_render_change_badge(skill.get('change_status'))}
+  <span class="fresh__name">{escape_html(skill['name'])}</span>
+  {_render_relative_time(at)}
 </a>"""
 
 
@@ -489,18 +455,16 @@ def _render_fresh_section(fresh_skills: list[dict], base_path: str = "") -> str:
     The cap only bounds this rail: the badges themselves are exhaustive, so
     anything trimmed here is still marked in the grid below.
 
-    The .fresh__ring wrapper carries the ring's one shared radius as
-    --fresh-radius; each tile inside carries its own --fresh-angle (see
-    _render_fresh_tile). Both are plain custom properties, not scoped to any
-    media query themselves, so a no-3D visitor (reduced motion, a narrow
-    viewport, forced-colors) gets exactly the flat scrolling rail this
-    section has always rendered — the ring only turns where styles.css's
-    gated rule opts in and reads them."""
+    Each tile carries its own --cf-offset (see _render_fresh_tile) — a plain
+    custom property, not scoped to any media query itself, so a no-coverflow
+    visitor (reduced motion, a narrow viewport, forced-colors, or no JS at
+    all) gets exactly the flat scrolling rail this section has always
+    rendered. The coverflow only forms where styles.css's gated rule opts in
+    and reads it."""
     if not fresh_skills:
         return ""
     shown = fresh_skills[:FRESH_RAIL_LIMIT]
     count = len(shown)
-    radius = _fresh_ring_radius(count)
     tiles = _join(*(
         _render_fresh_tile(skill, base_path, index=i, count=count)
         for i, skill in enumerate(shown)
@@ -511,10 +475,8 @@ def _render_fresh_section(fresh_skills: list[dict], base_path: str = "") -> str:
     <h2 class="fresh__title" id="fresh-title">Fresh from the oven</h2>
     <span class="tag fresh__tag">Last 48 hours</span>
   </div>
-  <div class="fresh__rail">
-    <div class="fresh__ring" style="--fresh-radius: {radius}px">
+  <div class="fresh__rail" data-fresh-coverflow>
 {tiles}
-    </div>
   </div>
 </section>"""
 
