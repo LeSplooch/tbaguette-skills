@@ -236,7 +236,7 @@ class VerifyInstallStrings:
     every_platform_heading: str
     every_platform_intro_html: str
     posix_intro: str
-    powershell_intro: str
+    powershell_intro_html: str
     powershell_caveat_html: str
     cmd_intro: str
     cmd_caveat_html: str
@@ -330,7 +330,7 @@ ENGLISH_VERIFY_INSTALL_STRINGS = VerifyInstallStrings(
         "there, <code>git clone</code> if it isn't."
     ),
     posix_intro="The POSIX command is the one machine-verified above, across four shells:",
-    powershell_intro=(
+    powershell_intro_html=(
         "The PowerShell command carries the exact same logic over to "
         "<code>Test-Path</code> and native cmdlets:"
     ),
@@ -1122,7 +1122,7 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
     <p>{v.every_platform_intro_html}</p>
     <p>{escape_html(v.posix_intro)}</p>
     <pre class="prose-code-block" dir="ltr"><code>{escape_html(INSTALL_COMMAND)}</code></pre>
-    <p>{v.powershell_intro}</p>
+    <p>{v.powershell_intro_html}</p>
     <pre class="prose-code-block" dir="ltr"><code>{escape_html(INSTALL_COMMAND_POWERSHELL)}</code></pre>
     <p>{v.powershell_caveat_html}</p>
     <p>{escape_html(v.cmd_intro)}</p>

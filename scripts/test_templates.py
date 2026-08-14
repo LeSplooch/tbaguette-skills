@@ -375,13 +375,27 @@ def check_i18n_verify_install_page() -> None:
     from python_highlight import highlight_source
 
     fr = locales.get_locale("fr")
+    ar = locales.get_locale("ar")
     highlighted = highlight_source("x = 1\n")
 
     html_en = render_verify_install_page(highlighted, FIXTURE["categories"], base_path="")
     check("default verify-install page still shows the real English heading (no regression)",
           "The install command only touches one folder" in html_en)
-    check("default verify-install page's code blocks force dir='ltr' regardless of page language",
-          html_en.count('dir="ltr"') >= 1)
+    check("default verify-install page has exactly 5 dir='ltr' occurrences -- the <html> tag "
+          "itself (English is ltr) plus the 4 code-block/pre elements this task adds "
+          "(the code-block div and 3 command <pre> blocks)",
+          html_en.count('dir="ltr"') == 5)
+
+    html_ar = render_verify_install_page(
+        highlighted, FIXTURE["categories"], base_path="", locale=ar,
+    )
+    check("Arabic verify-install page's own <html> tag is dir='rtl', not dir='ltr'",
+          '<html lang="ar" dir="rtl">' in html_ar)
+    check("...but its code blocks still force dir='ltr' -- exactly 4 occurrences, which since "
+          "the <html> tag itself is dir='rtl' here can only be coming from the code-block/pre "
+          "elements, proving they're locale-independent rather than accidentally inherited from "
+          "an English-only page",
+          html_ar.count('dir="ltr"') == 4)
 
     html_fr = render_verify_install_page(
         highlighted, FIXTURE["categories"], base_path="", locale=fr,
