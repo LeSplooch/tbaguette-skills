@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>debugging-concurrency — Debugging and performance — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a failure depends on timing, thread or task interleaving, or load, when a test passes alone but fails in parallel, when a hang…">
+<title>debugging-concurrency — Depuración y rendimiento — TBaguette’s Atelier</title>
+<meta name="description" content="Úsala cuando un fallo depende de los tiempos, del entrelazado de hilos o tareas, o de la carga…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="debugging-concurrency — Debugging and performance — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a failure depends on timing, thread or task interleaving, or load, when a test passes alone but fails in parallel, when a hang…">
+<meta property="og:title" content="debugging-concurrency — Depuración y rendimiento — TBaguette’s Atelier">
+<meta property="og:description" content="Úsala cuando un fallo depende de los tiempos, del entrelazado de hilos o tareas, o de la carga…">
 <link rel="canonical" href="/tbaguette-skills/es/skills/debugging-concurrency/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/debugging-concurrency/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/debugging-concurrency/">
@@ -34,12 +34,12 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="¡Copiado!"
+      data-i18n-no-match="Ninguna habilidad coincide."
+      data-i18n-modal-title="Nueva versión disponible"
+      data-i18n-modal-body="Esta página se ha actualizado. Recárgala para ver la última versión."
+      data-i18n-modal-reload="Recargar">
+<a class="skip-link" href="#main">Saltar al contenido</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -49,11 +49,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T05:08:28+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T05:08:28Z UTC</time>
+      <span class="site-header__updated-label">Actualizado</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T05:53:41+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T05:53:41Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Español</summary>
+  <summary class="language-switcher__summary">Idioma: Español</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/debugging-concurrency/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/debugging-concurrency/">Français</a></li>
@@ -74,9 +74,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Cambiar al tema claro"
+              data-i18n-theme-light="Cambiar al tema claro"
+              data-i18n-theme-dark="Cambiar al tema oscuro">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -84,10 +84,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/es/">Home</a>
+<nav class="container breadcrumb" aria-label="Ruta de navegación">
+  <a href="/tbaguette-skills/es/">Inicio</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/es/#debugging-and-performance">Debugging and performance</a>
+  <a href="/tbaguette-skills/es/#debugging-and-performance">Depuración y rendimiento</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">debugging-concurrency</span>
 </nav>
@@ -96,9 +96,9 @@
     <h1 class="skill-article__title">debugging-concurrency</h1>
     
   </div>
-  <span class="tag skill-article__tag">Debugging and performance</span>
-  <p class="lede">Use when a failure depends on timing, thread or task interleaving, or load, when a test passes alone but fails in parallel, when a hang, deadlock, livelock, lost update, or stale read appears under concurrency, when adding logging or a debugger makes the symptom disappear, or when a thread dump or hung process must be read. Covers races, happens-before reasoning, stress reproduction, and deterministic replay.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into Español yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">Depuración y rendimiento</span>
+  <p class="lede">Úsala cuando un fallo depende de los tiempos, del entrelazado de hilos o tareas, o de la carga, cuando una prueba pasa sola pero falla en paralelo, cuando aparece un cuelgue, un interbloqueo, un livelock, una actualización perdida o una lectura obsoleta en un contexto concurrente, cuando añadir logs o un depurador hace desaparecer el síntoma, o cuando hay que leer un volcado de hilos o un proceso colgado. Cubre las condiciones de carrera, el razonamiento happens-before, la reproducción bajo estrés y la repetición determinista.</p>
+</div><p class="translation-banner" role="note">Esta página todavía no se ha traducido al Español —se muestra la versión en inglés.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>A concurrency bug is a missing happens-before edge. The symptom is timing; the defect is an ordering constraint you assumed and never established, and no amount of reasoning about &quot;what usually happens first&quot; will find it.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Behavior changes with load, core count, machine speed, or run order</li><li>A hang with no crash, or a value that is occasionally wrong with no error anywhere</li><li>The symptom disappears under a debugger, a profiler, or added logging</li><li>A test passes alone and fails in parallel, or fails only in CI</li><li>A dynamic race detector or thread sanitizer reported something on a passing run</li></ul>
@@ -124,60 +124,60 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Bug disappears under the debugger</td><td>breakpoints and single-stepping serialize the threads, closing the window</td></tr><tr><td>Cannot reproduce after adding logging</td><td>the log call's own synchronization created the missing edge by accident</td></tr><tr><td>&quot;Fixed&quot; but recurs in a month</td><td>one call site fixed; the same check-then-act shape remains at the others</td></tr><tr><td>Only reproduces in production</td><td>production has more cores, more load, and a different scheduler than the developer machine</td></tr><tr><td>Concurrent collection used, updates still lost</td><td>each operation is atomic; the sequence of two is not</td></tr><tr><td>Deadlock only under load</td><td>the rare path that takes the locks in the other order needs contention to be visible</td></tr><tr><td>Thread dump shows nothing wrong</td><td>one dump cannot distinguish stuck from busy; three dumps can</td></tr><tr><td>Race detector output dismissed</td><td>it reports missing edges on runs that happen to produce correct output — that is the point</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's probably just a flaky test&quot; as a conclusion rather than a hypothesis</li><li>&quot;That can't happen, the other thread always finishes first&quot;</li><li>Adding a sleep, a retry, or a longer timeout to make a test green</li><li>Concluding it is fixed because it passed 10 times, when the pre-fix rate was 1 in 500</li><li>Reasoning about interleavings without naming the shared state and its invariant</li><li>Treating a race-detector warning on a passing run as noise</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/es/skills/reading-stack-traces/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="Navegación entre habilidades"><a class="prevnext__link" href="/tbaguette-skills/es/skills/reading-stack-traces/">
+  <span class="prevnext__label">Anterior</span>
   <span class="prevnext__name">← reading-stack-traces</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/es/skills/observing-production-safely/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">Siguiente</span>
   <span class="prevnext__name">observing-production-safely →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Debugging and performance</h2>
+  <h2 class="see-also__title">Más en Depuración y rendimiento</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/es/skills/reproducing-bugs/">
       <span class="see-also__name">reproducing-bugs</span>
-      <span class="see-also__summary">Use when a bug report must be turned into a failure that happens on demand, when a defect cannot be reproduced locally…</span>
+      <span class="see-also__summary">Úsala cuando hay que convertir un informe de error en un fallo que ocurre a voluntad, cuando un defecto no se reproduce en local…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/es/skills/bisecting-failures/">
       <span class="see-also__name">bisecting-failures</span>
-      <span class="see-also__summary">Use when something worked before and is broken now, when the culprit is one of many commits, config keys, dependency upgrades, data rows…</span>
+      <span class="see-also__summary">Úsala cuando algo funcionaba antes y ahora está roto, cuando el culpable es uno entre muchos commits, claves de configuración…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/es/skills/reading-stack-traces/">
       <span class="see-also__name">reading-stack-traces</span>
-      <span class="see-also__summary">Use when a crash, exception, panic, traceback, core dump, or error log must be interpreted…</span>
+      <span class="see-also__summary">Úsala cuando hay que interpretar una caída, una excepción, un panic, un traceback, un volcado de memoria o un log de error…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/es/skills/observing-production-safely/">
       <span class="see-also__name">observing-production-safely</span>
-      <span class="see-also__summary">Use when diagnosing a live system that users depend on, when the only evidence sits behind production data, when enabling a debug flag…</span>
+      <span class="see-also__summary">Úsala cuando se diagnostica un sistema en marcha del que dependen usuarios…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/es/skills/performance-profiling/">
       <span class="see-also__name">performance-profiling</span>
-      <span class="see-also__summary">Use when something is slow and the cause is unknown, when an optimization needs proof that it helped, when latency, throughput…</span>
+      <span class="see-also__summary">Úsala cuando algo va lento y no se sabe por qué, cuando una optimización tiene que demostrar que ha servido de algo…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/es/skills/finding-resource-leaks/">
       <span class="see-also__name">finding-resource-leaks</span>
-      <span class="see-also__summary">Use when memory, file descriptors, sockets, threads, connections, timers, or event subscriptions grow without bound…</span>
+      <span class="see-also__summary">Úsala cuando la memoria, los descriptores de archivo, los sockets, los hilos, las conexiones…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> alberga TBaguette&rsquo;s Atelier —las decisiones de criterio que se juegan entre el ticket y el commit, ordenadas como un banco de trabajo en condiciones.</p>
+    <nav aria-label="Categorías">
+      <p class="site-footer__nav-title">Categorías</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/es/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/es/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/es/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/es/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/es/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/es/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/es/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/es/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/es/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/es/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/es/#ui-and-design">Interfaz y diseño</a></li>
+<li><a href="/tbaguette-skills/es/#judgment-and-meta">Criterio y meta</a></li>
+<li><a href="/tbaguette-skills/es/#reading-code">Lectura de código</a></li>
+<li><a href="/tbaguette-skills/es/#landing-changes">Integración de cambios</a></li>
+<li><a href="/tbaguette-skills/es/#testing">Pruebas</a></li>
+<li><a href="/tbaguette-skills/es/#debugging-and-performance">Depuración y rendimiento</a></li>
+<li><a href="/tbaguette-skills/es/#designing-systems">Diseño de sistemas</a></li>
+<li><a href="/tbaguette-skills/es/#security">Seguridad (defensiva)</a></li>
+<li><a href="/tbaguette-skills/es/#communicating">Comunicación</a></li>
+<li><a href="/tbaguette-skills/es/#environment-and-tooling">Entorno y herramientas</a></li>
       </ul>
     </nav>
   </div>

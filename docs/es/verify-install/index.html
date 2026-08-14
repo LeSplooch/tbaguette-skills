@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The install command only touches one folder — TBaguette’s Atelier</title>
-<meta name="description" content="How the TBaguette install command is verified never to alter, overwrite, or merge into any other skill or plugin you already have — with the actual test source, not just a claim.">
+<title>El comando de instalación solo toca una carpeta — TBaguette’s Atelier</title>
+<meta name="description" content="Cómo se verifica que el comando de instalación de TBaguette nunca altera, sobrescribe ni se fusiona con ninguna otra habilidad o plugin que ya tengas, con el código real de la prueba y no solo una afirmación.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="The install command only touches one folder — TBaguette’s Atelier">
-<meta property="og:description" content="How the TBaguette install command is verified never to alter, overwrite, or merge into any other skill or plugin you already have — with the actual test source, not just a claim.">
+<meta property="og:title" content="El comando de instalación solo toca una carpeta — TBaguette’s Atelier">
+<meta property="og:description" content="Cómo se verifica que el comando de instalación de TBaguette nunca altera, sobrescribe ni se fusiona con ninguna otra habilidad o plugin que ya tengas, con el código real de la prueba y no solo una afirmación.">
 <link rel="canonical" href="/tbaguette-skills/es/verify-install/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/verify-install/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/verify-install/">
@@ -34,12 +34,12 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload">
-<a class="skip-link" href="#main">Skip to content</a>
+      data-i18n-copied="¡Copiado!"
+      data-i18n-no-match="Ninguna habilidad coincide."
+      data-i18n-modal-title="Nueva versión disponible"
+      data-i18n-modal-body="Esta página se ha actualizado. Recárgala para ver la última versión."
+      data-i18n-modal-reload="Recargar">
+<a class="skip-link" href="#main">Saltar al contenido</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -49,11 +49,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T05:08:28+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T05:08:28Z UTC</time>
+      <span class="site-header__updated-label">Actualizado</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T05:53:41+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T05:53:41Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: Español</summary>
+  <summary class="language-switcher__summary">Idioma: Español</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/verify-install/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/verify-install/">Français</a></li>
@@ -74,9 +74,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="Cambiar al tema claro"
+              data-i18n-theme-light="Cambiar al tema claro"
+              data-i18n-theme-dark="Cambiar al tema oscuro">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -84,47 +84,47 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/es/">Home</a>
+<nav class="container breadcrumb" aria-label="Ruta de navegación">
+  <a href="/tbaguette-skills/es/">Inicio</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <span class="breadcrumb__current" aria-current="page">Install verification</span>
+  <span class="breadcrumb__current" aria-current="page">Verificación de la instalación</span>
 </nav>
 <article class="container skill-article">
   <div class="skill-article__head">
-    <h1 class="skill-article__title">The install command only touches one folder</h1>
-    <p class="lede">A <code>git clone</code> into <code>~/.claude/skills/TBaguette</code> sits right next to whatever else already lives under <code>~/.claude/skills/</code> — other skills, other plugins, things you already trust. It's a fair question whether installing this one could touch any of that. It can't. This page is why, and the actual test that proves it, not a claim restated in different words.</p>
+    <h1 class="skill-article__title">El comando de instalación solo toca una carpeta</h1>
+    <p class="lede">Un <code>git clone</code> en <code>~/.claude/skills/TBaguette</code> aterriza justo al lado de todo lo que ya vive bajo <code>~/.claude/skills/</code>: otras habilidades, otros plugins, cosas en las que ya confías. Es una pregunta legítima: ¿podría esta instalación tocar algo de eso? No puede. Esta página explica por qué y enseña la prueba real que lo demuestra, no la misma afirmación dicha con otras palabras.</p>
   </div>
 
   <div class="prose">
-    <h2 id="what-it-does">What the command does</h2>
-    <p>The published command checks for an existing clone before doing anything: if <code>~/.claude/skills/TBaguette/.git</code> already exists, it runs <code>git pull</code> in place; otherwise it runs <code>git clone</code>. The first run installs. Every run after that updates. Neither branch ever reads or writes anywhere else.</p>
+    <h2 id="what-it-does">Qué hace el comando</h2>
+    <p>El comando publicado comprueba si ya existe un clon antes de hacer nada: si <code>~/.claude/skills/TBaguette/.git</code> ya está ahí, ejecuta <code>git pull</code> ahí mismo; si no, ejecuta <code>git clone</code>. La primera ejecución instala. Todas las siguientes actualizan. Ninguna de las dos ramas lee ni escribe en ningún otro lugar.</p>
 
-    <h2 id="why-it-cant-reach-anything-else">Why it can&#x27;t reach anything else</h2>
-    <p>Both branches are scoped to the single path <code>~/.claude/skills/TBaguette</code> by construction — a <code>git clone</code> or <code>git pull</code> targeting that path has no mechanism to write outside it. The one case worth naming explicitly is a real collision: something else already sitting at that exact path, that isn't a clone of this repo. <code>git clone</code> refuses outright when its target already exists and is non-empty — it does not merge, does not overwrite, does not ask. It fails loudly and leaves whatever was there exactly as it was. That refusal is git's own behavior, not something this project added on top.</p>
+    <h2 id="why-it-cant-reach-anything-else">Por qué no puede alcanzar nada más</h2>
+    <p>Las dos ramas están acotadas por construcción a una única ruta, <code>~/.claude/skills/TBaguette</code>: un <code>git clone</code> o un <code>git pull</code> que apunta ahí no tiene ningún mecanismo para escribir fuera. El único caso que merece nombrarse de forma explícita es una colisión de verdad: otra cosa ocupando ya exactamente esa ruta sin ser un clon de este repositorio. <code>git clone</code> se niega en redondo cuando su destino ya existe y no está vacío: no fusiona, no sobrescribe, no pregunta. Falla a las claras y deja lo que hubiera allí exactamente como estaba. Esa negativa es el comportamiento propio de git, no algo que este proyecto haya añadido por encima.</p>
 
-    <h2 id="four-scenarios">Four scenarios, not one</h2>
-    <p>A single happy-path test would only prove the command works when nothing is in its way, which is the one case nobody actually worried about. The real test runs four scenarios, each against a throwaway <code>HOME</code> directory seeded with fake sibling skills and plugins alongside <code>TBaguette</code>, checksummed before and after:</p>
+    <h2 id="four-scenarios">Cuatro escenarios, no uno</h2>
+    <p>Una sola prueba del camino feliz solo demostraría que el comando funciona cuando nada se le cruza, que es justo el caso que no preocupaba a nadie. La prueba de verdad recorre cuatro escenarios, cada uno contra un directorio <code>HOME</code> desechable, sembrado de habilidades y plugins falsos junto a <code>TBaguette</code>, con suma de verificación antes y después:</p>
     <ul>
-      <li><strong>A — fresh install.</strong> Nothing at that path yet. Confirms the clone succeeds and the siblings are untouched.</li>
-      <li><strong>B — running it again.</strong> Continues from A. Confirms the second run updates in place (<code>git pull</code>) instead of erroring the way a bare <code>git clone</code> would, and that the siblings are still untouched.</li>
-      <li><strong>C — an empty directory already named <code>TBaguette</code>.</strong> Confirms <code>git clone</code> is willing to use an empty directory that happens to already exist, and that siblings survive.</li>
-      <li><strong>D — the real collision.</strong> A non-empty, non-git directory already sitting at that exact path, with its own unrelated content. Confirms the command refuses rather than merging into it — and that both the colliding directory's own content and every sibling skill survive the refusal.</li>
+      <li><strong>A — instalación desde cero.</strong> Todavía no hay nada en esa ruta. Confirma que el clon funciona y que los vecinos quedan intactos.</li>
+      <li><strong>B — volver a ejecutarlo.</strong> Continúa desde A. Confirma que la segunda ejecución actualiza en el mismo sitio (<code>git pull</code>) en lugar de dar error, como haría un <code>git clone</code> a secas, y que los vecinos siguen intactos.</li>
+      <li><strong>C — un directorio vacío que ya se llama <code>TBaguette</code>.</strong> Confirma que <code>git clone</code> acepta usar un directorio vacío que resulta que ya existe, y que los vecinos sobreviven.</li>
+      <li><strong>D — la colisión de verdad.</strong> Un directorio no vacío y ajeno a git ocupando ya exactamente esa ruta, con su propio contenido sin relación alguna. Confirma que el comando se niega en lugar de fusionarse dentro, y que tanto el contenido del directorio en colisión como todas las habilidades vecinas sobreviven a esa negativa.</li>
     </ul>
-    <p>All twelve checks across those four scenarios pass before this site is ever deployed — plus twelve more that run the exact command string published above, word for word, through every POSIX-ish shell this project's own build machine has installed (bash, zsh, fish, and sh), rather than trusting that this page's Python reimplementation of it stayed faithful to what actually ships. <code>run_tests.py</code> runs all twenty-four alongside everything else, not as a separate manual step someone has to remember.</p>
+    <p>Las doce comprobaciones de esos cuatro escenarios pasan antes de que este sitio llegue a desplegarse —más otras doce que ejecutan la cadena de comando exacta publicada arriba, palabra por palabra, en todos los shells de tipo POSIX que hay instalados en la máquina de build de este proyecto (bash, zsh, fish y sh), en vez de fiarse de que la reimplementación en Python que hace esta página siga siendo fiel a lo que de verdad se publica. <code>run_tests.py</code> ejecuta las veinticuatro junto con todo lo demás, no como un paso manual aparte que alguien tenga que recordar.</p>
 
-    <h2 id="every-platform">Every platform, not just one</h2>
-    <p>The install frame above shows two commands, not one: a POSIX command for macOS, Linux, and anyone on Windows already inside WSL or Git Bash, and a PowerShell command for everyone else on Windows — which is most Windows users, since PowerShell has been the default terminal since Windows 10. Both do the exact same thing, in the same order, for the same reason: check for an existing clone, <code>git pull</code> if it's there, <code>git clone</code> if it isn't.</p>
-    <p>The POSIX command is the one machine-verified above, across four shells:</p>
+    <h2 id="every-platform">Todas las plataformas, no solo una</h2>
+    <p>El recuadro de instalación de arriba muestra dos comandos, no uno: uno POSIX para macOS, Linux y para quien en Windows ya esté dentro de WSL o Git Bash, y otro de PowerShell para el resto de usuarios de Windows —es decir, para la mayoría, porque PowerShell es el terminal predeterminado desde Windows 10. Los dos hacen exactamente lo mismo, en el mismo orden y por el mismo motivo: comprobar si ya hay un clon, <code>git pull</code> si está, <code>git clone</code> si no.</p>
+    <p>El comando POSIX es el que se verifica automáticamente más arriba, en cuatro shells:</p>
     <pre class="prose-code-block" dir="ltr"><code>[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code></pre>
-    <p>The PowerShell command carries the exact same logic over to <code>Test-Path</code> and native cmdlets:</p>
+    <p>El comando de PowerShell traslada exactamente la misma lógica a <code>Test-Path</code> y a los cmdlets nativos:</p>
     <pre class="prose-code-block" dir="ltr"><code>if (Test-Path &quot;$HOME\.claude\skills\TBaguette\.git&quot; -PathType Container) { git -C &quot;$HOME\.claude\skills\TBaguette&quot; pull } else { git clone https://github.com/LeSplooch/tbaguette-skills.git &quot;$HOME\.claude\skills\TBaguette&quot; }</code></pre>
-    <p>That one isn't cross-checked by an automated test the way the POSIX command is — this project's own build has no PowerShell runtime to run it against — so its correctness rests on <code>Test-Path</code>, <code>git -C</code>, and <code>git clone</code> being ordinary, well-documented behavior, not on an executed proof. If that's not good enough, that's a fair position to hold; the honest answer is "verified by careful construction," not "verified," for this one specifically.</p>
-    <p>And for Command Prompt, which nothing in the install frame targets but which still exists on every Windows machine:</p>
+    <p>Ese no lo contrasta ninguna prueba automatizada, a diferencia del comando POSIX —el build de este proyecto no tiene ningún runtime de PowerShell contra el que ejecutarlo—, así que su corrección descansa en que <code>Test-Path</code>, <code>git -C</code> y <code>git clone</code> se comportan de forma ordinaria y bien documentada, no en una demostración ejecutada. Si eso no basta, es una postura perfectamente defendible; la respuesta honesta, para este en concreto, es «verificado por construcción cuidadosa», no «verificado».</p>
+    <p>Y para el símbolo del sistema, al que no apunta nada del recuadro de instalación pero que sigue existiendo en todas las máquinas Windows:</p>
     <pre class="prose-code-block" dir="ltr"><code>if exist &quot;%USERPROFILE%\.claude\skills\TBaguette\.git&quot; (git -C &quot;%USERPROFILE%\.claude\skills\TBaguette&quot; pull) else (git clone https://github.com/LeSplooch/tbaguette-skills.git &quot;%USERPROFILE%\.claude\skills\TBaguette&quot;)</code></pre>
-    <p>Same logic again, translated to <code>IF EXIST</code> and <code>%USERPROFILE%</code> — with one honest imprecision. <code>IF EXIST</code> can't cleanly test "is this specifically a directory" in one line the way <code>-d</code> and <code>-PathType Container</code> can, so it matches a file or a directory at that path indiscriminately. That's never actually wrong here, since a real git checkout's <code>.git</code> is always a directory, but it's a looser guarantee than the other two, worth naming rather than glossing over.</p>
+    <p>La misma lógica otra vez, trasladada a <code>IF EXIST</code> y <code>%USERPROFILE%</code>, con una imprecisión que conviene reconocer. <code>IF EXIST</code> no sabe comprobar limpiamente «esto es concretamente un directorio» en una sola línea, como sí hacen <code>-d</code> y <code>-PathType Container</code>, así que acepta indistintamente un archivo o un directorio en esa ruta. Aquí eso nunca llega a ser falso, porque el <code>.git</code> de un clon real de git siempre es un directorio, pero es una garantía más laxa que las otras dos: mejor decirlo que pasarlo por alto.</p>
 
-    <h2 id="the-test-itself">The test itself</h2>
-    <p>This is <a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/scripts/test_install_command.py">scripts/test_install_command.py</a>, unedited — the same file the test suite actually runs, not a representative excerpt.</p>
+    <h2 id="the-test-itself">La prueba en sí</h2>
+    <p>Esto es <a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/scripts/test_install_command.py">scripts/test_install_command.py</a>, sin retocar: el mismo archivo que ejecuta la suite de pruebas, no un extracto representativo.</p>
   </div>
 
   <div class="code-block" dir="ltr">
@@ -402,27 +402,27 @@
 </div>
 
   <div class="prose">
-    <h2 id="run-it-yourself">Run it yourself</h2>
-    <p>Clone the repo and run <code>python3 scripts/test_install_command.py</code> directly, or <code>python3 scripts/run_tests.py</code> for the full suite this page's claims are checked against. Standard-library Python only — no bash required, since it isn't guaranteed to exist on every system this might run on.</p>
+    <h2 id="run-it-yourself">Ejecútalo tú mismo</h2>
+    <p>Clona el repositorio y ejecuta directamente <code>python3 scripts/test_install_command.py</code>, o <code>python3 scripts/run_tests.py</code> para la suite completa contra la que se comprueba lo que afirma esta página. Solo biblioteca estándar de Python —sin bash, porque no está garantizado que exista en todos los sistemas donde esto pueda acabar ejecutándose.</p>
   </div>
 </article>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> alberga TBaguette&rsquo;s Atelier —las decisiones de criterio que se juegan entre el ticket y el commit, ordenadas como un banco de trabajo en condiciones.</p>
+    <nav aria-label="Categorías">
+      <p class="site-footer__nav-title">Categorías</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/es/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/es/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/es/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/es/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/es/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/es/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/es/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/es/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/es/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/es/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/es/#ui-and-design">Interfaz y diseño</a></li>
+<li><a href="/tbaguette-skills/es/#judgment-and-meta">Criterio y meta</a></li>
+<li><a href="/tbaguette-skills/es/#reading-code">Lectura de código</a></li>
+<li><a href="/tbaguette-skills/es/#landing-changes">Integración de cambios</a></li>
+<li><a href="/tbaguette-skills/es/#testing">Pruebas</a></li>
+<li><a href="/tbaguette-skills/es/#debugging-and-performance">Depuración y rendimiento</a></li>
+<li><a href="/tbaguette-skills/es/#designing-systems">Diseño de sistemas</a></li>
+<li><a href="/tbaguette-skills/es/#security">Seguridad (defensiva)</a></li>
+<li><a href="/tbaguette-skills/es/#communicating">Comunicación</a></li>
+<li><a href="/tbaguette-skills/es/#environment-and-tooling">Entorno y herramientas</a></li>
       </ul>
     </nav>
   </div>
