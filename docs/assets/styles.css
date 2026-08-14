@@ -15,7 +15,8 @@
   6. Icons
   7. Header / wordmark / theme toggle / updated-time
   8. Hero + search
-  8b. "Fresh from the oven" rail (recently new/updated skills)
+  8b. "Fresh from the oven" rail (recently new/updated skills; a turning
+      3D ring wherever motion, width, and forced-colors all allow it)
   9. Category sections + card grid + card (incl. change-badge: new/updated)
   10. Breadcrumb
   11. Article: lede, prose, tables, code, lists
@@ -906,6 +907,17 @@ code {
    plain surface tiles — a display tray under the shopfront sign, not a second
    shopfront sign. Rendered only when something is actually fresh (see
    _render_fresh_section), so there is no empty state to style.
+
+   That tray also, wherever motion and space are both welcome, turns: a slow
+   3D ring rather than a flat scroller. .fresh__tile places each tile on a
+   circle (rotateY + translateZ, angle set inline by templates.py) and
+   .fresh__ring carries the whole circle around once every 36s, while every
+   .fresh__face runs the same focus/blur/scale pulse on its own phase offset,
+   so exactly one tile is ever front-and-centre as the ring turns. It is the
+   same display tray, just one that keeps revolving instead of sitting still.
+   See the gated rule below for the three conditions — motion, width,
+   forced-colors — that all have to hold before it turns; missing any one of
+   them leaves the original flat rail exactly as it was, not a broken ring.
    ------------------------------------------------------------------------- */
 
 .fresh { margin-top: var(--space-7); }
@@ -973,13 +985,33 @@ code {
   mask-image: linear-gradient(to right, black calc(100% - 40px), transparent 100%);
 }
 
+/* A no-op wherever the ring isn't turning: display: contents drops the
+   wrapper from the box tree entirely, so .fresh__tile still lands as a
+   direct flex item of .fresh__rail and the flat rail below needs no other
+   change. The gated rule further down gives it a real box only once the
+   ring is actually active. */
+.fresh__ring { display: contents; }
+
 .fresh__tile {
   scroll-snap-align: start;
   flex: 0 0 13rem;
+  display: block;
+}
+
+/* The visible card. Kept as a separate element from .fresh__tile (the <a>)
+   because the ring needs two transforms doing two different jobs — the tile
+   placing itself on the circle, the face turning to face the viewer and
+   pulsing focus as it passes the front — and a single element can only ever
+   carry one live transform: an animated one fully replaces any static value
+   the element also has, it doesn't compose with it. Everything the old
+   single-element tile looked like lives here now; .fresh__tile above is
+   just its slot. */
+.fresh__face {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-2);
+  height: 100%;
   padding: var(--space-4);
   background: var(--surface);
   border: 1px solid var(--border-subtle);
@@ -993,8 +1025,8 @@ code {
               background-color var(--duration-enter) var(--ease-out);
 }
 
-.fresh__tile:hover,
-.fresh__tile:focus-visible {
+.fresh__tile:hover .fresh__face,
+.fresh__tile:focus-visible .fresh__face {
   background: var(--surface-hover);
   border-color: var(--accent);
   transform: translateY(-2px);
@@ -1022,8 +1054,8 @@ code {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fresh__tile { transition-duration: 0.01ms; }
-  .fresh__tile:hover, .fresh__tile:focus-visible { transform: none; }
+  .fresh__face { transition-duration: 0.01ms; }
+  .fresh__tile:hover .fresh__face, .fresh__tile:focus-visible .fresh__face { transform: none; }
 }
 
 /* A forced palette drops the gradient rule's meaning (background-image
@@ -1033,7 +1065,97 @@ code {
 @media (forced-colors: active) {
   .fresh__head::after { display: none; }
   .fresh__head { border-bottom: 1px solid CanvasText; }
-  .fresh__tile { border: 1px solid CanvasText; }
+  .fresh__face { border: 1px solid CanvasText; }
+}
+
+/* Wherever a visitor's browser and stated preferences allow it — motion
+   welcome, a viewport with room to spare, no forced system palette — the
+   rail turns into the ring described above instead of staying a flat
+   scroller. All three conditions live in one query on purpose: it is the
+   single on/off switch for the whole effect, so there is exactly one place
+   that decides whether it runs, and every rule above stays a complete,
+   already-tested fallback with nothing left to override piecemeal. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 640px) and (forced-colors: none) {
+  .fresh__rail {
+    perspective: 1400px;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .fresh__ring {
+    display: block;
+    position: relative;
+    width: 13rem;
+    height: 9.5rem;
+    margin-inline: auto;
+    transform-style: preserve-3d;
+    animation: fresh-spin 36s linear infinite;
+  }
+
+  /* Each tile's own slot on the circle. --fresh-angle and --fresh-radius
+     (set inline by templates.py — one per tile, one per ring) are the only
+     per-instance numbers anywhere in this effect; everything else about the
+     ring is fixed in this stylesheet. scroll-snap-align targeted horizontal
+     scrolling, and nothing here scrolls any more.
+
+     backface-visibility belongs here, on the element that actually carries
+     the rotateY, not on .fresh__face below: .fresh__face has no 3D transform
+     of its own, so it is flattened onto .fresh__tile's plane rather than
+     independently oriented in the ring's 3D scene, and a flattened child's
+     own backface-visibility has nothing to evaluate against. Set on the
+     wrong element, tiles past 90° show their mirrored content instead of
+     vanishing. */
+  .fresh__tile {
+    position: absolute;
+    inset: 0;
+    scroll-snap-align: none;
+    backface-visibility: hidden;
+    transform: rotateY(var(--fresh-angle, 0deg)) translateZ(var(--fresh-radius, 160px));
+  }
+
+  /* Every face runs the identical fresh-focus loop, each started at a
+     different point via its own negative animation-delay (set inline,
+     proportional to its slot) — so as the ring turns, exactly one face is
+     ever at full size and focus: whichever one the ring has currently
+     carried to the front. */
+  .fresh__face {
+    height: 100%;
+    overflow: hidden;
+    animation: fresh-focus 36s linear infinite;
+  }
+
+  /* WCAG 2.2.2: anything that moves on its own for more than five seconds
+     needs a way to stop it. Hovering the rail or tabbing into it is that
+     way — either freezes the whole ring exactly where it is. */
+  .fresh__rail:hover .fresh__ring,
+  .fresh__rail:focus-within .fresh__ring,
+  .fresh__rail:hover .fresh__face,
+  .fresh__rail:focus-within .fresh__face {
+    animation-play-state: paused;
+  }
+
+  /* A tile paused mid-cycle can freeze dim and blurred — exactly wrong for
+     the one tile a keyboard visitor is actually on. Its face always snaps
+     to full focus regardless of where the shared animation happened to be
+     when it landed there. !important is the only thing that outranks a
+     running CSS animation's own output for the properties it is animating —
+     the same reason section 15 reaches for it below, the sole other use in
+     this file. */
+  .fresh__tile:focus-visible .fresh__face {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: scale(1) !important;
+  }
+}
+
+@keyframes fresh-spin {
+  to { transform: rotateY(360deg); }
+}
+
+@keyframes fresh-focus {
+  0%, 100% { opacity: 0.32; filter: blur(1.5px) brightness(0.72); transform: scale(0.82); }
+  50%      { opacity: 1;    filter: blur(0) brightness(1);        transform: scale(1); }
 }
 
 /* ---------------------------------------------------------------------------

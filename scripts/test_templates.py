@@ -330,12 +330,47 @@ def check_fresh_section() -> None:
           '<time class="fresh__when" datetime="2026-08-14T12:00:00+00:00" '
           'data-format-relative>2026-08-14</time>' in html)
 
+    # --- the 3D ring: geometry is data, not decoration, so it gets the same
+    # scrutiny as the rest of the tile — a wrong angle or delay is a visible
+    # gap or a stuck tile, not a cosmetic nit. ------------------------------
+    check("tiles sit inside a ring wrapper carrying the shared radius",
+          '<div class="fresh__ring" style="--fresh-radius:' in html)
+    check("the visible card is a nested face, not the anchor itself — the "
+          "anchor is only ever the 3D ring's placement slot",
+          html.count('class="fresh__face"') == 2)
+    check("first tile takes the ring's zero angle and zero delay — it is "
+          "already front-and-centre before the ring ever turns",
+          'style="--fresh-angle: 0deg"' in html
+          and 'style="animation-delay: 0s"' in html)
+    check("second of two tiles sits opposite the first (180deg) with a "
+          "half-cycle negative delay, so the shared fresh-focus loop reaches "
+          "it exactly when the ring has carried it to the front",
+          'style="--fresh-angle: 180deg"' in html
+          and 'style="animation-delay: -18s"' in html)
+
     many = [make(f"s{i:02d}", "new", "2026-08-14T12:00:00+00:00") for i in range(30)]
     capped = render_index(categories, {}, fresh_skills=many)
     check("the rail is capped rather than listing an entire burst of activity",
           capped.count('class="fresh__tile"') == templates.FRESH_RAIL_LIMIT)
     check("the cap keeps the newest end of the list, not an arbitrary slice",
           ">s00</span>" in capped and ">s29</span>" not in capped)
+    check("a capped burst still spaces every shown tile evenly around the "
+          "ring — the cap trims the list before the angle math runs, not after",
+          'style="--fresh-angle: 0deg"' in capped
+          and 'style="--fresh-angle: 330deg"' in capped)
+
+    check("_fresh_ring_radius: a single tile orbits nothing — it just turns "
+          "in place",
+          templates._fresh_ring_radius(1) == 0 and templates._fresh_ring_radius(0) == 0)
+    check("_fresh_ring_radius: a small burst clamps to the floor rather than "
+          "collapsing toward the ring's centre",
+          templates._fresh_ring_radius(2) == templates.FRESH_RING_RADIUS_MIN)
+    check("_fresh_ring_radius: a full rail clamps to the ceiling rather than "
+          "swinging past the section's available width",
+          templates._fresh_ring_radius(templates.FRESH_RAIL_LIMIT) == templates.FRESH_RING_RADIUS_MAX)
+    check("_fresh_ring_radius: a mid-sized ring lands strictly between the "
+          "two clamps under its own math, not pinned to either one",
+          templates.FRESH_RING_RADIUS_MIN < templates._fresh_ring_radius(6) < templates.FRESH_RING_RADIUS_MAX)
 
 
 def main() -> None:
