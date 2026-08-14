@@ -754,6 +754,13 @@ code {
   font-size: var(--text-2);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+  /* The install prompt runs to 7 numbered steps — capped to ~5 lines so the
+     frame doesn't dominate the hero, with the rest one scroll away. Height
+     is derived from the same tokens the text itself uses (font-size *
+     leading, plus the block's own padding and border) rather than a bare
+     pixel guess, so it stays correct if either token ever changes. */
+  max-height: calc(5 * var(--text-2) * var(--leading-normal) + 2 * var(--space-4) + 2px);
+  overflow-y: auto;
 }
 
 .install__copy {
