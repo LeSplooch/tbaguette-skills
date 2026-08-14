@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>threat-modeling — Security (defensive) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…">
+<title>threat-modeling — 安全（防御） — TBaguette’s Atelier</title>
+<meta name="description" content="在以下情况下使用：一份设计引入了新的信任边界、新一类敏感数据、新的外部集成，或者改动了认证或授权；一次设计评审需要补上安全这一节；有人问某个系统或功能可能出什么岔子；或者要推敲攻击者、攻击面、影响范围，以及哪些风险该先修。涵盖…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="threat-modeling — Security (defensive) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…">
+<meta property="og:title" content="threat-modeling — 安全（防御） — TBaguette’s Atelier">
+<meta property="og:description" content="在以下情况下使用：一份设计引入了新的信任边界、新一类敏感数据、新的外部集成，或者改动了认证或授权；一次设计评审需要补上安全这一节；有人问某个系统或功能可能出什么岔子；或者要推敲攻击者、攻击面、影响范围，以及哪些风险该先修。涵盖…">
 <link rel="canonical" href="/tbaguette-skills/zh/skills/threat-modeling/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/threat-modeling/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/threat-modeling/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
+      data-i18n-copied="已复制！"
+      data-i18n-no-match="没有匹配的技能。"
+      data-i18n-modal-title="有新版本"
+      data-i18n-modal-body="本页已更新，重新加载即可看到最新内容。"
+      data-i18n-modal-reload="重新加载"
       data-i18n-quote-open="“"
       data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">跳到主要内容</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:39:29+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:39:29Z UTC</time>
+      <span class="site-header__updated-label">更新于</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:14:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:14:31Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: 中文</summary>
+  <summary class="language-switcher__summary">语言: 中文</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/threat-modeling/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/threat-modeling/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="切换到浅色主题"
+              data-i18n-theme-light="切换到浅色主题"
+              data-i18n-theme-dark="切换到深色主题">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/zh/">Home</a>
+<nav class="container breadcrumb" aria-label="面包屑导航">
+  <a href="/tbaguette-skills/zh/">首页</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/zh/#security">Security (defensive)</a>
+  <a href="/tbaguette-skills/zh/#security">安全（防御）</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">threat-modeling</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">threat-modeling</h1>
     
   </div>
-  <span class="tag skill-article__tag">Security (defensive)</span>
-  <p class="lede">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration, or a change to authentication or authorization, when a design review needs a security section, when asked what could go wrong with a system or feature, or when reasoning about attackers, attack surface, blast radius, and which risks to fix first. Covers STRIDE, trust boundaries, data flow, attacker capability tiers, and risk ranking.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into 中文 yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">安全（防御）</span>
+  <p class="lede">在以下情况下使用：一份设计引入了新的信任边界、新一类敏感数据、新的外部集成，或者改动了认证或授权；一次设计评审需要补上安全这一节；有人问某个系统或功能可能出什么岔子；或者要推敲攻击者、攻击面、影响范围，以及哪些风险该先修。涵盖 STRIDE、信任边界、数据流、攻击者能力分级和风险排序。</p>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>A threat model is a 30–60 minute conversation that produces decisions, not a document. Its output is a list of design changes, mitigations with tests, and explicitly accepted risks with owners. If the design did not change and nothing got a test, the session was theater.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A new trust boundary appears: a new listener, IPC surface, plugin or extension point, tenant, file format you now parse, or a queue you now consume.</li><li>A new class of data enters: credentials, personal data, payment, health, keys, or telemetry that can carry user content.</li><li>A new external integration or an authorization change: third-party API, webhook receiver, identity provider, a new role, a new token type, a session mechanism, or any delegation.</li><li>Before writing the security section of a design doc, so the section reports decisions instead of inventing them.</li><li>Not for: root-causing a specific reported bug; evaluating a package's supply chain (<code>auditing-dependencies</code>); writing the actual permission scopes (<code>least-privilege-design</code>); the input-handling rules themselves (<code>handling-untrusted-input</code>).</li></ul>
@@ -131,48 +131,48 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>40 threats, zero decisions</td><td>Modeled components instead of boundaries; component enumeration never terminates</td></tr><tr><td>Every threat begins &quot;an attacker gains access and then…&quot;</td><td>No capability tiers; &quot;gains access&quot; is a conclusion being used as a premise</td></tr><tr><td>Ranked by CVSS or a severity label</td><td>A context-free score used in place of reachability in your system</td></tr><tr><td>Long debate on crypto choice, nothing on authorization</td><td>Novel-looking risks crowd out the common ones; broken access control outnumbers crypto flaws by a wide margin</td></tr><tr><td>Mitigation exists, no test</td><td>A mitigation without a test is a comment; the next refactor deletes it silently</td></tr><tr><td>&quot;The gateway will block that&quot;</td><td>Control placed at a layer any direct caller bypasses</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;That's an edge case, no real user would do that&quot; — the attacker is not a user.</li><li>&quot;It's internal-only,&quot; asserted without a check that it is.</li><li>&quot;We authenticate the caller, so we're covered&quot; — authentication answers <em>who</em>, not <em>what on whose behalf</em>.</li><li>&quot;We'll do security after the MVP&quot; — trust boundaries are architecture; they are not retrofitted, and the session that ends with zero design changes has already conceded this.</li><li>Nobody in the room can say which single credential could delete all customer data.</li><li>Exactly one mitigation per threat — defense in depth was never considered.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/zh/skills/handling-untrusted-input/">
-  <span class="prevnext__label">Next</span>
+<nav class="container prevnext" aria-label="技能导航"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/zh/skills/handling-untrusted-input/">
+  <span class="prevnext__label">下一个</span>
   <span class="prevnext__name">handling-untrusted-input →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Security (defensive)</h2>
+  <h2 class="see-also__title">“安全（防御）”分类中的更多技能</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
-      <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
+      <span class="see-also__summary">在以下情况下使用：代码要接收或解析来自自身信任边界之外的数据——请求、文件、上传内容、webhook、消息队列、配置，或者另一个内部服务；要拼出一段嵌入了变量的查询、命令、路径、URL、模板或标记；要评审一个清洗或转义的辅助函数；或者要处理反序列化、路径穿越、注入、XSS、SS…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
-      <span class="see-also__summary">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…</span>
+      <span class="see-also__summary">在以下情况下使用：要处理 API 密钥、令牌、口令、私钥、证书或连接字符串——把其中一个加进某个服务、CI 流水线、容器镜像或客户端应用，又或者在一次提交、一行日志、一张截图、一张工单或一条错误信息里发现了它。涵盖凭据泄露之后的应对、吊销与轮换、密钥扫描、环境变量与…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>
-      <span class="see-also__summary">Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries…</span>
+      <span class="see-also__summary">在以下情况下使用：要添加、升级、替换或移除某个第三方包或库；lockfile 的 diff 多出了传递依赖条目；漏洞扫描器或安全公告告警响了，需要分诊；某个依赖看起来无人维护、已被弃置，或者换了主人；又或者要权衡供应链风险、install 与 postinstall…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/least-privilege-design/">
       <span class="see-also__name">least-privilege-design</span>
-      <span class="see-also__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</span>
+      <span class="see-also__summary">在以下情况下使用：要创建或评审一个角色、服务账号、API 密钥、令牌作用域、IAM 或 RBAC…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> 里住着 TBaguette&rsquo;s Atelier——那些卡在工单与提交之间、只能靠判断力拿主意的事，都像一张收拾利落的工作台那样码得整整齐齐。</p>
+    <nav aria-label="类别">
+      <p class="site-footer__nav-title">类别</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/zh/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/zh/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/zh/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/zh/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/zh/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/zh/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/zh/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/zh/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/zh/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/zh/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/zh/#ui-and-design">UI 与设计</a></li>
+<li><a href="/tbaguette-skills/zh/#judgment-and-meta">判断力与元技能</a></li>
+<li><a href="/tbaguette-skills/zh/#reading-code">阅读代码</a></li>
+<li><a href="/tbaguette-skills/zh/#landing-changes">变更落地</a></li>
+<li><a href="/tbaguette-skills/zh/#testing">测试</a></li>
+<li><a href="/tbaguette-skills/zh/#debugging-and-performance">调试与性能</a></li>
+<li><a href="/tbaguette-skills/zh/#designing-systems">系统设计</a></li>
+<li><a href="/tbaguette-skills/zh/#security">安全（防御）</a></li>
+<li><a href="/tbaguette-skills/zh/#communicating">沟通</a></li>
+<li><a href="/tbaguette-skills/zh/#environment-and-tooling">环境与工具</a></li>
       </ul>
     </nav>
   </div>

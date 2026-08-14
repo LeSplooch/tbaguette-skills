@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>secrets-hygiene — Security (defensive) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…">
+<title>secrets-hygiene — 安全（防御） — TBaguette’s Atelier</title>
+<meta name="description" content="在以下情况下使用：要处理 API 密钥、令牌、口令、私钥、证书或连接字符串——把其中一个加进某个服务、CI 流水线、容器镜像或客户端应用，又或者在一次提交、一行日志、一张截图、一张工单或一条错误信息里发现了它。涵盖凭据泄露之后的应对、吊销与轮换、密钥扫描、环境变量与…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="secrets-hygiene — Security (defensive) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…">
+<meta property="og:title" content="secrets-hygiene — 安全（防御） — TBaguette’s Atelier">
+<meta property="og:description" content="在以下情况下使用：要处理 API 密钥、令牌、口令、私钥、证书或连接字符串——把其中一个加进某个服务、CI 流水线、容器镜像或客户端应用，又或者在一次提交、一行日志、一张截图、一张工单或一条错误信息里发现了它。涵盖凭据泄露之后的应对、吊销与轮换、密钥扫描、环境变量与…">
 <link rel="canonical" href="/tbaguette-skills/zh/skills/secrets-hygiene/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/secrets-hygiene/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/secrets-hygiene/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
+      data-i18n-copied="已复制！"
+      data-i18n-no-match="没有匹配的技能。"
+      data-i18n-modal-title="有新版本"
+      data-i18n-modal-body="本页已更新，重新加载即可看到最新内容。"
+      data-i18n-modal-reload="重新加载"
       data-i18n-quote-open="“"
       data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">跳到主要内容</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:39:29+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:39:29Z UTC</time>
+      <span class="site-header__updated-label">更新于</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:14:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:14:31Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: 中文</summary>
+  <summary class="language-switcher__summary">语言: 中文</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/secrets-hygiene/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/secrets-hygiene/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="切换到浅色主题"
+              data-i18n-theme-light="切换到浅色主题"
+              data-i18n-theme-dark="切换到深色主题">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/zh/">Home</a>
+<nav class="container breadcrumb" aria-label="面包屑导航">
+  <a href="/tbaguette-skills/zh/">首页</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/zh/#security">Security (defensive)</a>
+  <a href="/tbaguette-skills/zh/#security">安全（防御）</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">secrets-hygiene</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">secrets-hygiene</h1>
     
   </div>
-  <span class="tag skill-article__tag">Security (defensive)</span>
-  <p class="lede">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline, container image, or client app, or finding one in a commit, log line, screenshot, ticket, or error message. Covers leaked credential response, revocation and rotation, secret scanning, environment variable and dotenv handling, and pre-publication checks on a repository.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into 中文 yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">安全（防御）</span>
+  <p class="lede">在以下情况下使用：要处理 API 密钥、令牌、口令、私钥、证书或连接字符串——把其中一个加进某个服务、CI 流水线、容器镜像或客户端应用，又或者在一次提交、一行日志、一张截图、一张工单或一条错误信息里发现了它。涵盖凭据泄露之后的应对、吊销与轮换、密钥扫描、环境变量与 dotenv 的处理，以及仓库公开之前的检查。</p>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>A secret's only property is that its distribution is controlled, so every surface it has touched is a place it now lives. The measure of a healthy system is not whether secrets have leaked — they have — but whether any credential can be replaced on a Tuesday afternoon, without downtime and without a code change.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Adding a credential to a service, pipeline, image, device, or client application.</li><li>A key, token, or private key appears in a diff, log, ticket, chat message, screenshot, or exception.</li><li>Standing up CI or a deploy path; making a repository public; onboarding or offboarding someone.</li><li>Any sentence containing &quot;temporarily hardcode&quot;, &quot;just for local dev&quot;, or &quot;it's only a test key&quot;.</li><li>Not for: deciding what a credential should be <em>allowed to do</em> (<code>least-privilege-design</code>); whether a dependency can read your environment (<code>auditing-dependencies</code>).</li></ul>
@@ -128,52 +128,52 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The secret was removed in a follow-up commit</td><td>The commit that added it is still reachable; removal from the tip is cosmetic</td></tr><tr><td>Rotation requires a deploy</td><td>The value was captured into a constant or global at process start</td></tr><tr><td>Rotation was scheduled every quarter and never done</td><td>No overlap window, so rotation is an outage and every week is a bad week</td></tr><tr><td>Scanners are clean and a key still leaked</td><td>A custom token format with no recognizable prefix or entropy signature</td></tr><tr><td>Nobody can say which service uses this key</td><td>One credential, many consumers; it cannot be rotated without breaking something unknown</td></tr><tr><td>CI masking failed</td><td>The value was transformed before printing; masks match literals</td></tr><tr><td>An &quot;encrypted&quot; private key sits in the repo</td><td>The decryption key is in the same repo, the same image, or an environment everyone can read</td></tr><tr><td>The leak response began with a history rewrite</td><td>Revocation postponed behind the slowest and least effective step</td></tr><tr><td>Ignore rules treated as the control</td><td>Ignore files do not cover already-tracked files, other surfaces, or anyone's local tooling</td></tr><tr><td>Same key in staging and production</td><td>One credential spanning environments; the weakest environment sets the security of the strongest</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's just a dev key&quot; / &quot;it's a test account&quot;.</li><li>&quot;It's in a private repository.&quot;</li><li>&quot;We'll rotate if we see abuse&quot; — without per-credential telemetry, you will not see it.</li><li>&quot;Hardcode it for now and clean it up before merge.&quot;</li><li>&quot;The CI masking will catch it.&quot;</li><li>Any response that begins by estimating who might have seen it.</li><li>Rewriting history before revoking.</li><li>Nobody can name the owner or the expiry of a production credential.</li><li>A secret pasted into chat &quot;so it can be copied over&quot; — that message is now permanent.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/zh/skills/handling-untrusted-input/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="技能导航"><a class="prevnext__link" href="/tbaguette-skills/zh/skills/handling-untrusted-input/">
+  <span class="prevnext__label">上一个</span>
   <span class="prevnext__name">← handling-untrusted-input</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/zh/skills/auditing-dependencies/">
-  <span class="prevnext__label">Next</span>
+  <span class="prevnext__label">下一个</span>
   <span class="prevnext__name">auditing-dependencies →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Security (defensive)</h2>
+  <h2 class="see-also__title">“安全（防御）”分类中的更多技能</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/threat-modeling/">
       <span class="see-also__name">threat-modeling</span>
-      <span class="see-also__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</span>
+      <span class="see-also__summary">在以下情况下使用：一份设计引入了新的信任边界、新一类敏感数据、新的外部集成，或者改动了认证或授权；一次设计评审需要补上安全这一节；有人问某个系统或功能可能出什么岔子；或者要推敲攻击者、攻击面、影响范围，以及哪些风险该先修。涵盖…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
-      <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
+      <span class="see-also__summary">在以下情况下使用：代码要接收或解析来自自身信任边界之外的数据——请求、文件、上传内容、webhook、消息队列、配置，或者另一个内部服务；要拼出一段嵌入了变量的查询、命令、路径、URL、模板或标记；要评审一个清洗或转义的辅助函数；或者要处理反序列化、路径穿越、注入、XSS、SS…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>
-      <span class="see-also__summary">Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries…</span>
+      <span class="see-also__summary">在以下情况下使用：要添加、升级、替换或移除某个第三方包或库；lockfile 的 diff 多出了传递依赖条目；漏洞扫描器或安全公告告警响了，需要分诊；某个依赖看起来无人维护、已被弃置，或者换了主人；又或者要权衡供应链风险、install 与 postinstall…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/least-privilege-design/">
       <span class="see-also__name">least-privilege-design</span>
-      <span class="see-also__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</span>
+      <span class="see-also__summary">在以下情况下使用：要创建或评审一个角色、服务账号、API 密钥、令牌作用域、IAM 或 RBAC…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> 里住着 TBaguette&rsquo;s Atelier——那些卡在工单与提交之间、只能靠判断力拿主意的事，都像一张收拾利落的工作台那样码得整整齐齐。</p>
+    <nav aria-label="类别">
+      <p class="site-footer__nav-title">类别</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/zh/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/zh/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/zh/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/zh/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/zh/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/zh/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/zh/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/zh/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/zh/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/zh/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/zh/#ui-and-design">UI 与设计</a></li>
+<li><a href="/tbaguette-skills/zh/#judgment-and-meta">判断力与元技能</a></li>
+<li><a href="/tbaguette-skills/zh/#reading-code">阅读代码</a></li>
+<li><a href="/tbaguette-skills/zh/#landing-changes">变更落地</a></li>
+<li><a href="/tbaguette-skills/zh/#testing">测试</a></li>
+<li><a href="/tbaguette-skills/zh/#debugging-and-performance">调试与性能</a></li>
+<li><a href="/tbaguette-skills/zh/#designing-systems">系统设计</a></li>
+<li><a href="/tbaguette-skills/zh/#security">安全（防御）</a></li>
+<li><a href="/tbaguette-skills/zh/#communicating">沟通</a></li>
+<li><a href="/tbaguette-skills/zh/#environment-and-tooling">环境与工具</a></li>
       </ul>
     </nav>
   </div>

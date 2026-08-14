@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>naming-things — Reading code — TBaguette’s Atelier</title>
-<meta name="description" content="Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…">
+<title>naming-things — 阅读代码 — TBaguette’s Atelier</title>
+<meta name="description" content="在以下情况下使用：要给一个变量、函数、类型、模块、开关、配置键、数据表或事件取标识符；某个名字有误导性、缩得看不懂、与代码库其余部分风格不一，或者是从它早已不再描述的东西那里继承下来的；要衡量一次改名值不值那个代价；或者代码需要一句注释才能说清某个东西装的是什么、某个函数到底在…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="naming-things — Reading code — TBaguette’s Atelier">
-<meta property="og:description" content="Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…">
+<meta property="og:title" content="naming-things — 阅读代码 — TBaguette’s Atelier">
+<meta property="og:description" content="在以下情况下使用：要给一个变量、函数、类型、模块、开关、配置键、数据表或事件取标识符；某个名字有误导性、缩得看不懂、与代码库其余部分风格不一，或者是从它早已不再描述的东西那里继承下来的；要衡量一次改名值不值那个代价；或者代码需要一句注释才能说清某个东西装的是什么、某个函数到底在…">
 <link rel="canonical" href="/tbaguette-skills/zh/skills/naming-things/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/naming-things/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/naming-things/">
@@ -34,14 +34,14 @@
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
-      data-i18n-copied="Copied!"
-      data-i18n-no-match="No skills match."
-      data-i18n-modal-title="New version available"
-      data-i18n-modal-body="This page has been updated. Reload to see the latest."
-      data-i18n-modal-reload="Reload"
+      data-i18n-copied="已复制！"
+      data-i18n-no-match="没有匹配的技能。"
+      data-i18n-modal-title="有新版本"
+      data-i18n-modal-body="本页已更新，重新加载即可看到最新内容。"
+      data-i18n-modal-reload="重新加载"
       data-i18n-quote-open="“"
       data-i18n-quote-close="”">
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main">跳到主要内容</a>
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -51,11 +51,11 @@
     </a>
     <div class="site-header__actions">
       <p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-14T11:39:29+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T11:39:29Z UTC</time>
+      <span class="site-header__updated-label">更新于</span>
+      <time class="site-header__updated-value" datetime="2026-08-14T12:14:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt">2026-08-14T12:14:31Z UTC</time>
     </p>
       <details class="language-switcher">
-  <summary class="language-switcher__summary">Language: 中文</summary>
+  <summary class="language-switcher__summary">语言: 中文</summary>
   <ul class="language-switcher__list">
 <li><a class="language-switcher__link" href="/tbaguette-skills/skills/naming-things/">English</a></li>
 <li><a class="language-switcher__link" href="/tbaguette-skills/fr/skills/naming-things/">Français</a></li>
@@ -76,9 +76,9 @@
   </ul>
 </details>
       <button class="theme-toggle" type="button" data-theme-toggle
-              aria-label="Switch to light theme"
-              data-i18n-theme-light="Switch to light theme"
-              data-i18n-theme-dark="Switch to dark theme">
+              aria-label="切换到浅色主题"
+              data-i18n-theme-light="切换到浅色主题"
+              data-i18n-theme-dark="切换到深色主题">
         <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
         <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
       </button>
@@ -86,10 +86,10 @@
   </div>
 </header>
 <main id="main">
-<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/zh/">Home</a>
+<nav class="container breadcrumb" aria-label="面包屑导航">
+  <a href="/tbaguette-skills/zh/">首页</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/zh/#reading-code">Reading code</a>
+  <a href="/tbaguette-skills/zh/#reading-code">阅读代码</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">naming-things</span>
 </nav>
@@ -98,9 +98,9 @@
     <h1 class="skill-article__title">naming-things</h1>
     
   </div>
-  <span class="tag skill-article__tag">Reading code</span>
-  <p class="lede">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading, abbreviated, inconsistent with the rest of the codebase, or inherited from something it no longer describes; when weighing whether a rename is worth its cost; or when code needs a comment to explain what a thing holds or what a function actually does.</p>
-</div><p class="translation-banner" role="note">This page hasn’t been translated into 中文 yet — showing the English version.</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
+  <span class="tag skill-article__tag">阅读代码</span>
+  <p class="lede">在以下情况下使用：要给一个变量、函数、类型、模块、开关、配置键、数据表或事件取标识符；某个名字有误导性、缩得看不懂、与代码库其余部分风格不一，或者是从它早已不再描述的东西那里继承下来的；要衡量一次改名值不值那个代价；或者代码需要一句注释才能说清某个东西装的是什么、某个函数到底在干什么。</p>
+</div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en"><h2 id="overview">Overview</h2>
 <p>Names are the cheapest documentation to write and the most expensive to change once they reach a wire format, a database column, or another team's code. A name is read hundreds of times at sites that have none of the context of its definition, and it is the only documentation that cannot go stale silently — it goes wrong loudly, in every reader's head.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Introducing any identifier that will outlive the function it appears in.</li><li>A reviewer, a colleague, or you had to explain what something holds.</li><li>The same concept has different names in the API, the database, and the UI.</li><li>Deciding whether a bad name is worth a rename now.</li><li>Not for: mechanics of executing a large rename safely (refactoring-safely), or designing the shape of an interface rather than its vocabulary (designing-apis).</li></ul>
@@ -133,56 +133,56 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>A comment explaining what a variable holds</td><td>The name should have said it</td></tr><tr><td><code>data</code>, <code>info</code>, <code>obj</code>, <code>temp</code>, <code>result2</code></td><td>Naming postponed and never returned to</td></tr><tr><td>A condition reading as a double negative</td><td>Boolean named for the false state</td></tr><tr><td>One concept, three names across layers</td><td>No shared vocabulary; each layer named it locally</td></tr><tr><td>Renamed one occurrence &quot;correctly&quot;</td><td>Added the Nth variant; searchability now worse than before</td></tr><tr><td>A <code>get</code> accessor that makes a network call</td><td>Prefix contract broken; callers put it in a loop</td></tr><tr><td>Rename buried inside a behavior change</td><td>Neither reviewable; the revert takes both</td></tr><tr><td>Five minutes stuck on a name</td><td>The thing is two things</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;I'll name it properly later.&quot;</li><li>&quot;Everyone here knows what that abbreviation means.&quot;</li><li>&quot;It's just a temp variable.&quot;</li><li>&quot;I'll add a comment explaining what it holds.&quot;</li><li>&quot;The existing name is wrong, so I'll use the right one for mine.&quot;</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/zh/skills/reading-specifications/">
-  <span class="prevnext__label">Previous</span>
+<nav class="container prevnext" aria-label="技能导航"><a class="prevnext__link" href="/tbaguette-skills/zh/skills/reading-specifications/">
+  <span class="prevnext__label">上一个</span>
   <span class="prevnext__name">← reading-specifications</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Reading code</h2>
+  <h2 class="see-also__title">“阅读代码”分类中的更多技能</h2>
   <ul class="see-also__list">
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/orienting-in-unfamiliar-code/">
       <span class="see-also__name">orienting-in-unfamiliar-code</span>
-      <span class="see-also__summary">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project…</span>
+      <span class="see-also__summary">在以下情况下使用：第一次打开一个代码库、接手一个陌生或遗留的仓库、加入一个新项目，或者被要求去改一段在场的人谁都没写过的代码。涵盖该从哪里开始读、定位入口点和真正的模块边界、分辨活代码与死代码、找到活儿实际发生的地方，以及把文档里的架构和 import 关系揭示出的架构对上号。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/tracing-data-flow/">
       <span class="see-also__name">tracing-data-flow</span>
-      <span class="see-also__summary">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…</span>
+      <span class="see-also__summary">在以下情况下使用：某个值不对、缺失、为…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/code-archaeology/">
       <span class="see-also__name">code-archaeology</span>
-      <span class="see-also__summary">Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify…</span>
+      <span class="see-also__summary">在以下情况下使用：某段代码没有任何解释，而它为什么在那里又很要紧——一个古怪的绕行写法、一个魔数、一个谁都说不出理由的条件判断、一条与代码自相矛盾的注释、一个没头没尾的…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/mapping-dependencies/">
       <span class="see-also__name">mapping-dependencies</span>
-      <span class="see-also__summary">Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles…</span>
+      <span class="see-also__summary">在以下情况下使用：要评估一处改动会弄坏什么、估算影响面、追查循环导入或构建环、找出被太多人依赖的模块、检查分层或架构约束是否还成立、准备拆分、抽出或删掉一个模块，或者一处很小的本地改动让一个从没引用过它的东西挂了。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/finding-the-seam/">
       <span class="see-also__name">finding-the-seam</span>
-      <span class="see-also__summary">Use when deciding where in a codebase to make a change, when a fix could plausibly go in several places…</span>
+      <span class="see-also__summary">在以下情况下使用：要决定改动落在代码库的哪个位置；一处修复看上去放在好几个地方都说得通；一个 diff 正在向许多文件蔓延；必须在不改动归属方代码的前提下改变行为；某个东西不把整个系统跑起来就没法测；或者需要一个扩展点、适配器、包装层或注入点，才能把改动安全地落进去。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/reading-specifications/">
       <span class="see-also__name">reading-specifications</span>
-      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
+      <span class="see-also__summary">在以下情况下使用：要把一张工单、一个 issue、一份缺陷报告、一篇 RFC、一份标准、一份设计文档或用户的一句要求变成实际的活儿；需求含糊、自相矛盾，或者对边界情况只字未提；拿不准是该问一句澄清，还是带着一条写明的假设往下走；要拿捏 MUST、SHOULD 和 MAY…</span>
     </a></li>
   </ul>
 </div>
 </main>
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> 里住着 TBaguette&rsquo;s Atelier——那些卡在工单与提交之间、只能靠判断力拿主意的事，都像一张收拾利落的工作台那样码得整整齐齐。</p>
+    <nav aria-label="类别">
+      <p class="site-footer__nav-title">类别</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/zh/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/zh/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/zh/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/zh/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/zh/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/zh/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/zh/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/zh/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/zh/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/zh/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/tbaguette-skills/zh/#ui-and-design">UI 与设计</a></li>
+<li><a href="/tbaguette-skills/zh/#judgment-and-meta">判断力与元技能</a></li>
+<li><a href="/tbaguette-skills/zh/#reading-code">阅读代码</a></li>
+<li><a href="/tbaguette-skills/zh/#landing-changes">变更落地</a></li>
+<li><a href="/tbaguette-skills/zh/#testing">测试</a></li>
+<li><a href="/tbaguette-skills/zh/#debugging-and-performance">调试与性能</a></li>
+<li><a href="/tbaguette-skills/zh/#designing-systems">系统设计</a></li>
+<li><a href="/tbaguette-skills/zh/#security">安全（防御）</a></li>
+<li><a href="/tbaguette-skills/zh/#communicating">沟通</a></li>
+<li><a href="/tbaguette-skills/zh/#environment-and-tooling">环境与工具</a></li>
       </ul>
     </nav>
   </div>
