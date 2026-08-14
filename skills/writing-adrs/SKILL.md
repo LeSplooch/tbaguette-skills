@@ -35,7 +35,7 @@ Volume is diagnostic. More than ~2 per week and the team is recording tasks; few
 
 1. **Title** — a numbered, immutable noun phrase naming the decision: `0014: Single writer for the ledger table`. Not "Database decision", not a question.
 2. **Status** — Proposed / Accepted / Superseded by NNNN / Deprecated, each with a date. A record with no date cannot be evaluated against a timeline.
-3. **Context and forces** — the situation and the constraints that were live *at the time*: load figures, team size, deadline, existing commitments, what was unknown. Numbers, not adjectives — "12k writes/sec peak, two engineers, must ship before the contract renewal" is checkable in two years; "high load and limited resources" is not. This section is what a future reader compares against the present to decide whether the decision still stands.
+3. **Context and forces** — the situation and the constraints that were live *at the time*: load figures, team size, deadline, existing commitments, what was unknown. Numbers, not adjectives — "12k writes/sec peak, two engineers, must ship before the contract renewal" is checkable in two years; "high load and limited resources" is not. This section is what a future reader compares against the present to decide whether the decision still stands. Mark which of these forces you do not control: one you own changes only when someone here changes it, and that change arrives with a commit, while one belonging to a third party — a vendor's capabilities, a platform's rules, a dependency's limits — can expire with nothing in the repo moving. Flagging which is which tells a future reader exactly what to re-verify, instead of leaving them to re-litigate the whole decision in order to test one part of it.
 4. **Decision** — active voice, present tense, one sentence first: "We route all ledger writes through a single service." Specifics follow. "It was decided that" is the passive that erases the owner.
 5. **Consequences** — what becomes true, split into what gets easier, what gets harder, and what the team must now not do. Include the ones you dislike. A consequences section with no downside reads as advocacy and readers discount the entire record.
 
@@ -73,6 +73,7 @@ Volume is diagnostic. More than ~2 per week and the team is recording tasks; few
 | Every record's status is Accepted, forever | No supersession discipline; the set describes a system that no longer exists |
 | Consequences are all upside | Written to persuade a reviewer, not to inform a successor |
 | A reader has to ask the author what the record means | The record failed its only test |
+| A decision still binding years after its blocker disappeared | The forces mixed what the team controls with what a third party does, so nobody knew which one to re-check |
 
 ## Red flags
 

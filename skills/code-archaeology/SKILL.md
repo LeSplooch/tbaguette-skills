@@ -1,6 +1,6 @@
 ---
 name: code-archaeology
-description: Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify, a comment that contradicts the code, an unexplained TODO, or a line that looks safe to delete. Also when locating the commit that introduced a behavior or regression, following a file through renames and moves, or judging whether old code is still load-bearing.
+description: Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify, a comment that contradicts the code, an unexplained TODO, or a line that looks safe to delete. Also when locating the commit that introduced a behavior or regression, following a file through renames and moves, judging whether old code is still load-bearing, or when a recorded decision appears to rule out the work in front of you.
 ---
 
 # Code archaeology
@@ -64,6 +64,16 @@ Run `git log -1 --format=%ad -L <a>,<b>:<file>` on the region. Age is the cheape
 | 1–3 years | Check whether the condition it guards still exists |
 | Older than a major dependency, platform, or protocol version in use | Likely vestigial — but confirm the dependency actually moved, since workarounds outlive the bugs they name |
 
+## The reason has its own expiry date
+
+Finding the rationale is not the end of the dig. A durable decision record — an ADR, a design doc, a wontfix, a comment saying "we can't do X because Y" — freezes two different things in one sentence: the **principle** its author applied, and the **premise** about the world they applied it to. The principle is usually stable. The premise decays, silently, on a schedule nobody in this repo controls.
+
+Separate the two before treating the record as binding. A stated refusal to work around someone else's access controls is a principle, and it still holds. "There is no supported interface, so the only route is the unsupported one" is a premise about a third party, and third parties ship things. Premises that live outside the codebase — a vendor's capabilities, a dependency's limits, a platform's rules, a protocol version, a legal constraint — are exactly the class that expires with no commit touching the repo, which means no technique in this skill will show you it moved. Re-verifying one is usually a single search, and it is far cheaper than the work the record is currently blocking.
+
+Nothing in the wording distinguishes "we decided against this" from "this was impossible at the time", and the two deserve different responses. A record that was correct when written, is still correctly reasoned, and is wrong now is the ordinary case, not an indictment of its author — worth saying plainly, because the perceived cost of contradicting a colleague's judgment is what keeps expired premises load-bearing for years.
+
+This cuts both ways, and the check is what decides which. A premise that survives re-verification leaves the record stronger than it was, now with a second date on it; the failure is not trusting old records but trusting them untested. When you are the one writing the record, separate the two parts on the way in — see `writing-adrs`.
+
 ## When history is worthless
 
 | History shape | Signal | Fall back to |
@@ -87,6 +97,7 @@ The universal fallback when history is silent: the test that shipped with the co
 | Deleted a workaround; it broke again | Never searched for a prior revert of the same deletion |
 | Found the commit, still no reason | Stopped at the message; the rationale was in the review thread |
 | Concluded "no reason, it's safe" | Absence of a recorded reason is not evidence of absence |
+| Found a documented reason and closed the question | Presence of a recorded reason is not evidence it still holds |
 
 ## Red flags
 
@@ -95,3 +106,5 @@ The universal fallback when history is silent: the test that shipped with the co
 - "Nobody remembers, so there was no reason."
 - "I'll read the log until I spot it" — past a page, bisect.
 - "It's just a formatting change" — about a commit you are attributing a decision to.
+- "It's in the design doc, that was already decided" — decided on a premise, which is a different claim from still true.
+- Reading a document's present tense as evidence about the present.
