@@ -194,6 +194,192 @@ ENGLISH_STRINGS = Strings(
     ),
 )
 
+
+@dataclass(frozen=True)
+class VerifyInstallStrings:
+    """The verify-install page's ~980 words of prose. Kept as its own
+    catalog, separate from Strings, because this content is specific to
+    one page rather than site-wide chrome -- matches i18n/<lang>/
+    verify-install.json being its own file per the design spec. Every
+    *_html field is pre-formatted HTML (contains <code>/<strong> spans),
+    injected verbatim per this module's existing trust-boundary
+    convention. test_itself_template carries {test_github_url}/
+    {test_source_path} placeholders rather than a literal URL, so a
+    translator never has to retype (and risk mistyping) that link.
+    Likewise, three fields that mention the brand by name outside of a
+    literal file path -- four_scenarios_intro_html_template,
+    scenario_c_html_template, meta_description_template -- carry a
+    {brand} placeholder rather than embedding "TBaguette" directly,
+    formatted with the same BRAND_NAME constant Task 3 introduced (see
+    this plan's Global Constraints on brand identity). The several
+    ~/.claude/skills/TBaguette *path* mentions elsewhere in this class
+    (lede_html, what_it_does_html, why_html) are deliberately left as
+    plain literals -- a full filesystem path is already exactly as
+    untranslatable as the install command's own shell syntax, which the
+    same constraint explicitly exempts; splitting a path apart to
+    template-splice one path *segment* would add real complexity for a
+    string no translator would ever mistake for prose."""
+
+    title: str
+    lede_html: str
+    what_it_does_heading: str
+    what_it_does_html: str
+    why_heading: str
+    why_html: str
+    four_scenarios_heading: str
+    four_scenarios_intro_html_template: str
+    scenario_a_html: str
+    scenario_b_html: str
+    scenario_c_html_template: str
+    scenario_d_html: str
+    scenario_footer_html: str
+    every_platform_heading: str
+    every_platform_intro_html: str
+    posix_intro: str
+    powershell_intro: str
+    powershell_caveat_html: str
+    cmd_intro: str
+    cmd_caveat_html: str
+    test_itself_heading: str
+    test_itself_template: str
+    run_it_yourself_heading: str
+    run_it_yourself_html: str
+    breadcrumb_current: str
+    meta_description_template: str
+
+
+ENGLISH_VERIFY_INSTALL_STRINGS = VerifyInstallStrings(
+    title="The install command only touches one folder",
+    lede_html=(
+        "A <code>git clone</code> into <code>~/.claude/skills/TBaguette</code> "
+        "sits right next to whatever else already lives under "
+        "<code>~/.claude/skills/</code> — other skills, other plugins, things you "
+        "already trust. It's a fair question whether installing this one could touch "
+        "any of that. It can't. This page is why, and the actual test that proves it, "
+        "not a claim restated in different words."
+    ),
+    what_it_does_heading="What the command does",
+    what_it_does_html=(
+        "The published command checks for an existing clone before doing anything: "
+        "if <code>~/.claude/skills/TBaguette/.git</code> already exists, it runs "
+        "<code>git pull</code> in place; otherwise it runs <code>git clone</code>. The "
+        "first run installs. Every run after that updates. Neither branch ever "
+        "reads or writes anywhere else."
+    ),
+    why_heading="Why it can't reach anything else",
+    why_html=(
+        "Both branches are scoped to the single path "
+        "<code>~/.claude/skills/TBaguette</code> by construction — a "
+        "<code>git clone</code> or <code>git pull</code> targeting that path has no "
+        "mechanism to write outside it. The one case worth naming explicitly is a "
+        "real collision: something else already sitting at that exact path, that "
+        "isn't a clone of this repo. <code>git clone</code> refuses outright when its "
+        "target already exists and is non-empty — it does not merge, does not "
+        "overwrite, does not ask. It fails loudly and leaves whatever was there "
+        "exactly as it was. That refusal is git's own behavior, not something this "
+        "project added on top."
+    ),
+    four_scenarios_heading="Four scenarios, not one",
+    four_scenarios_intro_html_template=(
+        "A single happy-path test would only prove the command works when "
+        "nothing is in its way, which is the one case nobody actually worried "
+        "about. The real test runs four scenarios, each against a throwaway "
+        "<code>HOME</code> directory seeded with fake sibling skills and plugins "
+        "alongside <code>{brand}</code>, checksummed before and after:"
+    ),
+    scenario_a_html=(
+        "<strong>A — fresh install.</strong> Nothing at that path yet. Confirms "
+        "the clone succeeds and the siblings are untouched."
+    ),
+    scenario_b_html=(
+        "<strong>B — running it again.</strong> Continues from A. Confirms the "
+        "second run updates in place (<code>git pull</code>) instead of erroring "
+        "the way a bare <code>git clone</code> would, and that the siblings are "
+        "still untouched."
+    ),
+    scenario_c_html_template=(
+        "<strong>C — an empty directory already named <code>{brand}</code>.</strong> "
+        "Confirms <code>git clone</code> is willing to use an empty directory "
+        "that happens to already exist, and that siblings survive."
+    ),
+    scenario_d_html=(
+        "<strong>D — the real collision.</strong> A non-empty, non-git "
+        "directory already sitting at that exact path, with its own unrelated "
+        "content. Confirms the command refuses rather than merging into it — "
+        "and that both the colliding directory's own content and every sibling "
+        "skill survive the refusal."
+    ),
+    scenario_footer_html=(
+        "All twelve checks across those four scenarios pass before this site is "
+        "ever deployed — plus twelve more that run the exact command string "
+        "published above, word for word, through every POSIX-ish shell this "
+        "project's own build machine has installed (bash, zsh, fish, and sh), "
+        "rather than trusting that this page's Python reimplementation of it "
+        "stayed faithful to what actually ships. <code>run_tests.py</code> runs "
+        "all twenty-four alongside everything else, not as a separate manual step "
+        "someone has to remember."
+    ),
+    every_platform_heading="Every platform, not just one",
+    every_platform_intro_html=(
+        "The install frame above shows two commands, not one: a POSIX command "
+        "for macOS, Linux, and anyone on Windows already inside WSL or Git Bash, "
+        "and a PowerShell command for everyone else on Windows — which is most "
+        "Windows users, since PowerShell has been the default terminal since "
+        "Windows 10. Both do the exact same thing, in the same order, for the "
+        "same reason: check for an existing clone, <code>git pull</code> if it's "
+        "there, <code>git clone</code> if it isn't."
+    ),
+    posix_intro="The POSIX command is the one machine-verified above, across four shells:",
+    powershell_intro=(
+        "The PowerShell command carries the exact same logic over to "
+        "<code>Test-Path</code> and native cmdlets:"
+    ),
+    powershell_caveat_html=(
+        "That one isn't cross-checked by an automated test the way the POSIX "
+        "command is — this project's own build has no PowerShell runtime to run "
+        "it against — so its correctness rests on <code>Test-Path</code>, "
+        "<code>git -C</code>, and <code>git clone</code> being ordinary, "
+        "well-documented behavior, not on an executed proof. If that's not good "
+        "enough, that's a fair position to hold; the honest answer is \"verified "
+        "by careful construction,\" not \"verified,\" for this one specifically."
+    ),
+    cmd_intro=(
+        "And for Command Prompt, which nothing in the install frame targets "
+        "but which still exists on every Windows machine:"
+    ),
+    cmd_caveat_html=(
+        "Same logic again, translated to <code>IF EXIST</code> and "
+        "<code>%USERPROFILE%</code> — with one honest imprecision. "
+        "<code>IF EXIST</code> can't cleanly test \"is this specifically a "
+        "directory\" in one line the way <code>-d</code> and "
+        "<code>-PathType Container</code> can, so it matches a file or a "
+        "directory at that path indiscriminately. That's never actually wrong "
+        "here, since a real git checkout's <code>.git</code> is always a "
+        "directory, but it's a looser guarantee than the other two, worth naming "
+        "rather than glossing over."
+    ),
+    test_itself_heading="The test itself",
+    test_itself_template=(
+        'This is <a href="{test_github_url}">{test_source_path}</a>, '
+        "unedited — the same file the test suite actually runs, not a "
+        "representative excerpt."
+    ),
+    run_it_yourself_heading="Run it yourself",
+    run_it_yourself_html=(
+        "Clone the repo and run <code>python3 scripts/test_install_command.py</code> "
+        "directly, or <code>python3 scripts/run_tests.py</code> for the full suite "
+        "this page's claims are checked against. Standard-library Python only — "
+        "no bash required, since it isn't guaranteed to exist on every system this "
+        "might run on."
+    ),
+    breadcrumb_current="Install verification",
+    meta_description_template=(
+        "How the {brand} install command is verified never to alter, "
+        "overwrite, or merge into any other skill or plugin you already "
+        "have — with the actual test source, not just a claim."
+    ),
+)
+
 # Brand identity -- stays literal in every locale (see this plan's Global
 # Constraints). Every *_template Strings field that mentions the brand
 # names splices one of these in via str.format() rather than embedding the
@@ -874,7 +1060,7 @@ def _render_code_block(highlighted_lines: list[str]) -> str:
         f'<span class="code-block__line-code">{line or " "}</span></li>'
         for line in highlighted_lines
     ))
-    return f"""<div class="code-block">
+    return f"""<div class="code-block" dir="ltr">
   <div class="code-block__scroll">
     <ol class="code-block__lines">
 {rows}
@@ -884,143 +1070,87 @@ def _render_code_block(highlighted_lines: list[str]) -> str:
 
 
 def render_verify_install_page(highlighted_lines: list[str], categories: list[dict],
-                                base_path: str = "", last_updated_utc: str = "") -> str:
+                                base_path: str = "", last_updated_utc: str = "",
+                                *, locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                                strings: Strings = ENGLISH_STRINGS,
+                                verify_strings: VerifyInstallStrings = ENGLISH_VERIFY_INSTALL_STRINGS) -> str:
     """Full HTML document for the page linked from the install frame's
     "See how" — the actual explanation plus the actual test source,
     syntax-highlighted. highlighted_lines is pre-rendered HTML per line
     (see python_highlight.py), injected verbatim, same verbatim-injection
-    contract as skill body_html elsewhere in this module."""
-    breadcrumb = f"""<nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="{base_path}/">Home</a>
+    contract as skill body_html elsewhere in this module. The three
+    literal install-command strings (POSIX/PowerShell/cmd.exe) are never
+    translated — only verify_strings' surrounding prose is."""
+    v = verify_strings
+    breadcrumb = f"""<nav class="container breadcrumb" aria-label="{escape_html(strings.breadcrumb_aria_label)}">
+  <a href="{_locale_url(locale, base_path, '')}">{escape_html(strings.breadcrumb_home)}</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <span class="breadcrumb__current" aria-current="page">Install verification</span>
+  <span class="breadcrumb__current" aria-current="page">{escape_html(v.breadcrumb_current)}</span>
 </nav>"""
+
+    test_itself_html = v.test_itself_template.format(
+        test_github_url=INSTALL_TEST_GITHUB_URL, test_source_path=INSTALL_TEST_SOURCE_PATH
+    )
+    four_scenarios_intro_html = v.four_scenarios_intro_html_template.format(brand=BRAND_NAME)
+    scenario_c_html = v.scenario_c_html_template.format(brand=BRAND_NAME)
+    meta_description = v.meta_description_template.format(brand=BRAND_NAME)
 
     article = f"""<article class="container skill-article">
   <div class="skill-article__head">
-    <h1 class="skill-article__title">The install command only touches one folder</h1>
-    <p class="lede">A <code>git clone</code> into <code>~/.claude/skills/TBaguette</code>
-    sits right next to whatever else already lives under
-    <code>~/.claude/skills/</code> — other skills, other plugins, things you
-    already trust. It's a fair question whether installing this one could touch
-    any of that. It can't. This page is why, and the actual test that proves it,
-    not a claim restated in different words.</p>
+    <h1 class="skill-article__title">{escape_html(v.title)}</h1>
+    <p class="lede">{v.lede_html}</p>
   </div>
 
   <div class="prose">
-    <h2 id="what-it-does">What the command does</h2>
-    <p>The published command checks for an existing clone before doing anything:
-    if <code>~/.claude/skills/TBaguette/.git</code> already exists, it runs
-    <code>git pull</code> in place; otherwise it runs <code>git clone</code>. The
-    first run installs. Every run after that updates. Neither branch ever
-    reads or writes anywhere else.</p>
+    <h2 id="what-it-does">{escape_html(v.what_it_does_heading)}</h2>
+    <p>{v.what_it_does_html}</p>
 
-    <h2 id="why-it-cant-reach-anything-else">Why it can't reach anything else</h2>
-    <p>Both branches are scoped to the single path
-    <code>~/.claude/skills/TBaguette</code> by construction — a
-    <code>git clone</code> or <code>git pull</code> targeting that path has no
-    mechanism to write outside it. The one case worth naming explicitly is a
-    real collision: something else already sitting at that exact path, that
-    isn't a clone of this repo. <code>git clone</code> refuses outright when its
-    target already exists and is non-empty — it does not merge, does not
-    overwrite, does not ask. It fails loudly and leaves whatever was there
-    exactly as it was. That refusal is git's own behavior, not something this
-    project added on top.</p>
+    <h2 id="why-it-cant-reach-anything-else">{escape_html(v.why_heading)}</h2>
+    <p>{v.why_html}</p>
 
-    <h2 id="four-scenarios">Four scenarios, not one</h2>
-    <p>A single happy-path test would only prove the command works when
-    nothing is in its way, which is the one case nobody actually worried
-    about. The real test runs four scenarios, each against a throwaway
-    <code>HOME</code> directory seeded with fake sibling skills and plugins
-    alongside <code>TBaguette</code>, checksummed before and after:</p>
+    <h2 id="four-scenarios">{escape_html(v.four_scenarios_heading)}</h2>
+    <p>{four_scenarios_intro_html}</p>
     <ul>
-      <li><strong>A — fresh install.</strong> Nothing at that path yet. Confirms
-      the clone succeeds and the siblings are untouched.</li>
-      <li><strong>B — running it again.</strong> Continues from A. Confirms the
-      second run updates in place (<code>git pull</code>) instead of erroring
-      the way a bare <code>git clone</code> would, and that the siblings are
-      still untouched.</li>
-      <li><strong>C — an empty directory already named <code>TBaguette</code>.</strong>
-      Confirms <code>git clone</code> is willing to use an empty directory
-      that happens to already exist, and that siblings survive.</li>
-      <li><strong>D — the real collision.</strong> A non-empty, non-git
-      directory already sitting at that exact path, with its own unrelated
-      content. Confirms the command refuses rather than merging into it —
-      and that both the colliding directory's own content and every sibling
-      skill survive the refusal.</li>
+      <li>{v.scenario_a_html}</li>
+      <li>{v.scenario_b_html}</li>
+      <li>{scenario_c_html}</li>
+      <li>{v.scenario_d_html}</li>
     </ul>
-    <p>All twelve checks across those four scenarios pass before this site is
-    ever deployed — plus twelve more that run the exact command string
-    published above, word for word, through every POSIX-ish shell this
-    project's own build machine has installed (bash, zsh, fish, and sh),
-    rather than trusting that this page's Python reimplementation of it
-    stayed faithful to what actually ships. <code>run_tests.py</code> runs
-    all twenty-four alongside everything else, not as a separate manual step
-    someone has to remember.</p>
+    <p>{v.scenario_footer_html}</p>
 
-    <h2 id="every-platform">Every platform, not just one</h2>
-    <p>The install frame above shows two commands, not one: a POSIX command
-    for macOS, Linux, and anyone on Windows already inside WSL or Git Bash,
-    and a PowerShell command for everyone else on Windows — which is most
-    Windows users, since PowerShell has been the default terminal since
-    Windows 10. Both do the exact same thing, in the same order, for the
-    same reason: check for an existing clone, <code>git pull</code> if it's
-    there, <code>git clone</code> if it isn't.</p>
-    <p>The POSIX command is the one machine-verified above, across four
-    shells:</p>
-    <pre class="prose-code-block"><code>{escape_html(INSTALL_COMMAND)}</code></pre>
-    <p>The PowerShell command carries the exact same logic over to
-    <code>Test-Path</code> and native cmdlets:</p>
-    <pre class="prose-code-block"><code>{escape_html(INSTALL_COMMAND_POWERSHELL)}</code></pre>
-    <p>That one isn't cross-checked by an automated test the way the POSIX
-    command is — this project's own build has no PowerShell runtime to run
-    it against — so its correctness rests on <code>Test-Path</code>,
-    <code>git -C</code>, and <code>git clone</code> being ordinary,
-    well-documented behavior, not on an executed proof. If that's not good
-    enough, that's a fair position to hold; the honest answer is "verified
-    by careful construction," not "verified," for this one specifically.</p>
-    <p>And for Command Prompt, which nothing in the install frame targets
-    but which still exists on every Windows machine:</p>
-    <pre class="prose-code-block"><code>{escape_html(INSTALL_COMMAND_CMD)}</code></pre>
-    <p>Same logic again, translated to <code>IF EXIST</code> and
-    <code>%USERPROFILE%</code> — with one honest imprecision.
-    <code>IF EXIST</code> can't cleanly test "is this specifically a
-    directory" in one line the way <code>-d</code> and
-    <code>-PathType Container</code> can, so it matches a file or a
-    directory at that path indiscriminately. That's never actually wrong
-    here, since a real git checkout's <code>.git</code> is always a
-    directory, but it's a looser guarantee than the other two, worth naming
-    rather than glossing over.</p>
+    <h2 id="every-platform">{escape_html(v.every_platform_heading)}</h2>
+    <p>{v.every_platform_intro_html}</p>
+    <p>{escape_html(v.posix_intro)}</p>
+    <pre class="prose-code-block" dir="ltr"><code>{escape_html(INSTALL_COMMAND)}</code></pre>
+    <p>{v.powershell_intro}</p>
+    <pre class="prose-code-block" dir="ltr"><code>{escape_html(INSTALL_COMMAND_POWERSHELL)}</code></pre>
+    <p>{v.powershell_caveat_html}</p>
+    <p>{escape_html(v.cmd_intro)}</p>
+    <pre class="prose-code-block" dir="ltr"><code>{escape_html(INSTALL_COMMAND_CMD)}</code></pre>
+    <p>{v.cmd_caveat_html}</p>
 
-    <h2 id="the-test-itself">The test itself</h2>
-    <p>This is <a href="{INSTALL_TEST_GITHUB_URL}">{INSTALL_TEST_SOURCE_PATH}</a>,
-    unedited — the same file the test suite actually runs, not a
-    representative excerpt.</p>
+    <h2 id="the-test-itself">{escape_html(v.test_itself_heading)}</h2>
+    <p>{test_itself_html}</p>
   </div>
 
   {_render_code_block(highlighted_lines)}
 
   <div class="prose">
-    <h2 id="run-it-yourself">Run it yourself</h2>
-    <p>Clone the repo and run <code>python3 scripts/test_install_command.py</code>
-    directly, or <code>python3 scripts/run_tests.py</code> for the full suite
-    this page's claims are checked against. Standard-library Python only —
-    no bash required, since it isn't guaranteed to exist on every system this
-    might run on.</p>
+    <h2 id="run-it-yourself">{escape_html(v.run_it_yourself_heading)}</h2>
+    <p>{v.run_it_yourself_html}</p>
   </div>
 </article>"""
 
     main_html = _join(breadcrumb, article)
     return _render_document(
-        title="The install command only touches one folder — TBaguette’s Atelier",
-        meta_description=(
-            "How the TBaguette install command is verified never to alter, "
-            "overwrite, or merge into any other skill or plugin you already "
-            "have — with the actual test source, not just a claim."
-        ),
+        title=f"{v.title} — TBaguette’s Atelier",
+        meta_description=meta_description,
         body_class="page-skill",
         main_html=main_html,
         categories=categories,
         base_path=base_path,
         last_updated_utc=last_updated_utc,
+        locale=locale,
+        path_suffix="verify-install/",
+        strings=strings,
     )

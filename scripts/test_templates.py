@@ -370,6 +370,28 @@ def check_i18n_content_links_and_strings() -> None:
           '>New<' in html_en_badge)
 
 
+def check_i18n_verify_install_page() -> None:
+    import locales
+    from python_highlight import highlight_source
+
+    fr = locales.get_locale("fr")
+    highlighted = highlight_source("x = 1\n")
+
+    html_en = render_verify_install_page(highlighted, FIXTURE["categories"], base_path="")
+    check("default verify-install page still shows the real English heading (no regression)",
+          "The install command only touches one folder" in html_en)
+    check("default verify-install page's code blocks force dir='ltr' regardless of page language",
+          html_en.count('dir="ltr"') >= 1)
+
+    html_fr = render_verify_install_page(
+        highlighted, FIXTURE["categories"], base_path="", locale=fr,
+    )
+    check("French verify-install page's canonical points at /fr/verify-install/",
+          '<link rel="canonical" href="/fr/verify-install/">' in html_fr)
+    check("French verify-install page's breadcrumb Home link points at /fr/",
+          '<a href="/fr/">' in html_fr)
+
+
 def main() -> None:
     categories = FIXTURE["categories"]
     skills = FIXTURE["skills"]
@@ -523,6 +545,7 @@ def main() -> None:
     check_header_and_badges()
     check_i18n_document_shell()
     check_i18n_content_links_and_strings()
+    check_i18n_verify_install_page()
 
     print(f"\n{checker.total} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")
