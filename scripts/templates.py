@@ -82,10 +82,10 @@ class Strings:
     search_status_partial_template: str
     category_count_singular: str
     category_count_plural: str
-    install_frame_label: str
+    install_frame_label_template: str
     install_note_verified_text: str
     install_note_see_how: str
-    install_note_restart_html: str
+    install_note_restart_html_template: str
     install_tab_posix_label: str
     install_tab_windows_label: str
     install_tab_aria_label: str
@@ -94,7 +94,7 @@ class Strings:
     install_copy_label: str
     install_copy_copied: str
     install_copy_aria_label: str
-    footer_brand_html: str
+    footer_brand_html_template: str
     footer_categories_label: str
     breadcrumb_home: str
     breadcrumb_aria_label: str
@@ -141,15 +141,15 @@ ENGLISH_STRINGS = Strings(
     search_status_partial_template="{shown} of {total} skills match.",
     category_count_singular="skill",
     category_count_plural="skills",
-    install_frame_label="Install TBaguette’s skills",
+    install_frame_label_template="Install {brand}’s skills",
     install_note_verified_text=(
         "Only ever touches this folder — verified against your other skills, not "
         "just claimed."
     ),
     install_note_see_how="See how",
-    install_note_restart_html=(
+    install_note_restart_html_template=(
         "Restart Claude Code (or run <code>/reload-plugins</code>), then invoke a "
-        "skill as <code>TBaguette:skill-name</code>. This is for Claude Code "
+        "skill as <code>{brand}:skill-name</code>. This is for Claude Code "
         "specifically — the Claude Desktop app and claude.ai chat load skills "
         "from your account instead of this folder, so cloning here won’t make "
         "them appear there."
@@ -162,10 +162,10 @@ ENGLISH_STRINGS = Strings(
     install_copy_label="Copy",
     install_copy_copied="Copied!",
     install_copy_aria_label="Copy install command",
-    footer_brand_html=(
-        "<strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s "
-        "Atelier — the judgment calls that sit between the ticket and the commit, "
-        "organized like a proper bench."
+    footer_brand_html_template=(
+        "<strong>{brand_bakery}</strong> is home to {brand_atelier} — the judgment "
+        "calls that sit between the ticket and the commit, organized like a proper "
+        "bench."
     ),
     footer_categories_label="Categories",
     breadcrumb_home="Home",
@@ -193,6 +193,16 @@ ENGLISH_STRINGS = Strings(
         "English version."
     ),
 )
+
+# Brand identity -- stays literal in every locale (see this plan's Global
+# Constraints). Every *_template Strings field that mentions the brand
+# names splices one of these in via str.format() rather than embedding the
+# name inside the translatable value itself -- the same reasoning as the
+# count-interpolated templates above, just for a name that must never
+# translate instead of a number that must always agree grammatically.
+BRAND_NAME = "TBaguette"
+BRAND_ATELIER = "TBaguette&rsquo;s Atelier"
+BRAND_BAKERY = "La Boulangerie TBaguette"
 
 
 # ---------------------------------------------------------------------------
@@ -369,9 +379,12 @@ def _render_footer(categories: list[dict], base_path: str = "",
         f'<li><a href="{index_url}#{escape_html(cat["slug"])}">{escape_html(cat["title"])}</a></li>'
         for cat in categories
     ))
+    brand_html = strings.footer_brand_html_template.format(
+        brand_bakery=BRAND_BAKERY, brand_atelier=BRAND_ATELIER
+    )
     return f"""<footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand">{strings.footer_brand_html}</p>
+    <p class="site-footer__brand">{brand_html}</p>
     <nav aria-label="{escape_html(strings.footer_categories_label)}">
       <p class="site-footer__nav-title">{escape_html(strings.footer_categories_label)}</p>
       <ul class="site-footer__categories">
