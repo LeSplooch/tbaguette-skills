@@ -428,12 +428,44 @@ p { margin-top: var(--space-4); }
 
 strong { font-weight: 700; color: var(--text-primary); }
 
+/* direction/unicode-bidi: code is LTR everywhere, on every page, in every
+   language — a shell command or a file path does not become right-to-left
+   because the prose around it is. Without this, a <code> inside Arabic prose
+   inherits dir="rtl" and the bidi algorithm reorders its neutral characters:
+   ~/.claude/skills/TBaguette rendered as claude/skills/TBaguette./~ and
+   /reload-plugins as reload-plugins/ (7 of the 31 inline <code> elements on
+   /ar/verify-install/ were visibly wrong), while the homepage's install
+   command — the site's primary call to action — showed "] d ... [" for
+   "[ -d ... ]".
+
+   Deliberately at the CSS layer, on the element, rather than as a dir="ltr"
+   attribute per call site. A <code> can be authored in three different
+   places (a Python template, a skill's markdown body, or an _html field
+   inside a translator-authored i18n JSON string), and only the first is
+   reachable by reviewing this repo's Python. An element-wide rule is the
+   only version that also covers <code> nobody has written yet.
+
+   isolate, not embed/plaintext/isolate-override. isolate is what HTML's own
+   dir attribute maps to, so this matches the dir="ltr" already on
+   .code-block and .prose-code-block: the run is sealed off in both
+   directions, so neither does surrounding Arabic reorder the code, nor does
+   the code disturb the Arabic around it. embed does not seal it, leaving
+   boundary neutrals to resolve against the outside. plaintext would infer
+   direction from the first strong character and so fall back to the
+   paragraph's RTL for a snippet starting with a neutral (~, /, -), which is
+   exactly the broken case. isolate-override would force RTL text inside a
+   code sample to display left-to-right, corrupting it — isolate keeps the
+   bidi algorithm working correctly *within* the snippet while pinning its
+   base direction to ltr. Inert on the 15 LTR locales, which have no RTL runs
+   for isolation to change. */
 code {
   font-family: var(--font-mono);
   font-size: 0.9em;
   background: var(--surface-hover);
   padding: 0.15em 0.4em;
   border-radius: 6px;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 /* ---------------------------------------------------------------------------

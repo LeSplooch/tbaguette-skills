@@ -206,6 +206,43 @@ def check_rtl_css_pass() -> None:
           "-webkit-mask-image and mask-image (not still 'to right')",
           css.count("to left, black") == 2)
 
+    # Code is LTR in every language. Task 5 handled this per call site with
+    # dir="ltr" attributes, which by construction only covers the call sites
+    # someone thought of -- it missed the homepage install command and every
+    # inline <code> inside a translator-authored _html string in i18n/*.json,
+    # which reviewing this repo's Python cannot reach at all. One rule on the
+    # element covers all of them, plus any <code> not yet written.
+    code_rule = css[css.index("\ncode {"):css.index("}", css.index("\ncode {"))]
+    check("the base 'code' element rule pins direction: ltr, so no <code> "
+          "inherits dir=\"rtl\" from the page (an inline path rendered as "
+          "'claude/skills/TBaguette./~' without it)",
+          "direction: ltr" in code_rule)
+    check("...and isolates it with unicode-bidi: isolate -- what HTML's own "
+          "dir attribute maps to, sealing the run in both directions so "
+          "neither the Arabic reorders the code nor the code disturbs the "
+          "Arabic",
+          "unicode-bidi: isolate;" in code_rule)
+    check("...and specifically not isolate-override, which would force RTL "
+          "text inside a code sample to display left-to-right",
+          "isolate-override" not in code_rule)
+    check("...and not plaintext, which would infer direction from the first "
+          "strong character and so fall back to the paragraph's RTL for a "
+          "snippet starting with a neutral (~, / or -) -- the broken case",
+          "plaintext" not in code_rule)
+
+    # The rule only helps if it actually reaches the reported offenders, so
+    # assert against the templates rather than trusting that a bare `code`
+    # selector matches them.
+    templates_src = (Path(__file__).resolve().with_name("templates.py")).read_text(encoding="utf-8")
+    check("the homepage install command is a <code> element, so the rule "
+          "reaches it without a per-call-site attribute (D2: the primary "
+          "call to action rendered '] d ... [' for '[ -d ... ]')",
+          '<code class="install__command"' in templates_src)
+    check("Task 5's dir=\"ltr\" on .code-block is still present -- NOT made "
+          "redundant by the new rule, since .code-block renders <div>/<span> "
+          "and never a <code> element",
+          '<div class="code-block" dir="ltr">' in templates_src)
+
 
 def check_i18n_status() -> None:
     print("i18n_status")
