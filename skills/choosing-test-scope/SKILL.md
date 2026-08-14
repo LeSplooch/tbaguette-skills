@@ -64,7 +64,7 @@ Prefer fixtures **captured from a real response** over fixtures composed from a 
 
 Assume the shape varies wherever you have not actually looked. An envelope that wraps once on most routes and twice on one; a number arriving as bare JSON here, a quoted string there, an empty string when absent; a boolean spelled three ways by three endpoints. None of these are exotic, and all of them survive a suite whose fixtures were written by the same person who wrote the parser.
 
-Make the mismatch loud when it does arrive. A boundary that yields an empty collection for a payload it failed to recognise is indistinguishable from a genuinely empty upstream, and "zero rows" is the easiest wrong answer in the world to accept. An unrecognised shape should raise.
+Make the mismatch loud when it does arrive. A boundary that yields an empty collection for a payload it failed to recognize is indistinguishable from a genuinely empty upstream, and "zero rows" is the easiest wrong answer in the world to accept. An unrecognized shape should raise.
 
 ## Budgets, and the end-to-end death spiral
 
@@ -94,7 +94,7 @@ If the honest answer is "only end-to-end", the behavior exists solely in the wir
 | End-to-end failure takes an afternoon to attribute | Behavior tested above the layer that decides it |
 | Contract tests pass, integration breaks | Contracts verified against a shared mock instead of the real provider |
 | Every mocked test passes; the first real call returns nothing | Fixtures were written from a reading of the provider, so the suite tests the reading |
-| A shape change surfaces as an empty result rather than an error | The boundary parses leniently; an unrecognised payload must raise, not yield nothing |
+| A shape change surfaces as an empty result rather than an error | The boundary parses leniently; an unrecognized payload must raise, not yield nothing |
 | Coverage is 90% and bugs still escape | Coverage measures execution, not assertion; branches are run, not checked |
 | Integration suite has thousands of cases | Business-rule permutations tested through the database instead of in the domain |
 | Dependency upgrade needs a week of manual testing | No pinned-assumption tests; the boundary's behavior was never written down |
