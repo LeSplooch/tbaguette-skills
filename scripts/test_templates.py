@@ -243,7 +243,7 @@ def check_header_and_badges() -> None:
           and "La Boulangerie TBaguette —" not in html)
     check("footer still names La Boulangerie TBaguette as the place, without repeating "
           "\"atelier\" awkwardly now that the title itself is TBaguette's Atelier",
-          "La Boulangerie TBaguette</strong> is home to\n      TBaguette&rsquo;s Atelier" in html)
+          "La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier" in html)
 
     check("exactly two change-badges rendered (fresh and revised only, not untouched)",
           html.count('class="change-badge') == 2)
@@ -268,6 +268,67 @@ def check_header_and_badges() -> None:
           < fresh_page_html.index("skill-article__tag"))
     check("a skill page's own <title> ends in TBaguette’s Atelier too",
           "<title>fresh — Cat — TBaguette’s Atelier</title>" in fresh_page_html)
+
+
+def check_i18n_document_shell() -> None:
+    """Task 3's own coverage: the document shell threads locale/strings
+    through lang/dir, the hreflang/canonical block, and the language
+    switcher. Deliberately does not exercise _render_hero/_render_breadcrumb/
+    etc. — those keep their pre-locale signatures until Task 4."""
+    print("i18n document shell check")
+    import locales
+
+    fr = locales.get_locale("fr")
+    ar = locales.get_locale("ar")
+
+    html_en = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path="")
+    check("default render_index still emits lang='en' dir='ltr' (no regression)",
+          '<html lang="en" dir="ltr">' in html_en)
+
+    html_fr = render_index(
+        FIXTURE["categories"], FIXTURE["skills"], base_path="", locale=fr,
+    )
+    check("French index emits lang='fr' dir='ltr'", '<html lang="fr" dir="ltr">' in html_fr)
+    check("French index's canonical link points at /fr/",
+          '<link rel="canonical" href="/fr/">' in html_fr)
+    check("French index carries an hreflang alternate for every one of the 16 locales, "
+          "plus one more for x-default (17 total 'rel=\"alternate\" hreflang=' tags, since "
+          "x-default's own <link> also matches that prefix)",
+          html_fr.count('rel="alternate" hreflang="') == 17)
+    check("French index carries an x-default hreflang pointing at the English root",
+          'hreflang="x-default" href="/">' in html_fr)
+    check("French index's own hreflang entry uses the plain 'fr' tag (not a region variant)",
+          'hreflang="fr" href="/fr/">' in html_fr)
+    check("French index's Portuguese hreflang entry uses the region-specific 'pt-BR' tag",
+          'hreflang="pt-BR" href="/pt/">' in html_fr)
+
+    html_ar = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path="", locale=ar)
+    check("Arabic index emits dir='rtl'", '<html lang="ar" dir="rtl">' in html_ar)
+
+    html_skill_fr = render_skill_page(
+        FIXTURE["skills"]["designing-test-data"],
+        prev_skill=None, next_skill=None, siblings=[],
+        categories=FIXTURE["categories"], base_path="", locale=fr,
+    )
+    check("French skill page's canonical points at its own /fr/skills/<slug>/ path",
+          '<link rel="canonical" href="/fr/skills/designing-test-data/">' in html_skill_fr)
+    check("French skill page's English hreflang alternate points at the un-prefixed root path",
+          'hreflang="en" href="/skills/designing-test-data/">' in html_skill_fr)
+
+    html_skill_base_path = render_skill_page(
+        FIXTURE["skills"]["designing-test-data"],
+        prev_skill=None, next_skill=None, siblings=[],
+        categories=FIXTURE["categories"], base_path="/tbaguette-skills", locale=fr,
+    )
+    check("base_path prefixes every locale URL in the hreflang block, not just the current one",
+          'hreflang="en" href="/tbaguette-skills/skills/designing-test-data/">' in html_skill_base_path)
+
+    check("language switcher lists all 16 locales by endonym",
+          html_en.count('class="language-switcher__link"') == 16)
+    check("language switcher's French entry links to /fr/",
+          '<a class="language-switcher__link" href="/fr/"' in html_en)
+    check("language switcher marks the current locale with aria-current",
+          'aria-current="true"' in html_en)
 
 
 def main() -> None:
@@ -421,6 +482,7 @@ def main() -> None:
     check_base_path()
     check_verify_install_page()
     check_header_and_badges()
+    check_i18n_document_shell()
 
     print(f"\n{checker.total} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")

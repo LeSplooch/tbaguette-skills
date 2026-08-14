@@ -41,6 +41,160 @@ generator.
 
 from html import escape as _escape_html_impl
 
+import locales
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class Strings:
+    """Every piece of user-facing chrome text this module used to inline as
+    English literals. One frozen dataclass rather than a raw dict so a
+    missing/extra key is a Python-level error immediately, not a silent
+    KeyError deep in an f-string -- and so i18n/<lang>/ui.json's exact key
+    set can be checked against dataclasses.fields(Strings) (see
+    test_i18n.py's ui.json parity check, Task 4).
+
+    Every _render_* function that used to inline one of these strings now
+    takes `strings: Strings = ENGLISH_STRINGS` -- defaulting to English
+    keeps every existing call site (all of test_templates.py) passing
+    unmodified; only a locale build passes an explicit non-English catalog.
+
+    Templated fields use {name} placeholders (str.format, not
+    concatenation) because word order around an interpolated count or name
+    varies by language.
+    """
+
+    skip_link: str
+    header_updated_label: str
+    theme_toggle_switch_to_dark: str
+    theme_toggle_switch_to_light: str
+    language_switcher_label: str
+    hero_headline: str
+    hero_lede_template: str
+    search_label: str
+    search_placeholder: str
+    search_clear: str
+    search_reset_button: str
+    search_no_match_prefix: str
+    search_no_match_suffix_template: str
+    search_status_showing_all_template: str
+    search_status_no_match: str
+    search_status_partial_template: str
+    category_count_singular: str
+    category_count_plural: str
+    install_frame_label: str
+    install_note_verified_text: str
+    install_note_see_how: str
+    install_note_restart_html: str
+    install_tab_posix_label: str
+    install_tab_windows_label: str
+    install_tab_aria_label: str
+    install_hint_posix: str
+    install_hint_powershell: str
+    install_copy_label: str
+    install_copy_copied: str
+    install_copy_aria_label: str
+    footer_brand_html: str
+    footer_categories_label: str
+    breadcrumb_home: str
+    breadcrumb_aria_label: str
+    prevnext_previous: str
+    prevnext_next: str
+    prevnext_aria_label: str
+    see_also_title_template: str
+    formidable_stacks_heading: str
+    formidable_commands_heading: str
+    formidable_craft_floor_heading: str
+    change_badge_new: str
+    change_badge_updated: str
+    index_title_suffix: str
+    index_meta_description_template: str
+    update_modal_title: str
+    update_modal_body: str
+    update_modal_reload_button: str
+    translation_fallback_banner_template: str
+
+
+ENGLISH_STRINGS = Strings(
+    skip_link="Skip to content",
+    header_updated_label="Updated",
+    theme_toggle_switch_to_dark="Switch to dark theme",
+    theme_toggle_switch_to_light="Switch to light theme",
+    language_switcher_label="Language",
+    hero_headline="An atelier for the way you build.",
+    hero_lede_template=(
+        "{skill_count} Claude Code skills for the craft between the ticket and the "
+        "commit, across {category_count} categories — findable by name, browsable "
+        "below, and written like something a colleague actually handed you. Grown "
+        "out of my own projects over time, this collection is created and updated "
+        "automatically — and often — by Claude Opus, always its latest version, "
+        "as I code."
+    ),
+    search_label="Search skills",
+    search_placeholder="Search by name, summary, or category…",
+    search_clear="Clear",
+    search_reset_button="Clear search",
+    search_no_match_prefix="No skills match",
+    search_no_match_suffix_template="to see all {skill_count} again.",
+    search_status_showing_all_template="Showing all {count} skills.",
+    search_status_no_match="No skills match.",
+    search_status_partial_template="{shown} of {total} skills match.",
+    category_count_singular="skill",
+    category_count_plural="skills",
+    install_frame_label="Install TBaguette’s skills",
+    install_note_verified_text=(
+        "Only ever touches this folder — verified against your other skills, not "
+        "just claimed."
+    ),
+    install_note_see_how="See how",
+    install_note_restart_html=(
+        "Restart Claude Code (or run <code>/reload-plugins</code>), then invoke a "
+        "skill as <code>TBaguette:skill-name</code>. This is for Claude Code "
+        "specifically — the Claude Desktop app and claude.ai chat load skills "
+        "from your account instead of this folder, so cloning here won’t make "
+        "them appear there."
+    ),
+    install_tab_posix_label="macOS / Linux",
+    install_tab_windows_label="Windows (PowerShell)",
+    install_tab_aria_label="Choose your platform",
+    install_hint_posix="Works in bash, zsh, or fish — including WSL and Git Bash on Windows.",
+    install_hint_powershell="PowerShell 5.1 or 7+, the Windows default terminal since Windows 10.",
+    install_copy_label="Copy",
+    install_copy_copied="Copied!",
+    install_copy_aria_label="Copy install command",
+    footer_brand_html=(
+        "<strong>La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s "
+        "Atelier — the judgment calls that sit between the ticket and the commit, "
+        "organized like a proper bench."
+    ),
+    footer_categories_label="Categories",
+    breadcrumb_home="Home",
+    breadcrumb_aria_label="Breadcrumb",
+    prevnext_previous="Previous",
+    prevnext_next="Next",
+    prevnext_aria_label="Skill navigation",
+    see_also_title_template="More in {category}",
+    formidable_stacks_heading="Stacks",
+    formidable_commands_heading="Commands",
+    formidable_craft_floor_heading="Craft floor",
+    change_badge_new="New",
+    change_badge_updated="Updated",
+    index_title_suffix="Claude Code skills, organized",
+    index_meta_description_template=(
+        "{skill_count} Claude Code skills for the craft between the ticket and "
+        "the commit, organized into {category_count} categories and cross-linked "
+        "for the moment you need one."
+    ),
+    update_modal_title="New version available",
+    update_modal_body="This page has been updated. Reload to see the latest.",
+    update_modal_reload_button="Reload",
+    translation_fallback_banner_template=(
+        "This page hasn’t been translated into {language} yet — showing the "
+        "English version."
+    ),
+)
+
+
 # ---------------------------------------------------------------------------
 # Small internal helpers
 # ---------------------------------------------------------------------------
@@ -101,13 +255,52 @@ def _join(*parts: str) -> str:
     return "\n".join(p for p in parts if p)
 
 
+def _locale_url(locale: "locales.Locale", base_path: str, path_suffix: str) -> str:
+    """The one place "English lives at the root, every other locale lives
+    under /<code>/" is decided. path_suffix is the part after the locale
+    prefix — "" for the index, "skills/<slug>/" for a skill page,
+    "verify-install/" for that page — and never itself starts or ends
+    with a redundant slash beyond what's shown in the f-strings below."""
+    if locale.default:
+        return f"{base_path}/{path_suffix}"
+    return f"{base_path}/{locale.code}/{path_suffix}"
+
+
+def _render_language_switcher(
+    current_locale: "locales.Locale", base_path: str, path_suffix: str, strings: Strings
+) -> str:
+    items = _join(*(
+        f'<li><a class="language-switcher__link" href="{_locale_url(loc, base_path, path_suffix)}"'
+        + (' aria-current="true"' if loc.code == current_locale.code else "")
+        + f'>{escape_html(loc.endonym)}</a></li>'
+        for loc in locales.LOCALES
+    ))
+    return f"""<details class="language-switcher">
+  <summary class="language-switcher__summary">{escape_html(strings.language_switcher_label)}: {escape_html(current_locale.endonym)}</summary>
+  <ul class="language-switcher__list">
+{items}
+  </ul>
+</details>"""
+
+
+def _render_hreflang_block(base_path: str, path_suffix: str) -> str:
+    alternates = _join(*(
+        f'<link rel="alternate" hreflang="{escape_html(loc.hreflang)}" href="{_locale_url(loc, base_path, path_suffix)}">'
+        for loc in locales.LOCALES
+    ))
+    x_default = _locale_url(locales.DEFAULT_LOCALE, base_path, path_suffix)
+    return alternates + f'\n<link rel="alternate" hreflang="x-default" href="{x_default}">'
+
+
 # ---------------------------------------------------------------------------
 # Shared chrome: document shell, header, footer, theme toggle
 # ---------------------------------------------------------------------------
 
 
-def _render_head(*, title: str, meta_description: str, base_path: str = "") -> str:
+def _render_head(*, title: str, meta_description: str, base_path: str = "",
+                  locale: "locales.Locale" = locales.DEFAULT_LOCALE, path_suffix: str = "") -> str:
     desc = escape_html(meta_description)
+    canonical = _locale_url(locale, base_path, path_suffix)
     return f"""<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escape_html(title)}</title>
@@ -115,6 +308,8 @@ def _render_head(*, title: str, meta_description: str, base_path: str = "") -> s
 <meta property="og:type" content="website">
 <meta property="og:title" content="{escape_html(title)}">
 <meta property="og:description" content="{desc}">
+<link rel="canonical" href="{canonical}">
+{_render_hreflang_block(base_path, path_suffix)}
 <link rel="icon" type="image/svg+xml" href="{base_path}/assets/favicon.svg">
 <link rel="preload" href="{base_path}/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{base_path}/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -122,7 +317,8 @@ def _render_head(*, title: str, meta_description: str, base_path: str = "") -> s
 <script>{_THEME_BOOTSTRAP_JS}</script>"""
 
 
-def _render_updated_time(last_updated_utc: str, base_path: str = "") -> str:
+def _render_updated_time(last_updated_utc: str, base_path: str = "",
+                          strings: Strings = ENGLISH_STRINGS) -> str:
     # last_updated_utc is a UTC instant baked in at generation time (see
     # generate.py's own docstring on why it must be the very last step
     # before commit for this to be honest). Rendered here as a plain UTC
@@ -134,23 +330,29 @@ def _render_updated_time(last_updated_utc: str, base_path: str = "") -> str:
     # carries this same instant — see scripts/generate.py's _build_into().
     fallback = escape_html(last_updated_utc.replace("+00:00", "Z")) + " UTC"
     return f"""<p class="site-header__updated">
-      <span class="site-header__updated-label">Updated</span>
+      <span class="site-header__updated-label">{escape_html(strings.header_updated_label)}</span>
       <time class="site-header__updated-value" datetime="{escape_html(last_updated_utc)}" data-format-updated data-version-url="{base_path}/version.txt">{fallback}</time>
     </p>"""
 
 
-def _render_header(base_path: str = "", last_updated_utc: str = "") -> str:
-    updated_html = _render_updated_time(last_updated_utc, base_path) if last_updated_utc else ""
+def _render_header(base_path: str = "", last_updated_utc: str = "",
+                    *, locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                    path_suffix: str = "", strings: Strings = ENGLISH_STRINGS) -> str:
+    updated_html = _render_updated_time(last_updated_utc, base_path, strings) if last_updated_utc else ""
     return f"""<header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
-    <a class="wordmark" href="{base_path}/">
+    <a class="wordmark" href="{_locale_url(locale, base_path, '')}">
       {_icon("icon-wheat", css_class="icon wordmark__icon", base_path=base_path)}
       <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
     </a>
     <div class="site-header__actions">
       {updated_html}
-      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
+      {_render_language_switcher(locale, base_path, path_suffix, strings)}
+      <button class="theme-toggle" type="button" data-theme-toggle
+              aria-label="{escape_html(strings.theme_toggle_switch_to_light)}"
+              data-i18n-theme-light="{escape_html(strings.theme_toggle_switch_to_light)}"
+              data-i18n-theme-dark="{escape_html(strings.theme_toggle_switch_to_dark)}">
         {_icon("icon-sun", css_class="icon theme-toggle__icon theme-toggle__icon--sun", base_path=base_path)}
         {_icon("icon-moon", css_class="icon theme-toggle__icon theme-toggle__icon--moon", base_path=base_path)}
       </button>
@@ -159,18 +361,19 @@ def _render_header(base_path: str = "", last_updated_utc: str = "") -> str:
 </header>"""
 
 
-def _render_footer(categories: list[dict], base_path: str = "") -> str:
+def _render_footer(categories: list[dict], base_path: str = "",
+                    *, locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                    strings: Strings = ENGLISH_STRINGS) -> str:
+    index_url = _locale_url(locale, base_path, "")
     links = _join(*(
-        f'<li><a href="{base_path}/#{escape_html(cat["slug"])}">{escape_html(cat["title"])}</a></li>'
+        f'<li><a href="{index_url}#{escape_html(cat["slug"])}">{escape_html(cat["title"])}</a></li>'
         for cat in categories
     ))
     return f"""<footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand"><strong>La Boulangerie TBaguette</strong> is home to
-      TBaguette&rsquo;s Atelier — the judgment calls that sit between the ticket and
-      the commit, organized like a proper bench.</p>
-    <nav aria-label="Categories">
-      <p class="site-footer__nav-title">Categories</p>
+    <p class="site-footer__brand">{strings.footer_brand_html}</p>
+    <nav aria-label="{escape_html(strings.footer_categories_label)}">
+      <p class="site-footer__nav-title">{escape_html(strings.footer_categories_label)}</p>
       <ul class="site-footer__categories">
 {links}
       </ul>
@@ -181,19 +384,26 @@ def _render_footer(categories: list[dict], base_path: str = "") -> str:
 
 def _render_document(*, title: str, meta_description: str, body_class: str,
                       main_html: str, categories: list[dict],
-                      base_path: str = "", last_updated_utc: str = "") -> str:
+                      base_path: str = "", last_updated_utc: str = "",
+                      locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                      path_suffix: str = "", strings: Strings = ENGLISH_STRINGS) -> str:
     return f"""<!doctype html>
-<html lang="en">
+<html lang="{escape_html(locale.hreflang)}" dir="{escape_html(locale.dir)}">
 <head>
-{_render_head(title=title, meta_description=meta_description, base_path=base_path)}
+{_render_head(title=title, meta_description=meta_description, base_path=base_path, locale=locale, path_suffix=path_suffix)}
 </head>
-<body class="{body_class}">
-<a class="skip-link" href="#main">Skip to content</a>
-{_render_header(base_path, last_updated_utc)}
+<body class="{body_class}"
+      data-i18n-copied="{escape_html(strings.install_copy_copied)}"
+      data-i18n-no-match="{escape_html(strings.search_status_no_match)}"
+      data-i18n-modal-title="{escape_html(strings.update_modal_title)}"
+      data-i18n-modal-body="{escape_html(strings.update_modal_body)}"
+      data-i18n-modal-reload="{escape_html(strings.update_modal_reload_button)}">
+<a class="skip-link" href="#main">{escape_html(strings.skip_link)}</a>
+{_render_header(base_path, last_updated_utc, locale=locale, path_suffix=path_suffix, strings=strings)}
 <main id="main">
 {main_html}
 </main>
-{_render_footer(categories, base_path)}
+{_render_footer(categories, base_path, locale=locale, strings=strings)}
 <script src="{base_path}/assets/site.js" defer></script>
 </body>
 </html>
@@ -417,7 +627,9 @@ def _render_category_section(category: dict, skills: dict, icon_index: int,
 
 
 def render_index(categories: list[dict], skills: dict, base_path: str = "",
-                  last_updated_utc: str = "") -> str:
+                  last_updated_utc: str = "", *,
+                  locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                  strings: Strings = ENGLISH_STRINGS) -> str:
     """Full HTML document string for the landing page."""
     sections = _join(*(
         _render_category_section(cat, skills, i, base_path)
@@ -430,18 +642,21 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
         _render_search_empty_state(skill_count),
         f'<div data-categories>\n{sections}\n</div>',
     )
+    title = f"TBaguette’s Atelier — {strings.index_title_suffix}"
+    meta_description = strings.index_meta_description_template.format(
+        skill_count=skill_count, category_count=category_count
+    )
     return _render_document(
-        title="TBaguette’s Atelier — Claude Code skills, organized",
-        meta_description=(
-            f"{skill_count} Claude Code skills for the craft between the ticket and "
-            f"the commit, organized into {category_count} categories and cross-linked "
-            "for the moment you need one."
-        ),
+        title=title,
+        meta_description=meta_description,
         body_class="page-index",
         main_html=main_html,
         categories=categories,
         base_path=base_path,
         last_updated_utc=last_updated_utc,
+        locale=locale,
+        path_suffix="",
+        strings=strings,
     )
 
 
@@ -587,7 +802,9 @@ def _render_see_also(skill: dict, siblings: list[dict], base_path: str = "") -> 
 
 def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict | None,
                        siblings: list[dict], categories: list[dict],
-                       base_path: str = "", last_updated_utc: str = "") -> str:
+                       base_path: str = "", last_updated_utc: str = "",
+                       locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                       strings: Strings = ENGLISH_STRINGS) -> str:
     """Full HTML document string for one skill's page (siblings = other skills
     in the same category, for a 'see also' list; categories = full category
     list, for nav)."""
@@ -615,6 +832,9 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
         categories=categories,
         base_path=base_path,
         last_updated_utc=last_updated_utc,
+        locale=locale,
+        path_suffix=f"skills/{skill['slug']}/",
+        strings=strings,
     )
 
 
