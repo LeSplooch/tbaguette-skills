@@ -231,14 +231,15 @@ def build_content(
         skill_dir = root / slug
         locale_skill_dir = (locale_path / "skills" / slug) if locale_path else None
         fallback_description = translated_descriptions.get(slug)
+        category_title = translated_categories.get(category["slug"], category["title"])
         if slug == FORMIDABLE_SLUG:
             skills[slug] = build_formidable_skill_entry(
-                skill_dir, category,
+                skill_dir, category, category_title=category_title,
                 locale_skill_dir=locale_skill_dir, fallback_description=fallback_description,
             )
         else:
             skills[slug] = build_plain_skill_entry(
-                skill_dir, category,
+                skill_dir, category, category_title=category_title,
                 locale_skill_dir=locale_skill_dir, fallback_description=fallback_description,
             )
 
@@ -279,6 +280,7 @@ def list_skill_slugs(skills_root: Path) -> list[str]:
 
 def build_plain_skill_entry(
     skill_dir: Path, category: dict, *,
+    category_title: str | None = None,
     locale_skill_dir: Path | None = None, fallback_description: str | None = None,
 ) -> dict:
     """Build the schema entry for one of the 63 ordinary (non-formidable) skills.
@@ -290,6 +292,14 @@ def build_plain_skill_entry(
     trivially "in its own language," which is what lets templates.py
     (Task 6) key the fallback banner off this one flag regardless of
     whether a locale build is happening at all.
+
+    category_title, when given, is the (possibly translated) title to use
+    for this skill's own category_title field -- build_content passes in
+    categories.json's translation here so it reaches every place this
+    field is read (card tag, breadcrumb, see-also heading, <title>), not
+    just the top-level categories list. Falls back to category["title"]
+    (the raw English title) when not given, so any call site that doesn't
+    pass it behaves identically to before this parameter existed.
     """
     if locale_skill_dir is None:
         translated = True
@@ -305,7 +315,7 @@ def build_plain_skill_entry(
         "slug": skill_dir.name,
         "name": frontmatter["name"],
         "category_slug": category["slug"],
-        "category_title": category["title"],
+        "category_title": category_title if category_title is not None else category["title"],
         "description": description,
         "summary": summarize_description(description),
         "body_html": body_html,
@@ -316,6 +326,7 @@ def build_plain_skill_entry(
 
 def build_formidable_skill_entry(
     skill_dir: Path, category: dict, *,
+    category_title: str | None = None,
     locale_skill_dir: Path | None = None, fallback_description: str | None = None,
 ) -> dict:
     """Build the schema entry for formidable, including its inlined sub-pages.
@@ -330,6 +341,10 @@ def build_formidable_skill_entry(
     the whole page read as untranslated for the fallback banner (Task 6) --
     a coarser signal than per-file, deliberately, since the banner is a
     single page-level notice, not a per-tab one.
+
+    category_title behaves exactly as documented on build_plain_skill_entry
+    -- the (possibly translated) title threaded into this entry's own
+    category_title field, falling back to category["title"] when omitted.
     """
     if locale_skill_dir is None:
         main_translated = True
@@ -389,7 +404,7 @@ def build_formidable_skill_entry(
         "slug": skill_dir.name,
         "name": frontmatter["name"],
         "category_slug": category["slug"],
-        "category_title": category["title"],
+        "category_title": category_title if category_title is not None else category["title"],
         "description": description,
         "summary": summarize_description(description),
         "body_html": body_html,

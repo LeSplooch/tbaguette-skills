@@ -826,6 +826,37 @@ class LocaleBuildTests(unittest.TestCase):
                 content = content_pipeline.build_content(str(skills_root))
             self.assertTrue(content["skills"]["solo"]["translated"])
 
+    def test_locale_build_translates_per_skill_category_title_too(self):
+        """categories.json's translation must reach each skill's own
+        category_title field, not just the top-level categories list --
+        this is what the card tag, breadcrumb, see-also heading, and page
+        <title> actually read."""
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            skills_root = tmp_path / "skills"
+            locale_root = tmp_path / "i18n" / "xx"
+
+            skill_dir = skills_root / "zeta"
+            skill_dir.mkdir(parents=True)
+            (skill_dir / "SKILL.md").write_text(
+                "---\nname: zeta\ndescription: English zeta description.\n---\nBody.\n",
+                encoding="utf-8",
+            )
+            locale_root.mkdir(parents=True)
+            (locale_root / "categories.json").write_text(
+                '{"test-cat": "XX Translated Category"}', encoding="utf-8"
+            )
+
+            categories = [{"slug": "test-cat", "title": "English Test Cat", "skill_slugs": ["zeta"]}]
+            with mock.patch.object(content_pipeline, "CATEGORIES", categories):
+                content = content_pipeline.build_content(
+                    str(skills_root), locale="xx", locale_root=str(locale_root)
+                )
+            self.assertEqual(content["categories"][0]["title"], "XX Translated Category")
+            self.assertEqual(
+                content["skills"]["zeta"]["category_title"], "XX Translated Category",
+            )
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

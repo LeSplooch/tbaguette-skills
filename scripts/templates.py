@@ -41,6 +41,7 @@ generator.
 
 from html import escape as _escape_html_impl
 
+import content_pipeline
 import locales
 from dataclasses import dataclass
 
@@ -923,8 +924,18 @@ def _render_tab_group(*, heading: str, items: list[dict]) -> str:
             f'<div class="tabs__panel" role="tabpanel" id="{item_id}" '
             f'aria-labelledby="{tab_id}" tabindex="0"{hidden_attr}>{item["html"]}</div>'
         )
-    return f"""<section class="formidable-extra__group" aria-labelledby="{escape_html(heading.lower())}-heading">
-  <h2 id="{escape_html(heading.lower())}-heading" class="formidable-extra__subtitle">{escape_html(heading)}</h2>
+    # heading_id via content_pipeline.slugify() rather than a bare
+    # heading.lower(): .lower() only ever worked because English's and
+    # French's Stacks/Commands headings happen to be single words --
+    # a genuinely multi-word translated heading would leave a literal
+    # space in the id, which is invalid HTML and breaks aria-labelledby
+    # (a space-separated id list misparses one space-containing id as two
+    # nonexistent ones). slugify() already produces an ASCII-safe,
+    # hyphen-joined, no-space string, so it needs no escape_html() around
+    # it, unlike the old .lower() call.
+    heading_id = f"{content_pipeline.slugify(heading)}-heading"
+    return f"""<section class="formidable-extra__group" aria-labelledby="{heading_id}">
+  <h2 id="{heading_id}" class="formidable-extra__subtitle">{escape_html(heading)}</h2>
   <div class="tabs" data-tabs>
     <div class="tabs__list" role="tablist" aria-label="{escape_html(heading)}">
       {"".join(tabs)}

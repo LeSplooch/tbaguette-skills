@@ -442,6 +442,35 @@ def check_i18n_fallback_banner() -> None:
           'class="translation-banner"' not in html_default_skill_page)
 
 
+def check_i18n_multiword_heading_id() -> None:
+    """_render_tab_group's heading id must come from a real slugify, not a
+    bare .lower() -- English/French both happen to have single-word Stacks/
+    Commands headings today, so .lower() alone never showed the bug, but a
+    genuinely multi-word translated heading would leave a literal space in
+    the id, which is invalid HTML and breaks aria-labelledby (a
+    space-separated id list would misparse one space-containing id as two
+    nonexistent ones)."""
+    import dataclasses
+    import re
+
+    multiword_strings = dataclasses.replace(
+        ENGLISH_STRINGS, formidable_stacks_heading="Multi Word Heading"
+    )
+    html = render_skill_page(
+        FIXTURE["skills"]["formidable"], prev_skill=None, next_skill=None, siblings=[],
+        categories=FIXTURE["categories"], base_path="", strings=multiword_strings,
+    )
+    check("a multi-word translated heading produces a space-free HTML id "
+          "(otherwise aria-labelledby, a space-separated id list, would "
+          "misparse a single id containing an embedded space as two ids)",
+          'id="multi-word-heading-heading"' in html)
+
+    aria_match = re.search(r'aria-labelledby="(multi[^"]*)"', html)
+    check("...and the tablist section's aria-labelledby value pointing at "
+          "that heading contains no literal space character",
+          aria_match is not None and " " not in aria_match.group(1))
+
+
 def main() -> None:
     categories = FIXTURE["categories"]
     skills = FIXTURE["skills"]
@@ -597,6 +626,7 @@ def main() -> None:
     check_i18n_content_links_and_strings()
     check_i18n_verify_install_page()
     check_i18n_fallback_banner()
+    check_i18n_multiword_heading_id()
 
     print(f"\n{checker.total} checks passed.")
     print(f"Preview files written to {PREVIEW_DIR}")
