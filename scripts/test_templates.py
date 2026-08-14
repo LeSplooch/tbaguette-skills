@@ -502,33 +502,91 @@ def check_i18n_fallback_banner() -> None:
           'class="translation-banner"' not in html_default_skill_page)
 
 
-def check_i18n_multiword_heading_id() -> None:
-    """_render_tab_group's heading id must come from a real slugify, not a
-    bare .lower() -- English/French both happen to have single-word Stacks/
-    Commands headings today, so .lower() alone never showed the bug, but a
-    genuinely multi-word translated heading would leave a literal space in
-    the id, which is invalid HTML and breaks aria-labelledby (a
-    space-separated id list would misparse one space-containing id as two
-    nonexistent ones)."""
+def check_i18n_tab_group_heading_ids_are_translation_independent() -> None:
+    """_render_tab_group's heading id must not be derived from the heading
+    text at all. Two derivations were tried and both broke on real
+    translated content: heading.lower() left a literal space in the id for
+    any multi-word heading, and content_pipeline.slugify() collapsed an
+    all-non-Latin heading to "" and fell through to its literal "section"
+    fallback -- which, since BOTH of formidable's groups do that in
+    zh/ja/ko/ru/hi/ar, put id="section-heading" on the page twice.
+
+    The contract now: the id comes from the caller's stable ASCII group_id,
+    so it is byte-identical in every locale no matter what the heading says.
+    Both failure modes are asserted below against real shipped headings,
+    not synthetic ones -- this project has repeatedly found that synthetic
+    fixtures miss what real translated content hits."""
     import dataclasses
     import re
 
+    # zh's real shipped headings: 平台 (Stacks) / 命令 (Commands). Every
+    # character in both strips to nothing under slugify's [^a-z0-9]+.
+    zh_strings = dataclasses.replace(
+        ENGLISH_STRINGS,
+        formidable_stacks_heading="平台",
+        formidable_commands_heading="命令",
+    )
+    html_zh = render_skill_page(
+        FIXTURE["skills"]["formidable"], prev_skill=None, next_skill=None, siblings=[],
+        categories=FIXTURE["categories"], base_path="", strings=zh_strings,
+    )
+
+    check("an all-non-Latin heading does not collapse to the slugify "
+          "fallback id (the regression: both groups landing on "
+          "id=\"section-heading\" on the same page)",
+          'id="section-heading"' not in html_zh)
+
+    group_ids = re.findall(r'<section class="formidable-extra__group" '
+                           r'aria-labelledby="([^"]+)"', html_zh)
+    check("both tab groups still render with non-Latin headings",
+          len(group_ids) == 2)
+    check("...and the two groups' aria-labelledby targets are DIFFERENT ids "
+          "(identical ids made the Commands panel's accessible name resolve "
+          "to the Stacks heading)",
+          len(set(group_ids)) == 2)
+
+    # Each group's aria-labelledby must resolve to a heading that is really
+    # that group's own -- an id being unique is not enough if it points at
+    # the wrong h2.
+    for group_id, expected_heading in (("stacks", "平台"), ("commands", "命令")):
+        heading_id = f"{group_id}-heading"
+        check(f"the {group_id} group is labelled by id=\"{heading_id}\", a "
+              "stable ASCII id independent of its translated heading",
+              heading_id in group_ids)
+        check(f"...and that id belongs to the h2 actually reading "
+              f"\"{expected_heading}\", so the label resolves to its own "
+              "group's heading and not the other group's",
+              f'<h2 id="{heading_id}" class="formidable-extra__subtitle">'
+              f'{expected_heading}</h2>' in html_zh)
+
+    # The older multi-word failure mode, still guarded: no id may contain a
+    # space, since aria-labelledby is a space-separated id list and one
+    # space-containing id misparses as two nonexistent ones.
     multiword_strings = dataclasses.replace(
         ENGLISH_STRINGS, formidable_stacks_heading="Multi Word Heading"
     )
-    html = render_skill_page(
+    html_multiword = render_skill_page(
         FIXTURE["skills"]["formidable"], prev_skill=None, next_skill=None, siblings=[],
         categories=FIXTURE["categories"], base_path="", strings=multiword_strings,
     )
-    check("a multi-word translated heading produces a space-free HTML id "
-          "(otherwise aria-labelledby, a space-separated id list, would "
-          "misparse a single id containing an embedded space as two ids)",
-          'id="multi-word-heading-heading"' in html)
+    check("a multi-word translated heading leaves the id untouched -- it is "
+          "the caller's group_id, not the heading, so no space can reach it",
+          'id="stacks-heading"' in html_multiword
+          and 'id="multi-word-heading-heading"' not in html_multiword)
 
-    aria_match = re.search(r'aria-labelledby="(multi[^"]*)"', html)
-    check("...and the tablist section's aria-labelledby value pointing at "
-          "that heading contains no literal space character",
-          aria_match is not None and " " not in aria_match.group(1))
+    aria_values = re.findall(r'aria-labelledby="([^"]*)"', html_multiword)
+    check("...and no aria-labelledby value anywhere on the page contains a "
+          "literal space character",
+          aria_values and not any(" " in value for value in aria_values))
+
+    # The stable-id claim is only worth anything if it actually holds across
+    # locales: the same two ids must appear whatever the headings say.
+    check("the ids are byte-identical across wildly different heading "
+          "translations -- that is the whole point of a stable group_id",
+          set(re.findall(r'<h2 id="([^"]+)" class="formidable-extra__subtitle"',
+                         html_zh))
+          == set(re.findall(r'<h2 id="([^"]+)" class="formidable-extra__subtitle"',
+                            html_multiword)))
 
 
 def check_i18n_quote_glyphs() -> None:
@@ -841,7 +899,7 @@ def main() -> None:
     check_i18n_content_links_and_strings()
     check_i18n_verify_install_page()
     check_i18n_fallback_banner()
-    check_i18n_multiword_heading_id()
+    check_i18n_tab_group_heading_ids_are_translation_independent()
     check_i18n_quote_glyphs()
     check_i18n_sentence_end()
     check_i18n_prevnext_arrows()

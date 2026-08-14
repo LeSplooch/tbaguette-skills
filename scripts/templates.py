@@ -41,7 +41,6 @@ generator.
 
 from html import escape as _escape_html_impl
 
-import content_pipeline
 import locales
 from dataclasses import dataclass
 
@@ -944,7 +943,7 @@ def _render_translation_fallback_banner(locale: "locales.Locale", strings: Strin
     return f'<p class="translation-banner" role="note">{escape_html(message)}</p>'
 
 
-def _render_tab_group(*, heading: str, items: list[dict],
+def _render_tab_group(*, group_id: str, heading: str, items: list[dict],
                        lang: str | None = None, text_dir: str | None = None) -> str:
     if not items:
         return ""
@@ -970,16 +969,22 @@ def _render_tab_group(*, heading: str, items: list[dict],
             f'aria-labelledby="{tab_id}" tabindex="0"{hidden_attr}'
             f'{_fallback_attrs(lang, text_dir)}>{item["html"]}</div>'
         )
-    # heading_id via content_pipeline.slugify() rather than a bare
-    # heading.lower(): .lower() only ever worked because English's and
-    # French's Stacks/Commands headings happen to be single words --
-    # a genuinely multi-word translated heading would leave a literal
-    # space in the id, which is invalid HTML and breaks aria-labelledby
-    # (a space-separated id list misparses one space-containing id as two
-    # nonexistent ones). slugify() already produces an ASCII-safe,
-    # hyphen-joined, no-space string, so it needs no escape_html() around
-    # it, unlike the old .lower() call.
-    heading_id = f"{content_pipeline.slugify(heading)}-heading"
+    # heading_id comes from the caller's stable, translation-independent
+    # group_id -- never from the heading text. Two earlier attempts derived
+    # it from the heading and both broke on real translated content:
+    # heading.lower() left a literal space in the id for any multi-word
+    # heading (invalid HTML, and aria-labelledby is a space-separated id
+    # list, so one space-containing id misparses as two nonexistent ones),
+    # and content_pipeline.slugify() -- whose [^a-z0-9]+ strip is ASCII-only
+    # -- collapsed an entirely non-Latin heading to the empty string and
+    # fell through to its literal "section" fallback. Since both of
+    # formidable's groups do that in zh/ja/ko/ru/hi/ar, BOTH landed on
+    # id="section-heading" on the same page: a duplicate id, with the
+    # Commands panel's aria-labelledby resolving to the Stacks heading.
+    # An id is a machine identifier, so it gets a machine-chosen name;
+    # heading stays display-only. group_id is caller-supplied plain ASCII
+    # (see _render_formidable_extras), so it needs no escaping or slugging.
+    heading_id = f"{group_id}-heading"
     return f"""<section class="formidable-extra__group" aria-labelledby="{heading_id}">
   <h2 id="{heading_id}" class="formidable-extra__subtitle">{escape_html(heading)}</h2>
   <div class="tabs" data-tabs>
@@ -1014,10 +1019,15 @@ def _render_formidable_extras(skill: dict, strings: Strings = ENGLISH_STRINGS, *
     if not skill.get("is_formidable"):
         return ""
     groups = _join(
-        _render_tab_group(heading=strings.formidable_stacks_heading,
+        # group_id values are stable English keys, deliberately identical
+        # across every locale: they are HTML ids and anchor targets, not
+        # display text. Their headings are translated; these are not.
+        _render_tab_group(group_id="stacks",
+                          heading=strings.formidable_stacks_heading,
                           items=skill.get("formidable_stacks") or [],
                           lang=lang, text_dir=text_dir),
-        _render_tab_group(heading=strings.formidable_commands_heading,
+        _render_tab_group(group_id="commands",
+                          heading=strings.formidable_commands_heading,
                           items=skill.get("formidable_commands") or [],
                           lang=lang, text_dir=text_dir),
         _render_craft_floor(skill, strings, lang=lang, text_dir=text_dir),
