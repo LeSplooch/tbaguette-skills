@@ -1,6 +1,6 @@
 # TBaguette
 
-73 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+74 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -24,6 +24,7 @@ TBaguette skill hands off to a neighbour.
 
 | Skill | For |
 |---|---|
+| `using-tbaguette` | Force-injected at every session start: check TBaguette's own skills before every response, for the whole conversation |
 | `calibrating-confidence` | Marking verified vs inferred vs assumed; false precision; saying you don't know |
 | `red-teaming-your-own-work` | A bounded adversarial pass before handing work off |
 | `estimating-effort` | Reference classes, ranges over points, the planning fallacy |

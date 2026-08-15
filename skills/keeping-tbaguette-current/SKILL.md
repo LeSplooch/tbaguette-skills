@@ -31,32 +31,37 @@ If `~/.claude/skills/TBaguette/.git` doesn't exist, there's nothing to do —
 stop quietly. This shouldn't normally happen (this skill only runs from
 inside that same installed plugin), but don't assume; check.
 
-## 1. Check — every conversation, unconditionally
+## 1. Check — already done automatically at session start
 
-No rate-limit gate here, on purpose: check every single time this skill
-runs at the start of a conversation, regardless of how recently the last
-check happened — don't read `~/.claude/tbaguette-update-log.md`'s
-`Last checked:` line to decide *whether* to check. This is safe to do
-unthrottled because of the grain it runs at, not despite it: this fires
-once per new conversation (per the trigger description above), never once
-per message, and a single `git fetch` against one small repo under a short
-timeout is cheap enough not to need throttling on top of that.
+TBaguette's own `SessionStart` hook (`hooks/session-start`) now runs this
+step for you, every session, deterministically — it doesn't depend on this
+skill's description being matched at all. Its result shows up early in the
+conversation as a `<TBAGUETTE_UPDATE_CHECK>` block: the fetch already run,
+`HEAD` and `origin/master` already compared, the working tree's clean/dirty
+state already read.
 
-Fetch with a short timeout — this is meant to be a quiet background courtesy
-check, and a stalled connection should never hang the whole turn waiting on
-it:
+- **That block present, and this is close to where it appeared** (the first
+  response of a fresh session, or right after `/clear`/`/compact`): use its
+  data directly and skip straight to step 2 or 3 below. Don't re-fetch — the
+  hook already did.
+- **It's been a while** (many messages since session start), or **the user
+  is explicitly asking right now** whether TBaguette is current: re-run the
+  check yourself — the hook only guarantees this happens once per session,
+  not that the result stays fresh for the rest of a long conversation. Same
+  commands as before, now as the fallback path rather than the only path:
 
-```
-git -C ~/.claude/skills/TBaguette fetch origin master --quiet
-```
+  ```
+  git -C ~/.claude/skills/TBaguette fetch origin master --quiet
+  ```
 
-(run with roughly a 15-second timeout).
+  (run with roughly a 15-second timeout). Compare
+  `git -C ~/.claude/skills/TBaguette rev-parse HEAD` against
+  `git -C ~/.claude/skills/TBaguette rev-parse origin/master`.
 
-Compare `git -C ~/.claude/skills/TBaguette rev-parse HEAD` against
-`git -C ~/.claude/skills/TBaguette rev-parse origin/master`. Update the
-`Last checked:` timestamp in the log either way, including when the fetch
-itself failed — it's a record of the most recent attempt for a human
-skimming the log, not an input to any decision this skill makes.
+Either way — hook-provided or freshly run — update the `Last checked:`
+timestamp in the log, including when the fetch itself failed. It's a record
+of the most recent attempt for a human skimming the log, not an input to any
+decision this skill makes.
 
 - **Same SHA:** up to date. If this was a background/automatic check, don't
   say anything — silence is correct for "nothing to report." If the user
@@ -188,12 +193,13 @@ on its own, going back as far as this skill has been running.
   fast-forward merges.
 - **Never touches anything outside `~/.claude/skills/TBaguette`** and its
   own log file.
-- **Never modifies Claude Code settings or installs a hook.** Reliable
-  "every session" triggering the way this skill's own description asks for
-  depends on normal skill matching. A user who wants a harder guarantee can
-  wire up their own `SessionStart` hook that nudges toward this skill —
-  that's a deliberate, visible choice for them to make about their own
-  global settings, not something installing a plugin should do on their
-  behalf.
+- **The plugin's `SessionStart` hook only ever reads.** It runs step 1
+  (fetch, compare, `status --porcelain`) and nothing past it — no merge, no
+  changelog write, no settings change. Steps 2–6 stay exactly as documented
+  above, run by Claude, not by the hook script. This was previously a "we
+  deliberately don't install a hook for this" line; it changed on purpose —
+  see `superpowers/specs/2026-08-15-using-tbaguette-hook-design.md` for why
+  a plugin-shipped, read-only check was judged worth reversing that stance,
+  and `hooks/session-start` for exactly what it runs.
 - **Never discards local changes** to force an update through — see the
   safety gate above.

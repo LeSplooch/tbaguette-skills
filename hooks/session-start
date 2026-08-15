@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# SessionStart hook for the TBaguette plugin.
+#
+# Two things get injected as additionalContext:
+#   1. The full content of skills/using-tbaguette/SKILL.md, verbatim -- the
+#      standing instruction to check TBaguette's skills before every
+#      response, for the rest of the conversation.
+#   2. A deterministic result of keeping-tbaguette-current's step 1 (check
+#      the installed plugin against the published repo) -- fetch, compare,
+#      working-tree status. Steps 2-6 (safety gate, fast-forward update,
+#      report, log) are judgment calls and stay with Claude, following that
+#      skill's own instructions using the data injected here.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+using_tbaguette_content=$(cat "${PLUGIN_ROOT}/skills/using-tbaguette/SKILL.md" 2>&1 || echo "Error reading using-tbaguette skill")
+
+# --- keeping-tbaguette-current: step 1 (check) only, run deterministically ---
+#
+# Checks the literal ${PLUGIN_ROOT}/.git path rather than trusting git's own
+# upward directory search: if this directory isn't actually a clone, that
+# search can silently attribute a git command to a different, unrelated
+# ancestor repo instead of failing loudly.
+if [ -d "${PLUGIN_ROOT}/.git" ]; then
+    fetch_ok=1
+    # http.lowSpeedLimit/Time bounds the fetch without depending on the
+    # external `timeout` command, which isn't guaranteed present on every
+    # platform this repo supports (notably stock macOS).
+    git -C "${PLUGIN_ROOT}" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=15 \
+        fetch origin master --quiet >/dev/null 2>&1 || fetch_ok=0
+
+    if [ "$fetch_ok" -eq 1 ]; then
+        head_sha=$(git -C "${PLUGIN_ROOT}" rev-parse HEAD 2>/dev/null || echo "unknown")
+        origin_sha=$(git -C "${PLUGIN_ROOT}" rev-parse origin/master 2>/dev/null || echo "unknown")
+        porcelain=$(git -C "${PLUGIN_ROOT}" status --porcelain 2>/dev/null || echo "")
+
+        if [ "$head_sha" = "unknown" ] || [ "$origin_sha" = "unknown" ]; then
+            sha_status="unknown (rev-parse failed)"
+        elif [ "$head_sha" = "$origin_sha" ]; then
+            sha_status="same (up to date)"
+        else
+            sha_status="different (update available)"
+        fi
+
+        if [ -z "$porcelain" ]; then
+            tree_status="clean"
+        else
+            tree_status="dirty (local changes present)"
+        fi
+
+        update_check_block=$(cat <<EOF
+The TBaguette:keeping-tbaguette-current skill's step 1 (check) already ran automatically for this session -- do not re-fetch.
+
+- Installed plugin path: ${PLUGIN_ROOT}
+- HEAD: ${head_sha}
+- origin/master: ${origin_sha}
+- Comparison: ${sha_status}
+- Working tree: ${tree_status}
+
+If the comparison is "different" and the tree is clean, follow the TBaguette:keeping-tbaguette-current skill's remaining steps (safety gate, fast-forward update, report, record) using this data. If the tree is dirty, follow that skill's local-changes handling instead of updating. If the comparison is "same," this was a background check -- stay silent unless asked.
+EOF
+)
+    else
+        update_check_block="The TBaguette:keeping-tbaguette-current skill's step 1 (check) ran automatically but the fetch failed (offline, DNS, or slow connection) -- treat as a failed background check per that skill: stay silent unless the user explicitly asks."
+    fi
+else
+    update_check_block="Installed plugin path ${PLUGIN_ROOT} is not a git clone (no .git directory) -- TBaguette:keeping-tbaguette-current's update check does not apply here; nothing to do."
+fi
+
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+using_tbaguette_escaped=$(escape_for_json "$using_tbaguette_content")
+update_check_escaped=$(escape_for_json "$update_check_block")
+
+session_context="<EXTREMELY_IMPORTANT>\nYou have TBaguette.\n\n**Below is the full content of your 'TBaguette:using-tbaguette' skill - for all other TBaguette skills, use the 'Skill' tool with 'TBaguette:<skill-name>':**\n\n${using_tbaguette_escaped}\n</EXTREMELY_IMPORTANT>\n\n<TBAGUETTE_UPDATE_CHECK>\n${update_check_escaped}\n</TBAGUETTE_UPDATE_CHECK>"
+
+printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
+
+exit 0
