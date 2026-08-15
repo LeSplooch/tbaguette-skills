@@ -346,14 +346,13 @@
 
     // How many extra tiles of travel one unit of release velocity (in
     // index-units per ms) buys, and the hard cap on how many extra tiles a
-    // single flick can add. The cap matters for its own sake, not just to
-    // keep things sane: layout()'s clamp()s already flatten translateX by
-    // |offset| >= 2, rotateY by ~1.1, and opacity by ~3.1, so tiles past
-    // roughly three slots out are already invisible or motionless —
-    // momentum that tried to carry further than that would be spending
-    // velocity on a jump nobody would see happen.
-    var MOMENTUM_TIME_CONSTANT_MS = 180;
-    var MAX_MOMENTUM_TILES = 3;
+    // single flick can add. The cap exists so an especially fast or noisy
+    // velocity reading can't fling the ring so far it reads as a jump-cut
+    // rather than a spin — not because further tiles wouldn't be visible;
+    // the one that ends up centred is always animated fully into view
+    // regardless of how many slots away it started.
+    var MOMENTUM_TIME_CONSTANT_MS = 260;
+    var MAX_MOMENTUM_TILES = 5;
 
     rail.addEventListener('pointerdown', function (event) {
       if (event.button !== undefined && event.button !== 0) return;
