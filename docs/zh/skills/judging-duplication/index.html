@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>judging-duplication — 变更落地 — TBaguette’s Atelier</title>
-<meta name="description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta name="description" content="在以下情况下使用：两段代码看起来几乎一模一样，把它们并成一个像是明摆着的清理；评审者问起为什么会存在一份近乎相同的副本；要抽出一个共用的辅助函数或者一个基类；或者一次 DRY 式的清理正要把两个只在某个无关紧要的小细节上不同的东西合起来。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="judging-duplication — 变更落地 — TBaguette’s Atelier">
-<meta property="og:description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta property="og:description" content="在以下情况下使用：两段代码看起来几乎一模一样，把它们并成一个像是明摆着的清理；评审者问起为什么会存在一份近乎相同的副本；要抽出一个共用的辅助函数或者一个基类；或者一次 DRY 式的清理正要把两个只在某个无关紧要的小细节上不同的东西合起来。">
 <link rel="canonical" href="/tbaguette-skills/zh/skills/judging-duplication/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/judging-duplication/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/judging-duplication/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T17:30:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-15T17:30:36Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T17:38:29+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-15T17:38:29Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -93,7 +93,7 @@
     <span class="change-badge change-badge--new" data-fresh-at="2026-08-14T14:09:56+02:00">新增</span>
   </div>
   <span class="tag skill-article__tag">变更落地</span>
-  <p class="lede">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists, when extracting a shared helper or a base class, or when a DRY pass is about to unify things that differ only in a small arbitrary detail. Covers telling duplication that is debt from duplication that is a contract, the rule of three, what a merge breaks that no local test observes, and the residue to leave when a split is deliberate.</p>
+  <p class="lede">在以下情况下使用：两段代码看起来几乎一模一样，把它们并成一个像是明摆着的清理；评审者问起为什么会存在一份近乎相同的副本；要抽出一个共用的辅助函数或者一个基类；或者一次 DRY 式的清理正要把两个只在某个无关紧要的小细节上不同的东西合起来。涵盖如何分辨欠债式的重复和契约式的重复、“重复三次再抽取”的三次法则、一次合并会弄坏哪些本地测试根本观察不到的东西，以及当拆分是刻意为之时该在原地留下什么样的交代。</p>
 </div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Two functions that differ only in a detail are the most obvious cleanup in the file, and merging them can be invisible to every test you currently have.</p>
 <p>The question before unifying is never &quot;are these the same?&quot; It is <strong>&quot;what would notice if they stopped differing?&quot;</strong></p>
