@@ -13,8 +13,8 @@
  *                      48h window against the visitor's own clock)
  *   - fresh coverflow (landing page only — steps which rail tile is centred
  *                       on a timer; pauses on hover/focus; click-and-drag
- *                       spins it manually, clicking a side tile recentres
- *                       it instead of navigating)
+ *                       spins it manually with release momentum, clicking a
+ *                       side tile recentres it instead of navigating)
  *   - language switcher dismissal (every page — Escape / outside click on
  *                                   the native <details>; opening and
  *                                   closing it needs no JS)
@@ -332,6 +332,29 @@
     var dragStartX = 0;
     var dragStartIndex = 0;
 
+    // Momentum: a fast flick should carry the ring a bit past wherever the
+    // pointer happened to be at release, same as it would with any inertial
+    // scroller. That needs a release *velocity*, and the very last
+    // pointermove alone is too noisy a source for one — a visitor's hand
+    // can pause for a few ms right at the point of lifting off, which would
+    // read as "released at zero speed" even mid-flick. Instead this keeps a
+    // short rolling window of recent {time, x} samples and measures
+    // velocity across that whole window, so one twitchy final sample can't
+    // dominate the reading.
+    var VELOCITY_WINDOW_MS = 100;
+    var dragSamples = [];
+
+    // How many extra tiles of travel one unit of release velocity (in
+    // index-units per ms) buys, and the hard cap on how many extra tiles a
+    // single flick can add. The cap matters for its own sake, not just to
+    // keep things sane: layout()'s clamp()s already flatten translateX by
+    // |offset| >= 2, rotateY by ~1.1, and opacity by ~3.1, so tiles past
+    // roughly three slots out are already invisible or motionless —
+    // momentum that tried to carry further than that would be spending
+    // velocity on a jump nobody would see happen.
+    var MOMENTUM_TIME_CONSTANT_MS = 180;
+    var MAX_MOMENTUM_TILES = 3;
+
     rail.addEventListener('pointerdown', function (event) {
       if (event.button !== undefined && event.button !== 0) return;
       pointerDown = true;
@@ -339,6 +362,7 @@
       dragPointerId = event.pointerId;
       dragStartX = event.clientX;
       dragStartIndex = activeIndex;
+      dragSamples = [{ t: event.timeStamp, x: event.clientX }];
       if (rail.setPointerCapture) rail.setPointerCapture(event.pointerId);
     });
 
@@ -350,6 +374,10 @@
         dragMoved = true;
         manualOverride = true;
         tiles.forEach(function (tile) { tile.style.setProperty('transition', 'none', 'important'); });
+      }
+      dragSamples.push({ t: event.timeStamp, x: event.clientX });
+      while (dragSamples.length > 2 && event.timeStamp - dragSamples[0].t > VELOCITY_WINDOW_MS) {
+        dragSamples.shift();
       }
       // Dragging left (negative deltaX) steps forward, the same direction
       // as the next button and the auto-advance timer — see
@@ -366,7 +394,29 @@
       if (!dragMoved) return;
       var deltaX = event.clientX - dragStartX;
       var liveIndex = dragStartIndex - deltaX / DRAG_STEP_PX;
-      activeIndex = ((Math.round(liveIndex) % count) + count) % count;
+
+      // Same sign convention as the drag itself: a release still moving
+      // left (negative px/ms) is still travelling in the positive-index
+      // direction, so it gets negated the same way deltaX is above.
+      //
+      // A drag that was fast a moment ago but has since come to a stop —
+      // pointer held still before lifting off — leaves dragSamples' newest
+      // entry stale by the time pointerup fires, since a still pointer
+      // emits no pointermove events to refresh it. Without the STALL_MS
+      // check, that old sample would read as "released while still
+      // flying," launching a jump the visitor never asked for. A release
+      // that follows the last recorded movement by more than STALL_MS is
+      // instead treated as having already decayed to zero.
+      var STALL_MS = 60;
+      var oldest = dragSamples[0];
+      var newest = dragSamples[dragSamples.length - 1];
+      var elapsed = newest.t - oldest.t;
+      var stalled = event.timeStamp - newest.t > STALL_MS;
+      var velocityIndexPerMs = (!stalled && elapsed > 0) ? -(newest.x - oldest.x) / elapsed / DRAG_STEP_PX : 0;
+      var momentum = velocityIndexPerMs * MOMENTUM_TIME_CONSTANT_MS;
+      momentum = Math.max(-MAX_MOMENTUM_TILES, Math.min(MAX_MOMENTUM_TILES, momentum));
+
+      activeIndex = ((Math.round(liveIndex + momentum) % count) + count) % count;
       tiles.forEach(function (tile) { tile.style.removeProperty('transition'); });
       layout(activeIndex);
     }
