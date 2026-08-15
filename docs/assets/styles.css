@@ -1219,7 +1219,7 @@ code {
   .fresh__rail {
     position: relative;
     display: block;
-    height: 15.5rem;
+    height: 22rem;
     perspective: 900px;
     overflow: visible;
     -webkit-mask-image: none;
@@ -1250,21 +1250,36 @@ code {
      directly would replace this positioning outright rather than add to
      it — the trap the ring version's animations sat in, two reworks ago.
 
-     width: 17rem is explicit and load-bearing, not tidiness: the base rule
-     sizes .fresh__tile via `flex: 0 0 17rem`, which only means anything
-     while .fresh__rail is still a flex container. The instant this block's
+     width is explicit and load-bearing, not tidiness: the base rule sizes
+     .fresh__tile via `flex: 0 0 17rem`, which only means anything while
+     .fresh__rail is still a flex container. The instant this block's
      `.fresh__rail { display: block }` takes over, flex-basis stops doing
      anything, and an absolutely positioned box with no explicit width
      shrink-to-fits — which, for a flex-column card whose summary text has
      no natural wrap point to fall back to, measured out to the entire
-     remaining width of the rail rather than anything card-shaped. */
+     remaining width of the rail rather than anything card-shaped.
+
+     22rem/20rem (not the base rule's 17rem card width) are measured, not
+     guessed: with real skill summaries — some 130-180 characters — a card
+     narrower than this clips real content under overflow: hidden below,
+     the exact bug this size fixes. Measured every currently-fresh tile's
+     true unclipped height (transform: none, so an in-progress transition
+     retargeting mid-scale doesn't read as shorter than the tile actually
+     is — it very nearly did, the first time this was measured) across
+     increasing widths; going past 22rem keeps helping but each further
+     rem buys less than the last, so this is a point on a curve, not a
+     plateau — picked because it's already a real jump from 17rem and the
+     remaining gain per rem past it is small. 20rem then covers that
+     width's measured worst case (306px) with a little headroom, so
+     overflow: hidden below is a safety net for a pathological future
+     summary, not a rule the typical case already needs. */
   a.fresh__tile {
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 17rem;
-    margin: -6.75rem 0 0 -8.5rem;
-    height: 13.5rem;
+    width: 22rem;
+    margin: -10rem 0 0 -11rem;
+    height: 20rem;
     overflow: hidden;
     flex: none;
     scroll-snap-align: none;
