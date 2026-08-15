@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>redacting-sensitive-output — सुरक्षा (रक्षात्मक) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…">
+<meta name="description" content="जब सीक्रेट, क्रेडेंशियल, टोकन या निजी डेटा किसी लॉग लाइन, एरर मैसेज, स्टैक ट्रेस, क्रैश डंप, मेट्रिक लेबल, ट्रेस स्पैन, ऐनालिटिक्स इवेंट…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="redacting-sensitive-output — सुरक्षा (रक्षात्मक) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…">
+<meta property="og:description" content="जब सीक्रेट, क्रेडेंशियल, टोकन या निजी डेटा किसी लॉग लाइन, एरर मैसेज, स्टैक ट्रेस, क्रैश डंप, मेट्रिक लेबल, ट्रेस स्पैन, ऐनालिटिक्स इवेंट…">
 <link rel="canonical" href="/tbaguette-skills/hi/skills/redacting-sensitive-output/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/redacting-sensitive-output/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/redacting-sensitive-output/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T17:53:37+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-15T17:53:37Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T18:02:49+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-15T18:02:49Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -93,7 +93,7 @@
     <span class="change-badge change-badge--new" data-fresh-at="2026-08-14T14:09:56+02:00">नई</span>
   </div>
   <span class="tag skill-article__tag">सुरक्षा (रक्षात्मक)</span>
-  <p class="lede">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label, trace span, analytics event, support bundle, or a recorded test fixture. Covers what a redactor must not do with the match it found, allowlisting fields rather than denylisting patterns, partial reveals and re-identification, encoded and nested payloads, and testing by asserting the input is absent rather than the marker present.</p>
+  <p class="lede">जब सीक्रेट, क्रेडेंशियल, टोकन या निजी डेटा किसी लॉग लाइन, एरर मैसेज, स्टैक ट्रेस, क्रैश डंप, मेट्रिक लेबल, ट्रेस स्पैन, ऐनालिटिक्स इवेंट, सपोर्ट बंडल या रिकॉर्ड किए गए टेस्ट फ़िक्स्चर तक पहुँच सकते हों, तब इस्तेमाल करें। इसमें यह कि जो हिस्सा पकड़ में आया है, छिपाने वाला कोड उसके साथ क्या हरगिज़ न करे, पैटर्न की डिनाइलिस्ट बनाने के बजाय फ़ील्ड की अलाउलिस्ट बनाना, अधूरा हिस्सा दिखाने से दोबारा पहचान बन जाना, एनकोड किए हुए और एक-दूसरे में धँसे पेलोड, और टेस्ट में यह दावा करना कि इनपुट मौजूद नहीं है — न कि यह कि मार्कर मौजूद है — यह सब शामिल है।</p>
 </div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Redaction is the last line of defence, applied at the moment data leaves the program for somewhere a human or a vendor will read it. It fails quietly by construction: a redactor that redacts nothing produces output that looks exactly like output it redacted correctly.</p>
 <p>The two rules that carry most of the value: <strong>the replacement must not quote the match</strong>, and <strong>the test asserts the input is gone, never that the marker is present.</strong></p>
@@ -142,7 +142,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/hi/skills/validating-numeric-input/">
       <span class="see-also__name">validating-numeric-input</span>
-      <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
+      <span class="see-also__summary">जब कोई संख्या भरोसे की सीमा पार करे — कोई फ़ॉर्म फ़ील्ड, क्वेरी पैरामीटर, JSON बॉडी, कॉन्फ़िग वैल्यू, CSV सेल, सेंसर की रीडिंग…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/hi/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
