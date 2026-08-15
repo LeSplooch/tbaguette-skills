@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>redacting-sensitive-output — Seguridad (defensiva) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…">
+<meta name="description" content="Úsala cuando unos secretos, unas credenciales, unos tokens o unos datos personales pueden acabar en una línea de log, un mensaje de error…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="redacting-sensitive-output — Seguridad (defensiva) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…">
+<meta property="og:description" content="Úsala cuando unos secretos, unas credenciales, unos tokens o unos datos personales pueden acabar en una línea de log, un mensaje de error…">
 <link rel="canonical" href="/tbaguette-skills/es/skills/redacting-sensitive-output/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/redacting-sensitive-output/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/redacting-sensitive-output/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Actualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T16:55:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} hora local · {utc} UTC">2026-08-15T16:55:17Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T17:00:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} hora local · {utc} UTC">2026-08-15T17:00:39Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Español</summary>
@@ -93,7 +93,7 @@
     <span class="change-badge change-badge--new" data-fresh-at="2026-08-14T14:09:56+02:00">Nueva</span>
   </div>
   <span class="tag skill-article__tag">Seguridad (defensiva)</span>
-  <p class="lede">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label, trace span, analytics event, support bundle, or a recorded test fixture. Covers what a redactor must not do with the match it found, allowlisting fields rather than denylisting patterns, partial reveals and re-identification, encoded and nested payloads, and testing by asserting the input is absent rather than the marker present.</p>
+  <p class="lede">Úsala cuando unos secretos, unas credenciales, unos tokens o unos datos personales pueden acabar en una línea de log, un mensaje de error, una traza de pila, un volcado de caída, la etiqueta de una métrica, un span de traza, un evento de analítica, un paquete de diagnóstico o un fixture de prueba grabado. Cubre qué no debe hacer nunca una función de enmascarado con la coincidencia que acaba de encontrar, poner los campos en una lista de permitidos en lugar de poner los patrones en una lista de bloqueados, las revelaciones parciales y la reidentificación, las cargas útiles codificadas y anidadas, y cómo probarlo afirmando que la entrada ha desaparecido y no que el marcador está presente.</p>
 </div><p class="translation-banner" role="note">Esta página todavía no se ha traducido al Español —se muestra la versión en inglés.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Redaction is the last line of defence, applied at the moment data leaves the program for somewhere a human or a vendor will read it. It fails quietly by construction: a redactor that redacts nothing produces output that looks exactly like output it redacted correctly.</p>
 <p>The two rules that carry most of the value: <strong>the replacement must not quote the match</strong>, and <strong>the test asserts the input is gone, never that the marker is present.</strong></p>
@@ -142,7 +142,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/es/skills/validating-numeric-input/">
       <span class="see-also__name">validating-numeric-input</span>
-      <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
+      <span class="see-also__summary">Úsala cuando un número cruza una frontera de confianza —el campo de un formulario, un parámetro de consulta, un cuerpo JSON…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/es/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
