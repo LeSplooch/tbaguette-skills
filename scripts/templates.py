@@ -693,15 +693,24 @@ INSTALL_COMMAND_CMD = (
 )
 
 # Addressed to Claude, not to a shell — this is what a visitor pastes into a
-# Claude Code conversation instead of running a command themselves. Steps
-# 1-3 restate the exact clone-or-pull branch INSTALL_COMMAND already encodes
-# and test_install_command.py already proves (scenarios A/B/C), just as
-# prose instead of one shell's syntax, so it reads correctly no matter which
-# shell Claude's tool actually runs. Step 4 is the one place this does more
-# than the one-liner: a bare `git clone` just refuses on a real collision
-# (scenario D) — told only "install this," an agent could read that refusal
-# as a problem to solve and reach for rm -rf on its own initiative, so this
-# spells out the refusal explicitly instead of leaving it implicit.
+# Claude Code conversation instead of running a command themselves.
+# Branches 1-2 restate the exact clone-or-pull logic INSTALL_COMMAND
+# already encodes and test_install_command.py already proves (scenarios
+# A/B/C), just as prose instead of one shell's syntax, so it reads
+# correctly no matter which shell Claude's tool actually runs. Branch 3
+# names a real state this project has hit before (a directory that already
+# looks like a TBaguette install — CATALOG.md + skills/ — but has no .git
+# of its own): worth a specific, non-alarming message rather than lumping
+# it into branch 4's generic collision. Branch 4 is still the one place
+# this prompt does more than the shell one-liner: a bare `git clone` just
+# refuses on a real collision (scenario D) — told only "install this," an
+# agent could read that refusal as a problem to solve and reach for rm -rf
+# on its own initiative, so both branch 3 and branch 4 spell out "ask
+# first, don't act" explicitly instead of leaving it implicit. The
+# post-install checks go past "the files exist" to confirm the clone is
+# actually a working repo and to report back which version landed —
+# "verified, not just claimed" applied to what Claude tells the visitor,
+# not only to what the shell command itself can't reach.
 #
 # INSTALL_PROMPT and INSTALL_PROMPT_HINT are deliberately English-only, like
 # INSTALL_COMMAND/INSTALL_COMMAND_POWERSHELL/INSTALL_COMMAND_CMD above,
@@ -716,19 +725,26 @@ INSTALL_COMMAND_CMD = (
 # a schema change needing a translated value from all 12 shipped locales
 # for a single aria-label — worth revisiting in a dedicated pass, not here.
 INSTALL_PROMPT_HINT = "Paste into a Claude Code conversation — it reads your OS and runs the real commands itself."
-INSTALL_PROMPT = """Install (or update) the TBaguette skills plugin for Claude Code. Use your shell tool:
+INSTALL_PROMPT = """Install (or update) the TBaguette skills plugin for Claude Code. Use your shell tool.
 
-1. Target directory: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\\.claude\\skills\\TBaguette).
-2. If <target>/.git exists, update in place: git -C <target> pull.
-3. Else if <target> doesn't exist, or exists and is empty, install fresh:
+Before you start: confirm git is available (git --version). If it isn't, tell me and stop — there's nothing else to try.
+
+Target directory: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\\.claude\\skills\\TBaguette). Figure out which case applies:
+
+1. <target>/.git exists — update in place: git -C <target> pull.
+2. <target> doesn't exist, or exists and is empty — install fresh:
    git clone https://github.com/LeSplooch/tbaguette-skills.git <target>.
-4. Else (the directory exists, has content, and is not a git repo) — stop.
-   Do not delete or modify it. Tell me there's a naming collision at that
-   path that needs a manual look.
-5. After a successful clone or pull, confirm <target>/CATALOG.md and
-   <target>/skills/ both exist, so "it worked" is checked, not assumed.
-6. Tell me to restart Claude Code (or run /reload-plugins) — skills then
-   invoke as TBaguette:skill-name."""
+3. <target> exists, has content, isn't a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a "naming collision", and ask me whether to move it aside and re-clone, rather than doing that yourself.
+4. Anything else already at that path — stop. Do not delete or modify it. Tell me there's a naming collision that needs a manual look.
+
+If the clone or pull command itself fails (network, permissions, auth), show me the actual error rather than retrying blindly or guessing why.
+
+After a successful clone or pull, verify rather than assume:
+- <target>/.git exists and git -C <target> rev-parse HEAD succeeds.
+- <target>/CATALOG.md exists and <target>/skills/ is non-empty.
+- Read <target>/.claude-plugin/plugin.json's "version" field, if present, so you can tell me which version I'm now on.
+
+Then tell me what happened (installed fresh, updated, or already current), which version, and to restart Claude Code (or run /reload-plugins) — skills then invoke as TBaguette:skill-name."""
 
 
 def _render_install(base_path: str = "", *,

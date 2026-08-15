@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Actualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T04:49:37+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} hora local · {utc} UTC">2026-08-15T04:49:37Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T13:19:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} hora local · {utc} UTC">2026-08-15T13:19:07Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Español</summary>
@@ -90,19 +90,26 @@
   </p>
   <div class="install-frame__body">
     <div class="install">
-      <code class="install__command" id="install-prompt-command">Install (or update) the TBaguette skills plugin for Claude Code. Use your shell tool:
+      <code class="install__command" id="install-prompt-command">Install (or update) the TBaguette skills plugin for Claude Code. Use your shell tool.
 
-1. Target directory: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\.claude\skills\TBaguette).
-2. If &lt;target&gt;/.git exists, update in place: git -C &lt;target&gt; pull.
-3. Else if &lt;target&gt; doesn&#x27;t exist, or exists and is empty, install fresh:
+Before you start: confirm git is available (git --version). If it isn&#x27;t, tell me and stop — there&#x27;s nothing else to try.
+
+Target directory: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\.claude\skills\TBaguette). Figure out which case applies:
+
+1. &lt;target&gt;/.git exists — update in place: git -C &lt;target&gt; pull.
+2. &lt;target&gt; doesn&#x27;t exist, or exists and is empty — install fresh:
    git clone https://github.com/LeSplooch/tbaguette-skills.git &lt;target&gt;.
-4. Else (the directory exists, has content, and is not a git repo) — stop.
-   Do not delete or modify it. Tell me there&#x27;s a naming collision at that
-   path that needs a manual look.
-5. After a successful clone or pull, confirm &lt;target&gt;/CATALOG.md and
-   &lt;target&gt;/skills/ both exist, so &quot;it worked&quot; is checked, not assumed.
-6. Tell me to restart Claude Code (or run /reload-plugins) — skills then
-   invoke as TBaguette:skill-name.</code>
+3. &lt;target&gt; exists, has content, isn&#x27;t a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a &quot;naming collision&quot;, and ask me whether to move it aside and re-clone, rather than doing that yourself.
+4. Anything else already at that path — stop. Do not delete or modify it. Tell me there&#x27;s a naming collision that needs a manual look.
+
+If the clone or pull command itself fails (network, permissions, auth), show me the actual error rather than retrying blindly or guessing why.
+
+After a successful clone or pull, verify rather than assume:
+- &lt;target&gt;/.git exists and git -C &lt;target&gt; rev-parse HEAD succeeds.
+- &lt;target&gt;/CATALOG.md exists and &lt;target&gt;/skills/ is non-empty.
+- Read &lt;target&gt;/.claude-plugin/plugin.json&#x27;s &quot;version&quot; field, if present, so you can tell me which version I&#x27;m now on.
+
+Then tell me what happened (installed fresh, updated, or already current), which version, and to restart Claude Code (or run /reload-plugins) — skills then invoke as TBaguette:skill-name.</code>
       <button class="install__copy" type="button" data-copy-target="install-prompt-command"
               aria-label="Copiar el comando de instalación">
         <span class="install__copy-icons">
