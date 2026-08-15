@@ -1,6 +1,6 @@
 /*
  * La Boulangerie TBaguette — site.js
- * Vanilla JS, no dependencies. Eight independent features, each a no-op if
+ * Vanilla JS, no dependencies. Ten independent features, each a no-op if
  * its markup isn't on the current page:
  *   - theme toggle   (every page)
  *   - search/filter  (landing page only)
@@ -12,7 +12,9 @@
  *   - freshness      (every page — re-checks each New/Updated badge's
  *                      48h window against the visitor's own clock)
  *   - fresh coverflow (landing page only — steps which rail tile is centred
- *                       on a timer; pauses on hover/focus/manual prev-next)
+ *                       on a timer; pauses on hover/focus; click-and-drag
+ *                       spins it manually with release momentum, clicking a
+ *                       side tile recentres it instead of navigating)
  *   - language switcher dismissal (every page — Escape / outside click on
  *                                   the native <details>; opening and
  *                                   closing it needs no JS)
@@ -215,7 +217,20 @@
 
     var count = tiles.length;
     var activeIndex = 0;
-    var paused = false;
+
+    // Two independent reasons the clock might not be driving right now,
+    // not one: "hovering" is temporary and self-undoes (mouseleave/
+    // focusout), for the WCAG 2.2.2 pause-while-the-visitor-is-right-there
+    // case. "manualOverride" is permanent once set — prev/next, a drag, or
+    // picking a side tile all mean the visitor has taken the wheel, and
+    // the clock resuming a few seconds after they let go of the mouse
+    // would just undo their choice. A single `paused` flag used to stand
+    // in for both, which meant mouseleave after a prev/next click quietly
+    // resumed autoplay the moment the pointer left the rail — the opposite
+    // of what its own comment claimed.
+    var hovering = false;
+    var manualOverride = false;
+    function isPaused() { return hovering || manualOverride; }
 
     // Setting only the custom property here would be simpler, and
     // styles.css's --cf-transform / opacity calc()s would pick it up. This
@@ -230,9 +245,14 @@
     // what a no-JS visitor's static, correct-but-motionless coverflow
     // relies on. The clamped magnitudes mirror styles.css's clamp()s
     // exactly — see that rule for why they're this steep.
-    function layout() {
+    //
+    // index is a plain parameter, not always activeIndex itself: a drag
+    // in progress renders a live, fractional index every pointermove
+    // without ever writing that half-settled value into activeIndex,
+    // which only ever holds a real resting tile position.
+    function layout(index) {
       tiles.forEach(function (tile, i) {
-        var offset = freshSignedOffset(i, activeIndex, count);
+        var offset = freshSignedOffset(i, index, count);
         tile.style.setProperty('--cf-offset', offset);
         var abs = Math.abs(offset);
         var x = Math.max(-280, Math.min(280, offset * 140));
@@ -247,50 +267,212 @@
     }
 
     function step() {
-      if (paused) return;
+      if (isPaused()) return;
       activeIndex = (activeIndex + 1) % count;
-      layout();
+      layout(activeIndex);
     }
 
     // WCAG 2.2.2: anything that moves on its own for more than five seconds
     // needs a way to stop it. Hovering or tabbing into the rail is that way
     // — the interval keeps firing but simply stops rewriting offsets, so
     // resuming afterwards continues from the same tile rather than jumping.
-    rail.addEventListener('mouseenter', function () { paused = true; });
-    rail.addEventListener('mouseleave', function () { paused = false; });
+    rail.addEventListener('mouseenter', function () { hovering = true; });
+    rail.addEventListener('mouseleave', function () { hovering = false; });
     rail.addEventListener('focusin', function (event) {
-      paused = true;
+      hovering = true;
       // Recentre on whichever tile actually received focus, rather than
       // leaving it frozen wherever the step timer last put it — a keyboard
       // visitor's own tile should be the flat, full-size, opaque one, not
-      // whichever one the clock happened to choose.
+      // whichever one the clock happened to choose. Left as a temporary
+      // (hovering) override, not a permanent one: passing through on the
+      // way to something else with Tab isn't the same declaration of
+      // intent as reaching for a drag or a button.
       var index = tiles.indexOf(event.target);
       if (index !== -1 && index !== activeIndex) {
         activeIndex = index;
-        layout();
+        layout(activeIndex);
       }
     });
-    rail.addEventListener('focusout', function () { paused = false; });
+    rail.addEventListener('focusout', function () { hovering = false; });
 
     // Manual prev/next. Once a visitor has reached for one of these, the
-    // clock has been overruled — pausing for good rather than resuming on
-    // mouseleave/focusout respects that, instead of undoing their choice a
-    // few seconds later.
+    // clock has been overruled for good — manualOverride, not hovering.
     var nav = document.querySelector('[data-fresh-nav]');
     if (nav) {
       var prevBtn = nav.querySelector('[data-fresh-prev]');
       var nextBtn = nav.querySelector('[data-fresh-next]');
       var goTo = function (newIndex) {
-        paused = true;
+        manualOverride = true;
         activeIndex = ((newIndex % count) + count) % count;
-        layout();
+        layout(activeIndex);
       };
       if (prevBtn) prevBtn.addEventListener('click', function () { goTo(activeIndex - 1); });
       if (nextBtn) nextBtn.addEventListener('click', function () { goTo(activeIndex + 1); });
       nav.hidden = false;
     }
 
-    layout();
+    // Click-and-drag. DRAG_STEP_PX (how many px of drag equals one tile of
+    // rotation) intentionally matches layout()'s own 140px-per-step
+    // translateX above: dragging a tile by roughly its own visual travel
+    // distance advances exactly one slot, so the ring tracks the pointer
+    // 1:1 rather than at some unrelated, unpredictable rate.
+    //
+    // A pointer press alone doesn't mean a drag is happening — most
+    // presses on a tile are the first half of an ordinary click.
+    // dragMoved only flips true past DRAG_CLICK_THRESHOLD_PX of real
+    // movement, and only then are transitions disabled (so the live
+    // preview tracks the pointer with no easing lag) and manualOverride
+    // set. The click handler below reads dragMoved to tell a real drag's
+    // trailing click apart from an ordinary one.
+    var DRAG_STEP_PX = 140;
+    var DRAG_CLICK_THRESHOLD_PX = 6;
+    var pointerDown = false;
+    var dragMoved = false;
+    var dragPointerId = null;
+    var dragStartX = 0;
+    var dragStartIndex = 0;
+
+    // Momentum: a fast flick should carry the ring a bit past wherever the
+    // pointer happened to be at release, same as it would with any inertial
+    // scroller. That needs a release *velocity*, and the very last
+    // pointermove alone is too noisy a source for one — a visitor's hand
+    // can pause for a few ms right at the point of lifting off, which would
+    // read as "released at zero speed" even mid-flick. Instead this keeps a
+    // short rolling window of recent {time, x} samples and measures
+    // velocity across that whole window, so one twitchy final sample can't
+    // dominate the reading.
+    var VELOCITY_WINDOW_MS = 100;
+    var dragSamples = [];
+
+    // How many extra tiles of travel one unit of release velocity (in
+    // index-units per ms) buys, and the hard cap on how many extra tiles a
+    // single flick can add. The cap exists so an especially fast or noisy
+    // velocity reading can't fling the ring so far it reads as a jump-cut
+    // rather than a spin — not because further tiles wouldn't be visible;
+    // the one that ends up centred is always animated fully into view
+    // regardless of how many slots away it started.
+    var MOMENTUM_TIME_CONSTANT_MS = 260;
+    var MAX_MOMENTUM_TILES = 5;
+
+    rail.addEventListener('pointerdown', function (event) {
+      if (event.button !== undefined && event.button !== 0) return;
+      pointerDown = true;
+      dragMoved = false;
+      dragPointerId = event.pointerId;
+      dragStartX = event.clientX;
+      dragStartIndex = activeIndex;
+      dragSamples = [{ t: event.timeStamp, x: event.clientX }];
+      if (rail.setPointerCapture) rail.setPointerCapture(event.pointerId);
+    });
+
+    rail.addEventListener('pointermove', function (event) {
+      if (!pointerDown || event.pointerId !== dragPointerId) return;
+      var deltaX = event.clientX - dragStartX;
+      if (!dragMoved) {
+        if (Math.abs(deltaX) < DRAG_CLICK_THRESHOLD_PX) return;
+        dragMoved = true;
+        manualOverride = true;
+        tiles.forEach(function (tile) { tile.style.setProperty('transition', 'none', 'important'); });
+      }
+      dragSamples.push({ t: event.timeStamp, x: event.clientX });
+      while (dragSamples.length > 2 && event.timeStamp - dragSamples[0].t > VELOCITY_WINDOW_MS) {
+        dragSamples.shift();
+      }
+      // Dragging left (negative deltaX) steps forward, the same direction
+      // as the next button and the auto-advance timer — see
+      // freshSignedOffset's own sign convention.
+      layout(dragStartIndex - deltaX / DRAG_STEP_PX);
+    });
+
+    function endDrag(event) {
+      if (!pointerDown || event.pointerId !== dragPointerId) return;
+      pointerDown = false;
+      if (rail.releasePointerCapture) {
+        try { rail.releasePointerCapture(event.pointerId); } catch (error) { /* already released */ }
+      }
+      if (!dragMoved) return;
+      var deltaX = event.clientX - dragStartX;
+      var liveIndex = dragStartIndex - deltaX / DRAG_STEP_PX;
+
+      // Same sign convention as the drag itself: a release still moving
+      // left (negative px/ms) is still travelling in the positive-index
+      // direction, so it gets negated the same way deltaX is above.
+      //
+      // A drag that was fast a moment ago but has since come to a stop —
+      // pointer held still before lifting off — leaves dragSamples' newest
+      // entry stale by the time pointerup fires, since a still pointer
+      // emits no pointermove events to refresh it. Without the STALL_MS
+      // check, that old sample would read as "released while still
+      // flying," launching a jump the visitor never asked for. A release
+      // that follows the last recorded movement by more than STALL_MS is
+      // instead treated as having already decayed to zero.
+      var STALL_MS = 60;
+      var oldest = dragSamples[0];
+      var newest = dragSamples[dragSamples.length - 1];
+      var elapsed = newest.t - oldest.t;
+      var stalled = event.timeStamp - newest.t > STALL_MS;
+      var velocityIndexPerMs = (!stalled && elapsed > 0) ? -(newest.x - oldest.x) / elapsed / DRAG_STEP_PX : 0;
+      var momentum = velocityIndexPerMs * MOMENTUM_TIME_CONSTANT_MS;
+      momentum = Math.max(-MAX_MOMENTUM_TILES, Math.min(MAX_MOMENTUM_TILES, momentum));
+
+      // A harder flick should keep the ring visibly spinning for longer,
+      // not just cover more ground in the same 0.7s the CSS default gives
+      // every other settle (a plain click-to-recentre, prev/next, etc.) —
+      // at a fixed duration, more distance in the same time reads as
+      // "faster," not "more momentum." SPIN_DURATION_PER_TILE_S stretches
+      // the transition in proportion to how much momentum actually carried
+      // it, and only for this settle: --fresh-spin-duration is set inline
+      // here and nowhere else, so every other trigger keeps the CSS
+      // default untouched.
+      var SPIN_DURATION_PER_TILE_S = 0.18;
+      var MAX_SPIN_DURATION_S = 1.8;
+      var BASE_SPIN_DURATION_S = 0.7;
+      var spinDuration = Math.min(
+        MAX_SPIN_DURATION_S,
+        BASE_SPIN_DURATION_S + Math.abs(momentum) * SPIN_DURATION_PER_TILE_S
+      );
+
+      activeIndex = ((Math.round(liveIndex + momentum) % count) + count) % count;
+      tiles.forEach(function (tile) {
+        tile.style.removeProperty('transition');
+        tile.style.setProperty('--fresh-spin-duration', spinDuration + 's');
+      });
+      layout(activeIndex);
+      // Cleared once the settle finishes (a small buffer past its own
+      // duration covers rAF/paint slop) so a later, unrelated transition —
+      // another drag, a prev/next click, focus landing on a different tile
+      // — can't inherit this one's stretched duration by accident.
+      window.setTimeout(function () {
+        tiles.forEach(function (tile) { tile.style.removeProperty('--fresh-spin-duration'); });
+      }, spinDuration * 1000 + 50);
+    }
+    rail.addEventListener('pointerup', endDrag);
+    rail.addEventListener('pointercancel', endDrag);
+
+    // Click. A tile that's already centred just navigates — plain <a>
+    // behaviour, nothing to intercept. Any other tile recentres instead of
+    // navigating: the visitor picked which one they want a closer look at,
+    // not necessarily to leave the page yet. The click a real drag leaves
+    // behind is suppressed outright rather than read as either — dragMoved
+    // is consumed (reset) here so a single drag can only ever suppress the
+    // one click it actually caused.
+    rail.addEventListener('click', function (event) {
+      if (dragMoved) {
+        dragMoved = false;
+        event.preventDefault();
+        return;
+      }
+      var tile = event.target.closest ? event.target.closest('.fresh__tile') : null;
+      if (!tile) return;
+      var index = tiles.indexOf(tile);
+      if (index === -1 || index === activeIndex) return;
+      event.preventDefault();
+      manualOverride = true;
+      activeIndex = index;
+      layout(activeIndex);
+    });
+
+    layout(activeIndex);
     window.setInterval(step, FRESH_COVERFLOW_STEP_MS);
   }
 

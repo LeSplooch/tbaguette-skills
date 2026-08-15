@@ -1076,6 +1076,13 @@ code {
    as it was, not a broken coverflow. A visitor with no JS at all still gets
    the offsets templates.py rendered at build time — a real, if motionless,
    coverflow — never the flat rail by accident.
+
+   The clock isn't the only way a tile becomes active: initFreshCoverflow
+   also wires up click-and-drag (grab the ring, spin it, release to settle
+   on whichever tile ends up nearest centre) and click-to-recentre on any
+   tile that isn't centred yet — only the already-centred tile's click
+   still navigates. cursor/touch-action/user-select below exist for that
+   drag, not for anything this file alone renders.
    ------------------------------------------------------------------------- */
 
 .fresh { margin-top: var(--space-7); max-width: 46rem; }
@@ -1219,12 +1226,19 @@ code {
   .fresh__rail {
     position: relative;
     display: block;
-    height: 15.5rem;
+    height: 22rem;
     perspective: 900px;
     overflow: visible;
     -webkit-mask-image: none;
     mask-image: none;
+    cursor: grab;
+    /* Lets the page's own vertical scroll keep working with a finger
+       starting on the carousel; site.js's pointer handlers claim the
+       horizontal axis themselves rather than asking the browser to. */
+    touch-action: pan-y;
   }
+
+  .fresh__rail:active { cursor: grabbing; }
 
   /* --cf-offset (set inline by templates.py, kept live by site.js) is the
      only per-instance number here — everything else is a calc() of it.
@@ -1250,24 +1264,46 @@ code {
      directly would replace this positioning outright rather than add to
      it — the trap the ring version's animations sat in, two reworks ago.
 
-     width: 17rem is explicit and load-bearing, not tidiness: the base rule
-     sizes .fresh__tile via `flex: 0 0 17rem`, which only means anything
-     while .fresh__rail is still a flex container. The instant this block's
+     width is explicit and load-bearing, not tidiness: the base rule sizes
+     .fresh__tile via `flex: 0 0 17rem`, which only means anything while
+     .fresh__rail is still a flex container. The instant this block's
      `.fresh__rail { display: block }` takes over, flex-basis stops doing
      anything, and an absolutely positioned box with no explicit width
      shrink-to-fits — which, for a flex-column card whose summary text has
      no natural wrap point to fall back to, measured out to the entire
-     remaining width of the rail rather than anything card-shaped. */
+     remaining width of the rail rather than anything card-shaped.
+
+     22rem/20rem (not the base rule's 17rem card width) are measured, not
+     guessed: with real skill summaries — some 130-180 characters — a card
+     narrower than this clips real content under overflow: hidden below,
+     the exact bug this size fixes. Measured every currently-fresh tile's
+     true unclipped height (transform: none, so an in-progress transition
+     retargeting mid-scale doesn't read as shorter than the tile actually
+     is — it very nearly did, the first time this was measured) across
+     increasing widths; going past 22rem keeps helping but each further
+     rem buys less than the last, so this is a point on a curve, not a
+     plateau — picked because it's already a real jump from 17rem and the
+     remaining gain per rem past it is small. 20rem then covers that
+     width's measured worst case (306px) with a little headroom, so
+     overflow: hidden below is a safety net for a pathological future
+     summary, not a rule the typical case already needs. */
   a.fresh__tile {
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 17rem;
-    margin: -6.75rem 0 0 -8.5rem;
-    height: 13.5rem;
+    width: 22rem;
+    margin: -10rem 0 0 -11rem;
+    height: 20rem;
     overflow: hidden;
     flex: none;
     scroll-snap-align: none;
+    /* A drag crossing tile text would otherwise paint a text-selection
+       highlight instead of spinning the ring. -webkit-user-drag covers
+       Chrome/Safari's native "drag this link" gesture; templates.py's
+       draggable="false" is the one that actually holds in Firefox too. */
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: inherit;
     --cf-abs: max(var(--cf-offset), calc(var(--cf-offset) * -1));
     --cf-transform:
       translateX(clamp(-280px, calc(var(--cf-offset) * 140px), 280px))
@@ -1276,7 +1312,16 @@ code {
     transform: var(--cf-transform);
     opacity: clamp(0, calc(1 - var(--cf-abs) * 0.32), 1);
     z-index: max(1, calc(20 - var(--cf-abs)));
-    transition: transform 0.7s var(--ease-out), opacity 0.7s var(--ease-out),
+    /* --fresh-spin-duration exists so a momentum-carrying drag release can
+       lengthen just this settle without touching the shared rule: site.js
+       sets it inline only on the tiles animating out of a flung release,
+       proportional to how much momentum carried them, then clears it once
+       that transition finishes. Every other trigger (auto-advance, prev/
+       next, click-to-recentre) never sets it, so it stays at this default
+       0.7s for them — same speed as before momentum existed. */
+    --fresh-spin-duration: 0.7s;
+    transition: transform var(--fresh-spin-duration) var(--ease-out),
+                opacity var(--fresh-spin-duration) var(--ease-out),
                 border-color var(--duration-enter) var(--ease-out),
                 background-color var(--duration-enter) var(--ease-out),
                 box-shadow var(--duration-enter) var(--ease-out);
