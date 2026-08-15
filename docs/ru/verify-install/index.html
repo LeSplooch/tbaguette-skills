@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Обновлено</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T00:22:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} по местному времени · {utc} UTC">2026-08-15T00:22:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T04:49:37+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} по местному времени · {utc} UTC">2026-08-15T04:49:37Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Язык: Русский</summary>
@@ -109,7 +109,7 @@
     <p>Все двенадцать проверок из этих четырёх сценариев проходят ещё до того, как сайт вообще будет развёрнут, — плюс ещё двенадцать, которые прогоняют ровно ту строку команды, что опубликована выше, слово в слово, через каждую POSIX-подобную оболочку, установленную на сборочной машине этого проекта (bash, zsh, fish и sh), вместо того чтобы верить, будто её переизложение на Python на этой странице осталось верным тому, что действительно поставляется. <code>run_tests.py</code> запускает все двадцать четыре вместе со всем остальным, а не отдельным ручным шагом, о котором кому-то нужно помнить.</p>
 
     <h2 id="every-platform">Все платформы, а не одна</h2>
-    <p>Блок установки выше показывает две команды, а не одну: POSIX-команду для macOS, Linux и всех, кто под Windows уже сидит в WSL или Git Bash, и команду PowerShell для всех остальных пользователей Windows — то есть для большинства, ведь начиная с Windows 10 PowerShell стал терминалом по умолчанию. Обе делают ровно одно и то же, в том же порядке и по той же причине: проверить, есть ли уже клон, <code>git pull</code>, если он есть, и <code>git clone</code>, если нет.</p>
+    <p>Блок установки выше показывает не команду, которую нужно ввести самостоятельно, а промпт, адресованный Claude, — вставьте его в разговор с Claude Code, и Claude сам определит вашу операционную систему и выполнит нужную команду. Эта команда на каждой платформе — именно то, что показано ниже: POSIX-команду для macOS, Linux и всех, кто под Windows уже сидит в WSL или Git Bash, и команду PowerShell для всех остальных пользователей Windows — то есть для большинства, ведь начиная с Windows 10 PowerShell стал терминалом по умолчанию. Все три делают ровно одно и то же, в том же порядке и по той же причине: проверить, есть ли уже клон, <code>git pull</code>, если он есть, и <code>git clone</code>, если нет.</p>
     <p>POSIX-команда — как раз та, что машинно проверена выше, в четырёх оболочках:</p>
     <pre class="prose-code-block" dir="ltr"><code>[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code></pre>
     <p>Команда PowerShell переносит ровно ту же логику на <code>Test-Path</code> и родные командлеты:</p>

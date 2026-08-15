@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T00:22:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} بالتوقيت المحلي · {utc} UTC">2026-08-15T00:22:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T04:49:37+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} بالتوقيت المحلي · {utc} UTC">2026-08-15T04:49:37Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -109,7 +109,7 @@
     <p>تنجح الفحوص الاثنا عشر كلها في تلك السيناريوهات الأربعة قبل أن يُنشَر هذا الموقع أصلًا — يضاف إليها اثنا عشر فحصًا آخر تُشغِّل نصّ الأمر المنشور أعلاه حرفيًّا، كلمةً بكلمة، في كل مُفسِّر أوامر شبيه بـPOSIX مثبَّت على آلة البناء الخاصة بهذا المشروع (bash وzsh وfish وsh)، بدل الاتّكال على أنّ إعادة كتابة هذه الصفحة له بلغة بايثون بقيت وفيّة لما يُشحن فعلًا. و<code>run_tests.py</code> يشغّل الأربعة والعشرين جميعًا مع كل شيء آخر، لا كخطوة يدوية منفصلة على أحدٍ أن يتذكّرها.</p>
 
     <h2 id="every-platform">كل المنصّات، لا واحدة فقط</h2>
-    <p>إطار التثبيت أعلاه يعرض أمرين لا أمرًا واحدًا: أمر POSIX لمستخدمي macOS وLinux، ولكل من هو على Windows داخل WSL أو Git Bash أصلًا، وأمر PowerShell لبقية مستخدمي Windows — وهم أغلبهم، لأنّ PowerShell هي الطرفية الافتراضية منذ Windows 10. وكلاهما يفعل الشيء نفسه تمامًا، بالترتيب نفسه، للسبب نفسه: تحقَّق من وجود نسخة مستنسَخة، ثم <code>git pull</code> إن كانت موجودة، و<code>git clone</code> إن لم تكن.</p>
+    <p>إطار التثبيت أعلاه لا يعرض أمرًا تكتبه بنفسك، بل تعليمات موجَّهة إلى Claude — الصقها في محادثة Claude Code، وسيتعرَّف Claude على نظام تشغيلك وينفّذ الأمر المطابق بنفسه. وهذا الأمر، على كل منصة، هو بالضبط ما يلي: أمر POSIX لمستخدمي macOS وLinux، ولكل من هو على Windows داخل WSL أو Git Bash أصلًا، وأمر PowerShell لبقية مستخدمي Windows — وهم أغلبهم، لأنّ PowerShell هي الطرفية الافتراضية منذ Windows 10. والثلاثة جميعًا تفعل الشيء نفسه تمامًا، بالترتيب نفسه، للسبب نفسه: تحقَّق من وجود نسخة مستنسَخة، ثم <code>git pull</code> إن كانت موجودة، و<code>git clone</code> إن لم تكن.</p>
     <p>أمر POSIX هو الذي تحقَّقت منه الآلة أعلاه، في أربعة مُفسِّرات أوامر:</p>
     <pre class="prose-code-block" dir="ltr"><code>[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code></pre>
     <p>وأمر PowerShell ينقل المنطق نفسه حرفيًّا إلى <code>Test-Path</code> وأوامر cmdlet الأصيلة:</p>

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T00:22:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-15T00:22:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T04:49:37+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-15T04:49:37Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -109,7 +109,7 @@
     <p>이 네 시나리오에 걸친 열두 가지 검사는 이 사이트가 배포되기 전에 모두 통과합니다 — 여기에 더해, 위에 공개된 명령어 문자열을 한 글자도 바꾸지 않고 이 프로젝트의 빌드 머신에 설치된 POSIX 계열 셸 전부(bash, zsh, fish, sh)에서 실행하는 검사가 열두 가지 더 있습니다. 이 페이지의 파이썬 재구현이 실제로 배포되는 것에 충실한 상태로 남아 있으리라고 그냥 믿고 넘어가지 않기 위해서입니다. <code>run_tests.py</code>는 이 스물네 가지를 나머지 전부와 함께 돌립니다. 누군가 잊지 않고 챙겨야 하는 별도의 수동 단계가 아닙니다.</p>
 
     <h2 id="every-platform">하나가 아니라 모든 플랫폼</h2>
-    <p>위 설치 상자에 있는 명령어는 하나가 아니라 둘입니다. macOS와 Linux, 그리고 Windows에서 이미 WSL이나 Git Bash 안에 있는 사람을 위한 POSIX 명령어, 그리고 그 밖의 Windows 사용자를 위한 PowerShell 명령어 — Windows 10부터 PowerShell이 기본 터미널이었으니, 이쪽이 Windows 사용자의 대다수입니다. 둘은 똑같은 일을, 똑같은 순서로, 똑같은 이유로 합니다. 기존 클론이 있는지 확인하고, 있으면 <code>git pull</code>, 없으면 <code>git clone</code>.</p>
+    <p>위 설치 상자에 있는 것은 직접 입력하는 명령어가 아니라 Claude에게 건네는 프롬프트입니다. 이것을 Claude Code 대화에 붙여넣으면 Claude가 사용 중인 OS를 파악해 알맞은 명령어를 직접 실행합니다. 그 명령어는 플랫폼마다 바로 다음에 나오는 것과 같습니다. macOS와 Linux, 그리고 Windows에서 이미 WSL이나 Git Bash 안에 있는 사람을 위한 POSIX 명령어, 그리고 그 밖의 Windows 사용자를 위한 PowerShell 명령어 — Windows 10부터 PowerShell이 기본 터미널이었으니, 이쪽이 Windows 사용자의 대다수입니다. 셋 다 똑같은 일을, 똑같은 순서로, 똑같은 이유로 합니다. 기존 클론이 있는지 확인하고, 있으면 <code>git pull</code>, 없으면 <code>git clone</code>.</p>
     <p>위에서 네 개의 셸에 걸쳐 기계적으로 검증한 것이 바로 이 POSIX 명령어입니다:</p>
     <pre class="prose-code-block" dir="ltr"><code>[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code></pre>
     <p>PowerShell 명령어는 똑같은 논리를 <code>Test-Path</code>와 네이티브 cmdlet으로 그대로 옮긴 것입니다:</p>

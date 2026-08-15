@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T00:22:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-15T00:22:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T04:49:37+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-15T04:49:37Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Language: English</summary>
@@ -109,7 +109,7 @@
     <p>All twelve checks across those four scenarios pass before this site is ever deployed — plus twelve more that run the exact command string published above, word for word, through every POSIX-ish shell this project's own build machine has installed (bash, zsh, fish, and sh), rather than trusting that this page's Python reimplementation of it stayed faithful to what actually ships. <code>run_tests.py</code> runs all twenty-four alongside everything else, not as a separate manual step someone has to remember.</p>
 
     <h2 id="every-platform">Every platform, not just one</h2>
-    <p>The install frame above shows two commands, not one: a POSIX command for macOS, Linux, and anyone on Windows already inside WSL or Git Bash, and a PowerShell command for everyone else on Windows — which is most Windows users, since PowerShell has been the default terminal since Windows 10. Both do the exact same thing, in the same order, for the same reason: check for an existing clone, <code>git pull</code> if it's there, <code>git clone</code> if it isn't.</p>
+    <p>The install frame above shows a prompt addressed to Claude, not a command for you to type — paste it into a Claude Code conversation and Claude detects your OS and runs the matching command itself. That command, on every platform, is exactly what follows: a POSIX command for macOS, Linux, and anyone on Windows already inside WSL or Git Bash, and a PowerShell command for everyone else on Windows — which is most Windows users, since PowerShell has been the default terminal since Windows 10. All three do the exact same thing, in the same order, for the same reason: check for an existing clone, <code>git pull</code> if it's there, <code>git clone</code> if it isn't.</p>
     <p>The POSIX command is the one machine-verified above, across four shells:</p>
     <pre class="prose-code-block" dir="ltr"><code>[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code></pre>
     <p>The PowerShell command carries the exact same logic over to <code>Test-Path</code> and native cmdlets:</p>

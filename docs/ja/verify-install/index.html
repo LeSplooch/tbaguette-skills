@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">最終更新</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T00:22:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-15T00:22:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T04:49:37+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-15T04:49:37Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">言語: 日本語</summary>
@@ -109,7 +109,7 @@
     <p>この4つのシナリオにまたがる12項目のチェックは、このサイトが公開されるより前にすべて通ります——さらに、上に掲げたコマンド文字列を一字一句そのまま、このプロジェクトのビルドマシンに入っているPOSIX系シェルすべて（bash、zsh、fish、sh）で走らせるチェックが12項目。このページのPythonによる書き直しが、実際に配っているものに忠実なままだと信じ込まずに済ませるためです。<code>run_tests.py</code>はこの24項目をほかのすべてと一緒に走らせます。誰かが忘れずにやらなければならない別立ての手作業ではありません。</p>
 
     <h2 id="every-platform">対象は1つのプラットフォームではなく、すべて</h2>
-    <p>上のインストール枠に出ているのは、1つではなく2つのコマンドです。macOSとLinux、それにWindowsですでにWSLやGit Bashの中にいる人に向けたPOSIXコマンドと、それ以外のWindowsユーザーに向けたPowerShellコマンド——Windows 10以降PowerShellが既定のターミナルなので、こちらがWindowsユーザーの大半です。どちらもまったく同じことを、同じ順序で、同じ理由でやります。既存のクローンがあるか確認し、あれば<code>git pull</code>、なければ<code>git clone</code>。</p>
+    <p>上のインストール枠に出ているのは、自分で打ち込むコマンドではなく、Claude宛てのプロンプトです。Claude Codeとの会話に貼り付ければ、Claudeが自分のOSを判別し、該当するコマンドを自分で実行します。そのコマンドは、どのプラットフォームでも、この先に出てくる内容そのものです。macOSとLinux、それにWindowsですでにWSLやGit Bashの中にいる人に向けたPOSIXコマンドと、それ以外のWindowsユーザーに向けたPowerShellコマンド——Windows 10以降PowerShellが既定のターミナルなので、こちらがWindowsユーザーの大半です。3つともまったく同じことを、同じ順序で、同じ理由でやります。既存のクローンがあるか確認し、あれば<code>git pull</code>、なければ<code>git clone</code>。</p>
     <p>上で4つのシェルにわたって機械的に検証しているのは、このPOSIXコマンドです。</p>
     <pre class="prose-code-block" dir="ltr"><code>[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code></pre>
     <p>PowerShellコマンドは、まったく同じロジックを<code>Test-Path</code>とネイティブのコマンドレットに移したものです。</p>

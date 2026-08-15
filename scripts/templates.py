@@ -335,13 +335,17 @@ ENGLISH_VERIFY_INSTALL_STRINGS = VerifyInstallStrings(
     ),
     every_platform_heading="Every platform, not just one",
     every_platform_intro_html=(
-        "The install frame above shows two commands, not one: a POSIX command "
-        "for macOS, Linux, and anyone on Windows already inside WSL or Git Bash, "
-        "and a PowerShell command for everyone else on Windows — which is most "
-        "Windows users, since PowerShell has been the default terminal since "
-        "Windows 10. Both do the exact same thing, in the same order, for the "
-        "same reason: check for an existing clone, <code>git pull</code> if it's "
-        "there, <code>git clone</code> if it isn't."
+        "The install frame above shows a prompt addressed to Claude, not a "
+        "command for you to type — paste it into a Claude Code conversation "
+        "and Claude detects your OS and runs the matching command itself. "
+        "That command, on every platform, is exactly what follows: a POSIX "
+        "command for macOS, Linux, and anyone on Windows already inside WSL "
+        "or Git Bash, and a PowerShell command for everyone else on Windows "
+        "— which is most Windows users, since PowerShell has been the "
+        "default terminal since Windows 10. All three do the exact same "
+        "thing, in the same order, for the same reason: check for an "
+        "existing clone, <code>git pull</code> if it's there, "
+        "<code>git clone</code> if it isn't."
     ),
     posix_intro="The POSIX command is the one machine-verified above, across four shells:",
     powershell_intro_html=(

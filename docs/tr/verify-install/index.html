@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Son güncelleme</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T00:22:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-15T00:22:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T04:49:37+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-15T04:49:37Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Dil: Türkçe</summary>
@@ -109,7 +109,7 @@
     <p>Bu dört senaryoya yayılan on iki kontrolün tamamı, bu site dağıtılmadan önce geçer — üstüne on iki kontrol daha var: bunlar yukarıda yayımlanan komut dizisini kelimesi kelimesine, bu projenin kendi derleme makinesinde kurulu her POSIX benzeri kabukta (bash, zsh, fish ve sh) çalıştırır. Bu sayfadaki Python yeniden yazımının, gerçekten dağıtılana sadık kaldığına öylece güvenmemek için. <code>run_tests.py</code> bu yirmi dördünü diğer her şeyle birlikte çalıştırır; birinin hatırlaması gereken, elle yapılan ayrı bir adım olarak değil.</p>
 
     <h2 id="every-platform">Sadece biri değil, her platform</h2>
-    <p>Yukarıdaki kurulum çerçevesi bir değil, iki komut gösteriyor: macOS, Linux ve Windows'ta zaten WSL ya da Git Bash içinde olan herkes için bir POSIX komutu; Windows'taki geri kalan herkes için de bir PowerShell komutu — Windows 10'dan beri varsayılan terminal PowerShell olduğuna göre, Windows kullanıcılarının çoğu bu ikinci grupta. İkisi de tam olarak aynı şeyi, aynı sırayla, aynı gerekçeyle yapar: mevcut bir klon var mı diye bakar, varsa <code>git pull</code>, yoksa <code>git clone</code>.</p>
+    <p>Yukarıdaki kurulum çerçevesi artık sizin yazacağınız bir komut değil, Claude'a hitap eden bir prompt gösteriyor — bunu bir Claude Code konuşmasına yapıştırın; Claude işletim sisteminizi tanır ve karşılık gelen komutu kendisi çalıştırır. Bu komut, her platformda, tam olarak aşağıda gördüğünüz şeydir: macOS, Linux ve Windows'ta zaten WSL ya da Git Bash içinde olan herkes için bir POSIX komutu; Windows'taki geri kalan herkes için de bir PowerShell komutu — Windows 10'dan beri varsayılan terminal PowerShell olduğuna göre, Windows kullanıcılarının çoğu bu ikinci grupta. Üçü de tam olarak aynı şeyi, aynı sırayla, aynı gerekçeyle yapar: mevcut bir klon var mı diye bakar, varsa <code>git pull</code>, yoksa <code>git clone</code>.</p>
     <p>POSIX komutu, yukarıda dört kabukta makineyle doğrulanan komuttur:</p>
     <pre class="prose-code-block" dir="ltr"><code>[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code></pre>
     <p>PowerShell komutu, tam olarak aynı mantığı <code>Test-Path</code> ile PowerShell'in kendi cmdlet'lerine taşır:</p>

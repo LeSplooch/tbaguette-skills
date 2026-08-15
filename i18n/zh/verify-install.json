@@ -13,7 +13,7 @@
   "scenario_d_html": "<strong>D——真正的冲突。</strong>那条路径上已经躺着一个非空、也不是 git 仓库的目录，里面装着与本项目毫无关系的内容。确认命令会拒绝执行，而不是往里合并——并且被撞上的那个目录里的内容和每一个同级技能，都能在这次拒绝里完好无损。",
   "scenario_footer_html": "这四个场景里的十二项检查，全都在本站部署之前就已经通过——另外还有十二项，会把上面公布的那串命令原封不动、一字不差地丢进本项目构建机上装着的每一个类 POSIX shell 里跑一遍（bash、zsh、fish 和 sh），而不是指望本页用 Python 重写的那一版仍然忠实于真正发布出去的东西。<code>run_tests.py</code> 会把这二十四项和其他所有检查一起跑掉，而不是做成一个需要谁记着去执行的手动步骤。",
   "every_platform_heading": "每个平台，而不只是一个",
-  "every_platform_intro_html": "上面那个安装框里给的是两条命令，不是一条：一条 POSIX 命令，面向 macOS、Linux 以及在 Windows 上已经待在 WSL 或 Git Bash 里的人；一条 PowerShell 命令，面向其余所有 Windows 用户——也就是其中的绝大多数，因为自 Windows 10 起 PowerShell 就是默认终端。两条做的事一模一样，顺序一样，理由也一样：先看有没有现成的克隆，有就 <code>git pull</code>，没有就 <code>git clone</code>。",
+  "every_platform_intro_html": "上面那个安装框里给的不是命令，而是一段说给 Claude 听的提示词——把它粘贴进 Claude Code 对话里，Claude 会自己识别你的操作系统，并运行对应的命令。这条命令，在每个平台上，正是下面这些：一条 POSIX 命令，面向 macOS、Linux 以及在 Windows 上已经待在 WSL 或 Git Bash 里的人；一条 PowerShell 命令，面向其余所有 Windows 用户——也就是其中的绝大多数，因为自 Windows 10 起 PowerShell 就是默认终端。三条命令做的事一模一样，顺序一样，理由也一样：先看有没有现成的克隆，有就 <code>git pull</code>，没有就 <code>git clone</code>。",
   "posix_intro": "上面由机器在四个 shell 里验证过的，正是这条 POSIX 命令：",
   "powershell_intro_html": "PowerShell 命令把完全相同的逻辑搬到了 <code>Test-Path</code> 和原生 cmdlet 上：",
   "powershell_caveat_html": "这一条没有像 POSIX 命令那样被自动化测试交叉验证过——本项目的构建环境里没有 PowerShell 运行时可以拿来跑它——所以它的正确性靠的是 <code>Test-Path</code>、<code>git -C</code> 和 <code>git clone</code> 都是有充分文档的常规行为，而不是一次真正执行过的证明。如果你觉得这还不够，那也是个完全站得住脚的立场；单就这一条而言，诚实的说法是“靠审慎构造保证正确”，而不是“已验证”。",

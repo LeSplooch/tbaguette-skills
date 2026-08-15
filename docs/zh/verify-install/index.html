@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T00:22:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-15T00:22:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T04:49:37+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-15T04:49:37Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -109,7 +109,7 @@
     <p>这四个场景里的十二项检查，全都在本站部署之前就已经通过——另外还有十二项，会把上面公布的那串命令原封不动、一字不差地丢进本项目构建机上装着的每一个类 POSIX shell 里跑一遍（bash、zsh、fish 和 sh），而不是指望本页用 Python 重写的那一版仍然忠实于真正发布出去的东西。<code>run_tests.py</code> 会把这二十四项和其他所有检查一起跑掉，而不是做成一个需要谁记着去执行的手动步骤。</p>
 
     <h2 id="every-platform">每个平台，而不只是一个</h2>
-    <p>上面那个安装框里给的是两条命令，不是一条：一条 POSIX 命令，面向 macOS、Linux 以及在 Windows 上已经待在 WSL 或 Git Bash 里的人；一条 PowerShell 命令，面向其余所有 Windows 用户——也就是其中的绝大多数，因为自 Windows 10 起 PowerShell 就是默认终端。两条做的事一模一样，顺序一样，理由也一样：先看有没有现成的克隆，有就 <code>git pull</code>，没有就 <code>git clone</code>。</p>
+    <p>上面那个安装框里给的不是命令，而是一段说给 Claude 听的提示词——把它粘贴进 Claude Code 对话里，Claude 会自己识别你的操作系统，并运行对应的命令。这条命令，在每个平台上，正是下面这些：一条 POSIX 命令，面向 macOS、Linux 以及在 Windows 上已经待在 WSL 或 Git Bash 里的人；一条 PowerShell 命令，面向其余所有 Windows 用户——也就是其中的绝大多数，因为自 Windows 10 起 PowerShell 就是默认终端。三条命令做的事一模一样，顺序一样，理由也一样：先看有没有现成的克隆，有就 <code>git pull</code>，没有就 <code>git clone</code>。</p>
     <p>上面由机器在四个 shell 里验证过的，正是这条 POSIX 命令：</p>
     <pre class="prose-code-block" dir="ltr"><code>[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code></pre>
     <p>PowerShell 命令把完全相同的逻辑搬到了 <code>Test-Path</code> 和原生 cmdlet 上：</p>

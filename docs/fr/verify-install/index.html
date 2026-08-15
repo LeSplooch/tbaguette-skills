@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Mis à jour</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T00:22:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-15T00:22:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T04:49:37+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-15T04:49:37Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Langue: Français</summary>
@@ -109,7 +109,7 @@
     <p>Les douze vérifications de ces quatre scénarios passent avant que ce site soit déployé — plus douze autres qui exécutent la chaîne de commande exacte publiée ci-dessus, mot pour mot, dans chaque shell de type POSIX installé sur la machine de build de ce projet (bash, zsh, fish et sh), plutôt que de supposer que la réimplémentation Python qu’en donne cette page est restée fidèle à ce qui est réellement livré. <code>run_tests.py</code> lance les vingt-quatre avec tout le reste, pas comme une étape manuelle séparée dont il faudrait se souvenir.</p>
 
     <h2 id="every-platform">Toutes les plateformes, pas une seule</h2>
-    <p>Le cadre d’installation ci-dessus affiche deux commandes, pas une : une commande POSIX pour macOS, Linux et quiconque est déjà dans WSL ou Git Bash sous Windows, et une commande PowerShell pour tous les autres utilisateurs de Windows — c’est-à-dire la plupart d’entre eux, PowerShell étant le terminal par défaut depuis Windows 10. Les deux font exactement la même chose, dans le même ordre, pour la même raison : chercher un clone existant, <code>git pull</code> s’il est là, <code>git clone</code> sinon.</p>
+    <p>Le cadre d’installation ci-dessus affiche un prompt adressé à Claude, pas une commande que vous tapez vous-même — collez-le dans une conversation Claude Code, et Claude détecte votre système d’exploitation et exécute lui-même la commande correspondante. Cette commande, sur chaque plateforme, est exactement ce qui suit : une commande POSIX pour macOS, Linux et quiconque est déjà dans WSL ou Git Bash sous Windows, et une commande PowerShell pour tous les autres utilisateurs de Windows — c’est-à-dire la plupart d’entre eux, PowerShell étant le terminal par défaut depuis Windows 10. Les trois font exactement la même chose, dans le même ordre, pour la même raison : chercher un clone existant, <code>git pull</code> s’il est là, <code>git clone</code> sinon.</p>
     <p>La commande POSIX est celle qui est vérifiée automatiquement plus haut, dans quatre shells :</p>
     <pre class="prose-code-block" dir="ltr"><code>[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code></pre>
     <p>La commande PowerShell transpose exactement la même logique sur <code>Test-Path</code> et les cmdlets natives :</p>

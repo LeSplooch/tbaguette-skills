@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T00:22:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-15T00:22:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T04:49:37+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-15T04:49:37Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -109,7 +109,7 @@
     <p>उन चार सूरतों की बारहों जाँचें यह साइट डिप्लॉय होने से पहले ही पास हो जाती हैं — और इनके अलावा बारह जाँचें और, जो ऊपर प्रकाशित कमांड स्ट्रिंग को अक्षरशः, इस प्रोजेक्ट की अपनी बिल्ड मशीन पर मौजूद हर POSIX जैसे शेल (bash, zsh, fish और sh) में चलाती हैं — इस भरोसे पर टिके रहने के बजाय कि इस पन्ने का पायथन वाला रूपांतरण उसी के प्रति वफ़ादार बना रहा होगा जो असल में शिप होता है। <code>run_tests.py</code> इन चौबीसों को बाक़ी सबके साथ चलाता है, अलग से किसी ऐसे मैनुअल क़दम की तरह नहीं जो किसी को याद रखना पड़े।</p>
 
     <h2 id="every-platform">हर प्लेटफ़ॉर्म, सिर्फ़ एक नहीं</h2>
-    <p>ऊपर वाले इंस्टॉल फ़्रेम में एक नहीं, दो कमांड हैं: एक POSIX कमांड — macOS, Linux, और Windows पर उन सबके लिए जो पहले से WSL या Git Bash के भीतर हैं — और एक PowerShell कमांड, Windows के बाक़ी सब लोगों के लिए, यानी ज़्यादातर Windows यूज़र्स के लिए, क्योंकि Windows 10 से PowerShell ही डिफ़ॉल्ट टर्मिनल रहा है। दोनों बिलकुल एक ही काम, एक ही क्रम में, एक ही वजह से करते हैं: देखो कि क्लोन पहले से है या नहीं, हो तो <code>git pull</code>, न हो तो <code>git clone</code>।</p>
+    <p>ऊपर वाले इंस्टॉल फ़्रेम में जो दिख रहा है, वह ख़ुद टाइप किया जाने वाला कमांड नहीं, बल्कि Claude को संबोधित एक प्रॉम्प्ट है — इसे किसी Claude Code बातचीत में पेस्ट करें, और Claude आपका OS पहचानकर मिलता-जुलता कमांड खुद चला देगा। वह कमांड, हर प्लेटफॉर्म पर, ठीक वही है जो आगे दिया गया है: एक POSIX कमांड — macOS, Linux, और Windows पर उन सबके लिए जो पहले से WSL या Git Bash के भीतर हैं — और एक PowerShell कमांड, Windows के बाक़ी सब लोगों के लिए, यानी ज़्यादातर Windows यूज़र्स के लिए, क्योंकि Windows 10 से PowerShell ही डिफ़ॉल्ट टर्मिनल रहा है। तीनों बिलकुल एक ही काम, एक ही क्रम में, एक ही वजह से करते हैं: देखो कि क्लोन पहले से है या नहीं, हो तो <code>git pull</code>, न हो तो <code>git clone</code>।</p>
     <p>POSIX वाला कमांड वही है जिसे ऊपर चार शेल में मशीन से जाँचा जाता है:</p>
     <pre class="prose-code-block" dir="ltr"><code>[ -d ~/.claude/skills/TBaguette/.git ] &amp;&amp; git -C ~/.claude/skills/TBaguette pull || git clone https://github.com/LeSplooch/tbaguette-skills.git ~/.claude/skills/TBaguette</code></pre>
     <p>PowerShell वाला कमांड ठीक वही तर्क <code>Test-Path</code> और नेटिव cmdlet पर उतार देता है:</p>
