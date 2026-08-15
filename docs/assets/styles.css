@@ -1312,7 +1312,16 @@ code {
     transform: var(--cf-transform);
     opacity: clamp(0, calc(1 - var(--cf-abs) * 0.32), 1);
     z-index: max(1, calc(20 - var(--cf-abs)));
-    transition: transform 0.7s var(--ease-out), opacity 0.7s var(--ease-out),
+    /* --fresh-spin-duration exists so a momentum-carrying drag release can
+       lengthen just this settle without touching the shared rule: site.js
+       sets it inline only on the tiles animating out of a flung release,
+       proportional to how much momentum carried them, then clears it once
+       that transition finishes. Every other trigger (auto-advance, prev/
+       next, click-to-recentre) never sets it, so it stays at this default
+       0.7s for them — same speed as before momentum existed. */
+    --fresh-spin-duration: 0.7s;
+    transition: transform var(--fresh-spin-duration) var(--ease-out),
+                opacity var(--fresh-spin-duration) var(--ease-out),
                 border-color var(--duration-enter) var(--ease-out),
                 background-color var(--duration-enter) var(--ease-out),
                 box-shadow var(--duration-enter) var(--ease-out);

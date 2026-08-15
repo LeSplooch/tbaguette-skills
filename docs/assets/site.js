@@ -415,9 +415,36 @@
       var momentum = velocityIndexPerMs * MOMENTUM_TIME_CONSTANT_MS;
       momentum = Math.max(-MAX_MOMENTUM_TILES, Math.min(MAX_MOMENTUM_TILES, momentum));
 
+      // A harder flick should keep the ring visibly spinning for longer,
+      // not just cover more ground in the same 0.7s the CSS default gives
+      // every other settle (a plain click-to-recentre, prev/next, etc.) —
+      // at a fixed duration, more distance in the same time reads as
+      // "faster," not "more momentum." SPIN_DURATION_PER_TILE_S stretches
+      // the transition in proportion to how much momentum actually carried
+      // it, and only for this settle: --fresh-spin-duration is set inline
+      // here and nowhere else, so every other trigger keeps the CSS
+      // default untouched.
+      var SPIN_DURATION_PER_TILE_S = 0.18;
+      var MAX_SPIN_DURATION_S = 1.8;
+      var BASE_SPIN_DURATION_S = 0.7;
+      var spinDuration = Math.min(
+        MAX_SPIN_DURATION_S,
+        BASE_SPIN_DURATION_S + Math.abs(momentum) * SPIN_DURATION_PER_TILE_S
+      );
+
       activeIndex = ((Math.round(liveIndex + momentum) % count) + count) % count;
-      tiles.forEach(function (tile) { tile.style.removeProperty('transition'); });
+      tiles.forEach(function (tile) {
+        tile.style.removeProperty('transition');
+        tile.style.setProperty('--fresh-spin-duration', spinDuration + 's');
+      });
       layout(activeIndex);
+      // Cleared once the settle finishes (a small buffer past its own
+      // duration covers rAF/paint slop) so a later, unrelated transition —
+      // another drag, a prev/next click, focus landing on a different tile
+      // — can't inherit this one's stretched duration by accident.
+      window.setTimeout(function () {
+        tiles.forEach(function (tile) { tile.style.removeProperty('--fresh-spin-duration'); });
+      }, spinDuration * 1000 + 50);
     }
     rail.addEventListener('pointerup', endDrag);
     rail.addEventListener('pointercancel', endDrag);
