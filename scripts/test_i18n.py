@@ -105,15 +105,15 @@ def check_full_locale_build() -> None:
         docs = tmp_root / "docs"
         check("English index still builds at the root", (docs / "index.html").is_file())
         check("French index builds under docs/fr/", (docs / "fr" / "index.html").is_file())
-        check("every other locale's directory also exists (all 16 always route)",
+        check("every other locale's directory also exists (all registered locales always route)",
               all((docs / loc.code).is_dir() for loc in locales.LOCALES if not loc.default))
 
         fr_index_html = (docs / "fr" / "index.html").read_text(encoding="utf-8")
         check("French index emits dir='ltr' lang='fr'", '<html lang="fr" dir="ltr">' in fr_index_html)
         check("French index's translated hero headline made it through",
               "Un atelier pour votre façon de coder." in fr_index_html)
-        check("French index carries all 16 hreflang alternates plus x-default",
-              fr_index_html.count('rel="alternate" hreflang="') == 17)
+        check("French index carries all 13 hreflang alternates plus x-default",
+              fr_index_html.count('rel="alternate" hreflang="') == 14)
 
         fr_alpha_html = (docs / "fr" / "skills" / "alpha" / "index.html").read_text(encoding="utf-8")
         check("French alpha page shows the real translated body, no fallback banner",

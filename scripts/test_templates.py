@@ -404,10 +404,10 @@ def check_i18n_document_shell() -> None:
     check("French index emits lang='fr' dir='ltr'", '<html lang="fr" dir="ltr">' in html_fr)
     check("French index's canonical link points at /fr/",
           '<link rel="canonical" href="/fr/">' in html_fr)
-    check("French index carries an hreflang alternate for every one of the 16 locales, "
-          "plus one more for x-default (17 total 'rel=\"alternate\" hreflang=' tags, since "
+    check("French index carries an hreflang alternate for every one of the 13 locales, "
+          "plus one more for x-default (14 total 'rel=\"alternate\" hreflang=' tags, since "
           "x-default's own <link> also matches that prefix)",
-          html_fr.count('rel="alternate" hreflang="') == 17)
+          html_fr.count('rel="alternate" hreflang="') == 14)
     check("French index carries an x-default hreflang pointing at the English root",
           'hreflang="x-default" href="/">' in html_fr)
     check("French index's own hreflang entry uses the plain 'fr' tag (not a region variant)",
@@ -436,8 +436,8 @@ def check_i18n_document_shell() -> None:
     check("base_path prefixes every locale URL in the hreflang block, not just the current one",
           'hreflang="en" href="/tbaguette-skills/skills/designing-test-data/">' in html_skill_base_path)
 
-    check("language switcher lists all 16 locales by endonym",
-          html_en.count('class="language-switcher__link"') == 16)
+    check("language switcher lists all 13 locales by endonym",
+          html_en.count('class="language-switcher__link"') == 13)
     check("language switcher's French entry links to /fr/",
           '<a class="language-switcher__link" href="/fr/"' in html_en)
     check("language switcher marks the current locale with aria-current",

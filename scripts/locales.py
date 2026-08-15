@@ -1,7 +1,14 @@
 """Locale registry for the tbaguette-skills site's i18n build.
 
-The single source of truth for which 16 locales (English + 15 translations,
-one language per country) the site builds. scripts/generate.py,
+The single source of truth for which 13 locales (English + 12 translations,
+one language per country) the site builds. Vietnamese, Polish, and
+Indonesian were dropped 2026-08-15 -- translation work never started for
+them and there's no reason to publish an entry in the language switcher
+that just leads to an all-English page under a foreign-looking URL prefix.
+Re-adding one later is exactly reversing this: add its Locale entry back,
+bump EXPECTED_LOCALE_COUNT, then populate i18n/<code>/ following the same
+procedure documented in docs/superpowers/plans/2026-08-14-website-i18n.md's
+Task 12. scripts/generate.py,
 scripts/templates.py's language switcher, and scripts/test_i18n.py all
 import LOCALES from here rather than each declaring the list separately.
 
@@ -55,12 +62,9 @@ LOCALES: tuple[Locale, ...] = (
     Locale(code="hi", hreflang="hi", name="Hindi", endonym="हिन्दी", dir="ltr"),
     Locale(code="ar", hreflang="ar", name="Arabic", endonym="العربية", dir="rtl"),
     Locale(code="tr", hreflang="tr", name="Turkish", endonym="Türkçe", dir="ltr"),
-    Locale(code="vi", hreflang="vi", name="Vietnamese", endonym="Tiếng Việt", dir="ltr"),
-    Locale(code="pl", hreflang="pl", name="Polish", endonym="Polski", dir="ltr"),
-    Locale(code="id", hreflang="id", name="Indonesian", endonym="Indonesia", dir="ltr"),
 )
 
-EXPECTED_LOCALE_COUNT = 16
+EXPECTED_LOCALE_COUNT = 13
 
 DEFAULT_LOCALE: Locale = next(locale for locale in LOCALES if locale.default)
 
