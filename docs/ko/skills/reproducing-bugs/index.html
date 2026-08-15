@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>reproducing-bugs — 디버깅과 성능 — TBaguette’s Atelier</title>
-<meta name="description" content="버그 리포트를 원할 때마다 일어나는 실패로 바꿔야 할 때, 결함이 로컬에서 재현되지 않을 때, 프로덕션에서만 또는 특정 사용자 한 명에게만 일어날 때, 실패가 간헐적이거나 낮은 확률로만 나타날 때, 수정에 그것을 증명할 테스트가 없을 때 사용합니다.">
+<meta name="description" content="버그 리포트를 원할 때마다 일어나는 실패로 바꿔야 할 때, 결함이 로컬에서 재현되지 않을 때, 프로덕션에서만 또는 특정 사용자 한 명에게만 일어날 때, 실패가 간헐적이거나 낮은 확률로만 나타날 때…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="reproducing-bugs — 디버깅과 성능 — TBaguette’s Atelier">
-<meta property="og:description" content="버그 리포트를 원할 때마다 일어나는 실패로 바꿔야 할 때, 결함이 로컬에서 재현되지 않을 때, 프로덕션에서만 또는 특정 사용자 한 명에게만 일어날 때, 실패가 간헐적이거나 낮은 확률로만 나타날 때, 수정에 그것을 증명할 테스트가 없을 때 사용합니다.">
+<meta property="og:description" content="버그 리포트를 원할 때마다 일어나는 실패로 바꿔야 할 때, 결함이 로컬에서 재현되지 않을 때, 프로덕션에서만 또는 특정 사용자 한 명에게만 일어날 때, 실패가 간헐적이거나 낮은 확률로만 나타날 때…">
 <link rel="canonical" href="/tbaguette-skills/ko/skills/reproducing-bugs/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/reproducing-bugs/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/reproducing-bugs/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T19:19:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-15T19:19:07Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T19:23:47+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-15T19:23:47Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -93,7 +93,7 @@
     <span class="change-badge change-badge--updated" data-fresh-at="2026-08-14T11:27:18+02:00">업데이트</span>
   </div>
   <span class="tag skill-article__tag">디버깅과 성능</span>
-  <p class="lede">버그 리포트를 원할 때마다 일어나는 실패로 바꿔야 할 때, 결함이 로컬에서 재현되지 않을 때, 프로덕션에서만 또는 특정 사용자 한 명에게만 일어날 때, 실패가 간헐적이거나 낮은 확률로만 나타날 때, 수정에 그것을 증명할 테스트가 없을 때 사용합니다. 리포트에서 빠진 변수, 최소 재현, 입력 줄이기, 실패율, 그리고 추측 대신 증거를 남기는 법을 다룹니다.</p>
+  <p class="lede">버그 리포트를 원할 때마다 일어나는 실패로 바꿔야 할 때, 결함이 로컬에서 재현되지 않을 때, 프로덕션에서만 또는 특정 사용자 한 명에게만 일어날 때, 실패가 간헐적이거나 낮은 확률로만 나타날 때, 프로브나 측정이 그럴듯한 값을 돌려주지만 그것이 그저 기본값일 뿐일 수도 있을 때, 수정에 그것을 증명할 테스트가 없을 때 사용합니다. 리포트에서 빠진 변수, 최소 재현, 입력 줄이기, 실패율, 테스트 하네스를 믿기 전에 그 자체를 먼저 검증하기, 그리고 추측 대신 증거를 남기는 법을 다룹니다.</p>
 </div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Until the failure happens on demand, every fix is a guess and every claim of &quot;fixed&quot; is unfalsifiable. The reproduction is the deliverable that makes the rest of debugging possible, and it is the step most bug work skips.</p>
 <h2 id="when-to-use">When to use</h2>
