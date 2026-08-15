@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>judging-duplication — Değişiklikleri entegre etme — TBaguette’s Atelier</title>
-<meta name="description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta name="description" content="Şu durumlarda kullanın: iki kod parçası neredeyse birebir aynı görünüyorsa ve onları birleştirmek en bariz temizlik gibi duruyorsa; bir…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="judging-duplication — Değişiklikleri entegre etme — TBaguette’s Atelier">
-<meta property="og:description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta property="og:description" content="Şu durumlarda kullanın: iki kod parçası neredeyse birebir aynı görünüyorsa ve onları birleştirmek en bariz temizlik gibi duruyorsa; bir…">
 <link rel="canonical" href="/tbaguette-skills/tr/skills/judging-duplication/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/judging-duplication/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/judging-duplication/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Son güncelleme</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T18:20:54+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-15T18:20:54Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T18:33:21+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-15T18:33:21Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Dil: Türkçe</summary>
@@ -93,7 +93,7 @@
     <span class="change-badge change-badge--new" data-fresh-at="2026-08-14T14:09:56+02:00">Yeni</span>
   </div>
   <span class="tag skill-article__tag">Değişiklikleri entegre etme</span>
-  <p class="lede">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists, when extracting a shared helper or a base class, or when a DRY pass is about to unify things that differ only in a small arbitrary detail. Covers telling duplication that is debt from duplication that is a contract, the rule of three, what a merge breaks that no local test observes, and the residue to leave when a split is deliberate.</p>
+  <p class="lede">Şu durumlarda kullanın: iki kod parçası neredeyse birebir aynı görünüyorsa ve onları birleştirmek en bariz temizlik gibi duruyorsa; bir inceleyen kişi, neredeyse birebir bir kopyanın neden var olduğunu sorduğunda; ortak bir yardımcı ya da bir temel sınıf dışarı çıkarırken; veya bir DRY turu, yalnızca küçük ve keyfi bir ayrıntıda farklılaşan şeyleri birleştirmek üzereyken. Borç olan tekrarı sözleşme olan tekrardan ayırmayı, üçler kuralını, yerel hiçbir testin fark etmediği hâlde bir birleştirmenin neyi bozduğunu ve bölünme bilinçli olduğunda geride bırakılacak izleri kapsar.</p>
 </div><p class="translation-banner" role="note">Bu sayfanın Türkçe çevirisi henüz yok — İngilizce sürümü gösteriliyor.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Two functions that differ only in a detail are the most obvious cleanup in the file, and merging them can be invisible to every test you currently have.</p>
 <p>The question before unifying is never &quot;are these the same?&quot; It is <strong>&quot;what would notice if they stopped differing?&quot;</strong></p>
