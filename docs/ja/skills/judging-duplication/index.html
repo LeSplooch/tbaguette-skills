@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>judging-duplication — 変更を着地させる — TBaguette’s Atelier</title>
-<meta name="description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta name="description" content="2つのコードがほとんど同じに見えて、まとめるのが当たり前の片づけに思えるとき、なぜ似たコピーが存在するのかとレビュアーに問われたとき、共通のヘルパーや基底クラスを抽出するとき…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="judging-duplication — 変更を着地させる — TBaguette’s Atelier">
-<meta property="og:description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta property="og:description" content="2つのコードがほとんど同じに見えて、まとめるのが当たり前の片づけに思えるとき、なぜ似たコピーが存在するのかとレビュアーに問われたとき、共通のヘルパーや基底クラスを抽出するとき…">
 <link rel="canonical" href="/tbaguette-skills/ja/skills/judging-duplication/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/judging-duplication/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/judging-duplication/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">最終更新</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T17:38:29+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-15T17:38:29Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T17:46:28+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-15T17:46:28Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">言語: 日本語</summary>
@@ -93,7 +93,7 @@
     <span class="change-badge change-badge--new" data-fresh-at="2026-08-14T14:09:56+02:00">新着</span>
   </div>
   <span class="tag skill-article__tag">変更を着地させる</span>
-  <p class="lede">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists, when extracting a shared helper or a base class, or when a DRY pass is about to unify things that differ only in a small arbitrary detail. Covers telling duplication that is debt from duplication that is a contract, the rule of three, what a merge breaks that no local test observes, and the residue to leave when a split is deliberate.</p>
+  <p class="lede">2つのコードがほとんど同じに見えて、まとめるのが当たり前の片づけに思えるとき、なぜ似たコピーが存在するのかとレビュアーに問われたとき、共通のヘルパーや基底クラスを抽出するとき、あるいはDRYの見直しがごく小さな恣意的な違いしかないもの同士を1つにまとめようとしているときに使います。負債としての重複と契約としての重複の見分け方、3度目で抽象化するという「3回ルール」、まとめたときに手元のどのテストにも見えないまま壊れるもの、そして分けたままにするのが意図的なとき、そうと分かる痕跡を残すことを扱います。</p>
 </div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Two functions that differ only in a detail are the most obvious cleanup in the file, and merging them can be invisible to every test you currently have.</p>
 <p>The question before unifying is never &quot;are these the same?&quot; It is <strong>&quot;what would notice if they stopped differing?&quot;</strong></p>
