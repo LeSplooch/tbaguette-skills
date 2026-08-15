@@ -1076,6 +1076,13 @@ code {
    as it was, not a broken coverflow. A visitor with no JS at all still gets
    the offsets templates.py rendered at build time — a real, if motionless,
    coverflow — never the flat rail by accident.
+
+   The clock isn't the only way a tile becomes active: initFreshCoverflow
+   also wires up click-and-drag (grab the ring, spin it, release to settle
+   on whichever tile ends up nearest centre) and click-to-recentre on any
+   tile that isn't centred yet — only the already-centred tile's click
+   still navigates. cursor/touch-action/user-select below exist for that
+   drag, not for anything this file alone renders.
    ------------------------------------------------------------------------- */
 
 .fresh { margin-top: var(--space-7); max-width: 46rem; }
@@ -1224,7 +1231,14 @@ code {
     overflow: visible;
     -webkit-mask-image: none;
     mask-image: none;
+    cursor: grab;
+    /* Lets the page's own vertical scroll keep working with a finger
+       starting on the carousel; site.js's pointer handlers claim the
+       horizontal axis themselves rather than asking the browser to. */
+    touch-action: pan-y;
   }
+
+  .fresh__rail:active { cursor: grabbing; }
 
   /* --cf-offset (set inline by templates.py, kept live by site.js) is the
      only per-instance number here — everything else is a calc() of it.
@@ -1283,6 +1297,13 @@ code {
     overflow: hidden;
     flex: none;
     scroll-snap-align: none;
+    /* A drag crossing tile text would otherwise paint a text-selection
+       highlight instead of spinning the ring. -webkit-user-drag covers
+       Chrome/Safari's native "drag this link" gesture; templates.py's
+       draggable="false" is the one that actually holds in Firefox too. */
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: inherit;
     --cf-abs: max(var(--cf-offset), calc(var(--cf-offset) * -1));
     --cf-transform:
       translateX(clamp(-280px, calc(var(--cf-offset) * 140px), 280px))

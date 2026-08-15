@@ -341,6 +341,10 @@ def check_fresh_section() -> None:
           "category tag included, not a stripped-down rail-only variant",
           '<p class="card__summary">s</p>' in html
           and '<span class="tag">Cat</span>' in html)
+    check("a tile opts out of native link-dragging, which would otherwise "
+          "compete with site.js's own click-and-drag-to-spin for the same "
+          "gesture",
+          'draggable="false"' in html)
 
     # --- the coverflow: geometry is data, not decoration, so it gets the
     # same scrutiny as the rest of the tile — a wrong offset is a tile stuck

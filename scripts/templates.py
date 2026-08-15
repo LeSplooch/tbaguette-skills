@@ -882,7 +882,13 @@ def _render_fresh_tile(skill: dict, base_path: str = "", index: int = 0, count: 
     # ui.json rather than a rushed field addition mid-merge.
     badge = _render_change_badge(skill.get("change_status"), at)
     offset = _fresh_signed_offset(index, count)
-    return f"""<a class="card fresh__tile" href="{_skill_href(skill, base_path)}"{stamp} style="--cf-offset: {offset}">
+    # draggable="false": Firefox's native "drag this link" gesture would
+    # otherwise compete with site.js's own click-and-drag-to-spin handling
+    # for the same pointer gesture. Chrome/Safari take styles.css's
+    # -webkit-user-drag: none for the same thing; Firefox doesn't honour
+    # that property at all, but does honour the HTML attribute -- so both
+    # are needed, neither is redundant.
+    return f"""<a class="card fresh__tile" href="{_skill_href(skill, base_path)}"{stamp} draggable="false" style="--cf-offset: {offset}">
   <span class="card__name-row">
     <span class="card__name">{escape_html(skill['name'])}</span>
     {badge}

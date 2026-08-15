@@ -1,6 +1,6 @@
 /*
  * La Boulangerie TBaguette — site.js
- * Vanilla JS, no dependencies. Eight independent features, each a no-op if
+ * Vanilla JS, no dependencies. Ten independent features, each a no-op if
  * its markup isn't on the current page:
  *   - theme toggle   (every page)
  *   - search/filter  (landing page only)
@@ -12,7 +12,9 @@
  *   - freshness      (every page — re-checks each New/Updated badge's
  *                      48h window against the visitor's own clock)
  *   - fresh coverflow (landing page only — steps which rail tile is centred
- *                       on a timer; pauses on hover/focus/manual prev-next)
+ *                       on a timer; pauses on hover/focus; click-and-drag
+ *                       spins it manually, clicking a side tile recentres
+ *                       it instead of navigating)
  *   - language switcher dismissal (every page — Escape / outside click on
  *                                   the native <details>; opening and
  *                                   closing it needs no JS)
@@ -215,7 +217,20 @@
 
     var count = tiles.length;
     var activeIndex = 0;
-    var paused = false;
+
+    // Two independent reasons the clock might not be driving right now,
+    // not one: "hovering" is temporary and self-undoes (mouseleave/
+    // focusout), for the WCAG 2.2.2 pause-while-the-visitor-is-right-there
+    // case. "manualOverride" is permanent once set — prev/next, a drag, or
+    // picking a side tile all mean the visitor has taken the wheel, and
+    // the clock resuming a few seconds after they let go of the mouse
+    // would just undo their choice. A single `paused` flag used to stand
+    // in for both, which meant mouseleave after a prev/next click quietly
+    // resumed autoplay the moment the pointer left the rail — the opposite
+    // of what its own comment claimed.
+    var hovering = false;
+    var manualOverride = false;
+    function isPaused() { return hovering || manualOverride; }
 
     // Setting only the custom property here would be simpler, and
     // styles.css's --cf-transform / opacity calc()s would pick it up. This
@@ -230,9 +245,14 @@
     // what a no-JS visitor's static, correct-but-motionless coverflow
     // relies on. The clamped magnitudes mirror styles.css's clamp()s
     // exactly — see that rule for why they're this steep.
-    function layout() {
+    //
+    // index is a plain parameter, not always activeIndex itself: a drag
+    // in progress renders a live, fractional index every pointermove
+    // without ever writing that half-settled value into activeIndex,
+    // which only ever holds a real resting tile position.
+    function layout(index) {
       tiles.forEach(function (tile, i) {
-        var offset = freshSignedOffset(i, activeIndex, count);
+        var offset = freshSignedOffset(i, index, count);
         tile.style.setProperty('--cf-offset', offset);
         var abs = Math.abs(offset);
         var x = Math.max(-280, Math.min(280, offset * 140));
@@ -247,50 +267,136 @@
     }
 
     function step() {
-      if (paused) return;
+      if (isPaused()) return;
       activeIndex = (activeIndex + 1) % count;
-      layout();
+      layout(activeIndex);
     }
 
     // WCAG 2.2.2: anything that moves on its own for more than five seconds
     // needs a way to stop it. Hovering or tabbing into the rail is that way
     // — the interval keeps firing but simply stops rewriting offsets, so
     // resuming afterwards continues from the same tile rather than jumping.
-    rail.addEventListener('mouseenter', function () { paused = true; });
-    rail.addEventListener('mouseleave', function () { paused = false; });
+    rail.addEventListener('mouseenter', function () { hovering = true; });
+    rail.addEventListener('mouseleave', function () { hovering = false; });
     rail.addEventListener('focusin', function (event) {
-      paused = true;
+      hovering = true;
       // Recentre on whichever tile actually received focus, rather than
       // leaving it frozen wherever the step timer last put it — a keyboard
       // visitor's own tile should be the flat, full-size, opaque one, not
-      // whichever one the clock happened to choose.
+      // whichever one the clock happened to choose. Left as a temporary
+      // (hovering) override, not a permanent one: passing through on the
+      // way to something else with Tab isn't the same declaration of
+      // intent as reaching for a drag or a button.
       var index = tiles.indexOf(event.target);
       if (index !== -1 && index !== activeIndex) {
         activeIndex = index;
-        layout();
+        layout(activeIndex);
       }
     });
-    rail.addEventListener('focusout', function () { paused = false; });
+    rail.addEventListener('focusout', function () { hovering = false; });
 
     // Manual prev/next. Once a visitor has reached for one of these, the
-    // clock has been overruled — pausing for good rather than resuming on
-    // mouseleave/focusout respects that, instead of undoing their choice a
-    // few seconds later.
+    // clock has been overruled for good — manualOverride, not hovering.
     var nav = document.querySelector('[data-fresh-nav]');
     if (nav) {
       var prevBtn = nav.querySelector('[data-fresh-prev]');
       var nextBtn = nav.querySelector('[data-fresh-next]');
       var goTo = function (newIndex) {
-        paused = true;
+        manualOverride = true;
         activeIndex = ((newIndex % count) + count) % count;
-        layout();
+        layout(activeIndex);
       };
       if (prevBtn) prevBtn.addEventListener('click', function () { goTo(activeIndex - 1); });
       if (nextBtn) nextBtn.addEventListener('click', function () { goTo(activeIndex + 1); });
       nav.hidden = false;
     }
 
-    layout();
+    // Click-and-drag. DRAG_STEP_PX (how many px of drag equals one tile of
+    // rotation) intentionally matches layout()'s own 140px-per-step
+    // translateX above: dragging a tile by roughly its own visual travel
+    // distance advances exactly one slot, so the ring tracks the pointer
+    // 1:1 rather than at some unrelated, unpredictable rate.
+    //
+    // A pointer press alone doesn't mean a drag is happening — most
+    // presses on a tile are the first half of an ordinary click.
+    // dragMoved only flips true past DRAG_CLICK_THRESHOLD_PX of real
+    // movement, and only then are transitions disabled (so the live
+    // preview tracks the pointer with no easing lag) and manualOverride
+    // set. The click handler below reads dragMoved to tell a real drag's
+    // trailing click apart from an ordinary one.
+    var DRAG_STEP_PX = 140;
+    var DRAG_CLICK_THRESHOLD_PX = 6;
+    var pointerDown = false;
+    var dragMoved = false;
+    var dragPointerId = null;
+    var dragStartX = 0;
+    var dragStartIndex = 0;
+
+    rail.addEventListener('pointerdown', function (event) {
+      if (event.button !== undefined && event.button !== 0) return;
+      pointerDown = true;
+      dragMoved = false;
+      dragPointerId = event.pointerId;
+      dragStartX = event.clientX;
+      dragStartIndex = activeIndex;
+      if (rail.setPointerCapture) rail.setPointerCapture(event.pointerId);
+    });
+
+    rail.addEventListener('pointermove', function (event) {
+      if (!pointerDown || event.pointerId !== dragPointerId) return;
+      var deltaX = event.clientX - dragStartX;
+      if (!dragMoved) {
+        if (Math.abs(deltaX) < DRAG_CLICK_THRESHOLD_PX) return;
+        dragMoved = true;
+        manualOverride = true;
+        tiles.forEach(function (tile) { tile.style.setProperty('transition', 'none', 'important'); });
+      }
+      // Dragging left (negative deltaX) steps forward, the same direction
+      // as the next button and the auto-advance timer — see
+      // freshSignedOffset's own sign convention.
+      layout(dragStartIndex - deltaX / DRAG_STEP_PX);
+    });
+
+    function endDrag(event) {
+      if (!pointerDown || event.pointerId !== dragPointerId) return;
+      pointerDown = false;
+      if (rail.releasePointerCapture) {
+        try { rail.releasePointerCapture(event.pointerId); } catch (error) { /* already released */ }
+      }
+      if (!dragMoved) return;
+      var deltaX = event.clientX - dragStartX;
+      var liveIndex = dragStartIndex - deltaX / DRAG_STEP_PX;
+      activeIndex = ((Math.round(liveIndex) % count) + count) % count;
+      tiles.forEach(function (tile) { tile.style.removeProperty('transition'); });
+      layout(activeIndex);
+    }
+    rail.addEventListener('pointerup', endDrag);
+    rail.addEventListener('pointercancel', endDrag);
+
+    // Click. A tile that's already centred just navigates — plain <a>
+    // behaviour, nothing to intercept. Any other tile recentres instead of
+    // navigating: the visitor picked which one they want a closer look at,
+    // not necessarily to leave the page yet. The click a real drag leaves
+    // behind is suppressed outright rather than read as either — dragMoved
+    // is consumed (reset) here so a single drag can only ever suppress the
+    // one click it actually caused.
+    rail.addEventListener('click', function (event) {
+      if (dragMoved) {
+        dragMoved = false;
+        event.preventDefault();
+        return;
+      }
+      var tile = event.target.closest ? event.target.closest('.fresh__tile') : null;
+      if (!tile) return;
+      var index = tiles.indexOf(tile);
+      if (index === -1 || index === activeIndex) return;
+      event.preventDefault();
+      manualOverride = true;
+      activeIndex = index;
+      layout(activeIndex);
+    });
+
+    layout(activeIndex);
     window.setInterval(step, FRESH_COVERFLOW_STEP_MS);
   }
 
