@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>tracking-data-provenance — Conception de systèmes — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted…">
+<meta name="description" content="À utiliser quand un enregistrement peut être écrit à partir de plus d’une sorte de source — mesurée, importée, inférée…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="tracking-data-provenance — Conception de systèmes — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted…">
+<meta property="og:description" content="À utiliser quand un enregistrement peut être écrit à partir de plus d’une sorte de source — mesurée, importée, inférée…">
 <link rel="canonical" href="/tbaguette-skills/fr/skills/tracking-data-provenance/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/tracking-data-provenance/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/tracking-data-provenance/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Mis à jour</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T16:41:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-15T16:41:20Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T16:52:38+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-15T16:52:38Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Langue: Français</summary>
@@ -93,7 +93,7 @@
     <span class="change-badge change-badge--new" data-fresh-at="2026-08-14T14:09:56+02:00">Nouveau</span>
   </div>
   <span class="tag skill-article__tag">Conception de systèmes</span>
-  <p class="lede">Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted, or backfilled — when a field encodes how strongly something is believed, when an outside recommendation could trip a threshold meant for first-party evidence, when designing an import or sync path, or when a value&#x27;s origin has to survive into an audit, a model, or an automated decision. Covers separating write paths by origin, provenance fields, confidence laundering, and promotion rules.</p>
+  <p class="lede">À utiliser quand un enregistrement peut être écrit à partir de plus d’une sorte de source — mesurée, importée, inférée, affirmée par un utilisateur ou issue d’un backfill — quand un champ encode la force avec laquelle une information est tenue pour vraie, quand une recommandation extérieure risque de franchir un seuil prévu pour des preuves de première main, quand on conçoit un chemin d’import ou de synchronisation, ou quand l’origine d’une valeur doit survivre jusqu’à un audit, un modèle ou une décision automatisée. Couvre la séparation des chemins d’écriture par origine, les champs de provenance, le blanchiment de confiance, et les règles de promotion.</p>
 </div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A row records what is believed. Provenance records <strong>who believed it and on what basis</strong>, and it is the part that gets dropped first, because at write time everybody knows where the data came from.</p>
 <p>The failure is not that provenance is lost. It is that a weaker claim, once written through a path that means &quot;we observed this&quot;, becomes indistinguishable from a stronger one — and every downstream reader treats it as the stronger one.</p>

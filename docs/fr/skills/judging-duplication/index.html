@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>judging-duplication — Intégration des changements — TBaguette’s Atelier</title>
-<meta name="description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta name="description" content="À utiliser quand deux morceaux de code semblent quasi identiques et que les fusionner paraît le nettoyage évident…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="judging-duplication — Intégration des changements — TBaguette’s Atelier">
-<meta property="og:description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta property="og:description" content="À utiliser quand deux morceaux de code semblent quasi identiques et que les fusionner paraît le nettoyage évident…">
 <link rel="canonical" href="/tbaguette-skills/fr/skills/judging-duplication/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/judging-duplication/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/judging-duplication/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Mis à jour</span>
-      <time class="site-header__updated-value" datetime="2026-08-15T16:41:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-15T16:41:20Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-15T16:52:38+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-15T16:52:38Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Langue: Français</summary>
@@ -93,7 +93,7 @@
     <span class="change-badge change-badge--new" data-fresh-at="2026-08-14T14:09:56+02:00">Nouveau</span>
   </div>
   <span class="tag skill-article__tag">Intégration des changements</span>
-  <p class="lede">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists, when extracting a shared helper or a base class, or when a DRY pass is about to unify things that differ only in a small arbitrary detail. Covers telling duplication that is debt from duplication that is a contract, the rule of three, what a merge breaks that no local test observes, and the residue to leave when a split is deliberate.</p>
+  <p class="lede">À utiliser quand deux morceaux de code semblent quasi identiques et que les fusionner paraît le nettoyage évident, quand un relecteur demande pourquoi une quasi-copie existe, quand on extrait un utilitaire partagé ou une classe de base, ou quand une passe DRY s’apprête à unifier des choses qui ne diffèrent que par un petit détail arbitraire. Couvre la distinction entre la duplication qui est une dette et celle qui est un contrat, la règle des trois occurrences, ce qu’une fusion casse sans qu’aucun test local ne le voie, et les traces à laisser quand la séparation est délibérée.</p>
 </div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Two functions that differ only in a detail are the most obvious cleanup in the file, and merging them can be invisible to every test you currently have.</p>
 <p>The question before unifying is never &quot;are these the same?&quot; It is <strong>&quot;what would notice if they stopped differing?&quot;</strong></p>
