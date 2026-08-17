@@ -3,7 +3,7 @@ name: writing-the-failing-test-first
 description: Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written. Covers writing one failing test first, confirming it fails for the right reason, writing the minimal code that makes it pass, and refactoring only once the suite is green again.
 ---
 
-# Test-driven development
+# Writing the failing test first
 
 ## Overview
 

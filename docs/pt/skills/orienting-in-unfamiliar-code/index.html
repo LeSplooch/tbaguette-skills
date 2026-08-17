@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Atualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} horário local · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:59:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} horário local · {utc} UTC">2026-08-17T23:59:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Português</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">orienting-in-unfamiliar-code</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:59:03.066323+00:00">Atualizada</span>
   </div>
   <span class="tag skill-article__tag">Leitura de código</span>
   <p class="lede">Use quando for abrir um codebase pela primeira vez, herdar um repositório desconhecido ou legado, entrar em um projeto novo, ou receber o pedido de mudar um código que ninguém ali presente escreveu. Trata de por onde começar a ler, de localizar os pontos de entrada e as fronteiras reais entre módulos, de distinguir código vivo de código morto, de achar onde o trabalho de fato acontece, e de reconciliar a arquitetura documentada com a que os imports revelam.</p>
 </div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Orientation is a bounded reconnaissance with a deliverable: the name of the file you are going to change and a list of the things that will notice. It is not comprehension of the system, which no one has and which you will never reach by reading.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>First contact with a repo you did not write, or returning after a year.</li><li>A task lands and you cannot name the file it touches.</li><li>Documentation and code disagree and you need to know which is running.</li><li>You are estimating a change in a system you have not measured.</li><li>Not for: a specific value's path through the system (tracing-data-flow), the reason a line exists (code-archaeology), or the coupling graph (mapping-dependencies).</li></ul>
+<ul><li>First contact with a repo you did not write, or returning after a year.</li><li>A task lands and you cannot name the file it touches.</li><li>Documentation and code disagree and you need to know which is running.</li><li>You are estimating a change in a system you have not measured.</li><li>Not for: a specific value's path through the system (tracing-data-flow), the reason a line exists (code-archaeology), or the coupling graph (mapping-dependencies).</li><li>Run alongside <code>recovering-agent-context</code>: this skill reads what the code itself can show you; that one reads what prior AI sessions and instruction files learned here that the code can't — different sources, same first-contact moment.</li></ul>
 <h2 id="the-read-order">The read order</h2>
 <p>Work down this table. Each row answers a question the next row assumes.</p>
 <table><thead><tr><th>#</th><th>Read</th><th>Answers</th><th>Done when</th></tr></thead><tbody><tr><td>1</td><td>Build and manifest files, lockfile, CI config, container/deploy definitions</td><td>What this repo produces, what it depends on, how it is built, tested, and run</td><td>You can name every artifact the repo emits</td></tr><tr><td>2</td><td>Entry points: <code>main</code>, server bootstrap, CLI dispatch, exported API surface, job and migration entries</td><td>Where control begins, and how many beginnings there are</td><td>You have counted them</td></tr><tr><td>3</td><td>Test names only — not bodies</td><td>The intended contract, stated as a requirements list someone maintained</td><td>You can list the features from test names alone</td></tr><tr><td>4</td><td>Directory shape, one level deep</td><td>Which names are real boundaries and which are dumping grounds</td><td>You can guess where a new feature would go</td></tr><tr><td>5</td><td>Churn: <code>git log --format= --name-only --since=6.months | sort | uniq -c | sort -rn | head -40</code></td><td>Where work actually happens, which is rarely where the docs point</td><td>You have the top ten files</td></tr></tbody></table>

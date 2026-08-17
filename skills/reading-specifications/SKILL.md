@@ -16,6 +16,7 @@ Every specification has three layers: what it states, what it implies, and what 
 - Implementing against a standard, protocol, or third-party contract.
 - An estimate is being given for prose nobody has decomposed.
 - Not for: an interface you are defining rather than consuming (designing-apis), or deciding where the change lands once the requirement is settled (finding-the-seam).
+- Not for: settling *what to build* in the first place, before anything is written down — that's `scoping-before-building`, a live conversation this skill's own "ask or assume" table assumes has already happened and produced the document being read here.
 
 ## Three layers
 
@@ -80,7 +81,7 @@ Then count the statements. A "small" ticket that produces 14 testable statements
 | Guessing a number: limit, timeout, page size, retry count | Proceed with a named constant and a comment; the reviewer answers it in place |
 | Answering requires them to check with someone else or run something | Ask now — latency is the cost and it only grows |
 
-Batch the questions. One message with five numbered questions gets answered; five messages get one answer. Include your best guess for each so the reply can be "yes to all but 3". Never ask a question answerable by reading the code, the tests, the history, or by running the thing — "how does the current one behave" is not a question for a human.
+Batch the questions — this is asynchronous clarification against a spec or ticket author, where round-trip latency is the cost being minimized, not a live conversation. One message with five numbered questions gets answered; five messages get one answer. Include your best guess for each so the reply can be "yes to all but 3". (`scoping-before-building` asks one at a time instead, because that skill is a real-time back-and-forth where each answer can change what's worth asking next — batching there would just stall a conversation that's already live.) Never ask a question answerable by reading the code, the tests, the history, or by running the thing — "how does the current one behave" is not a question for a human.
 
 ## Common mistakes
 

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} بالتوقيت المحلي · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:59:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} بالتوقيت المحلي · {utc} UTC">2026-08-17T23:59:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">schema-evolution</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:59:03.066323+00:00">مُحدَّثة</span>
   </div>
   <span class="tag skill-article__tag">تصميم الأنظمة</span>
   <p class="lede">استخدِمها عند تغيير عقد قائم في الإنتاج فعلًا — إضافة حقل أو إزالته أو إعادة تسميته أو تغيير نوعه في مخطَّط قاعدة بيانات أو صيغة مُسلسَلة أو مستند مخزَّن أو حمولة واجهة برمجية أو رسالة طابور. وتصلح كذلك عندما يكسر نشرٌ تدريجيّ فكَّ التسلسل، وعندما يعجز المستهلكون القدامى عن قراءة البيانات الجديدة، وعندما يفشل التراجع على بيانات كتبها الإصدار الأحدث، وعند إضافة قيمة إلى نوع تعداديّ، أو عند التخطيط لرفع رقم الإصدار.</p>
 </div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Once a contract is in production you no longer own both sides of it. Every change must be safe for readers you cannot redeploy and for data written by writers you cannot recall. The question is never &quot;is this change correct&quot; but &quot;is this change correct while both versions are running, and again while rolling back.&quot;</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Adding, removing, renaming, retyping, or re-scoping a field in anything persisted or transmitted</li><li>A rolling deploy produces deserialization errors, unknown-field rejections, or missing-column failures</li><li>Adding a value to an enum, status, or any other closed set</li><li>Old messages sit in a queue or a log and will be read by new code, possibly weeks later</li><li>Planning an API or payload version bump, or being asked whether one is needed</li><li>Not for: moving or rewriting the data that already exists — that is a migration, and it is a separate discipline with its own failure modes</li></ul>
+<ul><li>Adding, removing, renaming, retyping, or re-scoping a field in anything persisted or transmitted</li><li>A rolling deploy produces deserialization errors, unknown-field rejections, or missing-column failures</li><li>Adding a value to an enum, status, or any other closed set</li><li>Old messages sit in a queue or a log and will be read by new code, possibly weeks later</li><li>Planning an API or payload version bump, or being asked whether one is needed</li><li>Not for: moving or rewriting the data that already exists — that is <code>data-migrations</code>, a separate discipline with its own failure modes that follows the order this skill sets</li><li>Not for: designing a new interface that has no deployed callers yet — that is <code>designing-apis</code>; this skill starts once a contract has callers you can no longer redeploy</li></ul>
 <h2 id="backward-and-forward-compatibility">Backward and forward compatibility</h2>
 <table><thead><tr><th>Term</th><th>Definition</th><th>Broken by</th></tr></thead><tbody><tr><td>Backward compatible</td><td>New code reads old data</td><td>Requiring a field that old writers never produced</td></tr><tr><td>Forward compatible</td><td>Old code reads new data</td><td>Removing or repurposing a field old readers still use; strict readers that reject unknown fields</td></tr></tbody></table>
 <p>A rolling deploy needs both at the same time, because both versions run concurrently for the length of the rollout, and every message or row written during that window is read by whichever version happens to pick it up. A rollback needs forward compatibility specifically: the older binary you are rolling back to must survive data the newer one already wrote. This is the case teams skip, and it is why &quot;the deploy went fine&quot; and &quot;the rollback corrupted things&quot; are the same incident.</p>

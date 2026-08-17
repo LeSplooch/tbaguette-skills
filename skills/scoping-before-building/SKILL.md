@@ -3,7 +3,7 @@ name: scoping-before-building
 description: Use when an idea, feature request, or new project needs to become an approved design before any code gets written, especially when it is unclear how much process the request actually needs. Covers classifying work as a spike, a bounded change, or an architectural one; asking clarifying questions one at a time; proposing and choosing between approaches; presenting a design for approval section by section; and writing and self-reviewing a spec before handing off to planning.
 ---
 
-# Brainstorming
+# Scoping before building
 
 ## Overview
 
@@ -82,7 +82,7 @@ A spike skips everything below, down to the report. State the question and a che
 
 This step is shared by the bounded and architectural paths. Start by reading the project rather than asking about it — files, docs, and recent commits already answer questions you'd otherwise have to ask. Then, before refining any detail, check whether the request is actually several independent projects wearing one description: "a platform with chat, billing, and analytics" is three or four specs, not one. Decomposing that shape comes before any question about one piece's details — otherwise the questions polish a slice of something that needs splitting first. Brainstorm the first sub-project through the normal flow; each remaining piece gets its own pass later.
 
-For a request that is genuinely one project: ask one question at a time, prefer multiple-choice over open-ended where you can, and never bundle a second question into the same message as the first — a message holding two questions reliably gets one answered. Aim the questions at purpose, constraints, and success criteria; work out implementation detail yourself rather than asking about it.
+For a request that is genuinely one project: ask one question at a time, prefer multiple-choice over open-ended where you can, and never bundle a second question into the same message as the first — a message holding two questions reliably gets one answered. This holds for a live back-and-forth with someone present to answer, where each reply can change what's worth asking next; it's the opposite of `reading-specifications`' advice to batch questions, which applies specifically to asynchronous clarification against a spec or ticket author, where round-trip latency — not conversational flow — is the cost being minimized. Aim the questions at purpose, constraints, and success criteria; work out implementation detail yourself rather than asking about it.
 
 ## Working the bounded path
 

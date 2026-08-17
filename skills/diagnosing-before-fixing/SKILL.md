@@ -3,7 +3,7 @@ name: diagnosing-before-fixing
 description: Use when a bug, test failure, crash, or any behavior that doesn't match what the code is supposed to do needs a fix and none has been proposed yet, especially when the obvious quick fix is tempting under time pressure or an earlier attempted fix didn't hold. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it actually originates rather than where it surfaced, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.
 ---
 
-# Systematic debugging
+# Diagnosing before fixing
 
 ## Overview
 

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Son güncelleme</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:59:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-17T23:59:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Dil: Türkçe</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">instrumenting-for-observability</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:59:03.066323+00:00">Güncellendi</span>
   </div>
   <span class="tag skill-article__tag">Sistem tasarlama</span>
   <p class="lede">Şu durumlarda kullanın: neyin loglanacağına, ölçüleceğine ya da izleneceğine karar verirken; bir olay, var olan telemetriyle açıklanamadığında; metrik ya da log faturası etiket kardinalitesi yüzünden fırladığında; bir uyarı, SLI veya SLO tanımlarken; bir istek ya da korelasyon kimliği bir kuyruk veya asenkron sınır boyunca kaybolduğunda; loglar yapısı olmayan biçimlendirilmiş dizelerden ibaretse; veya bir log seviyesi seçerken.</p>
 </div><p class="translation-banner" role="note">Bu sayfanın Türkçe çevirisi henüz yok — İngilizce sürümü gösteriliyor.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>You choose what you will be able to see during an incident before the incident, and no amount of urgency later changes that. Instrumentation added while an outage is running explains the next occurrence, never this one. The bar is not &quot;we have logging&quot; — it is that a specific question you have not thought of yet can be answered in minutes from what is already being emitted.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Adding logging, metrics, spans, or events to new or existing code</li><li>A postmortem where the honest answer to &quot;why&quot; is &quot;we could not tell&quot;</li><li>Designing an alert, an SLI, or an SLO, or being asked what to alert on</li><li>A telemetry bill jumping without a traffic increase</li><li>A request that crosses a queue, job, or worker boundary and cannot be followed through it</li><li>Not for: reading and interpreting an existing failure signal such as a stack trace — this skill is about what gets emitted in the first place</li></ul>
+<ul><li>Adding logging, metrics, spans, or events to new or existing code</li><li>A postmortem where the honest answer to &quot;why&quot; is &quot;we could not tell&quot;</li><li>Designing an alert, an SLI, or an SLO, or being asked what to alert on</li><li>A telemetry bill jumping without a traffic increase</li><li>A request that crosses a queue, job, or worker boundary and cannot be followed through it</li><li>Not for: reading and interpreting an existing failure signal such as a stack trace — this skill is about what gets emitted in the first place</li><li>Not for: safely enabling diagnostics against a live incident with what's already emitted — that's <code>observing-production-safely</code>; this skill is the design-time work done before any incident exists</li></ul>
 <h2 id="three-signals-three-jobs">Three signals, three jobs</h2>
 <table><thead><tr><th>Signal</th><th>Answers</th><th>Strength</th><th>Cannot do</th></tr></thead><tbody><tr><td>Metrics</td><td>&quot;Is it healthy, and is it worse than yesterday&quot;</td><td>Cheap per event, always on, aggregatable, the only sane alerting substrate</td><td>Explain a single request; carry an id</td></tr><tr><td>Logs</td><td>&quot;What happened to this one thing&quot;</td><td>Arbitrary detail, high cardinality, exact values</td><td>Serve as an alerting substrate at volume; be cheap</td></tr><tr><td>Traces</td><td>&quot;Where did the time go, and what caused what across boundaries&quot;</td><td>Causality and latency attribution across services</td><td>Be complete — sampling means the interesting request may be missing</td></tr></tbody></table>
 <p>Alert on metrics, explain with logs, attribute with traces. Alerting on a log search means the metric that should exist does not. If a trace is sampled, keep the trace id in the log line so an unsampled request can still be reconstructed, and always sample errors and slow requests at 100% regardless of the base rate.</p>

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:59:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T23:59:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">auditing-dependencies</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:59:03.066323+00:00">업데이트</span>
   </div>
   <span class="tag skill-article__tag">보안(방어)</span>
   <p class="lede">서드파티 패키지나 라이브러리를 추가하거나 업그레이드하거나 교체하거나 제거할 때, lockfile diff에 전이 의존성 항목이 늘어날 때, 취약점 스캐너나 보안 권고 알림이 울려 분류가 필요할 때, 의존성이 관리되지 않거나 방치되었거나 소유자가 바뀐 것으로 보일 때, 공급망 위험, install과 postinstall 스크립트, 타이포스쿼팅과 의존성 혼동, 벤더링, 버전 고정, 미러, 출처를 저울질할 때 사용합니다.</p>
 </div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Every dependency is code you ship, run at your own privilege, and never reviewed — and its dependencies are code you did not even choose. Adoption is the cheapest moment to say no and the only moment when saying no costs nothing.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Adding or replacing a package, or choosing between two libraries that do the same thing.</li><li>A pull request's lockfile diff adds transitive entries, or a major version upgrade is proposed.</li><li>A scanner, advisory feed, or audit command fails a build and the finding needs triage; or a dependency has gone quiet, been archived, or changed maintainers.</li><li>Not for: what the code may do at runtime once installed (<code>least-privilege-design</code>); how it must treat the data it parses (<code>handling-untrusted-input</code>).</li></ul>
+<ul><li>Adding or replacing a package, or choosing between two libraries that do the same thing.</li><li>A pull request's lockfile diff adds transitive entries, or a major version upgrade is proposed.</li><li>A scanner, advisory feed, or audit command fails a build and the finding needs triage; or a dependency has gone quiet, been archived, or changed maintainers.</li><li>Not for: what the code may do at runtime once installed (<code>least-privilege-design</code>); how it must treat the data it parses (<code>handling-untrusted-input</code>).</li><li>Not for: actually carrying out a version bump once it's decided — <code>upgrading-dependencies</code> covers that half; this skill covers whether to adopt, and the quarterly sweep for a dependency that's gone quiet.</li></ul>
 <h2 id="adoption-review-ten-minutes-before-the-first-install">Adoption review — ten minutes, before the first install</h2>
 <p>Ask in order and stop at the first disqualifier.</p>
 <table><thead><tr><th>Check</th><th>What to look at</th><th>Disqualifier</th></tr></thead><tbody><tr><td>Need</td><td>Lines of your code it replaces</td><td>Under ~100 lines you could write and test — you just bought an upgrade treadmill for a helper</td></tr><tr><td>Transitive weight</td><td>The <strong>resolved tree</strong>, not the direct entry</td><td>A leaf utility pulling 40 packages is a statement about its author's judgment, not just its size</td></tr><tr><td>Maintenance</td><td>Release cadence, issue response, <strong>how many humans hold commit rights</strong></td><td>One maintainer and no release in 18 months, on anything that parses input or opens sockets</td></tr><tr><td>Footprint</td><td>Does it open sockets, touch the filesystem, spawn processes, load native code, or phone home</td><td>Any of those in a library whose stated job needs none of them</td></tr><tr><td>Install-time execution</td><td>Does it run a script at install or build</td><td>Yes, and the script is not a compile step you can read and explain</td></tr><tr><td>Escape cost</td><td>How many files would import it; whether its types would enter your domain model</td><td>Its types spread past one adapter — removal becomes a rewrite</td></tr><tr><td>Provenance and license</td><td>Does the repository linked from the registry correspond to the published artifact; is there signing or build attestation; do the terms fit how you distribute</td><td>No source link, a repository that does not match the artifact, or unclear licensing</td></tr></tbody></table>

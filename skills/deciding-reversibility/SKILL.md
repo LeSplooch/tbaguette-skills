@@ -76,7 +76,7 @@ Predicate: if everyone facing this choice would make it identically, it belongs 
 
 It is negligence when the choice writes data, is user-visible, sets a security or privacy default, is the thing you were specifically asked to think about, or the options differ by an order of magnitude on a criterion someone named. There, the fast move is not to pick — it is to surface the choice with a recommendation.
 
-Record every fast decision in one line: the choice, the runner-up, and the observable that should trigger revisiting it. A decision with a named revisit trigger is one you are entitled to make quickly.
+Record every fast decision in one line: the choice, the runner-up, and the observable that should trigger revisiting it. A decision with a named revisit trigger is one you are entitled to make quickly. When that trigger fires later and the recorded decision is now blocking work, `revalidating-decisions` picks up from there — separating what was actually decided from the premise it was decided under.
 
 ## Common mistakes
 

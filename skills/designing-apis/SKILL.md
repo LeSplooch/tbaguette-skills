@@ -15,7 +15,7 @@ The interface is the only part you cannot refactor later: everything behind it i
 - Deciding one call versus three; required versus optional; what to return for a collection.
 - Adding a field, parameter, enum member, or error code to something already shipped.
 - Someone asks "is this change breaking?"
-- Not for: choosing a single identifier's wording (naming-things), evolving stored data (schema-evolution), deciding where the boundary belongs at all (drawing-boundaries).
+- Not for: choosing a single identifier's wording (naming-things), changing a contract that already has deployed callers (`schema-evolution`), deciding where the boundary belongs at all (drawing-boundaries).
 
 ## Shape and granularity
 
@@ -41,9 +41,9 @@ Optional-with-default beats nullable for two reasons: null forces every caller t
 ## Designing for growth
 
 - **Additive-only is the cheapest promise you can keep.** Additive means: a new optional field, a new operation, a new enum member *only if tolerance shipped first*, a new error code *only if callers were told to handle unknown codes by class*.
-- **Never return a bare closed enum you may need to grow.** Every closed enum is a promise you will never add a member. If growth is plausible, ship an `unknown`/default arm and the client's obligation to tolerate it, wait a full deprecation window so tolerant clients are deployed, *then* add the member. Reversing that order is the standard way a client fleet crashes.
+- **Never return a bare closed enum you may need to grow.** Every closed enum is a promise you will never add a member. If growth is plausible, ship an `unknown`/default arm and the client's obligation to tolerate it from day one — `schema-evolution` covers the deployment order for actually adding the member later without crashing the fleet that hasn't caught up.
 - Opaque tokens — cursors, continuation handles, resume tokens, ETags — must be opaque in fact, not just in the docs: encode and sign or version the payload, and reject a token you did not mint. If callers can parse it, they will depend on it, and their dependency becomes your contract.
-- Reserve removed field names and tag numbers so a future field cannot reuse them and misparse old data.
+- Reserve removed field names and tag numbers so a future field cannot reuse them and misparse old data — `schema-evolution` has the full mechanics of why reuse corrupts archived data with no error.
 - An open `extra: map<string,string>` bag becomes a schema you never versioned and can never validate. Prefer a reserved namespace with an explicit no-compatibility statement, or nothing.
 
 ## Collections, errors, idempotency
@@ -55,14 +55,7 @@ Optional-with-default beats nullable for two reasons: null forces every caller t
 
 ## Versioning and the compatibility contract
 
-| Strategy | Real cost |
-|---|---|
-| No version, additive forever | Cheapest to operate, strictest to design — nothing can ever be removed or renamed. Correct default. |
-| Version in path or namespace (`v2`, `libfoo2`) | You run N implementations, not N routes. Only viable with a published sunset date you actually enforce. |
-| Per-request negotiation (headers, capability handshake) | Fine granularity, combinatorial test matrix. Needs a flag per capability; a single increasing number degenerates to path versioning. |
-| Per-field evolution (numbered schema fields) | The only strategy that survives past a couple of versions. Requires never reusing a tag. |
-
-State three things explicitly: which surface is covered, how long an obsolete thing keeps working (in absolute time or releases), and how a break is signaled. **Deprecation without a runtime signal is not deprecation** — nobody reads changelogs; things that emit warnings get fixed. "Experimental" is only real when it is mechanically unpleasant to use (opt-in flag, `unstable_` prefix); a documentation note does not stop anyone from depending on it.
+The menu of versioning strategies and their real costs is the same whether you're picking one now or dealing with a contract that's already shipped — see `schema-evolution`'s versioning table rather than a second copy here. What belongs at design time instead: state three things explicitly before shipping v1 — which surface is covered, how long an obsolete thing keeps working (in absolute time or releases), and how a break is signaled. **Deprecation without a runtime signal is not deprecation** — nobody reads changelogs; things that emit warnings get fixed. "Experimental" is only real when it is mechanically unpleasant to use (opt-in flag, `unstable_` prefix); a documentation note does not stop anyone from depending on it.
 
 ## Common mistakes
 
@@ -71,8 +64,8 @@ State three things explicitly: which surface is covered, how long an obsolete th
 | Every new feature adds another boolean parameter | Options never modeled as a type; the first flag set the pattern |
 | Every caller wraps the API in the same helper | Wrong granularity — their helper is the API you should have shipped |
 | Adding an optional field broke old clients | Contract never stated unknown-field tolerance, so parsers were strict |
-| A new enum member crashed the fleet | Member added before tolerant clients were deployed |
 | "Page 2 and page 3 both contained item X" | Non-total ordering under pagination |
+| A new enum member crashed the fleet | Member added before tolerant clients were deployed — see `schema-evolution` for the deployment order |
 | v2 quietly returns fewer results than v1 | Unbounded collection in v1; adding a limit is breaking regardless of the version label |
 | Callers keep getting the call order wrong | Sequencing is a real constraint and belongs inside one call or an explicit state machine |
 | Support asks callers to "check the error text" | No stable error code in the contract |

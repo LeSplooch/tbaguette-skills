@@ -17,6 +17,7 @@ You choose what you will be able to see during an incident before the incident, 
 - A telemetry bill jumping without a traffic increase
 - A request that crosses a queue, job, or worker boundary and cannot be followed through it
 - Not for: reading and interpreting an existing failure signal such as a stack trace — this skill is about what gets emitted in the first place
+- Not for: safely enabling diagnostics against a live incident with what's already emitted — that's `observing-production-safely`; this skill is the design-time work done before any incident exists
 
 ## Three signals, three jobs
 

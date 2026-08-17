@@ -3,7 +3,7 @@ name: landing-a-finished-branch
 description: Use when implementation is done and its tests are green and it's time to decide how the branch lands, when choosing between a local merge, a pushed pull request, or leaving a branch alone, or when a worktree and its branch need to be torn down after the work has actually landed. Covers verifying the tree that's really about to ship, confirming the base branch, the merge/rebase/squash decision and what each does to history, and cleanup ownership for worktrees and branches.
 ---
 
-# Finishing a development branch
+# Landing a finished branch
 
 ## Overview
 

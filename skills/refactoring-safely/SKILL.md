@@ -33,7 +33,7 @@ A restructure that changes any of these is a behavior change wearing a refactor'
 
 ## One transformation at a time
 
-Apply a single named move, run the tests, commit. The interval between two green states is the size of the search space when it goes red — keep it under a few minutes of work. "Tests green at the end" is not the same discipline and does not produce the same outcome.
+Apply a single named move, run the tests, commit. The interval between two green states is the size of the search space when it goes red — keep it under a few minutes of work. "Tests green at the end" is not the same discipline and does not produce the same outcome. Each commit this produces is the atomic kind `atomic-commits` covers — a refactor commit that also carries a behavior change isn't atomic no matter how small it is.
 
 | Move | Preserves when done right | How it breaks when done in bulk |
 |---|---|---|

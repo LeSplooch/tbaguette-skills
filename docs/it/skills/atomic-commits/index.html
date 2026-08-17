@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aggiornato</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} ora locale · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:59:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} ora locale · {utc} UTC">2026-08-17T23:59:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Lingua: Italiano</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">atomic-commits</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Aggiornata</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:59:03.066323+00:00">Aggiornata</span>
   </div>
   <span class="tag skill-article__tag">Integrare le modifiche</span>
   <p class="lede">Da usare quando in una working tree si sono accumulate più modifiche senza rapporto tra loro, quando bisogna decidere che cosa sta in un solo commit, quando un diff mescola una rinomina o una riformattazione con un cambio di logica, quando una bisezione finisce su un commit troppo grande per ragionarci sopra, quando un revert o un backport si tira dietro modifiche che nessuno aveva chiesto, quando la working tree è condivisa con un altro agente IA, con un collega o con uno strumento che a sua volta ci scrive dentro, o quando chi rivede non riesce a trovare la modifica vera dentro un diff. Tratta la suddivisione per file e per hunk, la separazione meccanica contro quella semantica, lo staging in una working tree che non si possiede da soli e la granularità dei commit.</p>
 </div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>One commit, one decision. A commit is atomic when it builds and passes its tests standing alone, and reverting it removes exactly one choice from the tree — not when it is merely small.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>The checkout is shared with another agent, a colleague, or a tool that writes to it on its own schedule</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>landing-a-finished-branch</code>.</li></ul>
+<ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>The checkout is shared with another agent, a colleague, or a tool that writes to it on its own schedule</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>landing-a-finished-branch</code>. Not for deciding whether a restructure preserves behavior — see <code>refactoring-safely</code>; this skill only covers keeping that restructure in its own commit once the decision is made.</li></ul>
 <h2 id="what-logical-means">What &quot;logical&quot; means</h2>
 <p>Three tests, ordered by how often they catch something:</p>
 <ol><li><strong>The &quot;and&quot; test.</strong> If the subject line needs &quot;and&quot;, or wants to be a bulleted list, it is two commits.</li><li><strong>The revert test.</strong> Say out loud what breaks if this commit alone is reverted. If the answer names two independent things, split it.</li><li><strong>The build test.</strong> Each commit compiles, and its tests pass, with no later commit applied.</li></ol>

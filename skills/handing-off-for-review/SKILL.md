@@ -3,7 +3,7 @@ name: handing-off-for-review
 description: Use when completing a task or feature and about to hand it off before merging, when stuck and a fresh perspective would help, before a risky refactor to establish a baseline, or after fixing a complex or subtle bug. Covers what context a reviewer — human or subagent — needs up front, what to flag before they have to find it, when a request is premature, and what shape to ask the response back in.
 ---
 
-# Requesting code review
+# Handing off for review
 
 ## Overview
 

@@ -15,6 +15,7 @@ Every dependency is code you ship, run at your own privilege, and never reviewed
 - A pull request's lockfile diff adds transitive entries, or a major version upgrade is proposed.
 - A scanner, advisory feed, or audit command fails a build and the finding needs triage; or a dependency has gone quiet, been archived, or changed maintainers.
 - Not for: what the code may do at runtime once installed (`least-privilege-design`); how it must treat the data it parses (`handling-untrusted-input`).
+- Not for: actually carrying out a version bump once it's decided — `upgrading-dependencies` covers that half; this skill covers whether to adopt, and the quarterly sweep for a dependency that's gone quiet.
 
 ## Adoption review — ten minutes, before the first install
 

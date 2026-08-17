@@ -16,7 +16,7 @@ A long-running data migration is a program that will be interrupted — by a tim
 - Any sweep large enough that a single transaction would time out, exhaust memory, or hold locks past a few seconds
 - A migration that must run while production writes the same data
 - A migration that was killed partway and someone is about to re-run it from the top
-- Not for: changing the shape of the contract itself — that is schema evolution, and it decides the order in which the steps below are allowed to happen
+- Not for: changing the shape of the contract itself — that is `schema-evolution`, and it sets the order this skill's own live-traffic steps follow
 
 ## Before writing the loop
 
@@ -58,12 +58,9 @@ Decide in advance what a mismatch means. The acceptable count is normally zero; 
 
 ## Running against live traffic
 
-Order matters and there is exactly one safe order. Reversing steps 1 and 2 is the most common way an online migration corrupts data.
+The dual-write-before-backfill-before-cutover order is `schema-evolution`'s expand/migrate/contract sequence — this migration follows it rather than restating it; reversing that order is the most common way an online migration corrupts data. Two things belong here instead, specific to running the backfill step itself while production keeps writing:
 
-1. **Dual-write first.** New writes populate both representations; the old one remains authoritative. Deploy and let it soak.
-2. **Then backfill** only historical records, and never clobber a live write: update only where the new representation is still unset, or compare timestamps and yield to the newer value. A backfill that unconditionally overwrites will reverse concurrent user edits, and the users who notice are the ones who edited during your window.
-3. **Verify**, then switch reads with a fallback to the old representation.
-4. **Stop the old write** in a later release. **Drop the old data** in a later one still.
+**Never clobber a live write.** Update only where the new representation is still unset, or compare timestamps and yield to the newer value. A backfill that unconditionally overwrites will reverse concurrent user edits, and the users who notice are the ones who edited during your window.
 
 **Throttle against a live signal**, not a fixed sleep: replication lag, request latency percentile, lock waits, error rate, or queue depth. Pause above a threshold, resume below it — a fixed delay tuned at 2 a.m. is wrong at 9 a.m. Provide a kill switch the process polls between batches, stored where an on-call engineer can flip it without access to the terminal that launched the job. A migration nobody but its author can stop is an incident with a delay fuse.
 

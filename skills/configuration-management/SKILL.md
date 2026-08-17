@@ -17,6 +17,7 @@ Configuration is what varies between deployments of the same build, and nothing 
 - Credentials in a repository, a build argument, an image layer, or a log line
 - Deciding whether something should be config, a constant, or a runtime feature flag
 - Not for: the deployment mechanism itself, or infrastructure provisioning — this is about what the process reads at startup and how it behaves when that is wrong
+- Not for: the full discipline once a value is identified as a secret — storage, rotation, and revocation are `secrets-hygiene`; scrubbing one from logs or output is `redacting-sensitive-output`
 
 ## Code, config, or secret
 
@@ -58,7 +59,7 @@ The first debugging move for an environment-specific failure is a diff of the ef
 
 The running process must be able to report the configuration it actually resolved — an endpoint, a log line at startup, an admin command — with provenance for each value (default, file, environment, flag) and secrets redacted.
 
-Redact by **allowlist of keys safe to print**, never by denylist of names that look sensitive. A denylist matches `password` and `token` and misses `dsn`, `connection_string`, `webhook_url`, and `private_key_pem`, and the first time it misses is in a support bundle that has already been emailed. Print secrets as a fixed marker plus a fingerprint (length, or the first six characters of a hash) so an operator can tell two wrong values apart without learning either.
+Redact by allowlist, never denylist — see `redacting-sensitive-output` for why a denylist of sensitive-looking names always misses one (`dsn`, `webhook_url`, and `private_key_pem` are the ones that get past `password`/`token`, and the first miss is in a support bundle that's already been emailed). Specific to config: print secrets as a fixed marker plus a fingerprint (length, or the first six characters of a hash) so an operator can tell two wrong values apart without learning either.
 
 ## Defaults that are safe, not convenient
 

@@ -3,7 +3,7 @@ name: authoring-a-new-skill
 description: Use when creating a new skill, editing an existing one, judging whether a recurring technique is worth turning into a skill at all, or moving a drafted skill from a file on disk to something actually shipped in this repo. Covers the name/description frontmatter register, when a reference file is warranted versus keeping everything inline, testing a skill on a fresh subagent before trusting it, writing guidance an agent won't skip under pressure, and CATALOG.md placement.
 ---
 
-# Writing skills
+# Authoring a new skill
 
 ## Overview
 

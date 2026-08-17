@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aggiornato</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} ora locale · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:59:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} ora locale · {utc} UTC">2026-08-17T23:59:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Lingua: Italiano</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">red-teaming-your-own-work</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Aggiornata</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:59:03.066323+00:00">Aggiornata</span>
   </div>
   <span class="tag skill-article__tag">Giudizio e meta</span>
   <p class="lede">Da usare quando una modifica, un piano, un design, una raccomandazione o una risposta è finita e l’ha esaminata soltanto chi l’ha prodotta, quando non sembra esserci nulla di sbagliato e non si è provato nulla per farlo sembrare sbagliato, prima di consegnare un lavoro su cui qualcuno agirà, o dopo che una consegna precedente è tornata indietro con un difetto che una sola passata scettica avrebbe intercettato. Tratta l’autorevisione in chiave avversariale, le checklist di attacco e le passate di revisione limitate nel numero.</p>
@@ -115,6 +115,7 @@
 <p>One pass. Collect every finding before fixing any of them — fixing mid-pass truncates the pass, because attention moves to the repair. Then rank and act:</p>
 <table><thead><tr><th>Finding</th><th>Action</th></tr></thead><tbody><tr><td>Wrong result on an input the system will actually receive</td><td>Fix before delivering</td></tr><tr><td>Correct, but fails on input nothing can produce</td><td>Note in the report, do not fix</td></tr><tr><td>Disagreement with the request's own design</td><td>Raise it, do not unilaterally change it</td></tr><tr><td>Naming, formatting, structure</td><td>Fix silently or leave; do not report</td></tr></tbody></table>
 <p>Fixes written during the pass are unreviewed new work carrying the same defect rate as the original — re-attack the fix specifically, not the whole artifact again. A second full pass is warranted only when the first found a defect of a <em>kind</em> you had not considered, which means the pass was aimed wrong rather than that a third is owed. A second pass yielding only nits is the signal to stop.</p>
+<p>A pass that comes back clean, on work about to ship, is not evidence there is nothing left — it is precisely the moment <code>karen-and-the-manager</code> exists for. This skill finds behavioral defects; that one runs after, adversarially, for everything a correctness-focused attack list does not aim at.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The pass finds only cosmetic issues</td><td>Asked whether it is right instead of where it is wrong</td></tr><tr><td>Confidence is higher after the review than before it</td><td>The pass confirmed intent rather than testing behaviour</td></tr><tr><td>Found a defect, fixed it, shipped without re-attacking the fix</td><td>Fixes treated as corrections rather than as new untested code</td></tr><tr><td>The review keeps expanding into a rewrite</td><td>No budget; adversarial mode has no natural stopping point</td></tr><tr><td>&quot;Edge cases are handled&quot; with no enumeration</td><td>Handled the cases you thought of, which is exactly the set that produced the defect</td></tr><tr><td>The part reviewed is the part you already doubted</td><td>Attacked the known weak point; the strong point stayed undefended</td></tr><tr><td>A large change reviews clean in one sitting</td><td>Reviewed the artifact you remember writing, not the one that exists</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>

@@ -13,7 +13,7 @@ Core principles:
 
 - **Go all out.** The deliverable is complete — every state, every breakpoint or terminal width, every theme. Not a sketch with TODOs.
 - **The constraint envelope is the medium, not the excuse.** 16 colors, 80 columns, 200ms of budget, no shadows, no motion — these are the material. A great design is one that could only exist in that envelope.
-- **Verify in bounded passes.** Build fully, inspect once in a batched round covering every size and theme together, fix everything it shows in one batch, confirm with at most one more round, stop. Open-ended self-QA burns budget doing worse what a real review does better.
+- **Verify in bounded passes.** Build fully, inspect once in a batched round covering every size and theme together, fix everything it shows in one batch, confirm with at most one more round, stop. Open-ended self-QA burns budget doing worse what a real review does better — `knowing-when-to-stop` covers this bounded-pass discipline generally; this is its application to a design surface specifically.
 
 ## First move: name the envelope
 

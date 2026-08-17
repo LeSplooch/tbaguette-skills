@@ -16,6 +16,7 @@ Orientation is a bounded reconnaissance with a deliverable: the name of the file
 - Documentation and code disagree and you need to know which is running.
 - You are estimating a change in a system you have not measured.
 - Not for: a specific value's path through the system (tracing-data-flow), the reason a line exists (code-archaeology), or the coupling graph (mapping-dependencies).
+- Run alongside `recovering-agent-context`: this skill reads what the code itself can show you; that one reads what prior AI sessions and instruction files learned here that the code can't — different sources, same first-contact moment.
 
 ## The read order
 

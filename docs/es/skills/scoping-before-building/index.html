@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Actualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} hora local · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:59:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} hora local · {utc} UTC">2026-08-17T23:59:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Español</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">scoping-before-building</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Actualizada</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:59:03.066323+00:00">Actualizada</span>
   </div>
   <span class="tag skill-article__tag">Criterio y meta</span>
   <p class="lede">Úsala cuando una idea, una solicitud de función o un proyecto nuevo necesita convertirse en un diseño aprobado antes de escribir ningún código, sobre todo cuando no está claro cuánto proceso necesita realmente la solicitud. Cubre clasificar el trabajo como spike, cambio acotado o cambio arquitectónico; hacer preguntas aclaratorias de una en una; proponer y elegir entre enfoques; presentar un diseño para su aprobación sección por sección; y escribir y autorrevisar una spec antes de entregarla a planificación.</p>
@@ -143,7 +143,7 @@
 <p>A spike skips everything below, down to the report. State the question and a cheap plan to probe it in two or three sentences, get a nod, then find out as cheaply as correctness allows. Whatever gets built to answer it stays labeled throwaway — keeping it is a new request, not a continuation, and needs its own classification.</p>
 <h2 id="understanding-the-idea">Understanding the idea</h2>
 <p>This step is shared by the bounded and architectural paths. Start by reading the project rather than asking about it — files, docs, and recent commits already answer questions you'd otherwise have to ask. Then, before refining any detail, check whether the request is actually several independent projects wearing one description: &quot;a platform with chat, billing, and analytics&quot; is three or four specs, not one. Decomposing that shape comes before any question about one piece's details — otherwise the questions polish a slice of something that needs splitting first. Brainstorm the first sub-project through the normal flow; each remaining piece gets its own pass later.</p>
-<p>For a request that is genuinely one project: ask one question at a time, prefer multiple-choice over open-ended where you can, and never bundle a second question into the same message as the first — a message holding two questions reliably gets one answered. Aim the questions at purpose, constraints, and success criteria; work out implementation detail yourself rather than asking about it.</p>
+<p>For a request that is genuinely one project: ask one question at a time, prefer multiple-choice over open-ended where you can, and never bundle a second question into the same message as the first — a message holding two questions reliably gets one answered. This holds for a live back-and-forth with someone present to answer, where each reply can change what's worth asking next; it's the opposite of <code>reading-specifications</code>' advice to batch questions, which applies specifically to asynchronous clarification against a spec or ticket author, where round-trip latency — not conversational flow — is the cost being minimized. Aim the questions at purpose, constraints, and success criteria; work out implementation detail yourself rather than asking about it.</p>
 <h2 id="working-the-bounded-path">Working the bounded path</h2>
 <p>After understanding the idea, present the design directly in chat — a few sentences to a few short paragraphs covering the approach, the files it touches, and how it'll be tested — then stop. Once the user says yes, implement through the normal development workflow (<code>writing-the-failing-test-first</code> applies). No plan document exists on this path; the chat message you already got approved is the design.</p>
 <h2 id="exploring-approaches-architectural-path">Exploring approaches (architectural path)</h2>

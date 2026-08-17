@@ -3,7 +3,7 @@ name: fanning-out-independent-work
 description: Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems, a batch of scoped deliverables, parallel investigations. Covers telling genuine independence from work that only looks independent, avoiding collisions when agents share files or resources, writing prompts that stand alone, and reconciling results once parallel work returns.
 ---
 
-# Dispatching parallel agents
+# Fanning out independent work
 
 ## Overview
 

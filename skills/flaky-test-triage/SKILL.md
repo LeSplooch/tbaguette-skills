@@ -44,7 +44,7 @@ The last row is the one that gets misfiled most often, and it is the one that ma
 3. **Quantify in context.** Run the full suite with the recorded order 10–20 times. Establish a reproduction rate before attempting any fix; without one, the fix cannot be evaluated.
 4. **Bisect the order.** With a reproducing order fixed, binary-search the prefix of tests run before the victim. Roughly 10 runs isolates one polluter out of 1,000. This finds shared-state bugs no amount of reading finds.
 5. **Vary one axis at a time.** Threads: parallel versus single. Clock: shifted date and non-hour-offset timezone. Load: constrained CPU. Randomness: fixed seed. Each axis that changes the failure rate names the category.
-6. **Attribute.** Write down whether the defect is in the test or the product before writing any fix. A fix applied without attribution usually just moves the flake.
+6. **Attribute.** Write down whether the defect is in the test or the product before writing any fix. A fix applied without attribution usually just moves the flake. When the defect is in the test — it's exercising something inherently non-deterministic rather than a real product race — `testing-the-untestable` covers making that source of non-determinism controllable instead of retried around.
 
 ## Quarantine, with an expiry
 

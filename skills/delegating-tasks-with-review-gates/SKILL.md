@@ -3,7 +3,7 @@ name: delegating-tasks-with-review-gates
 description: Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, or when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it. Covers dispatching a zero-context implementer subagent per task, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.
 ---
 
-# Subagent-driven development
+# Delegating tasks with review gates
 
 ## Overview
 

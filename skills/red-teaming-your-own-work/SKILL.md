@@ -66,6 +66,8 @@ One pass. Collect every finding before fixing any of them — fixing mid-pass tr
 
 Fixes written during the pass are unreviewed new work carrying the same defect rate as the original — re-attack the fix specifically, not the whole artifact again. A second full pass is warranted only when the first found a defect of a *kind* you had not considered, which means the pass was aimed wrong rather than that a third is owed. A second pass yielding only nits is the signal to stop.
 
+A pass that comes back clean, on work about to ship, is not evidence there is nothing left — it is precisely the moment `karen-and-the-manager` exists for. This skill finds behavioral defects; that one runs after, adversarially, for everything a correctness-focused attack list does not aim at.
+
 ## Common mistakes
 
 | Symptom | Real cause |

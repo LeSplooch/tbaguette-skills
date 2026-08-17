@@ -3,7 +3,7 @@ name: isolating-work-with-worktrees
 description: Use when starting work that shouldn't touch the current checkout, before running a multi-step plan you might need to abandon cleanly, or when several tasks are about to run against the same repo at once. Covers judging whether isolation is worth its setup cost, detecting when you're already isolated, preferring a native isolated-workspace tool over a manual git worktree, and worktree placement, safety, and cleanup.
 ---
 
-# Using git worktrees
+# Isolating work with worktrees
 
 ## Overview
 

@@ -3,7 +3,7 @@ name: confirming-before-claiming-done
 description: Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed, or handed off on the strength of that claim; when a subagent's or tool's own success report is about to be repeated as fact; or when the only thing behind the claim is that the code looks right and nothing has actually been run. Covers naming the command that would prove the claim and running it fresh, treating a stale or partial run as current evidence, and the gap between believing something works and having confirmed it.
 ---
 
-# Verification before completion
+# Confirming before claiming done
 
 ## Overview
 

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:59:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T23:59:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -90,13 +90,13 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">formidable</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:59:03.066323+00:00">업데이트</span>
   </div>
   <span class="tag skill-article__tag">UI와 디자인</span>
   <p class="lede">웹, 네이티브 모바일, 데스크톱, 터미널이나 TUI, CLI 출력, 게임 HUD, 임베디드와 전자잉크 디스플레이, XR과 공간 인터페이스, 이메일, 인쇄물과 PDF, 음성과 채팅까지, 어떤 스택의 사용자 인터페이스든 설계하거나 다시 설계하거나 비평하거나 감사하거나 다듬거나 단단하게 만들 때 사용합니다. 시각적 위계, 레이아웃, 여백, 타이포그래피, 색, 모션, 아이코노그래피, 정보 밀도, 인터랙션 상태, 접근성, 지연 시간과 체감 성능, 테마와 토큰, UX 문구, 오류 상태와 빈 상태, 국제화, 그리고 여러 스택을 가로지르는 디자인 시스템을 다룹니다. 인터페이스가 밋밋하거나 심심하거나 어수선하거나 낡았거나 앞뒤가 맞지 않는다고 느껴질 때, 어떤 디자인을 다른 스택으로 고스란히 옮겨야 할 때도 씁니다.</p>
 </div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><p>Design that earns to be called out-of-distribution craft — on <strong>any</strong> surface a human looks at, not just a browser window. Whereas your default UI work is safe, web-shaped, and measured, here you work as a design director who has shipped on all of them: someone who knows that a terminal has a type scale, that a HUD has a reading order, that a CLI's error message is interface, and that none of these are excuses for mediocrity.</p>
 <p>Core principles:</p>
-<ul><li><strong>Go all out.</strong> The deliverable is complete — every state, every breakpoint or terminal width, every theme. Not a sketch with TODOs.</li><li><strong>The constraint envelope is the medium, not the excuse.</strong> 16 colors, 80 columns, 200ms of budget, no shadows, no motion — these are the material. A great design is one that could only exist in that envelope.</li><li><strong>Verify in bounded passes.</strong> Build fully, inspect once in a batched round covering every size and theme together, fix everything it shows in one batch, confirm with at most one more round, stop. Open-ended self-QA burns budget doing worse what a real review does better.</li></ul>
+<ul><li><strong>Go all out.</strong> The deliverable is complete — every state, every breakpoint or terminal width, every theme. Not a sketch with TODOs.</li><li><strong>The constraint envelope is the medium, not the excuse.</strong> 16 colors, 80 columns, 200ms of budget, no shadows, no motion — these are the material. A great design is one that could only exist in that envelope.</li><li><strong>Verify in bounded passes.</strong> Build fully, inspect once in a batched round covering every size and theme together, fix everything it shows in one batch, confirm with at most one more round, stop. Open-ended self-QA burns budget doing worse what a real review does better — <code>knowing-when-to-stop</code> covers this bounded-pass discipline generally; this is its application to a design surface specifically.</li></ul>
 <h2 id="first-move-name-the-envelope">First move: name the envelope</h2>
 <p>Before any design decision, establish the stack and its constraint envelope. Never assume web. Never assume the stack from the language — a Rust project may be a TUI, a game, or a web server.</p>
 <ol><li><strong>Detect.</strong> Look for the rendering authority: view/template/component files, a UI framework in the manifest, terminal escape or widget calls, a shader or canvas, a mail template, a prompt template. When two stacks are present, ask which surface this task is about.</li><li><strong>Load the stack file.</strong> Exactly one from the table below. It supplies the envelope — what the medium can express and what it cannot — and the idioms a native user of that stack expects.</li><li><strong>Find the incumbent visual truth.</strong> Tokens, theme file, stylesheet, palette constant, widget defaults, existing screens. Inspect at least one before editing. A project with no design file is not automatically greenfield.</li><li><strong>Then design.</strong> Load <a href="#cmd-craft-floor">reference/craft-floor.md</a> immediately before you edit UI — never for planning-only work.</li></ol>

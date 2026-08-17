@@ -3,7 +3,7 @@ name: working-a-plan-task-by-task
 description: Use when a written plan is ready to execute inline, in the current session — whether it was authored earlier in this session or handed over already-written — or when partway through a plan and needing to keep task order and verification from drifting. Covers critically reviewing a plan before starting, per-task checkpoints, keeping progress in the plan document rather than in your own context, and stopping at a genuine blocker instead of guessing past it.
 ---
 
-# Executing plans
+# Working a plan task by task
 
 ## Overview
 

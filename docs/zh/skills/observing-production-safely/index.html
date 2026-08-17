@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:59:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T23:59:03Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">observing-production-safely</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">已更新</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:59:03.066323+00:00">已更新</span>
   </div>
   <span class="tag skill-article__tag">调试与性能</span>
   <p class="lede">在以下情况下使用：要诊断一个用户正依赖着的线上系统；唯一的证据藏在生产数据后面；要对一个正在运行的服务打开调试开关、详细日志、堆转储、性能分析器或断点；忍不住想改动生产状态来验证一个猜想；或者要导出包含客户数据的转储、链路追踪或采样。</p>
@@ -99,6 +99,7 @@
 <h2 id="when-to-use">When to use</h2>
 <ul><li>The failure cannot be reproduced anywhere else and the evidence only exists live</li><li>About to raise a log level, attach a profiler, take a dump, or flip a debug flag on a running system</li><li>Considering editing a record, replaying a message, or clearing a cache &quot;just to see&quot;</li><li>Extracting logs, dumps, or samples that will contain real user data</li><li>During an incident, when someone proposes a diagnostic under time pressure</li></ul>
 <p>Not for: reasoning about the defect once you have the evidence (<code>diagnosing-before-fixing</code>), or getting a failure to happen on demand elsewhere (<code>reproducing-bugs</code>).</p>
+<p>Not for: deciding what should be emitted in the first place — that's <code>instrumenting-for-observability</code>, design-time work done before any incident exists. This skill is what's safe to switch on live, mid-incident, against whatever's already there.</p>
 <h2 id="the-ladder">The ladder</h2>
 <p>Descend in order. Stop at the first rung that answers the question — most investigations are finished by rung 2 and reach for rung 5 out of habit.</p>
 <ol><li><strong>Existing telemetry.</strong> Metrics, logs, traces, dashboards already collected. Zero marginal cost, and the only rung that is free.</li><li><strong>Read-only queries</strong> against a replica, with a statement timeout and a row limit set before the query is typed.</li><li><strong>Sampled diagnostics.</strong> One-in-N tracing, a debug header on a single request id, one canary instance out of the fleet.</li><li><strong>Passive process inspection.</strong> Sampling profiler, thread dump, process counters, existing admin or health endpoints.</li><li><strong>Stop-the-world capture.</strong> Heap dump, core dump, full snapshot. Drain the instance from the load balancer first, then capture, then decide whether to return it.</li><li><strong>Reproduce in a lower environment</strong> with production-shaped data.</li><li><strong>Mutating production state.</strong> Normally a hard stop. If genuinely required, it is a change: named owner, change record, announced, and reversible.</li></ol>

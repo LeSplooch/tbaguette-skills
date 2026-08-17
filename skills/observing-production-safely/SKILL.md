@@ -19,6 +19,8 @@ Every diagnostic is a change to production. Budget its cost, bound its scope, an
 
 Not for: reasoning about the defect once you have the evidence (`diagnosing-before-fixing`), or getting a failure to happen on demand elsewhere (`reproducing-bugs`).
 
+Not for: deciding what should be emitted in the first place — that's `instrumenting-for-observability`, design-time work done before any incident exists. This skill is what's safe to switch on live, mid-incident, against whatever's already there.
+
 ## The ladder
 
 Descend in order. Stop at the first rung that answers the question — most investigations are finished by rung 2 and reach for rung 5 out of habit.

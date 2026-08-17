@@ -3,7 +3,7 @@ name: verifying-review-feedback
 description: Use when code review feedback lands on your own change — from a person, a bot, or an automated reviewer — before any of it gets implemented, especially when a suggestion is unclear, stated with more confidence than evidence, or hard to reconcile with what the code actually does. Covers verifying a claim against the codebase before acting on it, choosing a fix versus a pushback versus a clarifying question, and responding to correct feedback without performative agreement.
 ---
 
-# Receiving code review
+# Verifying review feedback
 
 ## Overview
 

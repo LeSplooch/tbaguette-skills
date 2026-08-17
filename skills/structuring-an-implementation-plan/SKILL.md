@@ -3,7 +3,7 @@ name: structuring-an-implementation-plan
 description: Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan, before any code changes start. Covers deciding file structure ahead of the tasks, right-sizing tasks and steps, the plan document's required header and per-task structure, banning placeholder content, and self-reviewing a finished plan against its spec.
 ---
 
-# Writing plans
+# Structuring an implementation plan
 
 ## Overview
 

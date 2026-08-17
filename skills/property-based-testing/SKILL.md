@@ -17,6 +17,7 @@ An example test asserts what one input produces. A property asserts a relationsh
 - Handling untrusted or externally-supplied input, where "never crashes" is itself a requirement.
 - Not for: behavior whose whole specification is a table of cases (tax brackets, status-code mappings, business rules enumerated by a stakeholder). Writing a property there just restates the table twice.
 - Not for: the red-green-refactor cycle, owned by `writing-the-failing-test-first`.
+- Not for: authoring setup data whose shape you already fully know — `designing-test-data` covers builders, defaults, and volume for that. Both reach for a seeded random source, but this skill's generator defines a search domain hunting for a counterexample; that skill's generated data is bulk volume with a known shape.
 
 ## The property catalogue
 

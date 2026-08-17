@@ -16,7 +16,8 @@ Once a contract is in production you no longer own both sides of it. Every chang
 - Adding a value to an enum, status, or any other closed set
 - Old messages sit in a queue or a log and will be read by new code, possibly weeks later
 - Planning an API or payload version bump, or being asked whether one is needed
-- Not for: moving or rewriting the data that already exists — that is a migration, and it is a separate discipline with its own failure modes
+- Not for: moving or rewriting the data that already exists — that is `data-migrations`, a separate discipline with its own failure modes that follows the order this skill sets
+- Not for: designing a new interface that has no deployed callers yet — that is `designing-apis`; this skill starts once a contract has callers you can no longer redeploy
 
 ## Backward and forward compatibility
 

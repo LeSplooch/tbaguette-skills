@@ -65,7 +65,7 @@ Use realistic values wherever the code touches encoding, length limits, locale, 
 
 ## Volume without hand-writing it
 
-- Generate from a **seeded** pseudorandom source and print the seed in the failure output. Unseeded generated volume is an unreproducible test.
+- Generate from a **seeded** pseudorandom source and print the seed in the failure output. Unseeded generated volume is an unreproducible test. (This is bulk data with a shape you already know — a generator searching an input domain for a case that breaks a property is `property-based-testing`, a different problem that happens to share the seeding discipline.)
 - Generate at **boundary+1**, not at a round number. If paging is 100, build 101 rows; 1,000 rows tests nothing more and costs ten times as much.
 - For performance-shaped tests, **distribution beats count**: a long tail (a handful of records with 10,000 children, most with 0–2) exposes N+1 queries and missing indexes that a uniform 100-each dataset never will.
 - Insert bulk data through the store's native path, not the domain layer, when the test is about read behavior — otherwise setup dominates runtime.
