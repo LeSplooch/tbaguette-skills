@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aktualisiert</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} Ortszeit · {utc} UTC">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} Ortszeit · {utc} UTC">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Sprache: Deutsch</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">Änderungen einbringen</span>
-  <p class="lede">Einsetzen, wenn vorhandener Code umgebaut wird, ohne zu ändern, was er tut, wenn eine Änderung viele Aufrufstellen auf einmal berührt, wenn Tests mitten im Umbau brechen, wenn Code aufgeräumt werden muss, bevor ein Feature hinzukommen kann, wenn in ungetestetem oder altem Code gearbeitet wird, oder wenn die Versuchung besteht, neu zu schreiben statt umzuformen. Behandelt die Erhaltung des Verhaltens, Extrahieren und Inlining, großflächige Umbenennungen und die Entscheidung zwischen Refactoring und Neuschreiben.</p>
+  <p class="lede">Einsetzen, wenn vorhandener Code umgebaut wird, ohne zu ändern, was er tut, wenn eine Änderung viele Aufrufstellen auf einmal berührt, wenn Tests mitten im Umbau brechen, wenn Code aufgeräumt werden muss, bevor ein Feature hinzukommen kann, wenn in ungetestetem oder altem Code gearbeitet wird, wenn zwei nahezu identische Funktionen nach einer offensichtlichen Deduplizierung verlangen, oder wenn die Versuchung besteht, neu zu schreiben statt umzuformen. Behandelt die Erhaltung des Verhaltens, Extrahieren und Inlining, großflächige Umbenennungen, tragende Duplizierung und die Entscheidung zwischen Refactoring und Neuschreiben.</p>
 </div><p class="translation-banner" role="note">Diese Seite ist noch nicht auf Deutsch übersetzt — hier die englische Version.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A refactor changes structure and preserves observable behavior. The instant one diff does both, it is neither reviewable nor revertible, and nobody — including you — can say which half broke.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -146,7 +146,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/judging-duplication/">
       <span class="see-also__name">judging-duplication</span>
-      <span class="see-also__summary">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…</span>
+      <span class="see-also__summary">Einsetzen, wenn zwei Codestellen nahezu identisch aussehen und ihr Zusammenführen die offensichtliche Aufräumarbeit ist…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/de/skills/deleting-code/">
       <span class="see-also__name">deleting-code</span>

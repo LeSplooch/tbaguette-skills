@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>judging-duplication — बदलाव ज़मीन पर उतारना — TBaguette’s Atelier</title>
-<meta name="description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta name="description" content="जब कोड के दो टुकड़े लगभग एक जैसे दिखें और उन्हें मिला देना सबसे ज़ाहिर सफ़ाई लगे, जब कोई रिव्यूअर पूछे कि यह लगभग-नक़ल मौजूद क्यों है…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="judging-duplication — बदलाव ज़मीन पर उतारना — TBaguette’s Atelier">
-<meta property="og:description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta property="og:description" content="जब कोड के दो टुकड़े लगभग एक जैसे दिखें और उन्हें मिला देना सबसे ज़ाहिर सफ़ाई लगे, जब कोई रिव्यूअर पूछे कि यह लगभग-नक़ल मौजूद क्यों है…">
 <link rel="canonical" href="/tbaguette-skills/hi/skills/judging-duplication/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/judging-duplication/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/judging-duplication/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">बदलाव ज़मीन पर उतारना</span>
-  <p class="lede">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists, when extracting a shared helper or a base class, or when a DRY pass is about to unify things that differ only in a small arbitrary detail. Covers telling duplication that is debt from duplication that is a contract, the rule of three, what a merge breaks that no local test observes, and the residue to leave when a split is deliberate.</p>
+  <p class="lede">जब कोड के दो टुकड़े लगभग एक जैसे दिखें और उन्हें मिला देना सबसे ज़ाहिर सफ़ाई लगे, जब कोई रिव्यूअर पूछे कि यह लगभग-नक़ल मौजूद क्यों है, जब कोई साझा हेल्पर या बेस क्लास अलग निकालने की बात हो, या जब DRY के नाम पर की जा रही सफ़ाई ऐसी चीज़ों को एक करने चली हो जिनमें फ़र्क़ सिर्फ़ एक छोटे, मनमाने ब्योरे का है, तब इस्तेमाल करें। इसमें क़र्ज़ वाले दोहराव और कॉन्ट्रैक्ट वाले दोहराव में फ़र्क़ करना, तीन दोहरावों वाला नियम, मिलाने से क्या टूटता है जो किसी स्थानीय टेस्ट की पकड़ में नहीं आता, और बँटवारा जानबूझकर हो तो पीछे क्या निशान छोड़ना है — यह सब शामिल है।</p>
 </div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Two functions that differ only in a detail are the most obvious cleanup in the file, and merging them can be invisible to every test you currently have.</p>
 <p>The question before unifying is never &quot;are these the same?&quot; It is <strong>&quot;what would notice if they stopped differing?&quot;</strong></p>

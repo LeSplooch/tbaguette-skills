@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>validating-numeric-input — 보안(방어) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…">
+<meta name="description" content="폼 필드나 쿼리 매개변수, JSON 본문, 설정값, CSV 셀, 센서 측정값, 다른 서비스의 응답처럼 숫자 하나가 신뢰 경계를 넘어올 때, 범위 검사를 통과했는데 한참 아래에서 무언가 깨졌을 때, 값을 잘라 내거나 범위 안에 가둘 때…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="validating-numeric-input — 보안(방어) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…">
+<meta property="og:description" content="폼 필드나 쿼리 매개변수, JSON 본문, 설정값, CSV 셀, 센서 측정값, 다른 서비스의 응답처럼 숫자 하나가 신뢰 경계를 넘어올 때, 범위 검사를 통과했는데 한참 아래에서 무언가 깨졌을 때, 값을 잘라 내거나 범위 안에 가둘 때…">
 <link rel="canonical" href="/tbaguette-skills/ko/skills/validating-numeric-input/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/validating-numeric-input/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/validating-numeric-input/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">보안(방어)</span>
-  <p class="lede">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading, or another service&#x27;s response — when a range check passed and something broke far downstream, when clamping or bounding a value, when money or quantities are involved, or when a numeric parse silently produced zero. Covers NaN and infinity defeating comparisons, overflow and precision loss, locale and format ambiguity, and parsing a number rather than testing a relation.</p>
+  <p class="lede">폼 필드나 쿼리 매개변수, JSON 본문, 설정값, CSV 셀, 센서 측정값, 다른 서비스의 응답처럼 숫자 하나가 신뢰 경계를 넘어올 때, 범위 검사를 통과했는데 한참 아래에서 무언가 깨졌을 때, 값을 잘라 내거나 범위 안에 가둘 때, 돈이나 수량이 걸려 있을 때, 숫자 파싱이 소리 없이 0을 내놓았을 때 사용합니다. NaN과 무한대가 비교 검사를 무력하게 만드는 것, 오버플로와 정밀도 손실, 로케일과 표기 형식에서 오는 모호함, 그리고 관계를 시험하는 대신 수를 제대로 파싱하는 법을 다룹니다.</p>
 </div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A guard written as a comparison is not a parse, and it is not total over its own input domain. <code>value &lt; MINIMUM</code> asks a question about a number; it silently answers &quot;no&quot; for inputs that are not numbers at all.</p>
 <p>Parsing a number means asserting that it <strong>is</strong> one — finite first, then in range — rather than testing a relation and inferring the rest from the test not having fired.</p>
@@ -144,7 +144,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ko/skills/redacting-sensitive-output/">
       <span class="see-also__name">redacting-sensitive-output</span>
-      <span class="see-also__summary">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…</span>
+      <span class="see-also__summary">비밀 값이나 자격 증명, 토큰, 개인 정보가 로그 한 줄, 오류 메시지, 스택 트레이스, 크래시 덤프, 메트릭 라벨, 트레이스 스팬, 분석 이벤트, 지원용 진단 묶음, 기록해 둔 테스트 픽스처에 흘러들 수 있을 때 사용합니다.</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ko/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>

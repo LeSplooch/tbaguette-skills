@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>reproducing-bugs — デバッグとパフォーマンス — TBaguette’s Atelier</title>
-<meta name="description" content="バグ報告を、いつでも起こせる失敗に変えなければならないとき、手元で欠陥を再現できないとき、本番でしか、あるいは特定の1ユーザーにしか起きないとき、失敗が断続的だったり低い確率でしか現れなかったりするとき、あるいは修正にそれを証明するテストが付いていないときに使います。">
+<meta name="description" content="バグ報告を、いつでも起こせる失敗に変えなければならないとき、手元で欠陥を再現できないとき、本番でしか、あるいは特定の1ユーザーにしか起きないとき、失敗が断続的だったり低い確率でしか現れなかったりするとき、プローブや計測がもっともらしい値を返してきても…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="reproducing-bugs — デバッグとパフォーマンス — TBaguette’s Atelier">
-<meta property="og:description" content="バグ報告を、いつでも起こせる失敗に変えなければならないとき、手元で欠陥を再現できないとき、本番でしか、あるいは特定の1ユーザーにしか起きないとき、失敗が断続的だったり低い確率でしか現れなかったりするとき、あるいは修正にそれを証明するテストが付いていないときに使います。">
+<meta property="og:description" content="バグ報告を、いつでも起こせる失敗に変えなければならないとき、手元で欠陥を再現できないとき、本番でしか、あるいは特定の1ユーザーにしか起きないとき、失敗が断続的だったり低い確率でしか現れなかったりするとき、プローブや計測がもっともらしい値を返してきても…">
 <link rel="canonical" href="/tbaguette-skills/ja/skills/reproducing-bugs/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/reproducing-bugs/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/reproducing-bugs/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">最終更新</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">言語: 日本語</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">デバッグとパフォーマンス</span>
-  <p class="lede">バグ報告を、いつでも起こせる失敗に変えなければならないとき、手元で欠陥を再現できないとき、本番でしか、あるいは特定の1ユーザーにしか起きないとき、失敗が断続的だったり低い確率でしか現れなかったりするとき、あるいは修正にそれを証明するテストが付いていないときに使います。報告に欠けている変数、最小の再現、入力の削り込み、再現率、そして推測ではなく証拠を残すことを扱います。</p>
+  <p class="lede">バグ報告を、いつでも起こせる失敗に変えなければならないとき、手元で欠陥を再現できないとき、本番でしか、あるいは特定の1ユーザーにしか起きないとき、失敗が断続的だったり低い確率でしか現れなかったりするとき、プローブや計測がもっともらしい値を返してきても、それが単なるデフォルト値かもしれないとき、あるいは修正にそれを証明するテストが付いていないときに使います。報告に欠けている変数、最小の再現、入力の削り込み、再現率、テストハーネスを信用する前にそれ自体を検証すること、そして推測ではなく証拠を残すことを扱います。</p>
 </div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Until the failure happens on demand, every fix is a guess and every claim of &quot;fixed&quot; is unfalsifiable. The reproduction is the deliverable that makes the rest of debugging possible, and it is the step most bug work skips.</p>
 <h2 id="when-to-use">When to use</h2>

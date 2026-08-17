@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>redacting-sensitive-output — セキュリティ（防御） — TBaguette’s Atelier</title>
-<meta name="description" content="Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…">
+<meta name="description" content="シークレット、資格情報、トークン、個人データが、ログの1行、エラーメッセージ、スタックトレース、クラッシュダンプ、メトリクスのラベル、トレースのスパン、分析イベント、サポートバンドル、あるいは記録したテストフィクスチャに届きうるときに使います。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="redacting-sensitive-output — セキュリティ（防御） — TBaguette’s Atelier">
-<meta property="og:description" content="Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…">
+<meta property="og:description" content="シークレット、資格情報、トークン、個人データが、ログの1行、エラーメッセージ、スタックトレース、クラッシュダンプ、メトリクスのラベル、トレースのスパン、分析イベント、サポートバンドル、あるいは記録したテストフィクスチャに届きうるときに使います。">
 <link rel="canonical" href="/tbaguette-skills/ja/skills/redacting-sensitive-output/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/redacting-sensitive-output/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/redacting-sensitive-output/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">最終更新</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">言語: 日本語</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">セキュリティ（防御）</span>
-  <p class="lede">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label, trace span, analytics event, support bundle, or a recorded test fixture. Covers what a redactor must not do with the match it found, allowlisting fields rather than denylisting patterns, partial reveals and re-identification, encoded and nested payloads, and testing by asserting the input is absent rather than the marker present.</p>
+  <p class="lede">シークレット、資格情報、トークン、個人データが、ログの1行、エラーメッセージ、スタックトレース、クラッシュダンプ、メトリクスのラベル、トレースのスパン、分析イベント、サポートバンドル、あるいは記録したテストフィクスチャに届きうるときに使います。見つけたマッチに対してマスク処理がやってはならないこと、パターンを拒否リストで潰すのではなくフィールドを許可リストで選ぶこと、一部だけ見せることと再識別、エンコードされたペイロードや入れ子になったペイロード、そしてマーカーが出ていることではなく入力が消えていることをアサートしてテストすることを扱います。</p>
 </div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Redaction is the last line of defence, applied at the moment data leaves the program for somewhere a human or a vendor will read it. It fails quietly by construction: a redactor that redacts nothing produces output that looks exactly like output it redacted correctly.</p>
 <p>The two rules that carry most of the value: <strong>the replacement must not quote the match</strong>, and <strong>the test asserts the input is gone, never that the marker is present.</strong></p>
@@ -142,7 +142,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/validating-numeric-input/">
       <span class="see-also__name">validating-numeric-input</span>
-      <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
+      <span class="see-also__summary">数値が信頼境界を越えてくるとき——フォームの項目、クエリパラメータ、JSONのボディ、設定値、CSVのセル、センサーの読み取り値、別のサービスからの応答——範囲チェックは通ったのにずっと下流で何かが壊れたとき、値をクランプしたり上下限で抑えたりするとき、金額や数量が絡むとき…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>

@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>judging-duplication — 변경사항 반영하기 — TBaguette’s Atelier</title>
-<meta name="description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta name="description" content="코드 두 조각이 거의 똑같아 보여서 합치는 것이 뻔한 정리처럼 보일 때, 왜 거의 베낀 것이나 다름없는 코드가 있느냐고 리뷰어가 물을 때, 공용 헬퍼나 기반 클래스를 떼어낼 때…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="judging-duplication — 변경사항 반영하기 — TBaguette’s Atelier">
-<meta property="og:description" content="Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…">
+<meta property="og:description" content="코드 두 조각이 거의 똑같아 보여서 합치는 것이 뻔한 정리처럼 보일 때, 왜 거의 베낀 것이나 다름없는 코드가 있느냐고 리뷰어가 물을 때, 공용 헬퍼나 기반 클래스를 떼어낼 때…">
 <link rel="canonical" href="/tbaguette-skills/ko/skills/judging-duplication/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/judging-duplication/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/judging-duplication/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">변경사항 반영하기</span>
-  <p class="lede">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists, when extracting a shared helper or a base class, or when a DRY pass is about to unify things that differ only in a small arbitrary detail. Covers telling duplication that is debt from duplication that is a contract, the rule of three, what a merge breaks that no local test observes, and the residue to leave when a split is deliberate.</p>
+  <p class="lede">코드 두 조각이 거의 똑같아 보여서 합치는 것이 뻔한 정리처럼 보일 때, 왜 거의 베낀 것이나 다름없는 코드가 있느냐고 리뷰어가 물을 때, 공용 헬퍼나 기반 클래스를 떼어낼 때, DRY 정리가 사소하고 자의적인 부분 하나만 다른 것들을 하나로 합치려 들 때 사용합니다. 빚인 중복과 계약인 중복을 가려내는 법, 같은 것이 세 번째로 나타나기 전에는 묶지 않는다는 규칙, 합쳤을 때 여기 있는 어떤 테스트도 알아차리지 못한 채 깨지는 것, 그리고 일부러 갈라 둔 것이라면 그 자리에 무엇을 남겨 둘지를 다룹니다.</p>
 </div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Two functions that differ only in a detail are the most obvious cleanup in the file, and merging them can be invisible to every test you currently have.</p>
 <p>The question before unifying is never &quot;are these the same?&quot; It is <strong>&quot;what would notice if they stopped differing?&quot;</strong></p>

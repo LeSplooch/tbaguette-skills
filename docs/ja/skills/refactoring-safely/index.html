@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>refactoring-safely — 変更を着地させる — TBaguette’s Atelier</title>
-<meta name="description" content="振る舞いを変えずに既存のコードを組み替えるとき、1つの変更が多くの呼び出し元に同時に及ぶとき、組み替えの途中でテストが壊れるとき、機能を足す前にコードを片づける必要があるとき、テストのないコードやレガシーなコードで作業しているとき…">
+<meta name="description" content="振る舞いを変えずに既存のコードを組み替えるとき、1つの変更が多くの呼び出し元に同時に及ぶとき、組み替えの途中でテストが壊れるとき、機能を足す前にコードを片づける必要があるとき、テストのないコードやレガシーなコードで作業しているとき、ほとんど同じに見える2つの関数が…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="refactoring-safely — 変更を着地させる — TBaguette’s Atelier">
-<meta property="og:description" content="振る舞いを変えずに既存のコードを組み替えるとき、1つの変更が多くの呼び出し元に同時に及ぶとき、組み替えの途中でテストが壊れるとき、機能を足す前にコードを片づける必要があるとき、テストのないコードやレガシーなコードで作業しているとき…">
+<meta property="og:description" content="振る舞いを変えずに既存のコードを組み替えるとき、1つの変更が多くの呼び出し元に同時に及ぶとき、組み替えの途中でテストが壊れるとき、機能を足す前にコードを片づける必要があるとき、テストのないコードやレガシーなコードで作業しているとき、ほとんど同じに見える2つの関数が…">
 <link rel="canonical" href="/tbaguette-skills/ja/skills/refactoring-safely/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/refactoring-safely/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/refactoring-safely/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">最終更新</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">言語: 日本語</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">変更を着地させる</span>
-  <p class="lede">振る舞いを変えずに既存のコードを組み替えるとき、1つの変更が多くの呼び出し元に同時に及ぶとき、組み替えの途中でテストが壊れるとき、機能を足す前にコードを片づける必要があるとき、テストのないコードやレガシーなコードで作業しているとき、あるいは変換ではなく書き直したくなったときに使います。振る舞いの保存、抽出とインライン化、大規模な改名、そしてリファクタリングか書き直しかの判断を扱います。</p>
+  <p class="lede">振る舞いを変えずに既存のコードを組み替えるとき、1つの変更が多くの呼び出し元に同時に及ぶとき、組み替えの途中でテストが壊れるとき、機能を足す前にコードを片づける必要があるとき、テストのないコードやレガシーなコードで作業しているとき、ほとんど同じに見える2つの関数が、まとめてしまうのが当たり前に思えるとき、あるいは変換ではなく書き直したくなったときに使います。振る舞いの保存、抽出とインライン化、大規模な改名、支えになっている重複、そしてリファクタリングか書き直しかの判断を扱います。</p>
 </div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A refactor changes structure and preserves observable behavior. The instant one diff does both, it is neither reviewable nor revertible, and nobody — including you — can say which half broke.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -146,7 +146,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/judging-duplication/">
       <span class="see-also__name">judging-duplication</span>
-      <span class="see-also__summary">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…</span>
+      <span class="see-also__summary">2つのコードがほとんど同じに見えて、まとめるのが当たり前の片づけに思えるとき、なぜ似たコピーが存在するのかとレビュアーに問われたとき、共通のヘルパーや基底クラスを抽出するとき…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ja/skills/deleting-code/">
       <span class="see-also__name">deleting-code</span>

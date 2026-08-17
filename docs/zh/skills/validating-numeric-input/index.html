@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>validating-numeric-input — 安全（防御） — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…">
+<meta name="description" content="在以下情况下使用：一个数字跨过信任边界——表单字段、查询参数、JSON 请求体、配置值、CSV 单元格、传感器读数，或者另一个服务的响应；范围检查明明过了，东西却在很远的下游坏掉；要对一个值做钳制或者设上下界；牵涉到金额或数量；或者一次数值解析悄没声地得出了零。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="validating-numeric-input — 安全（防御） — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…">
+<meta property="og:description" content="在以下情况下使用：一个数字跨过信任边界——表单字段、查询参数、JSON 请求体、配置值、CSV 单元格、传感器读数，或者另一个服务的响应；范围检查明明过了，东西却在很远的下游坏掉；要对一个值做钳制或者设上下界；牵涉到金额或数量；或者一次数值解析悄没声地得出了零。">
 <link rel="canonical" href="/tbaguette-skills/zh/skills/validating-numeric-input/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/validating-numeric-input/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/validating-numeric-input/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">安全（防御）</span>
-  <p class="lede">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading, or another service&#x27;s response — when a range check passed and something broke far downstream, when clamping or bounding a value, when money or quantities are involved, or when a numeric parse silently produced zero. Covers NaN and infinity defeating comparisons, overflow and precision loss, locale and format ambiguity, and parsing a number rather than testing a relation.</p>
+  <p class="lede">在以下情况下使用：一个数字跨过信任边界——表单字段、查询参数、JSON 请求体、配置值、CSV 单元格、传感器读数，或者另一个服务的响应；范围检查明明过了，东西却在很远的下游坏掉；要对一个值做钳制或者设上下界；牵涉到金额或数量；或者一次数值解析悄没声地得出了零。涵盖比较判断在 NaN 和无穷大面前全线失效、范围检查因此拦不住它们、溢出与精度丢失、区域设置与格式带来的歧义，以及把一个数真正解析出来，而不是拿一个关系式去试探。</p>
 </div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A guard written as a comparison is not a parse, and it is not total over its own input domain. <code>value &lt; MINIMUM</code> asks a question about a number; it silently answers &quot;no&quot; for inputs that are not numbers at all.</p>
 <p>Parsing a number means asserting that it <strong>is</strong> one — finite first, then in range — rather than testing a relation and inferring the rest from the test not having fired.</p>
@@ -144,7 +144,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/redacting-sensitive-output/">
       <span class="see-also__name">redacting-sensitive-output</span>
-      <span class="see-also__summary">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…</span>
+      <span class="see-also__summary">在以下情况下使用：密钥、凭据、令牌或个人数据有可能进到一行日志、一条错误信息、一段调用栈回溯、一份崩溃转储、一个指标标签、一段链路 span、一条分析事件、一个支持包，或者一份录制下来的测试 fixture 里。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>

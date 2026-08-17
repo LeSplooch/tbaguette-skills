@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>redacting-sensitive-output — Güvenlik (savunma) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…">
+<meta name="description" content="Şu durumlarda kullanın: gizli bilgiler, kimlik bilgileri, token&#x27;ler ya da kişisel veriler bir log satırına, hata mesajına, yığın izine…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="redacting-sensitive-output — Güvenlik (savunma) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…">
+<meta property="og:description" content="Şu durumlarda kullanın: gizli bilgiler, kimlik bilgileri, token&#x27;ler ya da kişisel veriler bir log satırına, hata mesajına, yığın izine…">
 <link rel="canonical" href="/tbaguette-skills/tr/skills/redacting-sensitive-output/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/redacting-sensitive-output/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/redacting-sensitive-output/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Son güncelleme</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Dil: Türkçe</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">Güvenlik (savunma)</span>
-  <p class="lede">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label, trace span, analytics event, support bundle, or a recorded test fixture. Covers what a redactor must not do with the match it found, allowlisting fields rather than denylisting patterns, partial reveals and re-identification, encoded and nested payloads, and testing by asserting the input is absent rather than the marker present.</p>
+  <p class="lede">Şu durumlarda kullanın: gizli bilgiler, kimlik bilgileri, token&#x27;ler ya da kişisel veriler bir log satırına, hata mesajına, yığın izine, çökme dökümüne, metrik etiketine, izleme span&#x27;ına, analitik olayına, destek paketine veya kaydedilmiş bir test fixture&#x27;ına ulaşabiliyorsa. Maskeleme filtresinin bulduğu eşleşmeyle yapmaması gerekenleri, kalıpları kara listeye almak yerine alanları izin listesine almayı, kısmi ifşaları ve yeniden kimliklendirmeyi, kodlanmış ve iç içe geçmiş yükleri ve testin, işaretin varlığını değil girdinin yokluğunu doğrulamasını kapsar.</p>
 </div><p class="translation-banner" role="note">Bu sayfanın Türkçe çevirisi henüz yok — İngilizce sürümü gösteriliyor.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Redaction is the last line of defence, applied at the moment data leaves the program for somewhere a human or a vendor will read it. It fails quietly by construction: a redactor that redacts nothing produces output that looks exactly like output it redacted correctly.</p>
 <p>The two rules that carry most of the value: <strong>the replacement must not quote the match</strong>, and <strong>the test asserts the input is gone, never that the marker is present.</strong></p>
@@ -142,7 +142,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/validating-numeric-input/">
       <span class="see-also__name">validating-numeric-input</span>
-      <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir sayı bir güven sınırını geçtiğinde — bir form alanı, sorgu parametresi, JSON gövdesi, yapılandırma değeri…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>

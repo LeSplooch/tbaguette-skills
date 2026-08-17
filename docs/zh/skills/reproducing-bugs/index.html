@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>reproducing-bugs — 调试与性能 — TBaguette’s Atelier</title>
-<meta name="description" content="在以下情况下使用：要把一份缺陷报告变成一个说来就来的失败；某个缺陷在本地复现不出来；它只在生产环境出现，或者只对某一个用户出现；失败是间歇性的，或者只以很低的概率冒头；或者一处修复拿不出证明它有效的测试。">
+<meta name="description" content="在以下情况下使用：要把一份缺陷报告变成一个说来就来的失败；某个缺陷在本地复现不出来；它只在生产环境出现，或者只对某一个用户出现；失败是间歇性的，或者只以很低的概率冒头；一个探针或者一次测量返回的值看着挺像那么回事，实际上可能只是默认值；或者一处修复拿不出证明它有效的测试。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="reproducing-bugs — 调试与性能 — TBaguette’s Atelier">
-<meta property="og:description" content="在以下情况下使用：要把一份缺陷报告变成一个说来就来的失败；某个缺陷在本地复现不出来；它只在生产环境出现，或者只对某一个用户出现；失败是间歇性的，或者只以很低的概率冒头；或者一处修复拿不出证明它有效的测试。">
+<meta property="og:description" content="在以下情况下使用：要把一份缺陷报告变成一个说来就来的失败；某个缺陷在本地复现不出来；它只在生产环境出现，或者只对某一个用户出现；失败是间歇性的，或者只以很低的概率冒头；一个探针或者一次测量返回的值看着挺像那么回事，实际上可能只是默认值；或者一处修复拿不出证明它有效的测试。">
 <link rel="canonical" href="/tbaguette-skills/zh/skills/reproducing-bugs/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/reproducing-bugs/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/reproducing-bugs/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">调试与性能</span>
-  <p class="lede">在以下情况下使用：要把一份缺陷报告变成一个说来就来的失败；某个缺陷在本地复现不出来；它只在生产环境出现，或者只对某一个用户出现；失败是间歇性的，或者只以很低的概率冒头；或者一处修复拿不出证明它有效的测试。涵盖报告里缺失的变量、最小复现、输入规约、复现率，以及用取证取代猜测。</p>
+  <p class="lede">在以下情况下使用：要把一份缺陷报告变成一个说来就来的失败；某个缺陷在本地复现不出来；它只在生产环境出现，或者只对某一个用户出现；失败是间歇性的，或者只以很低的概率冒头；一个探针或者一次测量返回的值看着挺像那么回事，实际上可能只是默认值；或者一处修复拿不出证明它有效的测试。涵盖报告里缺失的变量、最小复现、输入规约、复现率、先验证测试工具本身再去信它的读数，以及用取证取代猜测。</p>
 </div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Until the failure happens on demand, every fix is a guess and every claim of &quot;fixed&quot; is unfalsifiable. The reproduction is the deliverable that makes the rest of debugging possible, and it is the step most bug work skips.</p>
 <h2 id="when-to-use">When to use</h2>

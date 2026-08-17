@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>redacting-sensitive-output — الأمن (الدفاعي) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…">
+<meta name="description" content="استخدِمها عندما يمكن أن تصل الأسرار أو الاعتمادات أو رموز الوصول أو البيانات الشخصية إلى سطر سجلّ، أو رسالة خطأ، أو تتبُّع مكدّس…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="redacting-sensitive-output — الأمن (الدفاعي) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…">
+<meta property="og:description" content="استخدِمها عندما يمكن أن تصل الأسرار أو الاعتمادات أو رموز الوصول أو البيانات الشخصية إلى سطر سجلّ، أو رسالة خطأ، أو تتبُّع مكدّس…">
 <link rel="canonical" href="/tbaguette-skills/ar/skills/redacting-sensitive-output/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/redacting-sensitive-output/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/redacting-sensitive-output/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} بالتوقيت المحلي · {utc} UTC">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} بالتوقيت المحلي · {utc} UTC">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">الأمن (الدفاعي)</span>
-  <p class="lede">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label, trace span, analytics event, support bundle, or a recorded test fixture. Covers what a redactor must not do with the match it found, allowlisting fields rather than denylisting patterns, partial reveals and re-identification, encoded and nested payloads, and testing by asserting the input is absent rather than the marker present.</p>
+  <p class="lede">استخدِمها عندما يمكن أن تصل الأسرار أو الاعتمادات أو رموز الوصول أو البيانات الشخصية إلى سطر سجلّ، أو رسالة خطأ، أو تتبُّع مكدّس، أو تفريغ انهيار، أو وسم مقياس، أو مقطع تتبُّع، أو حدث تحليلات، أو حزمة دعم، أو تجهيز اختبار مسجَّل. تتناول ما الذي يجب ألّا تفعله أداة الطمس بالمطابقة التي وجدتها، وإدراج الحقول في قائمة سماح بدل إدراج الأنماط في قائمة منع، والكشف الجزئيّ وإعادة تحديد الهوية، والحمولات المرمَّزة والمتداخلة، والاختبار بالتأكُّد من غياب المدخَل لا من حضور العلامة.</p>
 </div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Redaction is the last line of defence, applied at the moment data leaves the program for somewhere a human or a vendor will read it. It fails quietly by construction: a redactor that redacts nothing produces output that looks exactly like output it redacted correctly.</p>
 <p>The two rules that carry most of the value: <strong>the replacement must not quote the match</strong>, and <strong>the test asserts the input is gone, never that the marker is present.</strong></p>
@@ -142,7 +142,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ar/skills/validating-numeric-input/">
       <span class="see-also__name">validating-numeric-input</span>
-      <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
+      <span class="see-also__summary">استخدِمها عندما يعبر رقمٌ حدَّ ثقة — حقل نموذج، أو معامِل استعلام، أو متن JSON، أو قيمة إعداد، أو خلية CSV، أو قراءة مستشعر…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ar/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>

@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>recovering-agent-context — 코드 읽기 — TBaguette’s Atelier</title>
-<meta name="description" content="Use when picking up an existing project for the first time, resuming work that someone or something else started…">
+<meta name="description" content="이미 있는 프로젝트를 처음 넘겨받을 때, 다른 사람이나 다른 무언가가 시작해 둔 일을 이어받을 때, 앞서 AI 에이전트가 손댄 흔적이 있는 저장소를 물려받을 때…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="recovering-agent-context — 코드 읽기 — TBaguette’s Atelier">
-<meta property="og:description" content="Use when picking up an existing project for the first time, resuming work that someone or something else started…">
+<meta property="og:description" content="이미 있는 프로젝트를 처음 넘겨받을 때, 다른 사람이나 다른 무언가가 시작해 둔 일을 이어받을 때, 앞서 AI 에이전트가 손댄 흔적이 있는 저장소를 물려받을 때…">
 <link rel="canonical" href="/tbaguette-skills/ko/skills/recovering-agent-context/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/recovering-agent-context/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/recovering-agent-context/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">코드 읽기</span>
-  <p class="lede">Use when picking up an existing project for the first time, resuming work that someone or something else started, inheriting a repo that shows signs of prior AI agent work, or being told to continue or finish a task with no handoff attached. Covers sweeping every assistant that touched the repo rather than only your own, finding session transcripts and instruction files by shape when vendor paths have moved, searching huge transcript stores without reading them whole, telling an executed plan from an abandoned one, and turning what you find into a resume brief.</p>
+  <p class="lede">이미 있는 프로젝트를 처음 넘겨받을 때, 다른 사람이나 다른 무언가가 시작해 둔 일을 이어받을 때, 앞서 AI 에이전트가 손댄 흔적이 있는 저장소를 물려받을 때, 인수인계라고는 아무것도 붙어 있지 않은 채 어떤 일을 계속하거나 끝내라는 말을 들었을 때 사용합니다. 내 것만이 아니라 그 저장소를 거쳐 간 모든 어시스턴트를 훑는 법, 벤더가 쓰던 경로가 옮겨졌을 때 세션 대화 기록과 지시 파일을 경로가 아니라 생김새로 찾아내는 법, 거대한 대화 기록 저장소를 통째로 읽지 않고 뒤지는 법, 실행된 계획과 버려진 계획을 가려내는 법, 그리고 찾아낸 것을 이어서 일할 수 있는 브리핑으로 바꾸는 법을 다룹니다.</p>
 </div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Someone worked on this repo before you, and on an existing project it was rarely a person alone. Git records what shipped. Agent sessions record what was tried and thrown away, which options were rejected and why, and every instruction the human gave that never became a file — the three things that separate resuming from restarting.</p>
 <p>The same sessions also record plans that were never executed, APIs that never existed, and decisions reversed four turns later, in identical prose. What you recover is testimony, not ground truth.</p>

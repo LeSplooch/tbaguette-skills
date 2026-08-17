@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">系统设计</span>
-  <p class="lede">在以下情况下使用：要定义一个会被别的代码调用的接口——公开函数或库的入口点、HTTP 或 RPC 端点、IPC 或线上协议消息、插件契约，或者导出的模块边界。涵盖命名与粒度、必填参数与可选参数、默认值、分页与排序、给枚举添加取值、不透明令牌、弃用与下线、版本管理，以及判断一项拟议改动是不是破坏性变更。</p>
+  <p class="lede">在以下情况下使用：要定义一个会被别的代码调用的接口——公开函数或库的入口点、HTTP 或 RPC 端点、IPC 或线上协议消息、插件契约，或者导出的模块边界。涵盖命名与粒度、必填参数与可选参数、默认值、分页与排序、给枚举添加取值、不透明令牌、按数据来源分离写入路径、弃用与下线、版本管理，以及判断一项拟议改动是不是破坏性变更。</p>
 </div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>The interface is the only part you cannot refactor later: everything behind it is yours, everything in front belongs to callers you cannot deploy. Design the failure modes, the growth path, and the compatibility promise before the happy path.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -167,7 +167,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/tracking-data-provenance/">
       <span class="see-also__name">tracking-data-provenance</span>
-      <span class="see-also__summary">Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted…</span>
+      <span class="see-also__summary">在以下情况下使用：一条记录可能从不止一类来源写进来——实测的、导入的、推断的、用户自己声称的，或者事后回填的；某个字段编码的是一件事被相信到什么程度；一条来自外部的推荐有可能触发一个本来只为第一方证据设定的阈值；要设计一条导入或同步的写入路径…</span>
     </a></li>
   </ul>
 </div>

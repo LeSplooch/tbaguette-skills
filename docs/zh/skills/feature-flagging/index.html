@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -144,11 +144,11 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/refactoring-safely/">
       <span class="see-also__name">refactoring-safely</span>
-      <span class="see-also__summary">在以下情况下使用：要在不改变行为的前提下重整现有代码；一次改动同时牵动许多调用点；重整到一半测试挂了；要先把代码收拾干净才好加新功能；在没有测试的代码或遗留代码里干活；或者忍不住想推倒重写而不是逐步变换。</span>
+      <span class="see-also__summary">在以下情况下使用：要在不改变行为的前提下重整现有代码；一次改动同时牵动许多调用点；重整到一半测试挂了；要先把代码收拾干净才好加新功能；在没有测试的代码或遗留代码里干活；把两个几乎一模一样的函数合成一个，看上去是明摆着的清理；或者忍不住想推倒重写而不是逐步变换。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/judging-duplication/">
       <span class="see-also__name">judging-duplication</span>
-      <span class="see-also__summary">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…</span>
+      <span class="see-also__summary">在以下情况下使用：两段代码看起来几乎一模一样，把它们并成一个像是明摆着的清理；评审者问起为什么会存在一份近乎相同的副本；要抽出一个共用的辅助函数或者一个基类；或者一次 DRY 式的清理正要把两个只在某个无关紧要的小细节上不同的东西合起来。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/deleting-code/">
       <span class="see-also__name">deleting-code</span>

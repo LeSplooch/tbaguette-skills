@@ -308,7 +308,11 @@ class SummarizeDescriptionTests(unittest.TestCase):
         if not REAL_AR_DESCRIPTIONS_PATH.is_file():
             self.skipTest("real i18n/ar/descriptions.json not present")
         corpus = _real_ar_descriptions()
-        self.assertEqual(len(corpus), 66)
+        # A floor, not an exact count: the corpus was 66 entries when the ، and
+        # ؛ fix landed and grows whenever a skill is added, so pinning the
+        # number just makes every new skill break this test. 66 still catches a
+        # truncated or half-loaded file, which is what the guard is for.
+        self.assertGreaterEqual(len(corpus), 66)
         self.assertEqual(
             [slug for slug, text in corpus.items() if "," in text], [],
             "no real Arabic description should contain an ASCII comma",

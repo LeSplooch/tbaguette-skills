@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>validating-numeric-input — Güvenlik (savunma) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…">
+<meta name="description" content="Şu durumlarda kullanın: bir sayı bir güven sınırını geçtiğinde — bir form alanı, sorgu parametresi, JSON gövdesi, yapılandırma değeri…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="validating-numeric-input — Güvenlik (savunma) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…">
+<meta property="og:description" content="Şu durumlarda kullanın: bir sayı bir güven sınırını geçtiğinde — bir form alanı, sorgu parametresi, JSON gövdesi, yapılandırma değeri…">
 <link rel="canonical" href="/tbaguette-skills/tr/skills/validating-numeric-input/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/validating-numeric-input/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/validating-numeric-input/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Son güncelleme</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Dil: Türkçe</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">Güvenlik (savunma)</span>
-  <p class="lede">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading, or another service&#x27;s response — when a range check passed and something broke far downstream, when clamping or bounding a value, when money or quantities are involved, or when a numeric parse silently produced zero. Covers NaN and infinity defeating comparisons, overflow and precision loss, locale and format ambiguity, and parsing a number rather than testing a relation.</p>
+  <p class="lede">Şu durumlarda kullanın: bir sayı bir güven sınırını geçtiğinde — bir form alanı, sorgu parametresi, JSON gövdesi, yapılandırma değeri, CSV hücresi, sensör okuması ya da başka bir servisin yanıtı; bir aralık kontrolü geçtiği hâlde akışın çok ilerisinde bir şey bozulduğunda; bir değeri kırparken ya da sınırlarken; para veya miktarlar söz konusuysa; ya da sayısal bir ayrıştırma sessizce sıfır ürettiğinde. NaN ve sonsuz değerlerin karşılaştırma kontrollerini etkisiz kılmasını, taşmayı ve hassasiyet kaybını, yerel ayar ve biçim belirsizliğini ve bir bağıntıyı sınamak yerine sayının kendisini ayrıştırmayı kapsar.</p>
 </div><p class="translation-banner" role="note">Bu sayfanın Türkçe çevirisi henüz yok — İngilizce sürümü gösteriliyor.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A guard written as a comparison is not a parse, and it is not total over its own input domain. <code>value &lt; MINIMUM</code> asks a question about a number; it silently answers &quot;no&quot; for inputs that are not numbers at all.</p>
 <p>Parsing a number means asserting that it <strong>is</strong> one — finite first, then in range — rather than testing a relation and inferring the rest from the test not having fired.</p>
@@ -144,7 +144,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/redacting-sensitive-output/">
       <span class="see-also__name">redacting-sensitive-output</span>
-      <span class="see-also__summary">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: gizli bilgiler, kimlik bilgileri, token&#x27;ler ya da kişisel veriler bir log satırına, hata mesajına, yığın izine…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>

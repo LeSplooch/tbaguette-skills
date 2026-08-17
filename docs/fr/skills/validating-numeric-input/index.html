@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>validating-numeric-input — Sécurité (défensive) — TBaguette’s Atelier</title>
-<meta name="description" content="Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…">
+<meta name="description" content="À utiliser quand un nombre franchit une frontière de confiance — un champ de formulaire, un paramètre de requête, un corps JSON…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="validating-numeric-input — Sécurité (défensive) — TBaguette’s Atelier">
-<meta property="og:description" content="Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…">
+<meta property="og:description" content="À utiliser quand un nombre franchit une frontière de confiance — un champ de formulaire, un paramètre de requête, un corps JSON…">
 <link rel="canonical" href="/tbaguette-skills/fr/skills/validating-numeric-input/">
 <link rel="alternate" hreflang="en" href="/tbaguette-skills/skills/validating-numeric-input/">
 <link rel="alternate" hreflang="fr" href="/tbaguette-skills/fr/skills/validating-numeric-input/">
@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Mis à jour</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:03:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-17T18:03:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:07:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-17T18:07:20Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Langue: Français</summary>
@@ -93,7 +93,7 @@
     
   </div>
   <span class="tag skill-article__tag">Sécurité (défensive)</span>
-  <p class="lede">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading, or another service&#x27;s response — when a range check passed and something broke far downstream, when clamping or bounding a value, when money or quantities are involved, or when a numeric parse silently produced zero. Covers NaN and infinity defeating comparisons, overflow and precision loss, locale and format ambiguity, and parsing a number rather than testing a relation.</p>
+  <p class="lede">À utiliser quand un nombre franchit une frontière de confiance — un champ de formulaire, un paramètre de requête, un corps JSON, une valeur de configuration, une cellule CSV, une mesure de capteur ou la réponse d’un autre service — quand une vérification de plage est passée et que quelque chose a cassé bien plus loin en aval, quand on écrête ou borne une valeur, quand il est question d’argent ou de quantités, ou quand l’analyse d’un nombre a silencieusement produit zéro. Couvre NaN et l’infini qui mettent en échec les comparaisons, le dépassement de capacité et la perte de précision, les ambiguïtés de format et de locale, et le fait d’analyser un nombre plutôt que de tester une relation.</p>
 </div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A guard written as a comparison is not a parse, and it is not total over its own input domain. <code>value &lt; MINIMUM</code> asks a question about a number; it silently answers &quot;no&quot; for inputs that are not numbers at all.</p>
 <p>Parsing a number means asserting that it <strong>is</strong> one — finite first, then in range — rather than testing a relation and inferring the rest from the test not having fired.</p>
@@ -144,7 +144,7 @@
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/redacting-sensitive-output/">
       <span class="see-also__name">redacting-sensitive-output</span>
-      <span class="see-also__summary">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label…</span>
+      <span class="see-also__summary">À utiliser quand des secrets, des identifiants, des jetons ou des données personnelles risquent d’atteindre une ligne de log…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>
