@@ -20,6 +20,19 @@
 
 ---
 
+### Execution note (found during Task 1, not in the original scan)
+
+The design spec's harness table didn't surface this: OpenCode's and Pi's
+discovery both depend on a repo-root `package.json` (`main` for OpenCode,
+the `pi.extensions`/`pi.skills` fields for Pi — confirmed by reading
+superpowers' own `package.json` and its `docs/porting-to-a-new-harness.md`
+Part 5 Step 2). Without it, `.opencode/plugins/*.js` and
+`.pi/extensions/*.ts` are just files nobody's told to load — the hard
+requirement from that guide's Part 2 (auto-discovery, no per-session
+opt-in) silently fails. Added `package.json` to Task 1's file list to close
+this gap before Tasks 2-3 produce adapter code that would otherwise be
+inert.
+
 ### Task 1: Manifests and docs (mechanical)
 
 **Files:**
@@ -305,19 +318,25 @@ if __name__ == "__main__":
     unittest.main()
 ```
 
-- [ ] **Step 13: Wire the new test into `run_tests.py`**
+- [ ] **Step 13: Run the new test standalone (not yet wired in)**
 
-Read `scripts/run_tests.py` to see how the existing suites are registered (each `test_*.py` module gets discovered and run — check whether registration is automatic via `unittest discover` or an explicit list, per `README.md`'s note that "`python3 -m unittest discover` on its own misses two of the three test files," meaning `run_tests.py` has explicit wiring somewhere). Add `test_harness_manifests` to that explicit wiring using the same pattern as the existing entries.
+The test file includes `test_package_json_points_at_real_files`, which
+checks that `package.json`'s `main` and `pi.extensions` fields point at
+real files — true only after Task 2 (OpenCode) and Task 3 (Pi) create
+those files. Since this task runs before those, wiring the suite into
+`run_tests.py` now would make the full suite red for a reason that isn't a
+real defect. Run it standalone instead:
 
-- [ ] **Step 14: Run the test**
+Run: `cd scripts && python3 test_harness_manifests.py -v`
+Expected: `test_all_manifests_are_valid_json`, `test_versions_match_plugin_json`,
+and `test_agents_md_symlinks_to_claude_md` pass; `test_package_json_points_at_real_files`
+fails (expected — the files it checks for don't exist until Tasks 2-3 run).
 
-Run: `python3 scripts/test_harness_manifests.py -v`
-Expected: all tests pass (3 test methods, ~13 assertions across the subTests).
-
-- [ ] **Step 15: Run the full suite**
+- [ ] **Step 14: Run the full suite, confirming nothing else broke**
 
 Run: `python3 scripts/run_tests.py`
-Expected: all suites pass, including the new one.
+Expected: all *existing* suites still pass (this new test file isn't wired
+in yet, so it doesn't run here and can't fail the suite).
 
 - [ ] **Step 16: Commit and push**
 
@@ -326,7 +345,7 @@ git add .claude-plugin/marketplace.json .agents/plugins/marketplace.json \
   .codex-plugin/plugin.json .cursor-plugin/plugin.json .devin-plugin/plugin.json \
   .kimi-plugin/plugin.json gemini-extension.json GEMINI.md AGENTS.md \
   hooks/hooks-cursor.json PORTING.md README.kimi.md README.opencode.md \
-  scripts/test_harness_manifests.py scripts/run_tests.py
+  package.json scripts/test_harness_manifests.py
 git commit -m "$(cat <<'EOF'
 Add multi-harness discovery manifests (Codex, Cursor, Devin, Gemini,
 Kimi, generic Agents marketplace)
@@ -457,17 +476,29 @@ Expected: three new untracked paths (`.opencode/`, `.pi/`, `.hermes-plugin/`).
 
 Read the current `"version"` in `.claude-plugin/plugin.json` (may no longer be `0.6.0` if other work landed since Task 1 — this repo has concurrent activity, see Global Constraints). Bump the patch component by 1 (e.g. `0.6.0` → `0.6.1`). Apply the same new version string to the `"version"` field in every manifest from Task 1 that carries one: `.codex-plugin/plugin.json`, `.cursor-plugin/plugin.json`, `.devin-plugin/plugin.json`, `.kimi-plugin/plugin.json`, `gemini-extension.json`, and `.claude-plugin/marketplace.json`'s nested `plugins[0].version`.
 
-- [ ] **Step 3: Run the full test suite**
+- [ ] **Step 3: Wire `test_harness_manifests` into `run_tests.py`**
+
+All four of its tests are true now that Tasks 2-4 created the OpenCode and
+Pi adapter files. Read `scripts/run_tests.py`'s `SUITES` list and add an
+entry following the existing pattern (label, then a `[sys.executable,
+"test_harness_manifests.py"]` command — matches the plain-`unittest.main()`
+style already used by other entries, whose "Ran N tests in" output the
+runner's own regex already parses).
+
+- [ ] **Step 4: Run the full test suite**
 
 Run: `python3 scripts/run_tests.py`
-Expected: all suites pass, including `test_harness_manifests`'s version-match check against the bumped version.
+Expected: all suites pass, including `test_harness_manifests`'s
+version-match check against the bumped version and its
+package.json-points-at-real-files check (now true).
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 5: Commit**
 
 ```bash
 git add .opencode/ .pi/ .hermes-plugin/ .claude-plugin/plugin.json \
   .codex-plugin/plugin.json .cursor-plugin/plugin.json .devin-plugin/plugin.json \
-  .kimi-plugin/plugin.json gemini-extension.json .claude-plugin/marketplace.json
+  .kimi-plugin/plugin.json gemini-extension.json .claude-plugin/marketplace.json \
+  scripts/run_tests.py
 git commit -m "$(cat <<'EOF'
 Add OpenCode, Pi, and Hermes harness adapters; bump to <new-version>
 
@@ -480,7 +511,7 @@ EOF
 )"
 ```
 
-- [ ] **Step 5: Fetch, integrate if needed, push**
+- [ ] **Step 6: Fetch, integrate if needed, push**
 
 ```bash
 git fetch origin master
@@ -492,7 +523,7 @@ If `origin/master` has moved since Task 1's push: `git merge origin/master`, res
 git push origin master
 ```
 
-- [ ] **Step 6: Verify the live Pages deploy**
+- [ ] **Step 7: Verify the live Pages deploy**
 
 ```bash
 gh api repos/LeSplooch/tbaguette-skills/pages/builds/latest
@@ -500,7 +531,7 @@ gh api repos/LeSplooch/tbaguette-skills/pages/builds/latest
 
 If the new commit SHA hasn't triggered a build within ~30s: `gh api repos/LeSplooch/tbaguette-skills/pages/builds -X POST`. Once built, confirm with a no-cache fetch that this doesn't affect the live site's rendered content (this plan touches no `docs/`-visible content — the check here is only that the deploy pipeline itself stayed healthy, not that anything changed on the page).
 
-- [ ] **Step 7: Update the local install**
+- [ ] **Step 8: Update the local install**
 
 ```bash
 git -C ~/.claude/skills/TBaguette pull

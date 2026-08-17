@@ -1,0 +1,23 @@
+{
+  "name": "tbaguette-skills",
+  "version": "0.6.0",
+  "description": "TBaguette skills and runtime bootstrap for coding agents",
+  "type": "module",
+  "main": ".opencode/plugins/tbaguette.js",
+  "keywords": [
+    "pi-package",
+    "skills",
+    "code-review",
+    "debugging",
+    "testing",
+    "systems-design"
+  ],
+  "pi": {
+    "extensions": [
+      "./.pi/extensions/tbaguette.ts"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "tbaguette-dev",
+  "interface": {
+    "displayName": "TBaguette Dev"
+  },
+  "plugins": [
+    {
+      "name": "TBaguette",
+      "source": {
+        "source": "url",
+        "url": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

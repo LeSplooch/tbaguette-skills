@@ -1,0 +1,39 @@
+{
+  "name": "TBaguette",
+  "version": "0.6.0",
+  "description": "Seventy-four project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling.",
+  "author": {
+    "name": "verderosa2",
+    "email": "verderosa2@gmail.com"
+  },
+  "homepage": "https://github.com/LeSplooch/tbaguette-skills",
+  "repository": "https://github.com/LeSplooch/tbaguette-skills",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "code-review",
+    "debugging",
+    "testing",
+    "systems-design",
+    "security",
+    "naming",
+    "workflow"
+  ],
+  "skills": "./skills/",
+  "sessionStart": {
+    "skill": "using-tbaguette"
+  },
+  "skillInstructions": "Kimi Code tool mapping for TBaguette skills:\n\n- TBaguette skills describe actions, not specific tools -- almost all 74 are written this way on purpose, so most need no mapping at all. The one exception found by grep across the whole library: `using-tbaguette` says to invoke a skill \"with the Skill tool\". Use Kimi Code's native `Skill` tool for that.\n- When a skill asks to read, write, or edit a file, use Kimi Code's `Read`, `Write`, and `Edit` tools by their actual exposed names.\n- When a skill asks to search file contents, use `Grep`; when it asks to find files by path or pattern, use `Glob`; when it asks to run a shell command, use `Bash`.\n- If a future TBaguette skill asks to dispatch a subagent, use Kimi Code's `Agent` tool with a Kimi subagent type -- do not pass `general-purpose` as `subagent_type`. If it asks to track a todo list, use Kimi Code's `TodoList` tool. If it asks to present multiple-choice options or wait for the user's choice, use Kimi Code's `AskUserQuestion` tool rather than rendering choices as plain assistant text.",
+  "interface": {
+    "displayName": "TBaguette",
+    "shortDescription": "Judgment calls, code comprehension, and change discipline for coding agents",
+    "longDescription": "Use TBaguette for the craft between the ticket and the commit: reading unfamiliar code, naming, testing strategy, debugging, systems design, defensive security, and communicating the result.",
+    "developerName": "verderosa2",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://lesplooch.github.io/tbaguette-skills/"
+  }
+}
