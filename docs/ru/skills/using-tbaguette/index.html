@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Обновлено</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T18:24:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} по местному времени · {utc} UTC">2026-08-17T18:24:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T18:40:16+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} по местному времени · {utc} UTC">2026-08-17T18:40:16Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Язык: Русский</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">using-tbaguette</h1>
-    
+    <span class="change-badge change-badge--new" data-fresh-at="2026-08-17T18:40:16.911362+00:00">Новый</span>
   </div>
   <span class="tag skill-article__tag">Суждение и мета</span>
   <p class="lede">Применяйте в начале каждого разговора, в любом проекте, и держите это в уме до конца разговора, а не только на первом сообщении. Устанавливает, что собственные навыки TBaguette нужно проверять на уместность перед каждым ответом — ровно так же, как всплыло само это уведомление.</p>
@@ -103,6 +103,10 @@
 <table><thead><tr><th>Thought</th><th>Reality</th></tr></thead><tbody><tr><td>&quot;This is too small for a skill&quot;</td><td>Small changes are exactly where the guardrails (naming, commit hygiene, test scope) get skipped first.</td></tr><tr><td>&quot;I already know how to do this&quot;</td><td>Knowing the general shape of a task isn't the same as this library's specific judgment calls.</td></tr><tr><td>&quot;I'll check after I've looked at the code&quot;</td><td>Several skills (<code>orienting-in-unfamiliar-code</code>, <code>reading-specifications</code>) are about <em>how</em> to look, not what to do once you have.</td></tr><tr><td>&quot;It's just a question, not a task&quot;</td><td>Questions are tasks. Check for skills.</td></tr></tbody></table>
 <h2 id="alongside-other-plugins">Alongside other plugins</h2>
 <p>If another plugin also injects a &quot;check skills first&quot; notice — Superpowers' <code>using-superpowers</code>, for example — both apply at once. This one governs TBaguette's own library specifically and says nothing about anyone else's.</p>
+<h2 id="platform-adaptation">Platform adaptation</h2>
+<p>If you're running on a harness other than Claude Code, read its reference file for special instructions:</p>
+<ul><li>Hermes Agent: <code>references/hermes-tools.md</code></li></ul>
+<p>Other harnesses TBaguette ships a manifest for (Codex, Cursor, Devin, Gemini CLI, Kimi Code, OpenCode, Pi) don't currently need a separate reference file here — their tool mapping either lives inline in that harness's own manifest (Kimi's <code>skillInstructions</code>) or needs none at all, since most TBaguette skills describe actions rather than naming a specific tool. See <code>PORTING.md</code> at the repo root for the full harness-by-harness breakdown.</p>
 <h2 id="automatic-update-check">Automatic update check</h2>
 <p>If a <code>TBaguette:keeping-tbaguette-current</code> update-check block is attached below this notice, act on it per that skill's instructions — the network check already ran for this session, so don't repeat it.</p></div></article>
 <nav class="container prevnext" aria-label="Навигация по навыкам"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ru/skills/calibrating-confidence/">

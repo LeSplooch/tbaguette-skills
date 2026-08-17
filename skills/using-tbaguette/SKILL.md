@@ -30,6 +30,14 @@ Thoughts that mean stop and check anyway:
 
 If another plugin also injects a "check skills first" notice — Superpowers' `using-superpowers`, for example — both apply at once. This one governs TBaguette's own library specifically and says nothing about anyone else's.
 
+## Platform adaptation
+
+If you're running on a harness other than Claude Code, read its reference file for special instructions:
+
+- Hermes Agent: `references/hermes-tools.md`
+
+Other harnesses TBaguette ships a manifest for (Codex, Cursor, Devin, Gemini CLI, Kimi Code, OpenCode, Pi) don't currently need a separate reference file here — their tool mapping either lives inline in that harness's own manifest (Kimi's `skillInstructions`) or needs none at all, since most TBaguette skills describe actions rather than naming a specific tool. See `PORTING.md` at the repo root for the full harness-by-harness breakdown.
+
 ## Automatic update check
 
 If a `TBaguette:keeping-tbaguette-current` update-check block is attached below this notice, act on it per that skill's instructions — the network check already ran for this session, so don't repeat it.

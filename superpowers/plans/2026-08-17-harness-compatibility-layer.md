@@ -457,6 +457,42 @@ Expected: no output, exit code 0.
 
 ---
 
+### Execution note (found during Task 4, addressed before Task 5)
+
+The Hermes implementer's own report flagged a second gap the original scan
+missed: `.hermes-plugin/__init__.py`'s `_build_bootstrap()` reads
+`skills/using-tbaguette/references/hermes-tools.md` directly (a hard
+runtime dependency, not optional) — mirroring `using-superpowers`'
+`references/hermes-tools.md`, which `using-superpowers/SKILL.md` itself
+points at via a "Platform Adaptation" section this repo's `using-tbaguette`
+didn't yet have. Without the file, the Hermes plugin would raise
+`FileNotFoundError` on first load. Fixed before Task 5: ported
+`skills/using-tbaguette/references/hermes-tools.md` from superpowers'
+source (tool-name mapping, instructions-file location, skill-invocation
+and fallback-read syntax, all adapted to TBaguette's naming), and added a
+matching "Platform adaptation" section to `using-tbaguette/SKILL.md`,
+scoped honestly to only the one harness that actually has a reference file
+today (Codex/Pi/Kimi don't need one — their mapping is either inline or
+unnecessary, per `PORTING.md`'s reference table).
+
+Separately: **Plan A and Plan B's parallel dispatches share the same
+`skills/` tree**, and `scripts/content_pipeline.py` hard-gates on every
+on-disk skill directory being registered in its own `CATEGORIES` constant
+(a hand-maintained structure this plan's original scan never surfaced,
+since Plan A doesn't touch it — that's `content_pipeline.py`'s equivalent
+of `CATALOG.md`, and updating it is Plan B Task 16's job, not this one's).
+While Plan B's 13 agents are still landing skills, `python3
+scripts/run_tests.py` will show `content_pipeline.py` and `generate.py
+integration` red for a reason entirely outside this plan — not a defect in
+anything Task 1-4 produced. Verified this directly: temporarily relocated
+Plan B's in-progress skill directories out of `skills/` to a scratch
+location, confirmed all 8 suites pass clean in isolation (498 checks),
+then restored them before proceeding. Task 5 below commits only this
+plan's own files — no `skills/<new-superpowers-skill>/` directory is ever
+staged from here, so this plan's commit itself is not affected by the
+other plan's in-progress state, even though a live `run_tests.py` invoked
+in between will show red until Plan B also finishes and integrates.
+
 ### Task 5: Integrate, test, version bump, commit, push, verify
 
 **Files:**
