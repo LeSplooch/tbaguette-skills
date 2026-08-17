@@ -121,3 +121,5 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 - "One more fix attempt" — said after two have already failed
 - Each fix reveals a new instance of the same problem somewhere else
 - Adding a sleep to make a flaky repro script pass, instead of waiting for the condition
+- Investigating looks like nothing's happening, visibly, in front of people who are waiting; a bad retry's cost is invisible and lands later — that asymmetry is what's pulling, not an actual difference in risk
+- "I'll skip it with a tracked TODO" — said with real intent, about a TODO that dies the moment the release ships and priorities move on

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Atualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T19:42:57+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} horário local · {utc} UTC">2026-08-17T19:42:57Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} horário local · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Português</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">writing-skills</h1>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-08-17T19:42:57.138477+00:00">Nova</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T20:54:56.303885+00:00">Atualizada</span>
   </div>
   <span class="tag skill-article__tag">Ambiente e ferramentas</span>
   <p class="lede">Use quando estiver criando um skill novo, editando um já existente, avaliando se uma técnica recorrente vale a pena virar um skill, ou levando um skill rascunhado de um arquivo em disco para algo de fato publicado neste repo. Trata do registro do frontmatter de nome/descrição, de quando um arquivo de referência se justifica em vez de manter tudo inline, de testar um skill em um subagent novo antes de confiar nele, de escrever instruções que um agente não vai pular sob pressão, e do posicionamento no CATALOG.md.</p>
@@ -102,6 +102,7 @@
 <p>Write one when the technique wasn't obvious the first time you needed it, you'd reach for it again on a different codebase in a different language, and someone without your specific context would get it wrong without being told.</p>
 <p>Don't write one when it's a single-project convention — that belongs in that project's own CLAUDE.md or README, not in a library that has to survive being read cold in a repo it has never seen — when it's standard practice already documented well elsewhere, or when it's mechanical enough to enforce with a linter or a script instead of a paragraph someone has to remember to read.</p>
 <p>That first exclusion is stricter here than in general skill-authoring advice: every skill in this repo is project-, stack-, and language-agnostic by constitution, not by convention. A skill that only makes sense inside one specific codebase is a defect in this library, however well it reads.</p>
+<p>Check first whether an existing skill already covers this — skim <code>CATALOG.md</code>'s categories, not just the one that feels closest. A near-duplicate is usually a sign to extend or cross-reference the existing skill instead of shipping a second one that'll drift from it.</p>
 <table><thead><tr><th>Shape</th><th>Answers</th><th>Example here</th></tr></thead><tbody><tr><td>Technique</td><td>A concrete method, with steps</td><td><code>atomic-commits</code> — how to split a tree that grew three changes</td></tr><tr><td>Pattern</td><td>A way of recognizing a situation and reasoning about it</td><td><code>naming-things</code> — what a name should encode, in priority order</td></tr><tr><td>Reference</td><td>Judgment-dense material to consult, not a procedure to run</td><td><code>formidable</code>'s stack files — which idioms a given surface expects</td></tr></tbody></table>
 <p>Most skills are technique or pattern, and stay a single file. Reference-shaped content is the case most likely to outgrow one file — see Structure, below.</p>
 <h2 id="frontmatter-and-the-description-register">Frontmatter and the description register</h2>

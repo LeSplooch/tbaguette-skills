@@ -25,6 +25,8 @@ Don't write one when it's a single-project convention — that belongs in that p
 
 That first exclusion is stricter here than in general skill-authoring advice: every skill in this repo is project-, stack-, and language-agnostic by constitution, not by convention. A skill that only makes sense inside one specific codebase is a defect in this library, however well it reads.
 
+Check first whether an existing skill already covers this — skim `CATALOG.md`'s categories, not just the one that feels closest. A near-duplicate is usually a sign to extend or cross-reference the existing skill instead of shipping a second one that'll drift from it.
+
 | Shape | Answers | Example here |
 |---|---|---|
 | Technique | A concrete method, with steps | `atomic-commits` — how to split a tree that grew three changes |

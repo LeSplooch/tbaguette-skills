@@ -61,3 +61,4 @@ A blocker is not the same as a wrinkle. A step whose wording is ambiguous but wh
 - "I'll tick the boxes at the end — I know what I've done."
 - "The plan says X, but the codebase obviously wants Y, so I'll just do Y."
 - "I'll run the whole verification once at the end, it's faster that way."
+- "I'm not skipping it, I'm just reordering it — it'll still run, later." The discipline is running it at the checkpoint so a failure gets attributed to the task that caused it; deferred-but-eventually-run doesn't preserve that, it just delays finding out which task actually broke.

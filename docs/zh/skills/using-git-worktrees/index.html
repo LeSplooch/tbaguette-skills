@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T19:42:57+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T19:42:57Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">using-git-worktrees</h1>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-08-17T19:42:57.138477+00:00">新增</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T20:54:56.303885+00:00">已更新</span>
   </div>
   <span class="tag skill-article__tag">变更落地</span>
   <p class="lede">在以下情况下使用：要开始一项不该碰到当前 checkout 的工作；在运行一个可能需要干净放弃的多步计划之前；或者好几个任务正要同时对着同一个仓库跑起来。涵盖判断隔离是否值得它的搭建成本、识别自己是不是已经身处隔离环境、比起手动的 git worktree 更倾向于用原生的隔离工作区工具，以及 worktree 的放置位置、安全性和清理。</p>
@@ -113,6 +113,7 @@ git rev-parse --git-common-dir</code></pre>
 <h2 id="native-tool-first-git-worktree-second">Native tool first, git worktree second</h2>
 <p>Isolation can be built two ways. Check for the first before reaching for the second.</p>
 <p>Your harness may already manage isolated workspaces under some name — <code>EnterWorktree</code>, a <code>/worktree</code> command, a <code>--worktree</code> flag. If something like that exists, use it and move on to setup below. It's the one thing that knows where its own workspaces live, how their branches get made, and how to take them apart again, and it does all three as a unit your harness can actually track. Reaching for raw git instead, when that tool was sitting right there, doesn't skip a step — it just produces a workspace your harness never learns about and therefore never manages.</p>
+<p>Some native tools gate themselves tighter than this skill's own trade-off logic — invoked only on an explicit instruction to use a worktree, not on the judgment call above by itself. Check the tool's own description before assuming &quot;use it and move on&quot; is unconditional. A tighter gate isn't a contradiction to route around by falling back to raw git: it's satisfied the same way an unsettled preference already is — surface the trade-off and ask, per the section above, instead of either working around the gate or abandoning isolation because the tool declined it.</p>
 <p>Fall back to plain git only when no such tool exists.</p>
 <p><strong>Where.</strong> An explicit directory named in your instructions wins outright. Otherwise, use whichever of <code>.worktrees/</code> or <code>worktrees/</code> is already a convention in this project (<code>.worktrees/</code> if somehow both are). Absent either, default to <code>.worktrees/</code> at the project root.</p>
 <p><strong>Safety.</strong> Confirm the chosen directory is actually gitignored before putting anything in it:</p>

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T19:42:57+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T19:42:57Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">systematic-debugging</h1>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-08-17T19:42:57.138477+00:00">नई</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T20:54:56.303885+00:00">अपडेटेड</span>
   </div>
   <span class="tag skill-article__tag">डिबगिंग और परफ़ॉर्मेंस</span>
   <p class="lede">जब किसी बग, फ़ेल होते टेस्ट, क्रैश, या कोड को जो करना चाहिए उससे मेल न खाते किसी भी व्यवहार को फ़िक्स की ज़रूरत हो और अभी तक कोई फ़िक्स सुझाया न गया हो, ख़ासकर जब समय के दबाव में सामने दिखता झटपट फ़िक्स लुभावना लगे या कोई पहले आज़माया गया फ़िक्स टिका न हो, तब इस्तेमाल करें। इसमें रीप्रोड्यूस-हाइपोथिसिस-टेस्ट का चक्र, किसी लक्षण को वहाँ तक वापस खोजना जहाँ वह असल में पैदा होता है न कि जहाँ वह दिखा, बार-बार फ़ेल होते फ़िक्स से आगे बढ़कर आर्किटेक्चर पर ही सवाल उठाना, और ख़राब डेटा जिन-जिन परतों से गुज़रता है उन सब पर फ़िक्स को परखना शामिल है।</p>
@@ -137,7 +137,7 @@ after — waits for the condition:
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;The issue is simple, I don't need the loop&quot;</td><td>Simple bugs have root causes too; skipping the loop on an easy-looking one is how it comes back twice</td></tr><tr><td>Fix applied, same class of bug reappears elsewhere</td><td>The trace stopped at the first plausible cause instead of the actual origin</td></tr><tr><td>&quot;Let me just try changing this and see&quot;</td><td>A change made before a hypothesis exists is a guess wearing an experiment's clothes</td></tr><tr><td>Several changes made, then the test run once</td><td>Whichever result comes back, nothing was isolated — pass or fail explains neither change</td></tr><tr><td>Fix confirmed by one passing run</td><td>One run at a nonzero failure rate isn't confirmation — see <code>reproducing-bugs</code> for how many clean runs actually are enough</td></tr><tr><td>&quot;One more fix attempt&quot; after two failures</td><td>Three failures is an architecture signal, not a reason to try a fourth patch</td></tr><tr><td>Test written after the fix, to &quot;prove it works&quot;</td><td>A test that never watched the bug fail proves nothing about whether it would have caught it</td></tr><tr><td>&quot;I don't fully understand it, but this might work&quot;</td><td>Uncertainty deployed instead of named — say what isn't understood and go investigate exactly that</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
-<ul><li>&quot;Quick fix now, investigate properly later&quot;</li><li>&quot;Just try changing X and see if it works&quot;</li><li>&quot;It's probably X&quot; — said before anything traced the failure to X</li><li>Skipping the failing test because the fix &quot;obviously&quot; works</li><li>Proposing a fix before tracing where the bad value actually originates</li><li>&quot;One more fix attempt&quot; — said after two have already failed</li><li>Each fix reveals a new instance of the same problem somewhere else</li><li>Adding a sleep to make a flaky repro script pass, instead of waiting for the condition</li></ul></div></article>
+<ul><li>&quot;Quick fix now, investigate properly later&quot;</li><li>&quot;Just try changing X and see if it works&quot;</li><li>&quot;It's probably X&quot; — said before anything traced the failure to X</li><li>Skipping the failing test because the fix &quot;obviously&quot; works</li><li>Proposing a fix before tracing where the bad value actually originates</li><li>&quot;One more fix attempt&quot; — said after two have already failed</li><li>Each fix reveals a new instance of the same problem somewhere else</li><li>Adding a sleep to make a flaky repro script pass, instead of waiting for the condition</li><li>Investigating looks like nothing's happening, visibly, in front of people who are waiting; a bad retry's cost is invisible and lands later — that asymmetry is what's pulling, not an actual difference in risk</li><li>&quot;I'll skip it with a tracked TODO&quot; — said with real intent, about a TODO that dies the moment the release ships and priorities move on</li></ul></div></article>
 <nav class="container prevnext" aria-label="स्किल्स के बीच नेविगेशन"><a class="prevnext__link" href="/tbaguette-skills/hi/skills/finding-resource-leaks/">
   <span class="prevnext__label">पिछली</span>
   <span class="prevnext__name">← finding-resource-leaks</span>

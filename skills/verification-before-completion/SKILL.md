@@ -29,6 +29,8 @@ Run it in full: not the fast subset, not just the file that changed, the whole t
 
 Only once that comparison holds does the claim get made — and it gets made with the evidence next to it, not implied. "34/34 tests pass" carries different information than "tests pass."
 
+When the check itself is unreliable — an intermittent bug that only reproduces some fraction of the time — a single clean run doesn't carry the same weight it would for a deterministic one. That's a reason to run it enough times to get real signal, or to report status honestly as still-in-progress, not a reason to fall back to a hedged claim instead. "Should be fixed, let me know if you still see it" spends the same unearned confidence a flat "it's fixed" would; softer wording doesn't make one weak attempt add up to evidence.
+
 ## The claim and what actually proves it
 
 | Claim | Real evidence | Doesn't count |

@@ -50,6 +50,8 @@ Isolation can be built two ways. Check for the first before reaching for the sec
 
 Your harness may already manage isolated workspaces under some name — `EnterWorktree`, a `/worktree` command, a `--worktree` flag. If something like that exists, use it and move on to setup below. It's the one thing that knows where its own workspaces live, how their branches get made, and how to take them apart again, and it does all three as a unit your harness can actually track. Reaching for raw git instead, when that tool was sitting right there, doesn't skip a step — it just produces a workspace your harness never learns about and therefore never manages.
 
+Some native tools gate themselves tighter than this skill's own trade-off logic — invoked only on an explicit instruction to use a worktree, not on the judgment call above by itself. Check the tool's own description before assuming "use it and move on" is unconditional. A tighter gate isn't a contradiction to route around by falling back to raw git: it's satisfied the same way an unsettled preference already is — surface the trade-off and ask, per the section above, instead of either working around the gate or abandoning isolation because the tool declined it.
+
 Fall back to plain git only when no such tool exists.
 
 **Where.** An explicit directory named in your instructions wins outright. Otherwise, use whichever of `.worktrees/` or `worktrees/` is already a convention in this project (`.worktrees/` if somehow both are). Absent either, default to `.worktrees/` at the project root.
