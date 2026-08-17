@@ -1,0 +1,509 @@
+# Harness Compatibility Layer Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Make TBaguette discoverable and loadable on every harness the `superpowers` plugin (v6.3.0) supports — Codex, Cursor, Devin, Gemini CLI, Hermes, Kimi, OpenCode, Pi, plus the generic `.agents` marketplace convention — without touching `skills/` content.
+
+**Architecture:** Add one small manifest/adapter per harness at the repo root, adapted from superpowers 6.3.0's own copies (cached at `/home/thisfuck/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0/`): rename `superpowers`→`TBaguette`, point `skills` paths at `./skills/`, point bootstrap references at `using-tbaguette` instead of `using-superpowers`, and drop everything that's superpowers' own dev/release tooling rather than harness discovery.
+
+**Tech Stack:** JSON manifests, one Node.js adapter (OpenCode), one TypeScript adapter (Pi), one Python adapter (Hermes), bash (existing hooks, unchanged).
+
+## Global Constraints
+
+- Scope is discovery/compatibility only. Do NOT port superpowers' `.pre-commit-config.yaml`, `scripts/bump-version.sh`, per-harness `tests/`, `RELEASE-NOTES.md`, `CODE_OF_CONDUCT.md`, or `.github/ISSUE_TEMPLATE/` — TBaguette already covers that ground differently via `run_tests.py` and this repo's own ship pipeline.
+- TBaguette's `docs/` directory is the **generated static site**, fully owned by `scripts/generate.py` — never place hand-authored harness docs there. Superpowers' `docs/porting-to-a-new-harness.md`, `docs/README.kimi.md`, `docs/README.opencode.md` become `PORTING.md`, `README.kimi.md`, `README.opencode.md` at the repo root instead, as peers of `README.md`.
+- Reuse the existing `docs/assets/favicon.svg` for any manifest field wanting a small icon reference. Do not create new raster artwork (no `app-icon.png` equivalent).
+- Do not touch `.claude/worktrees/website-i18n` (branch `fr-using-tbaguette`) — unrelated in-progress work in a sibling worktree.
+- Every new/modified file must leave `python3 scripts/run_tests.py` fully green before any commit.
+- Source reference for every task: superpowers 6.3.0 files under `/home/thisfuck/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0/` (read-only reference — never edit anything under that path).
+- Repo's own commit convention: real message explaining *why*, no `--no-verify`, new commits only (never amend), push to `origin/master` only. Before any push, `git fetch origin master` and check for divergence first — this repo has other agents/worktrees pushing to it concurrently (confirmed during the design phase: a `website-i18n` worktree merged 27 commits mid-session). If `origin/master` has moved, `git merge origin/master`, resolve any conflicts confined to the generated `docs/` tree by regenerating from merged source (`git checkout --ours -- docs/ && python3 scripts/generate.py --base-path /tbaguette-skills`), rerun the full test suite, then push.
+
+---
+
+### Task 1: Manifests and docs (mechanical)
+
+**Files:**
+- Create: `.claude-plugin/marketplace.json`
+- Create: `.agents/plugins/marketplace.json`
+- Create: `.codex-plugin/plugin.json`
+- Create: `.cursor-plugin/plugin.json`
+- Create: `.devin-plugin/plugin.json`
+- Create: `.kimi-plugin/plugin.json`
+- Create: `gemini-extension.json`
+- Create: `GEMINI.md`
+- Create: `AGENTS.md` (symlink to `CLAUDE.md`)
+- Create: `hooks/hooks-cursor.json`
+- Create: `PORTING.md`
+- Create: `README.kimi.md`
+- Create: `README.opencode.md`
+- Test: `scripts/test_harness_manifests.py`
+
+**Interfaces:**
+- Consumes: `.claude-plugin/plugin.json` (existing — name, description, version fields to mirror)
+- Produces: nothing consumed by later tasks in this plan — Task 4 only needs these files to exist and be valid, not their contents
+
+- [ ] **Step 1: Read the existing plugin identity**
+
+Read `.claude-plugin/plugin.json` (name: `TBaguette`, version: `0.6.0`, description mentions "Seventy-four... skills"). Every manifest below reuses this name/description, adapted to each harness's schema — read the matching superpowers 6.3.0 file first in each case (paths given per file below) to see the exact schema shape, then substitute TBaguette's identity.
+
+- [ ] **Step 2: `.claude-plugin/marketplace.json`**
+
+Read `.../superpowers/6.3.0/.claude-plugin/marketplace.json` for shape. Write:
+
+```json
+{
+  "name": "tbaguette-dev",
+  "description": "Development marketplace for the TBaguette skills library",
+  "owner": {
+    "name": "verderosa2",
+    "email": "verderosa2@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "TBaguette",
+      "description": "Seventy-four project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling — plus formidable, design craft for every UI stack.",
+      "version": "0.6.0",
+      "source": "./",
+      "author": {
+        "name": "verderosa2",
+        "email": "verderosa2@gmail.com"
+      }
+    }
+  ]
+}
+```
+
+- [ ] **Step 3: `.agents/plugins/marketplace.json`**
+
+Read `.../superpowers/6.3.0/.agents/plugins/marketplace.json` for shape. Write:
+
+```json
+{
+  "name": "tbaguette-dev",
+  "interface": {
+    "displayName": "TBaguette Dev"
+  },
+  "plugins": [
+    {
+      "name": "TBaguette",
+      "source": {
+        "source": "url",
+        "url": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
+```
+
+- [ ] **Step 4: `.codex-plugin/plugin.json`**
+
+Read `.../superpowers/6.3.0/.codex-plugin/plugin.json` for shape (includes an `interface` block with `defaultPrompt`, `brandColor`, icon paths). Write, dropping `composerIcon`/`logo`/`screenshots` (no raster art — see Global Constraints) and `interface.brandColor` (no established brand color):
+
+```json
+{
+  "name": "TBaguette",
+  "version": "0.6.0",
+  "description": "Seventy-four project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling.",
+  "author": {
+    "name": "verderosa2",
+    "email": "verderosa2@gmail.com"
+  },
+  "homepage": "https://github.com/LeSplooch/tbaguette-skills",
+  "repository": "https://github.com/LeSplooch/tbaguette-skills",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "code-review",
+    "debugging",
+    "testing",
+    "systems-design",
+    "security",
+    "naming",
+    "workflow"
+  ],
+  "skills": "./skills/",
+  "hooks": {},
+  "interface": {
+    "displayName": "TBaguette",
+    "shortDescription": "Judgment calls, code comprehension, and change discipline for coding agents",
+    "longDescription": "Use TBaguette for the craft between the ticket and the commit: reading unfamiliar code, naming, testing strategy, debugging, systems design, defensive security, and communicating the result.",
+    "developerName": "verderosa2",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://lesplooch.github.io/tbaguette-skills/"
+  }
+}
+```
+
+Check the repo's actual license identifier before writing `"license"` — read `LICENSE` at the repo root and use whatever SPDX id matches (do not assume MIT without checking).
+
+- [ ] **Step 5: `.cursor-plugin/plugin.json`**
+
+Read `.../superpowers/6.3.0/.cursor-plugin/plugin.json` for shape. Write, pointing `hooks` at the new Cursor hook manifest from Step 9:
+
+```json
+{
+  "name": "TBaguette",
+  "displayName": "TBaguette",
+  "description": "Seventy-four project-, stack-, and language-agnostic skills for judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, and tooling.",
+  "version": "0.6.0",
+  "author": {
+    "name": "verderosa2",
+    "email": "verderosa2@gmail.com"
+  },
+  "homepage": "https://github.com/LeSplooch/tbaguette-skills",
+  "repository": "https://github.com/LeSplooch/tbaguette-skills",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "code-review",
+    "debugging",
+    "testing",
+    "systems-design",
+    "security"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks-cursor.json"
+}
+```
+
+(Same license-id check as Step 4.)
+
+- [ ] **Step 6: `.devin-plugin/plugin.json`**
+
+Read `.../superpowers/6.3.0/.devin-plugin/plugin.json` for shape (no `skills`/`hooks` keys — Devin discovers `skills/` by convention). Write the same identity fields as Step 4 minus the `interface`/`skills`/`hooks` keys, matching that source file's shape exactly.
+
+- [ ] **Step 7: `.kimi-plugin/plugin.json`**
+
+Read `.../superpowers/6.3.0/.kimi-plugin/plugin.json` in full, including its `skillInstructions` string. Write the same identity fields as Step 4, plus:
+
+```json
+  "sessionStart": {
+    "skill": "using-tbaguette"
+  },
+```
+
+For `skillInstructions`: grep `skills/` for the Claude-Code-specific tool names TBaguette skills actually reference — run `grep -rlo -E '\b(Skill tool|Task tool|TodoWrite|AskUserQuestion)\b' skills/` from the repo root and read each hit in context. Write a `skillInstructions` string mapping only the tool names that search actually surfaces to Kimi Code's equivalents (per superpowers' own mapping: `Skill` tool stays `Skill`, `Task tool (general-purpose)` → Kimi's `Agent` tool, `TodoWrite` → `TodoList`, ask-the-user language → Kimi's `AskUserQuestion`). Do not invent mappings for tool names that don't actually appear — copying superpowers' full block verbatim would reference things TBaguette skills don't say.
+
+- [ ] **Step 8: `gemini-extension.json` and `GEMINI.md`**
+
+Read `.../superpowers/6.3.0/gemini-extension.json` and `.../superpowers/6.3.0/GEMINI.md`. Write:
+
+`gemini-extension.json`:
+```json
+{
+  "name": "TBaguette",
+  "description": "Seventy-four project-, stack-, and language-agnostic skills for judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, and tooling.",
+  "version": "0.6.0",
+  "contextFileName": "GEMINI.md"
+}
+```
+
+`GEMINI.md` (mirrors superpowers' one-line pointer file — read its exact content first, adapt the plugin name and skill-tool-invocation phrasing to TBaguette's, keep it this short).
+
+- [ ] **Step 9: `AGENTS.md` symlink**
+
+```bash
+cd /home/thisfuck/Code/tbaguette-skills
+ln -s CLAUDE.md AGENTS.md
+```
+
+Verify: `ls -la AGENTS.md` shows it pointing at `CLAUDE.md`, and `cat AGENTS.md` prints `CLAUDE.md`'s actual content.
+
+- [ ] **Step 10: `hooks/hooks-cursor.json`**
+
+Read `.../superpowers/6.3.0/hooks/hooks-cursor.json` and TBaguette's existing `hooks/hooks.json` (Claude Code format) side by side. Write, keeping the same `run-hook.cmd session-start` invocation TBaguette's Claude Code hook already uses:
+
+```json
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "./hooks/run-hook.cmd session-start"
+      }
+    ]
+  }
+}
+```
+
+- [ ] **Step 11: `PORTING.md`, `README.kimi.md`, `README.opencode.md`**
+
+Read `.../superpowers/6.3.0/docs/porting-to-a-new-harness.md`, `.../docs/README.kimi.md`, `.../docs/README.opencode.md`. Write adapted versions at the TBaguette repo root (not under `docs/` — see Global Constraints), substituting: superpowers→TBaguette, `using-superpowers`→`using-tbaguette`, the repo URL, and the skill count (74). Drop any section that references superpowers' own dev/release tooling (version-bump script, pre-commit config) since TBaguette doesn't have those and isn't adding them.
+
+- [ ] **Step 12: Write the manifest validity test**
+
+Create `scripts/test_harness_manifests.py`:
+
+```python
+"""Validates every harness manifest this repo ships is well-formed and
+internally consistent with .claude-plugin/plugin.json, the source of
+truth for the plugin's name/version. Proportionate to "compatibility
+layer" scope -- this is not a port of superpowers' own per-harness
+tests/ suite, just enough to catch a malformed JSON file or a stale
+version number before it ships.
+"""
+import json
+import unittest
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+JSON_MANIFESTS = [
+    ".claude-plugin/plugin.json",
+    ".claude-plugin/marketplace.json",
+    ".agents/plugins/marketplace.json",
+    ".codex-plugin/plugin.json",
+    ".cursor-plugin/plugin.json",
+    ".devin-plugin/plugin.json",
+    ".kimi-plugin/plugin.json",
+    "gemini-extension.json",
+    "hooks/hooks.json",
+    "hooks/hooks-cursor.json",
+]
+
+
+class TestHarnessManifests(unittest.TestCase):
+    def test_all_manifests_are_valid_json(self):
+        for rel_path in JSON_MANIFESTS:
+            path = REPO_ROOT / rel_path
+            with self.subTest(manifest=rel_path):
+                self.assertTrue(path.is_file(), f"{rel_path} missing")
+                with path.open() as f:
+                    json.load(f)  # raises on malformed JSON
+
+    def test_versions_match_plugin_json(self):
+        plugin = json.load(open(REPO_ROOT / ".claude-plugin/plugin.json"))
+        expected_version = plugin["version"]
+        for rel_path in (
+            ".codex-plugin/plugin.json",
+            ".cursor-plugin/plugin.json",
+            ".devin-plugin/plugin.json",
+            ".kimi-plugin/plugin.json",
+            "gemini-extension.json",
+        ):
+            data = json.load(open(REPO_ROOT / rel_path))
+            with self.subTest(manifest=rel_path):
+                self.assertEqual(data["version"], expected_version)
+
+    def test_agents_md_symlinks_to_claude_md(self):
+        agents_md = REPO_ROOT / "AGENTS.md"
+        self.assertTrue(agents_md.is_symlink(), "AGENTS.md must be a symlink")
+        self.assertEqual(agents_md.resolve(), (REPO_ROOT / "CLAUDE.md").resolve())
+
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+- [ ] **Step 13: Wire the new test into `run_tests.py`**
+
+Read `scripts/run_tests.py` to see how the existing suites are registered (each `test_*.py` module gets discovered and run — check whether registration is automatic via `unittest discover` or an explicit list, per `README.md`'s note that "`python3 -m unittest discover` on its own misses two of the three test files," meaning `run_tests.py` has explicit wiring somewhere). Add `test_harness_manifests` to that explicit wiring using the same pattern as the existing entries.
+
+- [ ] **Step 14: Run the test**
+
+Run: `python3 scripts/test_harness_manifests.py -v`
+Expected: all tests pass (3 test methods, ~13 assertions across the subTests).
+
+- [ ] **Step 15: Run the full suite**
+
+Run: `python3 scripts/run_tests.py`
+Expected: all suites pass, including the new one.
+
+- [ ] **Step 16: Commit and push**
+
+```bash
+git add .claude-plugin/marketplace.json .agents/plugins/marketplace.json \
+  .codex-plugin/plugin.json .cursor-plugin/plugin.json .devin-plugin/plugin.json \
+  .kimi-plugin/plugin.json gemini-extension.json GEMINI.md AGENTS.md \
+  hooks/hooks-cursor.json PORTING.md README.kimi.md README.opencode.md \
+  scripts/test_harness_manifests.py scripts/run_tests.py
+git commit -m "$(cat <<'EOF'
+Add multi-harness discovery manifests (Codex, Cursor, Devin, Gemini,
+Kimi, generic Agents marketplace)
+
+Matches what superpowers 6.3.0 ships for the same harnesses, adapted
+to TBaguette's identity and skills path. Compatibility-only -- none of
+superpowers' own dev/release tooling is included; TBaguette already
+covers that ground differently.
+EOF
+)"
+git fetch origin master
+# If origin/master has moved: git merge origin/master, resolve any
+# docs/-confined conflicts per Global Constraints, rerun the suite.
+git push origin master
+```
+
+---
+
+### Task 2: OpenCode adapter
+
+**Files:**
+- Create: `.opencode/plugins/tbaguette.js`
+- Create: `.opencode/INSTALL.md`
+
+**Interfaces:**
+- Consumes: nothing from Task 1
+- Produces: nothing consumed by later tasks — independent of Task 3 and Task 4
+
+- [ ] **Step 1: Read the source adapter**
+
+Read `.../superpowers/6.3.0/.opencode/plugins/superpowers.js` in full (139 lines) and `.../superpowers/6.3.0/.opencode/INSTALL.md`. Note what it actually does: frontmatter extraction, path normalization, auto-registering the skills directory via a config hook, injecting bootstrap context (the `using-superpowers` skill's content) via a message transform.
+
+- [ ] **Step 2: Port `.opencode/plugins/tbaguette.js`**
+
+Copy the source file's structure and logic unchanged (frontmatter parsing and path normalization are generic, not superpowers-specific). Change only:
+- File header comment: "Superpowers plugin" → "TBaguette plugin"
+- Any hardcoded `superpowers` string used as the plugin/directory name → `TBaguette`
+- The bootstrap skill it reads and injects: `skills/using-superpowers/SKILL.md` → `skills/using-tbaguette/SKILL.md`
+- Any bootstrap message text that says "You have superpowers" / references `superpowers:<skill>` invocation syntax → "You have TBaguette" / `TBaguette:<skill>`, matching the phrasing TBaguette's own `hooks/session-start` already uses for the Claude Code hook (read that file for the exact wording to reuse)
+
+- [ ] **Step 3: Port `.opencode/INSTALL.md`**
+
+Same substitutions (superpowers→TBaguette, repo URL, skill count).
+
+- [ ] **Step 4: Syntax-check**
+
+Run: `node --check .opencode/plugins/tbaguette.js`
+Expected: no output, exit code 0 (syntax valid — this environment has no OpenCode runtime to execute it against, so syntax validity plus manual diff-review against the source is the available verification).
+
+---
+
+### Task 3: Pi adapter
+
+**Files:**
+- Create: `.pi/extensions/tbaguette.ts`
+
+**Interfaces:**
+- Consumes: nothing from Task 1 or Task 2
+- Produces: nothing consumed by later tasks
+
+- [ ] **Step 1: Read the source adapter**
+
+Read `.../superpowers/6.3.0/.pi/extensions/superpowers.ts` in full (121 lines).
+
+- [ ] **Step 2: Port `.pi/extensions/tbaguette.ts`**
+
+Same substitution rules as Task 2 Step 2 (structure/logic unchanged, only naming and the bootstrap-skill pointer change).
+
+- [ ] **Step 3: Syntax-check**
+
+Run: `npx tsc --noEmit .pi/extensions/tbaguette.ts 2>&1 || true`
+If `tsc` isn't available in this environment, fall back to `node --check` after stripping TypeScript-only syntax is not reliable — instead do a manual side-by-side diff against the source file confirming only the intended substitutions changed, and note in the commit message that this file is unexecuted/untested in this environment (matches this repo's own precedent: `README.md` already documents the PowerShell install command as "verified by careful construction," not machine-tested, when no runtime exists to test it).
+
+---
+
+### Task 4: Hermes adapter
+
+**Files:**
+- Create: `.hermes-plugin/__init__.py`
+- Create: `.hermes-plugin/plugin.yaml`
+
+**Interfaces:**
+- Consumes: nothing from Tasks 1-3
+- Produces: nothing consumed by later tasks
+
+- [ ] **Step 1: Read the source adapter**
+
+Read `.../superpowers/6.3.0/.hermes-plugin/__init__.py` (104 lines) and `.../superpowers/6.3.0/.hermes-plugin/plugin.yaml`.
+
+- [ ] **Step 2: Port `.hermes-plugin/plugin.yaml`**
+
+```yaml
+name: TBaguette
+version: 0.6.0
+description: TBaguette skills and workflow bootstrap for Hermes Agent
+author: verderosa2
+provides_hooks:
+  - pre_llm_call
+```
+
+- [ ] **Step 3: Port `.hermes-plugin/__init__.py`**
+
+Same substitution rules as Task 2 Step 2.
+
+- [ ] **Step 4: Syntax-check**
+
+Run: `python3 -m py_compile .hermes-plugin/__init__.py`
+Expected: no output, exit code 0.
+
+---
+
+### Task 5: Integrate, test, version bump, commit, push, verify
+
+**Files:**
+- Modify: `.claude-plugin/plugin.json` (version bump)
+- Modify: `.codex-plugin/plugin.json`, `.cursor-plugin/plugin.json`, `.devin-plugin/plugin.json`, `.kimi-plugin/plugin.json`, `gemini-extension.json`, `.claude-plugin/marketplace.json` (version field, to match)
+
+**Interfaces:**
+- Consumes: Task 1 (manifests, already committed), Task 2/3/4 (adapter files, staged but not committed)
+- Produces: the completed, pushed harness-compatibility layer
+
+- [ ] **Step 1: Verify Tasks 2-4's outputs are present and untracked**
+
+Run: `git status --short .opencode/ .pi/ .hermes-plugin/`
+Expected: three new untracked paths (`.opencode/`, `.pi/`, `.hermes-plugin/`).
+
+- [ ] **Step 2: Bump the version**
+
+Read the current `"version"` in `.claude-plugin/plugin.json` (may no longer be `0.6.0` if other work landed since Task 1 — this repo has concurrent activity, see Global Constraints). Bump the patch component by 1 (e.g. `0.6.0` → `0.6.1`). Apply the same new version string to the `"version"` field in every manifest from Task 1 that carries one: `.codex-plugin/plugin.json`, `.cursor-plugin/plugin.json`, `.devin-plugin/plugin.json`, `.kimi-plugin/plugin.json`, `gemini-extension.json`, and `.claude-plugin/marketplace.json`'s nested `plugins[0].version`.
+
+- [ ] **Step 3: Run the full test suite**
+
+Run: `python3 scripts/run_tests.py`
+Expected: all suites pass, including `test_harness_manifests`'s version-match check against the bumped version.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add .opencode/ .pi/ .hermes-plugin/ .claude-plugin/plugin.json \
+  .codex-plugin/plugin.json .cursor-plugin/plugin.json .devin-plugin/plugin.json \
+  .kimi-plugin/plugin.json gemini-extension.json .claude-plugin/marketplace.json
+git commit -m "$(cat <<'EOF'
+Add OpenCode, Pi, and Hermes harness adapters; bump to <new-version>
+
+Ports superpowers 6.3.0's own per-harness bootstrap adapters (skill
+frontmatter parsing, directory auto-registration, context injection),
+renamed and repointed at TBaguette's identity and using-tbaguette.
+Kept as its own commit, separate from the pure-manifest additions,
+since this is behavioral code rather than configuration.
+EOF
+)"
+```
+
+- [ ] **Step 5: Fetch, integrate if needed, push**
+
+```bash
+git fetch origin master
+```
+
+If `origin/master` has moved since Task 1's push: `git merge origin/master`, resolve any conflicts confined to `docs/` by regenerating (`git checkout --ours -- docs/ && python3 scripts/generate.py --base-path /tbaguette-skills`), rerun `python3 scripts/run_tests.py`, commit the merge, then:
+
+```bash
+git push origin master
+```
+
+- [ ] **Step 6: Verify the live Pages deploy**
+
+```bash
+gh api repos/LeSplooch/tbaguette-skills/pages/builds/latest
+```
+
+If the new commit SHA hasn't triggered a build within ~30s: `gh api repos/LeSplooch/tbaguette-skills/pages/builds -X POST`. Once built, confirm with a no-cache fetch that this doesn't affect the live site's rendered content (this plan touches no `docs/`-visible content — the check here is only that the deploy pipeline itself stayed healthy, not that anything changed on the page).
+
+- [ ] **Step 7: Update the local install**
+
+```bash
+git -C ~/.claude/skills/TBaguette pull
+```
+
+If that directory doesn't exist on this machine, skip this step.
