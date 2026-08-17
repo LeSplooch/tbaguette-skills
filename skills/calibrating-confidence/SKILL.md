@@ -16,7 +16,7 @@ A claim read from a file and a claim recalled from training must not sound the s
 - The user asks whether you are sure, or contradicts a claim
 - Every sentence in a draft has a qualifier, or none does
 - The accurate answer is that you do not know
-- Not for: whether a completion claim has been proven by running something — `verification-before-completion` owns that gate. This is how to speak when the check has not been run.
+- Not for: whether a completion claim has been proven by running something — `confirming-before-claiming-done` owns that gate. This is how to speak when the check has not been run.
 
 ## Three tiers, marked in the sentence
 

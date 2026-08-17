@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">observing-production-safely</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">अपडेटेड</span>
   </div>
   <span class="tag skill-article__tag">डिबगिंग और परफ़ॉर्मेंस</span>
   <p class="lede">जब ऐसे ज़िंदा सिस्टम की जाँच करनी हो जिस पर यूज़र टिके हैं, जब इकलौता सबूत प्रोडक्शन डेटा के पीछे हो, जब चलती हुई सर्विस पर डीबग फ़्लैग, विस्तृत लॉगिंग, हीप डंप, प्रोफ़ाइलर या ब्रेकपॉइंट लगाना हो, जब किसी अटकल को परखने के लिए प्रोडक्शन की हालत बदलने का मन हो, या जब ऐसे डंप, ट्रेस या नमूने निकालने हों जिनमें ग्राहकों का डेटा है, तब इस्तेमाल करें।</p>
@@ -98,7 +98,7 @@
 <p>Every diagnostic is a change to production. Budget its cost, bound its scope, and write its rollback before enabling it — a meaningful fraction of outages are caused by the investigation into a smaller problem.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>The failure cannot be reproduced anywhere else and the evidence only exists live</li><li>About to raise a log level, attach a profiler, take a dump, or flip a debug flag on a running system</li><li>Considering editing a record, replaying a message, or clearing a cache &quot;just to see&quot;</li><li>Extracting logs, dumps, or samples that will contain real user data</li><li>During an incident, when someone proposes a diagnostic under time pressure</li></ul>
-<p>Not for: reasoning about the defect once you have the evidence (<code>systematic-debugging</code>), or getting a failure to happen on demand elsewhere (<code>reproducing-bugs</code>).</p>
+<p>Not for: reasoning about the defect once you have the evidence (<code>diagnosing-before-fixing</code>), or getting a failure to happen on demand elsewhere (<code>reproducing-bugs</code>).</p>
 <h2 id="the-ladder">The ladder</h2>
 <p>Descend in order. Stop at the first rung that answers the question — most investigations are finished by rung 2 and reach for rung 5 out of habit.</p>
 <ol><li><strong>Existing telemetry.</strong> Metrics, logs, traces, dashboards already collected. Zero marginal cost, and the only rung that is free.</li><li><strong>Read-only queries</strong> against a replica, with a statement timeout and a row limit set before the query is typed.</li><li><strong>Sampled diagnostics.</strong> One-in-N tracing, a debug header on a single request id, one canary instance out of the fleet.</li><li><strong>Passive process inspection.</strong> Sampling profiler, thread dump, process counters, existing admin or health endpoints.</li><li><strong>Stop-the-world capture.</strong> Heap dump, core dump, full snapshot. Drain the instance from the load balancer first, then capture, then decide whether to return it.</li><li><strong>Reproduce in a lower environment</strong> with production-shaped data.</li><li><strong>Mutating production state.</strong> Normally a hard stop. If genuinely required, it is a change: named owner, change record, announced, and reversible.</li></ol>
@@ -154,8 +154,8 @@
       <span class="see-also__name">finding-resource-leaks</span>
       <span class="see-also__summary">जब मेमोरी, फ़ाइल डिस्क्रिप्टर, सॉकेट, थ्रेड, कनेक्शन, टाइमर या इवेंट सब्सक्रिप्शन बेहिसाब बढ़ते जाएँ…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/systematic-debugging/">
-      <span class="see-also__name">systematic-debugging</span>
+<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/diagnosing-before-fixing/">
+      <span class="see-also__name">diagnosing-before-fixing</span>
       <span class="see-also__summary">जब किसी बग, फ़ेल होते टेस्ट, क्रैश, या कोड को जो करना चाहिए उससे मेल न खाते किसी भी व्यवहार को फ़िक्स की ज़रूरत हो और अभी तक कोई फ़िक्स…</span>
     </a></li>
   </ul>

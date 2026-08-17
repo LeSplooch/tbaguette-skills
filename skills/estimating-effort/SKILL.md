@@ -15,7 +15,7 @@ An estimate assembled by decomposing the plan you can see underruns systematical
 - Producing a plan with durations, a schedule, or a sequencing commitment
 - An estimate has already been overrun and a replacement number is needed
 - The plausible range is wide enough that a point estimate would be fiction
-- Not for: breaking work into steps — `writing-plans` owns the decomposition. This owns the numbers attached to it, and whether they carry information.
+- Not for: breaking work into steps — `structuring-an-implementation-plan` owns the decomposition. This owns the numbers attached to it, and whether they carry information.
 
 ## Reference class first, decomposition second
 

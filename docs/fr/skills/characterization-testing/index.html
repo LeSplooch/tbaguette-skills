@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Mis à jour</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Langue: Français</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">characterization-testing</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Mis à jour</span>
   </div>
   <span class="tag skill-article__tag">Tests</span>
   <p class="lede">À utiliser quand on modifie, refactorise, extrait, porte ou supprime du code sans tests, quand le comportement actuel est inconnu ou non documenté, quand une réécriture doit reproduire sortie pour sortie un composant hérité, ou quand on sort les fichiers de référence, les tests d’approbation, les snapshots ou les diffs de sortie. Couvre l’épinglage du comportement existant, la consignation des bugs connus et le retrait des épingles.</p>
 </div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A characterization test asserts what the code <em>does</em>, not what it should do. It is a scaffold that makes a refactor observable, and it is the only kind of test whose correct first run is a pass rather than a failure.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>About to change, extract, port, or delete code with no test coverage and no written specification.</li><li>A rewrite must match a legacy component output for output before it may replace it.</li><li>Behavior is known only through the running system, and the people who wrote it are unavailable.</li><li>A dependency or runtime upgrade needs proof that observable output did not move.</li><li>Not for: behavior somebody can actually specify — write the specification as a test instead, via <code>test-driven-development</code>.</li><li>Not for: a known defect — that is <code>regression-test-from-bug</code>. Characterization pins bugs deliberately; it does not fix them.</li></ul>
+<ul><li>About to change, extract, port, or delete code with no test coverage and no written specification.</li><li>A rewrite must match a legacy component output for output before it may replace it.</li><li>Behavior is known only through the running system, and the people who wrote it are unavailable.</li><li>A dependency or runtime upgrade needs proof that observable output did not move.</li><li>Not for: behavior somebody can actually specify — write the specification as a test instead, via <code>writing-the-failing-test-first</code>.</li><li>Not for: a known defect — that is <code>regression-test-from-bug</code>. Characterization pins bugs deliberately; it does not fix them.</li></ul>
 <h2 id="choosing-the-observation-point">Choosing the observation point</h2>
 <p>The pin must survive the refactor, and that is entirely decided before any output is recorded.</p>
 <p><strong>Rule:</strong> the assertion must be expressible without naming a single symbol you intend to rename, move, split, inline, or delete. If the test calls the function you are about to dissolve, the refactor breaks the test and you learn nothing about behavior.</p>
@@ -157,8 +157,8 @@
       <span class="see-also__name">grounding-test-doubles</span>
       <span class="see-also__summary">À utiliser quand on écrit un mock, un stub, un fake ou une fixture pour quelque chose qu’on ne contrôle pas — une API HTTP…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/fr/skills/test-driven-development/">
-      <span class="see-also__name">test-driven-development</span>
+<li><a class="see-also__link" href="/tbaguette-skills/fr/skills/writing-the-failing-test-first/">
+      <span class="see-also__name">writing-the-failing-test-first</span>
       <span class="see-also__summary">À utiliser quand on implémente une nouvelle fonctionnalité…</span>
     </a></li>
   </ul>

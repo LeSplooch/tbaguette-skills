@@ -16,7 +16,7 @@ Stopping early ships something that merely looks unbroken; stopping late spends 
 - The first green result arrived and finishing right now is tempting
 - Work will be left unfinished and is about to go unnamed
 - The same class of fix has failed several times in a row
-- Not for: whether a specific claim has evidence behind it — `verification-before-completion` owns that gate. This owns how many passes to run and what finished means.
+- Not for: whether a specific claim has evidence behind it — `confirming-before-claiming-done` owns that gate. This owns how many passes to run and what finished means.
 - Paired with `karen-and-the-manager`: that skill is built to never run out of complaints on purpose; this one decides how many of them are worth another pass.
 
 ## Define done before the last mile

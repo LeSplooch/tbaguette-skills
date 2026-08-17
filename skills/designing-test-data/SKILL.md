@@ -16,7 +16,7 @@ The setup is the other half of a test's statement. If a reader cannot tell from 
 - Tests pass in isolation and fail in suite order, or fail only under parallel execution.
 - Seeding a store, queue, or file tree before exercising behavior.
 - Needing hundreds or millions of records for pagination, sort stability, or load shape.
-- Not for: the red-green-refactor loop itself, owned by `test-driven-development`.
+- Not for: the red-green-refactor loop itself, owned by `writing-the-failing-test-first`.
 
 ## The one-obvious-difference rule
 

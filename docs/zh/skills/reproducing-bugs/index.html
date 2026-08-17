@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">reproducing-bugs</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">已更新</span>
   </div>
   <span class="tag skill-article__tag">调试与性能</span>
   <p class="lede">在以下情况下使用：要把一份缺陷报告变成一个说来就来的失败；某个缺陷在本地复现不出来；它只在生产环境出现，或者只对某一个用户出现；失败是间歇性的，或者只以很低的概率冒头；一个探针或者一次测量返回的值看着挺像那么回事，实际上可能只是默认值；或者一处修复拿不出证明它有效的测试。涵盖报告里缺失的变量、最小复现、输入规约、复现率、先验证测试工具本身再去信它的读数，以及用取证取代猜测。</p>
@@ -98,7 +98,7 @@
 <p>Until the failure happens on demand, every fix is a guess and every claim of &quot;fixed&quot; is unfalsifiable. The reproduction is the deliverable that makes the rest of debugging possible, and it is the step most bug work skips.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A report describes a failure you have not yet seen with your own eyes</li><li>You are about to change code based on a theory you cannot test</li><li>The failure is described as &quot;sometimes&quot;, &quot;intermittent&quot;, or &quot;flaky&quot;</li><li>It happens in production, on one customer's account, or on one device only</li><li>Someone is about to close a ticket as &quot;cannot reproduce&quot;</li></ul>
-<p>Not for: the hypothesis loop once you can trigger it (<code>systematic-debugging</code>), or finding which change introduced it once you have a reliable test (<code>bisecting-failures</code>).</p>
+<p>Not for: the hypothesis loop once you can trigger it (<code>diagnosing-before-fixing</code>), or finding which change introduced it once you have a reliable test (<code>bisecting-failures</code>).</p>
 <h2 id="the-six-variables-reports-omit">The six variables reports omit</h2>
 <p>Every report describes what happened. Almost none describe the state that made it happen. Ask for all six before concluding anything.</p>
 <table><thead><tr><th>Variable</th><th>Ask for</th><th>Why it gets omitted</th></tr></thead><tbody><tr><td>Version</td><td>exact build/commit/package version, not &quot;latest&quot;</td><td>reporter assumes one version exists</td></tr><tr><td>Input</td><td>the actual bytes or payload, not a description of it</td><td>&quot;just a normal CSV&quot; hides the BOM, the CRLF, the emoji</td></tr><tr><td>Sequence</td><td>everything done before, including the steps that worked</td><td>reporter reports the last action, not the state machine</td></tr><tr><td>Environment</td><td>OS, locale, timezone, clock skew, proxy, extensions, flags, permissions</td><td>invisible to the reporter by definition</td></tr><tr><td>Timing</td><td>wall-clock time, concurrency, first request after deploy or idle</td><td>nobody thinks the hour of day is data</td></tr><tr><td>Data state</td><td>actual row counts, tenancy, migration level, cache warmth, entitlements</td><td>reporter cannot see their own data shape</td></tr></tbody></table>
@@ -155,8 +155,8 @@
       <span class="see-also__name">finding-resource-leaks</span>
       <span class="see-also__summary">在以下情况下使用：内存、文件描述符、套接字、线程、连接、定时器或事件订阅无界增长；进程因为内存耗尽被杀，或者撞上“打开文件过多”的错误；靠定期重启才能让服务活着；需要读懂一份堆快照；或者在稳定负载下占用还在往上爬。</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/systematic-debugging/">
-      <span class="see-also__name">systematic-debugging</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/diagnosing-before-fixing/">
+      <span class="see-also__name">diagnosing-before-fixing</span>
       <span class="see-also__summary">在以下情况下使用：一个 bug、一次测试失败、一次崩溃，或者任何跟代码本该做的事对不上的行为，需要一个修复而目前还没有人提出来，尤其是在时间压力下明摆着的快速修复看着很诱人，或者之前试过的一次修复没能撑住的时候。</span>
     </a></li>
   </ul>

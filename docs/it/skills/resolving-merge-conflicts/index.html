@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aggiornato</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} ora locale · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} ora locale · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Lingua: Italiano</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">resolving-merge-conflicts</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Aggiornata</span>
   </div>
   <span class="tag skill-article__tag">Integrare le modifiche</span>
   <p class="lede">Da usare quando un merge o un rebase segnala conflitti, quando un branch di lunga durata ha preso una strada diversa e l’integrazione si annuncia dolorosa, quando un merge è pulito sul piano testuale ma poi la build o il comportamento si rompono, quando lo stesso conflitto ricompare a ogni commit di un rebase, quando un file va in conflitto a ogni singola integrazione, o quando si deve decidere se annullare e riaffrontare la cosa invece di forzare una risoluzione.</p>
 </div><p class="translation-banner" role="note">Questa pagina non è ancora stata tradotta in Italiano — qui trovi la versione inglese.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A conflict is two answers to one question. Resolving it means answering the question, not choosing a hunk — and the result compiling proves nothing at all, because the merged tree is a version of the code that has never existed and has never been run.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A merge or rebase stopped with conflicts</li><li>A clean merge was followed by a broken build, or by behavior nobody intended</li><li>The same region conflicts repeatedly through a rebase</li><li>One file conflicts on every integration, regardless of who is working</li><li>Not for: choosing merge, rebase, or squash as an integration strategy — see <code>finishing-a-development-branch</code>. Not for isolating branches so they stop colliding — see <code>using-git-worktrees</code>.</li></ul>
+<ul><li>A merge or rebase stopped with conflicts</li><li>A clean merge was followed by a broken build, or by behavior nobody intended</li><li>The same region conflicts repeatedly through a rebase</li><li>One file conflicts on every integration, regardless of who is working</li><li>Not for: choosing merge, rebase, or squash as an integration strategy — see <code>landing-a-finished-branch</code>. Not for isolating branches so they stop colliding — see <code>isolating-work-with-worktrees</code>.</li></ul>
 <h2 id="understand-both-intents-before-touching-a-marker">Understand both intents before touching a marker</h2>
 <ul><li><strong>Read both sides' commits, not just their diffs.</strong> What problem was each solving? This is where commit-message quality pays out — and where its absence costs an hour (see <code>writing-commit-messages</code>).</li><li><strong>Name the question in one sentence</strong>: &quot;both sides needed the retry count to vary per caller&quot;. If you cannot state it, you do not yet understand the conflict, and any resolution is a guess with a build behind it.</li><li><strong>Read the whole file and the surrounding commits</strong>, not the marked region. The correct resolution frequently exists on neither side.</li></ul>
 <h2 id="resolve-by-re-applying-intent">Resolve by re-applying intent</h2>
@@ -121,9 +121,9 @@
   <span class="prevnext__label">Precedente</span>
   <span class="prevnext__name">← feature-flagging</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/it/skills/using-git-worktrees/">
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/it/skills/isolating-work-with-worktrees/">
   <span class="prevnext__label">Successiva</span>
-  <span class="prevnext__name">using-git-worktrees →</span>
+  <span class="prevnext__name">isolating-work-with-worktrees →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">Altre skill nella categoria Integrare le modifiche</h2>
@@ -156,12 +156,12 @@
       <span class="see-also__name">feature-flagging</span>
       <span class="see-also__summary">Da usare quando si nasconde del lavoro incompiuto dietro un interruttore, quando si pianifica un rilascio graduale…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/it/skills/using-git-worktrees/">
-      <span class="see-also__name">using-git-worktrees</span>
+<li><a class="see-also__link" href="/tbaguette-skills/it/skills/isolating-work-with-worktrees/">
+      <span class="see-also__name">isolating-work-with-worktrees</span>
       <span class="see-also__summary">Da usare quando si inizia un lavoro che non dovrebbe toccare il checkout attuale…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/it/skills/finishing-a-development-branch/">
-      <span class="see-also__name">finishing-a-development-branch</span>
+<li><a class="see-also__link" href="/tbaguette-skills/it/skills/landing-a-finished-branch/">
+      <span class="see-also__name">landing-a-finished-branch</span>
       <span class="see-also__summary">Da usare quando l&#x27;implementazione è finita…</span>
     </a></li>
   </ul>

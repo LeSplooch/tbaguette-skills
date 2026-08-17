@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">calibrating-confidence</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">已更新</span>
   </div>
   <span class="tag skill-article__tag">判断力与元技能</span>
   <p class="lede">在以下情况下使用：要陈述一个本次会话里并没有核实过的事实、成因、版本细节或 API 名称；被追问某个说法是否确定，或者被人当面质疑；结论靠的是回忆中的知识，而不是真正读到过的东西；每一句话都挂上了模棱两可的限定语；或者准确的回答其实就是“不知道”。涵盖证据等级、虚假的精确、概率措辞，以及没有根据的笃定。</p>
 </div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A claim read from a file and a claim recalled from training must not sound the same. Confidence tracks evidence, not fluency — and the strongest internal signal, how smoothly an answer arrives, is uncorrelated with truth for anything version-specific, recently changed, or particular to this project.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <code>verification-before-completion</code> owns that gate. This is how to speak when the check has not been run.</li></ul>
+<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <code>confirming-before-claiming-done</code> owns that gate. This is how to speak when the check has not been run.</li></ul>
 <h2 id="three-tiers-marked-in-the-sentence">Three tiers, marked in the sentence</h2>
 <table><thead><tr><th>Tier</th><th>What earns it</th><th>How it must read</th></tr></thead><tbody><tr><td>Verified</td><td>Observed in this session's tool output — file contents, command output, a test result, a response body</td><td>Flat assertion, source named when naming it is cheap</td></tr><tr><td>Inferred</td><td>Follows from verified facts by an argument you could write in one line</td><td>Assertion plus the inference: &quot;so X, because Y is set and Z reads it&quot;</td></tr><tr><td>Assumed</td><td>Plausible from convention, priors, or recall — including confident recall</td><td>Marked: &quot;conventionally defaults to X; not checked here&quot;</td></tr></tbody></table>
 <p>Rules that make the tiers real:</p>
@@ -163,12 +163,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">在以下情况下使用：一条记录在案的决策——一份 ADR、一篇设计文档、一个 wontfix、运维手册里的一行，或者一句“我们做不了 X，因为 Y”的注释——看上去把眼前这件活儿给否掉了；有人把某条约束当作定论引用，却没人说得清它是什么时候的事…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">在以下情况下使用：一个想法、一项功能需求或一个新项目需要在写下任何代码之前先变成一份获批的设计，尤其是在这项需求到底需要多少流程还说不清楚的时候。</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">在以下情况下使用：正要说一个修复、一项功能或一套测试套件已经完成、修好或者通过了；一处改动正要凭着这句断言的分量被提交、推送或者交出去；一个 subagent 或工具自己给出的成功报告正要被当成事实原样复述；或者断言背后唯一的支撑就是代码看起来是对的，而实际上什么都没有真正跑过。</span>
     </a></li>
   </ul>

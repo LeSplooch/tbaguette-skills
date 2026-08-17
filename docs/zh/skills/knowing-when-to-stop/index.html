@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">knowing-when-to-stop</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">已更新</span>
   </div>
   <span class="tag skill-article__tag">判断力与元技能</span>
   <p class="lede">在以下情况下使用：工作看起来已经完成，而下一个动作不过是再打磨、再重构或再检查一遍；自我复查已经转了好几圈，发现的问题越来越小；第一次跑出绿灯就想立刻收工；同一类修法已经连着失败好几次；或者剩下的活儿眼看就要被原地留下，却没人把它说出来。涵盖边际收益递减、镀金式的过度打磨、有边界的复查轮次，以及把遗留问题明确交接出去。</p>
 </div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Stopping early ships something that merely looks unbroken; stopping late spends the user's budget on polish nobody asked for. Both come from the same omission — no finish line defined before the last mile started.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>The work looks done and the next action would be another pass, polish, or check</li><li>A verification loop has run several times and the findings are getting smaller</li><li>The first green result arrived and finishing right now is tempting</li><li>Work will be left unfinished and is about to go unnamed</li><li>The same class of fix has failed several times in a row</li><li>Not for: whether a specific claim has evidence behind it — <code>verification-before-completion</code> owns that gate. This owns how many passes to run and what finished means.</li><li>Paired with <code>karen-and-the-manager</code>: that skill is built to never run out of complaints on purpose; this one decides how many of them are worth another pass.</li></ul>
+<ul><li>The work looks done and the next action would be another pass, polish, or check</li><li>A verification loop has run several times and the findings are getting smaller</li><li>The first green result arrived and finishing right now is tempting</li><li>Work will be left unfinished and is about to go unnamed</li><li>The same class of fix has failed several times in a row</li><li>Not for: whether a specific claim has evidence behind it — <code>confirming-before-claiming-done</code> owns that gate. This owns how many passes to run and what finished means.</li><li>Paired with <code>karen-and-the-manager</code>: that skill is built to never run out of complaints on purpose; this one decides how many of them are worth another pass.</li></ul>
 <h2 id="define-done-before-the-last-mile">Define done before the last mile</h2>
 <p>Done is: every item in the request demonstrably works, on the inputs the user actually has, and everything remaining is named. Write that sentence at the start; the task ends when it is true.</p>
 <p>Without it, done degrades into one of two defaults — the first thing tried passed, or you ran out of obvious things to do — and neither has anything to do with the request.</p>
@@ -169,12 +169,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">在以下情况下使用：一条记录在案的决策——一份 ADR、一篇设计文档、一个 wontfix、运维手册里的一行，或者一句“我们做不了 X，因为 Y”的注释——看上去把眼前这件活儿给否掉了；有人把某条约束当作定论引用，却没人说得清它是什么时候的事…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">在以下情况下使用：一个想法、一项功能需求或一个新项目需要在写下任何代码之前先变成一份获批的设计，尤其是在这项需求到底需要多少流程还说不清楚的时候。</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">在以下情况下使用：正要说一个修复、一项功能或一套测试套件已经完成、修好或者通过了；一处改动正要凭着这句断言的分量被提交、推送或者交出去；一个 subagent 或工具自己给出的成功报告正要被当成事实原样复述；或者断言背后唯一的支撑就是代码看起来是对的，而实际上什么都没有真正跑过。</span>
     </a></li>
   </ul>

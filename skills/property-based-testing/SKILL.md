@@ -16,7 +16,7 @@ An example test asserts what one input produces. A property asserts a relationsh
 - Replacing, porting, or optimizing an implementation that must agree with the old one.
 - Handling untrusted or externally-supplied input, where "never crashes" is itself a requirement.
 - Not for: behavior whose whole specification is a table of cases (tax brackets, status-code mappings, business rules enumerated by a stakeholder). Writing a property there just restates the table twice.
-- Not for: the red-green-refactor cycle, owned by `test-driven-development`.
+- Not for: the red-green-refactor cycle, owned by `writing-the-failing-test-first`.
 
 ## The property catalogue
 

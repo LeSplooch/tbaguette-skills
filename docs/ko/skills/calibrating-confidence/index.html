@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">calibrating-confidence</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">업데이트</span>
   </div>
   <span class="tag skill-article__tag">판단력과 메타 스킬</span>
   <p class="lede">이번 세션에서 확인하지 않은 사실이나 원인, 버전 세부사항, API 이름을 말할 때, 그 주장이 확실하냐는 질문을 받거나 반박을 당할 때, 결론이 읽은 것이 아니라 기억에 기대고 있을 때, 모든 문장에 방어적인 표현이 붙기 시작했을 때, 정확한 답이 ‘모른다’일 때 사용합니다. 근거의 등급, 거짓 정밀도, 확률을 나타내는 표현, 근거 없는 확신을 다룹니다.</p>
 </div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A claim read from a file and a claim recalled from training must not sound the same. Confidence tracks evidence, not fluency — and the strongest internal signal, how smoothly an answer arrives, is uncorrelated with truth for anything version-specific, recently changed, or particular to this project.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <code>verification-before-completion</code> owns that gate. This is how to speak when the check has not been run.</li></ul>
+<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <code>confirming-before-claiming-done</code> owns that gate. This is how to speak when the check has not been run.</li></ul>
 <h2 id="three-tiers-marked-in-the-sentence">Three tiers, marked in the sentence</h2>
 <table><thead><tr><th>Tier</th><th>What earns it</th><th>How it must read</th></tr></thead><tbody><tr><td>Verified</td><td>Observed in this session's tool output — file contents, command output, a test result, a response body</td><td>Flat assertion, source named when naming it is cheap</td></tr><tr><td>Inferred</td><td>Follows from verified facts by an argument you could write in one line</td><td>Assertion plus the inference: &quot;so X, because Y is set and Z reads it&quot;</td></tr><tr><td>Assumed</td><td>Plausible from convention, priors, or recall — including confident recall</td><td>Marked: &quot;conventionally defaults to X; not checked here&quot;</td></tr></tbody></table>
 <p>Rules that make the tiers real:</p>
@@ -163,12 +163,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">ADR이나 설계 문서, wontfix 표시, 런북의 한 줄, “Y 때문에 X는 못 한다”고 적힌 주석처럼 기록으로 남은 결정이 지금 눈앞의 일을 가로막는 것처럼 보일 때…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">아이디어나 기능 요청, 새 프로젝트가 코드를 한 줄도 쓰기 전에 승인된 설계로 바뀌어야 할 때, 특히 그 요청이 실제로 얼마나 많은 프로세스를 필요로 하는지 불분명할 때 사용합니다.</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">수정이나 기능, 테스트 스위트가 다 됐다거나 고쳐졌다거나 통과했다고 말하려 할 때, 그 주장의 힘만으로 변경 사항을 커밋하거나 푸시하거나 넘기려 할 때, subagent나 도구 자신의 성공 보고를 그대로 사실인 것처럼 되풀이하려 할 때…</span>
     </a></li>
   </ul>

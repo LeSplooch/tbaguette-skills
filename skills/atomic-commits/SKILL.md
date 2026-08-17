@@ -17,7 +17,7 @@ One commit, one decision. A commit is atomic when it builds and passes its tests
 - A revert or a backport drags in changes that were not part of the fix
 - The checkout is shared with another agent, a colleague, or a tool that writes to it on its own schedule
 - Before publishing a branch whose history is still a draft
-- Not for: what the message should say — see `writing-commit-messages`. Not for choosing merge, squash, or rebase at integration time — see `finishing-a-development-branch`.
+- Not for: what the message should say — see `writing-commit-messages`. Not for choosing merge, squash, or rebase at integration time — see `landing-a-finished-branch`.
 
 ## What "logical" means
 

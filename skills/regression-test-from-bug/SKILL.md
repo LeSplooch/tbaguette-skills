@@ -16,7 +16,7 @@ A test that has never failed for the reason it claims to guard is decoration. Th
 - A bug that was fixed before has reappeared, meaning the previous guard was absent, deleted, or scoped wrong.
 - A production incident is being written up and needs a permanent guard, not an action item.
 - Not for: turning a vague report into an on-demand failure — that is `reproducing-bugs`.
-- Not for: finding the root cause — that is `systematic-debugging`. Write this test after the cause is known, or the test pins the symptom.
+- Not for: finding the root cause — that is `diagnosing-before-fixing`. Write this test after the cause is known, or the test pins the symptom.
 
 ## The procedure
 

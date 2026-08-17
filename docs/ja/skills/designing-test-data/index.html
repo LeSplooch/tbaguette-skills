@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">最終更新</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">言語: 日本語</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">designing-test-data</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">更新</span>
   </div>
   <span class="tag skill-article__tag">テスト</span>
   <p class="lede">テストのセットアップがアサーションより長いとき、フィクスチャがファイルをまたいで共有されているとき、どのセットアップ値がテストを落としているのかわからないとき、単体では通るテストがスイートの順序で落ちるとき、あるいはファクトリ、ビルダー、オブジェクトマザー、シードデータ、ページネーションや負荷試験のための大量データを組むときに使います。デフォルト値、現実的な値と最小限の値のどちらを取るか、Unicodeやロケール依存の入力を扱います。</p>
 </div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>The setup is the other half of a test's statement. If a reader cannot tell from the setup which value makes this test different from the one above it, the test communicates nothing and will not survive its author.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Setup is longer than the assertion, or repeats across files with small edits.</li><li>A test fails and it is not obvious which of the twelve fields in the setup caused it.</li><li>Tests pass in isolation and fail in suite order, or fail only under parallel execution.</li><li>Seeding a store, queue, or file tree before exercising behavior.</li><li>Needing hundreds or millions of records for pagination, sort stability, or load shape.</li><li>Not for: the red-green-refactor loop itself, owned by <code>test-driven-development</code>.</li></ul>
+<ul><li>Setup is longer than the assertion, or repeats across files with small edits.</li><li>A test fails and it is not obvious which of the twelve fields in the setup caused it.</li><li>Tests pass in isolation and fail in suite order, or fail only under parallel execution.</li><li>Seeding a store, queue, or file tree before exercising behavior.</li><li>Needing hundreds or millions of records for pagination, sort stability, or load shape.</li><li>Not for: the red-green-refactor loop itself, owned by <code>writing-the-failing-test-first</code>.</li></ul>
 <h2 id="the-one-obvious-difference-rule">The one-obvious-difference rule</h2>
 <p>Every value in a setup is either <strong>irrelevant</strong> — and must be a default, invisible — or <strong>relevant</strong> — and must be explicit, named, and adjacent to the assertion. Two tests that differ in intent differ in exactly one visible line.</p>
 <ul><li>Setup that names more than 3 values the test never asserts on has the wrong defaults.</li><li>Give the relevant value a name that states the reason: <code>expiredYesterday</code>, <code>maxLengthTitle</code>. A bare literal makes the reader reverse-engineer the intent.</li><li>Assert only on fields the test set or the code derived. Asserting on an incidental default couples the test to the builder.</li></ul>
@@ -153,8 +153,8 @@
       <span class="see-also__name">grounding-test-doubles</span>
       <span class="see-also__summary">自分の管理下にないものに対してモック、スタブ、フェイク、フィクスチャを書くとき——HTTP API、ベンダーのSDK、キュー、デバイス、他チームのサービス——スイート全体が緑になった直後に最初の実呼び出しで落ちたとき…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/test-driven-development/">
-      <span class="see-also__name">test-driven-development</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/writing-the-failing-test-first/">
+      <span class="see-also__name">writing-the-failing-test-first</span>
       <span class="see-also__summary">新しい機能を実装するとき、バグを直すとき、あるいは既存の振る舞いを変えるとき——本番用コードを書くよりも前に使います。</span>
     </a></li>
   </ul>

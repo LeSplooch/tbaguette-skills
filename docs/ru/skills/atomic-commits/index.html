@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Обновлено</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} по местному времени · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} по местному времени · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Язык: Русский</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">atomic-commits</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Обновлён</span>
   </div>
   <span class="tag skill-article__tag">Интеграция изменений</span>
   <p class="lede">Применяйте, когда в рабочей копии накопилось несколько несвязанных изменений, когда нужно решить, что относится к одному коммиту, когда в диффе переименование или переформатирование смешано с изменением логики, когда бинарный поиск по истории упирается в коммит, слишком большой, чтобы в нём разобраться, когда откат или бэкпорт тянет за собой изменения, о которых никто не просил, когда рабочую копию с вами делит другой ИИ-агент, коллега или инструмент, который в неё пишет, или когда ревьюер не может разглядеть в диффе само изменение. Разбирает разделение по файлам и по ханкам, механические правки против смысловых, подготовку изменений к коммиту в рабочей копии, которая принадлежит не только вам, и гранулярность коммитов.</p>
 </div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>One commit, one decision. A commit is atomic when it builds and passes its tests standing alone, and reverting it removes exactly one choice from the tree — not when it is merely small.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>The checkout is shared with another agent, a colleague, or a tool that writes to it on its own schedule</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>finishing-a-development-branch</code>.</li></ul>
+<ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>The checkout is shared with another agent, a colleague, or a tool that writes to it on its own schedule</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>landing-a-finished-branch</code>.</li></ul>
 <h2 id="what-logical-means">What &quot;logical&quot; means</h2>
 <p>Three tests, ordered by how often they catch something:</p>
 <ol><li><strong>The &quot;and&quot; test.</strong> If the subject line needs &quot;and&quot;, or wants to be a bulleted list, it is two commits.</li><li><strong>The revert test.</strong> Say out loud what breaks if this commit alone is reverted. If the answer names two independent things, split it.</li><li><strong>The build test.</strong> Each commit compiles, and its tests pass, with no later commit applied.</li></ol>
@@ -155,12 +155,12 @@
       <span class="see-also__name">resolving-merge-conflicts</span>
       <span class="see-also__summary">Применяйте, когда слияние или ребейз сообщает о конфликтах…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/using-git-worktrees/">
-      <span class="see-also__name">using-git-worktrees</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/isolating-work-with-worktrees/">
+      <span class="see-also__name">isolating-work-with-worktrees</span>
       <span class="see-also__summary">Применяйте, когда начинаете работу, которая не должна затрагивать текущий checkout, перед запуском многошагового плана…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/finishing-a-development-branch/">
-      <span class="see-also__name">finishing-a-development-branch</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/landing-a-finished-branch/">
+      <span class="see-also__name">landing-a-finished-branch</span>
       <span class="see-also__summary">Применяйте, когда реализация готова, её тесты зелёные и пора решать, как ветке приземлиться; когда выбираете между локальным слиянием…</span>
     </a></li>
   </ul>

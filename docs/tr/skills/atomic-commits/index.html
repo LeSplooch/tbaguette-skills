@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Son güncelleme</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Dil: Türkçe</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">atomic-commits</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Güncellendi</span>
   </div>
   <span class="tag skill-article__tag">Değişiklikleri entegre etme</span>
   <p class="lede">Şu durumlarda kullanın: çalışma ağacında birbiriyle ilgisiz birkaç değişiklik birikmişse, tek bir commit&#x27;e neyin gireceğine karar verirken, bir diff yeniden adlandırma ya da biçim düzeltmesini mantık değişikliğiyle karıştırıyorsa, bir bisect akıl erdirilemeyecek kadar büyük bir commit&#x27;e denk geliyorsa, bir revert ya da backport kimsenin istemediği değişiklikleri de sürüklüyorsa, çalışma ağacı başka bir yapay zekâ ajanıyla, bir meslektaşınızla ya da aynı ağaca yazan bir araçla paylaşılıyorsa veya inceleyen kişi diff içinde asıl değişikliği bulamıyorsa. Dosya ve hunk bazında bölmeyi, mekanik ayrımla anlamsal ayrımı, tek başınıza sahip olmadığınız bir ağaçta değişiklikleri hazırlama alanına almayı ve commit ayrıntı düzeyini kapsar.</p>
 </div><p class="translation-banner" role="note">Bu sayfanın Türkçe çevirisi henüz yok — İngilizce sürümü gösteriliyor.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>One commit, one decision. A commit is atomic when it builds and passes its tests standing alone, and reverting it removes exactly one choice from the tree — not when it is merely small.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>The checkout is shared with another agent, a colleague, or a tool that writes to it on its own schedule</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>finishing-a-development-branch</code>.</li></ul>
+<ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>The checkout is shared with another agent, a colleague, or a tool that writes to it on its own schedule</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>landing-a-finished-branch</code>.</li></ul>
 <h2 id="what-logical-means">What &quot;logical&quot; means</h2>
 <p>Three tests, ordered by how often they catch something:</p>
 <ol><li><strong>The &quot;and&quot; test.</strong> If the subject line needs &quot;and&quot;, or wants to be a bulleted list, it is two commits.</li><li><strong>The revert test.</strong> Say out loud what breaks if this commit alone is reverted. If the answer names two independent things, split it.</li><li><strong>The build test.</strong> Each commit compiles, and its tests pass, with no later commit applied.</li></ol>
@@ -155,12 +155,12 @@
       <span class="see-also__name">resolving-merge-conflicts</span>
       <span class="see-also__summary">Şu durumlarda kullanın: bir merge ya da rebase çakışma bildirdiğinde; uzun ömürlü bir branch ayrışmışsa ve entegrasyon zahmetli…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/tr/skills/using-git-worktrees/">
-      <span class="see-also__name">using-git-worktrees</span>
+<li><a class="see-also__link" href="/tbaguette-skills/tr/skills/isolating-work-with-worktrees/">
+      <span class="see-also__name">isolating-work-with-worktrees</span>
       <span class="see-also__summary">Şu durumlarda kullanın: mevcut checkout&#x27;a dokunmaması gereken bir işe başlarken; temiz bir şekilde vazgeçmeniz gerekebilecek çok adımlı…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/tr/skills/finishing-a-development-branch/">
-      <span class="see-also__name">finishing-a-development-branch</span>
+<li><a class="see-also__link" href="/tbaguette-skills/tr/skills/landing-a-finished-branch/">
+      <span class="see-also__name">landing-a-finished-branch</span>
       <span class="see-also__summary">Şu durumlarda kullanın: uygulama tamamlanmış ve testleri yeşilken ve branch&#x27;in nasıl ineceğine karar verme zamanı geldiğinde; yerel bir…</span>
     </a></li>
   </ul>

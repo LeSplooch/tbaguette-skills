@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aktualisiert</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} Ortszeit · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} Ortszeit · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Sprache: Deutsch</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">property-based-testing</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Aktualisiert</span>
   </div>
   <span class="tag skill-article__tag">Testen</span>
   <p class="lede">Einsetzen, wenn Beispieltests nur die Fälle abdecken, an die jemand gedacht hat, beim Testen von Parsern, Serialisierern, Encodern, Sortierverfahren, Comparatoren, Arithmetik, Caches oder Datenstrukturen, wenn ein Fehler aus einer Eingabe kommt, mit der niemand gerechnet hat, wenn eine Implementierung durch eine andere ersetzt wird, die dasselbe liefern muss, oder wenn zu Fuzzing, Generatoren, Shrinking, Invarianten oder Round-Trip-Prüfungen gegriffen wird. Nicht für Verhalten, das nur als Tabelle von Fällen spezifiziert ist.</p>
 </div><p class="translation-banner" role="note">Diese Seite ist noch nicht auf Deutsch übersetzt — hier die englische Version.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>An example test asserts what one input produces. A property asserts a relationship that holds for every input, then lets a generator hunt for the counterexample. The generator finds the inputs you would never have written down — which is exactly where the bugs are.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>The specification is a <strong>rule</strong>, not a list: &quot;parsing undoes printing&quot;, &quot;the result is always sorted&quot;, &quot;cost never decreases when items are added&quot;.</li><li>Input has structure with a large or unbounded space: text, numbers, collections, trees, wire formats, dates.</li><li>Replacing, porting, or optimizing an implementation that must agree with the old one.</li><li>Handling untrusted or externally-supplied input, where &quot;never crashes&quot; is itself a requirement.</li><li>Not for: behavior whose whole specification is a table of cases (tax brackets, status-code mappings, business rules enumerated by a stakeholder). Writing a property there just restates the table twice.</li><li>Not for: the red-green-refactor cycle, owned by <code>test-driven-development</code>.</li></ul>
+<ul><li>The specification is a <strong>rule</strong>, not a list: &quot;parsing undoes printing&quot;, &quot;the result is always sorted&quot;, &quot;cost never decreases when items are added&quot;.</li><li>Input has structure with a large or unbounded space: text, numbers, collections, trees, wire formats, dates.</li><li>Replacing, porting, or optimizing an implementation that must agree with the old one.</li><li>Handling untrusted or externally-supplied input, where &quot;never crashes&quot; is itself a requirement.</li><li>Not for: behavior whose whole specification is a table of cases (tax brackets, status-code mappings, business rules enumerated by a stakeholder). Writing a property there just restates the table twice.</li><li>Not for: the red-green-refactor cycle, owned by <code>writing-the-failing-test-first</code>.</li></ul>
 <h2 id="the-property-catalogue">The property catalogue</h2>
 <table><thead><tr><th>Property</th><th>Shape</th><th>Catches</th></tr></thead><tbody><tr><td>Round-trip</td><td><code>decode(encode(x)) == x</code></td><td>Asymmetric escaping, lost precision, dropped optional fields, encoding-dependent truncation</td></tr><tr><td>Oracle / differential</td><td><code>new(x) == old(x)</code> or <code>fast(x) == naive(x)</code></td><td>Divergence during a rewrite, optimization, or port</td></tr><tr><td>Metamorphic</td><td>Relate two runs when no oracle exists: <code>search(a AND b) ⊆ search(a)</code>, <code>f(sorted(x)) == f(x)</code></td><td>Bugs in code whose correct output nobody can state</td></tr><tr><td>Invariant preservation</td><td>Every operation leaves the structure valid: balanced, sorted, sums to the ledger total</td><td>State-machine corruption after long operation sequences</td></tr><tr><td>Idempotence</td><td><code>f(f(x)) == f(x)</code></td><td>Normalizers, migrations, deduplication, retried writes, upserts</td></tr><tr><td>Commutativity / associativity</td><td>Order or grouping does not change the result</td><td>Merge, CRDT, aggregation, and parallel-reduction bugs</td></tr><tr><td>Never-crashes</td><td>No unexpected failure mode for any input</td><td>Parsers on untrusted input — lowest value per property, highest value per line</td></tr></tbody></table>
 <p>Round-trip alone cannot detect an encoder and decoder that are wrong in matching ways. Pair every round-trip property with one hand-written example asserting the actual external representation.</p>
@@ -154,8 +154,8 @@
       <span class="see-also__name">grounding-test-doubles</span>
       <span class="see-also__summary">Einsetzen, wenn ein Mock, ein Stub, ein Fake oder ein Fixture für etwas geschrieben wird…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/de/skills/test-driven-development/">
-      <span class="see-also__name">test-driven-development</span>
+<li><a class="see-also__link" href="/tbaguette-skills/de/skills/writing-the-failing-test-first/">
+      <span class="see-also__name">writing-the-failing-test-first</span>
       <span class="see-also__summary">Einsetzen, wenn ein neues Feature implementiert…</span>
     </a></li>
   </ul>

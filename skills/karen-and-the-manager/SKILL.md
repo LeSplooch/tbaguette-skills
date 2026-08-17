@@ -19,7 +19,7 @@ permits is what surfaces the defects that pass waves through.
 - Work is about to be marked done, shipped, or handed off.
 - `red-teaming-your-own-work` or a code review just came back clean — that is exactly
   when complacency is highest, not evidence there is nothing left to find.
-- Not for mid-implementation debugging (`systematic-debugging` owns that) or first-pass
+- Not for mid-implementation debugging (`diagnosing-before-fixing` owns that) or first-pass
   design critique (`reviewing-code-deeply`, or formidable's `critique`/`audit`, own
   that). This runs last, against a result that already looks finished.
 - Pairs with `knowing-when-to-stop`, invoked immediately after. Karen has no stopping

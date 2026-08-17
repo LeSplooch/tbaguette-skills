@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">最終更新</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">言語: 日本語</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">karen-and-the-manager</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">更新</span>
   </div>
   <span class="tag skill-article__tag">判断力とメタスキル</span>
   <p class="lede">ある仕事が完了・出荷・引き渡しと呼ばれようとしていて、それを作った本人にしか見られていないとき、レッドチーム的な見直しやコードレビューがちょうど何事もなく通って、そのこと自体が怪しく思えるとき、磨き込みが「まあ十分」で通され続けているとき、あるいは欠陥を捕まえるために残された最強の道具が、どうやっても満足しないレビュアーであるときに使います。knowing-when-to-stopと組み合わせ、すぐ後に呼び出して結果に歯止めをかけます。</p>
 </div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A persona-forced adversarial pass for the moment a normal review already came back clean. Two escalating roles: Karen, who is never satisfied and complains about everything down to the smallest detail, and the manager she demands to see, who separately decides which of her complaints are worth acting on. The persona is not decoration — exaggerating the critic's standards past what a polite, calibrated pass permits is what surfaces the defects that pass waves through.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Work is about to be marked done, shipped, or handed off.</li><li><code>red-teaming-your-own-work</code> or a code review just came back clean — that is exactly when complacency is highest, not evidence there is nothing left to find.</li><li>Not for mid-implementation debugging (<code>systematic-debugging</code> owns that) or first-pass design critique (<code>reviewing-code-deeply</code>, or formidable's <code>critique</code>/<code>audit</code>, own that). This runs last, against a result that already looks finished.</li><li>Pairs with <code>knowing-when-to-stop</code>, invoked immediately after. Karen has no stopping instinct by design — that is supplied by the manager's triage and by the paired skill, not by Karen holding back.</li></ul>
+<ul><li>Work is about to be marked done, shipped, or handed off.</li><li><code>red-teaming-your-own-work</code> or a code review just came back clean — that is exactly when complacency is highest, not evidence there is nothing left to find.</li><li>Not for mid-implementation debugging (<code>diagnosing-before-fixing</code> owns that) or first-pass design critique (<code>reviewing-code-deeply</code>, or formidable's <code>critique</code>/<code>audit</code>, own that). This runs last, against a result that already looks finished.</li><li>Pairs with <code>knowing-when-to-stop</code>, invoked immediately after. Karen has no stopping instinct by design — that is supplied by the manager's triage and by the paired skill, not by Karen holding back.</li></ul>
 <h2 id="karens-pass">Karen's pass</h2>
 <p>Go through the finished result as the most dissatisfied stakeholder who will ever see it. Nothing is beneath comment: spacing off by a hair, a label that is technically correct but not the clearest word available, an edge case that &quot;works&quot; but looks improvised, one place that is inconsistent with everywhere else, a default that was merely acceptable rather than actually decided. Every complaint names a real, specific location — not &quot;this could be better,&quot; but <em>&quot;the confirm button here says 'OK.' Three other confirm actions on this same result say the actual consequence. Now I don't trust that anything here was decided on purpose instead of typed first and left.&quot;</em> <strong>Fix:</strong> rename to match the other three, then check whether any of those three are the odd one out instead.</p>
 <p>No complaint is too small to write down, and the pass is failed if it produces fewer than ten. Immediately under each complaint goes its concrete fix — Karen is not useful if she stays a feeling.</p>
@@ -160,12 +160,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">記録された決定——ADR、設計文書、wontfix、ランブックの1行、あるいは「YだからXはできない」と書かれたコメント——が目の前の仕事を封じているように見えるとき、ある制約がいつのものとも示されないまま決着済みとして引かれるとき…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">アイデアや機能要望、新しいプロジェクトが、コードを書き始める前に承認済みの設計にならなければならないとき、とりわけそのリクエストが実際どれだけのプロセスを必要とするのか判然としないときに使います。</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">修正や機能、テストスイートが完了した・直った・通ったと言おうとしているとき、その主張の強さだけを根拠に変更がコミットされ、プッシュされ、あるいは引き渡されようとしているとき、subagentやツール自身の成功報告がそのまま事実として繰り返されようとしているとき…</span>
     </a></li>
   </ul>

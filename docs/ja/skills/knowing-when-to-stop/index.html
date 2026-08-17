@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">最終更新</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">言語: 日本語</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">knowing-when-to-stop</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">更新</span>
   </div>
   <span class="tag skill-article__tag">判断力とメタスキル</span>
   <p class="lede">仕事が終わったように見えていて、次の一手がもう一度の磨き込み・リファクタリング・確認でしかないとき、自己レビューのループを何周も回して見つかるものが小さくなり続けているとき、最初に緑になった瞬間にすぐ終わりにしたくなるとき、同じ種類の修正が何度も続けて失敗しているとき、あるいは残った仕事が名指しされないまま置き去りにされようとしているときに使います。逓減する効果、過剰な作り込み、回数を区切った見直し、そして明示的な引き継ぎを扱います。</p>
 </div><p class="translation-banner" role="note">このページはまだ日本語に翻訳されていません——英語版を表示しています。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Stopping early ships something that merely looks unbroken; stopping late spends the user's budget on polish nobody asked for. Both come from the same omission — no finish line defined before the last mile started.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>The work looks done and the next action would be another pass, polish, or check</li><li>A verification loop has run several times and the findings are getting smaller</li><li>The first green result arrived and finishing right now is tempting</li><li>Work will be left unfinished and is about to go unnamed</li><li>The same class of fix has failed several times in a row</li><li>Not for: whether a specific claim has evidence behind it — <code>verification-before-completion</code> owns that gate. This owns how many passes to run and what finished means.</li><li>Paired with <code>karen-and-the-manager</code>: that skill is built to never run out of complaints on purpose; this one decides how many of them are worth another pass.</li></ul>
+<ul><li>The work looks done and the next action would be another pass, polish, or check</li><li>A verification loop has run several times and the findings are getting smaller</li><li>The first green result arrived and finishing right now is tempting</li><li>Work will be left unfinished and is about to go unnamed</li><li>The same class of fix has failed several times in a row</li><li>Not for: whether a specific claim has evidence behind it — <code>confirming-before-claiming-done</code> owns that gate. This owns how many passes to run and what finished means.</li><li>Paired with <code>karen-and-the-manager</code>: that skill is built to never run out of complaints on purpose; this one decides how many of them are worth another pass.</li></ul>
 <h2 id="define-done-before-the-last-mile">Define done before the last mile</h2>
 <p>Done is: every item in the request demonstrably works, on the inputs the user actually has, and everything remaining is named. Write that sentence at the start; the task ends when it is true.</p>
 <p>Without it, done degrades into one of two defaults — the first thing tried passed, or you ran out of obvious things to do — and neither has anything to do with the request.</p>
@@ -169,12 +169,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">記録された決定——ADR、設計文書、wontfix、ランブックの1行、あるいは「YだからXはできない」と書かれたコメント——が目の前の仕事を封じているように見えるとき、ある制約がいつのものとも示されないまま決着済みとして引かれるとき…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">アイデアや機能要望、新しいプロジェクトが、コードを書き始める前に承認済みの設計にならなければならないとき、とりわけそのリクエストが実際どれだけのプロセスを必要とするのか判然としないときに使います。</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">修正や機能、テストスイートが完了した・直った・通ったと言おうとしているとき、その主張の強さだけを根拠に変更がコミットされ、プッシュされ、あるいは引き渡されようとしているとき、subagentやツール自身の成功報告がそのまま事実として繰り返されようとしているとき…</span>
     </a></li>
   </ul>

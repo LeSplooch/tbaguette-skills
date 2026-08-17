@@ -15,7 +15,7 @@ A conflict is two answers to one question. Resolving it means answering the ques
 - A clean merge was followed by a broken build, or by behavior nobody intended
 - The same region conflicts repeatedly through a rebase
 - One file conflicts on every integration, regardless of who is working
-- Not for: choosing merge, rebase, or squash as an integration strategy — see `finishing-a-development-branch`. Not for isolating branches so they stop colliding — see `using-git-worktrees`.
+- Not for: choosing merge, rebase, or squash as an integration strategy — see `landing-a-finished-branch`. Not for isolating branches so they stop colliding — see `isolating-work-with-worktrees`.
 
 ## Understand both intents before touching a marker
 

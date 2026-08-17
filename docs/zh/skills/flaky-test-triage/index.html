@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">flaky-test-triage</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">已更新</span>
   </div>
   <span class="tag skill-article__tag">测试</span>
   <p class="lede">在以下情况下使用：一个测试重跑就过、只在 CI 里失败、只有整套跑才失败、过了午夜或跨夏令时切换才失败、并行执行时失败，或者在负载高的机器上失败；又或者有人提议用重试、跳过或加长超时把构建刷绿。涵盖间歇性失败、顺序依赖、共享状态、竞态，以及把不稳定的测试隔离出来。</p>
 </div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A flaky test is a defect report whose owner has not been determined yet. The defect is in the test roughly half the time and in the product the other half — and the half that lives in the product is a race that users are already hitting at the same rate the test fails.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A test failed, was rerun, and passed, with no code change in between.</li><li>A test passes alone and fails in the suite, or passes in the suite and fails alone.</li><li>Failures cluster on CI, on one worker, at a time of day, or after a DST change.</li><li>Someone is about to add a retry, a skip marker, or a larger timeout.</li><li>The suite is rerun as a matter of routine, and nobody reads the first result.</li><li>Not for: a test that fails every time — that is a deterministic bug, owned by <code>systematic-debugging</code>.</li></ul>
+<ul><li>A test failed, was rerun, and passed, with no code change in between.</li><li>A test passes alone and fails in the suite, or passes in the suite and fails alone.</li><li>Failures cluster on CI, on one worker, at a time of day, or after a DST change.</li><li>Someone is about to add a retry, a skip marker, or a larger timeout.</li><li>The suite is rerun as a matter of routine, and nobody reads the first result.</li><li>Not for: a test that fails every time — that is a deterministic bug, owned by <code>diagnosing-before-fixing</code>.</li></ul>
 <h2 id="the-arithmetic-that-forces-the-issue">The arithmetic that forces the issue</h2>
 <p>Independent per-test reliability compounds. At 99.9% per test, a 500-test suite is green 61% of the time; a 2,000-test suite, 13%. To keep a 2,000-test suite green on 95% of runs, each test must be 99.997% reliable. There is no per-test flake rate that is acceptable at scale, which is why &quot;it only fails 1 in 50&quot; is not a defense.</p>
 <h2 id="cause-taxonomy">Cause taxonomy</h2>
@@ -156,8 +156,8 @@
       <span class="see-also__name">grounding-test-doubles</span>
       <span class="see-also__summary">在以下情况下使用：要给一个自己控制不了的东西写 mock、stub、fake 或 fixture——一个 HTTP API、一个第三方 SDK、一个队列、一台设备、别的团队的服务；整套测试全绿之后，第一次真实调用就挂了…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/test-driven-development/">
-      <span class="see-also__name">test-driven-development</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/writing-the-failing-test-first/">
+      <span class="see-also__name">writing-the-failing-test-first</span>
       <span class="see-also__summary">在以下情况下使用：要实现任何新功能、修复一个 bug，或者改变已有的行为——都在写下任何生产代码之前使用。</span>
     </a></li>
   </ul>

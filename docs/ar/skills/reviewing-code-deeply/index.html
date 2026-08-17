@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">آخر تحديث</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} بالتوقيت المحلي · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} بالتوقيت المحلي · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">اللغة: العربية</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">reviewing-code-deeply</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">مُحدَّثة</span>
   </div>
   <span class="tag skill-article__tag">التواصل</span>
   <p class="lede">استخدِمها عند مراجعة تغيير كتبه غيرك — طلب سحب أو رقعة أو diff أو سلسلة كوميتات — وتقرير ما الذي يستحقّ تعليقًا، وهل تحجب الدمج أم توافق، وكيف تصوغ ملاحظة. وتصلح كذلك عندما تولّد المراجعة عشرات التعليقات، وعندما يكون diff أكبر من أن يُراجَع بعناية، وعندما تظلّ المراجعات تمرّر كودًا ينكسر لاحقًا. تتناول ترتيب أولويات المراجعة، ومراجعة الاختبارات، واكتشاف الحالات الغائبة، والحجب في مقابل الملاحظة غير الحاجبة.</p>
 </div><p class="translation-banner" role="note">لم تُترجَم هذه الصفحة إلى العربية بعد — هذه هي النسخة الإنجليزية.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Review in strict priority order and stop when your attention is spent. Comments about naming, spent on a diff whose failure handling is wrong, are worse than no review at all — they signal the change was examined when it was not.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Reviewing a pull request, patch series, or diff written by someone else</li><li>Deciding whether a concern blocks a merge</li><li>A review has produced more than a dozen comments and none of them are about behavior</li><li>Reviewed code shipped a defect and the review process needs a look</li><li><strong>Not for:</strong> asking someone else to review your work → <code>requesting-code-review</code>. Responding to feedback on your own change → <code>receiving-code-review</code>.</li></ul>
+<ul><li>Reviewing a pull request, patch series, or diff written by someone else</li><li>Deciding whether a concern blocks a merge</li><li>A review has produced more than a dozen comments and none of them are about behavior</li><li>Reviewed code shipped a defect and the review process needs a look</li><li><strong>Not for:</strong> asking someone else to review your work → <code>handing-off-for-review</code>. Responding to feedback on your own change → <code>verifying-review-feedback</code>.</li></ul>
 <h2 id="priority-order-descend-only-when-the-level-above-is-clear">Priority order — descend only when the level above is clear</h2>
 <table><thead><tr><th>#</th><th>Level</th><th>Question</th><th>Cost of never reaching it</th></tr></thead><tbody><tr><td>1</td><td>Correctness</td><td>Does it do what the change claims, at the boundaries and on the failure paths?</td><td>The review had no value</td></tr><tr><td>2</td><td>Security &amp; data safety</td><td>Untrusted input, authorization at every entry, secrets, destructive or irreversible operations, migrations that cannot roll back, personal data in logs</td><td>The review had negative value</td></tr><tr><td>3</td><td>Design &amp; boundaries</td><td>Is this the right seam? Does it leak state, create a cycle, or make the next change harder?</td><td>The cost arrives in six months</td></tr><tr><td>4</td><td>Readability &amp; naming</td><td>Will the next reader understand this without the author present?</td><td>Mild, permanent</td></tr><tr><td>5</td><td>Style &amp; formatting</td><td>—</td><td>None; this is a tool's job</td></tr></tbody></table>
 <p>Level 5 is never a human's work. A comment about formatting is a bug report against the CI configuration, and should be filed as one.</p>
@@ -154,20 +154,20 @@
       <span class="see-also__name">explaining-technical-work</span>
       <span class="see-also__summary">استخدِمها عند كتابة شرح لعمل تقنيّ موجَّه إلى شخص آخر — تحديث حالة، أو خلاصة لتغيير أو لتحقيق، أو تسليم عمل، أو تصعيد، أو جولة في تصميم…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ar/skills/requesting-code-review/">
-      <span class="see-also__name">requesting-code-review</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ar/skills/handing-off-for-review/">
+      <span class="see-also__name">handing-off-for-review</span>
       <span class="see-also__summary">استخدِمها عند إنهاء مهمة أو ميزة والتوشُّك على تسليمها قبل الدمج، وعندما تكون عالقًا وقد يساعد منظور جديد…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ar/skills/receiving-code-review/">
-      <span class="see-also__name">receiving-code-review</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ar/skills/verifying-review-feedback/">
+      <span class="see-also__name">verifying-review-feedback</span>
       <span class="see-also__summary">استخدِمها عندما تصل ملاحظات مراجعة الكود إلى تغييرك الخاص — من شخص أو bot أو مراجِع آليّ — قبل أن يُنفَّذ أيّ منها…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ar/skills/writing-plans/">
-      <span class="see-also__name">writing-plans</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ar/skills/structuring-an-implementation-plan/">
+      <span class="see-also__name">structuring-an-implementation-plan</span>
       <span class="see-also__summary">استخدِمها عندما تستقرّ spec أو مجموعة متطلبات ويكون الخطوة التالية تحويلها إلى خطة تنفيذ متعددة الخطوات، قبل أن تبدأ أيّ تغييرات في الكود.</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ar/skills/executing-plans/">
-      <span class="see-also__name">executing-plans</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ar/skills/working-a-plan-task-by-task/">
+      <span class="see-also__name">working-a-plan-task-by-task</span>
       <span class="see-also__summary">استخدِمها عندما تكون خطة مكتوبة جاهزة للتنفيذ المباشر ضمن الجلسة الحالية — سواء كُتبت سابقًا في هذه الجلسة نفسها أو سُلِّمت وهي مكتوبة…</span>
     </a></li>
   </ul>

@@ -17,7 +17,7 @@ Every diagnostic is a change to production. Budget its cost, bound its scope, an
 - Extracting logs, dumps, or samples that will contain real user data
 - During an incident, when someone proposes a diagnostic under time pressure
 
-Not for: reasoning about the defect once you have the evidence (`systematic-debugging`), or getting a failure to happen on demand elsewhere (`reproducing-bugs`).
+Not for: reasoning about the defect once you have the evidence (`diagnosing-before-fixing`), or getting a failure to happen on demand elsewhere (`reproducing-bugs`).
 
 ## The ladder
 

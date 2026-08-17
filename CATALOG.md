@@ -34,8 +34,8 @@ TBaguette skill hands off to a neighbour.
 | `knowing-when-to-stop` | Diminishing returns, gold-plating, bounded passes, explicit handoff |
 | `karen-and-the-manager` | Persona-forced finishing pass: never-satisfied critique, then a triage pass on it. Invoke right after `knowing-when-to-stop` |
 | `revalidating-decisions` | Separating a decision's principle from its premise; which premises expire with no commit; overturning an old call on evidence |
-| `brainstorming` | Turning an idea into an approved design before any code; one clarifying question at a time |
-| `verification-before-completion` | Evidence before claiming done — running the check that proves it, not trusting a stale run or a subagent's report |
+| `scoping-before-building` | Turning an idea into an approved design before any code; one clarifying question at a time |
+| `confirming-before-claiming-done` | Evidence before claiming done — running the check that proves it, not trusting a stale run or a subagent's report |
 
 ## Reading code
 
@@ -62,8 +62,8 @@ TBaguette skill hands off to a neighbour.
 | `deleting-code` | Proving code is dead; deprecation with a deadline |
 | `feature-flagging` | The four flag types, flag debt, combinatorics |
 | `resolving-merge-conflicts` | Resolving by intent; semantic conflicts that never conflict textually |
-| `using-git-worktrees` | Judging whether isolation is worth its cost; native isolated-workspace tool vs. a manual git worktree |
-| `finishing-a-development-branch` | Merge, rebase, or squash, and what each does to history; branch and worktree cleanup |
+| `isolating-work-with-worktrees` | Judging whether isolation is worth its cost; native isolated-workspace tool vs. a manual git worktree |
+| `landing-a-finished-branch` | Merge, rebase, or squash, and what each does to history; branch and worktree cleanup |
 
 ## Testing
 
@@ -77,7 +77,7 @@ TBaguette skill hands off to a neighbour.
 | `characterization-testing` | Pinning legacy behavior before changing it |
 | `choosing-test-scope` | Unit, integration, contract, end-to-end — and what only each catches |
 | `grounding-test-doubles` | Fixture provenance; capture over compose; one live test per integration; unrecognized shapes must raise |
-| `test-driven-development` | The red-green-refactor cycle itself — failing test first, minimal code, refactor on green |
+| `writing-the-failing-test-first` | The red-green-refactor cycle itself — failing test first, minimal code, refactor on green |
 
 ## Debugging and performance
 
@@ -90,7 +90,7 @@ TBaguette skill hands off to a neighbour.
 | `observing-production-safely` | Diagnosing live systems without becoming the incident |
 | `performance-profiling` | Baselines, percentiles, flame graphs, benchmark traps |
 | `finding-resource-leaks` | Growth over time; retention vs allocation; error-path leaks |
-| `systematic-debugging` | The general hypothesis-driven loop; tracing a symptom back to where it actually originates |
+| `diagnosing-before-fixing` | The general hypothesis-driven loop; tracing a symptom back to where it actually originates |
 
 ## Designing systems
 
@@ -132,10 +132,10 @@ TBaguette skill hands off to a neighbour.
 | `writing-postmortems` | Blameless in mechanism; contributing factors over root cause |
 | `reviewing-code-deeply` | Reviewing in priority order; finding what is absent |
 | `explaining-technical-work` | Conclusion first; altitude chosen by what the reader will do |
-| `requesting-code-review` | What a reviewer needs up front; when a request is premature |
-| `receiving-code-review` | Verifying feedback before acting on it; fix vs. pushback vs. clarifying question |
-| `writing-plans` | Turning a settled spec into bite-sized, placeholder-free tasks |
-| `executing-plans` | Executing an already-written plan inline, in the current session |
+| `handing-off-for-review` | What a reviewer needs up front; when a request is premature |
+| `verifying-review-feedback` | Verifying feedback before acting on it; fix vs. pushback vs. clarifying question |
+| `structuring-an-implementation-plan` | Turning a settled spec into bite-sized, placeholder-free tasks |
+| `working-a-plan-task-by-task` | Executing an already-written plan inline, in the current session |
 
 ## Environment and tooling
 
@@ -147,7 +147,7 @@ TBaguette skill hands off to a neighbour.
 | `upgrading-dependencies` | Routine and cheap, or one forced upgrade during an incident |
 | `keeping-tbaguette-current` | Checks the installed TBaguette plugin against the published repo, updates it if it can fast-forward cleanly, keeps a local changelog |
 | `automating-repetition` | When a manual sequence should become a tool, and when it should not |
-| `dispatching-parallel-agents` | Telling genuine independence from work that only looks independent; avoiding collisions |
-| `subagent-driven-development` | Fresh subagent per task, gated by a two-stage review, with a bounded fix loop |
-| `writing-skills` | What makes a skill worth writing, the frontmatter register, testing it before it ships |
+| `fanning-out-independent-work` | Telling genuine independence from work that only looks independent; avoiding collisions |
+| `delegating-tasks-with-review-gates` | Fresh subagent per task, gated by a two-stage review, with a bounded fix loop |
+| `authoring-a-new-skill` | What makes a skill worth writing, the frontmatter register, testing it before it ships |
 | `play-console` † | Google Play Console workflows |

@@ -17,7 +17,7 @@ Until the failure happens on demand, every fix is a guess and every claim of "fi
 - It happens in production, on one customer's account, or on one device only
 - Someone is about to close a ticket as "cannot reproduce"
 
-Not for: the hypothesis loop once you can trigger it (`systematic-debugging`), or finding which change introduced it once you have a reliable test (`bisecting-failures`).
+Not for: the hypothesis loop once you can trigger it (`diagnosing-before-fixing`), or finding which change introduced it once you have a reliable test (`bisecting-failures`).
 
 ## The six variables reports omit
 

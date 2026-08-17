@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">reviewing-code-deeply</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">已更新</span>
   </div>
   <span class="tag skill-article__tag">沟通</span>
   <p class="lede">在以下情况下使用：要评审别人的改动——一个 pull request、一份补丁、一个 diff 或一串提交——判断哪些地方值得留言、该拦下还是该批准，以及一条疑虑要怎么措辞。也适用于一次评审已经留了几十条评论、一个 diff 大到没法认真看完，或者评审一次次放过了后来出事的代码。涵盖评审的优先顺序、怎么评审测试、找出缺失的用例，以及哪些意见该拦人、哪些不该。</p>
 </div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Review in strict priority order and stop when your attention is spent. Comments about naming, spent on a diff whose failure handling is wrong, are worse than no review at all — they signal the change was examined when it was not.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Reviewing a pull request, patch series, or diff written by someone else</li><li>Deciding whether a concern blocks a merge</li><li>A review has produced more than a dozen comments and none of them are about behavior</li><li>Reviewed code shipped a defect and the review process needs a look</li><li><strong>Not for:</strong> asking someone else to review your work → <code>requesting-code-review</code>. Responding to feedback on your own change → <code>receiving-code-review</code>.</li></ul>
+<ul><li>Reviewing a pull request, patch series, or diff written by someone else</li><li>Deciding whether a concern blocks a merge</li><li>A review has produced more than a dozen comments and none of them are about behavior</li><li>Reviewed code shipped a defect and the review process needs a look</li><li><strong>Not for:</strong> asking someone else to review your work → <code>handing-off-for-review</code>. Responding to feedback on your own change → <code>verifying-review-feedback</code>.</li></ul>
 <h2 id="priority-order-descend-only-when-the-level-above-is-clear">Priority order — descend only when the level above is clear</h2>
 <table><thead><tr><th>#</th><th>Level</th><th>Question</th><th>Cost of never reaching it</th></tr></thead><tbody><tr><td>1</td><td>Correctness</td><td>Does it do what the change claims, at the boundaries and on the failure paths?</td><td>The review had no value</td></tr><tr><td>2</td><td>Security &amp; data safety</td><td>Untrusted input, authorization at every entry, secrets, destructive or irreversible operations, migrations that cannot roll back, personal data in logs</td><td>The review had negative value</td></tr><tr><td>3</td><td>Design &amp; boundaries</td><td>Is this the right seam? Does it leak state, create a cycle, or make the next change harder?</td><td>The cost arrives in six months</td></tr><tr><td>4</td><td>Readability &amp; naming</td><td>Will the next reader understand this without the author present?</td><td>Mild, permanent</td></tr><tr><td>5</td><td>Style &amp; formatting</td><td>—</td><td>None; this is a tool's job</td></tr></tbody></table>
 <p>Level 5 is never a human's work. A comment about formatting is a bug report against the CI configuration, and should be filed as one.</p>
@@ -154,20 +154,20 @@
       <span class="see-also__name">explaining-technical-work</span>
       <span class="see-also__summary">在以下情况下使用：要把一项技术工作解释给另一个人听——进度同步、一次改动或一次排查的总结、交接、上报、设计走查，或者一条建议。</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/requesting-code-review/">
-      <span class="see-also__name">requesting-code-review</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/handing-off-for-review/">
+      <span class="see-also__name">handing-off-for-review</span>
       <span class="see-also__summary">在以下情况下使用：完成了一项任务或功能，正要在合并之前把它交出去；卡住了，一个新鲜的视角会有帮助；在一次有风险的重构之前先立一个基准；或者修完一个复杂或者微妙的 bug 之后。</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/receiving-code-review/">
-      <span class="see-also__name">receiving-code-review</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/verifying-review-feedback/">
+      <span class="see-also__name">verifying-review-feedback</span>
       <span class="see-also__summary">在以下情况下使用：代码评审的反馈落到了你自己的改动上——不管是来自一个人、一个 bot，还是一个自动化评审工具——而其中还没有任何一条被落实；尤其是在一条建议含糊不清、说得比证据能撑起来的更笃定，或者跟代码实际的行为对不上号的时候。</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/writing-plans/">
-      <span class="see-also__name">writing-plans</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/structuring-an-implementation-plan/">
+      <span class="see-also__name">structuring-an-implementation-plan</span>
       <span class="see-also__summary">在以下情况下使用：一份 spec 或一套需求已经定下来，下一步是把它变成一份多步骤的实施计划，且都在任何代码改动开始之前。</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/executing-plans/">
-      <span class="see-also__name">executing-plans</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/working-a-plan-task-by-task/">
+      <span class="see-also__name">working-a-plan-task-by-task</span>
       <span class="see-also__summary">在以下情况下使用：一份写好的计划已经可以在当前会话里内联执行——不管它是在这个会话里早些时候写的，还是被原封不动地交接过来的——或者在执行一份计划执行到一半时，需要防止任务顺序和验证漂移走样。</span>
     </a></li>
   </ul>

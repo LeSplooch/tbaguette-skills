@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aktualisiert</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} Ortszeit · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} Ortszeit · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Sprache: Deutsch</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">atomic-commits</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Aktualisiert</span>
   </div>
   <span class="tag skill-article__tag">Änderungen einbringen</span>
   <p class="lede">Einsetzen, wenn ein Arbeitsverzeichnis mehrere unzusammenhängende Änderungen angesammelt hat, wenn zu entscheiden ist, was in einen Commit gehört, wenn ein Diff eine Umbenennung oder eine Umformatierung mit einer Logikänderung vermischt, wenn ein Bisect auf einem Commit landet, der zu groß ist, um ihn noch zu durchschauen, wenn ein Revert oder ein Backport Änderungen mitschleppt, die niemand verlangt hat, wenn das Arbeitsverzeichnis mit einem anderen KI-Agenten, einem Kollegen oder einem Werkzeug geteilt wird, das ebenfalls hineinschreibt, oder wenn ein Reviewer die eigentliche Änderung im Diff nicht findet. Behandelt das Aufteilen nach Datei und nach Hunk, die Trennung von Mechanischem und Semantischem, das Stagen in einem Arbeitsverzeichnis, das einem nicht allein gehört, sowie die Granularität von Commits.</p>
 </div><p class="translation-banner" role="note">Diese Seite ist noch nicht auf Deutsch übersetzt — hier die englische Version.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>One commit, one decision. A commit is atomic when it builds and passes its tests standing alone, and reverting it removes exactly one choice from the tree — not when it is merely small.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>The checkout is shared with another agent, a colleague, or a tool that writes to it on its own schedule</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>finishing-a-development-branch</code>.</li></ul>
+<ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>The checkout is shared with another agent, a colleague, or a tool that writes to it on its own schedule</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>landing-a-finished-branch</code>.</li></ul>
 <h2 id="what-logical-means">What &quot;logical&quot; means</h2>
 <p>Three tests, ordered by how often they catch something:</p>
 <ol><li><strong>The &quot;and&quot; test.</strong> If the subject line needs &quot;and&quot;, or wants to be a bulleted list, it is two commits.</li><li><strong>The revert test.</strong> Say out loud what breaks if this commit alone is reverted. If the answer names two independent things, split it.</li><li><strong>The build test.</strong> Each commit compiles, and its tests pass, with no later commit applied.</li></ol>
@@ -155,12 +155,12 @@
       <span class="see-also__name">resolving-merge-conflicts</span>
       <span class="see-also__summary">Einsetzen, wenn ein Merge oder Rebase Konflikte meldet…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/de/skills/using-git-worktrees/">
-      <span class="see-also__name">using-git-worktrees</span>
+<li><a class="see-also__link" href="/tbaguette-skills/de/skills/isolating-work-with-worktrees/">
+      <span class="see-also__name">isolating-work-with-worktrees</span>
       <span class="see-also__summary">Einsetzen, wenn Arbeit beginnt, die das aktuelle Checkout nicht anfassen sollte, bevor ein mehrstufiger Plan läuft…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/de/skills/finishing-a-development-branch/">
-      <span class="see-also__name">finishing-a-development-branch</span>
+<li><a class="see-also__link" href="/tbaguette-skills/de/skills/landing-a-finished-branch/">
+      <span class="see-also__name">landing-a-finished-branch</span>
       <span class="see-also__summary">Einsetzen, wenn die Implementierung fertig ist, ihre Tests grün sind und zu entscheiden ist…</span>
     </a></li>
   </ul>

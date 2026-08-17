@@ -16,7 +16,7 @@ A flaky test is a defect report whose owner has not been determined yet. The def
 - Failures cluster on CI, on one worker, at a time of day, or after a DST change.
 - Someone is about to add a retry, a skip marker, or a larger timeout.
 - The suite is rerun as a matter of routine, and nobody reads the first result.
-- Not for: a test that fails every time — that is a deterministic bug, owned by `systematic-debugging`.
+- Not for: a test that fails every time — that is a deterministic bug, owned by `diagnosing-before-fixing`.
 
 ## The arithmetic that forces the issue
 

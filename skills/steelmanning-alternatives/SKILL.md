@@ -15,7 +15,7 @@ The first workable idea gets adopted, and everything after it becomes that idea'
 - A plan or design presents one option, or presents three that share a shape
 - An alternative was dismissed in a single clause
 - The chosen approach is fighting the problem — special cases are accumulating
-- Not for: open-ended exploration of what to build alongside the user, which is `brainstorming`. This applies once a direction has been taken, explicitly or by default.
+- Not for: open-ended exploration of what to build alongside the user, which is `scoping-before-building`. This applies once a direction has been taken, explicitly or by default.
 
 ## The lock-in mechanic
 

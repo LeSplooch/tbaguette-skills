@@ -1,5 +1,12 @@
 # Superpowers parity — design
 
+> **Note (2026-08-18):** the 13 skills named throughout this document by
+> their original superpowers-identical slugs (`brainstorming`,
+> `writing-plans`, etc.) were renamed shortly after shipping so they don't
+> read as copies — see `CATALOG.md` for the live names. This document is
+> the historical record of what was decided at the time and is left
+> unchanged.
+
 ## Goal
 
 Two independent outcomes, shipped separately:

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Atualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} horário local · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} horário local · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Português</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">red-teaming-your-own-work</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Atualizada</span>
   </div>
   <span class="tag skill-article__tag">Julgamento e meta</span>
   <p class="lede">Use quando uma mudança, um plano, um design, uma recomendação ou uma resposta está pronta e só foi examinada por quem a produziu, quando nada parece errado e nada foi tentado para fazê-la parecer errada, antes de entregar um trabalho sobre o qual alguém vai agir, ou depois de uma entrega anterior ter voltado com um defeito que uma única passada cética teria pegado. Trata da autorrevisão em chave adversarial, das listas de ataque e das passadas de revisão com número limitado.</p>
 </div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Rereading work confirms it; attacking it finds defects. Spend one bounded pass before delivery assuming the work is wrong and hunting for where — the productive question is not whether a defect exists but where it is hiding.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A change, plan, recommendation, or answer is finished and only its author has seen it</li><li>Nothing appears wrong, and nothing has been attempted to make it appear wrong</li><li>Before handing off a change set, a design, or a decision someone will act on</li><li>A previous delivery came back with a defect one skeptical pass would have caught</li><li>Not for: confirming a claim has evidence behind it (<code>verification-before-completion</code>), or diagnosing a failure you already know about (<code>systematic-debugging</code>). This is for work that currently looks correct.</li></ul>
+<ul><li>A change, plan, recommendation, or answer is finished and only its author has seen it</li><li>Nothing appears wrong, and nothing has been attempted to make it appear wrong</li><li>Before handing off a change set, a design, or a decision someone will act on</li><li>A previous delivery came back with a defect one skeptical pass would have caught</li><li>Not for: confirming a claim has evidence behind it (<code>confirming-before-claiming-done</code>), or diagnosing a failure you already know about (<code>diagnosing-before-fixing</code>). This is for work that currently looks correct.</li></ul>
 <h2 id="the-stance">The stance</h2>
 <p>&quot;Is this right?&quot; is answered by the same reasoning that produced the work, and it returns yes. &quot;If this is wrong, where is it wrong?&quot; forces the generation of candidate locations, which is a different task with a different output. Commit to finding at least one real defect; a pass that ends with none, and with no surprise about that, was a reread.</p>
 <h2 id="the-attack-list">The attack list</h2>
@@ -166,12 +166,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">Use quando uma decisão registrada — um ADR, um documento de design, um wontfix…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/pt/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/pt/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">Use quando uma ideia, um pedido de funcionalidade ou um novo projeto precisa virar um design aprovado antes de qualquer código ser escrito…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/pt/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/pt/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">Use quando estiver prestes a dizer que um fix, uma funcionalidade ou uma suíte de testes está pronta…</span>
     </a></li>
   </ul>

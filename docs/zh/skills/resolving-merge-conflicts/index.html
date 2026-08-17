@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">resolving-merge-conflicts</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">已更新</span>
   </div>
   <span class="tag skill-article__tag">变更落地</span>
   <p class="lede">在以下情况下使用：一次合并或变基报出了冲突；一个长期分支已经跑偏，看着就不好合；合并在文本上干干净净，之后构建或行为却坏了；同一个冲突在变基的每一个提交上反复出现；某个文件每次集成都要冲突一遍；或者要判断是该中止重来，还是硬着头皮把这次解决推完。</p>
 </div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A conflict is two answers to one question. Resolving it means answering the question, not choosing a hunk — and the result compiling proves nothing at all, because the merged tree is a version of the code that has never existed and has never been run.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A merge or rebase stopped with conflicts</li><li>A clean merge was followed by a broken build, or by behavior nobody intended</li><li>The same region conflicts repeatedly through a rebase</li><li>One file conflicts on every integration, regardless of who is working</li><li>Not for: choosing merge, rebase, or squash as an integration strategy — see <code>finishing-a-development-branch</code>. Not for isolating branches so they stop colliding — see <code>using-git-worktrees</code>.</li></ul>
+<ul><li>A merge or rebase stopped with conflicts</li><li>A clean merge was followed by a broken build, or by behavior nobody intended</li><li>The same region conflicts repeatedly through a rebase</li><li>One file conflicts on every integration, regardless of who is working</li><li>Not for: choosing merge, rebase, or squash as an integration strategy — see <code>landing-a-finished-branch</code>. Not for isolating branches so they stop colliding — see <code>isolating-work-with-worktrees</code>.</li></ul>
 <h2 id="understand-both-intents-before-touching-a-marker">Understand both intents before touching a marker</h2>
 <ul><li><strong>Read both sides' commits, not just their diffs.</strong> What problem was each solving? This is where commit-message quality pays out — and where its absence costs an hour (see <code>writing-commit-messages</code>).</li><li><strong>Name the question in one sentence</strong>: &quot;both sides needed the retry count to vary per caller&quot;. If you cannot state it, you do not yet understand the conflict, and any resolution is a guess with a build behind it.</li><li><strong>Read the whole file and the surrounding commits</strong>, not the marked region. The correct resolution frequently exists on neither side.</li></ul>
 <h2 id="resolve-by-re-applying-intent">Resolve by re-applying intent</h2>
@@ -121,9 +121,9 @@
   <span class="prevnext__label">上一个</span>
   <span class="prevnext__name">← feature-flagging</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/zh/skills/using-git-worktrees/">
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/zh/skills/isolating-work-with-worktrees/">
   <span class="prevnext__label">下一个</span>
-  <span class="prevnext__name">using-git-worktrees →</span>
+  <span class="prevnext__name">isolating-work-with-worktrees →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">“变更落地”分类中的更多技能</h2>
@@ -156,12 +156,12 @@
       <span class="see-also__name">feature-flagging</span>
       <span class="see-also__summary">在以下情况下使用：要把没做完的东西藏在一个开关后面；要规划灰度放量、紧急关停开关或暗发布；要用开关圈住一次实验或一项付费权益；老开关越攒越多而没人清理；开关的组合把测试矩阵搞得没法管了；靠翻开关回滚这条路失败了；或者要在开关与另开一个分支或构建之间做选择。</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/using-git-worktrees/">
-      <span class="see-also__name">using-git-worktrees</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/isolating-work-with-worktrees/">
+      <span class="see-also__name">isolating-work-with-worktrees</span>
       <span class="see-also__summary">在以下情况下使用：要开始一项不该碰到当前 checkout 的工作；在运行一个可能需要干净放弃的多步计划之前；或者好几个任务正要同时对着同一个仓库跑起来。</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/finishing-a-development-branch/">
-      <span class="see-also__name">finishing-a-development-branch</span>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/landing-a-finished-branch/">
+      <span class="see-also__name">landing-a-finished-branch</span>
       <span class="see-also__summary">在以下情况下使用：实现已经完成、测试也都通过了，是时候决定这个分支怎么落地；要在本地合并、推送过的 pull request，或者干脆放着某个分支不动之间做选择；或者在工作真正落地之后，需要把一个 worktree 和它的分支拆掉。</span>
     </a></li>
   </ul>

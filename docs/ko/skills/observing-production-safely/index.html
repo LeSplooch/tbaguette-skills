@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">observing-production-safely</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">업데이트</span>
   </div>
   <span class="tag skill-article__tag">디버깅과 성능</span>
   <p class="lede">사용자가 의존하고 있는 살아 있는 시스템을 진단할 때, 유일한 증거가 프로덕션 데이터 뒤에 있을 때, 돌아가는 서비스에 디버그 플래그나 상세 로깅, 힙 덤프, 프로파일러, 브레이크포인트를 걸 때, 가설을 시험해 보려고 프로덕션 상태를 바꾸고 싶어질 때, 고객 데이터가 담긴 덤프나 트레이스, 샘플을 빼낼 때 사용합니다.</p>
@@ -98,7 +98,7 @@
 <p>Every diagnostic is a change to production. Budget its cost, bound its scope, and write its rollback before enabling it — a meaningful fraction of outages are caused by the investigation into a smaller problem.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>The failure cannot be reproduced anywhere else and the evidence only exists live</li><li>About to raise a log level, attach a profiler, take a dump, or flip a debug flag on a running system</li><li>Considering editing a record, replaying a message, or clearing a cache &quot;just to see&quot;</li><li>Extracting logs, dumps, or samples that will contain real user data</li><li>During an incident, when someone proposes a diagnostic under time pressure</li></ul>
-<p>Not for: reasoning about the defect once you have the evidence (<code>systematic-debugging</code>), or getting a failure to happen on demand elsewhere (<code>reproducing-bugs</code>).</p>
+<p>Not for: reasoning about the defect once you have the evidence (<code>diagnosing-before-fixing</code>), or getting a failure to happen on demand elsewhere (<code>reproducing-bugs</code>).</p>
 <h2 id="the-ladder">The ladder</h2>
 <p>Descend in order. Stop at the first rung that answers the question — most investigations are finished by rung 2 and reach for rung 5 out of habit.</p>
 <ol><li><strong>Existing telemetry.</strong> Metrics, logs, traces, dashboards already collected. Zero marginal cost, and the only rung that is free.</li><li><strong>Read-only queries</strong> against a replica, with a statement timeout and a row limit set before the query is typed.</li><li><strong>Sampled diagnostics.</strong> One-in-N tracing, a debug header on a single request id, one canary instance out of the fleet.</li><li><strong>Passive process inspection.</strong> Sampling profiler, thread dump, process counters, existing admin or health endpoints.</li><li><strong>Stop-the-world capture.</strong> Heap dump, core dump, full snapshot. Drain the instance from the load balancer first, then capture, then decide whether to return it.</li><li><strong>Reproduce in a lower environment</strong> with production-shaped data.</li><li><strong>Mutating production state.</strong> Normally a hard stop. If genuinely required, it is a change: named owner, change record, announced, and reversible.</li></ol>
@@ -154,8 +154,8 @@
       <span class="see-also__name">finding-resource-leaks</span>
       <span class="see-also__summary">메모리나 파일 디스크립터, 소켓, 스레드, 커넥션, 타이머, 이벤트 구독이 끝없이 늘어날 때, 프로세스가 메모리 부족으로 강제 종료되거나 열린 파일이 너무 많다는 오류에 걸릴 때, 주기적인 재시작이 서비스를 겨우 살려 두고 있을 때…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/systematic-debugging/">
-      <span class="see-also__name">systematic-debugging</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/diagnosing-before-fixing/">
+      <span class="see-also__name">diagnosing-before-fixing</span>
       <span class="see-also__summary">버그, 테스트 실패, 크래시, 또는 코드가 원래 해야 할 일과 어긋나는 어떤 동작이든 수정이 필요한데 아직 아무 수정안도 나오지 않았을 때, 특히 시간 압박 속에서 뻔한 임시방편이 유혹적일 때나 이전에 시도한 수정이 버티지 못했을 때 사용합니다.</span>
     </a></li>
   </ul>

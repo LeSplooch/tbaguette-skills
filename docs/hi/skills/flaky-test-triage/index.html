@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">flaky-test-triage</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">अपडेटेड</span>
   </div>
   <span class="tag skill-article__tag">टेस्टिंग</span>
   <p class="lede">जब टेस्ट दोबारा चलाने पर पास हो जाए, सिर्फ़ CI में फ़ेल हो, सिर्फ़ पूरा सूट चलने पर फ़ेल हो, आधी रात के बाद या DST बदलने पर फ़ेल हो, समानांतर चलने पर फ़ेल हो, या लदी हुई मशीन पर फ़ेल हो; या जब कोई बिल्ड हरा करने के लिए रीट्राई, स्किप या लंबा टाइमआउट सुझाए, तब इस्तेमाल करें। इसमें रुक-रुककर होने वाली नाकामी, क्रम पर निर्भरता, साझा स्टेट, रेस कंडीशन, और क्वारंटीन शामिल हैं।</p>
 </div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A flaky test is a defect report whose owner has not been determined yet. The defect is in the test roughly half the time and in the product the other half — and the half that lives in the product is a race that users are already hitting at the same rate the test fails.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A test failed, was rerun, and passed, with no code change in between.</li><li>A test passes alone and fails in the suite, or passes in the suite and fails alone.</li><li>Failures cluster on CI, on one worker, at a time of day, or after a DST change.</li><li>Someone is about to add a retry, a skip marker, or a larger timeout.</li><li>The suite is rerun as a matter of routine, and nobody reads the first result.</li><li>Not for: a test that fails every time — that is a deterministic bug, owned by <code>systematic-debugging</code>.</li></ul>
+<ul><li>A test failed, was rerun, and passed, with no code change in between.</li><li>A test passes alone and fails in the suite, or passes in the suite and fails alone.</li><li>Failures cluster on CI, on one worker, at a time of day, or after a DST change.</li><li>Someone is about to add a retry, a skip marker, or a larger timeout.</li><li>The suite is rerun as a matter of routine, and nobody reads the first result.</li><li>Not for: a test that fails every time — that is a deterministic bug, owned by <code>diagnosing-before-fixing</code>.</li></ul>
 <h2 id="the-arithmetic-that-forces-the-issue">The arithmetic that forces the issue</h2>
 <p>Independent per-test reliability compounds. At 99.9% per test, a 500-test suite is green 61% of the time; a 2,000-test suite, 13%. To keep a 2,000-test suite green on 95% of runs, each test must be 99.997% reliable. There is no per-test flake rate that is acceptable at scale, which is why &quot;it only fails 1 in 50&quot; is not a defense.</p>
 <h2 id="cause-taxonomy">Cause taxonomy</h2>
@@ -156,8 +156,8 @@
       <span class="see-also__name">grounding-test-doubles</span>
       <span class="see-also__summary">जब ऐसी किसी चीज़ के लिए मॉक, स्टब, फ़ेक या फ़िक्स्चर लिखना हो जो आपके क़ाबू में न हो — कोई HTTP API, वेंडर का SDK, क्यू, डिवाइस…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/test-driven-development/">
-      <span class="see-also__name">test-driven-development</span>
+<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/writing-the-failing-test-first/">
+      <span class="see-also__name">writing-the-failing-test-first</span>
       <span class="see-also__summary">जब कोई नया फ़ीचर लागू करना हो, कोई बग ठीक करना हो…</span>
     </a></li>
   </ul>

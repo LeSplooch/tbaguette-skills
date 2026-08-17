@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Atualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} horário local · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} horário local · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Português</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">calibrating-confidence</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Atualizada</span>
   </div>
   <span class="tag skill-article__tag">Julgamento e meta</span>
   <p class="lede">Use quando for afirmar um fato, uma causa, um detalhe de versão ou o nome de uma API que não foi conferido nesta sessão, quando perguntam se uma afirmação é certa ou a contestam, quando uma conclusão se apoia em conhecimento lembrado em vez de algo que foi lido, quando toda frase ganhou uma ressalva, ou quando a resposta correta é que você não sabe. Trata dos níveis de evidência, da falsa precisão, da linguagem de probabilidade e da certeza não conquistada.</p>
 </div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A claim read from a file and a claim recalled from training must not sound the same. Confidence tracks evidence, not fluency — and the strongest internal signal, how smoothly an answer arrives, is uncorrelated with truth for anything version-specific, recently changed, or particular to this project.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <code>verification-before-completion</code> owns that gate. This is how to speak when the check has not been run.</li></ul>
+<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <code>confirming-before-claiming-done</code> owns that gate. This is how to speak when the check has not been run.</li></ul>
 <h2 id="three-tiers-marked-in-the-sentence">Three tiers, marked in the sentence</h2>
 <table><thead><tr><th>Tier</th><th>What earns it</th><th>How it must read</th></tr></thead><tbody><tr><td>Verified</td><td>Observed in this session's tool output — file contents, command output, a test result, a response body</td><td>Flat assertion, source named when naming it is cheap</td></tr><tr><td>Inferred</td><td>Follows from verified facts by an argument you could write in one line</td><td>Assertion plus the inference: &quot;so X, because Y is set and Z reads it&quot;</td></tr><tr><td>Assumed</td><td>Plausible from convention, priors, or recall — including confident recall</td><td>Marked: &quot;conventionally defaults to X; not checked here&quot;</td></tr></tbody></table>
 <p>Rules that make the tiers real:</p>
@@ -163,12 +163,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">Use quando uma decisão registrada — um ADR, um documento de design, um wontfix…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/pt/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/pt/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">Use quando uma ideia, um pedido de funcionalidade ou um novo projeto precisa virar um design aprovado antes de qualquer código ser escrito…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/pt/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/pt/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">Use quando estiver prestes a dizer que um fix, uma funcionalidade ou uma suíte de testes está pronta…</span>
     </a></li>
   </ul>

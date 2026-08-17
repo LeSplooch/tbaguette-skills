@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">calibrating-confidence</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">अपडेटेड</span>
   </div>
   <span class="tag skill-article__tag">विवेक और मेटा-स्किल्स</span>
   <p class="lede">जब कोई तथ्य, कारण, वर्शन का ब्योरा या API का नाम बताया जा रहा हो जिसे इसी सेशन में जाँचा न गया हो, जब पूछा जाए कि दावा पक्का है या नहीं, या उस पर आपत्ति उठे, जब निष्कर्ष कहीं पढ़ी हुई चीज़ के बजाय याददाश्त पर टिका हो, जब हर वाक्य में एक-न-एक “शायद” जुड़ चुका हो, या जब सही जवाब यही हो कि पता नहीं, तब इस्तेमाल करें। इसमें सबूत के दर्जे, झूठी सटीकता, संभावना की भाषा, और बिना कमाया हुआ यक़ीन शामिल हैं।</p>
 </div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A claim read from a file and a claim recalled from training must not sound the same. Confidence tracks evidence, not fluency — and the strongest internal signal, how smoothly an answer arrives, is uncorrelated with truth for anything version-specific, recently changed, or particular to this project.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <code>verification-before-completion</code> owns that gate. This is how to speak when the check has not been run.</li></ul>
+<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <code>confirming-before-claiming-done</code> owns that gate. This is how to speak when the check has not been run.</li></ul>
 <h2 id="three-tiers-marked-in-the-sentence">Three tiers, marked in the sentence</h2>
 <table><thead><tr><th>Tier</th><th>What earns it</th><th>How it must read</th></tr></thead><tbody><tr><td>Verified</td><td>Observed in this session's tool output — file contents, command output, a test result, a response body</td><td>Flat assertion, source named when naming it is cheap</td></tr><tr><td>Inferred</td><td>Follows from verified facts by an argument you could write in one line</td><td>Assertion plus the inference: &quot;so X, because Y is set and Z reads it&quot;</td></tr><tr><td>Assumed</td><td>Plausible from convention, priors, or recall — including confident recall</td><td>Marked: &quot;conventionally defaults to X; not checked here&quot;</td></tr></tbody></table>
 <p>Rules that make the tiers real:</p>
@@ -163,12 +163,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">जब कोई दर्ज किया हुआ फ़ैसला — ADR, डिज़ाइन दस्तावेज़, wontfix, रनबुक की कोई लाइन…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">जब किसी आइडिया, फ़ीचर रिक्वेस्ट या नए प्रोजेक्ट को कोई भी कोड लिखे जाने से पहले किसी स्वीकृत डिज़ाइन में बदलना हो…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">जब किसी फ़िक्स, फ़ीचर या टेस्ट सूट को पूरा, ठीक या पास हुआ बताने ही वाले हों; जब कोई बदलाव सिर्फ़ उसी दावे के दम पर कमिट…</span>
     </a></li>
   </ul>

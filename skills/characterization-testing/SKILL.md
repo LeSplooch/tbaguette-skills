@@ -15,7 +15,7 @@ A characterization test asserts what the code *does*, not what it should do. It 
 - A rewrite must match a legacy component output for output before it may replace it.
 - Behavior is known only through the running system, and the people who wrote it are unavailable.
 - A dependency or runtime upgrade needs proof that observable output did not move.
-- Not for: behavior somebody can actually specify — write the specification as a test instead, via `test-driven-development`.
+- Not for: behavior somebody can actually specify — write the specification as a test instead, via `writing-the-failing-test-first`.
 - Not for: a known defect — that is `regression-test-from-bug`. Characterization pins bugs deliberately; it does not fix them.
 
 ## Choosing the observation point

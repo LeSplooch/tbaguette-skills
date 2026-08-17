@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Son güncelleme</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Dil: Türkçe</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">regression-test-from-bug</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Güncellendi</span>
   </div>
   <span class="tag skill-article__tag">Testler</span>
   <p class="lede">Şu durumlarda kullanın: bir kusur bildirildiğinde, yeniden üretildiğinde ya da yamandığında; bir üretim olayı veya acil düzeltme için test yazarken; daha önce düzeltilmiş bir hata geri geldiğinde; veya aynı kusurun bir daha geri dönemeyeceği şekilde neyin doğrulanacağına karar verirken. Katmanı seçmeyi, testi kusurun adıyla adlandırmayı, doğrulamanın kapsamını belirlemeyi ve düzeltme yerleştikten sonra testin tutulup tutulmayacağını kapsar.</p>
 </div><p class="translation-banner" role="note">Bu sayfanın Türkçe çevirisi henüz yok — İngilizce sürümü gösteriliyor.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A test that has never failed for the reason it claims to guard is decoration. The defect is the specification: it names an assumption the code violated, and the test's job is to make that assumption cost nothing to hold forever.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A defect has been reproduced and is about to be fixed.</li><li>A hotfix shipped without a test and needs one added behind it.</li><li>A bug that was fixed before has reappeared, meaning the previous guard was absent, deleted, or scoped wrong.</li><li>A production incident is being written up and needs a permanent guard, not an action item.</li><li>Not for: turning a vague report into an on-demand failure — that is <code>reproducing-bugs</code>.</li><li>Not for: finding the root cause — that is <code>systematic-debugging</code>. Write this test after the cause is known, or the test pins the symptom.</li></ul>
+<ul><li>A defect has been reproduced and is about to be fixed.</li><li>A hotfix shipped without a test and needs one added behind it.</li><li>A bug that was fixed before has reappeared, meaning the previous guard was absent, deleted, or scoped wrong.</li><li>A production incident is being written up and needs a permanent guard, not an action item.</li><li>Not for: turning a vague report into an on-demand failure — that is <code>reproducing-bugs</code>.</li><li>Not for: finding the root cause — that is <code>diagnosing-before-fixing</code>. Write this test after the cause is known, or the test pins the symptom.</li></ul>
 <h2 id="the-procedure">The procedure</h2>
 <ol><li><strong>Reproduce outside a test first</strong>, at whatever layer is easiest. Until it reproduces, you have a hypothesis, not a bug.</li><li><strong>Write the test at the layer where you observed it</strong>, even if that is slow and end-to-end. Confirm it fails — and read the failure message. A failure for a different reason (missing fixture, typo, wrong route) means the test is not yet about the bug.</li><li><strong>Then push it down.</strong> Find the narrowest layer that still shows the failure, port the test there, confirm red again, and delete the wide version. Exception with an observable predicate: if the defect lives in the wiring between components — configuration, serialization across a boundary, dependency registration, ordering across services — no narrow test can see it, and the wide one stays.</li><li><strong>Fix.</strong> Confirm green.</li><li><strong>Re-confirm the teeth.</strong> Revert the fix (stash it), run the test, watch it go red, restore the fix. This is the highest-value step and the most-skipped one; it is the only proof that the test and the fix are actually connected.</li></ol>
 <h2 id="scope-the-assertion-to-the-invariant-not-the-trace">Scope the assertion to the invariant, not the trace</h2>
@@ -153,8 +153,8 @@
       <span class="see-also__name">grounding-test-doubles</span>
       <span class="see-also__summary">Şu durumlarda kullanın: kontrolünüzde olmayan bir şey için mock, stub, fake ya da fixture yazarken — bir HTTP API&#x27;si, üçüncü taraf bir SDK…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/tr/skills/test-driven-development/">
-      <span class="see-also__name">test-driven-development</span>
+<li><a class="see-also__link" href="/tbaguette-skills/tr/skills/writing-the-failing-test-first/">
+      <span class="see-also__name">writing-the-failing-test-first</span>
       <span class="see-also__summary">Herhangi bir yeni özellik geliştirirken, bir hatayı düzeltirken ya da var olan bir davranışı değiştirirken — hiçbir üretim kodu yazılmadan…</span>
     </a></li>
   </ul>

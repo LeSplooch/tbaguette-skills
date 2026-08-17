@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">karen-and-the-manager</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">업데이트</span>
   </div>
   <span class="tag skill-article__tag">판단력과 메타 스킬</span>
   <p class="lede">어떤 작업이 곧 완료나 출시, 인수인계로 불리려는데 만든 사람 말고는 아무도 들여다본 적이 없을 때, 레드팀식 점검이나 코드 리뷰가 방금 아무 문제 없이 통과했고 그 사실 자체가 수상할 때, 마감 품질이 ‘이 정도면 됐다’로 계속 넘어갈 때, 결함을 잡아낼 가장 강력한 수단으로 남은 것이 결코 만족하지 않는 리뷰어일 때 사용합니다. 바로 뒤에 불러 결과에 선을 긋는 knowing-when-to-stop과 짝을 이룹니다.</p>
 </div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A persona-forced adversarial pass for the moment a normal review already came back clean. Two escalating roles: Karen, who is never satisfied and complains about everything down to the smallest detail, and the manager she demands to see, who separately decides which of her complaints are worth acting on. The persona is not decoration — exaggerating the critic's standards past what a polite, calibrated pass permits is what surfaces the defects that pass waves through.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Work is about to be marked done, shipped, or handed off.</li><li><code>red-teaming-your-own-work</code> or a code review just came back clean — that is exactly when complacency is highest, not evidence there is nothing left to find.</li><li>Not for mid-implementation debugging (<code>systematic-debugging</code> owns that) or first-pass design critique (<code>reviewing-code-deeply</code>, or formidable's <code>critique</code>/<code>audit</code>, own that). This runs last, against a result that already looks finished.</li><li>Pairs with <code>knowing-when-to-stop</code>, invoked immediately after. Karen has no stopping instinct by design — that is supplied by the manager's triage and by the paired skill, not by Karen holding back.</li></ul>
+<ul><li>Work is about to be marked done, shipped, or handed off.</li><li><code>red-teaming-your-own-work</code> or a code review just came back clean — that is exactly when complacency is highest, not evidence there is nothing left to find.</li><li>Not for mid-implementation debugging (<code>diagnosing-before-fixing</code> owns that) or first-pass design critique (<code>reviewing-code-deeply</code>, or formidable's <code>critique</code>/<code>audit</code>, own that). This runs last, against a result that already looks finished.</li><li>Pairs with <code>knowing-when-to-stop</code>, invoked immediately after. Karen has no stopping instinct by design — that is supplied by the manager's triage and by the paired skill, not by Karen holding back.</li></ul>
 <h2 id="karens-pass">Karen's pass</h2>
 <p>Go through the finished result as the most dissatisfied stakeholder who will ever see it. Nothing is beneath comment: spacing off by a hair, a label that is technically correct but not the clearest word available, an edge case that &quot;works&quot; but looks improvised, one place that is inconsistent with everywhere else, a default that was merely acceptable rather than actually decided. Every complaint names a real, specific location — not &quot;this could be better,&quot; but <em>&quot;the confirm button here says 'OK.' Three other confirm actions on this same result say the actual consequence. Now I don't trust that anything here was decided on purpose instead of typed first and left.&quot;</em> <strong>Fix:</strong> rename to match the other three, then check whether any of those three are the odd one out instead.</p>
 <p>No complaint is too small to write down, and the pass is failed if it produces fewer than ten. Immediately under each complaint goes its concrete fix — Karen is not useful if she stays a feeling.</p>
@@ -160,12 +160,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">ADR이나 설계 문서, wontfix 표시, 런북의 한 줄, “Y 때문에 X는 못 한다”고 적힌 주석처럼 기록으로 남은 결정이 지금 눈앞의 일을 가로막는 것처럼 보일 때…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">아이디어나 기능 요청, 새 프로젝트가 코드를 한 줄도 쓰기 전에 승인된 설계로 바뀌어야 할 때, 특히 그 요청이 실제로 얼마나 많은 프로세스를 필요로 하는지 불분명할 때 사용합니다.</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">수정이나 기능, 테스트 스위트가 다 됐다거나 고쳐졌다거나 통과했다고 말하려 할 때, 그 주장의 힘만으로 변경 사항을 커밋하거나 푸시하거나 넘기려 할 때, subagent나 도구 자신의 성공 보고를 그대로 사실인 것처럼 되풀이하려 할 때…</span>
     </a></li>
   </ul>

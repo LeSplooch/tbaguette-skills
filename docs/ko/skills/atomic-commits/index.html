@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">atomic-commits</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">업데이트</span>
   </div>
   <span class="tag skill-article__tag">변경사항 반영하기</span>
   <p class="lede">작업 트리에 서로 관계없는 변경이 여러 개 쌓였을 때, 무엇을 한 커밋에 담을지 정할 때, diff가 이름 변경이나 서식 정리를 로직 변경과 뒤섞을 때, bisect가 따라가기에 너무 큰 커밋에 멈춰 설 때, revert나 백포트가 아무도 요청하지 않은 변경까지 끌고 올 때, 작업 트리를 다른 AI 에이전트나 동료, 또는 거기에 직접 써 넣는 도구와 함께 쓸 때, 리뷰어가 diff 안에서 진짜 변경을 찾지 못할 때 사용합니다. 파일 단위와 헝크 단위 분할, 기계적인 변경과 의미적인 변경의 분리, 나 혼자만의 것이 아닌 트리에서 스테이징하기, 커밋의 크기를 다룹니다.</p>
 </div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>One commit, one decision. A commit is atomic when it builds and passes its tests standing alone, and reverting it removes exactly one choice from the tree — not when it is merely small.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>The checkout is shared with another agent, a colleague, or a tool that writes to it on its own schedule</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>finishing-a-development-branch</code>.</li></ul>
+<ul><li>The working tree holds two or three unrelated changes and you are about to stage all of it</li><li>A diff mixes a rename, a reformat, or a regenerated artifact with a logic change</li><li>A bisect landed on a commit too large to reason about</li><li>A revert or a backport drags in changes that were not part of the fix</li><li>The checkout is shared with another agent, a colleague, or a tool that writes to it on its own schedule</li><li>Before publishing a branch whose history is still a draft</li><li>Not for: what the message should say — see <code>writing-commit-messages</code>. Not for choosing merge, squash, or rebase at integration time — see <code>landing-a-finished-branch</code>.</li></ul>
 <h2 id="what-logical-means">What &quot;logical&quot; means</h2>
 <p>Three tests, ordered by how often they catch something:</p>
 <ol><li><strong>The &quot;and&quot; test.</strong> If the subject line needs &quot;and&quot;, or wants to be a bulleted list, it is two commits.</li><li><strong>The revert test.</strong> Say out loud what breaks if this commit alone is reverted. If the answer names two independent things, split it.</li><li><strong>The build test.</strong> Each commit compiles, and its tests pass, with no later commit applied.</li></ol>
@@ -155,12 +155,12 @@
       <span class="see-also__name">resolving-merge-conflicts</span>
       <span class="see-also__summary">머지나 리베이스가 충돌을 알릴 때, 오래 살아남은 브랜치가 갈라져서 통합이 고통스러워 보일 때, 머지가 텍스트상으로는 깨끗한데 그 뒤에 빌드나 동작이 망가질 때, 리베이스의 커밋마다 같은 충돌이 다시 나타날 때…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/using-git-worktrees/">
-      <span class="see-also__name">using-git-worktrees</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/isolating-work-with-worktrees/">
+      <span class="see-also__name">isolating-work-with-worktrees</span>
       <span class="see-also__summary">지금의 checkout을 건드려서는 안 되는 작업을 시작할 때, 나중에 깔끔하게 포기해야 할 수도 있는 여러 단계짜리 계획을 실행하기 전에, 또는 여러 작업이 동시에 같은 저장소에 대해 돌아가려 할 때 사용합니다.</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/finishing-a-development-branch/">
-      <span class="see-also__name">finishing-a-development-branch</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/landing-a-finished-branch/">
+      <span class="see-also__name">landing-a-finished-branch</span>
       <span class="see-also__summary">구현이 끝나고 테스트가 초록불이 되어 브랜치를 어떻게 착지시킬지 결정할 때, 로컬 머지와 푸시된 풀 리퀘스트, 또는 브랜치를 그냥 놔두는 것 중에서 고를 때, 또는 작업이 실제로 착지한 뒤에 worktree와 그 브랜치를 정리해야 할 때 사용합니다.</span>
     </a></li>
   </ul>

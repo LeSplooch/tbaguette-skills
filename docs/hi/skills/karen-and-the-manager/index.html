@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">karen-and-the-manager</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">अपडेटेड</span>
   </div>
   <span class="tag skill-article__tag">विवेक और मेटा-स्किल्स</span>
   <p class="lede">जब कोई काम पूरा, शिप या हैंडऑफ़ कहलाने ही वाला हो और उसे बनाने वाले के सिवा किसी ने देखा तक न हो; जब रेड-टीम वाली एक पड़ताल या कोड रिव्यू अभी-अभी बेदाग़ लौटा हो और यही बात शक़ पैदा करे; जब फ़िनिशिंग को “इतना काफ़ी है” कहकर बार-बार आगे बढ़ा दिया जाता हो; या जब ख़ामियाँ पकड़ने के लिए बचा सबसे मज़बूत औज़ार ऐसा रिव्यूअर हो जो संतुष्ट होने से ही इनकार कर दे, तब इस्तेमाल करें। नतीजे को हद में बाँधने के लिए ठीक इसके बाद बुलाई जाने वाली knowing-when-to-stop के साथ इसकी जोड़ी बनती है।</p>
 </div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>A persona-forced adversarial pass for the moment a normal review already came back clean. Two escalating roles: Karen, who is never satisfied and complains about everything down to the smallest detail, and the manager she demands to see, who separately decides which of her complaints are worth acting on. The persona is not decoration — exaggerating the critic's standards past what a polite, calibrated pass permits is what surfaces the defects that pass waves through.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Work is about to be marked done, shipped, or handed off.</li><li><code>red-teaming-your-own-work</code> or a code review just came back clean — that is exactly when complacency is highest, not evidence there is nothing left to find.</li><li>Not for mid-implementation debugging (<code>systematic-debugging</code> owns that) or first-pass design critique (<code>reviewing-code-deeply</code>, or formidable's <code>critique</code>/<code>audit</code>, own that). This runs last, against a result that already looks finished.</li><li>Pairs with <code>knowing-when-to-stop</code>, invoked immediately after. Karen has no stopping instinct by design — that is supplied by the manager's triage and by the paired skill, not by Karen holding back.</li></ul>
+<ul><li>Work is about to be marked done, shipped, or handed off.</li><li><code>red-teaming-your-own-work</code> or a code review just came back clean — that is exactly when complacency is highest, not evidence there is nothing left to find.</li><li>Not for mid-implementation debugging (<code>diagnosing-before-fixing</code> owns that) or first-pass design critique (<code>reviewing-code-deeply</code>, or formidable's <code>critique</code>/<code>audit</code>, own that). This runs last, against a result that already looks finished.</li><li>Pairs with <code>knowing-when-to-stop</code>, invoked immediately after. Karen has no stopping instinct by design — that is supplied by the manager's triage and by the paired skill, not by Karen holding back.</li></ul>
 <h2 id="karens-pass">Karen's pass</h2>
 <p>Go through the finished result as the most dissatisfied stakeholder who will ever see it. Nothing is beneath comment: spacing off by a hair, a label that is technically correct but not the clearest word available, an edge case that &quot;works&quot; but looks improvised, one place that is inconsistent with everywhere else, a default that was merely acceptable rather than actually decided. Every complaint names a real, specific location — not &quot;this could be better,&quot; but <em>&quot;the confirm button here says 'OK.' Three other confirm actions on this same result say the actual consequence. Now I don't trust that anything here was decided on purpose instead of typed first and left.&quot;</em> <strong>Fix:</strong> rename to match the other three, then check whether any of those three are the odd one out instead.</p>
 <p>No complaint is too small to write down, and the pass is failed if it produces fewer than ten. Immediately under each complaint goes its concrete fix — Karen is not useful if she stays a feeling.</p>
@@ -160,12 +160,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">जब कोई दर्ज किया हुआ फ़ैसला — ADR, डिज़ाइन दस्तावेज़, wontfix, रनबुक की कोई लाइन…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">जब किसी आइडिया, फ़ीचर रिक्वेस्ट या नए प्रोजेक्ट को कोई भी कोड लिखे जाने से पहले किसी स्वीकृत डिज़ाइन में बदलना हो…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">जब किसी फ़िक्स, फ़ीचर या टेस्ट सूट को पूरा, ठीक या पास हुआ बताने ही वाले हों; जब कोई बदलाव सिर्फ़ उसी दावे के दम पर कमिट…</span>
     </a></li>
   </ul>

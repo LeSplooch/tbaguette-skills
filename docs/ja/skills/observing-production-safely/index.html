@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">最終更新</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="現地時間 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">言語: 日本語</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">observing-production-safely</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">更新</span>
   </div>
   <span class="tag skill-article__tag">デバッグとパフォーマンス</span>
   <p class="lede">ユーザーが頼っている稼働中のシステムを診断するとき、唯一の証拠が本番データの向こうにあるとき、動いているサービスに対してデバッグフラグ・詳細ログ・ヒープダンプ・プロファイラ・ブレークポイントを有効にするとき、仮説を試すために本番の状態を変えたくなったとき、あるいは顧客データを含むダンプ・トレース・サンプルを取り出すときに使います。</p>
@@ -98,7 +98,7 @@
 <p>Every diagnostic is a change to production. Budget its cost, bound its scope, and write its rollback before enabling it — a meaningful fraction of outages are caused by the investigation into a smaller problem.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>The failure cannot be reproduced anywhere else and the evidence only exists live</li><li>About to raise a log level, attach a profiler, take a dump, or flip a debug flag on a running system</li><li>Considering editing a record, replaying a message, or clearing a cache &quot;just to see&quot;</li><li>Extracting logs, dumps, or samples that will contain real user data</li><li>During an incident, when someone proposes a diagnostic under time pressure</li></ul>
-<p>Not for: reasoning about the defect once you have the evidence (<code>systematic-debugging</code>), or getting a failure to happen on demand elsewhere (<code>reproducing-bugs</code>).</p>
+<p>Not for: reasoning about the defect once you have the evidence (<code>diagnosing-before-fixing</code>), or getting a failure to happen on demand elsewhere (<code>reproducing-bugs</code>).</p>
 <h2 id="the-ladder">The ladder</h2>
 <p>Descend in order. Stop at the first rung that answers the question — most investigations are finished by rung 2 and reach for rung 5 out of habit.</p>
 <ol><li><strong>Existing telemetry.</strong> Metrics, logs, traces, dashboards already collected. Zero marginal cost, and the only rung that is free.</li><li><strong>Read-only queries</strong> against a replica, with a statement timeout and a row limit set before the query is typed.</li><li><strong>Sampled diagnostics.</strong> One-in-N tracing, a debug header on a single request id, one canary instance out of the fleet.</li><li><strong>Passive process inspection.</strong> Sampling profiler, thread dump, process counters, existing admin or health endpoints.</li><li><strong>Stop-the-world capture.</strong> Heap dump, core dump, full snapshot. Drain the instance from the load balancer first, then capture, then decide whether to return it.</li><li><strong>Reproduce in a lower environment</strong> with production-shaped data.</li><li><strong>Mutating production state.</strong> Normally a hard stop. If genuinely required, it is a change: named owner, change record, announced, and reversible.</li></ol>
@@ -154,8 +154,8 @@
       <span class="see-also__name">finding-resource-leaks</span>
       <span class="see-also__summary">メモリ、ファイルディスクリプタ、ソケット、スレッド、コネクション、タイマー、イベント購読が際限なく増えるとき、プロセスがメモリ不足で殺されたり、開いているファイルが多すぎるというエラーに当たったりするとき、定期再起動だけがサービスを生かしているとき…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/systematic-debugging/">
-      <span class="see-also__name">systematic-debugging</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ja/skills/diagnosing-before-fixing/">
+      <span class="see-also__name">diagnosing-before-fixing</span>
       <span class="see-also__summary">バグ、テストの失敗、クラッシュ、あるいはコードが本来すべきことと食い違うどんな振る舞いであれ、修正が必要でまだ何も提案されていないとき、とりわけ時間の圧力のもとで手っ取り早い修正が魅力的に見えるとき、あるいは以前試した修正が効かなかったときに使います。</span>
     </a></li>
   </ul>

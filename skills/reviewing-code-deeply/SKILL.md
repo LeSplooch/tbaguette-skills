@@ -15,7 +15,7 @@ Review in strict priority order and stop when your attention is spent. Comments 
 - Deciding whether a concern blocks a merge
 - A review has produced more than a dozen comments and none of them are about behavior
 - Reviewed code shipped a defect and the review process needs a look
-- **Not for:** asking someone else to review your work → `requesting-code-review`. Responding to feedback on your own change → `receiving-code-review`.
+- **Not for:** asking someone else to review your work → `handing-off-for-review`. Responding to feedback on your own change → `verifying-review-feedback`.
 
 ## Priority order — descend only when the level above is clear
 

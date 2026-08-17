@@ -15,7 +15,7 @@ Rereading work confirms it; attacking it finds defects. Spend one bounded pass b
 - Nothing appears wrong, and nothing has been attempted to make it appear wrong
 - Before handing off a change set, a design, or a decision someone will act on
 - A previous delivery came back with a defect one skeptical pass would have caught
-- Not for: confirming a claim has evidence behind it (`verification-before-completion`), or diagnosing a failure you already know about (`systematic-debugging`). This is for work that currently looks correct.
+- Not for: confirming a claim has evidence behind it (`confirming-before-claiming-done`), or diagnosing a failure you already know about (`diagnosing-before-fixing`). This is for work that currently looks correct.
 
 ## The stance
 

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">आख़िरी अपडेट</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} स्थानीय समय · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">भाषा: हिन्दी</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">estimating-effort</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">अपडेटेड</span>
   </div>
   <span class="tag skill-article__tag">विवेक और मेटा-स्किल्स</span>
   <p class="lede">जब पूछा जाए कि किसी काम में कितना समय लगेगा, बदलाव कितना बड़ा है, या दिए गए समय में काम अँट जाएगा या नहीं; जब समय-सीमा के साथ कोई योजना, शेड्यूल या क्रम का वादा देना हो; जब पिछला अनुमान पहले ही पार हो चुका हो और नया आँकड़ा चाहिए; या जब फैलाव इतना चौड़ा हो कि कोई भी एक आँकड़ा गढ़ा हुआ ही होगा, तब इस्तेमाल करें। इसमें संदर्भ वर्ग, दायरे में जवाब देना, प्लानिंग फ़ैलेसी, स्पाइक, और दोबारा अनुमान लगाना शामिल हैं।</p>
 </div><p class="translation-banner" role="note">इस पन्ने का हिन्दी अनुवाद अभी नहीं हुआ है — नीचे अंग्रेज़ी वाला वर्शन दिख रहा है।</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>An estimate assembled by decomposing the plan you can see underruns systematically, because the visible plan is the part that goes right. Anchor on how comparable work actually went, adjust only for differences you can name, and use decomposition as a cross-check rather than a source.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Asked how long something takes, how large a change is, or whether it fits a window</li><li>Producing a plan with durations, a schedule, or a sequencing commitment</li><li>An estimate has already been overrun and a replacement number is needed</li><li>The plausible range is wide enough that a point estimate would be fiction</li><li>Not for: breaking work into steps — <code>writing-plans</code> owns the decomposition. This owns the numbers attached to it, and whether they carry information.</li></ul>
+<ul><li>Asked how long something takes, how large a change is, or whether it fits a window</li><li>Producing a plan with durations, a schedule, or a sequencing commitment</li><li>An estimate has already been overrun and a replacement number is needed</li><li>The plausible range is wide enough that a point estimate would be fiction</li><li>Not for: breaking work into steps — <code>structuring-an-implementation-plan</code> owns the decomposition. This owns the numbers attached to it, and whether they carry information.</li></ul>
 <h2 id="reference-class-first-decomposition-second">Reference class first, decomposition second</h2>
 <ol><li><strong>Name the class by shape, not domain.</strong> &quot;A change inside one module that already has tests.&quot; &quot;An integration with an external service whose behaviour is undocumented.&quot; &quot;A rename across an unknown number of call sites.&quot; The domain — billing, rendering, sync — predicts far less than the shape.</li><li><strong>Find real outcomes.</strong> Version-control history for comparable changes, how long the last two similar tasks actually took, elapsed wall-clock rather than remembered effort. Remembered effort systematically excludes the parts that went badly.</li><li><strong>Start from that number.</strong> Adjust only for differences you can point at. &quot;We understand this codebase better now&quot; is the standard unearned adjustment and is nearly always wrong, because whatever familiarity existed was already priced into the previous outcome.</li><li><strong>Decompose as a check.</strong> When the bottom-up sum lands well below the reference class, the decomposition is missing tasks. That is the near-universal direction of the discrepancy — not the reference class being pessimistic.</li></ol>
 <h2 id="why-decomposition-alone-makes-it-worse">Why decomposition alone makes it worse</h2>
@@ -166,12 +166,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">जब कोई दर्ज किया हुआ फ़ैसला — ADR, डिज़ाइन दस्तावेज़, wontfix, रनबुक की कोई लाइन…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">जब किसी आइडिया, फ़ीचर रिक्वेस्ट या नए प्रोजेक्ट को कोई भी कोड लिखे जाने से पहले किसी स्वीकृत डिज़ाइन में बदलना हो…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/hi/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">जब किसी फ़िक्स, फ़ीचर या टेस्ट सूट को पूरा, ठीक या पास हुआ बताने ही वाले हों; जब कोई बदलाव सिर्फ़ उसी दावे के दम पर कमिट…</span>
     </a></li>
   </ul>

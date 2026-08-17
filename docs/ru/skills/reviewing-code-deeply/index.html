@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Обновлено</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} по местному времени · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} по местному времени · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Язык: Русский</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">reviewing-code-deeply</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Обновлён</span>
   </div>
   <span class="tag skill-article__tag">Коммуникация</span>
   <p class="lede">Применяйте, когда просматриваете чужое изменение — пул-реквест, патч, дифф или серию коммитов — и решаете, что заслуживает комментария, блокировать или одобрять и как сформулировать замечание. Также когда ревью порождает десятки комментариев, когда дифф слишком велик, чтобы просмотреть его внимательно, или когда ревью раз за разом пропускает код, который потом ломается. Разбирает порядок приоритетов при ревью, ревью тестов, поиск отсутствующих случаев и разницу между блокирующими и неблокирующими замечаниями.</p>
 </div><p class="translation-banner" role="note">Русский: эта страница ещё не переведена — ниже английская версия.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Review in strict priority order and stop when your attention is spent. Comments about naming, spent on a diff whose failure handling is wrong, are worse than no review at all — they signal the change was examined when it was not.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Reviewing a pull request, patch series, or diff written by someone else</li><li>Deciding whether a concern blocks a merge</li><li>A review has produced more than a dozen comments and none of them are about behavior</li><li>Reviewed code shipped a defect and the review process needs a look</li><li><strong>Not for:</strong> asking someone else to review your work → <code>requesting-code-review</code>. Responding to feedback on your own change → <code>receiving-code-review</code>.</li></ul>
+<ul><li>Reviewing a pull request, patch series, or diff written by someone else</li><li>Deciding whether a concern blocks a merge</li><li>A review has produced more than a dozen comments and none of them are about behavior</li><li>Reviewed code shipped a defect and the review process needs a look</li><li><strong>Not for:</strong> asking someone else to review your work → <code>handing-off-for-review</code>. Responding to feedback on your own change → <code>verifying-review-feedback</code>.</li></ul>
 <h2 id="priority-order-descend-only-when-the-level-above-is-clear">Priority order — descend only when the level above is clear</h2>
 <table><thead><tr><th>#</th><th>Level</th><th>Question</th><th>Cost of never reaching it</th></tr></thead><tbody><tr><td>1</td><td>Correctness</td><td>Does it do what the change claims, at the boundaries and on the failure paths?</td><td>The review had no value</td></tr><tr><td>2</td><td>Security &amp; data safety</td><td>Untrusted input, authorization at every entry, secrets, destructive or irreversible operations, migrations that cannot roll back, personal data in logs</td><td>The review had negative value</td></tr><tr><td>3</td><td>Design &amp; boundaries</td><td>Is this the right seam? Does it leak state, create a cycle, or make the next change harder?</td><td>The cost arrives in six months</td></tr><tr><td>4</td><td>Readability &amp; naming</td><td>Will the next reader understand this without the author present?</td><td>Mild, permanent</td></tr><tr><td>5</td><td>Style &amp; formatting</td><td>—</td><td>None; this is a tool's job</td></tr></tbody></table>
 <p>Level 5 is never a human's work. A comment about formatting is a bug report against the CI configuration, and should be filed as one.</p>
@@ -154,20 +154,20 @@
       <span class="see-also__name">explaining-technical-work</span>
       <span class="see-also__summary">Применяйте, когда пишете объяснение технической работы для другого человека — отчёт о статусе, сводку по изменению или расследованию…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/requesting-code-review/">
-      <span class="see-also__name">requesting-code-review</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/handing-off-for-review/">
+      <span class="see-also__name">handing-off-for-review</span>
       <span class="see-also__summary">Применяйте, когда завершаете задачу или функциональность и вот-вот передадите её перед слиянием, когда застряли и свежий взгляд помог бы…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/receiving-code-review/">
-      <span class="see-also__name">receiving-code-review</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/verifying-review-feedback/">
+      <span class="see-also__name">verifying-review-feedback</span>
       <span class="see-also__summary">Применяйте, когда обратная связь по код-ревью приходит на ваше собственное изменение — от человека…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/writing-plans/">
-      <span class="see-also__name">writing-plans</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/structuring-an-implementation-plan/">
+      <span class="see-also__name">structuring-an-implementation-plan</span>
       <span class="see-also__summary">Применяйте, когда спека или набор требований устоялись и следующий шаг — превратить их в многошаговый план реализации…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/executing-plans/">
-      <span class="see-also__name">executing-plans</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ru/skills/working-a-plan-task-by-task/">
+      <span class="see-also__name">working-a-plan-task-by-task</span>
       <span class="see-also__summary">Применяйте, когда написанный план готов к выполнению прямо в текущей сессии — независимо от того…</span>
     </a></li>
   </ul>

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Atualizado</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} horário local · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} horário local · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Idioma: Português</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">designing-test-data</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Atualizada</span>
   </div>
   <span class="tag skill-article__tag">Testes</span>
   <p class="lede">Use quando o setup de um teste é mais longo que as suas asserções, quando as fixtures são compartilhadas entre arquivos, quando não está claro qual valor do setup faz um teste falhar, quando os testes passam sozinhos mas falham na ordem da suíte, ou quando se constroem factories, builders, object mothers, dados de seed ou dados em volume para testes de paginação e de carga. Trata dos valores padrão, dos valores realistas versus os mínimos e das entradas em Unicode e dependentes de localidade.</p>
 </div><p class="translation-banner" role="note">Esta página ainda não foi traduzida para o Português — exibindo a versão em inglês.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>The setup is the other half of a test's statement. If a reader cannot tell from the setup which value makes this test different from the one above it, the test communicates nothing and will not survive its author.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Setup is longer than the assertion, or repeats across files with small edits.</li><li>A test fails and it is not obvious which of the twelve fields in the setup caused it.</li><li>Tests pass in isolation and fail in suite order, or fail only under parallel execution.</li><li>Seeding a store, queue, or file tree before exercising behavior.</li><li>Needing hundreds or millions of records for pagination, sort stability, or load shape.</li><li>Not for: the red-green-refactor loop itself, owned by <code>test-driven-development</code>.</li></ul>
+<ul><li>Setup is longer than the assertion, or repeats across files with small edits.</li><li>A test fails and it is not obvious which of the twelve fields in the setup caused it.</li><li>Tests pass in isolation and fail in suite order, or fail only under parallel execution.</li><li>Seeding a store, queue, or file tree before exercising behavior.</li><li>Needing hundreds or millions of records for pagination, sort stability, or load shape.</li><li>Not for: the red-green-refactor loop itself, owned by <code>writing-the-failing-test-first</code>.</li></ul>
 <h2 id="the-one-obvious-difference-rule">The one-obvious-difference rule</h2>
 <p>Every value in a setup is either <strong>irrelevant</strong> — and must be a default, invisible — or <strong>relevant</strong> — and must be explicit, named, and adjacent to the assertion. Two tests that differ in intent differ in exactly one visible line.</p>
 <ul><li>Setup that names more than 3 values the test never asserts on has the wrong defaults.</li><li>Give the relevant value a name that states the reason: <code>expiredYesterday</code>, <code>maxLengthTitle</code>. A bare literal makes the reader reverse-engineer the intent.</li><li>Assert only on fields the test set or the code derived. Asserting on an incidental default couples the test to the builder.</li></ul>
@@ -153,8 +153,8 @@
       <span class="see-also__name">grounding-test-doubles</span>
       <span class="see-also__summary">Use quando for escrever um mock, um stub, um fake ou uma fixture para algo que não está sob o seu controle — uma API HTTP…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/pt/skills/test-driven-development/">
-      <span class="see-also__name">test-driven-development</span>
+<li><a class="see-also__link" href="/tbaguette-skills/pt/skills/writing-the-failing-test-first/">
+      <span class="see-also__name">writing-the-failing-test-first</span>
       <span class="see-also__summary">Use quando for implementar qualquer funcionalidade nova, corrigir um bug…</span>
     </a></li>
   </ul>

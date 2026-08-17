@@ -1,5 +1,13 @@
 # Superpowers Content Parity Implementation Plan
 
+> **Note (2026-08-18):** the 13 skills this plan built under their
+> original superpowers-identical slugs were renamed shortly after
+> shipping — see `CATALOG.md` for the live names (e.g. `brainstorming` is
+> now `scoping-before-building`, `writing-plans` is now
+> `structuring-an-implementation-plan`). This plan is the historical
+> record of what was executed at the time and is left otherwise
+> unchanged.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. Tasks 1-13 are mutually independent and safe to dispatch in parallel — each writes only to its own new `skills/<name>/` directory. Tasks 14-18 are strictly sequential and each depends on all of Tasks 1-13 being complete.
 
 **Goal:** Build TBaguette-native, enhanced replacements for the 13 skills `CATALOG.md` currently marks `†` as hand-offs to the `superpowers` plugin — same names, so they're true drop-in replacements — and ship them as one batch.

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Language: English</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">red-teaming-your-own-work</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it, when nothing looks wrong and nothing has been tried to make it look wrong, before handing off work someone will act on, or after a previous delivery came back with a defect a single skeptical pass would have caught. Covers adversarial self-review, attack checklists, and bounded review passes.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Rereading work confirms it; attacking it finds defects. Spend one bounded pass before delivery assuming the work is wrong and hunting for where — the productive question is not whether a defect exists but where it is hiding.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A change, plan, recommendation, or answer is finished and only its author has seen it</li><li>Nothing appears wrong, and nothing has been attempted to make it appear wrong</li><li>Before handing off a change set, a design, or a decision someone will act on</li><li>A previous delivery came back with a defect one skeptical pass would have caught</li><li>Not for: confirming a claim has evidence behind it (<code>verification-before-completion</code>), or diagnosing a failure you already know about (<code>systematic-debugging</code>). This is for work that currently looks correct.</li></ul>
+<ul><li>A change, plan, recommendation, or answer is finished and only its author has seen it</li><li>Nothing appears wrong, and nothing has been attempted to make it appear wrong</li><li>Before handing off a change set, a design, or a decision someone will act on</li><li>A previous delivery came back with a defect one skeptical pass would have caught</li><li>Not for: confirming a claim has evidence behind it (<code>confirming-before-claiming-done</code>), or diagnosing a failure you already know about (<code>diagnosing-before-fixing</code>). This is for work that currently looks correct.</li></ul>
 <h2 id="the-stance">The stance</h2>
 <p>&quot;Is this right?&quot; is answered by the same reasoning that produced the work, and it returns yes. &quot;If this is wrong, where is it wrong?&quot; forces the generation of candidate locations, which is a different task with a different output. Commit to finding at least one real defect; a pass that ends with none, and with no surprise about that, was a reread.</p>
 <h2 id="the-attack-list">The attack list</h2>
@@ -166,12 +166,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">Use when a recorded decision — an ADR, design doc, wontfix, runbook line…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">Use when an idea, feature request, or new project needs to become an approved design before any code gets written…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</span>
     </a></li>
   </ul>

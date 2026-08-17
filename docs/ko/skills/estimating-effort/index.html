@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-17T20:54:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T20:54:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-17T23:33:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-17T23:33:18Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">estimating-effort</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-17T23:33:18.127848+00:00">업데이트</span>
   </div>
   <span class="tag skill-article__tag">판단력과 메타 스킬</span>
   <p class="lede">무언가에 얼마나 걸리는지, 변경이 얼마나 큰지, 주어진 기간 안에 그 일이 들어가는지 질문을 받을 때, 기간이 붙은 계획이나 일정, 순서 약속을 내놓을 때, 앞선 추정을 이미 넘겨서 새 숫자가 필요할 때, 편차가 너무 커서 어떤 단일 숫자를 대든 지어낸 것이 될 때 사용합니다. 참조 집단, 범위로 말하기, 계획 오류, 탐색 스파이크, 재추정을 다룹니다.</p>
 </div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>An estimate assembled by decomposing the plan you can see underruns systematically, because the visible plan is the part that goes right. Anchor on how comparable work actually went, adjust only for differences you can name, and use decomposition as a cross-check rather than a source.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Asked how long something takes, how large a change is, or whether it fits a window</li><li>Producing a plan with durations, a schedule, or a sequencing commitment</li><li>An estimate has already been overrun and a replacement number is needed</li><li>The plausible range is wide enough that a point estimate would be fiction</li><li>Not for: breaking work into steps — <code>writing-plans</code> owns the decomposition. This owns the numbers attached to it, and whether they carry information.</li></ul>
+<ul><li>Asked how long something takes, how large a change is, or whether it fits a window</li><li>Producing a plan with durations, a schedule, or a sequencing commitment</li><li>An estimate has already been overrun and a replacement number is needed</li><li>The plausible range is wide enough that a point estimate would be fiction</li><li>Not for: breaking work into steps — <code>structuring-an-implementation-plan</code> owns the decomposition. This owns the numbers attached to it, and whether they carry information.</li></ul>
 <h2 id="reference-class-first-decomposition-second">Reference class first, decomposition second</h2>
 <ol><li><strong>Name the class by shape, not domain.</strong> &quot;A change inside one module that already has tests.&quot; &quot;An integration with an external service whose behaviour is undocumented.&quot; &quot;A rename across an unknown number of call sites.&quot; The domain — billing, rendering, sync — predicts far less than the shape.</li><li><strong>Find real outcomes.</strong> Version-control history for comparable changes, how long the last two similar tasks actually took, elapsed wall-clock rather than remembered effort. Remembered effort systematically excludes the parts that went badly.</li><li><strong>Start from that number.</strong> Adjust only for differences you can point at. &quot;We understand this codebase better now&quot; is the standard unearned adjustment and is nearly always wrong, because whatever familiarity existed was already priced into the previous outcome.</li><li><strong>Decompose as a check.</strong> When the bottom-up sum lands well below the reference class, the decomposition is missing tasks. That is the near-universal direction of the discrepancy — not the reference class being pessimistic.</li></ol>
 <h2 id="why-decomposition-alone-makes-it-worse">Why decomposition alone makes it worse</h2>
@@ -166,12 +166,12 @@
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">ADR이나 설계 문서, wontfix 표시, 런북의 한 줄, “Y 때문에 X는 못 한다”고 적힌 주석처럼 기록으로 남은 결정이 지금 눈앞의 일을 가로막는 것처럼 보일 때…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/brainstorming/">
-      <span class="see-also__name">brainstorming</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">아이디어나 기능 요청, 새 프로젝트가 코드를 한 줄도 쓰기 전에 승인된 설계로 바뀌어야 할 때, 특히 그 요청이 실제로 얼마나 많은 프로세스를 필요로 하는지 불분명할 때 사용합니다.</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/verification-before-completion/">
-      <span class="see-also__name">verification-before-completion</span>
+<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/confirming-before-claiming-done/">
+      <span class="see-also__name">confirming-before-claiming-done</span>
       <span class="see-also__summary">수정이나 기능, 테스트 스위트가 다 됐다거나 고쳐졌다거나 통과했다고 말하려 할 때, 그 주장의 힘만으로 변경 사항을 커밋하거나 푸시하거나 넘기려 할 때, subagent나 도구 자신의 성공 보고를 그대로 사실인 것처럼 되풀이하려 할 때…</span>
     </a></li>
   </ul>
