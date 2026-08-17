@@ -299,6 +299,36 @@ Per that skill's own output shape — fix what the manager confirms, leave what'
 - Consumes: Task 15's output (final skill count: 74 + 13 = 87)
 - Produces: a source tree internally consistent at count 87, ready for Task 17's translation and Task 18's test/ship
 
+### Execution note (found while running this task, not in the original scan)
+
+`EXPECTED_SKILL_COUNT` is not the only hard gate on skill count.
+`scripts/content_pipeline.py` has its own `CATEGORIES` constant — a
+hand-maintained list of dicts (`slug`/`title`/`skill_slugs`) that mirrors
+`CATALOG.md`'s structure but is a *separate* source of truth the docstring
+explicitly says is "not re-derived from `CATALOG.md` or any other
+heuristic." `build_content()` raises a hard `ValueError` for any on-disk
+skill directory not listed there. Discovered this the hard way: running
+`scripts/run_tests.py` while Plan A's own verification was in flight (both
+plans share the `skills/` tree) failed on exactly this, for skills that
+existed on disk but weren't registered anywhere yet — not a defect in
+either plan, just an integration point neither plan's original scan
+surfaced. Added a step here, before the constant bump, to update
+`CATEGORIES` with all 13 new skills in the same category placement as
+`CATALOG.md`'s (already-updated) rows.
+
+- [ ] **Step 0 (added): Update `content_pipeline.py`'s `CATEGORIES`**
+
+Add each of the 13 new skill slugs to its category's `skill_slugs` list in
+`scripts/content_pipeline.py`, matching `CATALOG.md`'s placement exactly:
+`brainstorming`, `verification-before-completion` → `judgment-and-meta`;
+`using-git-worktrees`, `finishing-a-development-branch` →
+`landing-changes`; `test-driven-development` → `testing`;
+`systematic-debugging` → `debugging-and-performance`;
+`requesting-code-review`, `receiving-code-review`, `writing-plans`,
+`executing-plans` → `communicating`; `dispatching-parallel-agents`,
+`subagent-driven-development`, `writing-skills` →
+`environment-and-tooling`.
+
 - [ ] **Step 1: Bump the constant**
 
 In `scripts/generate.py`, change `EXPECTED_SKILL_COUNT = 74` to `EXPECTED_SKILL_COUNT = 87`.

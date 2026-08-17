@@ -1,6 +1,6 @@
 """Content-extraction pipeline for the TBaguette skills showcase site.
 
-Reads the 74 skill directories under ``~/.claude/skills/TBaguette/skills/``
+Reads the 87 skill directories under ``~/.claude/skills/TBaguette/skills/``
 (each a ``SKILL.md`` with YAML frontmatter and a markdown body; one skill,
 ``formidable``, additionally carries a ``reference/`` tree of stack and
 command reference files) and produces a single JSON-serializable dict that
@@ -51,6 +51,8 @@ CATEGORIES: list[dict] = [
             "knowing-when-to-stop",
             "karen-and-the-manager",
             "revalidating-decisions",
+            "brainstorming",
+            "verification-before-completion",
         ],
     },
     {
@@ -79,6 +81,8 @@ CATEGORIES: list[dict] = [
             "deleting-code",
             "feature-flagging",
             "resolving-merge-conflicts",
+            "using-git-worktrees",
+            "finishing-a-development-branch",
         ],
     },
     {
@@ -93,6 +97,7 @@ CATEGORIES: list[dict] = [
             "characterization-testing",
             "choosing-test-scope",
             "grounding-test-doubles",
+            "test-driven-development",
         ],
     },
     {
@@ -106,6 +111,7 @@ CATEGORIES: list[dict] = [
             "observing-production-safely",
             "performance-profiling",
             "finding-resource-leaks",
+            "systematic-debugging",
         ],
     },
     {
@@ -150,6 +156,10 @@ CATEGORIES: list[dict] = [
             "writing-postmortems",
             "reviewing-code-deeply",
             "explaining-technical-work",
+            "requesting-code-review",
+            "receiving-code-review",
+            "writing-plans",
+            "executing-plans",
         ],
     },
     {
@@ -162,6 +172,9 @@ CATEGORIES: list[dict] = [
             "upgrading-dependencies",
             "keeping-tbaguette-current",
             "automating-repetition",
+            "dispatching-parallel-agents",
+            "subagent-driven-development",
+            "writing-skills",
         ],
     },
 ]
@@ -495,7 +508,7 @@ def split_frontmatter(markdown_text: str) -> tuple[dict[str, str], str]:
     """Split a SKILL.md's YAML frontmatter from its markdown body.
 
     Every SKILL.md in this corpus uses flat, single-line, unquoted
-    `key: value` frontmatter (verified against all 74 files), so this reads
+    `key: value` frontmatter (verified against all 87 files), so this reads
     just enough YAML to get name/description out without a YAML dependency
     -- it is not a general YAML parser.
     """
@@ -602,7 +615,7 @@ def summarize_description(description: str, max_length: int = SUMMARY_MAX_LENGTH
     """Trim a frontmatter description to a clean, <=140-char teaser.
 
     Every description in this corpus is a single long "Use when A, when B,
-    ... or when Z. Covers ..." sentence (all 74 run well past 140 characters,
+    ... or when Z. Covers ..." sentence (all 87 run well past 140 characters,
     the shortest is 279), so this always has real trimming to do. Strategy:
     take the first sentence; if it still doesn't fit, cut at the last comma
     (clause boundary) within budget, or fall back to the last word boundary
@@ -877,7 +890,7 @@ def _dedupe_id(candidate: str, used_ids: set[str]) -> str:
 def _consume_fenced_code_block(lines: list[str], index: int) -> tuple[str, int]:
     """Consume a ``` ... ``` block. Not in the spec's stated subset, but real
 
-    (7 of the 74 files use one, e.g. bisecting-failures.md's bisect script);
+    (7 of the 87 files use one, e.g. bisecting-failures.md's bisect script);
     rendered as a literal, HTML-escaped <pre><code> block with no inline
     markdown processing inside it, so a code sample's own `*` or backticks
     can't be misread as formatting -- this matters concretely, since one
