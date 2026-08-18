@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-18T05:32:52+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-18T05:32:52Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-18T19:08:16+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-18T19:08:16Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -115,9 +115,9 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Property passes for any implementation</td><td>The property restates the implementation; a wrong implementation would satisfy it too</td></tr><tr><td>Property never fails, then a bug ships</td><td>Generator never reaches the failing region — empty, huge, duplicate, or boundary values are absent</td></tr><tr><td>Failure cannot be reproduced</td><td>Seed not printed, or the generator reads the clock or an external source</td></tr><tr><td>Counterexample is enormous</td><td>Shrinking is absent, blocked by a custom type, or reduces toward an invalid value and gives up</td></tr><tr><td>Suite is slow and gets its case count lowered</td><td>Property does I/O or database work per case; properties belong on pure logic, integration on examples</td></tr><tr><td>Round-trip green, real consumers break</td><td>Both directions share the same wrong assumption; no external-format example test exists</td></tr><tr><td>Rewrite matches old behavior including its bugs</td><td>Oracle property treated as a specification instead of a change-detector</td></tr><tr><td>Property is skipped after intermittent failures</td><td>A genuine nondeterminism in the code under test was misfiled as generator noise</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;The property is basically the function&quot; — then it proves nothing.</li><li>Adding a filter to the generator to make a failing property pass.</li><li>Narrowing the generator's range after a failure, instead of fixing the code.</li><li>Reducing the case count to make CI faster while keeping the property as evidence.</li><li>Deleting the shrunk example test because &quot;the property covers it&quot;.</li><li>Treating a nondeterministic property failure as flakiness rather than a discovered race.</li></ul></div></article>
-<nav class="container prevnext" aria-label="技能导航"><a class="prevnext__link" href="/tbaguette-skills/zh/skills/designing-test-data/">
+<nav class="container prevnext" aria-label="技能导航"><a class="prevnext__link" href="/tbaguette-skills/zh/skills/auditing-new-input-categories/">
   <span class="prevnext__label">上一个</span>
-  <span class="prevnext__name">← designing-test-data</span>
+  <span class="prevnext__name">← auditing-new-input-categories</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/zh/skills/testing-the-untestable/">
   <span class="prevnext__label">下一个</span>
@@ -129,6 +129,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/designing-test-data/">
       <span class="see-also__name">designing-test-data</span>
       <span class="see-also__summary">在以下情况下使用：一个测试的准备代码比它的断言还长；fixture 被多个文件共用；说不清是哪个准备值导致测试失败；测试单跑能过、按套件顺序跑就挂；或者要构造工厂、builder、object mother、种子数据，或者为分页和压测准备的大批量数据。</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/auditing-new-input-categories/">
+      <span class="see-also__name">auditing-new-input-categories</span>
+      <span class="see-also__summary">在以下情况下使用：给系统扩展一种全新的输入类别——新的文字书写系统、文件格式、支付方式、协议版本、设备类型、货币，或者复数形式比已支持语言更多的语言——而不是在已支持的类别里新增一个值；灰度发布时反复在旧的公共代码里挖出问题，而不是新内容本身出问题…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/testing-the-untestable/">
       <span class="see-also__name">testing-the-untestable</span>

@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-18T05:32:52+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-18T05:32:52Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-18T19:08:16+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-18T19:08:16Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -90,14 +90,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">designing-test-data</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-18T01:59:03+02:00">已更新</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-18T19:08:16.421421+00:00">已更新</span>
   </div>
   <span class="tag skill-article__tag">测试</span>
   <p class="lede">在以下情况下使用：一个测试的准备代码比它的断言还长；fixture 被多个文件共用；说不清是哪个准备值导致测试失败；测试单跑能过、按套件顺序跑就挂；或者要构造工厂、builder、object mother、种子数据，或者为分页和压测准备的大批量数据。涵盖默认值、真实值与最小值的取舍，以及 Unicode 和区域设置相关的输入。</p>
 </div><p class="translation-banner" role="note">本页尚未翻译成中文——下面显示的是英文版。</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>The setup is the other half of a test's statement. If a reader cannot tell from the setup which value makes this test different from the one above it, the test communicates nothing and will not survive its author.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Setup is longer than the assertion, or repeats across files with small edits.</li><li>A test fails and it is not obvious which of the twelve fields in the setup caused it.</li><li>Tests pass in isolation and fail in suite order, or fail only under parallel execution.</li><li>Seeding a store, queue, or file tree before exercising behavior.</li><li>Needing hundreds or millions of records for pagination, sort stability, or load shape.</li><li>Not for: the red-green-refactor loop itself, owned by <code>writing-the-failing-test-first</code>.</li></ul>
+<ul><li>Setup is longer than the assertion, or repeats across files with small edits.</li><li>A test fails and it is not obvious which of the twelve fields in the setup caused it.</li><li>Tests pass in isolation and fail in suite order, or fail only under parallel execution.</li><li>Seeding a store, queue, or file tree before exercising behavior.</li><li>Needing hundreds or millions of records for pagination, sort stability, or load shape.</li><li>Not for: the red-green-refactor loop itself, owned by <code>writing-the-failing-test-first</code>.</li><li>Not for: a system taking on an entire new <em>category</em> of input for the first time — a new script, file format, or protocol version — where the risk lives in shared code no prior category ever exercised. Realistic values inside a category you already handle are this skill's job; auditing a category you don't yet handle is <code>auditing-new-input-categories</code>.</li></ul>
 <h2 id="the-one-obvious-difference-rule">The one-obvious-difference rule</h2>
 <p>Every value in a setup is either <strong>irrelevant</strong> — and must be a default, invisible — or <strong>relevant</strong> — and must be explicit, named, and adjacent to the assertion. Two tests that differ in intent differ in exactly one visible line.</p>
 <ul><li>Setup that names more than 3 values the test never asserts on has the wrong defaults.</li><li>Give the relevant value a name that states the reason: <code>expiredYesterday</code>, <code>maxLengthTitle</code>. A bare literal makes the reader reverse-engineer the intent.</li><li>Assert only on fields the test set or the code derived. Asserting on an incidental default couples the test to the builder.</li></ul>
@@ -111,6 +111,7 @@
 <h2 id="realistic-over-minimal">Realistic over minimal</h2>
 <table><thead><tr><th>Hazard</th><th>Minimal value that lies</th><th>Use instead</th></tr></thead><tbody><tr><td>Encoding</td><td><code>&quot;abc&quot;</code></td><td>A 4-byte emoji, a combining-accent pair, an RTL name — separates bytes, code points, and graphemes</td></tr><tr><td>Length</td><td><code>&quot;test&quot;</code></td><td>Schema maximum, maximum+1, a 1-character value, and empty-but-legal</td></tr><tr><td>Case and locale</td><td><code>&quot;Alice&quot;</code>, <code>&quot;Bob&quot;</code></td><td><code>Ä</code>, <code>ø</code>, <code>ı</code> — collation order and lowercasing differ by locale</td></tr><tr><td>Money and decimals</td><td><code>10</code></td><td>The currency's real minor-unit precision, a negative, and a pair like <code>0.1 + 0.2</code></td></tr><tr><td>Time</td><td>A round timestamp</td><td>A leap day, a DST transition, an end-of-month, 23:30 in a <code>+05:45</code> zone</td></tr><tr><td>Identifiers</td><td><code>&quot;id1&quot;</code></td><td>The real format and length; plus a value that looks numeric but is not</td></tr><tr><td>Scale</td><td>3 rows</td><td>One past every internal boundary: page size+1, batch size+1, buffer size+1</td></tr></tbody></table>
 <p>Use realistic values wherever the code touches encoding, length limits, locale, ordering, arithmetic precision, or a size boundary. Elsewhere, minimal is correct and cheaper.</p>
+<p>The table above assumes the script, format, or locale itself is one the system already handles — an RTL name is a realistic <em>value</em> only once RTL is a category the code has ever run at all. The first RTL name, the first new file format, the first new plural rule: that is a different problem, not covered by picking a better value, and it is <code>auditing-new-input-categories</code>'s job.</p>
 <h2 id="volume-without-hand-writing-it">Volume without hand-writing it</h2>
 <ul><li>Generate from a <strong>seeded</strong> pseudorandom source and print the seed in the failure output. Unseeded generated volume is an unreproducible test. (This is bulk data with a shape you already know — a generator searching an input domain for a case that breaks a property is <code>property-based-testing</code>, a different problem that happens to share the seeding discipline.)</li><li>Generate at <strong>boundary+1</strong>, not at a round number. If paging is 100, build 101 rows; 1,000 rows tests nothing more and costs ten times as much.</li><li>For performance-shaped tests, <strong>distribution beats count</strong>: a long tail (a handful of records with 10,000 children, most with 0–2) exposes N+1 queries and missing indexes that a uniform 100-each dataset never will.</li><li>Insert bulk data through the store's native path, not the domain layer, when the test is about read behavior — otherwise setup dominates runtime.</li><li>Past ~1s of setup per test, move to one suite-scoped read-only dataset built once; tests that mutate create their own records instead.</li></ul>
 <p>All of the above assumes you own the shape you are building. For a double standing in for something you do not control, the governing question is where its content came from — see <code>grounding-test-doubles</code>.</p>
@@ -118,13 +119,17 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Test fails only when run after another test</td><td>Shared fixture handed out by reference; one test mutates the next test's input</td></tr><tr><td>Changing one fixture field breaks 30 tests</td><td>Those tests assert on values they never set — the fixture is an unwritten specification</td></tr><tr><td>Nobody can tell what the test is about</td><td>Every field is explicit, so the relevant one is indistinguishable from the noise</td></tr><tr><td>Fixture has 40 fields and none can be removed</td><td>Kitchen-sink fixture; no test declares what it needs, so nothing can be proven unused</td></tr><tr><td>Test still passes with the production logic deleted</td><td>The default already equals the expected value</td></tr><tr><td>Suite gets slower every sprint</td><td>Every test seeds the whole world; setup cost tracks fixture size, not test needs</td></tr><tr><td>Test data reaches a real inbox or a live endpoint</td><td>Plausible-looking defaults instead of reserved-range ones</td></tr><tr><td>One test fails around the end of each month</td><td>Data derived from the current date crossing a month, quarter, or DST boundary</td></tr><tr><td>Generated-data failure cannot be reproduced</td><td>No seed recorded, or the seed was time-derived</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;I'll just add one more field to the shared fixture.&quot;</li><li>&quot;The test needs the whole object graph anyway.&quot;</li><li>&quot;Random data finds more bugs&quot; — said without recording a seed.</li><li>Copying a fixture file and editing two fields.</li><li>Loading a production dump as test data.</li><li>An expected value computed by the same expression as the code under test.</li><li>A setup block you scroll past to reach the assertion.</li></ul></div></article>
-<nav class="container prevnext" aria-label="技能导航"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/zh/skills/property-based-testing/">
+<nav class="container prevnext" aria-label="技能导航"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/zh/skills/auditing-new-input-categories/">
   <span class="prevnext__label">下一个</span>
-  <span class="prevnext__name">property-based-testing →</span>
+  <span class="prevnext__name">auditing-new-input-categories →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">“测试”分类中的更多技能</h2>
   <ul class="see-also__list">
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/auditing-new-input-categories/">
+      <span class="see-also__name">auditing-new-input-categories</span>
+      <span class="see-also__summary">在以下情况下使用：给系统扩展一种全新的输入类别——新的文字书写系统、文件格式、支付方式、协议版本、设备类型、货币，或者复数形式比已支持语言更多的语言——而不是在已支持的类别里新增一个值；灰度发布时反复在旧的公共代码里挖出问题，而不是新内容本身出问题…</span>
+    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/property-based-testing/">
       <span class="see-also__name">property-based-testing</span>
       <span class="see-also__summary">在以下情况下使用：示例测试只覆盖了有人想到的那些情况；要测解析器、序列化器、编码器、排序、比较器、算术、缓存或数据结构；一个缺陷来自谁都没料到的输入；要用一套实现替换另一套，而两者必须给出一致的结果；或者打算动用模糊测试、生成器、反例收缩、不变量或往返一致性检查。</span>

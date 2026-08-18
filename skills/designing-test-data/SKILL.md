@@ -17,6 +17,7 @@ The setup is the other half of a test's statement. If a reader cannot tell from 
 - Seeding a store, queue, or file tree before exercising behavior.
 - Needing hundreds or millions of records for pagination, sort stability, or load shape.
 - Not for: the red-green-refactor loop itself, owned by `writing-the-failing-test-first`.
+- Not for: a system taking on an entire new *category* of input for the first time — a new script, file format, or protocol version — where the risk lives in shared code no prior category ever exercised. Realistic values inside a category you already handle are this skill's job; auditing a category you don't yet handle is `auditing-new-input-categories`.
 
 ## The one-obvious-difference rule
 
@@ -62,6 +63,8 @@ Two further rules that most builders get wrong:
 | Scale | 3 rows | One past every internal boundary: page size+1, batch size+1, buffer size+1 |
 
 Use realistic values wherever the code touches encoding, length limits, locale, ordering, arithmetic precision, or a size boundary. Elsewhere, minimal is correct and cheaper.
+
+The table above assumes the script, format, or locale itself is one the system already handles — an RTL name is a realistic *value* only once RTL is a category the code has ever run at all. The first RTL name, the first new file format, the first new plural rule: that is a different problem, not covered by picking a better value, and it is `auditing-new-input-categories`'s job.
 
 ## Volume without hand-writing it
 

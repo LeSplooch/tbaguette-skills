@@ -1,6 +1,6 @@
 # TBaguette
 
-87 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+88 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -70,6 +70,7 @@ TBaguette skill hands off to a neighbour.
 | Skill | For |
 |---|---|
 | `designing-test-data` | Builders over fixtures; the one-obvious-difference rule |
+| `auditing-new-input-categories` | A new category vs. a new instance; why prior categories' green tests are not evidence; sourcing known trouble spots from expert knowledge |
 | `property-based-testing` | Invariants, generators, shrinking |
 | `testing-the-untestable` | Time, randomness, network, filesystem, identifiers, concurrency |
 | `flaky-test-triage` | The cause taxonomy; quarantine with an expiry; why retry is not a fix |
