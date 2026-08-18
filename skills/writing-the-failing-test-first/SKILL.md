@@ -26,6 +26,8 @@ Catching yourself already mid-implementation — "just this once," "I'll backfil
 
 That includes the version of this thought that sounds like judgment rather than shortcut: "I already know what this should look like, so rewriting it from a test won't teach me anything new." It's true and beside the point — the loop was never about being surprised by your own solution. It's about watching a test fail for the reason you predicted, which is the only check that the test could have caught you being wrong. A reason for skipping the order that sounds compelling is exactly the moment to run the order anyway; if the reason is right, the red step confirms it in thirty seconds, and if it's wrong, that's the bug the whole discipline exists to catch before it ships.
 
+The deadline that feels closest isn't always the one with the least slack. Deleting and redoing test-first can feel like trading a calm evening for a scramble tomorrow, but tomorrow morning usually holds more real working time before a 9am review than the last thirty minutes before dinner tonight do — and redoing a design you just spent hours arriving at is rarely a second full pass, since the hard calls are already made. Do the actual arithmetic on the time available before treating "later" as the scarier option; it usually isn't the one that's actually short on room.
+
 Exceptions exist: throwaway prototyping, generated code, one-off configuration. Those are exceptions you name out loud and get agreement on before you start, not defaults you slide into because the test felt inconvenient this time.
 
 ## Red — write a test that fails for the right reason

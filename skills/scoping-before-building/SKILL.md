@@ -92,6 +92,10 @@ After understanding the idea, present the design directly in chat — a few sent
 
 Propose two or three real approaches, not one dressed up as a choice. Lead with the one you'd actually pick and say why; present the others honestly enough that a different choice would be defensible. Apply YAGNI to all of them before presenting — an approach padded with unrequested features doesn't get more convincing for having more in it, and everything trimmed here is a paragraph the eventual spec won't have to carry either.
 
+## When the design needs an answer code can give faster than guessing
+
+Sometimes a question blocking the design itself — does this library support batch writes, does this API actually return the field an approach depends on — is faster to answer by running five lines than by reading documentation or guessing out loud. That's still research, not implementation, and it stays research only under three conditions: it answers one specific open question, nothing from it survives into the approved build, and you say what you're doing before you do it ("let me check whether X supports Y — throwaway, just answering the question"). The moment the answer to the question becomes "yes, and here's forty lines that basically already do it," the spike quietly became the build, and the approval it was supposed to inform never happened. Delete the probe once it's answered the question, the same way a spike's output is disposable, and bring the *answer* back into the design conversation, not the code.
+
 ## Presenting the design
 
 Once the shape is clear, present it in sections and check after each one, rather than unloading the whole thing and asking for a single verdict at the end — a wrong assumption in section one invalidates everything built on it in section four, and catching it before section four is the entire point of the checkpoint. Scale each section's length to how much it actually needs: a couple of sentences where the choice is obvious, a longer paragraph where it's genuinely nuanced. Cover architecture, the components involved, how data moves between them, error handling, and how it gets tested. Expect to backtrack — a section that doesn't land is a reason to revisit an earlier one, not to push forward and hope it resolves itself.
@@ -137,6 +141,7 @@ Then hand the written spec to the user with a direct ask — something like "spe
 | Five questions sent in one message, only the first one answered | Questions weren't batched one at a time |
 | A written spec reads clean but the plan built from it goes sideways | Self-review checked spelling and section balance instead of contradictions and ambiguity |
 | A layout question described in three paragraphs still gets misread | The question was visual; it got the text treatment anyway |
+| Exploratory code from mid-design "just checking" ends up in the shipped implementation | Research and building were never actually kept separate — the probe's output should have crossed back in as an answer, not as code |
 
 ## Red flags
 

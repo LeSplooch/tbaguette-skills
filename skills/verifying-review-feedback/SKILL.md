@@ -30,6 +30,10 @@ Agreement that arrives before verification costs you nothing to produce and is w
 
 Restating the comment — in your own words, back to the reviewer if needed — is what surfaces the gap between "I understood this" and "I'm about to guess." If the restatement doesn't come easily, that's the clarification path below, not a cue to implement your best guess and see what happens.
 
+## The comment is also evidence, and it can go stale too
+
+A review comment names a line, a behavior, sometimes a literal snippet — all true of the code as it stood the moment the comment was written. If the diff has moved since then, because a different comment in the same batch already touched that code, or someone else pushed to the branch, the comment may be describing a shape that no longer exists. Verifying against what the comment *says* instead of what the code *currently does* is the same gap `confirming-before-claiming-done` covers for your own completion claims, aimed here at someone else's observation instead: re-read the actual code at the location the comment names, right now, before deciding whether it's right, wrong, or has already been overtaken by a later fix.
+
 ## Disagreement and confusion are both legitimate answers
 
 Verification lands you in one of four places, and only one of them looks like blind compliance:
@@ -65,6 +69,7 @@ Scale the checking to how much context the source could plausibly have. A bot, o
 | Pushback that turns into a paragraph defending the original code | The technical reason is buried under the discomfort of disagreeing |
 | An unclear item quietly dropped from the batch | Guessed silently, or hoped nobody would notice it wasn't addressed |
 | The same suggestion resurfaces two reviews later, still wrong | Implemented without checking it against a decision already on record |
+| A fix applied to code the comment no longer accurately describes | The comment was trusted as current instead of re-checked against the code as it stands now |
 
 ## Red flags
 

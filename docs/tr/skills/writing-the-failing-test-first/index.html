@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Son güncelleme</span>
-      <time class="site-header__updated-value" datetime="2026-08-18T00:42:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-18T00:42:20Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-18T04:26:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-18T04:26:40Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Dil: Türkçe</summary>
@@ -90,7 +90,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">writing-the-failing-test-first</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-18T00:42:20.370334+00:00">Güncellendi</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-18T04:26:40.512335+00:00">Güncellendi</span>
   </div>
   <span class="tag skill-article__tag">Testler</span>
   <p class="lede">Herhangi bir yeni özellik geliştirirken, bir hatayı düzeltirken ya da var olan bir davranışı değiştirirken — hiçbir üretim kodu yazılmadan önce kullanın. Önce başarısız olan tek bir test yazmayı, bunun doğru sebeple başarısız olduğunu doğrulamayı, onu geçirecek asgari kodu yazmayı, ve yalnızca suite yeniden yeşile döndükten sonra yeniden düzenleme yapmayı kapsar.</p>
@@ -101,6 +101,7 @@
 <h2 id="no-production-code-before-a-failing-test">No production code before a failing test</h2>
 <p>Catching yourself already mid-implementation — &quot;just this once,&quot; &quot;I'll backfill the test after,&quot; &quot;this one's too simple to bother&quot; — is the signal to stop and delete what you wrote. Not comment it out, not keep it open in another tab to &quot;adapt&quot; while writing the test: delete it. A test written while looking at a solution you already have is not a test-first test no matter what the file timestamps say — you already know what the answer looks like, and you'll write the assertion to match it instead of to specify it.</p>
 <p>That includes the version of this thought that sounds like judgment rather than shortcut: &quot;I already know what this should look like, so rewriting it from a test won't teach me anything new.&quot; It's true and beside the point — the loop was never about being surprised by your own solution. It's about watching a test fail for the reason you predicted, which is the only check that the test could have caught you being wrong. A reason for skipping the order that sounds compelling is exactly the moment to run the order anyway; if the reason is right, the red step confirms it in thirty seconds, and if it's wrong, that's the bug the whole discipline exists to catch before it ships.</p>
+<p>The deadline that feels closest isn't always the one with the least slack. Deleting and redoing test-first can feel like trading a calm evening for a scramble tomorrow, but tomorrow morning usually holds more real working time before a 9am review than the last thirty minutes before dinner tonight do — and redoing a design you just spent hours arriving at is rarely a second full pass, since the hard calls are already made. Do the actual arithmetic on the time available before treating &quot;later&quot; as the scarier option; it usually isn't the one that's actually short on room.</p>
 <p>Exceptions exist: throwaway prototyping, generated code, one-off configuration. Those are exceptions you name out loud and get agreement on before you start, not defaults you slide into because the test felt inconvenient this time.</p>
 <h2 id="red-write-a-test-that-fails-for-the-right-reason">Red — write a test that fails for the right reason</h2>
 <p>Write one test for one behavior, name it after that behavior, and before you write its body, answer: what production change would make this fail? If you can't name one, you don't yet know what you're testing — go find the actual behavior first, rather than writing an assertion and hoping it lands on something real.</p>

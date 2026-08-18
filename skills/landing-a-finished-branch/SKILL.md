@@ -23,6 +23,8 @@ Run the full suite against the tree that's actually going to be integrated, not 
 
 The other half of "finished" is knowing what it's finished *relative to*. Name the base branch — usually obvious from the branch's upstream or whatever plan started the work — and confirm it if there's any doubt. Getting the base wrong is one of the few mistakes here you can't cheaply take back once it's pushed.
 
+Sometimes that base isn't a stable trunk at all — it's another feature branch, still unreviewed, that this one was stacked on top of. Every option below still applies, but say so explicitly when you present the menu ("this stacks on `<branch>`, which hasn't landed yet"), because otherwise "the base branch" quietly resolves to the eventual trunk in everyone's head, including yours. A pull request opened against trunk from here will show every commit from both branches as if this one authored them, and a local merge here means merging into the still-unreviewed branch, not into trunk. The confirmation this skill already asks for doesn't resolve that on its own — a stacked base needs its own sentence, not just a name.
+
 ## What's on the menu
 
 Where the branch lives decides what you're even allowed to offer:
@@ -82,6 +84,7 @@ If removal is refused because the worktree still holds modified or untracked fil
 | An unrelated worktree removed along with the finished one | Cleanup ownership was assumed instead of checked |
 | A removal refusal pushed through with `--force` | The refusal meant those files existed nowhere else; forcing destroyed them instead of asking |
 | Merge lands on the wrong parent branch | The base was assumed from habit instead of confirmed against the branch's actual fork point |
+| A pull request shows commits from a branch nobody's reviewing yet | The base was assumed to be trunk without checking whether the actual base branch has landed |
 | A rejected push gets force-pushed to make it go through | The rejection meant the remote had moved; that needed investigating, not overwriting |
 
 ## Red flags

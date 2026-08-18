@@ -120,6 +120,10 @@ Every adjudication is a recorded ruling. A finding dropped with no line explaini
 
 Close the task once its review is clean, or once every remaining finding is parked or ruled at the cap — never earlier, and never move to the next task while a Critical or Important finding sits neither fixed nor resolved.
 
+## When a finding points backward, not forward
+
+Most findings are about the task just reviewed. Occasionally one isn't — Task 6's review reveals that Task 2's interface choice, already closed and built on by three tasks since, was wrong. This is worse than an ordinary load-bearing finding, because the damage isn't pending, it's already shipped: don't fold it into Task 6's fix loop as though Task 6 caused it. Stop, name which earlier task the finding actually belongs to and what's been built on top of it since, and treat it the way a load-bearing finding at the cap is treated — surfaced to your human partner, not silently absorbed into whichever task happened to be open when it was noticed. The running record you've kept since before task one is what makes this findable at all: without it, "Task 2 was wrong" has no way to become "and Tasks 3 through 5 inherited it," because nothing recorded what those tasks actually depended on.
+
 ## The final review
 
 Once every task is done, dispatch one review across the whole branch — not per-task scope this time, and on the most capable model available regardless of what individual tasks used. Compose that dispatch the way `handing-off-for-review` describes: what was built, what it should do, the exact range, and the shape you want the findings back in. Hand it the running list of deferred minors and parked findings too, so it triages what actually blocks merge instead of rediscovering all of it from nothing.
@@ -140,6 +144,7 @@ Once the final review is clean, this skill's job is done. How the branch actuall
 | A dispatch prompt balloons with several tasks' worth of pasted history | Session history got pasted in instead of handed over as an interface the brief states plainly |
 | The implementer's self-review stands in for the task review | Self-review and independent review catch different things; one was skipped, not just deferred |
 | An implementer spawns its own reviewer and the controller treats that as covered | A duplicate review seat, not a second opinion — the real review still has to run |
+| A defect traced back to an earlier, already-closed task | Treated as the current task's finding instead of raised against the task that actually owns it |
 
 ## Red flags
 

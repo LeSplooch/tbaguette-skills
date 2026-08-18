@@ -134,6 +134,10 @@ Fix what you find inline, immediately — no separate re-review pass required. A
 
 Calibrate what's worth flagging: an issue that would cause an implementer to build the wrong thing, stall, or guess is real. A wording preference or a "nicer" phrasing isn't, and it doesn't block the plan. When a second reviewer runs this same list, the output is a status — approved, or issues found — with each issue naming its exact task and step and why it would derail implementation, and any recommendations kept separate and explicitly non-blocking: a plan doesn't fail review over advice.
 
+## When execution reveals the plan was wrong
+
+A plan is a prediction, and predictions miss once real code pushes back — a signature comes out different than guessed, a file needs splitting the plan never called for. That's not a failure of this skill; it's `working-a-plan-task-by-task` and `delegating-tasks-with-review-gates` correctly treating a plan/codebase contradiction as a blocker to raise rather than a wrinkle to absorb. What this skill owns is what happens to the *document* once that's resolved: note the actual outcome at the task that produced it, briefly, so a reader hitting Task 9's Interfaces block finds the signature Task 4 really shipped, not the one originally guessed at. An Interfaces block that quietly drifts from what got built costs the next task the same way an undefined reference would — the difference is only that this one used to be right and nobody updated it. Whether to also revise the original steps or just annotate the divergence is a call for whoever's executing; either way, the plan stops earning its keep as a reference the moment its predictions and the shipped code disagree and nothing on the page admits it.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -145,6 +149,7 @@ Calibrate what's worth flagging: an issue that would cause an implementer to bui
 | The plan reads fine but nobody can say which spec line it satisfies | Tasks written from the shape of the code, not from the spec, and never checked back against it |
 | Self-review finds nothing | Run by the same eyes that just wrote the plan, in the same sitting, with no actual distance |
 | A plan skips Global Constraints in the header | The spec's project-wide rules got copied once per task instead of once, and drifted |
+| An Interfaces block cites a signature the codebase no longer has | The plan recorded a prediction and never got updated once execution produced something different |
 
 ## Red flags
 
