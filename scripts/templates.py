@@ -724,7 +724,18 @@ INSTALL_COMMAND_CMD = (
 # a small mismatch now that this button copies a prompt instead) to avoid
 # a schema change needing a translated value from all 12 shipped locales
 # for a single aria-label — worth revisiting in a dedicated pass, not here.
-INSTALL_PROMPT_HINT = "Paste into a Claude Code conversation — it reads your OS and runs the real commands itself."
+#
+# The hint also names Claude Desktop explicitly and recommends a model.
+# A real visitor asked where in Claude Desktop to paste this — "a Claude
+# Code conversation" read as a location, not as an exclusion of the other
+# product. Claude Desktop has no shell tool by default and doesn't read
+# ~/.claude/skills/ at all (see README's Install section), so pasting the
+# prompt there can't do anything useful; worth ruling out here rather than
+# only in the README a visitor may never open. Naming Claude Sonnet (Max)
+# sets an expectation for what this has actually been exercised against,
+# rather than leaving model choice to a visitor with no way to know it
+# matters — a recommendation, not a claim that nothing else works.
+INSTALL_PROMPT_HINT = "Paste into a Claude Code conversation on Claude Sonnet (Max) — not Claude Desktop, which can't run it. It reads your OS and runs the real commands itself."
 INSTALL_PROMPT = """Install (or update) the TBaguette skills plugin for Claude Code. Use your shell tool.
 
 Before you start: confirm git is available (git --version). If it isn't, tell me and stop — there's nothing else to try.
