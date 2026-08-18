@@ -24,6 +24,8 @@ A test written after the code has never been seen to fail. It cannot prove it ca
 
 Catching yourself already mid-implementation — "just this once," "I'll backfill the test after," "this one's too simple to bother" — is the signal to stop and delete what you wrote. Not comment it out, not keep it open in another tab to "adapt" while writing the test: delete it. A test written while looking at a solution you already have is not a test-first test no matter what the file timestamps say — you already know what the answer looks like, and you'll write the assertion to match it instead of to specify it.
 
+That includes the version of this thought that sounds like judgment rather than shortcut: "I already know what this should look like, so rewriting it from a test won't teach me anything new." It's true and beside the point — the loop was never about being surprised by your own solution. It's about watching a test fail for the reason you predicted, which is the only check that the test could have caught you being wrong. A reason for skipping the order that sounds compelling is exactly the moment to run the order anyway; if the reason is right, the red step confirms it in thirty seconds, and if it's wrong, that's the bug the whole discipline exists to catch before it ships.
+
 Exceptions exist: throwaway prototyping, generated code, one-off configuration. Those are exceptions you name out loud and get agreement on before you start, not defaults you slide into because the test felt inconvenient this time.
 
 ## Red — write a test that fails for the right reason
@@ -80,6 +82,7 @@ That check is the actual definition of done, not "coverage went up." Ship the te
 | Refactor step quietly changes an assertion | Refactor is being used to smuggle in a second, unproven change |
 | Whole suite re-run "to be safe" instead of reading the one failure | The failure message was never actually read closely enough to say why it failed |
 | Bug fixed with no test written first | The only evidence the fix works is manual checking, which leaves nothing to catch the regression |
+| Code kept and tests backfilled because "I already know this cold" | Confidence in the solution stood in for proof a test could catch it being wrong |
 
 ## Red flags
 
@@ -90,4 +93,5 @@ That check is the actual definition of done, not "coverage went up." Ship the te
 - "Already spent three hours on this; deleting it now would be wasteful."
 - "It's about the spirit of TDD, not the ritual."
 - "This case is different, the rule doesn't really fit here."
+- "I already know what this should look like — rewriting it teaches me nothing."
 - "The suite's green" — said about a test nobody watched fail first.
