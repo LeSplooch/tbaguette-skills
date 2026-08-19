@@ -83,8 +83,11 @@ Where no dump facility exists, attach a debugger and dump all thread backtraces,
 | Sleep to let the other thing finish | an unenforced happens-before with an expiry date set by the next fast machine |
 | Reorder two statements until it passes | depends on the compiler not reordering them back, which it is permitted to do |
 | Kill and restart a process that was only slow, not hung | discarded its warm-up, cache, or partial progress and re-entered the same contention it was losing before |
+| Relocate a reentrant deadlock's block, reasoning about scheduler timing | still a blocking wait somewhere in the call chain; correct until a different caller, version, or load pattern schedules it differently |
 
 The test for a real fix: state in one sentence which happens-before edge now exists that did not before. If the sentence is "there is a lock now" without naming what it orders against what, a symptom was removed.
+
+A reentrant deadlock — a blocking wait nested inside another blocking call on the same thread or executor — has a second test, because the first fix attempted is almost always to relocate the block: run it earlier, run it on a different thread, reason about which thread the runtime will actually schedule it onto. That reasoning is fragile by construction — it holds until the next caller, version, or load pattern schedules something differently, and the hang comes back. The fix that survives removes every blocking wait from the call chain instead: await or its equivalent end-to-end, no blocking invoke anywhere in the path. If the call chain still contains a blocking wait anywhere, the fix isn't done, no matter how confidently the relocation was reasoned through.
 
 ## The question that finds the class
 
@@ -112,3 +115,4 @@ For each piece of shared state, write its invariant explicitly. Then, for every 
 - Reasoning about interleavings without naming the shared state and its invariant
 - Treating a race-detector warning on a passing run as noise
 - Killing and restarting a slow process without first checking CPU-time-vs-elapsed
+- A deadlock fix justified by which thread something will run on, rather than by removing the blocking wait
