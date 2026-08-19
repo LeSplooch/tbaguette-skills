@@ -33,9 +33,12 @@ Independent per-test reliability compounds. At 99.9% per test, a 500-test suite 
 | Fails at a stable rate with no pattern | Unseeded randomness in data, ids, or iteration order | Seed everything; check hash and map iteration order |
 | Starts failing after N runs, then always | Resource leak: file descriptors, connections, disk, ports in TIME_WAIT | Watch handle and connection counts across the run |
 | Fails only on the first run of the day or in a clean environment | Test depends on a warm cache, existing data, or a previously-created account | Run against a freshly provisioned environment |
+| Order-dependent assertion on a callback-built list | The callback only preserves delivery order under a real dispatcher/event-loop context; without one — the normal case in a test harness — the guarantee disappears, whether the runtime falls back to unordered dispatch, throws, or no-ops | Check whether the code normally runs under a real dispatcher or event loop that the test doesn't supply |
 | A different assertion fails each time | A real race in the product, not in the test | Stop triaging the test; treat it as a production incident |
 
 The last row is the one that gets misfiled most often, and it is the one that matters most.
+
+The order-dependent-callback row has the opposite prescription: the fix is asserting an order-independent invariant — max value reached, set membership, monotonic non-decrease — instead of position, or giving the test a synchronous stand-in for the missing dispatcher context, never a retry.
 
 ## Diagnosis
 
@@ -79,6 +82,7 @@ Retrying at the whole-suite level is worse than at the test level: it hides whic
 | A skipped test's feature breaks in production | Quarantine without expiry silently removed coverage |
 | Flakes only appeared after enabling parallelism | Pre-existing shared state that serial execution was accidentally hiding |
 | Failure moves to a different test after a fix | The polluter was never found; only the victim was patched |
+| Test asserting the last item of a callback-built list is intermittently flaky | Looks like a product race, but it's the test harness missing the dispatcher context the callback needs to stay ordered |
 
 ## Red flags
 
@@ -90,3 +94,4 @@ Retrying at the whole-suite level is worse than at the test level: it hides whic
 - "It only fails in CI, so it's a CI problem."
 - Marking a test flaky without ever having reproduced it.
 - A test file with more skip markers than assertions.
+- Asserting a specific position — especially "the last item" — in a collection built by an async callback, with no real dispatcher or event loop under test.
