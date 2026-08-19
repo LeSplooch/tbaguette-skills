@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">更新于</span>
-      <time class="site-header__updated-value" datetime="2026-08-19T00:26:35+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-19T00:26:35Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-19T18:15:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="当地时间 {local} · UTC {utc}">2026-08-19T18:15:40Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">语言: 中文</summary>
@@ -113,9 +113,9 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The requester reviews their own diff instead of dispatching anyone</td><td>Self-review mistaken for a second pair of eyes; it spends the coordinator's context and catches only what the author already believed was fine</td></tr><tr><td>The reviewer gets a pasted session transcript</td><td>Context conflated with completeness — the transcript has everything except the two things actually needed: intent and range</td></tr><tr><td>A request goes out as &quot;review my changes,&quot; no SHAs attached</td><td>The range was assumed obvious instead of stated; the reviewer has to guess where the diff even starts</td></tr><tr><td>The reviewer surfaces an edge case the requester already knew was untested</td><td>The gap was left to be discovered instead of disclosed up front</td></tr><tr><td>Review skipped because the change is &quot;too small to matter&quot;</td><td>Size substituted for readiness as the criterion — small changes fail for free too</td></tr><tr><td>Findings come back for a diff that's already changed underneath them</td><td>Dispatched before the edit reached a stable boundary</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's too simple to need a review&quot; — the excuse that precedes most defects nobody thought to look for.</li><li>Pasting a session transcript in because writing three sentences of context feels slower.</li><li>Dispatching a reviewer before running the checks that would have caught the obvious issues.</li><li>A known rough edge left unmentioned, on the chance the reviewer doesn't find it either.</li><li>A subagent reviewer told to loop in a second opinion of its own for part of the diff.</li></ul></div></article>
-<nav class="container prevnext" aria-label="技能导航"><a class="prevnext__link" href="/tbaguette-skills/zh/skills/explaining-technical-work/">
+<nav class="container prevnext" aria-label="技能导航"><a class="prevnext__link" href="/tbaguette-skills/zh/skills/crouton/">
   <span class="prevnext__label">上一个</span>
-  <span class="prevnext__name">← explaining-technical-work</span>
+  <span class="prevnext__name">← crouton</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/zh/skills/verifying-review-feedback/">
   <span class="prevnext__label">下一个</span>
@@ -147,6 +147,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/explaining-technical-work/">
       <span class="see-also__name">explaining-technical-work</span>
       <span class="see-also__summary">在以下情况下使用：要把一项技术工作解释给另一个人听——进度同步、一次改动或一次排查的总结、交接、上报、设计走查，或者一条建议。</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/zh/skills/crouton/">
+      <span class="see-also__name">crouton</span>
+      <span class="see-also__summary">在以下情况下使用：有人要求简短、压缩或省 token 的输出——“caveman 模式”“说简短点”“别解释了”“少用点 token”“省着点上下文”；一次长会话的上下文预算快要用完；或者回复已经膨胀成没人看的开场白、工具调用旁白和收尾总结。</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/zh/skills/verifying-review-feedback/">
       <span class="see-also__name">verifying-review-feedback</span>

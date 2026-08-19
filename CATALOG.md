@@ -1,6 +1,6 @@
 # TBaguette
 
-88 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+89 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -133,6 +133,7 @@ TBaguette skill hands off to a neighbour.
 | `writing-postmortems` | Blameless in mechanism; contributing factors over root cause |
 | `reviewing-code-deeply` | Reviewing in priority order; finding what is absent |
 | `explaining-technical-work` | Conclusion first; altitude chosen by what the reader will do |
+| `crouton` | Terse on purpose: what really costs tokens, which words survive any cut, where compression stops |
 | `handing-off-for-review` | What a reviewer needs up front; when a request is premature |
 | `verifying-review-feedback` | Verifying feedback before acting on it; fix vs. pushback vs. clarifying question |
 | `structuring-an-implementation-plan` | Turning a settled spec into bite-sized, placeholder-free tasks |

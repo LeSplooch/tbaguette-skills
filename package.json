@@ -1,6 +1,6 @@
 {
   "name": "tbaguette-skills",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "TBaguette skills and runtime bootstrap for coding agents",
   "type": "module",
   "main": ".opencode/plugins/tbaguette.js",
