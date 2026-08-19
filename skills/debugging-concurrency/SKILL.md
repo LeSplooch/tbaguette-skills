@@ -57,6 +57,10 @@ The instinct is to stabilize. Invert it — an unreproducible race cannot be ver
 
 ## Reading a hung process
 
+Before dumping anything, check whether it's actually stuck — dumps cost minutes, this check costs seconds. `ps -o etime,time,pcpu -p <pid>` (or the platform equivalent) compares elapsed wall-clock time against CPU time accumulated: a process at 0:03 CPU time after an hour elapsed is blocked, worth the dump comparison below; one at 40:00 CPU time after that same hour is running, just slower than expected — not deadlocked.
+
+When CPU time is climbing, check system load and swap (`uptime`, `vmstat`, `free`, or their equivalents) before concluding anything is wrong with the process itself — it may just be losing a scheduling fight with everything else on the box. Killing and restarting doesn't fix that fight; it discards whatever warm-up, cache, or partial progress the process had built and drops it back into the same contention, sometimes ensuring it never finishes.
+
 Take at least three dumps 5–10 seconds apart. One dump cannot distinguish stuck from busy — the comparison is the whole technique.
 
 1. Count threads by state. A wall of threads in the same wait is contention or pool exhaustion; two threads in a cycle is a deadlock.
@@ -78,6 +82,7 @@ Where no dump facility exists, attach a debugger and dump all thread backtraces,
 | One global lock over everything | correct, unshippable at load, and it converts races into deadlocks |
 | Sleep to let the other thing finish | an unenforced happens-before with an expiry date set by the next fast machine |
 | Reorder two statements until it passes | depends on the compiler not reordering them back, which it is permitted to do |
+| Kill and restart a process that was only slow, not hung | discarded its warm-up, cache, or partial progress and re-entered the same contention it was losing before |
 
 The test for a real fix: state in one sentence which happens-before edge now exists that did not before. If the sentence is "there is a lock now" without naming what it orders against what, a symptom was removed.
 
@@ -106,3 +111,4 @@ For each piece of shared state, write its invariant explicitly. Then, for every 
 - Concluding it is fixed because it passed 10 times, when the pre-fix rate was 1 in 500
 - Reasoning about interleavings without naming the shared state and its invariant
 - Treating a race-detector warning on a passing run as noise
+- Killing and restarting a slow process without first checking CPU-time-vs-elapsed
