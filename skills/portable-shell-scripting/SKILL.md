@@ -83,6 +83,15 @@ trap 'cleanup; exit 143' TERM HUP
 
 `mktemp` rather than a `$$`-derived name: a predictable path in a world-writable directory is a symlink attack and a collision. An EXIT trap does not reliably fire on a signal in every shell, so name the signals and re-raise `INT` so callers see a real interrupt. SIGKILL and power loss cannot be trapped, so keep scratch data under the system temp root where the OS reclaims it, and make cleanup idempotent.
 
+## Killing processes by pattern
+
+`pkill -f` and `pgrep -f` match against a process's *entire* command line, not just its name — every argument, every embedded string, whatever ends up in argv. That's most dangerous when the caller and the target share a harness — an `eval`, a heredoc, a wrapper script — because the same substring that identifies the target then also shows up in the caller's own command line.
+
+- Prefer a saved PID over pattern matching: write `$!` to a file right after starting the background process, then `kill "$(cat "$pidfile")"` to stop it later. No pattern, no risk of matching something else.
+- If `-f` is unavoidable, check what it would hit before running it. `pgrep -f 'pattern'` lists the matching PIDs; `ps -o pid,args= -p <pids>` shows their exact command lines, including, potentially, the shell about to run the `pkill`. (GNU `pgrep -a` does both in one step; it's a procps extension, not available on BSD/macOS `pgrep`.)
+- Anchor the pattern on something only the target has — a unique flag, a full path — not a bare project or script name.
+- `pkill` without `-f` matches only the process's short kernel-tracked name (`comm`), which is immune to `argv[0]` spoofing but not to how the target was launched: for a script run directly (`./script.sh`), `comm` is the script's own basename, narrow enough to target; for a script run through an explicit interpreter (`bash script.sh`), `comm` is the *interpreter's* name, which matches every other script running under that interpreter too.
+
 ## Same name, different tool
 
 The usual GNU-versus-BSD casualties: `sed -i` (BSD requires an argument, GNU forbids one), `readlink -f`, `date -d` versus `date -v`, `stat -c` versus `stat -f`, `grep -P`, `find -printf`, `xargs -r`, `sort -h`, `head -n -1`, `seq`, `tac`. `awk` splits three ways (gawk, mawk, busybox); the POSIX awk subset avoids nearly all of it.
@@ -101,6 +110,7 @@ Choose the POSIX subset first. Where an extension is genuinely needed, probe the
 | Cleanup deleted the wrong tree | unquoted path, or an unset variable expanding to nothing with no `set -u` |
 | Trailing newlines missing from captured output | `$(…)` strips every trailing newline; append a sentinel and remove it |
 | Fails on exactly one machine | GNU versus BSD flags for `sed`, `date`, `readlink`, or `stat` |
+| `pkill -f` killed the calling shell, not the target | the pattern also matched the shell's own wrapped or eval'd command line, not just the target's argv |
 
 ## Red flags
 
@@ -109,3 +119,4 @@ Choose the POSIX subset first. Where an extension is genuinely needed, probe the
 - A second level of quoting inside `ssh`, `sudo sh -c`, or a generated command line
 - Adding `|| true` to silence a failure rather than to declare it non-fatal
 - The script now holds arrays of records, parses JSON or CSV with `sed`, retries with backoff, or passes 200 lines — it has outgrown shell and should become a program in a language with data structures and a test runner
+- `pkill -f` or `pgrep -f` run with a pattern nobody checked against every process it could match, including the caller's own
