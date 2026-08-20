@@ -1258,7 +1258,28 @@ code {
     display: block;
     height: 22rem;
     perspective: 900px;
-    overflow: visible;
+    /* The base rule's `overflow-x: auto` has to go -- a scroller would fight
+       the drag handler -- but plain `visible` let the fan push the whole page
+       sideways. A tile sits 11rem either side of the rail's centre and
+       translates up to 280px further, so its far edge lands 456px from centre
+       whatever the rail measures; once the rail's own half-width drops below
+       that (anywhere under roughly 900px of viewport, worst at the 640px
+       breakpoint where this effect switches on) the surplus became real
+       document scroll -- measured at 768px: 5px of horizontal scrollbar on a
+       page with nothing to scroll to.
+
+       `clip` rather than `hidden` because hidden would make this a scroll
+       container and re-introduce the scroller the drag handler replaces, and
+       because clip is the axis-independent one: `overflow-y` stays visible
+       here without being coerced to auto, which `hidden` would have done.
+       The clip margin is what keeps this a scroll fix rather than a visual
+       change -- 280px is the translate clamp above, so every tile still
+       paints its full spread and simply stops contributing scrollable
+       overflow. Bleeding off the viewport edge is the intended look; a
+       scrollbar to chase it was never part of it. */
+    overflow-x: clip;
+    overflow-y: visible;
+    overflow-clip-margin: 280px;
     -webkit-mask-image: none;
     mask-image: none;
     cursor: grab;
