@@ -17,11 +17,12 @@ Stopping early ships something that merely looks unbroken; stopping late spends 
 - Work will be left unfinished and is about to go unnamed
 - The same class of fix has failed several times in a row
 - Not for: whether a specific claim has evidence behind it — `confirming-before-claiming-done` owns that gate. This owns how many passes to run and what finished means.
+- Not for: making sure every part of the request got delivered in the first place — `finishing-what-you-started` owns the near side of the finish line, and the ledger that keeps the criteria legible on a long run. This owns the far side.
 - Paired with `karen-and-the-manager`: that skill is built to never run out of complaints on purpose; this one decides how many of them are worth another pass.
 
 ## Define done before the last mile
 
-Done is: every item in the request demonstrably works, on the inputs the user actually has, and everything remaining is named. Write that sentence at the start; the task ends when it is true.
+Done is: every item in the request demonstrably works, on the inputs the user actually has, and everything remaining is named. Write that sentence at the start; the task ends when it is true. On work long enough that the sentence would fade before the last mile arrives, write it down as a ledger instead of a sentence — `finishing-what-you-started` covers that shape.
 
 Without it, done degrades into one of two defaults — the first thing tried passed, or you ran out of obvious things to do — and neither has anything to do with the request.
 

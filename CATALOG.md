@@ -1,6 +1,6 @@
 # TBaguette
 
-89 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+90 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -31,6 +31,7 @@ TBaguette skill hands off to a neighbour.
 | `deciding-reversibility` | One-way vs two-way doors; matching decision cost to decision weight |
 | `steelmanning-alternatives` | Escaping first-idea lock-in; recommending rather than surveying |
 | `managing-scope-drift` | Necessary vs adjacent vs discovered work; silent widening and narrowing |
+| `finishing-what-you-started` | The near side of the finish line: an acceptance ledger written before the work, checks watched failing first, numbers re-measured at report time |
 | `knowing-when-to-stop` | Diminishing returns, gold-plating, bounded passes, explicit handoff |
 | `karen-and-the-manager` | Persona-forced finishing pass: never-satisfied critique, then a triage pass on it. Invoke right after `knowing-when-to-stop` |
 | `revalidating-decisions` | Separating a decision's principle from its premise; which premises expire with no commit; overturning an old call on evidence |

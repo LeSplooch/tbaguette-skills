@@ -49,7 +49,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-20T04:28:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-20T04:28:03Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-20T17:55:46+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-20T17:55:46Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -90,16 +90,16 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">knowing-when-to-stop</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-20T17:55:46.542514+00:00">업데이트</span>
   </div>
   <span class="tag skill-article__tag">판단력과 메타 스킬</span>
   <p class="lede">일이 끝난 것처럼 보이고 다음 행동이라고 해 봐야 한 번 더 다듬기나 리팩터링, 확인뿐일 때, 자기 리뷰 루프를 여러 바퀴 돌았는데 나오는 것이 계속 작아질 때, 처음 초록불이 뜨자마자 곧장 끝내고 싶어질 때, 같은 종류의 수정이 연달아 여러 번 실패했을 때, 남은 일이 이름조차 불리지 못한 채 그대로 방치되려 할 때 사용합니다. 수확 체감, 과도한 손질, 횟수를 정해 둔 점검, 명시적인 인수인계를 다룹니다.</p>
 </div><p class="translation-banner" role="note">이 페이지는 아직 한국어로 번역되지 않았습니다 — 아래는 영어 버전입니다.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>Stopping early ships something that merely looks unbroken; stopping late spends the user's budget on polish nobody asked for. Both come from the same omission — no finish line defined before the last mile started.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>The work looks done and the next action would be another pass, polish, or check</li><li>A verification loop has run several times and the findings are getting smaller</li><li>The first green result arrived and finishing right now is tempting</li><li>Work will be left unfinished and is about to go unnamed</li><li>The same class of fix has failed several times in a row</li><li>Not for: whether a specific claim has evidence behind it — <code>confirming-before-claiming-done</code> owns that gate. This owns how many passes to run and what finished means.</li><li>Paired with <code>karen-and-the-manager</code>: that skill is built to never run out of complaints on purpose; this one decides how many of them are worth another pass.</li></ul>
+<ul><li>The work looks done and the next action would be another pass, polish, or check</li><li>A verification loop has run several times and the findings are getting smaller</li><li>The first green result arrived and finishing right now is tempting</li><li>Work will be left unfinished and is about to go unnamed</li><li>The same class of fix has failed several times in a row</li><li>Not for: whether a specific claim has evidence behind it — <code>confirming-before-claiming-done</code> owns that gate. This owns how many passes to run and what finished means.</li><li>Not for: making sure every part of the request got delivered in the first place — <code>finishing-what-you-started</code> owns the near side of the finish line, and the ledger that keeps the criteria legible on a long run. This owns the far side.</li><li>Paired with <code>karen-and-the-manager</code>: that skill is built to never run out of complaints on purpose; this one decides how many of them are worth another pass.</li></ul>
 <h2 id="define-done-before-the-last-mile">Define done before the last mile</h2>
-<p>Done is: every item in the request demonstrably works, on the inputs the user actually has, and everything remaining is named. Write that sentence at the start; the task ends when it is true.</p>
+<p>Done is: every item in the request demonstrably works, on the inputs the user actually has, and everything remaining is named. Write that sentence at the start; the task ends when it is true. On work long enough that the sentence would fade before the last mile arrives, write it down as a ledger instead of a sentence — <code>finishing-what-you-started</code> covers that shape.</p>
 <p>Without it, done degrades into one of two defaults — the first thing tried passed, or you ran out of obvious things to do — and neither has anything to do with the request.</p>
 <h2 id="done-against-not-obviously-broken">Done against not obviously broken</h2>
 <table><thead><tr><th>Dimension</th><th>Not obviously broken</th><th>Done</th></tr></thead><tbody><tr><td>Tests</td><td>The test you wrote passes</td><td>The requested behaviour is exercised, including the input the user described</td></tr><tr><td>Errors</td><td>Nothing raised</td><td>Failure paths were provoked deliberately and behaved</td></tr><tr><td>Scope</td><td>The main path works</td><td>Every requested item has a stated state</td></tr><tr><td>Inputs</td><td>It worked on your example</td><td>It worked on the real or boundary input</td></tr><tr><td>Integration</td><td>The unit works</td><td>The caller works, in place</td></tr></tbody></table>
@@ -122,9 +122,9 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The fifth pass finds only naming issues</td><td>Passes ran until boredom rather than to a criterion</td></tr><tr><td>Declared done; the user immediately finds a requested item broken</td><td>Verified the built thing, never re-read the request</td></tr><tr><td>Improvement continued past the point the request was satisfied</td><td>Done defined by feeling rather than by the request text</td></tr><tr><td>Re-editing lines you edited two passes ago</td><td>Churn misread as refinement</td></tr><tr><td>Flexibility added with no second caller</td><td>A requirement anticipated instead of waited for</td></tr><tr><td>The unfinished part is absent from the report</td><td>Stopping conflated with finishing</td></tr><tr><td>Five attempts at one defect, all the same shape</td><td>Iterating on the fix instead of on the diagnosis</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;One more quick improvement&quot;</li><li>&quot;While I am verifying, let me also…&quot;</li><li>&quot;It passed, so we are done&quot; after a single check</li><li>Relief interpreted as completion</li><li>A summary with no remaining-work section on a task that plainly has one</li><li>Reaching for the next polish because stopping feels like giving up</li></ul></div></article>
-<nav class="container prevnext" aria-label="스킬 간 이동"><a class="prevnext__link" href="/tbaguette-skills/ko/skills/managing-scope-drift/">
+<nav class="container prevnext" aria-label="스킬 간 이동"><a class="prevnext__link" href="/tbaguette-skills/ko/skills/finishing-what-you-started/">
   <span class="prevnext__label">이전</span>
-  <span class="prevnext__name">← managing-scope-drift</span>
+  <span class="prevnext__name">← finishing-what-you-started</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/ko/skills/karen-and-the-manager/">
   <span class="prevnext__label">다음</span>
@@ -160,6 +160,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/ko/skills/managing-scope-drift/">
       <span class="see-also__name">managing-scope-drift</span>
       <span class="see-also__summary">작업이 요청받은 범위를 넘어 자라났거나 diff가 요청이 시사하는 것보다 커졌을 때, 고치려면 옆에 있는 것까지 건드려야 할 것 같을 때, 지나가다 진짜 문제를 발견했을 때, 근처 코드를 정리하거나 이름을 바꾸거나 리팩터링하거나 개선하고 싶어질 때…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/ko/skills/finishing-what-you-started/">
+      <span class="see-also__name">finishing-what-you-started</span>
+      <span class="see-also__summary">일이 커서 중간에 멈춰도 티가 안 날 정도일 때 — 많은 파일에 걸친 훑기, 오래 이어지는 자율 실행, 여러 부분으로 된 요청…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/ko/skills/karen-and-the-manager/">
       <span class="see-also__name">karen-and-the-manager</span>

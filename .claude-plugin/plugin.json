@@ -1,8 +1,8 @@
 {
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "TBaguette",
-  "version": "0.9.0",
-  "description": "Eighty-nine project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling — plus formidable, design craft for every UI stack.",
+  "version": "0.10.0",
+  "description": "Ninety project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling — plus formidable, design craft for every UI stack.",
   "author": {
     "name": "verderosa2",
     "email": "verderosa2@gmail.com"
