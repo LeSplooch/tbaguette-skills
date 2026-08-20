@@ -112,8 +112,8 @@ def check_full_locale_build() -> None:
         check("French index emits dir='ltr' lang='fr'", '<html lang="fr" dir="ltr">' in fr_index_html)
         check("French index's translated hero headline made it through",
               "Un atelier pour votre façon de coder." in fr_index_html)
-        check("French index carries all 13 hreflang alternates plus x-default",
-              fr_index_html.count('rel="alternate" hreflang="') == 14)
+        check("French index carries all 12 hreflang alternates plus x-default",
+              fr_index_html.count('rel="alternate" hreflang="') == 13)
 
         fr_alpha_html = (docs / "fr" / "skills" / "alpha" / "index.html").read_text(encoding="utf-8")
         check("French alpha page shows the real translated body, no fallback banner",

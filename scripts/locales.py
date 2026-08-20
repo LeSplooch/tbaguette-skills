@@ -1,10 +1,13 @@
 """Locale registry for the tbaguette-skills site's i18n build.
 
-The single source of truth for which 13 locales (English + 12 translations,
+The single source of truth for which 12 locales (English + 11 translations,
 one language per country) the site builds. Vietnamese, Polish, and
 Indonesian were dropped 2026-08-15 -- translation work never started for
 them and there's no reason to publish an entry in the language switcher
 that just leads to an all-English page under a foreign-looking URL prefix.
+Russian was dropped 2026-08-20; unlike those three its translation was
+complete, so removing it also deleted i18n/ru/ and docs/ru/ rather than
+just an unpopulated switcher entry.
 Re-adding one later is exactly reversing this: add its Locale entry back,
 bump EXPECTED_LOCALE_COUNT, then populate i18n/<code>/ following the same
 procedure documented in docs/superpowers/plans/2026-08-14-website-i18n.md's
@@ -55,7 +58,6 @@ LOCALES: tuple[Locale, ...] = (
     Locale(code="de", hreflang="de", name="German", endonym="Deutsch", dir="ltr"),
     Locale(code="it", hreflang="it", name="Italian", endonym="Italiano", dir="ltr"),
     Locale(code="pt", hreflang="pt-BR", name="Portuguese", endonym="Português", dir="ltr"),
-    Locale(code="ru", hreflang="ru", name="Russian", endonym="Русский", dir="ltr"),
     Locale(code="zh", hreflang="zh-Hans", name="Chinese", endonym="中文", dir="ltr"),
     Locale(code="ja", hreflang="ja", name="Japanese", endonym="日本語", dir="ltr"),
     Locale(code="ko", hreflang="ko", name="Korean", endonym="한국어", dir="ltr"),
@@ -64,7 +66,7 @@ LOCALES: tuple[Locale, ...] = (
     Locale(code="tr", hreflang="tr", name="Turkish", endonym="Türkçe", dir="ltr"),
 )
 
-EXPECTED_LOCALE_COUNT = 13
+EXPECTED_LOCALE_COUNT = 12
 
 DEFAULT_LOCALE: Locale = next(locale for locale in LOCALES if locale.default)
 
