@@ -49,6 +49,17 @@ front of the model is to paste a prompt or flip a mode by hand each
 session, it can't be properly supported — full stop, before writing
 anything.
 
+**Strongly wanted, not required: a per-turn re-injection point.** Session
+start alone is measurably not enough. Across real Claude Code sessions,
+the start-of-session notice landed 95% of the time, yet only ~42% of
+substantive sessions ever invoked a TBaguette skill — sessions running
+hundreds of turns would invoke one, or none. A single message at position
+zero loses against a long context no matter how forcefully it's worded, so
+where a harness offers a per-prompt hook, use it: Claude Code does this
+with `UserPromptSubmit` → `hooks/user-prompt-submit`, a short nudge rather
+than a second copy of the full `SKILL.md`. A harness without one is still
+supportable, just weaker in long sessions.
+
 Beyond that, check the harness has: file read/write/edit (essential), shell
 command execution (essential), and ideally skill discovery + on-demand
 loading (if absent, the fallback is reading the relevant `SKILL.md`
@@ -78,9 +89,9 @@ never loaded.
 
 | Harness | Entry point | Bootstrap mechanism | Tool mapping |
 |---|---|---|---|
-| Claude Code | `.claude-plugin/plugin.json` + `hooks/hooks.json` | shell hook → `hooks/session-start` | native `Skill` tool; no adapter needed |
+| Claude Code | `.claude-plugin/plugin.json` + `hooks/hooks.json` | shell hook → `hooks/session-start`, plus per-turn `hooks/user-prompt-submit` | native `Skill` tool; no adapter needed |
 | Codex | `.codex-plugin/plugin.json` (empty `hooks`) | native skill discovery, no session-start hook | none shipped yet — no TBaguette skill has needed one so far |
-| Cursor | `.cursor-plugin/plugin.json` + `hooks/hooks-cursor.json` | shell hook → `hooks/session-start` | none needed (Claude Code–compatible tool surface) |
+| Cursor | `.cursor-plugin/plugin.json` + `hooks/hooks-cursor.json` | shell hook → `hooks/session-start`; no per-turn hook wired up yet | none needed (Claude Code–compatible tool surface) |
 | Copilot CLI | shares the Claude Code hook path | shell hook → `hooks/session-start` | none needed | 
 | Devin | `.devin-plugin/plugin.json` | Devin's own `skills/` convention | none shipped |
 | Gemini CLI | `gemini-extension.json` + `GEMINI.md` | instructions file `@`-include of `using-tbaguette` | none shipped |

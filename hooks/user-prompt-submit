@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# UserPromptSubmit hook for the TBaguette plugin.
+#
+# Re-asserts using-tbaguette's standing rule once per user turn.
+#
+# Why this exists alongside the SessionStart hook: SessionStart injects
+# using-tbaguette's full text, but it does that exactly once, at position
+# zero of the context. Measured across real sessions, that single injection
+# decays badly -- sessions running hundreds of turns would invoke one
+# TBaguette skill, or none, despite the notice being present and explicit
+# about applying "for the rest of this conversation."
+#
+# So this hook trades a small per-turn token cost for the reminder actually
+# staying in force. It deliberately does NOT repeat the whole SKILL.md --
+# SessionStart already did that, and every TBaguette skill's trigger
+# description is already in the available-skills context. All this needs to
+# do is put the check back in front of Claude before it starts responding.
+
+set -euo pipefail
+
+nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see TBaguette:using-tbaguette. If one plausibly applies, invoke it -- Skill tool, \`TBaguette:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
+
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+context="<TBAGUETTE_SKILL_CHECK>\n$(escape_for_json "$nudge")\n</TBAGUETTE_SKILL_CHECK>"
+
+printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "UserPromptSubmit",\n    "additionalContext": "%s"\n  }\n}\n' "$context"
+
+exit 0

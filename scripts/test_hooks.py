@@ -1,5 +1,6 @@
-"""Tests for the TBaguette plugin's SessionStart hook: hooks/hooks.json's
-declared shape, and hooks/session-start's actual behavior -- that it emits
+"""Tests for the TBaguette plugin's hooks: hooks/hooks.json's declared
+shape, hooks/user-prompt-submit's per-turn skill-check nudge, and
+hooks/session-start's actual behavior -- that it emits
 well-formed additionalContext carrying using-tbaguette's SKILL.md verbatim,
 and that keeping-tbaguette-current's step 1 (fetch, compare, working-tree
 status) reports correctly across the four states that path can be in.
@@ -35,6 +36,7 @@ check = checker.check
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOKS_DIR = REPO_ROOT / "hooks"
 SESSION_START = HOOKS_DIR / "session-start"
+USER_PROMPT_SUBMIT = HOOKS_DIR / "user-prompt-submit"
 RUN_HOOK_CMD = HOOKS_DIR / "run-hook.cmd"
 
 USING_TBAGUETTE_FIXTURE = (
@@ -149,6 +151,30 @@ def check_hooks_json_shape() -> None:
     check("invokes run-hook.cmd via CLAUDE_PLUGIN_ROOT", "${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" in command_str)
     check("passes session-start as the script name", "session-start" in command_str)
 
+    # UserPromptSubmit: the per-turn re-assertion of using-tbaguette's rule.
+    # SessionStart alone measurably decays -- long sessions would invoke one
+    # TBaguette skill or none -- so this group existing is the fix, and a
+    # regression that silently dropped it would restore the original bug.
+    prompt_groups = data.get("hooks", {}).get("UserPromptSubmit", [])
+    check("declares exactly one UserPromptSubmit matcher group", len(prompt_groups) == 1)
+
+    prompt_hooks = prompt_groups[0].get("hooks", []) if prompt_groups else []
+    check("exactly one UserPromptSubmit command", len(prompt_hooks) == 1)
+
+    prompt_command = prompt_hooks[0] if prompt_hooks else {}
+    check("UserPromptSubmit hook type is command", prompt_command.get("type") == "command")
+    check("UserPromptSubmit runs through bash", prompt_command.get("shell") == "bash")
+    check(
+        "UserPromptSubmit is not async (additionalContext must land before the turn)",
+        prompt_command.get("async") is False,
+    )
+    prompt_command_str = prompt_command.get("command", "")
+    check(
+        "UserPromptSubmit invokes run-hook.cmd via CLAUDE_PLUGIN_ROOT",
+        "${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" in prompt_command_str,
+    )
+    check("passes user-prompt-submit as the script name", "user-prompt-submit" in prompt_command_str)
+
 
 # ---------------------------------------------------------------------------
 # File permissions
@@ -159,6 +185,7 @@ def check_executable_bits() -> None:
     print("executable bits")
     check("session-start is executable", os.access(SESSION_START, os.X_OK))
     check("run-hook.cmd is executable", os.access(RUN_HOOK_CMD, os.X_OK))
+    check("user-prompt-submit is executable", os.access(USER_PROMPT_SUBMIT, os.X_OK))
 
 
 # ---------------------------------------------------------------------------
@@ -272,9 +299,57 @@ def check_update_check_no_git() -> None:
         check("no SHA-comparison language leaks in", "up to date" not in ctx and "update available" not in ctx)
 
 
+# ---------------------------------------------------------------------------
+# UserPromptSubmit: the per-turn skill-check nudge
+# ---------------------------------------------------------------------------
+
+
+def check_user_prompt_submit() -> None:
+    print("user-prompt-submit: per-turn skill-check nudge")
+    # Unlike session-start, this script reads nothing from its plugin root --
+    # the nudge is static text -- so the repo's real copy is what runs here,
+    # no fixture root needed.
+    result = subprocess.run(
+        ["bash", str(USER_PROMPT_SUBMIT)],
+        capture_output=True,
+        text=True,
+    )
+    check("user-prompt-submit exits 0", result.returncode == 0)
+    check("writes nothing to stderr", result.stderr == "")
+
+    payload = json.loads(result.stdout)
+    hook_output = payload.get("hookSpecificOutput", {})
+    check("top-level key is hookSpecificOutput", "hookSpecificOutput" in payload)
+    check("hookEventName is UserPromptSubmit", hook_output.get("hookEventName") == "UserPromptSubmit")
+
+    ctx = hook_output.get("additionalContext", "")
+    check("names the Skill tool invocation form", "TBaguette:<skill-name>" in ctx)
+    check("points back at using-tbaguette for the full rule", "using-tbaguette" in ctx)
+    # The two rationalizations that the measured misses ran on: treating a
+    # question as not-a-task, and treating small work as beneath a skill.
+    check("closes the 'just a question' loophole", "Questions" in ctx)
+    check("closes the 'too small' loophole", "too small" in ctx)
+    # This fires on every single user turn, so its size is a recurring cost,
+    # not a one-off. A ceiling here is what keeps a well-meaning edit from
+    # quietly turning a nudge back into a full SKILL.md re-injection.
+    check(f"stays short enough for per-turn cost ({len(ctx)} bytes)", len(ctx) < 600)
+
+    wrapped = subprocess.run(
+        ["bash", str(RUN_HOOK_CMD), "user-prompt-submit"],
+        capture_output=True,
+        text=True,
+    )
+    check("run-hook.cmd dispatches to it", wrapped.returncode == 0)
+    check(
+        "wrapper output matches the script's own",
+        json.loads(wrapped.stdout) == payload,
+    )
+
+
 def main() -> None:
     check_hooks_json_shape()
     check_executable_bits()
+    check_user_prompt_submit()
     check_session_start_basic_shape()
     check_run_hook_cmd_unix_passthrough()
     check_update_check_same_sha()
