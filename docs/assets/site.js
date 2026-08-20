@@ -13,8 +13,8 @@
  *                      48h window against the visitor's own clock)
  *   - fresh coverflow (landing page only — steps which rail tile is centred
  *                       on a timer; pauses on hover/focus; click-and-drag
- *                       spins it manually with release momentum, clicking a
- *                       side tile recentres it instead of navigating)
+ *                       spins it manually with release momentum, while a
+ *                       plain click on any tile follows it to its skill)
  *   - language switcher dismissal (every page — Escape / outside click on
  *                                   the native <details>; opening and
  *                                   closing it needs no JS)
@@ -218,19 +218,29 @@
     var count = tiles.length;
     var activeIndex = 0;
 
-    // Two independent reasons the clock might not be driving right now,
-    // not one: "hovering" is temporary and self-undoes (mouseleave/
+    // Three independent reasons the clock might not be driving right now,
+    // not one. "hovering" is temporary and self-undoes (mouseleave/
     // focusout), for the WCAG 2.2.2 pause-while-the-visitor-is-right-there
-    // case. "manualOverride" is permanent once set — prev/next, a drag, or
-    // picking a side tile all mean the visitor has taken the wheel, and
-    // the clock resuming a few seconds after they let go of the mouse
-    // would just undo their choice. A single `paused` flag used to stand
-    // in for both, which meant mouseleave after a prev/next click quietly
-    // resumed autoplay the moment the pointer left the rail — the opposite
-    // of what its own comment claimed.
+    // case. "pressing" is temporary too and spans exactly one pointer
+    // press: a plain click on a tile now navigates to that skill, so
+    // whichever tile is under the pointer at release has to be the one
+    // that was pressed — a step landing in the handful of milliseconds
+    // between pointerdown and click would otherwise rotate a different
+    // tile under the cursor and send the visitor somewhere they didn't
+    // pick. For a mouse that window is already covered by "hovering";
+    // this is what covers a touch or pen tap on a tablet wide enough for
+    // the coverflow, where no mouseenter precedes the press.
+    // "manualOverride" is the permanent one — prev/next or a drag means
+    // the visitor has taken the wheel, and the clock resuming a few
+    // seconds after they let go of the mouse would just undo their
+    // choice. A single `paused` flag used to stand in for all of this,
+    // which meant mouseleave after a prev/next click quietly resumed
+    // autoplay the moment the pointer left the rail — the opposite of
+    // what its own comment claimed.
     var hovering = false;
+    var pressing = false;
     var manualOverride = false;
-    function isPaused() { return hovering || manualOverride; }
+    function isPaused() { return hovering || pressing || manualOverride; }
 
     // Setting only the custom property here would be simpler, and
     // styles.css's --cf-transform / opacity calc()s would pick it up. This
@@ -318,12 +328,15 @@
     // 1:1 rather than at some unrelated, unpredictable rate.
     //
     // A pointer press alone doesn't mean a drag is happening — most
-    // presses on a tile are the first half of an ordinary click.
-    // dragMoved only flips true past DRAG_CLICK_THRESHOLD_PX of real
+    // presses on a tile are the first half of an ordinary click, and an
+    // ordinary click follows that tile's href like any other card on the
+    // page. dragMoved only flips true past DRAG_CLICK_THRESHOLD_PX of real
     // movement, and only then are transitions disabled (so the live
     // preview tracks the pointer with no easing lag) and manualOverride
-    // set. The click handler below reads dragMoved to tell a real drag's
-    // trailing click apart from an ordinary one.
+    // set. That threshold is the entire line between the rail's two
+    // gestures: the click handler below reads dragMoved to tell a real
+    // drag's trailing click (suppressed) from an ordinary one (left alone
+    // to navigate).
     var DRAG_STEP_PX = 140;
     var DRAG_CLICK_THRESHOLD_PX = 6;
     var pointerDown = false;
@@ -357,6 +370,7 @@
     rail.addEventListener('pointerdown', function (event) {
       if (event.button !== undefined && event.button !== 0) return;
       pointerDown = true;
+      pressing = true;
       dragMoved = false;
       dragPointerId = event.pointerId;
       dragStartX = event.clientX;
@@ -387,6 +401,10 @@
     function endDrag(event) {
       if (!pointerDown || event.pointerId !== dragPointerId) return;
       pointerDown = false;
+      // The press is over either way — whether it turned out to be a drag
+      // (manualOverride now holds the clock) or an ordinary click (whose
+      // navigation is about to make the clock moot anyway).
+      pressing = false;
       if (rail.releasePointerCapture) {
         try { rail.releasePointerCapture(event.pointerId); } catch (error) { /* already released */ }
       }
@@ -417,7 +435,8 @@
 
       // A harder flick should keep the ring visibly spinning for longer,
       // not just cover more ground in the same 0.7s the CSS default gives
-      // every other settle (a plain click-to-recentre, prev/next, etc.) —
+      // every other settle (prev/next, focus landing on a tile, the auto-
+      // advance clock) —
       // at a fixed duration, more distance in the same time reads as
       // "faster," not "more momentum." SPIN_DURATION_PER_TILE_S stretches
       // the transition in proportion to how much momentum actually carried
@@ -449,27 +468,30 @@
     rail.addEventListener('pointerup', endDrag);
     rail.addEventListener('pointercancel', endDrag);
 
-    // Click. A tile that's already centred just navigates — plain <a>
-    // behaviour, nothing to intercept. Any other tile recentres instead of
-    // navigating: the visitor picked which one they want a closer look at,
-    // not necessarily to leave the page yet. The click a real drag leaves
-    // behind is suppressed outright rather than read as either — dragMoved
-    // is consumed (reset) here so a single drag can only ever suppress the
+    // Click. Every tile is a link to its skill and a click on any of them
+    // — centred or not — follows it, which is why there is nothing here
+    // for the ordinary case: no preventDefault, no recentring, just plain
+    // <a> behaviour. That also keeps middle-click, ctrl/cmd-click and
+    // "open in new tab" working, which any synthetic navigation of our own
+    // would have quietly broken.
+    //
+    // Side tiles used to recentre instead of navigating, on the theory
+    // that picking one meant "show me this one closer" rather than "take
+    // me there". It made the rail's most obvious gesture do the one thing
+    // a card that looks exactly like every other card on the page doesn't
+    // do, and left no way to reach a fresh skill except centring it first
+    // and clicking again. Spinning the ring is what the drag, the prev/
+    // next buttons and the clock are for; the click is for going.
+    //
+    // The one click this does intercept is the one a real drag leaves
+    // behind, which would otherwise navigate on release — the pointer ends
+    // a spin over some tile, and that is not a click on it. dragMoved is
+    // consumed (reset) here so a single drag can only ever suppress the
     // one click it actually caused.
     rail.addEventListener('click', function (event) {
-      if (dragMoved) {
-        dragMoved = false;
-        event.preventDefault();
-        return;
-      }
-      var tile = event.target.closest ? event.target.closest('.fresh__tile') : null;
-      if (!tile) return;
-      var index = tiles.indexOf(tile);
-      if (index === -1 || index === activeIndex) return;
+      if (!dragMoved) return;
+      dragMoved = false;
       event.preventDefault();
-      manualOverride = true;
-      activeIndex = index;
-      layout(activeIndex);
     });
 
     layout(activeIndex);

@@ -1109,10 +1109,11 @@ code {
 
    The clock isn't the only way a tile becomes active: initFreshCoverflow
    also wires up click-and-drag (grab the ring, spin it, release to settle
-   on whichever tile ends up nearest centre) and click-to-recentre on any
-   tile that isn't centred yet — only the already-centred tile's click
-   still navigates. cursor/touch-action/user-select below exist for that
-   drag, not for anything this file alone renders.
+   on whichever tile ends up nearest centre) and the prev/next buttons.
+   Clicking a tile is not one of those ways — every tile is a link and a
+   click on any of them, centred or not, just follows it to its skill.
+   cursor/touch-action/user-select below exist for the drag, not for
+   anything this file alone renders.
    ------------------------------------------------------------------------- */
 
 .fresh { margin-top: var(--space-7); max-width: 46rem; }
@@ -1354,7 +1355,13 @@ code {
        draggable="false" is the one that actually holds in Firefox too. */
     user-select: none;
     -webkit-user-drag: none;
-    cursor: inherit;
+    /* A tile is a link first — clicking one follows it to its skill, the
+       same as every other card on this page — so it gets `pointer` rather
+       than inheriting the rail's `grab`. The rail keeps `grab` for the
+       space around the tiles, where dragging is the only thing on offer,
+       and the rule below puts `grabbing` back on the tiles themselves for
+       as long as a press is actually down on one. */
+    cursor: pointer;
     --cf-abs: max(var(--cf-offset), calc(var(--cf-offset) * -1));
     --cf-transform:
       translateX(clamp(-280px, calc(var(--cf-offset) * 140px), 280px))
@@ -1368,8 +1375,8 @@ code {
        sets it inline only on the tiles animating out of a flung release,
        proportional to how much momentum carried them, then clears it once
        that transition finishes. Every other trigger (auto-advance, prev/
-       next, click-to-recentre) never sets it, so it stays at this default
-       0.7s for them — same speed as before momentum existed. */
+       next, focus landing on a tile) never sets it, so it stays at this
+       default 0.7s for them — same speed as before momentum existed. */
     --fresh-spin-duration: 0.7s;
     transition: transform var(--fresh-spin-duration) var(--ease-out),
                 opacity var(--fresh-spin-duration) var(--ease-out),
@@ -1377,6 +1384,12 @@ code {
                 background-color var(--duration-enter) var(--ease-out),
                 box-shadow var(--duration-enter) var(--ease-out);
   }
+
+  /* Held down on a tile, either gesture is still live — the press becomes
+     a spin or a click depending on whether it moves — and `grabbing` is
+     the honest cursor for that moment. Outranks the base rule's `pointer`
+     on specificity alone, so it doesn't depend on source order. */
+  .fresh__rail:active a.fresh__tile { cursor: grabbing; }
 
   a.fresh__tile:hover,
   a.fresh__tile:focus-visible {
