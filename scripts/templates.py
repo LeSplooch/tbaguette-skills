@@ -557,17 +557,31 @@ def _render_updated_time(last_updated_utc: str, base_path: str = "",
     </p>"""
 
 
+def _render_plugin_version(version: str) -> str:
+    # A version string is locale-independent and always Latin digits, so it
+    # carries dir="ltr" explicitly -- without it the RTL locales reorder
+    # "v0.10.0" around the dot. Not a link and deliberately outside the
+    # <a class="wordmark">: it is metadata about the product rather than part
+    # of the title, and clicking a version number should not navigate home.
+    return f'<span class="wordmark-version" dir="ltr">v{escape_html(version)}</span>'
+
+
 def _render_header(base_path: str = "", last_updated_utc: str = "",
                     *, locale: "locales.Locale" = locales.DEFAULT_LOCALE,
-                    path_suffix: str = "", strings: Strings = ENGLISH_STRINGS) -> str:
+                    path_suffix: str = "", strings: Strings = ENGLISH_STRINGS,
+                    plugin_version: str = "") -> str:
     updated_html = _render_updated_time(last_updated_utc, base_path, strings) if last_updated_utc else ""
+    version_html = _render_plugin_version(plugin_version) if plugin_version else ""
     return f"""<header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
-    <a class="wordmark" href="{_locale_url(locale, base_path, '')}">
-      {_icon("icon-wheat", css_class="icon wordmark__icon", base_path=base_path)}
-      <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
-    </a>
+    <div class="site-header__brand">
+      <a class="wordmark" href="{_locale_url(locale, base_path, '')}">
+        {_icon("icon-wheat", css_class="icon wordmark__icon", base_path=base_path)}
+        <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
+      </a>
+      {version_html}
+    </div>
     <div class="site-header__actions">
       {updated_html}
       {_render_language_switcher(locale, base_path, path_suffix, strings)}
@@ -611,7 +625,8 @@ def _render_document(*, title: str, meta_description: str, body_class: str,
                       main_html: str, categories: list[dict],
                       base_path: str = "", last_updated_utc: str = "",
                       locale: "locales.Locale" = locales.DEFAULT_LOCALE,
-                      path_suffix: str = "", strings: Strings = ENGLISH_STRINGS) -> str:
+                      path_suffix: str = "", strings: Strings = ENGLISH_STRINGS,
+                      plugin_version: str = "") -> str:
     return f"""<!doctype html>
 <html lang="{escape_html(locale.hreflang)}" dir="{escape_html(locale.dir)}">
 <head>
@@ -626,7 +641,7 @@ def _render_document(*, title: str, meta_description: str, body_class: str,
       data-i18n-quote-open="{escape_html(strings.search_empty_query_open)}"
       data-i18n-quote-close="{escape_html(strings.search_empty_query_close)}">
 <a class="skip-link" href="#main">{escape_html(strings.skip_link)}</a>
-{_render_header(base_path, last_updated_utc, locale=locale, path_suffix=path_suffix, strings=strings)}
+{_render_header(base_path, last_updated_utc, locale=locale, path_suffix=path_suffix, strings=strings, plugin_version=plugin_version)}
 <main id="main">
 {main_html}
 </main>
@@ -1013,7 +1028,8 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
                   last_updated_utc: str = "", *,
                   fresh_skills: list[dict] | None = None,
                   locale: "locales.Locale" = locales.DEFAULT_LOCALE,
-                  strings: Strings = ENGLISH_STRINGS) -> str:
+                  strings: Strings = ENGLISH_STRINGS,
+                  plugin_version: str = "") -> str:
     """Full HTML document string for the landing page. fresh_skills arrives
     already ordered newest-first from generate.py, which is the only place
     that can know a change's real timestamp."""
@@ -1044,6 +1060,7 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
         locale=locale,
         path_suffix="",
         strings=strings,
+        plugin_version=plugin_version,
     )
 
 
@@ -1292,7 +1309,8 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
                        siblings: list[dict], categories: list[dict],
                        base_path: str = "", last_updated_utc: str = "",
                        locale: "locales.Locale" = locales.DEFAULT_LOCALE,
-                       strings: Strings = ENGLISH_STRINGS) -> str:
+                       strings: Strings = ENGLISH_STRINGS,
+                       plugin_version: str = "") -> str:
     """Full HTML document string for one skill's page (siblings = other skills
     in the same category, for a 'see also' list; categories = full category
     list, for nav)."""
@@ -1332,6 +1350,7 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
         locale=locale,
         path_suffix=f"skills/{skill['slug']}/",
         strings=strings,
+        plugin_version=plugin_version,
     )
 
 
@@ -1365,7 +1384,8 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
                                 base_path: str = "", last_updated_utc: str = "",
                                 *, locale: "locales.Locale" = locales.DEFAULT_LOCALE,
                                 strings: Strings = ENGLISH_STRINGS,
-                                verify_strings: VerifyInstallStrings = ENGLISH_VERIFY_INSTALL_STRINGS) -> str:
+                                verify_strings: VerifyInstallStrings = ENGLISH_VERIFY_INSTALL_STRINGS,
+                                plugin_version: str = "") -> str:
     """Full HTML document for the page linked from the install frame's
     "See how" — the actual explanation plus the actual test source,
     syntax-highlighted. highlighted_lines is pre-rendered HTML per line
@@ -1445,4 +1465,5 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
         locale=locale,
         path_suffix="verify-install/",
         strings=strings,
+        plugin_version=plugin_version,
     )

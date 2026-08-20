@@ -42,14 +42,17 @@
 <header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
-    <a class="wordmark" href="/tbaguette-skills/ko/">
-      <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
-      <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
-    </a>
+    <div class="site-header__brand">
+      <a class="wordmark" href="/tbaguette-skills/ko/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+        <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
+      </a>
+      <span class="wordmark-version" dir="ltr">v0.10.0</span>
+    </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-20T17:55:46+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-20T17:55:46Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-20T21:35:49+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-20T21:35:49Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -90,7 +93,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">auditing-new-input-categories</h1>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-08-18T21:08:16+02:00">신규</span>
+    
   </div>
   <span class="tag skill-article__tag">테스트</span>
   <p class="lede">시스템을 새로운 입력 카테고리에 대응하도록 확장할 때 — 새로운 문자 체계, 파일 형식, 결제 수단, 프로토콜 버전, 기기 종류, 통화, 또는 이미 지원하는 언어보다 복수형이 더 많은 언어 등 — 이미 지원하는 카테고리 안의 새 값을 추가하는 것과는 다를 때, 점진적 롤아웃을 할 때마다 새 콘텐츠 자체가 아니라 오래된 공유 코드에서 계속 버그가 나올 때, 또는 실제로는 한 번도 돌려본 적 없는 카테고리에 대한 커버리지로 초록색 테스트 스위트를 그대로 믿고 싶어질 때 사용합니다. 전문 지식으로 그 카테고리의 잘 알려진 문제 지점을 찾아내는 법, 실제 콘텐츠가 들어오기 전에 공유 코드 경로를 점검하는 것, 그리고 이전 카테고리에서의 깨끗한 실행이 다음 카테고리에 대해서는 아무것도 증명하지 못하는 이유를 다룹니다.</p>

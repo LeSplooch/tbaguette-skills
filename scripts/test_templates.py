@@ -273,6 +273,33 @@ def check_header_and_badges() -> None:
           "entirely rather than left blank",
           "site-header__updated" not in no_time_html)
 
+    # The version is chrome on every page, so it renders from a parameter the
+    # generator fills from .claude-plugin/plugin.json -- never a literal in
+    # this file, which would make the site a second place to remember it.
+    versioned = render_index(categories, skills, last_updated_utc=iso,
+                             plugin_version="1.2.3")
+    check("the plugin version renders next to the wordmark",
+          '<span class="wordmark-version" dir="ltr">v1.2.3</span>' in versioned)
+    check("it sits outside the wordmark's <a>, so clicking a version number "
+          "does not navigate home",
+          versioned.index("</a>") < versioned.index("wordmark-version")
+          < versioned.index("site-header__actions"))
+    check("dir=\"ltr\" is on the version itself, so RTL locales do not "
+          "reorder the digits around the dots",
+          'class="wordmark-version" dir="ltr"' in versioned)
+    check("with no plugin_version passed, the element is omitted entirely "
+          "rather than rendering a bare 'v'",
+          "wordmark-version" not in no_time_html
+          and "wordmark-version" not in render_index(categories, skills,
+                                                     last_updated_utc=iso))
+
+    versioned_skill = render_skill_page(
+        skills["fresh"], prev_skill=None, next_skill=None, siblings=[],
+        categories=categories, plugin_version="1.2.3",
+    )
+    check("skill pages carry the version too, not just the index",
+          'class="wordmark-version" dir="ltr">v1.2.3</span>' in versioned_skill)
+
     fresh_page_html = render_skill_page(
         skills["fresh"], prev_skill=None, next_skill=None, siblings=[], categories=categories,
     )

@@ -323,7 +323,8 @@ def _write(path: Path, html: str) -> None:
 
 def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_utc: str,
                  *, locale: locales.Locale, strings: templates.Strings,
-                 verify_strings: templates.VerifyInstallStrings) -> None:
+                 verify_strings: templates.VerifyInstallStrings,
+                 plugin_version: str = "") -> None:
     """Writes one locale's pages into output_dir, which must already exist
     and be empty. Raises on the first failure — the caller is responsible
     for only promoting output_dir's contents once every locale succeeds."""
@@ -335,7 +336,7 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
         templates.render_index(
             categories, skills, base_path, last_updated_utc=last_updated_utc,
             fresh_skills=content.get("fresh_skills", []),
-            locale=locale, strings=strings,
+            locale=locale, strings=strings, plugin_version=plugin_version,
         ),
     )
 
@@ -344,7 +345,7 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
         html = templates.render_skill_page(
             skill, prev_skill=prev_skill, next_skill=next_skill, siblings=siblings,
             categories=categories, base_path=base_path, last_updated_utc=last_updated_utc,
-            locale=locale, strings=strings,
+            locale=locale, strings=strings, plugin_version=plugin_version,
         )
         _write(output_dir / "skills" / skill["slug"] / "index.html", html)
 
@@ -354,6 +355,7 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
     verify_html = templates.render_verify_install_page(
         highlighted_lines, categories, base_path, last_updated_utc=last_updated_utc,
         locale=locale, strings=strings, verify_strings=verify_strings,
+        plugin_version=plugin_version,
     )
     _write(output_dir / "verify-install" / "index.html", verify_html)
 
@@ -382,6 +384,7 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
         )
 
     now = datetime.now(timezone.utc)
+    plugin_version = _plugin_version()
     fresh = _fresh_skills(project_root, now=now)
     last_updated_utc = now.isoformat(timespec="seconds")
 
@@ -433,6 +436,7 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
             _build_into(
                 locale_output_dir, content, base_path, last_updated_utc,
                 locale=locale, strings=strings, verify_strings=verify_strings,
+                plugin_version=plugin_version,
             )
             if not locale.default:
                 swapped_names.append(locale.code)
@@ -463,6 +467,23 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
 
 def _default_project_root() -> Path:
     return Path(__file__).resolve().parent.parent
+
+
+def _plugin_version() -> str:
+    """The published plugin version, shown next to the site wordmark.
+
+    .claude-plugin/plugin.json is the single source of truth for it --
+    test_harness_manifests.py already asserts every other manifest matches
+    that file, so reading it here keeps the site from becoming a separate
+    place the version has to be remembered.
+
+    Deliberately resolved from this script's own location rather than from
+    the caller's project_root: project_root is where output goes, and the
+    integration tests point it at a scratch directory that has no manifest
+    in it. The manifest that describes the plugin being published always
+    sits next to scripts/, whatever the output path is."""
+    manifest = Path(__file__).resolve().parent.parent / ".claude-plugin" / "plugin.json"
+    return json.loads(manifest.read_text(encoding="utf-8"))["version"]
 
 
 def _default_skills_root(project_root: Path) -> Path:

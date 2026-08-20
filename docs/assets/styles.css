@@ -601,6 +601,36 @@ code {
   opacity: 0.72;
 }
 
+/* Brand and version are one flex item, so the header's own wrap breaks between
+   brand and actions before it breaks between title and version. Below 332px
+   (measured, not guessed) there is genuinely no room for both on one line and
+   the version does take its own row -- checked at 320px, where it lands on the
+   same left edge the wrapped "updated" metadata and language switcher already
+   use, so it reads as part of that stack rather than as a stray. Baseline
+   alignment, not centre: the version sits on the title's own baseline.
+   `last baseline` specifically, because .wordmark is an inline-flex whose
+   *first* baseline comes from the wheat icon and would hang the number high. */
+.site-header__brand {
+  display: flex;
+  align-items: last baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* --text-1 is the scale's designated meta/mono step, and this reuses the
+   same mono + muted treatment the header's "last updated" metadata already
+   uses, so the two read as one system rather than two ideas. No glow and no
+   hover response: the wordmark above owns both, and a version competing with
+   the title it annotates would be a hierarchy failure. */
+.wordmark-version {
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
 .site-header__actions {
   display: flex;
   flex-wrap: wrap;
