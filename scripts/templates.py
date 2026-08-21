@@ -883,6 +883,38 @@ def _fresh_signed_offset(index: int, count: int) -> int:
     return index if index <= half else index - count
 
 
+# One tile-step of horizontal travel, matching styles.css's own
+# `var(--cf-offset) * 140px` and site.js's DRAG_STEP_PX. Restated here for
+# the same reason _fresh_signed_offset is: there is no build step joining
+# the three, so they are kept deliberately parallel.
+FRESH_STEP_PX = 140
+
+
+def _fresh_group_shift_px(count: int) -> int:
+    """How far to slide the whole fan sideways so it sits centred in the
+    rail, rather than merely having its *active* tile centred.
+
+    Those are not the same thing whenever the offsets _fresh_signed_offset
+    hands out are lopsided, which is most of the time. Four tiles land on
+    -1, 0, 1, 2: one card left of centre and two to the right, so the fan
+    reaches 295px to the left and 420px to the right and visibly hugs the
+    rail's right edge with a gap opening on the left. Five tiles (-2..2)
+    are symmetric and need no help; six put their sixth at offset 3, which
+    is stacked invisibly behind the 2 and must not drag the centring with
+    it -- hence clamping the range to the +-2 that is actually visible.
+
+    Returned in px rather than in offsets so a fractional half-step lands
+    as a real translate; the shift depends only on `count`, so it stays
+    constant while the rail steps or is dragged, and the fan never jitters
+    sideways mid-spin."""
+    if count <= 1:
+        return 0
+    half = count // 2
+    hi = min(half, 2)
+    lo = max(-(count - 1 - half), -2)
+    return round(-(lo + hi) / 2 * FRESH_STEP_PX)
+
+
 def _render_fresh_tile(skill: dict, base_path: str = "", index: int = 0, count: int = 1) -> str:
     """One rail tile — the same card content as the grid below
     (_render_skill_card): name + badge, summary, category tag and arrow.
@@ -974,7 +1006,7 @@ def _render_fresh_section(fresh_skills: list[dict], base_path: str = "") -> str:
     <span class="tag fresh__tag">Last 48 hours</span>
     {nav}
   </div>
-  <div class="fresh__rail" data-fresh-coverflow>
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: {_fresh_group_shift_px(count)}px">
 {tiles}
   </div>
 </section>"""

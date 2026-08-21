@@ -413,6 +413,34 @@ def check_fresh_section() -> None:
           templates._fresh_signed_offset(7, 12) == -5
           and templates._fresh_signed_offset(11, 12) == -1)
 
+    # --- group centring. The offsets above centre the *active* tile; these
+    # centre the whole fan, which is a different thing whenever the offsets
+    # are lopsided. Getting this wrong is not subtle on screen: the fan
+    # hugs one edge of the rail with a gap opening on the other. ----------
+    check("_fresh_group_shift_px: a symmetric fan is already centred and is "
+          "left alone — five tiles span -2..2, so a shift would only break "
+          "what is already right",
+          templates._fresh_group_shift_px(5) == 0
+          and templates._fresh_group_shift_px(3) == 0
+          and templates._fresh_group_shift_px(1) == 0)
+    check("_fresh_group_shift_px: four tiles land on -1,0,1,2 — two cards "
+          "right of centre against one to the left — so the fan slides back "
+          "half a step to sit level in the rail",
+          templates._fresh_group_shift_px(4) == -70)
+    check("_fresh_group_shift_px: two tiles are lopsided for the same "
+          "reason and get the same half-step correction",
+          templates._fresh_group_shift_px(2) == -70)
+    check("_fresh_group_shift_px: a sixth tile sits at offset 3, stacked "
+          "invisibly behind the 2, and must not drag the centring out with "
+          "it — the range that counts is the +-2 actually on screen",
+          templates._fresh_group_shift_px(6) == 0
+          and templates._fresh_group_shift_px(12) == 0)
+    check("the rail carries the group shift for no-JS visitors, who never "
+          "run site.js's copy of this and would otherwise get the lopsided "
+          "fan permanently",
+          'style="--cf-shift: 0px"' in html
+          or 'style="--cf-shift: -70px"' in html)
+
 
 def check_i18n_document_shell() -> None:
     """Task 3's own coverage: the document shell threads locale/strings

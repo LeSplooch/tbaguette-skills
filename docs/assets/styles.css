@@ -1411,7 +1411,7 @@ code {
     cursor: pointer;
     --cf-abs: max(var(--cf-offset), calc(var(--cf-offset) * -1));
     --cf-transform:
-      translateX(clamp(-280px, calc(var(--cf-offset) * 140px), 280px))
+      translateX(calc(clamp(-280px, calc(var(--cf-offset) * 140px), 280px) + var(--cf-shift, 0px)))
       rotateY(clamp(-38deg, calc(var(--cf-offset) * -34deg), 38deg))
       scale(clamp(0.55, calc(1 - var(--cf-abs) * 0.13), 1));
     transform: var(--cf-transform);

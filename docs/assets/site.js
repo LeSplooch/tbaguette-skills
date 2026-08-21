@@ -201,6 +201,19 @@
     return diff > count / 2 ? diff - count : diff;
   }
 
+  // Restates templates.py's _fresh_group_shift_px — see there for why the
+  // fan needs sliding at all and why the range is clamped to ±2. Depends
+  // only on count, so it is computed once per rail and stays put while the
+  // rail steps or is dragged; a shift that moved with activeIndex would
+  // make the whole fan slide sideways on every step.
+  function freshGroupShiftPx(count) {
+    if (count <= 1) return 0;
+    var half = Math.floor(count / 2);
+    var hi = Math.min(half, 2);
+    var lo = Math.max(-(count - 1 - half), -2);
+    return Math.round(-(lo + hi) / 2 * 140);
+  }
+
   function initFreshCoverflow() {
     var rail = document.querySelector('[data-fresh-coverflow]');
     if (!rail) return;
@@ -216,6 +229,7 @@
     if (window.matchMedia && window.matchMedia('(forced-colors: active)').matches) return;
 
     var count = tiles.length;
+    var groupShift = freshGroupShiftPx(count);
     var activeIndex = 0;
 
     // Three independent reasons the clock might not be driving right now,
@@ -266,7 +280,7 @@
         var offset = freshSignedOffset(i, index, count);
         tile.style.setProperty('--cf-offset', offset);
         var abs = Math.abs(offset);
-        var x = Math.max(-280, Math.min(280, offset * 140));
+        var x = Math.max(-280, Math.min(280, offset * 140)) + groupShift;
         var rotate = Math.max(-38, Math.min(38, offset * -34));
         var scale = Math.max(0.55, 1 - abs * 0.13);
         tile.style.transform =
