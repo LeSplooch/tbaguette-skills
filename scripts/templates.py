@@ -777,7 +777,9 @@ After a successful clone or pull, verify rather than assume:
 - <target>/CATALOG.md exists and <target>/skills/ is non-empty.
 - Read <target>/.claude-plugin/plugin.json's "version" field, if present, so you can tell me which version I'm now on.
 
-Then tell me what happened (installed fresh, updated, or already current), which version, and to restart Claude Code (or run /reload-plugins) — skills then invoke as TBaguette:skill-name."""
+Then tell me what happened (installed fresh, updated, or already current), which version, and to restart Claude Code (or run /reload-plugins) — skills then invoke as TBaguette:skill-name.
+
+Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke TBaguette:using-tbaguette here."""
 
 
 def _render_install(base_path: str = "", *,

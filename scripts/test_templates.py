@@ -1048,6 +1048,18 @@ def main() -> None:
     check("prompt's Windows target path matches the tested cmd.exe install command",
           "%USERPROFILE%\\.claude\\skills\\TBaguette" in INSTALL_PROMPT
           and "%USERPROFILE%\\.claude\\skills\\TBaguette" in INSTALL_COMMAND_CMD)
+    check("prompt tells Claude to report both escapes from the stale session it is "
+          "running in, so someone who copies the button without reading the note "
+          "beside it still hears it — the session running this install is always "
+          "one that predates it",
+          "open a new conversation" in INSTALL_PROMPT
+          and "TBaguette:using-tbaguette" in INSTALL_PROMPT)
+    check("prompt and the on-page note agree that a pre-install session keeps its "
+          "startup skill list (same fact, two audiences — drift here means the "
+          "page and the prompt start telling visitors different things)",
+          "skill list it had at startup" in INSTALL_PROMPT
+          and "skill list it started with"
+          in ENGLISH_STRINGS.install_note_session_html_template)
     print(f"  wrote {index_path}")
 
     # --- render_skill_page: formidable (the interesting one) --------------

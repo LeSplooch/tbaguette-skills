@@ -51,7 +51,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-21T14:23:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-21T14:23:50Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-21T14:40:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-21T14:40:11Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Language: English</summary>
@@ -110,7 +110,9 @@ After a successful clone or pull, verify rather than assume:
 - &lt;target&gt;/CATALOG.md exists and &lt;target&gt;/skills/ is non-empty.
 - Read &lt;target&gt;/.claude-plugin/plugin.json&#x27;s &quot;version&quot; field, if present, so you can tell me which version I&#x27;m now on.
 
-Then tell me what happened (installed fresh, updated, or already current), which version, and to restart Claude Code (or run /reload-plugins) — skills then invoke as TBaguette:skill-name.</code>
+Then tell me what happened (installed fresh, updated, or already current), which version, and to restart Claude Code (or run /reload-plugins) — skills then invoke as TBaguette:skill-name.
+
+Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke TBaguette:using-tbaguette here.</code>
       <button class="install__copy" type="button" data-copy-target="install-prompt-command"
               aria-label="Copy install command">
         <span class="install__copy-icons">
