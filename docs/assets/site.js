@@ -254,7 +254,8 @@
     // still set alongside it, since it (and styles.css's calc() rule) is
     // what a no-JS visitor's static, correct-but-motionless coverflow
     // relies on. The clamped magnitudes mirror styles.css's clamp()s
-    // exactly — see that rule for why they're this steep.
+    // exactly — see that rule for why the fan is five cards wide, and why
+    // the opacity falloff is squared where every other one here is linear.
     //
     // index is a plain parameter, not always activeIndex itself: a drag
     // in progress renders a live, fractional index every pointermove
@@ -267,12 +268,12 @@
         var abs = Math.abs(offset);
         var x = Math.max(-280, Math.min(280, offset * 140));
         var rotate = Math.max(-38, Math.min(38, offset * -34));
-        var scale = Math.max(0.55, 1 - abs * 0.19);
+        var scale = Math.max(0.55, 1 - abs * 0.13);
         tile.style.transform =
           'translateX(' + x + 'px) ' +
           'rotateY(' + rotate + 'deg) ' +
           'scale(' + scale + ')';
-        tile.style.opacity = Math.max(0, 1 - abs * 0.32);
+        tile.style.opacity = Math.max(0, 1 - abs * abs * 0.115);
       });
     }
 

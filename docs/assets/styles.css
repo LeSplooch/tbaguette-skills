@@ -1302,6 +1302,26 @@ code {
      centre card with neighbours that fall away fast reads as a coverflow;
      gentler steps just look like a slightly skewed row.
 
+     The fan is five cards wide, and that number is set by the translate
+     clamp rather than chosen here: at 140px a step, ±280px is reached at
+     offset 2, so offsets 0, ±1 and ±2 are the only distinct positions the
+     clamp permits — everything at 3 or beyond stacks exactly on top of the
+     2s. The clamp is not free to raise, either; it is the same 280px as
+     overflow-clip-margin below, and the pair is what keeps the fan from
+     turning into real document scroll.
+
+     So how many cards *read* as cards is purely a question of how fast
+     they fade and shrink, which is why those two falloffs are tuned
+     separately from the step. Scale is gentle (0.13 a step: 1, 0.87,
+     0.74) so the outermost pair still has card-like mass. Opacity is
+     quadratic rather than linear, because linear cannot do what is needed
+     here: reaching zero by offset 3 — mandatory, since a 3 sits exactly
+     behind a 2 and any opacity at all would show as a dirty double edge —
+     forces about a third at offset 2, which is the ghost this replaces.
+     Squaring holds the near cards up and drops the far ones off a cliff:
+     1, 0.885, 0.54, then 0. Five legible cards, and a hard nothing behind
+     them.
+
      Selectors here are the type-qualified `a.fresh__tile`, not the bare
      class, on purpose: since a tile is also a .card, and section 9's
      .card / .card:hover rules sit later in this file, a same-specificity
@@ -1366,9 +1386,9 @@ code {
     --cf-transform:
       translateX(clamp(-280px, calc(var(--cf-offset) * 140px), 280px))
       rotateY(clamp(-38deg, calc(var(--cf-offset) * -34deg), 38deg))
-      scale(clamp(0.55, calc(1 - var(--cf-abs) * 0.19), 1));
+      scale(clamp(0.55, calc(1 - var(--cf-abs) * 0.13), 1));
     transform: var(--cf-transform);
-    opacity: clamp(0, calc(1 - var(--cf-abs) * 0.32), 1);
+    opacity: clamp(0, calc(1 - var(--cf-abs) * var(--cf-abs) * 0.115), 1);
     z-index: max(1, calc(20 - var(--cf-abs)));
     /* --fresh-spin-duration exists so a momentum-carrying drag release can
        lengthen just this settle without touching the shared rule: site.js
