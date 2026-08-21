@@ -1084,12 +1084,28 @@ code {
    positioning. Rendered only when something is actually fresh (see
    _render_fresh_section), so there is no empty state to style.
 
-   max-width here matches .install-frame's own 46rem on purpose: both sit
-   inside the full-width .container, and without a matching cap this
-   section's horizontal centre (which the coverflow below centres its tiles
-   on) would land at the container's centre — well to the right of where
-   .install-frame and .search, both narrower and left-aligned, actually sit.
-   Matching the wider of the two keeps the rail's centre close to both.
+   max-width here used to match .install-frame's own 46rem exactly, so that
+   this section's horizontal centre — which the coverflow below centres its
+   tiles on — sat directly over the install frame's. Both live inside the
+   full-width .container, and with no cap at all that centre lands at the
+   container's centre, well to the right of where .install-frame and
+   .search, both narrower and left-aligned, actually sit. So a cap is still
+   needed; it just no longer has to be 46rem exactly.
+
+   53rem is the width at which the five-card fan stops being clipped, and
+   it was measured rather than picked: the outermost pair of cards has
+   72px of itself exposed at 46rem, 97px at 49rem, 121px at 52rem and
+   126px at 53rem, which is the whole of what it will ever show — 54rem
+   and 56rem are identical to 53rem and add only empty rail. Below 53rem
+   the rail's own edge is what cuts the outer cards short, which is what
+   made the fan read four cards wide with a sliver on the end.
+
+   The cost is that the fan's centre now sits 3.5rem right of the install
+   frame's rather than on top of it. That is the same *kind* of drift the
+   original cap existed to prevent, but a small fraction of it — an
+   uncapped section drifts far further — and it buys the outer pair most
+   of its width back. The heading and tag above are left-aligned and do
+   not move, so the section still starts on the page's left margin.
 
    That tray also, wherever motion and space are both welcome, becomes a
    coverflow rather than a flat scroller: one tile flat and full-size at
@@ -1116,7 +1132,7 @@ code {
    anything this file alone renders.
    ------------------------------------------------------------------------- */
 
-.fresh { margin-top: var(--space-7); max-width: 46rem; }
+.fresh { margin-top: var(--space-7); max-width: 53rem; }
 
 .fresh__head {
   position: relative;
@@ -1302,22 +1318,25 @@ code {
      centre card with neighbours that fall away fast reads as a coverflow;
      gentler steps just look like a slightly skewed row.
 
-     The fan is exactly five cards wide, and the step is not the reason —
-     the rail's own box is. At 140px a step the clamp is reached at offset
-     2, so 0, ±1 and ±2 are the only distinct positions and everything
-     from 3 out stacks precisely on top of the 2s; but the harder limit is
-     that the rail is 46rem and the fan already fills it exactly:
-     352 + 2x120 + 2x72 = 736px of card exposed, edge to edge, nothing
-     spare. overflow-clip-margin does not buy room here — it widens the
-     paint region but hit-testing still stops dead at the padding box, so
-     anything spilling past the rail edge would be visible and unclickable,
-     which is the wrong trade now that a tile's click navigates.
+     The fan is exactly five cards wide: at 140px a step the clamp is
+     reached at offset 2, so 0, ±1 and ±2 are the only distinct positions
+     and everything from 3 out stacks precisely on top of the 2s.
 
-     That is why raising the step backfires, and it was measured doing so:
-     at 170px a step the outermost pair drops from 72px of exposure to 39,
-     at 200px to 6. A wider step pushes offset 2 past the rail edge and the
-     rail simply cuts it off. More room for five cards has to come from a
-     wider rail or a narrower card, never from spreading these further.
+     How much of those five actually shows is a separate question, and the
+     answer is set by the rail's width, not by the step. The fan wants
+     352 + 2x120 + 2x126 = 848px to lay out unclipped, which is why .fresh
+     is capped at 53rem above; at the 46rem it used to be, the rail's own
+     edge cut the outer pair down to 72px each and the fan read four cards
+     wide with a sliver on the end. overflow-clip-margin does not rescue
+     that — it widens the paint region, but hit-testing still stops dead at
+     the padding box, so anything spilling past the rail edge would be
+     visible and unclickable, the wrong trade now that a click navigates.
+
+     Raising the step is the tempting fix and it backfires, measured: at
+     170px a step the outermost pair drops from 72px of exposure to 39, at
+     200px to 6, because a wider step pushes offset 2 further into the edge
+     that is already clipping it. Room comes from the rail, never from
+     spreading these further apart.
 
      So legibility is what the falloffs buy, and the opacity one is
      quadratic rather than linear like everything else here for a specific
