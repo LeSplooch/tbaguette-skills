@@ -51,7 +51,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aggiornato</span>
-      <time class="site-header__updated-value" datetime="2026-08-21T02:41:19+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} ora locale · {utc} UTC">2026-08-21T02:41:19Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-21T13:20:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} ora locale · {utc} UTC">2026-08-21T13:20:50Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Lingua: Italiano</summary>
@@ -153,9 +153,9 @@ description: Use when A, B, or C. Covers D, E, F.
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Description reads like a changelog entry (&quot;dispatches per task with review between&quot;)</td><td>Description written to summarize the skill instead of to trigger it; agents will follow the summary and skip the body</td></tr><tr><td>A <code>reference/</code> file for a forty-line skill</td><td>Reached for progressive disclosure before checking whether it fits inline; a handful of skills out of dozens have one, each because its content is genuinely read selectively</td></tr><tr><td>Skill ships without ever running on a subagent that didn't have it</td><td>RED phase skipped — the skill addresses whatever you imagined agents would do, not what they actually do</td></tr><tr><td>Every rule has an escape clause (&quot;...unless it doesn't make sense&quot;)</td><td>A nuance clause reopens the exact negotiation a flat rule was meant to close</td></tr><tr><td>Skill written for a project-specific convention</td><td>Belongs in that project's own CLAUDE.md, not a library that has to survive being read cold in an unrelated repo</td></tr><tr><td>A flowchart shows a linear checklist</td><td>A numbered list would read faster; the diagram is doing a list's job worse</td></tr><tr><td>New skill has no <code>CATALOG.md</code> row</td><td>Written, not shipped — the count check in <code>scripts/generate.py</code> will fail the build the moment someone notices</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's obviously clear, it doesn't need testing on a subagent.&quot;</li><li>&quot;I'll just add this section — it's small enough to skip re-testing.&quot;</li><li>&quot;This is basically the Anthropic or superpowers version, I don't need to check how this repo actually does it.&quot;</li><li>&quot;The description is a good summary of what the skill does&quot; — a good summary and a good trigger are different documents.</li><li>Reaching for a <code>reference/</code> file because the main one &quot;feels long,&quot; without checking whether anything in it actually needs to be read selectively rather than every time.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Navigazione tra le skill"><a class="prevnext__link" href="/tbaguette-skills/it/skills/delegating-tasks-with-review-gates/">
+<nav class="container prevnext" aria-label="Navigazione tra le skill"><a class="prevnext__link" href="/tbaguette-skills/it/skills/routing-around-capability-gaps/">
   <span class="prevnext__label">Precedente</span>
-  <span class="prevnext__name">← delegating-tasks-with-review-gates</span>
+  <span class="prevnext__name">← routing-around-capability-gaps</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">Altre skill nella categoria Ambiente e strumenti</h2>
@@ -191,6 +191,10 @@ description: Use when A, B, or C. Covers D, E, F.
 <li><a class="see-also__link" href="/tbaguette-skills/it/skills/delegating-tasks-with-review-gates/">
       <span class="see-also__name">delegating-tasks-with-review-gates</span>
       <span class="see-also__summary">Da usare quando si esegue un piano di implementazione multi-task, task per task…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/it/skills/routing-around-capability-gaps/">
+      <span class="see-also__name">routing-around-capability-gaps</span>
+      <span class="see-also__summary">Da usare quando il lavoro richiede qualcosa che il modello o l’harness attuale non sa fare — input audio o video…</span>
     </a></li>
   </ul>
 </div>

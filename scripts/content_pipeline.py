@@ -177,6 +177,7 @@ CATEGORIES: list[dict] = [
             "automating-repetition",
             "fanning-out-independent-work",
             "delegating-tasks-with-review-gates",
+            "routing-around-capability-gaps",
             "authoring-a-new-skill",
         ],
     },

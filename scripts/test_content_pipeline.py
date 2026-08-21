@@ -624,8 +624,8 @@ class BuildContentIntegrationTests(unittest.TestCase):
     def setUpClass(cls):
         cls.content = build_content(str(REAL_SKILLS_ROOT))
 
-    def test_finds_exactly_89_skills(self):
-        self.assertEqual(len(self.content["skills"]), 90)
+    def test_finds_exactly_91_skills(self):
+        self.assertEqual(len(self.content["skills"]), 91)
 
     def test_ten_categories_in_the_locked_order(self):
         actual_slugs = [c["slug"] for c in self.content["categories"]]
@@ -633,9 +633,9 @@ class BuildContentIntegrationTests(unittest.TestCase):
         self.assertEqual(actual_slugs, expected_slugs)
         self.assertEqual(len(actual_slugs), 10)
 
-    def test_category_skill_slug_counts_sum_to_89(self):
+    def test_category_skill_slug_counts_sum_to_91(self):
         total = sum(len(c["skill_slugs"]) for c in self.content["categories"])
-        self.assertEqual(total, 90)
+        self.assertEqual(total, 91)
 
     def test_formidable_entry_has_stacks_commands_and_craft_floor(self):
         formidable = self.content["skills"]["formidable"]

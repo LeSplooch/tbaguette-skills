@@ -1,6 +1,6 @@
 # TBaguette
 
-90 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+91 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -152,5 +152,6 @@ TBaguette skill hands off to a neighbour.
 | `automating-repetition` | When a manual sequence should become a tool, and when it should not |
 | `fanning-out-independent-work` | Telling genuine independence from work that only looks independent; avoiding collisions |
 | `delegating-tasks-with-review-gates` | Fresh subagent per task, gated by a two-stage review, with a bounded fix loop |
+| `routing-around-capability-gaps` | When this model or harness can't do it: surveying what else is on the machine, deterministic tools before a second model, consent before data crosses a provider |
 | `authoring-a-new-skill` | What makes a skill worth writing, the frontmatter register, testing it before it ships |
 | `play-console` † | Google Play Console workflows |
