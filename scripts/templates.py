@@ -90,6 +90,7 @@ class Strings:
     install_note_verified_text: str
     install_note_see_how: str
     install_note_restart_html_template: str
+    install_note_session_html_template: str
     install_tab_posix_label: str
     install_tab_windows_label: str
     install_tab_aria_label: str
@@ -167,6 +168,12 @@ ENGLISH_STRINGS = Strings(
         "specifically — the Claude Desktop app and claude.ai chat load skills "
         "from your account instead of this folder, so cloning here won’t make "
         "them appear there."
+    ),
+    install_note_session_html_template=(
+        "A conversation that was already open when you installed or updated — "
+        "including the one you installed from — is still running on the skill "
+        "list it started with. Open a new conversation to pick up the latest, or "
+        "invoke <code>{brand}:using-tbaguette</code> in the old one."
     ),
     install_tab_posix_label="macOS / Linux",
     install_tab_windows_label="Windows (PowerShell)",
@@ -779,6 +786,7 @@ def _render_install(base_path: str = "", *,
     escaped_prompt = escape_html(INSTALL_PROMPT)
     frame_label = strings.install_frame_label_template.format(brand=BRAND_NAME)
     restart_note_html = strings.install_note_restart_html_template.format(brand=BRAND_NAME)
+    session_note_html = strings.install_note_session_html_template.format(brand=BRAND_NAME)
     return f"""<div class="install-frame">
   <p class="install-frame__label">
     {_icon("icon-crust", base_path=base_path)}
@@ -804,6 +812,10 @@ def _render_install(base_path: str = "", *,
     <p class="install-frame__note">
       {_icon("icon-check", base_path=base_path)}
       <span>{restart_note_html}</span>
+    </p>
+    <p class="install-frame__note">
+      {_icon("icon-check", base_path=base_path)}
+      <span>{session_note_html}</span>
     </p>
   </div>
 </div>"""

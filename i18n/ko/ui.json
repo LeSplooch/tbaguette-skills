@@ -25,6 +25,7 @@
   "install_note_verified_text": "건드리는 것은 이 폴더 하나뿐입니다 — 말로만 그런 것이 아니라, 이미 설치되어 있는 다른 스킬들을 상대로 실제로 검증했습니다.",
   "install_note_see_how": "검증 과정 보기",
   "install_note_restart_html_template": "Claude Code를 다시 시작하거나 <code>/reload-plugins</code>를 실행한 다음, <code>{brand}:skill-name</code> 형태로 스킬을 호출하세요. 이건 Claude Code에 한정된 이야기입니다 — Claude Desktop 앱과 claude.ai 채팅은 이 폴더가 아니라 계정에서 스킬을 불러오기 때문에, 여기에 클론해도 그쪽에는 나타나지 않습니다.",
+  "install_note_session_html_template": "설치하거나 업데이트할 때 이미 열려 있던 대화는 — 설치에 사용한 그 대화까지 포함해서 — 시작할 때의 스킬 목록 그대로 돌아갑니다. 최신 상태로 쓰려면 새 대화를 열거나, 기존 대화에서 <code>{brand}:using-tbaguette</code>를 호출하세요.",
   "install_tab_posix_label": "macOS / Linux",
   "install_tab_windows_label": "Windows (PowerShell)",
   "install_tab_aria_label": "플랫폼 선택",

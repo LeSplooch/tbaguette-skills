@@ -1021,6 +1021,17 @@ def main() -> None:
     check("the Claude-Code-specific note sits after the safety note, before the lede",
           index_html.index("install-frame__note") < index_html.index('Restart Claude Code')
           < index_html.index("hero__lede"))
+    check("a third note names both ways to pick up a fresh install/update from a "
+          "conversation that predates it (the bug this prevents: someone installs, "
+          "sees nothing change in the very conversation they installed from, and "
+          "concludes the install failed)",
+          'is still running on the skill list it started with' in index_html
+          and 'Open a new conversation' in index_html
+          and 'TBaguette:using-tbaguette' in index_html)
+    check("that note sits last of the three, still inside the frame and before the lede",
+          index_html.index('Restart Claude Code')
+          < index_html.index('Open a new conversation')
+          < index_html.index("hero__lede"))
     check("no platform-picker tabs remain now that there's a single universal prompt",
           'data-autoselect-platform' not in index_html and 'tab-install-posix' not in index_html)
 

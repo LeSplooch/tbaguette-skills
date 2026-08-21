@@ -25,6 +25,7 @@
   "install_note_verified_text": "Nunca toca nada más que esta carpeta —verificado frente a tus otras habilidades, no solo afirmado.",
   "install_note_see_how": "Ver cómo",
   "install_note_restart_html_template": "Reinicia Claude Code (o ejecuta <code>/reload-plugins</code>) e invoca una habilidad con <code>{brand}:skill-name</code>. Esto es específico de Claude Code: la aplicación Claude Desktop y el chat de claude.ai cargan las habilidades desde tu cuenta y no desde esta carpeta, así que clonar aquí no hará que aparezcan allí.",
+  "install_note_session_html_template": "Una conversación que ya estuviera abierta cuando instalaste o actualizaste —incluida aquella desde la que instalaste— sigue funcionando con la lista de habilidades con la que empezó. Abre una conversación nueva para tener lo último, o invoca <code>{brand}:using-tbaguette</code> en la antigua.",
   "install_tab_posix_label": "macOS / Linux",
   "install_tab_windows_label": "Windows (PowerShell)",
   "install_tab_aria_label": "Elige tu plataforma",

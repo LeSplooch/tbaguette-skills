@@ -25,6 +25,7 @@
   "install_note_verified_text": "Ne touche que ce dossier, jamais rien d’autre — vérifié face à vos autres compétences, pas seulement affirmé.",
   "install_note_see_how": "Voir comment",
   "install_note_restart_html_template": "Redémarrez Claude Code (ou lancez <code>/reload-plugins</code>), puis invoquez une compétence avec <code>{brand}:skill-name</code>. C’est propre à Claude Code — l’application Claude Desktop et le chat claude.ai chargent les compétences depuis votre compte plutôt que depuis ce dossier : cloner ici ne les y fera pas apparaître.",
+  "install_note_session_html_template": "Une conversation déjà ouverte au moment de l’installation ou de la mise à jour — y compris celle depuis laquelle vous avez installé — continue de tourner avec la liste de compétences qu’elle avait au départ. Ouvrez une nouvelle conversation pour disposer de la dernière version, ou invoquez <code>{brand}:using-tbaguette</code> dans l’ancienne.",
   "install_tab_posix_label": "macOS / Linux",
   "install_tab_windows_label": "Windows (PowerShell)",
   "install_tab_aria_label": "Choisissez votre plateforme",
