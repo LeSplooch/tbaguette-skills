@@ -376,7 +376,14 @@
       dragStartX = event.clientX;
       dragStartIndex = activeIndex;
       dragSamples = [{ t: event.timeStamp, x: event.clientX }];
-      if (rail.setPointerCapture) rail.setPointerCapture(event.pointerId);
+      // Deliberately no setPointerCapture here. Capturing at press time
+      // retargets the whole rest of the sequence — pointerup and, fatally,
+      // the click — onto the rail, so the click never lands on the tile's
+      // own <a> and the browser is left with no link to activate. That is
+      // silent: no error, nothing suppressed, the click simply arrives at
+      // an element that isn't a link and nothing happens. It cost the rail
+      // every plain click on a tile for as long as capture was taken here.
+      // pointermove takes it instead, at the one moment it earns anything.
     });
 
     rail.addEventListener('pointermove', function (event) {
@@ -386,6 +393,14 @@
         if (Math.abs(deltaX) < DRAG_CLICK_THRESHOLD_PX) return;
         dragMoved = true;
         manualOverride = true;
+        // Capture here, not at pointerdown: this is the first instant the
+        // gesture is known to be a drag rather than a click, so it's the
+        // first instant capture costs nothing (see pointerdown for what it
+        // costs earlier). From here on the spin keeps tracking the pointer
+        // even once it leaves the rail, which is the whole point of it.
+        if (rail.setPointerCapture) {
+          try { rail.setPointerCapture(event.pointerId); } catch (error) { /* pointer already gone */ }
+        }
         tiles.forEach(function (tile) { tile.style.setProperty('transition', 'none', 'important'); });
       }
       dragSamples.push({ t: event.timeStamp, x: event.clientX });
@@ -409,6 +424,17 @@
         try { rail.releasePointerCapture(event.pointerId); } catch (error) { /* already released */ }
       }
       if (!dragMoved) return;
+      // pointercancel means the browser claimed the gesture for itself (a
+      // vertical pan taking the finger, say). The ring still has to settle
+      // below — otherwise it's left frozen at a fractional offset with its
+      // transitions switched off — but no click ever follows a cancel, so
+      // the one suppression dragMoved is holding has to be handed back
+      // here instead of left armed for whatever click comes next. Every
+      // *pointer* click clears it via pointerdown first, so the click that
+      // would inherit a stale flag is precisely the one that arrives
+      // without a pointerdown: a keyboard visitor's Enter, swallowed with
+      // nothing on screen to explain why.
+      if (event.type === 'pointercancel') dragMoved = false;
       var deltaX = event.clientX - dragStartX;
       var liveIndex = dragStartIndex - deltaX / DRAG_STEP_PX;
 
@@ -490,6 +516,16 @@
     // one click it actually caused.
     rail.addEventListener('click', function (event) {
       if (!dragMoved) return;
+      // Enter on a focused tile arrives here as a click too, with detail 0
+      // (no pointer click-count behind it) and — unlike every pointer
+      // click — no pointerdown in front of it to have cleared a stale
+      // flag. It is never a drag's trailing click, so it must never be the
+      // one that spends the suppression. Checked structurally rather than
+      // by enumerating the ways a drag can end without producing a click:
+      // pointercancel is handled above, but a release outside the window
+      // can strand one too, and the cost of being wrong lands entirely on
+      // keyboard visitors, who get no cursor feedback to explain it.
+      if (!event.detail) return;
       dragMoved = false;
       event.preventDefault();
     });
