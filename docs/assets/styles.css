@@ -1302,25 +1302,33 @@ code {
      centre card with neighbours that fall away fast reads as a coverflow;
      gentler steps just look like a slightly skewed row.
 
-     The fan is five cards wide, and that number is set by the translate
-     clamp rather than chosen here: at 140px a step, ±280px is reached at
-     offset 2, so offsets 0, ±1 and ±2 are the only distinct positions the
-     clamp permits — everything at 3 or beyond stacks exactly on top of the
-     2s. The clamp is not free to raise, either; it is the same 280px as
-     overflow-clip-margin below, and the pair is what keeps the fan from
-     turning into real document scroll.
+     The fan is exactly five cards wide, and the step is not the reason —
+     the rail's own box is. At 140px a step the clamp is reached at offset
+     2, so 0, ±1 and ±2 are the only distinct positions and everything
+     from 3 out stacks precisely on top of the 2s; but the harder limit is
+     that the rail is 46rem and the fan already fills it exactly:
+     352 + 2x120 + 2x72 = 736px of card exposed, edge to edge, nothing
+     spare. overflow-clip-margin does not buy room here — it widens the
+     paint region but hit-testing still stops dead at the padding box, so
+     anything spilling past the rail edge would be visible and unclickable,
+     which is the wrong trade now that a tile's click navigates.
 
-     So how many cards *read* as cards is purely a question of how fast
-     they fade and shrink, which is why those two falloffs are tuned
-     separately from the step. Scale is gentle (0.13 a step: 1, 0.87,
-     0.74) so the outermost pair still has card-like mass. Opacity is
-     quadratic rather than linear, because linear cannot do what is needed
-     here: reaching zero by offset 3 — mandatory, since a 3 sits exactly
-     behind a 2 and any opacity at all would show as a dirty double edge —
-     forces about a third at offset 2, which is the ghost this replaces.
-     Squaring holds the near cards up and drops the far ones off a cliff:
-     1, 0.885, 0.54, then 0. Five legible cards, and a hard nothing behind
-     them.
+     That is why raising the step backfires, and it was measured doing so:
+     at 170px a step the outermost pair drops from 72px of exposure to 39,
+     at 200px to 6. A wider step pushes offset 2 past the rail edge and the
+     rail simply cuts it off. More room for five cards has to come from a
+     wider rail or a narrower card, never from spreading these further.
+
+     So legibility is what the falloffs buy, and the opacity one is
+     quadratic rather than linear like everything else here for a specific
+     reason: it has to reach *zero* by offset 3 — not merely low — because
+     a 3 sits exactly behind a 2 and any residue shows as a doubled, dirty
+     edge. A linear ramp hitting zero at 3 is forced to about a third at
+     offset 2, and a third is a smudge, not a card; that was the fan
+     reading three wide with two ghosts on the ends. Squaring holds the
+     near cards up and drops the far ones off a cliff: 1, 0.885, 0.54,
+     then 0. Scale softens to match (0.13 a step: 1, 0.87, 0.74) so the
+     outer pair keeps some mass instead of shrinking out of legibility.
 
      Selectors here are the type-qualified `a.fresh__tile`, not the bare
      class, on purpose: since a tile is also a .card, and section 9's
