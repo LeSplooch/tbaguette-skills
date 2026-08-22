@@ -59,6 +59,12 @@ The unbounded queue is how load becomes latency instead of visible failure. It a
 
 Sizing is arithmetic, not intuition. By Little's Law, wait time equals queue length divided by service rate, so pick the maximum acceptable wait and set the bound to service rate × that wait. A queue of 10,000 in front of a consumer serving 100 per second is a 100-second wait, which is a decision someone should have made on purpose.
 
+## Start the clock when the work does
+
+A per-item deadline is only meaningful if the item's clock starts when the item does. Most timeout primitives fix their deadline at construction, so building every wrapper up front — the natural shape of a fan-out — starts every clock simultaneously, including for items queued behind their own siblings on a concurrency-limited backend. Items several waves deep then spend their entire budget waiting for a slot and time out having done no work at all. Either construct the timeout inside the unit of work, downstream of whatever gate grants the item its slot, so the clock starts when the turn actually begins — or issue the work in bounded waves and create each wave's timeouts immediately before awaiting that wave.
+
+The diagnostic: every item times out while a single item, run alone, finishes comfortably. That is queue time inside the deadline, not slow work. The failure is also quieter than it looks — a timeout that fired before any work began is indistinguishable downstream from work that ran and produced a neutral result, so an aggregate over partial results should record how many contributors actually ran. "No agreement" among workers that never started is not disagreement.
+
 ## Watch age, not just depth
 
 Queue depth alone is ambiguous — 10,000 items is healthy at 5,000 per second and an outage at 5 per second. Alert on **age of the oldest unstarted item**, which is directly comparable to the latency objective. Supporting indicators, all leading rather than lagging: in-use concurrency versus the limit, time spent waiting for a slot, rejections broken down by reason, and the ratio of arrival rate to service rate — sustained above 1.0, everything else is a countdown.
@@ -92,6 +98,7 @@ A limit a client cannot see before hitting it forces every client to discover it
 | One tenant degrades everyone despite per-tenant limits | Sum of per-tenant limits exceeds real capacity; no global backstop |
 | Legitimate users throttled while abuse continues | Limiting per IP behind NAT while the attacker rotates addresses |
 | Queue drains hours after traffic stops | Work with expired deadlines never discarded |
+| Every item in a fan-out times out, any single item alone finishes fast | Timeout clocks started at construction, so queue time behind siblings consumed the budget |
 | Rejecting requests does not reduce load | Shedding after the connection, transaction, or thread is already claimed |
 | Clients retry into the limit in a tight loop | No retry hint, no remaining-quota signal, limit undiscoverable in advance |
 
@@ -103,4 +110,5 @@ A limit a client cannot see before hitting it forces every client to discover it
 - A limit chosen as a round number with no measured capacity behind it
 - A breaker that trips on a single failure, or that never half-opens
 - Alerting on queue depth but not on queue age
+- Timeout wrappers for a whole batch constructed up front, then awaited a few at a time
 - "The client should not be sending that much" instead of a limit that makes it observable
