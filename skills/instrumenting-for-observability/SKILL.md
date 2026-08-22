@@ -81,6 +81,7 @@ Measure where the user feels it — at the edge or in the client — not where i
 
 - Latency as percentiles with the count beside them (p50, p95, p99). A mean hides the tail, and the tail is the experience being complained about.
 - Availability as successful requests over valid requests. Settle the denominator argument up front: a client's own malformed input is usually excluded; your rate limits, timeouts, and capacity rejections are included, because from the user's side those are your failure.
+- The same denominator discipline covers grouped reports: records that legitimately lack the group-by field get their own explicit bucket instead of being filtered out. The null-guard that removes noise is the same clause that removes a whole legitimate category — a stage that never sets the field, a client version that predates the field — and the filtered result still renders as complete: an empty report reads as "nothing has happened yet," and nothing visible distinguishes it from "the query excluded the only populated category." Validate a new aggregate against data where the field is absent, not only where it is populated.
 - Alert on symptoms the user can feel, not on causes. CPU, memory, and queue depth are diagnostic panels; the page fires on error ratio and latency breaching the objective, with a burn rate that gives a human time to respond.
 - Every incident review ends with one question: what field, counter, or span would have made this obvious in the first minute? Add it before the review is closed, or it will be missing again.
 
@@ -97,6 +98,7 @@ Deciding what to emit is upstream of making it safe to emit; `redacting-sensitiv
 | Logs exist but the answer needs a new regular expression | Values interpolated into message strings instead of emitted as fields |
 | One failure produces twelve log lines | Logged at every layer on the way up instead of once at the deciding boundary |
 | Dashboards look healthy during a customer outage | Measured at the server, not at the edge; means instead of percentiles |
+| A report is empty — or one category short — while matching records exist | A null-guard on an optional field excluded the records that legitimately lack it |
 | Secret found in the log index | Redaction by denylist, or a whole object logged for convenience |
 | DEBUG is useless because enabling it needs a deploy | Log level fixed at build time rather than adjustable at runtime |
 
@@ -109,3 +111,4 @@ Deciding what to emit is upstream of making it safe to emit; `redacting-sensitiv
 - "Just log the whole object" as a debugging convenience
 - A trace that stops at the queue boundary
 - An SLI chosen because it was already being measured
+- A report that filters out the records lacking its group-by field instead of bucketing them
