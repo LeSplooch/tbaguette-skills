@@ -15,6 +15,12 @@ Before responding — including a clarifying question, "let me look at the code 
 
 If a skill turns out not to fit once you're in it, that's fine — drop it. But check first, every time.
 
+## When the work is bigger than one response
+
+One skill covers one stretch of work. Anything that will take several — a feature, a bug with no known cause, a migration, an audit — needs them in an order, and that order is `orchestrating-work-end-to-end`: which track the request is on, which phase it is in, what evidence opens the next gate, and where the run record lives so a compaction doesn't cost the run. Invoke it before the first action, not after the first three.
+
+When several skills apply at once, they go in this order: the spine first, because it says which phase this is; then that phase's owner skill; then whatever the work's own content calls for. "Build me X" starts at `scoping-before-building`, not in an editor. "Fix this bug" starts at `diagnosing-before-fixing`, not at a patch.
+
 ## Red flags
 
 Thoughts that mean stop and check anyway:

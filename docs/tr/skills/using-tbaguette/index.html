@@ -46,12 +46,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.10.5</span>
+      <span class="wordmark-version" dir="ltr">v0.11.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Son güncelleme</span>
-      <time class="site-header__updated-value" datetime="2026-08-22T19:45:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-22T19:45:06Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-22T20:48:23+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} yerel saatle · {utc} UTC">2026-08-22T20:48:23Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Dil: Türkçe</summary>
@@ -91,7 +91,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">using-tbaguette</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T20:48:23.029630+00:00">Güncellendi</span>
   </div>
   <span class="tag skill-article__tag">Muhakeme ve meta beceriler</span>
   <p class="lede">Her konuşmanın başında, her projede kullanın ve konuşmanın geri kalanı boyunca da aklınızda tutun — yalnızca ilk mesajda değil. Bu bildirimin kendisi nasıl öne çıkarıldıysa, her yanıttan önce TBaguette&#x27;in kendi becerilerinin de konuyla ilgili olup olmadığının kontrol edilmesi gerektiğini ortaya koyar.</p>
@@ -99,6 +99,9 @@
 <h2 id="the-rule">The rule</h2>
 <p>Before responding — including a clarifying question, &quot;let me look at the code first,&quot; or anything that feels too small to bother — check whether a TBaguette skill covers it. You don't need to open a file to see what exists: every <code>TBaguette:*</code> skill and its trigger description is already listed in your available-skills context. <code>CATALOG.md</code> in this repo has the longer versions when a one-line trigger isn't enough to judge relevance.</p>
 <p>If a skill turns out not to fit once you're in it, that's fine — drop it. But check first, every time.</p>
+<h2 id="when-the-work-is-bigger-than-one-response">When the work is bigger than one response</h2>
+<p>One skill covers one stretch of work. Anything that will take several — a feature, a bug with no known cause, a migration, an audit — needs them in an order, and that order is <code>orchestrating-work-end-to-end</code>: which track the request is on, which phase it is in, what evidence opens the next gate, and where the run record lives so a compaction doesn't cost the run. Invoke it before the first action, not after the first three.</p>
+<p>When several skills apply at once, they go in this order: the spine first, because it says which phase this is; then that phase's owner skill; then whatever the work's own content calls for. &quot;Build me X&quot; starts at <code>scoping-before-building</code>, not in an editor. &quot;Fix this bug&quot; starts at <code>diagnosing-before-fixing</code>, not at a patch.</p>
 <h2 id="red-flags">Red flags</h2>
 <p>Thoughts that mean stop and check anyway:</p>
 <table><thead><tr><th>Thought</th><th>Reality</th></tr></thead><tbody><tr><td>&quot;This is too small for a skill&quot;</td><td>Small changes are exactly where the guardrails (naming, commit hygiene, test scope) get skipped first.</td></tr><tr><td>&quot;I already know how to do this&quot;</td><td>Knowing the general shape of a task isn't the same as this library's specific judgment calls.</td></tr><tr><td>&quot;I'll check after I've looked at the code&quot;</td><td>Several skills (<code>orienting-in-unfamiliar-code</code>, <code>reading-specifications</code>) are about <em>how</em> to look, not what to do once you have.</td></tr><tr><td>&quot;It's just a question, not a task&quot;</td><td>Questions are tasks. Check for skills.</td></tr></tbody></table>
@@ -110,13 +113,17 @@
 <p>Other harnesses TBaguette ships a manifest for (Codex, Cursor, Devin, Gemini CLI, Kimi Code, OpenCode, Pi) don't currently need a separate reference file here — their tool mapping either lives inline in that harness's own manifest (Kimi's <code>skillInstructions</code>) or needs none at all, since most TBaguette skills describe actions rather than naming a specific tool. See <code>PORTING.md</code> at the repo root for the full harness-by-harness breakdown.</p>
 <h2 id="automatic-update-check">Automatic update check</h2>
 <p>If a <code>TBaguette:keeping-tbaguette-current</code> update-check block is attached below this notice, act on it per that skill's instructions — the network check already ran for this session, so don't repeat it.</p></div></article>
-<nav class="container prevnext" aria-label="Beceriler arasında gezinme"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/tr/skills/calibrating-confidence/">
+<nav class="container prevnext" aria-label="Beceriler arasında gezinme"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/tr/skills/orchestrating-work-end-to-end/">
   <span class="prevnext__label">Sonraki</span>
-  <span class="prevnext__name">calibrating-confidence →</span>
+  <span class="prevnext__name">orchestrating-work-end-to-end →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">“Muhakeme ve meta beceriler” kategorisindeki diğer beceriler</h2>
   <ul class="see-also__list">
+<li><a class="see-also__link" href="/tbaguette-skills/tr/skills/orchestrating-work-end-to-end/">
+      <span class="see-also__name">orchestrating-work-end-to-end</span>
+      <span class="see-also__summary">Şu durumlarda kullanın: bir istek tek bir düzenlemeden fazlasını gerektirecekse ve ne kadar süreç hak ettiğine henüz karar verilmemişse —…</span>
+    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/tr/skills/calibrating-confidence/">
       <span class="see-also__name">calibrating-confidence</span>
       <span class="see-also__summary">Şu durumlarda kullanın: bu oturumda doğrulanmamış bir olguyu, nedeni…</span>

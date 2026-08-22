@@ -16,6 +16,7 @@ An idea is not a design, and understanding what someone wants is not the same as
 - When a request's size is genuinely unclear — it could resolve to a one-file fix or a new subsystem, and you don't yet know which.
 - When the direction sounds obvious but "yes, build it that way" was never actually said.
 - Not for: turning an already-clear requirement into tasks (see `structuring-an-implementation-plan`).
+- This is the first phase of a longer arc when the work is a build. `orchestrating-work-end-to-end` holds the rest of it — what phase follows the approval, and what evidence opens each one after that.
 - `reading-specifications` looks adjacent — it also turns something vague into something concrete. The difference is what's missing: `reading-specifications` starts from a spec that already exists and resolves its ambiguity by reading harder. This skill starts before anything is written down, when *what to build* is still open and settling it takes a conversation with a person, not another pass over a document. Run this skill first; whatever it produces is what `reading-specifications` would later read.
 
 ## Classify before asking anything

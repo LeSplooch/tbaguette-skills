@@ -46,12 +46,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.10.5</span>
+      <span class="wordmark-version" dir="ltr">v0.11.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Aggiornato</span>
-      <time class="site-header__updated-value" datetime="2026-08-22T19:45:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} ora locale · {utc} UTC">2026-08-22T19:45:06Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-22T20:48:23+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} ora locale · {utc} UTC">2026-08-22T20:48:23Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Lingua: Italiano</summary>
@@ -91,7 +91,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">delegating-tasks-with-review-gates</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T20:48:23.029630+00:00">Aggiornata</span>
   </div>
   <span class="tag skill-article__tag">Ambiente e strumenti</span>
   <p class="lede">Da usare quando si esegue un piano di implementazione multi-task, task per task, nella sessione corrente; quando ogni task deve andare a un subagent nuovo che non porta nulla della storia accumulata della sessione; o quando l&#x27;implementazione di un task deve essere verificata sia rispetto ai suoi requisiti sia rispetto alla sua cura tecnica prima che il task successivo ci costruisca sopra. Tratta l&#x27;affidare a un subagent implementatore senza contesto ogni task, la revisione in due fasi — conformità alla spec e qualità del codice — che fa da gate a ciascuna, il lavorare in un ciclo di correzione delimitato quando la revisione trova problemi, e una revisione finale dell&#x27;intero branch una volta che ogni task è finito.</p>
@@ -103,7 +103,7 @@
 <p>Do this work in an isolated workspace — a worktree or a feature branch, never a shared trunk directly (see <code>isolating-work-with-worktrees</code> for setting one up).</p>
 <p>Read the plan once. If it names a spec, read that too: the spec is the authority the plan argues from, and where the two disagree, the spec wins. A plan with no reachable spec still runs, but treat every ruling you make under it as provisional.</p>
 <p>Scan the plan once for problems before dispatching task one: tasks that contradict each other or the plan's own global constraints, and anything the plan explicitly mandates that would itself be a defect under review — a test asserting nothing, a logic block duplicated verbatim. Rule on whatever the scan turns up and write down what you decided; a scan that finds nothing is still worth stating, not just skipping in silence.</p>
-<p>Keep a running written record outside your own context, updated after every task and every fix round: which tasks are closed, which commits closed them, and every ruling made along the way. Tick the plan's own <code>- [ ]</code> checkboxes as tasks close, too — a plan written by <code>structuring-an-implementation-plan</code> carries them for exactly this, and letting them drift out of step with your record leaves two accounts of progress that disagree. Compaction erases what you remember; it does not erase that file or <code>git log</code>. Recovering from a lost context means trusting the record and the log over your own recollection — a controller that trusts its memory instead re-dispatches work that's already done, which is the single most expensive mistake this loop can make.</p>
+<p>Keep a running written record outside your own context, updated after every task and every fix round: which tasks are closed, which commits closed them, and every ruling made along the way. If this loop is one phase of a larger run, that record already exists and has a shape — <code>orchestrating-work-end-to-end</code> defines it, and a second file competing with it is two accounts of progress that will disagree. Tick the plan's own <code>- [ ]</code> checkboxes as tasks close, too — a plan written by <code>structuring-an-implementation-plan</code> carries them for exactly this, and letting them drift out of step with your record leaves two accounts of progress that disagree. Compaction erases what you remember; it does not erase that file or <code>git log</code>. Recovering from a lost context means trusting the record and the log over your own recollection — a controller that trusts its memory instead re-dispatches work that's already done, which is the single most expensive mistake this loop can make.</p>
 <h2 id="decide-dont-stall">Decide, don't stall</h2>
 <p>This loop runs to completion without pausing to check in between tasks — that's the point of keeping it in one session instead of routing every step through a person. Conflicts, ambiguities, a plan silent on some edge case: decide them against the spec (the plan is the spec's argument, not the reverse), write down what you decided and why in a line or two, and keep going. A wrong call costs rework someone can see in the record and undo; a session parked on a question it could have answered itself costs the whole session and buys nothing.</p>
 <p>A short list of things actually justify stopping to ask: an irreversible or destructive operation, anything security-sensitive, a side effect that reaches outside this workspace — a push to a shared branch, a merge, a publish — or a plan broken enough that every path forward is a guess. Outside that list, rule and continue.</p>

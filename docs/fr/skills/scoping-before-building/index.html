@@ -46,12 +46,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.10.5</span>
+      <span class="wordmark-version" dir="ltr">v0.11.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Mis à jour</span>
-      <time class="site-header__updated-value" datetime="2026-08-22T19:45:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-22T19:45:06Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-22T20:48:23+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} heure locale · {utc} UTC">2026-08-22T20:48:23Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Langue: Français</summary>
@@ -91,14 +91,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">scoping-before-building</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T20:48:23.029630+00:00">Mis à jour</span>
   </div>
   <span class="tag skill-article__tag">Jugement et méta</span>
   <p class="lede">À utiliser quand une idée, une demande de fonctionnalité ou un nouveau projet doit devenir un design approuvé avant qu&#x27;aucun code ne soit écrit, surtout quand on ne sait pas clairement combien de processus la demande exige vraiment. Couvre le classement du travail en spike, en changement borné ou en changement architectural ; poser des questions de clarification une par une ; proposer et choisir entre des approches ; présenter un design pour approbation section par section ; et rédiger puis relire soi-même une spec avant de la transmettre à la planification.</p>
 </div><p class="translation-banner" role="note">Cette page n’a pas encore été traduite en Français — voici la version anglaise.</p><div class="prose" lang="en" dir="ltr"><h2 id="overview">Overview</h2>
 <p>An idea is not a design, and understanding what someone wants is not the same as having permission to build it. This skill turns a request into an approved shape through dialogue — questions, proposed approaches, a design presented for a yes — before any implementation begins. How much ceremony that takes scales with the size of the request. Whether a yes is required before code gets written does not: that gate is the same width for a one-line flag and for a new subsystem.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Before creating a feature, a new project, a component, or any functionality that doesn't exist yet.</li><li>Before changing existing behavior in a way nobody present has actually signed off on.</li><li>When a request's size is genuinely unclear — it could resolve to a one-file fix or a new subsystem, and you don't yet know which.</li><li>When the direction sounds obvious but &quot;yes, build it that way&quot; was never actually said.</li><li>Not for: turning an already-clear requirement into tasks (see <code>structuring-an-implementation-plan</code>).</li><li><code>reading-specifications</code> looks adjacent — it also turns something vague into something concrete. The difference is what's missing: <code>reading-specifications</code> starts from a spec that already exists and resolves its ambiguity by reading harder. This skill starts before anything is written down, when <em>what to build</em> is still open and settling it takes a conversation with a person, not another pass over a document. Run this skill first; whatever it produces is what <code>reading-specifications</code> would later read.</li></ul>
+<ul><li>Before creating a feature, a new project, a component, or any functionality that doesn't exist yet.</li><li>Before changing existing behavior in a way nobody present has actually signed off on.</li><li>When a request's size is genuinely unclear — it could resolve to a one-file fix or a new subsystem, and you don't yet know which.</li><li>When the direction sounds obvious but &quot;yes, build it that way&quot; was never actually said.</li><li>Not for: turning an already-clear requirement into tasks (see <code>structuring-an-implementation-plan</code>).</li><li>This is the first phase of a longer arc when the work is a build. <code>orchestrating-work-end-to-end</code> holds the rest of it — what phase follows the approval, and what evidence opens each one after that.</li><li><code>reading-specifications</code> looks adjacent — it also turns something vague into something concrete. The difference is what's missing: <code>reading-specifications</code> starts from a spec that already exists and resolves its ambiguity by reading harder. This skill starts before anything is written down, when <em>what to build</em> is still open and settling it takes a conversation with a person, not another pass over a document. Run this skill first; whatever it produces is what <code>reading-specifications</code> would later read.</li></ul>
 <h2 id="classify-before-asking-anything">Classify before asking anything</h2>
 <p>Say the classification out loud before your first question — &quot;this looks bounded, so I'll present a short design here rather than write a spec&quot; — so it can be corrected before you invest in the wrong amount of process.</p>
 <table><thead><tr><th>Path</th><th>What it looks like</th><th>What it produces</th></tr></thead><tbody><tr><td>Spike</td><td>A feasibility question — &quot;can this work,&quot; &quot;is this even possible&quot; — where the deliverable is an answer, not code anyone keeps</td><td>A recommendation; anything built along the way stays labeled throwaway</td></tr><tr><td>Bounded</td><td>A well-scoped change to a flow that already exists in the codebase you're working in — a new flag, a small endpoint, a one-file fix</td><td>A few sentences of design, said out loud in chat</td></tr><tr><td>Architectural</td><td>A new project, a new subsystem, or a change that restructures how components fit together or touches an interface other code relies on</td><td>A written, self-reviewed spec, handed off to <code>structuring-an-implementation-plan</code></td></tr></tbody></table>
@@ -184,6 +184,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/using-tbaguette/">
       <span class="see-also__name">using-tbaguette</span>
       <span class="see-also__summary">À utiliser au début de chaque conversation, dans tous les projets…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/fr/skills/orchestrating-work-end-to-end/">
+      <span class="see-also__name">orchestrating-work-end-to-end</span>
+      <span class="see-also__summary">À utiliser quand une demande exigera plus d’une seule modification et que rien n’a encore décidé de la quantité de processus qu’elle…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/fr/skills/calibrating-confidence/">
       <span class="see-also__name">calibrating-confidence</span>

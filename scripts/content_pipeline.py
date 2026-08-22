@@ -42,6 +42,7 @@ CATEGORIES: list[dict] = [
         "title": "Judgment and meta",
         "skill_slugs": [
             "using-tbaguette",
+            "orchestrating-work-end-to-end",
             "calibrating-confidence",
             "red-teaming-your-own-work",
             "estimating-effort",
