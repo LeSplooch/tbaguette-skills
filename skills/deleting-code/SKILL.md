@@ -57,6 +57,8 @@ Delete the whole vertical, not the entry point: tests, fixtures, config keys, fe
 
 Tests go with the feature, with one distinction: a test that exercises *only* the deleted feature is deleted, while a test that exercises a **general invariant through** the deleted feature is rewritten against a surviving path. Deleting that second kind quietly drops coverage of a rule that still holds, and it is the coverage nobody notices losing.
 
+Once the deletion is made, the compiler is the completeness check — but it only testifies about files it compiled. In most toolchains the default build and the test build compile different sets, and benchmarks, examples, and feature- or platform-gated code are further sets again. A symbol still referenced from one of those compiles clean under the default target and surfaces later as what reads like an unrelated breakage. Before calling a deletion finished, run the compiler over every target that can reference the symbol, not just the one the default build command covers; in an uncompiled stack, the pass that resolves names — typically collecting and importing the full test suite — plays the same role, with the same scoping caveat. Dead-code warnings are computed over the same partial file set, so they are not a census of callers either: a build that skips tests can flag a still-live test helper as dead, and says nothing at all about an exported symbol no matter who calls it.
+
 Keeping code "just in case" is not free. It is read by every future reader, matched by every search, compiled into every build, updated by every sweeping refactor, and scanned by every audit — and unreachable code is where unpatched vulnerabilities sit longest, because nobody prioritizes fixing something nobody runs.
 
 ## When consumers are outside your view
@@ -71,6 +73,7 @@ Whichever you pick, delete at a time you can watch it — never bundled with oth
 |---|---|
 | "No references found", then a production break | Searched code only — not config, data, telemetry, or external callers |
 | Feature deleted, its tests still green and still running | Tests were never in the deletion's scope |
+| Deletion pronounced complete on a clean default build, then the test suite breaks somewhere that looks unrelated | The default target never compiled the tests, benchmarks, examples, or gated code that still referenced the symbol |
 | Code commented out "temporarily" three years ago | Nobody was willing to own the decision, so it was deferred into the file |
 | Deprecation warning present for years | No removal date was ever attached to it |
 | A dashboard went blank after a cleanup | A log line or metric name was treated as internal |
@@ -86,3 +89,4 @@ Whichever you pick, delete at a time you can watch it — never bundled with oth
 - "We can always get it back from history" used as the reason not to write a findable commit message
 - Deleting bundled with a release, or right before nobody is watching
 - Deleting something because a search was clean, when the stack uses reflection, plugins, or configuration-driven dispatch
+- "It compiles" — from a build that never compiled the tests
