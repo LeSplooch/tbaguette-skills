@@ -24,7 +24,7 @@
   "install_frame_label_template": "Installa le skill di {brand}",
   "install_note_verified_text": "Non tocca mai nulla al di fuori di questa cartella — verificato contro le tue altre skill, non semplicemente dichiarato.",
   "install_note_see_how": "Scopri come",
-  "install_note_restart_html_template": "Riavvia Claude Code (oppure esegui <code>/reload-plugins</code>), poi richiama una skill con <code>{brand}:skill-name</code>. Questo vale nello specifico per Claude Code — l’app Claude Desktop e la chat di claude.ai caricano le skill dal tuo account anziché da questa cartella, quindi clonare qui non le farà comparire lì.",
+  "install_note_restart_html_template": "Riavvia il tuo agente (in Claude Code, <code>/reload-plugins</code>), poi richiama una skill con <code>{brand}:skill-name</code>. Con Claude si intende nello specifico Claude Code — l’app Claude Desktop e la chat di claude.ai caricano le skill dal tuo account anziché da questa cartella, quindi clonare qui non le farà comparire lì.",
   "install_note_session_html_template": "Una conversazione già aperta quando hai installato o aggiornato — compresa quella da cui hai installato — continua a funzionare con l’elenco di skill con cui è partita. Apri una nuova conversazione per avere l’ultima versione, oppure richiama <code>{brand}:using-tbaguette</code> in quella vecchia.",
   "install_tab_posix_label": "macOS / Linux",
   "install_tab_windows_label": "Windows (PowerShell)",

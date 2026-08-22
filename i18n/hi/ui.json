@@ -24,7 +24,7 @@
   "install_frame_label_template": "{brand} की स्किल्स इंस्टॉल करें",
   "install_note_verified_text": "यह कमांड सिर्फ़ इसी फ़ोल्डर को छूता है, और किसी को नहीं — यह महज़ दावा नहीं, आपकी बाक़ी स्किल्स के साथ रखकर सचमुच जाँचा गया है।",
   "install_note_see_how": "जाँच का तरीक़ा देखें",
-  "install_note_restart_html_template": "Claude Code को दोबारा चालू करें (या <code>/reload-plugins</code> चलाएँ), और फिर किसी स्किल को <code>{brand}:skill-name</code> की तरह बुलाएँ। यह बात ख़ास तौर पर Claude Code की है — Claude Desktop ऐप और claude.ai चैट स्किल्स इस फ़ोल्डर से नहीं, आपके अकाउंट से लोड करते हैं, इसलिए यहाँ क्लोन करने से वे वहाँ नहीं दिखेंगी।",
+  "install_note_restart_html_template": "अपने एजेंट को दोबारा चालू करें (Claude Code में <code>/reload-plugins</code>), और फिर किसी स्किल को <code>{brand}:skill-name</code> की तरह बुलाएँ। Claude के मामले में इसका मतलब ख़ास तौर पर Claude Code है — Claude Desktop ऐप और claude.ai चैट स्किल्स इस फ़ोल्डर से नहीं, आपके अकाउंट से लोड करते हैं, इसलिए यहाँ क्लोन करने से वे वहाँ नहीं दिखेंगी।",
   "install_note_session_html_template": "इंस्टॉल या अपडेट करते वक़्त जो बातचीत पहले से खुली थी — वह भी जिसमें से आपने इंस्टॉल किया — वह अब भी उसी स्किल सूची पर चल रही है जिससे वह शुरू हुई थी। नया वाला पाने के लिए नई बातचीत शुरू करें, या पुरानी वाली में <code>{brand}:using-tbaguette</code> को बुलाएँ।",
   "install_tab_posix_label": "macOS / Linux",
   "install_tab_windows_label": "Windows (PowerShell)",

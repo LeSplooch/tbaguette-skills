@@ -4,7 +4,7 @@ This is a condensed adaptation of the `superpowers` plugin's own
 [porting guide](https://github.com/obra/superpowers/blob/main/docs/porting-to-a-new-harness.md)
 — credit there for the methodology and the vocabulary this document reuses
 (shapes A/B/C, the capability checklist). TBaguette's own harness layer was
-built by following it. If you're adding harness #10, read the source guide
+built by following it. If you're adding harness #11, read the source guide
 in full for the parts condensed away here (live-instance verification via a
 driven TUI, distribution/release mechanics, Windows specifics, PR process);
 this file covers the invariants and points you at TBaguette's own reference
@@ -98,6 +98,7 @@ never loaded.
 | Kimi Code | `.kimi-plugin/plugin.json` | manifest `sessionStart.skill` loads `using-tbaguette` | inline `skillInstructions` |
 | OpenCode | `.opencode/plugins/tbaguette.js` (declared via root `package.json` `main`) | in-process: `config` hook registers skills dir, `experimental.chat.messages.transform` injects context | inline in `tbaguette.js` |
 | Pi | `.pi/extensions/tbaguette.ts` (declared via root `package.json`'s `pi` field) | in-process: resource discovery registers skills, a context event injects bootstrap | inline in `tbaguette.ts` |
+| Hermes Agent | `.hermes-plugin/plugin.yaml` + `.hermes-plugin/__init__.py` (installed with `hermes plugins install LeSplooch/tbaguette-skills`) | in-process: `register()` registers every skill with the native loader, a `pre_llm_call` hook injects the bootstrap on the first turn | `skills/using-tbaguette/references/hermes-tools.md` |
 
 When in doubt, read the files, not this table — same rule the source guide
 gives, still true here.

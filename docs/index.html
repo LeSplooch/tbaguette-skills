@@ -51,7 +51,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-22T00:32:09+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-22T00:32:09Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-22T19:45:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-22T19:45:06Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">Language: English</summary>
@@ -91,11 +91,13 @@
   </p>
   <div class="install-frame__body">
     <div class="install">
-      <code class="install__command" id="install-prompt-command">Install (or update) the TBaguette skills plugin for Claude Code. Use your shell tool.
+      <code class="install__command" id="install-prompt-command">Install (or update) TBaguette — a skills library for coding agents — into whichever agent you are. Use your shell tool.
 
 Before you start: confirm git is available (git --version). If it isn&#x27;t, tell me and stop — there&#x27;s nothing else to try.
 
-Target directory: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\.claude\skills\TBaguette). Figure out which case applies:
+TBaguette is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Copilot CLI, Devin, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can&#x27;t tell which one you are, say so and ask me, rather than falling through to the first route below.
+
+Route A — you read Claude Code&#x27;s skills directory. Target: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\.claude\skills\TBaguette). Figure out which case applies:
 
 1. &lt;target&gt;/.git exists — update in place: git -C &lt;target&gt; pull.
 2. &lt;target&gt; doesn&#x27;t exist, or exists and is empty — install fresh:
@@ -103,16 +105,23 @@ Target directory: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\.claude\ski
 3. &lt;target&gt; exists, has content, isn&#x27;t a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a &quot;naming collision&quot;, and ask me whether to move it aside and re-clone, rather than doing that yourself.
 4. Anything else already at that path — stop. Do not delete or modify it. Tell me there&#x27;s a naming collision that needs a manual look.
 
-If the clone or pull command itself fails (network, permissions, auth), show me the actual error rather than retrying blindly or guessing why.
+Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. If it&#x27;s a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
 
-After a successful clone or pull, verify rather than assume:
+Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is &quot;tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git&quot;, added to the &quot;plugin&quot; array in opencode.json.
+
+Route D — none of those. Don&#x27;t invent a path. Find the directory your harness actually reads: its own dotdir in my home directory, or an existing skills/, plugins/, or extensions/ folder — confirmed to be there, not assumed. Clone-or-pull into a TBaguette-named directory inside it, following Route A&#x27;s four cases. If nothing you find is clearly right, clone nothing: tell me what you checked and ask.
+
+Whichever route: never delete, move, or overwrite anything to make room. If the clone or pull command itself fails (network, permissions, auth), show me the actual error rather than retrying blindly or guessing why.
+
+After a successful install, verify rather than assume. For a clone you placed yourself:
 - &lt;target&gt;/.git exists and git -C &lt;target&gt; rev-parse HEAD succeeds.
 - &lt;target&gt;/CATALOG.md exists and &lt;target&gt;/skills/ is non-empty.
 - Read &lt;target&gt;/.claude-plugin/plugin.json&#x27;s &quot;version&quot; field, if present, so you can tell me which version I&#x27;m now on.
+For a harness-managed install, verify it the way your harness reports installed plugins.
 
-Then tell me what happened (installed fresh, updated, or already current), which version, and to restart Claude Code (or run /reload-plugins) — skills then invoke as TBaguette:skill-name.
+Then tell me what happened (installed fresh, updated, or already current), which version, and the reload step for my agent specifically — restarting it, Claude Code&#x27;s /reload-plugins, Kimi Code&#x27;s /new. Skills then invoke as TBaguette:skill-name.
 
-Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke TBaguette:using-tbaguette here.</code>
+Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke TBaguette:using-tbaguette here (if you have no skill tool, read skills/using-tbaguette/SKILL.md from the install instead).</code>
       <button class="install__copy" type="button" data-copy-target="install-prompt-command"
               aria-label="Copy install command">
         <span class="install__copy-icons">
@@ -122,14 +131,14 @@ Flag one more thing, because it applies to this very conversation: this session 
         <span data-copy-label>Copy</span>
       </button>
     </div>
-    <p class="install__hint">Paste into a Claude Code conversation on Claude Sonnet (Max) — not Claude Desktop, which can&#x27;t run it. It reads your OS and runs the real commands itself.</p>
+    <p class="install__hint">Paste into whichever coding agent you use — it works out which harness it&#x27;s in and installs the right way for it. It needs a shell tool, which rules out Claude Desktop; on Claude Code it&#x27;s been exercised against Claude Sonnet (Max).</p>
     <p class="install-frame__note">
       <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
       <span>Only ever touches this folder — verified against your other skills, not just claimed. <a href="/tbaguette-skills/verify-install/">See how</a>.</span>
     </p>
     <p class="install-frame__note">
       <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
-      <span>Restart Claude Code (or run <code>/reload-plugins</code>), then invoke a skill as <code>TBaguette:skill-name</code>. This is for Claude Code specifically — the Claude Desktop app and claude.ai chat load skills from your account instead of this folder, so cloning here won’t make them appear there.</span>
+      <span>Restart your agent (in Claude Code, <code>/reload-plugins</code>), then invoke a skill as <code>TBaguette:skill-name</code>. On Claude that means Claude Code specifically — the Claude Desktop app and claude.ai chat load skills from your account instead of this folder, so cloning here won’t make them appear there.</span>
     </p>
     <p class="install-frame__note">
       <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
@@ -149,10 +158,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/" data-fresh-at="2026-08-22T00:32:09.721117+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/" data-fresh-at="2026-08-22T02:32:09+02:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">rate-limiting-and-backpressure</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T00:32:09.721117+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T02:32:09+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</p>
   <span class="card__foot">
@@ -182,7 +191,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/authoring-a-new-skill/" data-fresh-at="2026-08-22T02:16:04+02:00" draggable="false" style="--cf-offset: 3">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/authoring-a-new-skill/" data-fresh-at="2026-08-22T02:16:04+02:00" draggable="false" style="--cf-offset: -2">
   <span class="card__name-row">
     <span class="card__name">authoring-a-new-skill</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T02:16:04+02:00">Updated</span>
@@ -193,7 +202,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/routing-around-capability-gaps/" data-fresh-at="2026-08-21T15:20:50+02:00" draggable="false" style="--cf-offset: -3">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/routing-around-capability-gaps/" data-fresh-at="2026-08-21T15:20:50+02:00" draggable="false" style="--cf-offset: -1">
   <span class="card__name-row">
     <span class="card__name">routing-around-capability-gaps</span>
     <span class="change-badge change-badge--new" data-fresh-at="2026-08-21T15:20:50+02:00">New</span>
@@ -201,28 +210,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   <p class="card__summary">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…</p>
   <span class="card__foot">
     <span class="tag">Environment and tooling</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/finishing-what-you-started/" data-fresh-at="2026-08-20T19:55:46+02:00" draggable="false" style="--cf-offset: -2">
-  <span class="card__name-row">
-    <span class="card__name">finishing-what-you-started</span>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-08-20T19:55:46+02:00">New</span>
-  </span>
-  <p class="card__summary">Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run…</p>
-  <span class="card__foot">
-    <span class="tag">Judgment and meta</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/knowing-when-to-stop/" data-fresh-at="2026-08-20T19:55:46+02:00" draggable="false" style="--cf-offset: -1">
-  <span class="card__name-row">
-    <span class="card__name">knowing-when-to-stop</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-20T19:55:46+02:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when work looks done and the next action would be another polish, refactor…</p>
-  <span class="card__foot">
-    <span class="tag">Judgment and meta</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -361,7 +348,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/finishing-what-you-started/" data-search-card data-search-terms="finishing-what-you-started use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">finishing-what-you-started</span>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-08-20T19:55:46+02:00">New</span>
+    
   </span>
   <p class="card__summary">Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run…</p>
   <span class="card__foot">
@@ -372,7 +359,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/knowing-when-to-stop/" data-search-card data-search-terms="knowing-when-to-stop use when work looks done and the next action would be another polish, refactor… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">knowing-when-to-stop</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-20T19:55:46+02:00">Updated</span>
+    
   </span>
   <p class="card__summary">Use when work looks done and the next action would be another polish, refactor…</p>
   <span class="card__foot">
@@ -1009,7 +996,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/" data-search-card data-search-terms="rate-limiting-and-backpressure use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses… designing systems">
   <span class="card__name-row">
     <span class="card__name">rate-limiting-and-backpressure</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T00:32:09.721117+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T02:32:09+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</p>
   <span class="card__foot">

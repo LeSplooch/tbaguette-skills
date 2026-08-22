@@ -163,11 +163,11 @@ ENGLISH_STRINGS = Strings(
     ),
     install_note_see_how="See how",
     install_note_restart_html_template=(
-        "Restart Claude Code (or run <code>/reload-plugins</code>), then invoke a "
-        "skill as <code>{brand}:skill-name</code>. This is for Claude Code "
-        "specifically — the Claude Desktop app and claude.ai chat load skills "
-        "from your account instead of this folder, so cloning here won’t make "
-        "them appear there."
+        "Restart your agent (in Claude Code, <code>/reload-plugins</code>), then "
+        "invoke a skill as <code>{brand}:skill-name</code>. On Claude that means "
+        "Claude Code specifically — the Claude Desktop app and claude.ai chat "
+        "load skills from your account instead of this folder, so cloning here "
+        "won’t make them appear there."
     ),
     install_note_session_html_template=(
         "A conversation that was already open when you installed or updated — "
@@ -714,31 +714,66 @@ INSTALL_COMMAND_CMD = (
     '(git clone https://github.com/LeSplooch/tbaguette-skills.git "%USERPROFILE%\\.claude\\skills\\TBaguette")'
 )
 
-# Addressed to Claude, not to a shell — this is what a visitor pastes into a
-# Claude Code conversation instead of running a command themselves.
-# Branches 1-2 restate the exact clone-or-pull logic INSTALL_COMMAND
-# already encodes and test_install_command.py already proves (scenarios
-# A/B/C), just as prose instead of one shell's syntax, so it reads
-# correctly no matter which shell Claude's tool actually runs. Branch 3
-# names a real state this project has hit before (a directory that already
-# looks like a TBaguette install — CATALOG.md + skills/ — but has no .git
-# of its own): worth a specific, non-alarming message rather than lumping
-# it into branch 4's generic collision. Branch 4 is still the one place
-# this prompt does more than the shell one-liner: a bare `git clone` just
-# refuses on a real collision (scenario D) — told only "install this," an
-# agent could read that refusal as a problem to solve and reach for rm -rf
-# on its own initiative, so both branch 3 and branch 4 spell out "ask
-# first, don't act" explicitly instead of leaving it implicit. The
-# post-install checks go past "the files exist" to confirm the clone is
-# actually a working repo and to report back which version landed —
-# "verified, not just claimed" applied to what Claude tells the visitor,
-# not only to what the shell command itself can't reach.
+# Addressed to whichever agent it's pasted into, not to a shell — this is
+# what a visitor hands their coding agent instead of running a command
+# themselves. It is deliberately harness-adaptive rather than Claude
+# Code-only: TBaguette ships manifests for ten harnesses (see PORTING.md),
+# and a prompt that assumed Claude Code told everyone else, wrongly, that
+# they weren't supported.
 #
-# INSTALL_PROMPT and INSTALL_PROMPT_HINT are deliberately English-only, like
-# INSTALL_COMMAND/INSTALL_COMMAND_POWERSHELL/INSTALL_COMMAND_CMD above,
-# unlike the rest of this page: the prompt is addressed to Claude (an AI
-# agent), not to the human visitor, who only ever copy-pastes it verbatim
-# rather than reads it closely — Claude follows the original English at
+# The design rule behind the four routes: *state what this repo ships, let
+# the agent supply what it knows about itself.* Only Route A's path is a
+# fact this project can verify (test_install_command.py proves it against
+# four scenarios); the install directory for Codex, Cursor, or Pi is not
+# something this file can assert without guessing, and a guessed path
+# published on a website is a fabricated one. The agent reading this
+# prompt *is* the harness in question and knows its own install mechanism,
+# so Route D tells it to discover and confirm rather than inviting it to
+# act on a path this prompt invented. "Don't invent a path ... clone
+# nothing: tell me what you checked and ask" is the load-bearing sentence.
+#
+# Routes B and C exist because installs differ in kind, not just in path:
+# some harnesses install from a git URL through their own command (and for
+# slash commands like Kimi's `/plugins install`, only the human can type
+# it, which the agent has to say rather than silently substitute a
+# filesystem clone for), and some are a line in a config file the agent
+# must not edit unasked — PORTING.md's rule 2, "never edit a user's
+# personal files," applied to the install itself. Where this repo already
+# documents an exact line for one of them, the prompt publishes that line
+# rather than leaving an agent to reconstruct a package spec it would get
+# subtly wrong; test_templates.py checks each one against the file that
+# documents it, so the prompt is never the only place such a string lives.
+#
+# The "if you genuinely can't tell which one you are, ask" clause is load-
+# bearing too, and was added after asking what an uncertain agent would do
+# with this prompt: Route A is the concrete one, with four numbered cases,
+# so it reads as the default. An agent on a harness that never looks at
+# ~/.claude/skills would clone there, verify the clone, and report success
+# — a wholly successful install of nothing.
+#
+# Branches 1-2 of Route A restate the exact clone-or-pull logic
+# INSTALL_COMMAND already encodes and test_install_command.py already
+# proves (scenarios A/B/C), just as prose instead of one shell's syntax,
+# so it reads correctly no matter which shell the agent's tool actually
+# runs. Branch 3 names a real state this project has hit before (a
+# directory that already looks like a TBaguette install — CATALOG.md +
+# skills/ — but has no .git of its own): worth a specific, non-alarming
+# message rather than lumping it into branch 4's generic collision. Branch
+# 4 is still the one place this prompt does more than the shell one-liner:
+# a bare `git clone` just refuses on a real collision (scenario D) — told
+# only "install this," an agent could read that refusal as a problem to
+# solve and reach for rm -rf on its own initiative, so branches 3 and 4
+# spell out "ask first, don't act" explicitly instead of leaving it
+# implicit. The post-install checks go past "the files exist" to confirm
+# the clone is actually a working repo and to report back which version
+# landed — "verified, not just claimed" applied to what the agent tells
+# the visitor, not only to what the shell command itself can't reach.
+#
+# INSTALL_PROMPT and INSTALL_PROMPT_HINT are deliberately English-only,
+# like INSTALL_COMMAND/INSTALL_COMMAND_POWERSHELL/INSTALL_COMMAND_CMD
+# above, unlike the rest of this page: the prompt is addressed to an AI
+# agent, not to the human visitor, who only ever copy-pastes it verbatim
+# rather than reads it closely — an agent follows the original English at
 # least as reliably as any translation, and a translation only adds a
 # chance of introducing an ambiguity the original doesn't have, for no
 # reader who benefits from it. install_copy_aria_label is reused rather
@@ -747,22 +782,24 @@ INSTALL_COMMAND_CMD = (
 # a schema change needing a translated value from all 12 shipped locales
 # for a single aria-label — worth revisiting in a dedicated pass, not here.
 #
-# The hint also names Claude Desktop explicitly and recommends a model.
-# A real visitor asked where in Claude Desktop to paste this — "a Claude
-# Code conversation" read as a location, not as an exclusion of the other
-# product. Claude Desktop has no shell tool by default and doesn't read
-# ~/.claude/skills/ at all (see README's Install section), so pasting the
-# prompt there can't do anything useful; worth ruling out here rather than
-# only in the README a visitor may never open. Naming Claude Sonnet (Max)
-# sets an expectation for what this has actually been exercised against,
-# rather than leaving model choice to a visitor with no way to know it
-# matters — a recommendation, not a claim that nothing else works.
-INSTALL_PROMPT_HINT = "Paste into a Claude Code conversation on Claude Sonnet (Max) — not Claude Desktop, which can't run it. It reads your OS and runs the real commands itself."
-INSTALL_PROMPT = """Install (or update) the TBaguette skills plugin for Claude Code. Use your shell tool.
+# The hint still rules out Claude Desktop by name. A real visitor asked
+# where in Claude Desktop to paste this — "a Claude Code conversation"
+# read as a location, not as an exclusion of the other product. Claude
+# Desktop has no shell tool by default and doesn't read ~/.claude/skills/
+# at all (see README's Install section), so pasting the prompt there can't
+# do anything useful; worth ruling out here rather than only in the README
+# a visitor may never open. Naming Claude Sonnet (Max) sets an expectation
+# for what this has actually been exercised against, rather than leaving
+# model choice to a visitor with no way to know it matters — a
+# recommendation, not a claim that nothing else works.
+INSTALL_PROMPT_HINT = "Paste into whichever coding agent you use — it works out which harness it's in and installs the right way for it. It needs a shell tool, which rules out Claude Desktop; on Claude Code it's been exercised against Claude Sonnet (Max)."
+INSTALL_PROMPT = """Install (or update) TBaguette — a skills library for coding agents — into whichever agent you are. Use your shell tool.
 
 Before you start: confirm git is available (git --version). If it isn't, tell me and stop — there's nothing else to try.
 
-Target directory: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\\.claude\\skills\\TBaguette). Figure out which case applies:
+TBaguette is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Copilot CLI, Devin, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can't tell which one you are, say so and ask me, rather than falling through to the first route below.
+
+Route A — you read Claude Code's skills directory. Target: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\\.claude\\skills\\TBaguette). Figure out which case applies:
 
 1. <target>/.git exists — update in place: git -C <target> pull.
 2. <target> doesn't exist, or exists and is empty — install fresh:
@@ -770,16 +807,23 @@ Target directory: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\\.claude\\s
 3. <target> exists, has content, isn't a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a "naming collision", and ask me whether to move it aside and re-clone, rather than doing that yourself.
 4. Anything else already at that path — stop. Do not delete or modify it. Tell me there's a naming collision that needs a manual look.
 
-If the clone or pull command itself fails (network, permissions, auth), show me the actual error rather than retrying blindly or guessing why.
+Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. If it's a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
 
-After a successful clone or pull, verify rather than assume:
+Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is "tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git", added to the "plugin" array in opencode.json.
+
+Route D — none of those. Don't invent a path. Find the directory your harness actually reads: its own dotdir in my home directory, or an existing skills/, plugins/, or extensions/ folder — confirmed to be there, not assumed. Clone-or-pull into a TBaguette-named directory inside it, following Route A's four cases. If nothing you find is clearly right, clone nothing: tell me what you checked and ask.
+
+Whichever route: never delete, move, or overwrite anything to make room. If the clone or pull command itself fails (network, permissions, auth), show me the actual error rather than retrying blindly or guessing why.
+
+After a successful install, verify rather than assume. For a clone you placed yourself:
 - <target>/.git exists and git -C <target> rev-parse HEAD succeeds.
 - <target>/CATALOG.md exists and <target>/skills/ is non-empty.
 - Read <target>/.claude-plugin/plugin.json's "version" field, if present, so you can tell me which version I'm now on.
+For a harness-managed install, verify it the way your harness reports installed plugins.
 
-Then tell me what happened (installed fresh, updated, or already current), which version, and to restart Claude Code (or run /reload-plugins) — skills then invoke as TBaguette:skill-name.
+Then tell me what happened (installed fresh, updated, or already current), which version, and the reload step for my agent specifically — restarting it, Claude Code's /reload-plugins, Kimi Code's /new. Skills then invoke as TBaguette:skill-name.
 
-Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke TBaguette:using-tbaguette here."""
+Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke TBaguette:using-tbaguette here (if you have no skill tool, read skills/using-tbaguette/SKILL.md from the install instead)."""
 
 
 def _render_install(base_path: str = "", *,

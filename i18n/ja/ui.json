@@ -24,7 +24,7 @@
   "install_frame_label_template": "{brand}のスキルをインストール",
   "install_note_verified_text": "触れるのはこのフォルダだけです——そう主張するだけでなく、すでに入っているほかのスキルを相手に実際に確かめてあります。",
   "install_note_see_how": "検証の方法を見る",
-  "install_note_restart_html_template": "Claude Codeを再起動し（または<code>/reload-plugins</code>を実行し）、<code>{brand}:skill-name</code>の形でスキルを呼び出します。これはClaude Codeに限った話です——Claude Desktopアプリとclaude.aiのチャットは、このフォルダではなくアカウントからスキルを読み込みます。ここにクローンしても、そちらに現れることはありません。",
+  "install_note_restart_html_template": "エージェントを再起動し（Claude Codeなら<code>/reload-plugins</code>）、<code>{brand}:skill-name</code>の形でスキルを呼び出します。Claudeの場合、これはClaude Codeに限った話です——Claude Desktopアプリとclaude.aiのチャットは、このフォルダではなくアカウントからスキルを読み込みます。ここにクローンしても、そちらに現れることはありません。",
   "install_note_session_html_template": "インストールや更新をした時点ですでに開いていた会話は——インストールに使ったその会話も含めて——始まったときのスキル一覧のまま動いています。最新の状態にするには、新しい会話を開くか、元の会話で<code>{brand}:using-tbaguette</code>を呼び出してください。",
   "install_tab_posix_label": "macOS / Linux",
   "install_tab_windows_label": "Windows (PowerShell)",

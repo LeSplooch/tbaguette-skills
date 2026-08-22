@@ -1005,21 +1005,25 @@ def main() -> None:
           "headers elsewhere on the page, so this checks the label's own slice, not "
           "just presence anywhere)",
           '#icon-crust' in index_html[label_start:label_end])
-    check("hint tells the visitor to paste this into Claude Code, not run it themselves",
-          "Paste into a Claude Code conversation" in index_html)
+    check("hint tells the visitor to paste this into whatever agent they use, not "
+          "run it themselves, and still rules out the one Claude product that "
+          "can't run it",
+          "Paste into whichever coding agent you use" in index_html
+          and "rules out Claude Desktop" in index_html)
     check("verification note sits after the prompt and before the lede, inside the frame",
           index_html.index('id="install-prompt-command"') < index_html.index("install-frame__note")
           < index_html.index("hero__lede"))
     check("verification note links to the on-site explanation page, base_path-prefixed",
           'href="/verify-install/"' in index_html)
-    check("a second note tells visitors to restart/reload and how to invoke a skill",
-          'Restart Claude Code' in index_html and 'TBaguette:skill-name' in index_html)
+    check("a second note tells visitors to restart/reload and how to invoke a skill, "
+          "without assuming the agent they installed from is Claude Code",
+          'Restart your agent' in index_html and 'TBaguette:skill-name' in index_html)
     check("that note clarifies this is Claude Code-specific, not Desktop app/claude.ai chat "
           "(the actual bug this was written to prevent: a visitor installs correctly but "
           "never sees the skills because they're looking in the wrong product)",
           'Claude Desktop app and claude.ai chat load skills from your account' in index_html)
-    check("the Claude-Code-specific note sits after the safety note, before the lede",
-          index_html.index("install-frame__note") < index_html.index('Restart Claude Code')
+    check("the reload note sits after the safety note, before the lede",
+          index_html.index("install-frame__note") < index_html.index('Restart your agent')
           < index_html.index("hero__lede"))
     check("a third note names both ways to pick up a fresh install/update from a "
           "conversation that predates it (the bug this prevents: someone installs, "
@@ -1029,7 +1033,7 @@ def main() -> None:
           and 'Open a new conversation' in index_html
           and 'TBaguette:using-tbaguette' in index_html)
     check("that note sits last of the three, still inside the frame and before the lede",
-          index_html.index('Restart Claude Code')
+          index_html.index('Restart your agent')
           < index_html.index('Open a new conversation')
           < index_html.index("hero__lede"))
     check("no platform-picker tabs remain now that there's a single universal prompt",
@@ -1060,6 +1064,61 @@ def main() -> None:
           "skill list it had at startup" in INSTALL_PROMPT
           and "skill list it started with"
           in ENGLISH_STRINGS.install_note_session_html_template)
+
+    # --- the prompt is harness-adaptive, not Claude Code-only ------------
+    # The failure this guards against is a silent regression to a
+    # Claude-Code-shaped prompt: everyone on Codex, Cursor, or OpenCode
+    # pastes it, watches an agent clone into a directory its harness never
+    # reads, and concludes TBaguette doesn't support them.
+    check("prompt tells the agent to identify its own harness before acting, "
+          "rather than naming one for it",
+          "Work out which one you are running in" in INSTALL_PROMPT)
+    for route in ("Route A", "Route B", "Route C", "Route D"):
+        check(f"prompt carries {route}", f"{route} —" in INSTALL_PROMPT)
+    check("the four routes appear in order",
+          INSTALL_PROMPT.index("Route A") < INSTALL_PROMPT.index("Route B")
+          < INSTALL_PROMPT.index("Route C") < INSTALL_PROMPT.index("Route D"))
+    check("Route D forbids inventing an install path — the one thing this "
+          "prompt must never license, since only Route A's path is a fact "
+          "this repo can verify (test_install_command.py) and the rest would "
+          "be a guess published on a website",
+          "Don't invent a path." in INSTALL_PROMPT
+          and "clone nothing" in INSTALL_PROMPT)
+    check("Route C refuses to edit a user's config unasked (PORTING.md's rule 2, "
+          "applied to the install itself)",
+          "never edit my config silently" in INSTALL_PROMPT)
+    check("no route may clear space for itself",
+          "never delete, move, or overwrite anything to make room" in INSTALL_PROMPT)
+
+    # Every harness the prompt names must be one this repo actually ships an
+    # integration for, per PORTING.md's own reference table — otherwise the
+    # prompt advertises support that doesn't exist, or (the likelier drift)
+    # a newly ported harness never gets added to the list visitors read.
+    repo_root = Path(__file__).resolve().parent.parent
+    porting_md = (repo_root / "PORTING.md").read_text(encoding="utf-8")
+    documented = {row.split("|")[1].strip()
+                  for row in porting_md.splitlines()
+                  if row.startswith("| ") and row.count("|") >= 5}
+    named = INSTALL_PROMPT.split("it supports (", 1)[1].split(")", 1)[0]
+    named_harnesses = [h.strip() for h in named.split(",")]
+    check("prompt names at least the nine harnesses PORTING.md tabulates",
+          len(named_harnesses) >= 9)
+    for harness in named_harnesses:
+        check(f"prompt's {harness!r} has a documented integration in PORTING.md",
+              harness in documented or f"{harness} Agent" in documented)
+
+    # Every concrete install line the prompt publishes has to match the repo
+    # file that documents it. The prompt must never be the only place one of
+    # these strings lives — that's how a package spec goes stale on the
+    # landing page while the per-harness README quietly moves on.
+    for line, doc_rel in (
+        ("hermes plugins install LeSplooch/tbaguette-skills", ".hermes-plugin/__init__.py"),
+        ("/plugins install https://github.com/LeSplooch/tbaguette-skills", "README.kimi.md"),
+        ("tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git", "README.opencode.md"),
+    ):
+        check(f"prompt's {line!r} still matches {doc_rel}",
+              line in INSTALL_PROMPT
+              and line in (repo_root / doc_rel).read_text(encoding="utf-8"))
     print(f"  wrote {index_path}")
 
     # --- render_skill_page: formidable (the interesting one) --------------

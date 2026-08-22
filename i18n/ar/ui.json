@@ -24,7 +24,7 @@
   "install_frame_label_template": "تثبيت مهارات {brand}",
   "install_note_verified_text": "لا يمسّ سوى هذا المجلد ولا شيء غيره — وقد تحقَّقنا من ذلك فعليًّا في وجود مهاراتك الأخرى، لا مجرد ادّعاء.",
   "install_note_see_how": "كيف تحقَّقنا",
-  "install_note_restart_html_template": "أعِد تشغيل Claude Code (أو نفِّذ <code>/reload-plugins</code>)، ثم استدعِ مهارةً بالصيغة <code>{brand}:skill-name</code>. هذا خاصّ بـClaude Code تحديدًا — فتطبيق Claude Desktop ودردشة claude.ai يحمّلان المهارات من حسابك لا من هذا المجلد، والاستنساخ هنا لن يُظهرها هناك.",
+  "install_note_restart_html_template": "أعِد تشغيل وكيلك (وفي Claude Code: <code>/reload-plugins</code>)، ثم استدعِ مهارةً بالصيغة <code>{brand}:skill-name</code>. ومع Claude فالمقصود Claude Code تحديدًا — فتطبيق Claude Desktop ودردشة claude.ai يحمّلان المهارات من حسابك لا من هذا المجلد، والاستنساخ هنا لن يُظهرها هناك.",
   "install_note_session_html_template": "أي محادثة كانت مفتوحة بالفعل وقت التثبيت أو التحديث — بما فيها المحادثة التي ثبَّتَ منها — لا تزال تعمل بقائمة المهارات التي بدأت بها. افتح محادثة جديدة للحصول على أحدث نسخة، أو استدعِ <code>{brand}:using-tbaguette</code> في المحادثة القديمة.",
   "install_tab_posix_label": "macOS / Linux",
   "install_tab_windows_label": "Windows (PowerShell)",

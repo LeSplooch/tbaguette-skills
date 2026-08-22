@@ -51,7 +51,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">최종 업데이트</span>
-      <time class="site-header__updated-value" datetime="2026-08-22T00:32:09+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-22T00:32:09Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-22T19:45:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="현지 시간 {local} · UTC {utc}">2026-08-22T19:45:06Z UTC</time>
     </p>
       <details class="language-switcher">
   <summary class="language-switcher__summary">언어: 한국어</summary>
@@ -91,11 +91,13 @@
   </p>
   <div class="install-frame__body">
     <div class="install">
-      <code class="install__command" id="install-prompt-command">Install (or update) the TBaguette skills plugin for Claude Code. Use your shell tool.
+      <code class="install__command" id="install-prompt-command">Install (or update) TBaguette — a skills library for coding agents — into whichever agent you are. Use your shell tool.
 
 Before you start: confirm git is available (git --version). If it isn&#x27;t, tell me and stop — there&#x27;s nothing else to try.
 
-Target directory: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\.claude\skills\TBaguette). Figure out which case applies:
+TBaguette is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Copilot CLI, Devin, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can&#x27;t tell which one you are, say so and ask me, rather than falling through to the first route below.
+
+Route A — you read Claude Code&#x27;s skills directory. Target: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\.claude\skills\TBaguette). Figure out which case applies:
 
 1. &lt;target&gt;/.git exists — update in place: git -C &lt;target&gt; pull.
 2. &lt;target&gt; doesn&#x27;t exist, or exists and is empty — install fresh:
@@ -103,16 +105,23 @@ Target directory: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\.claude\ski
 3. &lt;target&gt; exists, has content, isn&#x27;t a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a &quot;naming collision&quot;, and ask me whether to move it aside and re-clone, rather than doing that yourself.
 4. Anything else already at that path — stop. Do not delete or modify it. Tell me there&#x27;s a naming collision that needs a manual look.
 
-If the clone or pull command itself fails (network, permissions, auth), show me the actual error rather than retrying blindly or guessing why.
+Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. If it&#x27;s a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
 
-After a successful clone or pull, verify rather than assume:
+Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is &quot;tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git&quot;, added to the &quot;plugin&quot; array in opencode.json.
+
+Route D — none of those. Don&#x27;t invent a path. Find the directory your harness actually reads: its own dotdir in my home directory, or an existing skills/, plugins/, or extensions/ folder — confirmed to be there, not assumed. Clone-or-pull into a TBaguette-named directory inside it, following Route A&#x27;s four cases. If nothing you find is clearly right, clone nothing: tell me what you checked and ask.
+
+Whichever route: never delete, move, or overwrite anything to make room. If the clone or pull command itself fails (network, permissions, auth), show me the actual error rather than retrying blindly or guessing why.
+
+After a successful install, verify rather than assume. For a clone you placed yourself:
 - &lt;target&gt;/.git exists and git -C &lt;target&gt; rev-parse HEAD succeeds.
 - &lt;target&gt;/CATALOG.md exists and &lt;target&gt;/skills/ is non-empty.
 - Read &lt;target&gt;/.claude-plugin/plugin.json&#x27;s &quot;version&quot; field, if present, so you can tell me which version I&#x27;m now on.
+For a harness-managed install, verify it the way your harness reports installed plugins.
 
-Then tell me what happened (installed fresh, updated, or already current), which version, and to restart Claude Code (or run /reload-plugins) — skills then invoke as TBaguette:skill-name.
+Then tell me what happened (installed fresh, updated, or already current), which version, and the reload step for my agent specifically — restarting it, Claude Code&#x27;s /reload-plugins, Kimi Code&#x27;s /new. Skills then invoke as TBaguette:skill-name.
 
-Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke TBaguette:using-tbaguette here.</code>
+Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke TBaguette:using-tbaguette here (if you have no skill tool, read skills/using-tbaguette/SKILL.md from the install instead).</code>
       <button class="install__copy" type="button" data-copy-target="install-prompt-command"
               aria-label="설치 명령어 복사">
         <span class="install__copy-icons">
@@ -122,14 +131,14 @@ Flag one more thing, because it applies to this very conversation: this session 
         <span data-copy-label>복사</span>
       </button>
     </div>
-    <p class="install__hint">Paste into a Claude Code conversation on Claude Sonnet (Max) — not Claude Desktop, which can&#x27;t run it. It reads your OS and runs the real commands itself.</p>
+    <p class="install__hint">Paste into whichever coding agent you use — it works out which harness it&#x27;s in and installs the right way for it. It needs a shell tool, which rules out Claude Desktop; on Claude Code it&#x27;s been exercised against Claude Sonnet (Max).</p>
     <p class="install-frame__note">
       <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
       <span>건드리는 것은 이 폴더 하나뿐입니다 — 말로만 그런 것이 아니라, 이미 설치되어 있는 다른 스킬들을 상대로 실제로 검증했습니다. <a href="/tbaguette-skills/ko/verify-install/">검증 과정 보기</a>.</span>
     </p>
     <p class="install-frame__note">
       <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
-      <span>Claude Code를 다시 시작하거나 <code>/reload-plugins</code>를 실행한 다음, <code>TBaguette:skill-name</code> 형태로 스킬을 호출하세요. 이건 Claude Code에 한정된 이야기입니다 — Claude Desktop 앱과 claude.ai 채팅은 이 폴더가 아니라 계정에서 스킬을 불러오기 때문에, 여기에 클론해도 그쪽에는 나타나지 않습니다.</span>
+      <span>쓰고 있는 에이전트를 다시 시작한 다음(Claude Code라면 <code>/reload-plugins</code>), <code>TBaguette:skill-name</code> 형태로 스킬을 호출하세요. Claude에서는 Claude Code에 한정된 이야기입니다 — Claude Desktop 앱과 claude.ai 채팅은 이 폴더가 아니라 계정에서 스킬을 불러오기 때문에, 여기에 클론해도 그쪽에는 나타나지 않습니다.</span>
     </p>
     <p class="install-frame__note">
       <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
@@ -149,10 +158,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/" data-fresh-at="2026-08-22T00:32:09.721117+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/" data-fresh-at="2026-08-22T02:32:09+02:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">rate-limiting-and-backpressure</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T00:32:09.721117+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T02:32:09+02:00">Updated</span>
   </span>
   <p class="card__summary">시스템이 감당할 수 있는 것보다 많은 부하를 받고 있을 때, 스로틀링이나 할당량, 429 응답을 설계할 때, 큐가 계속 자라거나 몇 시간 늦게야 비워질 때, 재시도가 부분 장애를 전면 장애로 키울 때, 커넥션이나 스레드 풀이 고갈될 때…</p>
   <span class="card__foot">
@@ -182,7 +191,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/authoring-a-new-skill/" data-fresh-at="2026-08-22T02:16:04+02:00" draggable="false" style="--cf-offset: 3">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/authoring-a-new-skill/" data-fresh-at="2026-08-22T02:16:04+02:00" draggable="false" style="--cf-offset: -2">
   <span class="card__name-row">
     <span class="card__name">authoring-a-new-skill</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T02:16:04+02:00">Updated</span>
@@ -193,7 +202,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/routing-around-capability-gaps/" data-fresh-at="2026-08-21T15:20:50+02:00" draggable="false" style="--cf-offset: -3">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/routing-around-capability-gaps/" data-fresh-at="2026-08-21T15:20:50+02:00" draggable="false" style="--cf-offset: -1">
   <span class="card__name-row">
     <span class="card__name">routing-around-capability-gaps</span>
     <span class="change-badge change-badge--new" data-fresh-at="2026-08-21T15:20:50+02:00">New</span>
@@ -201,28 +210,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   <p class="card__summary">지금의 모델이나 harness가 할 수 없는 것이 일에 필요할 때 — 오디오나 비디오 입력, 이미지나 음성 출력, 이 창보다 큰 컨텍스트, 진짜 브라우저, GPU나 오프라인 추론…</p>
   <span class="card__foot">
     <span class="tag">환경과 도구</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/finishing-what-you-started/" data-fresh-at="2026-08-20T19:55:46+02:00" draggable="false" style="--cf-offset: -2">
-  <span class="card__name-row">
-    <span class="card__name">finishing-what-you-started</span>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-08-20T19:55:46+02:00">New</span>
-  </span>
-  <p class="card__summary">일이 커서 중간에 멈춰도 티가 안 날 정도일 때 — 많은 파일에 걸친 훑기, 오래 이어지는 자율 실행, 여러 부분으로 된 요청…</p>
-  <span class="card__foot">
-    <span class="tag">판단력과 메타 스킬</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/knowing-when-to-stop/" data-fresh-at="2026-08-20T19:55:46+02:00" draggable="false" style="--cf-offset: -1">
-  <span class="card__name-row">
-    <span class="card__name">knowing-when-to-stop</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-20T19:55:46+02:00">Updated</span>
-  </span>
-  <p class="card__summary">일이 끝난 것처럼 보이고 다음 행동이라고 해 봐야 한 번 더 다듬기나 리팩터링, 확인뿐일 때, 자기 리뷰 루프를 여러 바퀴 돌았는데 나오는 것이 계속 작아질 때, 처음 초록불이 뜨자마자 곧장 끝내고 싶어질 때…</p>
-  <span class="card__foot">
-    <span class="tag">판단력과 메타 스킬</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -361,7 +348,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/ko/skills/finishing-what-you-started/" data-search-card data-search-terms="finishing-what-you-started 일이 커서 중간에 멈춰도 티가 안 날 정도일 때 — 많은 파일에 걸친 훑기, 오래 이어지는 자율 실행, 여러 부분으로 된 요청… 판단력과 메타 스킬">
   <span class="card__name-row">
     <span class="card__name">finishing-what-you-started</span>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-08-20T19:55:46+02:00">신규</span>
+    
   </span>
   <p class="card__summary">일이 커서 중간에 멈춰도 티가 안 날 정도일 때 — 많은 파일에 걸친 훑기, 오래 이어지는 자율 실행, 여러 부분으로 된 요청…</p>
   <span class="card__foot">
@@ -372,7 +359,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/ko/skills/knowing-when-to-stop/" data-search-card data-search-terms="knowing-when-to-stop 일이 끝난 것처럼 보이고 다음 행동이라고 해 봐야 한 번 더 다듬기나 리팩터링, 확인뿐일 때, 자기 리뷰 루프를 여러 바퀴 돌았는데 나오는 것이 계속 작아질 때, 처음 초록불이 뜨자마자 곧장 끝내고 싶어질 때… 판단력과 메타 스킬">
   <span class="card__name-row">
     <span class="card__name">knowing-when-to-stop</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-20T19:55:46+02:00">업데이트</span>
+    
   </span>
   <p class="card__summary">일이 끝난 것처럼 보이고 다음 행동이라고 해 봐야 한 번 더 다듬기나 리팩터링, 확인뿐일 때, 자기 리뷰 루프를 여러 바퀴 돌았는데 나오는 것이 계속 작아질 때, 처음 초록불이 뜨자마자 곧장 끝내고 싶어질 때…</p>
   <span class="card__foot">
@@ -1009,7 +996,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/ko/skills/rate-limiting-and-backpressure/" data-search-card data-search-terms="rate-limiting-and-backpressure 시스템이 감당할 수 있는 것보다 많은 부하를 받고 있을 때, 스로틀링이나 할당량, 429 응답을 설계할 때, 큐가 계속 자라거나 몇 시간 늦게야 비워질 때, 재시도가 부분 장애를 전면 장애로 키울 때, 커넥션이나 스레드 풀이 고갈될 때… 시스템 설계">
   <span class="card__name-row">
     <span class="card__name">rate-limiting-and-backpressure</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T00:32:09.721117+00:00">업데이트</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-22T02:32:09+02:00">업데이트</span>
   </span>
   <p class="card__summary">시스템이 감당할 수 있는 것보다 많은 부하를 받고 있을 때, 스로틀링이나 할당량, 429 응답을 설계할 때, 큐가 계속 자라거나 몇 시간 늦게야 비워질 때, 재시도가 부분 장애를 전면 장애로 키울 때, 커넥션이나 스레드 풀이 고갈될 때…</p>
   <span class="card__foot">

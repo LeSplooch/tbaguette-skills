@@ -24,7 +24,7 @@
   "install_frame_label_template": "安装 {brand} 技能",
   "install_note_verified_text": "只会动这一个文件夹，别的一概不碰——这一点是拿你已有的其他技能实测验证过的，不是嘴上说说。",
   "install_note_see_how": "查看验证过程",
-  "install_note_restart_html_template": "重启 Claude Code（或执行 <code>/reload-plugins</code>），然后用 <code>{brand}:skill-name</code> 的形式调用技能。这只针对 Claude Code——Claude 桌面应用和 claude.ai 网页对话是从你的账户加载技能的，不是从这个文件夹，所以克隆到这里并不会让它们在那边出现。",
+  "install_note_restart_html_template": "重启你的智能体（在 Claude Code 里是 <code>/reload-plugins</code>），然后用 <code>{brand}:skill-name</code> 的形式调用技能。就 Claude 而言，这里说的是 Claude Code——Claude 桌面应用和 claude.ai 网页对话是从你的账户加载技能的，不是从这个文件夹，所以克隆到这里并不会让它们在那边出现。",
   "install_note_session_html_template": "安装或更新时已经打开的对话——包括你用来安装的那一个——仍然在用它启动时的那份技能列表。开一个新对话就能用上最新的，或者在原来那个对话里调用 <code>{brand}:using-tbaguette</code>。",
   "install_tab_posix_label": "macOS / Linux",
   "install_tab_windows_label": "Windows (PowerShell)",

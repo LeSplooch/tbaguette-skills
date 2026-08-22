@@ -24,7 +24,7 @@
   "install_frame_label_template": "{brand} becerilerini kurun",
   "install_note_verified_text": "Yalnızca bu klasöre dokunur, başka hiçbir yere — sadece iddia edilmiş değil, sizdeki diğer becerilere karşı gerçekten doğrulandı.",
   "install_note_see_how": "Nasıl doğrulandığını görün",
-  "install_note_restart_html_template": "Claude Code'u yeniden başlatın (ya da <code>/reload-plugins</code> çalıştırın), sonra bir beceriyi <code>{brand}:skill-name</code> biçiminde çağırın. Bu, özellikle Claude Code için geçerli — Claude Desktop uygulaması ile claude.ai sohbeti becerileri bu klasörden değil hesabınızdan yükler; buraya klonlamak onları orada görünür kılmaz.",
+  "install_note_restart_html_template": "Ajanınızı yeniden başlatın (Claude Code'da <code>/reload-plugins</code>), sonra bir beceriyi <code>{brand}:skill-name</code> biçiminde çağırın. Claude tarafında bu, özellikle Claude Code demek — Claude Desktop uygulaması ile claude.ai sohbeti becerileri bu klasörden değil hesabınızdan yükler; buraya klonlamak onları orada görünür kılmaz.",
   "install_note_session_html_template": "Kurulum ya da güncelleme sırasında zaten açık olan bir sohbet — kurulumu yaptığınız sohbet dâhil — hâlâ başladığı andaki beceri listesiyle çalışır. En güncel hâli için yeni bir sohbet açın ya da eskisinde <code>{brand}:using-tbaguette</code> çağırın.",
   "install_tab_posix_label": "macOS / Linux",
   "install_tab_windows_label": "Windows (PowerShell)",

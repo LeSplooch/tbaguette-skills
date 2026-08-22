@@ -51,6 +51,26 @@ about rather than overclaiming. Read the full walkthrough, the exact test source
 Command Prompt equivalent too at
 [lesplooch.github.io/tbaguette-skills/verify-install](https://lesplooch.github.io/tbaguette-skills/verify-install/).
 
+### Other agents
+
+The commands above are the Claude Code install. TBaguette isn't Claude Code-only,
+though: this same repo ships an integration for Codex, Cursor, Copilot CLI, Devin,
+Gemini CLI, Hermes, Kimi Code, OpenCode, and Pi — see [`PORTING.md`](PORTING.md)
+for what each one loads and how, plus [`README.opencode.md`](README.opencode.md)
+and [`README.kimi.md`](README.kimi.md) for the two with enough surface to need
+their own page.
+
+Those installs differ in kind, not just in path — a plugin command here, an
+extension install there, a line in a config file somewhere else — so rather than
+ten recipes, the [site's install box](https://lesplooch.github.io/tbaguette-skills/)
+carries one prompt you paste into whichever agent you use. It works out which
+harness it's in and takes the matching route: clone-or-pull into Claude Code's
+skills directory, hand off to the harness's own install command, show you the
+config line and ask before touching it, or — when it can't identify a directory
+its harness actually reads — stop and ask, rather than inventing a path. Only the
+Claude Code path is one this repo can machine-verify, which is exactly why the
+prompt is written to discover the rest instead of asserting them.
+
 ## What's in it
 
 - **`formidable`** — design craft for every UI stack: web, native mobile, desktop,
