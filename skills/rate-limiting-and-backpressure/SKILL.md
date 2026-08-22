@@ -65,6 +65,12 @@ A per-item deadline is only meaningful if the item's clock starts when the item 
 
 The diagnostic: every item times out while a single item, run alone, finishes comfortably. That is queue time inside the deadline, not slow work. The failure is also quieter than it looks — a timeout that fired before any work began is indistinguishable downstream from work that ran and produced a neutral result, so an aggregate over partial results should record how many contributors actually ran. "No agreement" among workers that never started is not disagreement.
 
+## Bound the resource, not the batch
+
+The resource decides the scope of its limit: a backend shared process-wide needs a process-wide semaphore; one shared across processes needs the bound somewhere every caller passes through — a shared pool, a proxy, the backend's own admission control. A bound scoped to the unit of work reads as correct in isolation, and it is: each batch keeps its in-flight work within the backend's capacity, and three independent schedulers running three well-behaved batches still oversubscribe the same backend threefold. Every caller is disciplined; the process is not. This is the concurrency side of the global-backstop rule above — the sum of local limits is not the capacity, and never was.
+
+The diagnostic: the same saturation symptom returns after a local bound fixed it. The instinct is to suspect the fix regressed; instead, count the independent callers that each hold a full copy of the backend's capacity. The corollary is arithmetic, however wrong it feels: parallelism against an already-saturated backend buys no throughput — the backend was the bottleneck either way — and spends the callers' deadlines on waiting instead. Serializing callers is often strictly better, not a reluctant compromise.
+
 ## Watch age, not just depth
 
 Queue depth alone is ambiguous — 10,000 items is healthy at 5,000 per second and an outage at 5 per second. Alert on **age of the oldest unstarted item**, which is directly comparable to the latency objective. Supporting indicators, all leading rather than lagging: in-use concurrency versus the limit, time spent waiting for a slot, rejections broken down by reason, and the ratio of arrival rate to service rate — sustained above 1.0, everything else is a countdown.
@@ -99,6 +105,7 @@ A limit a client cannot see before hitting it forces every client to discover it
 | Legitimate users throttled while abuse continues | Limiting per IP behind NAT while the attacker rotates addresses |
 | Queue drains hours after traffic stops | Work with expired deadlines never discarded |
 | Every item in a fan-out times out, any single item alone finishes fast | Timeout clocks started at construction, so queue time behind siblings consumed the budget |
+| The saturation symptom returns after a per-batch bound fixed it | The bound is scoped to the batch, so several independent callers each hold a full copy of the backend's capacity |
 | Rejecting requests does not reduce load | Shedding after the connection, transaction, or thread is already claimed |
 | Clients retry into the limit in a tight loop | No retry hint, no remaining-quota signal, limit undiscoverable in advance |
 
@@ -111,4 +118,5 @@ A limit a client cannot see before hitting it forces every client to discover it
 - A breaker that trips on a single failure, or that never half-opens
 - Alerting on queue depth but not on queue age
 - Timeout wrappers for a whole batch constructed up front, then awaited a few at a time
+- A semaphore created per batch, per request, or per caller for a resource they all share
 - "The client should not be sending that much" instead of a limit that makes it observable
