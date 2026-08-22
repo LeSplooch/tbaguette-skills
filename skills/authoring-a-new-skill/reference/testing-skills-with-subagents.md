@@ -26,6 +26,8 @@ Run the scenario before the skill exists, or with the skill deliberately withhel
 
 Capture the exact rationalization, word for word. "The agent chose wrong" doesn't tell a future editor what to fix; "the agent said deleting two hundred lines would be wasteful, and reasoned that manual testing already covered the same ground" does. This is the same discipline as reading a stack trace instead of guessing at a bug — the exact wording is the diagnostic.
 
+All of that assumes the scenario can produce the failure at all — check that before running it. A scenario only exercises failures reachable inside one dispatch, and some skills target failures that structurally aren't: context decay late in a long session, drift accumulated across many turns, acceptance criteria that erode because they were held only in context too long. No amount of stacked pressure substitutes for the missing length — a subagent three sentences into its task cannot exhibit the decay of a two-hundred-turn session. When the claimed trigger can't occur inside the scenario, a clean baseline bounds the scenario, not the risk: write that limit down next to the result instead of counting the run as evidence. The distinction matters at ship time — three clean REDs on a failure the scenario *could* have produced argue the skill may be unnecessary; three clean REDs on a failure it *couldn't* argue nothing at all.
+
 ## Writing a scenario with real teeth
 
 A scenario with no pressure just gets the skill recited back:
