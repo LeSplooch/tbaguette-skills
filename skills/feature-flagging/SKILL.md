@@ -36,6 +36,7 @@ Kill switches carry an extra requirement: evaluation must not depend on anything
 
 - **The removal ticket is created in the commit that introduces the flag**, referencing the flag key. No ticket, no flag. Nothing later in the process reliably creates it.
 - **The expiry date lives in code or metadata.** Past expiry the build warns; past a grace period the build fails. This is the only mechanism that works; reminders, dashboards, and good intentions all decay.
+- **A flag that suspends a rule gets its current value pinned in a test.** Not one that selects between behaviours — both of its states are valid. But where one state is a deliberate, accepted violation, pin it, and make the failure message the handover note: why the deviation exists, what ends it, and that ending it means deleting the assertion. The expiry above fires on a date; this fires the moment someone flips the flag, at the person flipping it. A comment explaining the trade fires never.
 - **Removal deletes the flag and the dead branch in one commit**, then verifies no configuration anywhere still names the key. Removing the flag while keeping both branches is how a "removed" flag becomes unreachable code, and how an orphan config key becomes a mystery in the next audit.
 - **A release flag past two release cycles, or roughly 60 days, is a live incident waiting.** Its off branch has not executed in weeks, and untested code does not work — meaning the rollback path you are counting on is the least-exercised code in the system.
 
@@ -77,6 +78,7 @@ Use a branch, a separate build, or a different technique when:
 | Test matrix has become unmanageable | Interacting flags modeled as independent booleans |
 | Feature "does not work" for exactly one environment | Misspelled key silently resolving to the default |
 | Removing a flag broke production | The wrong branch was kept, or config still referenced the key |
+| A deliberate deviation was reverted by accident | Its rationale lived in a comment, and no assertion failed when the flag flipped |
 | Cleanup process keeps proposing deletion of a paid feature's gate | Entitlement modeled as a release flag |
 | A reported bug cannot be reproduced | Flag values at the time of the error were never recorded |
 
