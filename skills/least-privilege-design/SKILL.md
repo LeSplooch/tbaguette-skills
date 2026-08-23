@@ -87,6 +87,8 @@ Intent is not a control. Review the effective permissions, not the name or the d
 3. **Compare against actual use:** list the actions taken in the last 90 days. The delta is the removal list, and it is the only evidence-based way to shrink a grant. Run it even on policies that look tidy — grants outlive their reasons.
 4. **Verify the negative:** attempt one action the role must not perform and confirm the denial. An untested denial is an assumption — this is the step everyone skips and the only one that produces evidence. Repeat on every change to the role, and every 90 days for anything reaching production data.
 
+When the demand for a justification arrives from outside — a questionnaire, an audit finding, a distribution review asking why a declared capability is needed — it is a prompt to run the compare-against-use step above, before writing a word. What that comparison returns decides the answer: used as described, justify it; used more narrowly, narrow the grant and justify what is left; not used at all, remove it, and the question retires along with it. Compare against observed calls rather than against whether the symbol appears — a capability referenced only from a path that never executes reads as used to a grep and as unused to the audit log. That last state accumulates because declaring is cheap once and removing later feels risky, while the justification cost recurs every review cycle until either the feature exists or the declaration is removed.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -104,6 +106,7 @@ Intent is not a control. Review the effective permissions, not the name or the d
 ## Red flags
 
 - "Give it admin for now, we'll narrow it later" — *later* has no trigger.
+- "Declare it now so it's ready when we build the feature" — the feature is hypothetical; the review cost is not.
 - "It's behind the firewall" / "only our own code calls it."
 - A permission set that has only ever grown, or a wildcard with no written reason next to it.
 - Being unable to name the single process that uses a credential.
