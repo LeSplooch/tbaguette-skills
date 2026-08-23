@@ -38,6 +38,7 @@ When the check itself is unreliable — an intermittent bug that only reproduces
 | Tests pass | This session's run, fresh, zero failures | A run from before the last edit; "should still pass" |
 | Lint is clean | This session's run, zero warnings | Spot-checking only the file you just touched |
 | Build succeeds | Fresh build, exit code checked | Lint passing; no red squiggles in the editor |
+| It is live | A signed-out, cache-busted fetch of the published URL | It renders in your authoring session; the upload exited 0 |
 | A bug is fixed | Reproduced the original symptom on the new code, and it's gone | The diff looks like the right fix |
 | A regression test guards it | Red on the old code, green on the fix, both watched | Passes once, never run against the broken version |
 | A subagent finished the task | The diff it actually produced, read | Its own summary of what it did |
@@ -52,6 +53,12 @@ This is what makes "I fixed it" and "I confirmed the fix" different acts, not ju
 ## A report is not a check
 
 A subagent reporting success, a CI badge sitting green, a teammate saying it should be fine — none of these are verification, they're claims, and repeating one as your own confirmed status launders someone else's unchecked belief into something that sounds checked. Read the diff the subagent actually produced instead of its summary of the diff. Open the CI log instead of trusting the badge. Run the command yourself instead of describing having run it. The report may well be accurate — that's a separate fact from whether it's been checked.
+
+## The push is not the reach
+
+Where a check ran is part of what it proves. Confirming a published thing from the seat that published it — the authoring session, the signed-in browser, the tool that did the upload — establishes that the artifact exists and that you, specifically, can reach it; the claim is that its audience can. The two contexts differ along axes invisible from inside the authoring one, authentication and caching chief among them, and the two failures they produce run in opposite directions.
+
+A default-private artifact is indistinguishable from a public one at the owner's seat, so a page that renders perfectly for its author returns nothing to anyone else — worse once the URL has already gone out as public. A stale cache is the mirror image: it serves the previous version after a genuinely successful deploy, so a correct check reads as a failure and invites a pointless re-push. One makes a broken thing look fine, the other makes a fine thing look broken, and a signed-out, cache-busted fetch from outside the publishing tool settles both.
 
 ## Common mistakes
 
