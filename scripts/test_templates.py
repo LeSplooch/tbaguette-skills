@@ -442,75 +442,18 @@ def check_fresh_section() -> None:
           or 'style="--cf-shift: -70px"' in html)
 
 
-def check_i18n_document_shell() -> None:
-    """Task 3's own coverage: the document shell threads locale/strings
-    through lang/dir, the hreflang/canonical block, and the language
-    switcher. Deliberately does not exercise _render_hero/_render_breadcrumb/
-    etc. — those keep their pre-locale signatures until Task 4."""
-    print("i18n document shell check")
-    import locales
-
-    fr = locales.get_locale("fr")
-    ar = locales.get_locale("ar")
-
-    html_en = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path="")
-    check("default render_index still emits lang='en' dir='ltr' (no regression)",
-          '<html lang="en" dir="ltr">' in html_en)
-
-    html_fr = render_index(
-        FIXTURE["categories"], FIXTURE["skills"], base_path="", locale=fr,
-    )
-    check("French index emits lang='fr' dir='ltr'", '<html lang="fr" dir="ltr">' in html_fr)
-    check("French index's canonical link points at /fr/",
-          '<link rel="canonical" href="/fr/">' in html_fr)
-    check("French index carries an hreflang alternate for every one of the 12 locales, "
-          "plus one more for x-default (13 total 'rel=\"alternate\" hreflang=' tags, since "
-          "x-default's own <link> also matches that prefix)",
-          html_fr.count('rel="alternate" hreflang="') == 13)
-    check("French index carries an x-default hreflang pointing at the English root",
-          'hreflang="x-default" href="/">' in html_fr)
-    check("French index's own hreflang entry uses the plain 'fr' tag (not a region variant)",
-          'hreflang="fr" href="/fr/">' in html_fr)
-    check("French index's Portuguese hreflang entry uses the region-specific 'pt-BR' tag",
-          'hreflang="pt-BR" href="/pt/">' in html_fr)
-
-    html_ar = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path="", locale=ar)
-    check("Arabic index emits dir='rtl'", '<html lang="ar" dir="rtl">' in html_ar)
-
-    html_skill_fr = render_skill_page(
-        FIXTURE["skills"]["designing-test-data"],
-        prev_skill=None, next_skill=None, siblings=[],
-        categories=FIXTURE["categories"], base_path="", locale=fr,
-    )
-    check("French skill page's canonical points at its own /fr/skills/<slug>/ path",
-          '<link rel="canonical" href="/fr/skills/designing-test-data/">' in html_skill_fr)
-    check("French skill page's English hreflang alternate points at the un-prefixed root path",
-          'hreflang="en" href="/skills/designing-test-data/">' in html_skill_fr)
-
-    html_skill_base_path = render_skill_page(
-        FIXTURE["skills"]["designing-test-data"],
-        prev_skill=None, next_skill=None, siblings=[],
-        categories=FIXTURE["categories"], base_path="/tbaguette-skills", locale=fr,
-    )
-    check("base_path prefixes every locale URL in the hreflang block, not just the current one",
-          'hreflang="en" href="/tbaguette-skills/skills/designing-test-data/">' in html_skill_base_path)
-
-    check("language switcher lists all 12 locales by endonym",
-          html_en.count('class="language-switcher__link"') == 12)
-    check("language switcher's French entry links to /fr/",
-          '<a class="language-switcher__link" href="/fr/"' in html_en)
-    check("language switcher marks the current locale with aria-current",
-          'aria-current="true"' in html_en)
-
-
 def check_i18n_content_links_and_strings() -> None:
-    """Task 4's own coverage: unlike check_i18n_document_shell above (which
-    only exercises the document shell), this confirms locale actually
-    reaches content-level links -- cards, breadcrumb, prev/next, see-also --
-    that Task 3 deliberately left on their pre-locale signatures."""
+    """Confirms a locale reaches content-level links -- cards, breadcrumb,
+    prev/next, see-also. Uses a synthetic French Locale constructed
+    directly (not locales.get_locale) since the real registry is
+    English-only as of the 2026-08-23 i18n revert -- the per-locale
+    routing machinery itself wasn't removed, only its content and its
+    live consumers (switcher, hreflang), so this keeps real regression
+    coverage on code that would matter again the moment a locale is
+    re-added."""
     import locales
 
-    fr = locales.get_locale("fr")
+    fr = locales.Locale(code="fr", hreflang="fr", name="French", endonym="Français", dir="ltr")
     fr_strings = ENGLISH_STRINGS  # a real translated Strings isn't built until Task 12; reuse
                                    # ENGLISH_STRINGS here to isolate this test to *routing*
                                    # (does a card/breadcrumb/prevnext link land under /fr/?),
@@ -548,11 +491,15 @@ def check_i18n_content_links_and_strings() -> None:
 
 
 def check_i18n_verify_install_page() -> None:
+    """Uses synthetic fr/ar Locale instances (see
+    check_i18n_content_links_and_strings' docstring for why: the real
+    registry is English-only, but the locale-aware rendering these
+    exercise wasn't removed)."""
     import locales
     from python_highlight import highlight_source
 
-    fr = locales.get_locale("fr")
-    ar = locales.get_locale("ar")
+    fr = locales.Locale(code="fr", hreflang="fr", name="French", endonym="Français", dir="ltr")
+    ar = locales.Locale(code="ar", hreflang="ar", name="Arabic", endonym="العربية", dir="rtl")
     highlighted = highlight_source("x = 1\n")
 
     html_en = render_verify_install_page(highlighted, FIXTURE["categories"], base_path="")
@@ -584,9 +531,12 @@ def check_i18n_verify_install_page() -> None:
 
 
 def check_i18n_fallback_banner() -> None:
+    """Uses a synthetic fr Locale (see check_i18n_content_links_and_strings'
+    docstring) -- the fallback-banner mechanism this tests is real,
+    unremoved code, independent of what's currently in the registry."""
     import locales
 
-    fr = locales.get_locale("fr")
+    fr = locales.Locale(code="fr", hreflang="fr", name="French", endonym="Français", dir="ltr")
     untranslated_skill = {**FIXTURE["skills"]["designing-test-data"], "translated": False}
     translated_skill = {**FIXTURE["skills"]["designing-test-data"], "translated": True}
 
@@ -604,10 +554,10 @@ def check_i18n_fallback_banner() -> None:
           'class="prose" lang="en" dir="ltr"' in html_untranslated)
 
     # The direction override only matters on an RTL page, which is where it
-    # was missing: all 66 skill bodies are still English-only, so before this
+    # was missing: all skill bodies are English-only, so before this
     # every /ar/skills/* page laid English out as an RTL paragraph and threw
     # each trailing colon and period to the start of its visual line.
-    ar = locales.get_locale("ar")
+    ar = locales.Locale(code="ar", hreflang="ar", name="Arabic", endonym="العربية", dir="rtl")
     html_ar_untranslated = render_skill_page(
         untranslated_skill, prev_skill=None, next_skill=None, siblings=[],
         categories=FIXTURE["categories"], base_path="", locale=ar,
@@ -919,7 +869,10 @@ def check_i18n_prevnext_arrows() -> None:
     .card__arrow.
 
     Invisible to the RTL *CSS* pass in test_i18n.py, which can only see CSS
-    properties -- this is a literal character in the markup."""
+    properties -- this is a literal character in the markup. Uses
+    synthetic fr/ar Locale instances (see
+    check_i18n_content_links_and_strings' docstring) -- the mirroring
+    logic this exercises is real, unremoved code."""
     import locales
 
     dtd = FIXTURE["skills"]["designing-test-data"]
@@ -939,14 +892,16 @@ def check_i18n_prevnext_arrows() -> None:
     check("LTR: the prev link points ← (unchanged)",
           'class="prevnext__name">← designing-test-data<' in en_prev)
 
-    fr_next, fr_prev = render(locales.get_locale("fr"))
+    fr = locales.Locale(code="fr", hreflang="fr", name="French", endonym="Français", dir="ltr")
+    fr_next, fr_prev = render(fr)
     check("an already-shipped LTR locale is byte-for-byte unaffected by the "
           "swap (French next link still →)",
           'class="prevnext__name">flaky-test-triage →<' in fr_next)
     check("...and French prev still ←",
           'class="prevnext__name">← designing-test-data<' in fr_prev)
 
-    ar_next, ar_prev = render(locales.get_locale("ar"))
+    ar = locales.Locale(code="ar", hreflang="ar", name="Arabic", endonym="العربية", dir="rtl")
+    ar_next, ar_prev = render(ar)
     check("RTL: the next link points ← -- a right-to-left reader advances "
           "leftward, so that is the forward direction",
           'class="prevnext__name">flaky-test-triage ←<' in ar_next)
@@ -1182,7 +1137,6 @@ def main() -> None:
     check_verify_install_page()
     check_header_and_badges()
     check_fresh_section()
-    check_i18n_document_shell()
     check_i18n_content_links_and_strings()
     check_i18n_verify_install_page()
     check_i18n_fallback_banner()

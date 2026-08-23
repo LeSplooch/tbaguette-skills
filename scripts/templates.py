@@ -50,9 +50,11 @@ class Strings:
     """Every piece of user-facing chrome text this module used to inline as
     English literals. One frozen dataclass rather than a raw dict so a
     missing/extra key is a Python-level error immediately, not a silent
-    KeyError deep in an f-string -- and so i18n/<lang>/ui.json's exact key
-    set can be checked against dataclasses.fields(Strings) (see
-    test_i18n.py's ui.json parity check, Task 4).
+    KeyError deep in an f-string. (Before the 2026-08-23 i18n revert, this
+    exact key set was also what a translated locale's ui.json was checked
+    against; that content and its check are gone along with the rest of
+    i18n/, but the dataclass's own error-immediacy benefit for the English
+    default stands regardless.)
 
     Every _render_* function that used to inline one of these strings now
     takes `strings: Strings = ENGLISH_STRINGS` -- defaulting to English
@@ -69,7 +71,6 @@ class Strings:
     header_updated_value_template: str
     theme_toggle_switch_to_dark: str
     theme_toggle_switch_to_light: str
-    language_switcher_label: str
     hero_headline: str
     hero_lede_template: str
     search_label: str
@@ -132,7 +133,6 @@ ENGLISH_STRINGS = Strings(
     header_updated_value_template="{local} your time · {utc} UTC",
     theme_toggle_switch_to_dark="Switch to dark theme",
     theme_toggle_switch_to_light="Switch to light theme",
-    language_switcher_label="Language",
     hero_headline="An atelier for the way you build.",
     hero_lede_template=(
         "{skill_count} Claude Code skills for the craft between the ticket and the "
@@ -491,32 +491,6 @@ def _locale_url(locale: "locales.Locale", base_path: str, path_suffix: str) -> s
     return f"{base_path}/{locale.code}/{path_suffix}"
 
 
-def _render_language_switcher(
-    current_locale: "locales.Locale", base_path: str, path_suffix: str, strings: Strings
-) -> str:
-    items = _join(*(
-        f'<li><a class="language-switcher__link" href="{_locale_url(loc, base_path, path_suffix)}"'
-        + (' aria-current="true"' if loc.code == current_locale.code else "")
-        + f'>{escape_html(loc.endonym)}</a></li>'
-        for loc in locales.LOCALES
-    ))
-    return f"""<details class="language-switcher">
-  <summary class="language-switcher__summary">{escape_html(strings.language_switcher_label)}: {escape_html(current_locale.endonym)}</summary>
-  <ul class="language-switcher__list">
-{items}
-  </ul>
-</details>"""
-
-
-def _render_hreflang_block(base_path: str, path_suffix: str) -> str:
-    alternates = _join(*(
-        f'<link rel="alternate" hreflang="{escape_html(loc.hreflang)}" href="{_locale_url(loc, base_path, path_suffix)}">'
-        for loc in locales.LOCALES
-    ))
-    x_default = _locale_url(locales.DEFAULT_LOCALE, base_path, path_suffix)
-    return alternates + f'\n<link rel="alternate" hreflang="x-default" href="{x_default}">'
-
-
 # ---------------------------------------------------------------------------
 # Shared chrome: document shell, header, footer, theme toggle
 # ---------------------------------------------------------------------------
@@ -534,7 +508,6 @@ def _render_head(*, title: str, meta_description: str, base_path: str = "",
 <meta property="og:title" content="{escape_html(title)}">
 <meta property="og:description" content="{desc}">
 <link rel="canonical" href="{canonical}">
-{_render_hreflang_block(base_path, path_suffix)}
 <link rel="icon" type="image/svg+xml" href="{base_path}/assets/favicon.svg">
 <link rel="preload" href="{base_path}/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{base_path}/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -591,7 +564,6 @@ def _render_header(base_path: str = "", last_updated_utc: str = "",
     </div>
     <div class="site-header__actions">
       {updated_html}
-      {_render_language_switcher(locale, base_path, path_suffix, strings)}
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="{escape_html(strings.theme_toggle_switch_to_light)}"
               data-i18n-theme-light="{escape_html(strings.theme_toggle_switch_to_light)}"

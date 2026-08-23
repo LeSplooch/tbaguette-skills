@@ -1,19 +1,23 @@
-"""Locale registry for the tbaguette-skills site's i18n build.
+"""Locale registry for the tbaguette-skills site's build.
 
-The single source of truth for which 12 locales (English + 11 translations,
-one language per country) the site builds. Vietnamese, Polish, and
-Indonesian were dropped 2026-08-15 -- translation work never started for
-them and there's no reason to publish an entry in the language switcher
-that just leads to an all-English page under a foreign-looking URL prefix.
-Russian was dropped 2026-08-20; unlike those three its translation was
-complete, so removing it also deleted i18n/ru/ and docs/ru/ rather than
-just an unpopulated switcher entry.
-Re-adding one later is exactly reversing this: add its Locale entry back,
-bump EXPECTED_LOCALE_COUNT, then populate i18n/<code>/ following the same
-procedure documented in docs/superpowers/plans/2026-08-14-website-i18n.md's
-Task 12. scripts/generate.py,
-scripts/templates.py's language switcher, and scripts/test_i18n.py all
-import LOCALES from here rather than each declaring the list separately.
+The single source of truth for which locale(s) the site builds. English
+only, as of 2026-08-23: the site briefly carried 11 translations (French,
+Spanish, German, Italian, Portuguese, Chinese, Japanese, Korean, Hindi,
+Arabic, Turkish) alongside three that never got past an empty switcher
+entry (Vietnamese, Polish, Indonesian, dropped 2026-08-15) and one dropped
+mid-life after shipping complete (Russian, 2026-08-20). All 11 remaining
+translations were removed 2026-08-23 -- the per-skill body translation
+effort (i18n/<code>/skills/*) turned out too expensive in tokens to
+run, and rather than leave a half-finished translation layer live, the
+whole i18n build (chrome strings, descriptions, categories, skill bodies)
+was reverted along with it. The history above is worth keeping: re-adding
+i18n later means re-running the same procedure documented in
+docs/superpowers/plans/2026-08-14-website-i18n.md and
+docs/superpowers/specs/2026-08-14-website-i18n-design.md, not reinventing
+it -- add Locale entries back, bump EXPECTED_LOCALE_COUNT, populate
+i18n/<code>/. scripts/generate.py, scripts/templates.py's language
+switcher, and scripts/test_i18n.py all import LOCALES from here rather
+than each declaring the list separately.
 
     python3 scripts/locales.py    # prints the registry as a sanity check
 """
@@ -53,20 +57,9 @@ class Locale:
 
 LOCALES: tuple[Locale, ...] = (
     Locale(code="en", hreflang="en", name="English", endonym="English", dir="ltr", default=True),
-    Locale(code="fr", hreflang="fr", name="French", endonym="Français", dir="ltr"),
-    Locale(code="es", hreflang="es", name="Spanish", endonym="Español", dir="ltr"),
-    Locale(code="de", hreflang="de", name="German", endonym="Deutsch", dir="ltr"),
-    Locale(code="it", hreflang="it", name="Italian", endonym="Italiano", dir="ltr"),
-    Locale(code="pt", hreflang="pt-BR", name="Portuguese", endonym="Português", dir="ltr"),
-    Locale(code="zh", hreflang="zh-Hans", name="Chinese", endonym="中文", dir="ltr"),
-    Locale(code="ja", hreflang="ja", name="Japanese", endonym="日本語", dir="ltr"),
-    Locale(code="ko", hreflang="ko", name="Korean", endonym="한국어", dir="ltr"),
-    Locale(code="hi", hreflang="hi", name="Hindi", endonym="हिन्दी", dir="ltr"),
-    Locale(code="ar", hreflang="ar", name="Arabic", endonym="العربية", dir="rtl"),
-    Locale(code="tr", hreflang="tr", name="Turkish", endonym="Türkçe", dir="ltr"),
 )
 
-EXPECTED_LOCALE_COUNT = 12
+EXPECTED_LOCALE_COUNT = 1
 
 DEFAULT_LOCALE: Locale = next(locale for locale in LOCALES if locale.default)
 

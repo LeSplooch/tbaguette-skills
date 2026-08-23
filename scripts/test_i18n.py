@@ -1,7 +1,13 @@
-"""Tests for the site's i18n build: locale registry integrity, per-file
-content fallback, description precedence, UI-string key parity, routing
-output (hreflang/canonical/switcher), and RTL. Plain assert-based, using
-the shared Checker (see scripts/checker.py) -- matches test_generate.py and
+"""Tests for the locale-aware build machinery that survived the
+2026-08-23 i18n revert: locale registry integrity, the multi-locale build
+mechanism (exercised via a synthetic locale set, since the real registry
+is English-only), the EXPECTED_LOCALE_COUNT gate, remaining RTL-neutral
+CSS, and confirmation that i18n/ and its now-content-free tooling are
+actually gone rather than left dormant. Locale-aware *rendering* itself
+(routing, fallback banners, RTL dir handling) is still covered in
+test_templates.py's check_i18n_* functions, which also switched to
+synthetic locales for the same reason. Plain assert-based, using the
+shared Checker (see scripts/checker.py) -- matches test_generate.py and
 test_templates.py's convention, not test_content_pipeline.py's unittest one.
 
 Usage:
@@ -45,11 +51,7 @@ def check_locale_registry() -> None:
         sum(1 for locale in locales.LOCALES if locale.default) == 1,
     )
     check("English is present and is the default locale", locales.DEFAULT_LOCALE.code == "en")
-    check(
-        "Arabic is the only rtl locale (matches the approved 15-language list)",
-        [locale.code for locale in locales.LOCALES if locale.dir == "rtl"] == ["ar"],
-    )
-    check("get_locale('fr') returns the French entry", locales.get_locale("fr").endonym == "Français")
+    check("get_locale('en') returns the English entry", locales.get_locale("en").endonym == "English")
 
     threw = False
     try:
@@ -57,6 +59,15 @@ def check_locale_registry() -> None:
     except KeyError:
         threw = True
     check("get_locale raises KeyError for an unknown code", threw)
+
+    threw_fr = False
+    try:
+        locales.get_locale("fr")
+    except KeyError:
+        threw_fr = True
+    check("get_locale('fr') also raises KeyError -- proves the 2026-08-23 "
+          "i18n revert actually removed it from the registry, not just its "
+          "content on disk", threw_fr)
 
 
 def _write_skill(skills_root: Path, slug: str, description: str, body: str) -> None:
@@ -68,8 +79,20 @@ def _write_skill(skills_root: Path, slug: str, description: str, body: str) -> N
 
 
 def check_full_locale_build() -> None:
+    """The real registry is English-only as of the 2026-08-23 i18n revert,
+    so this mocks locales.LOCALES (+ the EXPECTED_LOCALE_COUNT gate it must
+    match) to a synthetic 3-locale set instead of using the real one --
+    the multi-locale build machinery itself wasn't removed, only its
+    content and its live consumers (switcher, hreflang), and this is what
+    keeps that machinery under real regression coverage for the day it's
+    needed again."""
     print("full locale build (synthetic fixture)")
     tmp_root = Path(tempfile.mkdtemp(prefix="tbaguette-i18n-build-test-"))
+    fake_locales = (
+        locales.DEFAULT_LOCALE,
+        locales.Locale(code="fr", hreflang="fr", name="French", endonym="Français", dir="ltr"),
+        locales.Locale(code="es", hreflang="es", name="Spanish", endonym="Español", dir="ltr"),
+    )
     try:
         skills_root = tmp_root / "skills"
         _write_skill(skills_root, "alpha", "English alpha description.", "English alpha body.")
@@ -99,6 +122,8 @@ def check_full_locale_build() -> None:
 
         with mock.patch.object(content_pipeline, "CATEGORIES", fixture_categories), \
              mock.patch.object(generate, "EXPECTED_SKILL_COUNT", 2), \
+             mock.patch.object(locales, "LOCALES", fake_locales), \
+             mock.patch.object(generate, "EXPECTED_LOCALE_COUNT", len(fake_locales)), \
              mock.patch.object(generate, "_default_i18n_root", lambda root: i18n_root):
             content = generate.generate(tmp_root, skills_root, base_path="")
 
@@ -106,14 +131,15 @@ def check_full_locale_build() -> None:
         check("English index still builds at the root", (docs / "index.html").is_file())
         check("French index builds under docs/fr/", (docs / "fr" / "index.html").is_file())
         check("every other locale's directory also exists (all registered locales always route)",
-              all((docs / loc.code).is_dir() for loc in locales.LOCALES if not loc.default))
+              all((docs / loc.code).is_dir() for loc in fake_locales if not loc.default))
 
         fr_index_html = (docs / "fr" / "index.html").read_text(encoding="utf-8")
         check("French index emits dir='ltr' lang='fr'", '<html lang="fr" dir="ltr">' in fr_index_html)
         check("French index's translated hero headline made it through",
               "Un atelier pour votre façon de coder." in fr_index_html)
-        check("French index carries all 12 hreflang alternates plus x-default",
-              fr_index_html.count('rel="alternate" hreflang="') == 13)
+        check("French index carries no hreflang alternates -- that block was "
+              "removed with the rest of phase 1 in the 2026-08-23 revert",
+              'rel="alternate" hreflang="' not in fr_index_html)
 
         fr_alpha_html = (docs / "fr" / "skills" / "alpha" / "index.html").read_text(encoding="utf-8")
         check("French alpha page shows the real translated body, no fallback banner",
@@ -142,6 +168,8 @@ def check_full_locale_build() -> None:
         es_dir_mtime_before = (docs / "es").stat().st_mtime
         with mock.patch.object(content_pipeline, "CATEGORIES", fixture_categories), \
              mock.patch.object(generate, "EXPECTED_SKILL_COUNT", 2), \
+             mock.patch.object(locales, "LOCALES", fake_locales), \
+             mock.patch.object(generate, "EXPECTED_LOCALE_COUNT", len(fake_locales)), \
              mock.patch.object(generate, "_default_i18n_root", lambda root: i18n_root):
             generate.generate(tmp_root, skills_root, base_path="", only_locale="fr")
         check("a --locale fr build leaves es/ untouched on disk",
@@ -194,17 +222,10 @@ def check_rtl_css_pass() -> None:
           "text-align: left" not in css_outside_exemption)
     check("no bare 'text-align: right' remains outside the exemption",
           "text-align: right" not in css_outside_exemption)
-    check("the card-arrow hover motion has an explicit [dir=\"rtl\"] override",
-          '[dir="rtl"] .card:hover .card__arrow' in css)
-    check("...and that override uses the correct transform composition "
-          "(scaleX(-1) translateX(3px), not a negated translateX(-3px) which "
-          "would move the glyph the wrong screen-space direction under RTL)",
-          "scaleX(-1) translateX(3px)" in css)
-    check("the tab-list scroll-fade mask has an explicit [dir=\"rtl\"] override",
-          '[dir="rtl"] .tabs__list' in css)
-    check("...and that override actually points the fade 'to left' on both "
-          "-webkit-mask-image and mask-image (not still 'to right')",
-          css.count("to left, black") == 2)
+    check("the card-arrow and tab-list [dir=\"rtl\"] overrides are gone -- "
+          "removed with the rest of RTL support in the 2026-08-23 revert, "
+          "since no locale is ever dir=\"rtl\" anymore",
+          '[dir="rtl"]' not in css)
 
     # Code is LTR in every language. Task 5 handled this per call site with
     # dir="ltr" attributes, which by construction only covers the call sites
@@ -244,146 +265,18 @@ def check_rtl_css_pass() -> None:
           '<div class="code-block" dir="ltr">' in templates_src)
 
 
-def check_language_switcher_css() -> None:
-    """The language switcher is the one new piece of chrome the i18n work
-    adds, and it shipped with literally zero CSS: none of its four class
-    names appeared anywhere in styles.css. A native unstyled <details>
-    expands in normal flow, so opening it inflated the header from ~140px
-    to ~620px and pushed the whole page down, on every page of all 16
-    locales.
-
-    Asserting the selectors merely *exist* would repeat the weakness the
-    final review called out in Task 9's RTL checks, so each check below
-    pins the property that actually does the work -- above all the
-    absolute positioning, which is the entire difference between a popover
-    and a header that grows by 480px."""
-    print("language switcher CSS")
-    css_path = Path(__file__).resolve().parent.parent / "docs" / "assets" / "styles.css"
-    css = css_path.read_text(encoding="utf-8")
-
-    def rule_body(selector: str) -> str:
-        start = css.index(selector + " {")
-        return css[start:css.index("}", start)]
-
-    for selector in (".language-switcher", ".language-switcher__summary",
-                     ".language-switcher__list", ".language-switcher__link"):
-        check(f"{selector} has a rule at all (all four shipped unstyled)",
-              selector + " {" in css)
-
-    switcher = rule_body(".language-switcher")
-    check("the <details> establishes a containing block, so the panel can "
-          "anchor to it rather than to the page",
-          "position: relative" in switcher)
-
-    panel = rule_body(".language-switcher__list")
-    check("the open panel is OUT OF NORMAL FLOW -- the whole bug was a "
-          "16-item list expanding in flow and inflating the header",
-          "position: absolute" in panel)
-    check("...and is anchored with the logical inset-inline-end, not a "
-          "physical right, so /ar/ mirrors without a [dir=\"rtl\"] override",
-          "inset-inline-end" in panel and "right:" not in panel)
-    check("...and stacks above the header band rather than behind it",
-          "z-index" in panel)
-    check("...and drops the <ul>'s bullets and default indent",
-          "list-style: none" in panel)
-    check("...and scrolls rather than running off a short viewport, since "
-          "16 entries overflow one",
-          "overflow-y: auto" in panel and "max-height" in panel)
-
-    summary = rule_body(".language-switcher__summary")
-    check("the summary drops the native disclosure triangle",
-          "list-style: none" in summary)
-    check("...including on WebKit/Blink, which ignores list-style on a "
-          "summary and needs the pseudo-element reset too",
-          ".language-switcher__summary::-webkit-details-marker" in css)
-
-    check("the current locale, marked aria-current in the markup, gets a "
-          "visible treatment too -- it was announced but indistinguishable",
-          ".language-switcher__link[aria-current]" in css)
-
-    check("the switcher's transitions are covered by the reduced-motion "
-          "block, like every other transitioned element on the site",
-          ".language-switcher__summary, .language-switcher__summary::after"
-          in css[css.index("@media (prefers-reduced-motion: reduce)"):])
-
-
-def check_i18n_status() -> None:
-    print("i18n_status")
-    import i18n_status
-
-    tmp_root = Path(tempfile.mkdtemp(prefix="tbaguette-i18n-status-test-"))
-    try:
-        skills_root = tmp_root / "skills"
-        _write_skill(skills_root, "alpha", "Alpha description.", "Alpha body.")
-        _write_skill(skills_root, "beta", "Beta description.", "Beta body.")
-        _write_skill(skills_root, "gamma", "Gamma description.", "Gamma body.")
-
-        i18n_root = tmp_root / "i18n"
-        fr_dir = i18n_root / "fr"
-        (fr_dir / "skills" / "alpha").mkdir(parents=True)
-        (fr_dir / "skills" / "alpha" / "SKILL.md").write_text(
-            "---\nname: alpha\ndescription: Alpha en français.\n---\nCorps.\n", encoding="utf-8"
-        )
-        (fr_dir / "ui.json").write_text("{}", encoding="utf-8")
-
-        fr = locales.get_locale("fr")
-        status = i18n_status.locale_status(fr, skills_root, i18n_root)
-        check("counts one of three skills translated", status["translated_count"] == 1)
-        check("total_count reflects the real skill corpus size", status["total_count"] == 3)
-        check("missing_slugs lists exactly the two untranslated skills",
-              set(status["missing_slugs"]) == {"beta", "gamma"})
-        check("has_ui_json is True (the file exists, even though it's an empty stub here)",
-              status["has_ui_json"] is True)
-        check("has_categories_json is False (never created for this fixture)",
-              status["has_categories_json"] is False)
-
-        es = locales.get_locale("es")
-        es_status = i18n_status.locale_status(es, skills_root, i18n_root)
-        check("a locale with no i18n/ directory at all reports zero translated, not an error",
-              es_status["translated_count"] == 0 and es_status["has_ui_json"] is False)
-    finally:
-        shutil.rmtree(tmp_root, ignore_errors=True)
-
-
-def check_real_i18n_content_key_parity() -> None:
-    print("real i18n/ content key parity")
+def check_i18n_directory_gone() -> None:
+    """The 2026-08-23 revert's actual content-removal claim, checked
+    directly rather than trusted: no i18n/ directory should exist in the
+    real repo at all. (i18n_status.py, which used to report per-locale
+    phase-2 coverage, was deleted alongside it -- there is no more
+    translation effort for it to report on.)"""
+    print("i18n directory removed")
     project_root = Path(__file__).resolve().parent.parent
-    i18n_root = project_root / "i18n"
-    if not i18n_root.is_dir():
-        print("  (no i18n/ directory yet -- nothing to check)")
-        return
-
-    ui_keys = {f.name for f in dataclasses.fields(templates.Strings)}
-    verify_keys = {f.name for f in dataclasses.fields(templates.VerifyInstallStrings)}
-    real_skill_slugs = set(content_pipeline.list_skill_slugs(project_root / "skills"))
-    real_category_slugs = {c["slug"] for c in content_pipeline.CATEGORIES}
-
-    for locale_dir in sorted(p for p in i18n_root.iterdir() if p.is_dir()):
-        code = locale_dir.name
-
-        ui_json_path = locale_dir / "ui.json"
-        if ui_json_path.is_file():
-            data = json.loads(ui_json_path.read_text(encoding="utf-8"))
-            check(f"i18n/{code}/ui.json has exactly Strings' key set (no missing, no extra)",
-                  set(data.keys()) == ui_keys)
-
-        verify_json_path = locale_dir / "verify-install.json"
-        if verify_json_path.is_file():
-            data = json.loads(verify_json_path.read_text(encoding="utf-8"))
-            check(f"i18n/{code}/verify-install.json has exactly VerifyInstallStrings' key set",
-                  set(data.keys()) == verify_keys)
-
-        descriptions_path = locale_dir / "descriptions.json"
-        if descriptions_path.is_file():
-            data = json.loads(descriptions_path.read_text(encoding="utf-8"))
-            check(f"i18n/{code}/descriptions.json has no unknown skill slugs",
-                  set(data.keys()) <= real_skill_slugs)
-
-        categories_path = locale_dir / "categories.json"
-        if categories_path.is_file():
-            data = json.loads(categories_path.read_text(encoding="utf-8"))
-            check(f"i18n/{code}/categories.json has no unknown category slugs",
-                  set(data.keys()) <= real_category_slugs)
+    check("no i18n/ directory exists in the real repo",
+          not (project_root / "i18n").is_dir())
+    check("i18n_status.py was removed, not left dormant",
+          not (project_root / "scripts" / "i18n_status.py").is_file())
 
 
 def main() -> None:
@@ -391,9 +284,7 @@ def main() -> None:
     check_full_locale_build()
     check_locale_count_gate()
     check_rtl_css_pass()
-    check_language_switcher_css()
-    check_i18n_status()
-    check_real_i18n_content_key_parity()
+    check_i18n_directory_gone()
     print(f"\n{checker.total} checks passed.")
 
 
