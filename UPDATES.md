@@ -11,8 +11,16 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-08-24 — The site now says what changed
+## 2026-08-24 — Skills link to each other, and the site says what changed
 
+- Every mention one skill makes of another is now a link to that skill’s page
+  — 362 of them across the site. The library is densely cross-referenced and
+  none of it was navigable before; `diagnosing-before-fixing` naming
+  `regression-test-from-bug` was a dead string.
+- Both forms link: the `code`-span mentions that run through the bodies and
+  tables, and the bare ones in the “Not for: … (other-skill)” line at the top
+  of most skills. A page never links to itself, and a code span that is not a
+  skill stays plain.
 - The landing page carries an **Update notes** section under the “Fresh from
   the oven” rail: the newest entry’s bullets in full, everything earlier
   folded behind one disclosure that needs no JavaScript to open.

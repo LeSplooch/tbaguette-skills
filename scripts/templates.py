@@ -469,8 +469,17 @@ def _icon(symbol_id: str, *, css_class: str = "icon", base_path: str = "") -> st
     )
 
 
+def skill_url(slug: str, base_path: str = "",
+              locale: "locales.Locale" = locales.DEFAULT_LOCALE) -> str:
+    """The page URL for a slug. Public because content_pipeline needs it too:
+    it turns one skill's mention of another into a link, and the href depends
+    on the site's base path, which is this module's business rather than the
+    pipeline's."""
+    return _locale_url(locale, base_path, f"skills/{escape_html(slug)}/")
+
+
 def _skill_href(skill: dict, base_path: str = "", locale: "locales.Locale" = locales.DEFAULT_LOCALE) -> str:
-    return _locale_url(locale, base_path, f"skills/{escape_html(skill['slug'])}/")
+    return skill_url(skill["slug"], base_path, locale)
 
 
 def _search_haystack(skill: dict) -> str:
@@ -1271,7 +1280,7 @@ def _render_skill_head(skill: dict, strings: Strings = ENGLISH_STRINGS) -> str:
     {badge}
   </div>
   <span class="tag skill-article__tag">{escape_html(skill.get('category_title', ''))}</span>
-  <p class="lede">{escape_html(skill.get('description', ''))}</p>
+  <p class="lede">{skill.get('description_html') or escape_html(skill.get('description', ''))}</p>
 </div>"""
 
 

@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Scope changing is not a failure; changing it silently is. Both directions count equally — quietly doing more and quietly doing less are the same defect, because both take from the user the ability to decide what they are paying for.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>The work has grown past what was asked, or the diff exceeds what the request implies</li><li>A fix appears to require touching something adjacent</li><li>A genuine problem is found in passing, unrelated to the task</li><li>Tempted to also clean up, rename, refactor, or improve nearby code</li><li>One requested item is harder than the rest and is drifting toward omission</li><li>Not for: judging whether the work is finished to standard — that is <code>knowing-when-to-stop</code>. This is about what belongs in the work at all.</li></ul>
+<ul><li>The work has grown past what was asked, or the diff exceeds what the request implies</li><li>A fix appears to require touching something adjacent</li><li>A genuine problem is found in passing, unrelated to the task</li><li>Tempted to also clean up, rename, refactor, or improve nearby code</li><li>One requested item is harder than the rest and is drifting toward omission</li><li>Not for: judging whether the work is finished to standard — that is <a class="skill-link" href="/tbaguette-skills/skills/knowing-when-to-stop/"><code>knowing-when-to-stop</code></a>. This is about what belongs in the work at all.</li></ul>
 <h2 id="three-classes-one-test">Three classes, one test</h2>
 <p>For every candidate piece of work, ask: can the request be delivered, working, without this?</p>
 <table><thead><tr><th>Class</th><th>Test</th><th>Action</th></tr></thead><tbody><tr><td>Necessary</td><td>The request is blocked or broken without it</td><td>Do it. One line in the report. No permission needed</td></tr><tr><td>Adjacent</td><td>Improves code you happen to be touching; the request works regardless</td><td>Do not do it. Record it, report it</td></tr><tr><td>Discovered</td><td>A real defect or false premise found in passing, unrelated to the request</td><td>Report it. Fix only if it blocks the request, and never silently</td></tr></tbody></table>

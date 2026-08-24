@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Any large replacement ships as a sequence of individually deployable, individually revertible steps. The big-bang cutover is a plan that assumes you will not be interrupted, that nothing will be discovered mid-flight, and that rollback is a button — and all three assumptions fail together, at the worst moment.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Replacing a subsystem, dependency, protocol, or storage layer that has live traffic</li><li>A change whose full form would touch more code than can be reviewed or reverted at once</li><li>Two implementations are already live and the second one has stopped advancing</li><li>Deciding when it is safe to cut over from an old path to a new one</li><li>Not for: the internals of a data backfill or a schema version sequence — see <code>data-migrations</code> and <code>schema-evolution</code>. Not for the toggle mechanism itself — see <code>feature-flagging</code>.</li></ul>
+<ul><li>Replacing a subsystem, dependency, protocol, or storage layer that has live traffic</li><li>A change whose full form would touch more code than can be reviewed or reverted at once</li><li>Two implementations are already live and the second one has stopped advancing</li><li>Deciding when it is safe to cut over from an old path to a new one</li><li>Not for: the internals of a data backfill or a schema version sequence — see <a class="skill-link" href="/tbaguette-skills/skills/data-migrations/"><code>data-migrations</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/schema-evolution/"><code>schema-evolution</code></a>. Not for the toggle mechanism itself — see <a class="skill-link" href="/tbaguette-skills/skills/feature-flagging/"><code>feature-flagging</code></a>.</li></ul>
 <h2 id="two-shapes-and-which-applies">Two shapes, and which applies</h2>
 <p><strong>Expand–migrate–contract</strong> — for interfaces, schemas, formats, and anything with readers and writers. Add the new thing alongside the old (purely additive, backward compatible), move writers then readers, then remove the old. Each phase deploys separately.</p>
 <p><strong>Strangler fig</strong> — for whole subsystems. Put a seam in front of the existing implementation <em>first</em> — a façade, router, adapter, or proxy that changes nothing — and ship it. Then move one capability at a time behind that seam until nothing routes to the old implementation, and delete it. The seam ships before any migration work, as its own change, with its own verification that behavior is unchanged.</p>

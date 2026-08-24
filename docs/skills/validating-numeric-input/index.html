@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,12 +64,12 @@
     
   </div>
   <span class="tag skill-article__tag">Security (defensive)</span>
-  <p class="lede">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading, or another service&#x27;s response — when a range check passed and something broke far downstream, when clamping or bounding a value, when money or quantities are involved, or when a numeric parse silently produced zero. Covers NaN and infinity defeating comparisons, overflow and precision loss, locale and format ambiguity, and parsing a number rather than testing a relation.</p>
+  <p class="lede">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading, or another service's response — when a range check passed and something broke far downstream, when clamping or bounding a value, when money or quantities are involved, or when a numeric parse silently produced zero. Covers NaN and infinity defeating comparisons, overflow and precision loss, locale and format ambiguity, and parsing a number rather than testing a relation.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A guard written as a comparison is not a parse, and it is not total over its own input domain. <code>value &lt; MINIMUM</code> asks a question about a number; it silently answers &quot;no&quot; for inputs that are not numbers at all.</p>
 <p>Parsing a number means asserting that it <strong>is</strong> one — finite first, then in range — rather than testing a relation and inferring the rest from the test not having fired.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Any external number: form, query string, JSON, header, config, CSV, spreadsheet, sensor, upstream API.</li><li>Before clamping, bounding, summing, indexing, allocating, or scaling by a value.</li><li>A value passed every check and surfaced as an exception somewhere unrelated.</li><li>Anything involving money, quantities, durations, or identifiers that look numeric.</li><li>Not for: the general parse-don't-validate argument and the injection family (<code>handling-untrusted-input</code>), or how to represent the resulting failure (<code>modeling-errors</code>).</li></ul>
+<ul><li>Any external number: form, query string, JSON, header, config, CSV, spreadsheet, sensor, upstream API.</li><li>Before clamping, bounding, summing, indexing, allocating, or scaling by a value.</li><li>A value passed every check and surfaced as an exception somewhere unrelated.</li><li>Anything involving money, quantities, durations, or identifiers that look numeric.</li><li>Not for: the general parse-don't-validate argument and the injection family (<a class="skill-link" href="/tbaguette-skills/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a>), or how to represent the resulting failure (<a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a>).</li></ul>
 <h2 id="the-order-that-works">The order that works</h2>
 <ol><li><strong>Assert it is a number of the expected kind</strong> — integer versus real, and reject the string forms you did not intend to accept.</li><li><strong>Assert it is finite.</strong> This is the step everyone skips, and it is the one that makes every later step meaningful.</li><li><strong>Assert the range</strong>, now that comparison means something.</li><li><strong>Convert to the domain type</strong> — cents, a duration, a bounded quantity — and let the rest of the program hold that type rather than a raw number.</li></ol>
 <p>Steps 2 and 3 are not interchangeable. Range-then-finite is the same bug in a different order.</p>

@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A characterization test asserts what the code <em>does</em>, not what it should do. It is a scaffold that makes a refactor observable, and it is the only kind of test whose correct first run is a pass rather than a failure.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>About to change, extract, port, or delete code with no test coverage and no written specification.</li><li>A rewrite must match a legacy component output for output before it may replace it.</li><li>Behavior is known only through the running system, and the people who wrote it are unavailable.</li><li>A dependency or runtime upgrade needs proof that observable output did not move.</li><li>Not for: behavior somebody can actually specify — write the specification as a test instead, via <code>writing-the-failing-test-first</code>.</li><li>Not for: a known defect — that is <code>regression-test-from-bug</code>. Characterization pins bugs deliberately; it does not fix them.</li></ul>
+<ul><li>About to change, extract, port, or delete code with no test coverage and no written specification.</li><li>A rewrite must match a legacy component output for output before it may replace it.</li><li>Behavior is known only through the running system, and the people who wrote it are unavailable.</li><li>A dependency or runtime upgrade needs proof that observable output did not move.</li><li>Not for: behavior somebody can actually specify — write the specification as a test instead, via <a class="skill-link" href="/tbaguette-skills/skills/writing-the-failing-test-first/"><code>writing-the-failing-test-first</code></a>.</li><li>Not for: a known defect — that is <a class="skill-link" href="/tbaguette-skills/skills/regression-test-from-bug/"><code>regression-test-from-bug</code></a>. Characterization pins bugs deliberately; it does not fix them.</li></ul>
 <h2 id="choosing-the-observation-point">Choosing the observation point</h2>
 <p>The pin must survive the refactor, and that is entirely decided before any output is recorded.</p>
 <p><strong>Rule:</strong> the assertion must be expressible without naming a single symbol you intend to rename, move, split, inline, or delete. If the test calls the function you are about to dissolve, the refactor breaks the test and you learn nothing about behavior.</p>

@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -69,8 +69,8 @@
 <p>Every diagnostic is a change to production. Budget its cost, bound its scope, and write its rollback before enabling it — a meaningful fraction of outages are caused by the investigation into a smaller problem.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>The failure cannot be reproduced anywhere else and the evidence only exists live</li><li>About to raise a log level, attach a profiler, take a dump, or flip a debug flag on a running system</li><li>Considering editing a record, replaying a message, or clearing a cache &quot;just to see&quot;</li><li>Extracting logs, dumps, or samples that will contain real user data</li><li>During an incident, when someone proposes a diagnostic under time pressure</li></ul>
-<p>Not for: reasoning about the defect once you have the evidence (<code>diagnosing-before-fixing</code>), or getting a failure to happen on demand elsewhere (<code>reproducing-bugs</code>).</p>
-<p>Not for: deciding what should be emitted in the first place — that's <code>instrumenting-for-observability</code>, design-time work done before any incident exists. This skill is what's safe to switch on live, mid-incident, against whatever's already there.</p>
+<p>Not for: reasoning about the defect once you have the evidence (<a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a>), or getting a failure to happen on demand elsewhere (<a class="skill-link" href="/tbaguette-skills/skills/reproducing-bugs/"><code>reproducing-bugs</code></a>).</p>
+<p>Not for: deciding what should be emitted in the first place — that's <a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a>, design-time work done before any incident exists. This skill is what's safe to switch on live, mid-incident, against whatever's already there.</p>
 <h2 id="the-ladder">The ladder</h2>
 <p>Descend in order. Stop at the first rung that answers the question — most investigations are finished by rung 2 and reach for rung 5 out of habit.</p>
 <ol><li><strong>Existing telemetry.</strong> Metrics, logs, traces, dashboards already collected. Zero marginal cost, and the only rung that is free.</li><li><strong>Read-only queries</strong> against a replica, with a statement timeout and a row limit set before the query is typed.</li><li><strong>Sampled diagnostics.</strong> One-in-N tracing, a debug header on a single request id, one canary instance out of the fleet.</li><li><strong>Passive process inspection.</strong> Sampling profiler, thread dump, process counters, existing admin or health endpoints.</li><li><strong>Stop-the-world capture.</strong> Heap dump, core dump, full snapshot. Drain the instance from the load balancer first, then capture, then decide whether to return it.</li><li><strong>Reproduce in a lower environment</strong> with production-shaped data.</li><li><strong>Mutating production state.</strong> Normally a hard stop. If genuinely required, it is a change: named owner, change record, announced, and reversible.</li></ol>

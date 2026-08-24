@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -69,7 +69,7 @@
 <p>A pipeline is a product whose user is a person waiting, and its budget is their attention. Every design choice is a trade against two failure states: feedback so slow that people stop waiting for it, and results so unreliable that people stop reading them.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Creating a pipeline, adding a stage, or reworking one that has grown organically</li><li>Feedback takes long enough that people context-switch away from the change</li><li>People rerun a red build before reading it, or merge with a failing check</li><li>A failure reproduces only on the runner</li><li>Deciding whether a new check blocks merges, and what a fork's pull request is allowed to touch</li></ul>
-<p>Not for: diagnosing one specific intermittent test (<code>flaky-test-triage</code>), deciding which tests should exist (<code>choosing-test-scope</code>), or making the build itself deterministic (<code>reproducible-environments</code>).</p>
+<p>Not for: diagnosing one specific intermittent test (<a class="skill-link" href="/tbaguette-skills/skills/flaky-test-triage/"><code>flaky-test-triage</code></a>), deciding which tests should exist (<a class="skill-link" href="/tbaguette-skills/skills/choosing-test-scope/"><code>choosing-test-scope</code></a>), or making the build itself deterministic (<a class="skill-link" href="/tbaguette-skills/skills/reproducible-environments/"><code>reproducible-environments</code></a>).</p>
 <h2 id="order-by-cost-to-signal">Order by cost-to-signal</h2>
 <p>The fastest check that can fail must fail first. Ordering is free; parallelism is not.</p>
 <table><thead><tr><th>Stage</th><th>Budget</th><th>Catches</th></tr></thead><tbody><tr><td>Format, lint, config and manifest validation</td><td>under 60s</td><td>typos, style, malformed pipeline and schema files</td></tr><tr><td>Type check or compile</td><td>1–3 min</td><td>missing symbols, signature misuse</td></tr><tr><td>Unit tests</td><td>under 5 min, sharded</td><td>logic defects</td></tr><tr><td>Build and package the artifact</td><td>parallel with tests when independent</td><td>packaging and dependency-resolution breaks</td></tr><tr><td>Integration and contract tests</td><td>5–15 min</td><td>wiring, boundaries, serialization</td></tr><tr><td>End-to-end, device, or browser</td><td>10–30 min, smallest blocking set</td><td>full-stack regressions</td></tr><tr><td>Fuzzing, perf, full matrix, licence and vulnerability sweeps</td><td>nightly or post-merge</td><td>low per-commit yield, high cost</td></tr></tbody></table>

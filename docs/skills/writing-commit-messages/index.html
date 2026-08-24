@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>The message is written for whoever finds this commit in a blame or a bisect years from now and must decide whether it is safe to touch. The diff already states what changed; only the message can state why, and only the author still knows.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Committing anything a future reader might need to revert, backport, or understand out of context</li><li>Squashing a branch into one commit and composing the message that survives</li><li>Reverting, or fixing an earlier commit</li><li>The history under a file reads as &quot;fix&quot;, &quot;wip&quot;, &quot;update&quot;, &quot;address review comments&quot;</li><li>Not for deciding <em>what belongs in</em> the commit — see <code>atomic-commits</code>. Not for reconstructing intent from an existing history — see <code>code-archaeology</code>.</li></ul>
+<ul><li>Committing anything a future reader might need to revert, backport, or understand out of context</li><li>Squashing a branch into one commit and composing the message that survives</li><li>Reverting, or fixing an earlier commit</li><li>The history under a file reads as &quot;fix&quot;, &quot;wip&quot;, &quot;update&quot;, &quot;address review comments&quot;</li><li>Not for deciding <em>what belongs in</em> the commit — see <a class="skill-link" href="/tbaguette-skills/skills/atomic-commits/"><code>atomic-commits</code></a>. Not for reconstructing intent from an existing history — see <a class="skill-link" href="/tbaguette-skills/skills/code-archaeology/"><code>code-archaeology</code></a>.</li></ul>
 <h2 id="the-subject-line-is-an-index-entry">The subject line is an index entry</h2>
 <p>It appears in one-line logs, bisect output, blame, tag ranges, and release notes. It is read at least a hundred times per reading of the body.</p>
 <ul><li><strong>Under 50 characters</strong>, imperative mood, capitalized, no trailing period. Imperative because the subject completes &quot;applying this commit will ___&quot;, and because tool-generated subjects (revert, merge, cherry-pick) already use it — mixed moods make a log unscannable.</li><li><strong>State the effect, not the mechanism.</strong> &quot;Fix crash on empty cache&quot; beats &quot;Add null check in cache lookup&quot;. The mechanism is in the diff; the effect is what a bisector is scanning for.</li><li><strong>Pass the distinguishability test</strong>: put it beside the other 40 subjects in this file's history. If it could be any of them — &quot;Fix bug&quot;, &quot;Update handler&quot;, &quot;Refactor&quot; — it is an index entry that indexes nothing.</li><li>Wrap the body at 72 characters. Tools indent it, and terminals still wrap at 80.</li></ul>

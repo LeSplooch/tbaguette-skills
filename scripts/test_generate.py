@@ -241,6 +241,70 @@ def check_freshness_window() -> None:
         shutil.rmtree(non_repo, ignore_errors=True)
 
 
+def check_skill_links_end_to_end(docs: Path, base_path: str) -> None:
+    """Every skill cross-reference on the built site, checked against the pages
+    that actually exist beside it. The unit tests cover the linking rules; this
+    covers the wiring — base_path, the update-notes path, and the claim that no
+    link is dead."""
+    print("skill cross-reference links")
+    slugs = {p.name for p in (docs / "skills").iterdir() if p.is_dir()}
+    total = 0
+    broken: list[str] = []
+    unprefixed: list[str] = []
+    for page in sorted(docs.rglob("index.html")):
+        for href in re.findall(
+            r'class="skill-link[^"]*" href="([^"]*)"', page.read_text(encoding="utf-8")
+        ):
+            total += 1
+            if base_path and not href.startswith(base_path + "/"):
+                unprefixed.append(f"{page.name}: {href}")
+            if href.strip("/").split("/")[-1] not in slugs:
+                broken.append(f"{page.relative_to(docs)}: {href}")
+
+    check(f"the built site carries skill cross-reference links ({total} of them)",
+          total > 300)
+    check(f"every one points at a skill page that exists — no dead cross-"
+          f"references (first offenders: {broken[:3]})", not broken)
+    check(f"every one carries the deployment base path, so they resolve on the "
+          f"published site and not only when served from a domain root "
+          f"(first offenders: {unprefixed[:3]})", not unprefixed)
+
+    index = (docs / "index.html").read_text(encoding="utf-8")
+    check("the update notes link their skill mentions too",
+          f'class="skill-link" href="{base_path}/skills/orchestrating-work-end-to-end/"'
+          in index)
+    check("...but a code span in those notes that is not a skill stays plain — "
+          "`UPDATES.md` linked to a nonexistent /skills/UPDATES.md/ until the "
+          "notes path got the same known-slug filter build_content already used",
+          "/skills/UPDATES.md/" not in index and "<code>UPDATES.md</code>" in index)
+
+    own = (docs / "skills" / "naming-things" / "index.html").read_text(encoding="utf-8")
+    check("a page never links to itself",
+          f'class="skill-link" href="{base_path}/skills/naming-things/"' not in own)
+
+    # formidable is the page with two link systems on it at once, which is the
+    # only place they could collide. Its reference panels cross-reference each
+    # other by *filename* ("harden.md"), which resolves to an on-page anchor;
+    # its body cross-references another *skill* by slug, which resolves to that
+    # skill's page. Measured, not assumed: the panels contain no slug mentions
+    # at all, so the real check is that adding slug linking left the 6 anchor
+    # links untouched.
+    formidable = (docs / "skills" / "formidable" / "index.html").read_text(encoding="utf-8")
+    check("formidable's body links the one other skill it names",
+          f'class="skill-link" href="{base_path}/skills/knowing-when-to-stop/"' in formidable)
+    check("`tokens` in that same body stays plain — it names formidable's own "
+          "tokens command, not a skill, and there is no skill by that name",
+          "<code>tokens</code>" in formidable
+          and f'{base_path}/skills/tokens/' not in formidable)
+    anchors = re.findall(r'href="#((?:cmd|stack)-[a-z-]+)"', formidable)
+    ids = set(re.findall(r'id="([^"]+)"', formidable))
+    dangling = sorted({a for a in anchors if a not in ids})
+    check(f"the reference panels' own relative-.md links all still resolve to "
+          f"real on-page ids ({len(anchors)} of them), undisturbed by the new "
+          f"slug linking (dangling: {dangling[:3]})",
+          len(anchors) > 20 and not dangling)
+
+
 def check_update_notes_source() -> None:
     """_update_notes() against a real file on disk. The parser's own grammar is
     covered in test_content_pipeline; what matters here is the policy generate.py
@@ -414,6 +478,11 @@ def main() -> None:
             "under real data and not just in the template's own fixtures",
             index_html2.index("data-update-notes") < index_html2.index("data-search-root"),
         )
+
+        # Deferred to here rather than run after the first build: half of what
+        # it checks lives in the update notes, and the first build deliberately
+        # had no UPDATES.md to read.
+        check_skill_links_end_to_end(docs, "/tbaguette-skills")
         check(
             "second run returns the same skill count",
             len(content2["skills"]) == len(content["skills"]),

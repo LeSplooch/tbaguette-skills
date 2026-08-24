@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Release notes are read by one person with one question: what must I do, and what do I get? They are a decision aid for an upgrade, not a record of the team's work. Anything that does not move that reader toward a yes or no is a tax they pay in scanning time.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Cutting a release of anything another team, customer, or process consumes</li><li>The release contains a breaking change, a removal, a deprecation, or a required migration</li><li>Turning a generated commit log into something a human can act on</li><li>Consumers are asking in support channels what an upgrade requires</li><li><strong>Not for:</strong> why the change was made → <code>writing-adrs</code>. How to use the new feature → <code>writing-durable-docs</code>. Notes link to both; they do not contain them.</li></ul>
+<ul><li>Cutting a release of anything another team, customer, or process consumes</li><li>The release contains a breaking change, a removal, a deprecation, or a required migration</li><li>Turning a generated commit log into something a human can act on</li><li>Consumers are asking in support channels what an upgrade requires</li><li><strong>Not for:</strong> why the change was made → <a class="skill-link" href="/tbaguette-skills/skills/writing-adrs/"><code>writing-adrs</code></a>. How to use the new feature → <a class="skill-link" href="/tbaguette-skills/skills/writing-durable-docs/"><code>writing-durable-docs</code></a>. Notes link to both; they do not contain them.</li></ul>
 <h2 id="two-artifacts-not-one">Two artifacts, not one</h2>
 <table><thead><tr><th></th><th>Changelog</th><th>Release notes</th></tr></thead><tbody><tr><td>Produced by</td><td>Generation from commits or merged changes</td><td>A human, deliberately</td></tr><tr><td>Coverage</td><td>Complete, every change</td><td>Selective, only what affects a reader</td></tr><tr><td>Order</td><td>Chronological or by type</td><td>By impact on the reader</td></tr><tr><td>Purpose</td><td>Archive and attribution</td><td>Upgrade decision and migration</td></tr></tbody></table>
 <p>Merging them yields either a changelog nobody can act on or notes that are incomplete and therefore untrustworthy. Ship both; the notes link to the changelog for completeness so the notes are free to omit.</p>

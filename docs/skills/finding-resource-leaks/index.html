@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -69,7 +69,7 @@
 <p>A leak is retention, not allocation. The allocation site is merely where the object was born; the defect is the reference that outlives its purpose — which is why reading the allocating code almost never finds it. Detect leaks by measuring growth under steady load, never by inspecting source.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A process is killed for memory, hits a descriptor limit, or exhausts a connection pool</li><li>A scheduled restart, or a &quot;just restart it weekly&quot; note, is holding the system up</li><li>Resource usage climbs across hours or days without a corresponding rise in traffic</li><li>Latency degrades steadily after deploy and recovers on restart</li><li>Duplicate side effects appear, multiplying with uptime — a subscription leak wearing a logic bug's clothes</li></ul>
-<p>Not for: cost per operation at fixed load (<code>performance-profiling</code>), or a bounded queue backing up under real load (<code>rate-limiting-and-backpressure</code>).</p>
+<p>Not for: cost per operation at fixed load (<a class="skill-link" href="/tbaguette-skills/skills/performance-profiling/"><code>performance-profiling</code></a>), or a bounded queue backing up under real load (<a class="skill-link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/"><code>rate-limiting-and-backpressure</code></a>).</p>
 <h2 id="detect-by-growth">Detect by growth</h2>
 <ul><li>Hold offered load constant for at least 4 hours and plot the resource against time. Legitimate use rises then plateaus. A leak rises with a roughly constant slope and never flattens.</li><li><strong>Measure the floor, not the peak.</strong> The value after a forced collection or an idle period is the live set; peaks are noise. A floor that rises across three or more cycles is a leak, and this single measurement removes most false alarms.</li><li>Quantify per operation: Δresource ÷ operations in the window. &quot;4 KB per request&quot; and &quot;one descriptor per failed connect&quot; are actionable. &quot;Memory grows&quot; is not, and it is what most tickets say.</li><li>Project from the slope: at this rate, when does it hit the limit? A leak that takes longer than the deploy interval is real but low priority. One that hits in six hours is an outage on the first quiet weekend.</li><li>Load must be steady. Growth under rising load is capacity, not a leak, and mistaking the two sends people hunting references that do not exist.</li></ul>
 <h2 id="the-resource-table">The resource table</h2>

@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -69,7 +69,7 @@
 <p>The bottleneck is almost never where it feels like it is; experienced engineers guessing at their own code are wrong more often than they are right. Measure the running system, optimize what the measurement names, then measure the whole workload again against a target chosen before any of it started.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Something is reported slow and no measurement exists yet</li><li>An optimization is proposed, in progress, or already merged without a number attached</li><li>Latency, tail behavior, or capacity must be characterized for an SLO or a budget</li><li>Reading a flame graph, sampling profile, or benchmark output</li><li>A benchmark result looks too good to be true</li></ul>
-<p>Not for: growth over time rather than cost per operation (<code>finding-resource-leaks</code>), or capacity questions that are really about queueing and load shedding (<code>rate-limiting-and-backpressure</code>).</p>
+<p>Not for: growth over time rather than cost per operation (<a class="skill-link" href="/tbaguette-skills/skills/finding-resource-leaks/"><code>finding-resource-leaks</code></a>), or capacity questions that are really about queueing and load shedding (<a class="skill-link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/"><code>rate-limiting-and-backpressure</code></a>).</p>
 <h2 id="before-touching-anything">Before touching anything</h2>
 <p>Write down five things: workload, metric, current value, target value, environment. A missing target makes optimization unbounded, and unbounded optimization is how a two-day task becomes a two-week one.</p>
 <ul><li>The target comes from a requirement, not from &quot;faster&quot;. Useful anchors: 16.7 ms per frame at 60 Hz, ~100 ms for an interaction to feel instantaneous, ~1 s before attention drifts, ~10 s before abandonment, and whatever the SLO already promises.</li><li>The baseline is a distribution, not a number. Run ≥ 30 iterations; record p50, p95, p99, and the run-to-run spread. <strong>If the variance between two baseline runs exceeds the improvement you are hunting, fix the measurement before touching the code</strong> — otherwise every result you produce afterward is noise you will interpret as signal.</li><li>Confirm the workload is representative before profiling it. Profiling a fixture optimizes the fixture, and the resulting change frequently makes production slower.</li></ul>

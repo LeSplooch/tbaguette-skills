@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>The dependency graph in the import statements is one of three graphs, and it is the one least likely to hurt you. Two components with no shared code and one shared table are more tightly coupled than two modules that import each other, because nothing will tell them when they disagree.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Before a signature, schema, or shared-behavior change, to enumerate who notices.</li><li>A cycle blocks a build, a test, an extraction, or a deletion.</li><li>Deciding module boundaries, or whether a proposed split is even possible.</li><li>An incident traced to a component that had no visible link to the change.</li><li>Not for: choosing where to put a change once the graph is known (finding-the-seam), or one value's path (tracing-data-flow).</li></ul>
+<ul><li>Before a signature, schema, or shared-behavior change, to enumerate who notices.</li><li>A cycle blocks a build, a test, an extraction, or a deletion.</li><li>Deciding module boundaries, or whether a proposed split is even possible.</li><li>An incident traced to a component that had no visible link to the change.</li><li>Not for: choosing where to put a change once the graph is known (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/finding-the-seam/">finding-the-seam</a>), or one value's path (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/tracing-data-flow/">tracing-data-flow</a>).</li></ul>
 <h2 id="three-graphs-not-one">Three graphs, not one</h2>
 <table><thead><tr><th>Graph</th><th>An edge means</th><th>Lives in</th><th>Breaks when</th></tr></thead><tbody><tr><td>Compile / link</td><td>A needs B's symbols to build</td><td>import, include, use statements; build files</td><td>a signature, type, constant, or visibility changes</td></tr><tr><td>Runtime</td><td>A's execution reaches B's</td><td>DI config, route tables, plugin manifests, dynamic loads, callbacks, service calls, queue topics, cron entries</td><td>behavior, ordering, or timing changes</td></tr><tr><td>Data</td><td>A and B agree on a shape</td><td>schemas, tables, wire formats, file layouts, cache keys, env vars, log and metric fields</td><td>a field changes, with zero shared code</td></tr></tbody></table>
 <p>Only the first is mechanically extractable. The data graph is the one that causes incidents: both sides compile, deploy, and pass their own tests while disagreeing about a field. Every &quot;how did that break, they don't even import each other&quot; is a data edge.</p>

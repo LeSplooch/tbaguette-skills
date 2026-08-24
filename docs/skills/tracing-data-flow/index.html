@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A trace is a written artifact — a chain of file:line hops with what changed at each one. Held in memory it is re-derived every twenty minutes and is wrong by the third hop. The goal is not to understand the module; it is to enumerate every place this value is produced, altered, and read.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A value arrives wrong somewhere far from where it was set.</li><li>Assessing what a field change breaks: every writer and every reader must be named.</li><li>A name appears in two places with no visible path between them.</li><li>Auditing where sensitive or user-supplied data reaches.</li><li>Not for: diagnosing why a system misbehaves when the value is not yet identified (systematic-debugging), or module-level coupling (mapping-dependencies).</li></ul>
+<ul><li>A value arrives wrong somewhere far from where it was set.</li><li>Assessing what a field change breaks: every writer and every reader must be named.</li><li>A name appears in two places with no visible path between them.</li><li>Auditing where sensitive or user-supplied data reaches.</li><li>Not for: diagnosing why a system misbehaves when the value is not yet identified (systematic-debugging), or module-level coupling (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/mapping-dependencies/">mapping-dependencies</a>).</li></ul>
 <h2 id="anatomy-of-a-trace">Anatomy of a trace</h2>
 <p>Four node types. Miss one and the trace is wrong, not incomplete.</p>
 <ul><li><strong>Source</strong> — where the value enters the system: a wire payload, a database read, a config or env lookup, a clock, a random draw, a literal default. Every trace terminates upward at a source; if yours does not, you stopped early.</li><li><strong>Transform</strong> — parse, normalize, cast, round, truncate, encode, redact. Every transform is a chance for the value to change meaning without changing name.</li><li><strong>Sink</strong> — where it is observed: a query, a response, a log, a metric, a branch condition.</li><li><strong>Silent event</strong> — the four below. These are what make traces wrong.</li></ul>

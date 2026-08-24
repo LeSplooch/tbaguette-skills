@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -227,9 +227,11 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-08-24">24 Aug 2026</time>
-    <span class="notes__entry-title">The site now says what changed</span>
+    <span class="notes__entry-title">Skills link to each other, and the site says what changed</span>
   </h3>
   <ul class="notes__bullets">
+    <li>Every mention one skill makes of another is now a link to that skill’s page — 362 of them across the site. The library is densely cross-referenced and none of it was navigable before; <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> naming <a class="skill-link" href="/tbaguette-skills/skills/regression-test-from-bug/"><code>regression-test-from-bug</code></a> was a dead string.</li>
+    <li>Both forms link: the <code>code</code>-span mentions that run through the bodies and tables, and the bare ones in the “Not for: … (other-skill)” line at the top of most skills. A page never links to itself, and a code span that is not a skill stays plain.</li>
     <li>The landing page carries an <strong>Update notes</strong> section under the “Fresh from the oven” rail: the newest entry’s bullets in full, everything earlier folded behind one disclosure that needs no JavaScript to open.</li>
     <li>Notes come from <code>UPDATES.md</code> at the repo root, not from the commit log, so an entry can say what is different for you rather than which files moved.</li>
     <li>The rail and the notes answer different questions side by side. The rail names <em>which</em> skills changed in the last 48 hours; the notes say <em>what</em> changed, including work that touches no skill at all.</li>
@@ -247,9 +249,9 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="notes__entry-title">Three skills sharpened, and English-only again</span>
   </h3>
   <ul class="notes__bullets">
-    <li><code>least-privilege-design</code> now covers being asked to justify a permission something already holds: check what actually calls it before defending it in the abstract.</li>
-    <li><code>confirming-before-claiming-done</code> closes the gap between “pushed” and “reached the user” — a deploy nothing has fetched yet is not evidence the change landed.</li>
-    <li><code>feature-flagging</code> says to pin the value of a flag that suspends a rule, so a test proves the suspension instead of inheriting whatever the environment happened to have set.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a> now covers being asked to justify a permission something already holds: check what actually calls it before defending it in the abstract.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> closes the gap between “pushed” and “reached the user” — a deploy nothing has fetched yet is not evidence the change landed.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/feature-flagging/"><code>feature-flagging</code></a> says to pin the value of a flag that suspends a rule, so a test proves the suspension instead of inheriting whatever the environment happened to have set.</li>
     <li>The site dropped its eleven translated locales and serves English only. Translated URLs (<code>/fr/</code>, <code>/de/</code>, and the rest) no longer exist. Nothing about installing TBaguette or about skill content changed.</li>
   </ul>
 </li>
@@ -259,9 +261,9 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="notes__entry-title">The spine the rest of the library hangs off</span>
   </h3>
   <ul class="notes__bullets">
-    <li>New skill: <code>orchestrating-work-end-to-end</code>. Invoke it when a request will take more than one edit — it routes the work to a track, names the phase you are in, and says what evidence opens the next one. It is the skill that sequences the other ninety-one.</li>
+    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a>. Invoke it when a request will take more than one edit — it routes the work to a track, names the phase you are in, and says what evidence opens the next one. It is the skill that sequences the other ninety-one.</li>
     <li>The install prompt on the site works out which harness it was pasted into and takes that route, instead of assuming Claude Code and falling through to a filesystem clone.</li>
-    <li><code>rate-limiting-and-backpressure</code>, <code>instrumenting-for-observability</code>, <code>deleting-code</code>, and <code>authoring-a-new-skill</code> each gained a case they previously got wrong.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/"><code>rate-limiting-and-backpressure</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/deleting-code/"><code>deleting-code</code></a>, and <a class="skill-link" href="/tbaguette-skills/skills/authoring-a-new-skill/"><code>authoring-a-new-skill</code></a> each gained a case they previously got wrong.</li>
   </ul>
 </li>
 <li class="notes__entry">
@@ -270,7 +272,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="notes__entry-title">When the model itself is the blocker</span>
   </h3>
   <ul class="notes__bullets">
-    <li>New skill: <code>routing-around-capability-gaps</code> — what to do when the thing being asked for is outside what this model or harness can actually do, rather than quietly delivering something adjacent and calling it done.</li>
+    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> — what to do when the thing being asked for is outside what this model or harness can actually do, rather than quietly delivering something adjacent and calling it done.</li>
     <li>The install instructions warn that a conversation already open when you install will not see the new skills. Start a fresh one.</li>
     <li>The “Fresh from the oven” carousel works again: a click on a tile reaches its skill, dragging no longer swallows that click, the fan sits level in its rail, and it stopped pushing the whole page sideways at narrow widths.</li>
   </ul>
@@ -281,7 +283,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="notes__entry-title">Finishing, and a version you can read</span>
   </h3>
   <ul class="notes__bullets">
-    <li>New skill: <code>finishing-what-you-started</code>, for long runs and multi-part requests where stopping short would go unnoticed. Write the acceptance ledger to a file before starting, and re-measure every number at report time rather than quoting it from memory.</li>
+    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/finishing-what-you-started/"><code>finishing-what-you-started</code></a>, for long runs and multi-part requests where stopping short would go unnoticed. Write the acceptance ledger to a file before starting, and re-measure every number at report time rather than quoting it from memory.</li>
     <li>The installed plugin’s version shows next to the wordmark in the site header, so you can tell at a glance whether what you have matches what is published.</li>
     <li>The skill check is re-asserted every turn rather than only at the start of a session, which is where it used to quietly lapse in long conversations.</li>
   </ul>

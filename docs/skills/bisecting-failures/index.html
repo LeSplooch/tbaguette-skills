@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,12 +64,12 @@
     
   </div>
   <span class="tag skill-article__tag">Debugging and performance</span>
-  <p class="lede">Use when something worked before and is broken now, when the culprit is one of many commits, config keys, dependency upgrades, data rows, or uncommitted edits, when `git bisect` runs into build failures, flaky tests, or merge-heavy history, or when there is no version control to search at all. Covers binary search over any axis of change and writing an unattended bisect script.</p>
+  <p class="lede">Use when something worked before and is broken now, when the culprit is one of many commits, config keys, dependency upgrades, data rows, or uncommitted edits, when <code>git bisect</code> runs into build failures, flaky tests, or merge-heavy history, or when there is no version control to search at all. Covers binary search over any axis of change and writing an unattended bisect script.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Binary search applies to any set of differences you can split in half and test, not just commit history. Bisection converts an unbounded &quot;what broke it&quot; question into ⌈log₂ n⌉ mechanical runs, which is why it beats reading the diff whenever n exceeds about 20.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A known-good state and a known-bad state exist and something between them is the cause</li><li>The diff between them is too large to read, or spans repos you do not control</li><li>A dependency upgrade, config change, or data import preceded the failure</li><li>The working tree has accumulated many edits and one of them breaks the build</li><li>Reading the change set has already failed once</li></ul>
-<p>Not for: a failure with no known-good state (nothing to bisect between — find the defect directly), or a test that fails at an unmeasured rate (<code>reproducing-bugs</code> first, then come back with a number).</p>
+<p>Not for: a failure with no known-good state (nothing to bisect between — find the defect directly), or a test that fails at an unmeasured rate (<a class="skill-link" href="/tbaguette-skills/skills/reproducing-bugs/"><code>reproducing-bugs</code></a> first, then come back with a number).</p>
 <h2 id="preconditions-in-order">Preconditions, in order</h2>
 <ol><li><strong>Verify both ends by running the test.</strong> Assuming the old version was good is the most common way a whole search is wasted; roughly one time in five it was never good and you are searching an empty interval.</li><li><strong>Have a test that discriminates.</strong> Deterministic, or with a measured reproduction rate. Narrow: a single case, not the suite.</li><li><strong>Make each step independent.</strong> Clean build outputs, reset database and caches, reinstall dependencies from the candidate's own lockfile. Stale artifacts leaking between steps is the number one cause of a confidently wrong bisect answer.</li><li><strong>Do the cost arithmetic.</strong> ⌈log₂ n⌉ runs: 1,000 candidates is 10 runs, 1,000,000 is 20. At 20 minutes per run that is 3+ hours — reduce the test before starting, not after run 6.</li></ol>
 <h2 id="the-axes">The axes</h2>

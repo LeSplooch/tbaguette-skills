@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -69,7 +69,7 @@
 <p>Shell expands text and then splits and globs the result; quoting is not politeness, it is the mechanism that turns that off. <code>set -e</code> is a seatbelt with documented holes rather than error handling, and the shell you tested in is rarely the shell that will run the script.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Writing a script that runs somewhere you do not control: a CI runner, a container image, a BSD or Alpine host, a colleague's laptop</li><li>A script fails only in CI, only on macOS, or only for one person</li><li>Symptoms: <code>[: too many arguments</code>, <code>unbound variable</code>, <code>bad substitution</code>, a loop whose variables are unchanged afterwards, <code>rm</code> treating a filename as an option</li><li>Auditing a script that outgrew its one-off origin</li></ul>
-<p>Not for: deciding whether the automation should exist at all (<code>automating-repetition</code>), or pinning the tools it invokes (<code>reproducible-environments</code>).</p>
+<p>Not for: deciding whether the automation should exist at all (<a class="skill-link" href="/tbaguette-skills/skills/automating-repetition/"><code>automating-repetition</code></a>), or pinning the tools it invokes (<a class="skill-link" href="/tbaguette-skills/skills/reproducible-environments/"><code>reproducible-environments</code></a>).</p>
 <h2 id="quoting-splitting-globbing">Quoting, splitting, globbing</h2>
 <p>An unquoted expansion is split on <code>IFS</code> (space, tab, newline) and every resulting field is then glob-expanded against the filesystem. Quote every expansion and treat an unquoted one as a deliberate, commented request for splitting.</p>
 <table><thead><tr><th>Form</th><th>Behavior</th></tr></thead><tbody><tr><td><code>&quot;$@&quot;</code></td><td>Each argument stays one word; an empty list expands to nothing. The only correct argument forwarding.</td></tr><tr><td><code>$@</code>, <code>$*</code></td><td>Split and globbed. <code>&quot;$*&quot;</code> joins into one word with the first <code>IFS</code> character.</td></tr><tr><td><code>x=$y</code>, <code>case $y in</code></td><td>The two contexts that never split. Quoting is optional there, and harmless.</td></tr><tr><td><code>[ $x = y ]</code></td><td>A syntax error when <code>$x</code> is empty or contains a space. Write <code>[ &quot;$x&quot; = y ]</code>.</td></tr><tr><td><code>for f in *.log</code></td><td>POSIX leaves the literal <code>*.log</code> when nothing matches; guard with <code>[ -e &quot;$f&quot; ] || continue</code>.</td></tr></tbody></table>

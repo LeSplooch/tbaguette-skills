@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Pick from workload shape and failure tolerance, never from language fashion. Most concurrency pain is a model-selection error, and no amount of careful locking repairs a model that does not fit the work.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Starting any component that handles more than one thing at once, or adding a background worker, scheduler, or parallel path.</li><li>Deciding shared mutable state versus message passing — a design decision, not an implementation detail.</li><li>Symptoms: latency high while CPU sits idle, p99 far above p50, pool exhaustion, memory climbing until OOM, deadlock that only appears under production load.</li><li>Not for: diagnosing a specific existing race or deadlock (debugging-concurrency), or setting queue bounds and shedding policy once the model is chosen (rate-limiting-and-backpressure).</li></ul>
+<ul><li>Starting any component that handles more than one thing at once, or adding a background worker, scheduler, or parallel path.</li><li>Deciding shared mutable state versus message passing — a design decision, not an implementation detail.</li><li>Symptoms: latency high while CPU sits idle, p99 far above p50, pool exhaustion, memory climbing until OOM, deadlock that only appears under production load.</li><li>Not for: diagnosing a specific existing race or deadlock (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/debugging-concurrency/">debugging-concurrency</a>), or setting queue bounds and shedding policy once the model is chosen (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">rate-limiting-and-backpressure</a>).</li></ul>
 <h2 id="three-questions-in-order">Three questions, in order</h2>
 <ol><li><strong>What is the work waiting on?</strong> Measure the split between on-CPU time and time blocked in syscalls. Above ~70% waiting, you want concurrency (overlap). Above ~70% on-CPU, you want parallelism or — first — a better algorithm. Concurrency never makes CPU-bound work faster; it makes it slower and harder to debug.</li><li><strong>How many units at peak?</strong> Under ~100, almost any model works and you should pick for debuggability. Into the thousands, OS threads start losing to stack reservations (typically 512KB–8MB each) and scheduler overhead. Past ~10k concurrent waits, you need async or a lightweight-task runtime.</li><li><strong>Interactive or batch?</strong> Interactive means a latency budget and a real cancellation story. Batch means throughput and the freedom to redo work, which makes queues far more attractive.</li></ol>
 <h2 id="the-models">The models</h2>

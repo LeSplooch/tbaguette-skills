@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-24T02:42:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T02:42:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-24T03:23:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-24T03:23:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,11 +64,11 @@
     
   </div>
   <span class="tag skill-article__tag">Landing changes</span>
-  <p class="lede">Use when starting work that shouldn&#x27;t touch the current checkout, before running a multi-step plan you might need to abandon cleanly, or when several tasks are about to run against the same repo at once. Covers judging whether isolation is worth its setup cost, detecting when you&#x27;re already isolated, preferring a native isolated-workspace tool over a manual git worktree, and worktree placement, safety, and cleanup.</p>
+  <p class="lede">Use when starting work that shouldn't touch the current checkout, before running a multi-step plan you might need to abandon cleanly, or when several tasks are about to run against the same repo at once. Covers judging whether isolation is worth its setup cost, detecting when you're already isolated, preferring a native isolated-workspace tool over a manual git worktree, and worktree placement, safety, and cleanup.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A worktree is a second checkout of the same repository on its own branch, so work that goes wrong can be thrown away without touching the checkout something else depends on staying clean — your own current branch a step from now, another agent's in-flight edits, a colleague's review. That protection costs a full setup cycle (install, build) and leaves a workspace on disk that has to be remembered and removed later. Isolation is worth choosing deliberately, not reaching for automatically; once it's chosen, prefer whatever isolated-workspace tool your harness already provides over building one from git plumbing yourself.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Starting work substantial or risky enough that you want a clean way to abandon it.</li><li>Before running a multi-step plan, alongside <code>working-a-plan-task-by-task</code> — a bad step partway through shouldn't cost you the checkout you started from.</li><li>Several independent tasks about to run against the same repo at once, pairing with <code>fanning-out-independent-work</code> — each one needs a workspace nothing else is writing to concurrently.</li><li>The current checkout already has uncommitted work sitting in it — yours, a colleague's, another agent's — that a new change would step on.</li><li>Not for: deciding whether to merge, rebase, or discard a finished branch (see <code>landing-a-finished-branch</code>).</li></ul>
+<ul><li>Starting work substantial or risky enough that you want a clean way to abandon it.</li><li>Before running a multi-step plan, alongside <a class="skill-link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/"><code>working-a-plan-task-by-task</code></a> — a bad step partway through shouldn't cost you the checkout you started from.</li><li>Several independent tasks about to run against the same repo at once, pairing with <a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a> — each one needs a workspace nothing else is writing to concurrently.</li><li>The current checkout already has uncommitted work sitting in it — yours, a colleague's, another agent's — that a new change would step on.</li><li>Not for: deciding whether to merge, rebase, or discard a finished branch (see <a class="skill-link" href="/tbaguette-skills/skills/landing-a-finished-branch/"><code>landing-a-finished-branch</code></a>).</li></ul>
 <h2 id="detect-before-you-build">Detect before you build</h2>
 <p>Before creating anything, find out whether the question is already settled:</p>
 <pre class="prose-code-block"><code>git rev-parse --git-dir

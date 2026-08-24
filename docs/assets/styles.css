@@ -20,7 +20,7 @@
   8c. Update notes (what changed, in words, read from UPDATES.md)
   9. Category sections + card grid + card (incl. change-badge: new/updated)
   10. Breadcrumb
-  11. Article: lede, prose, tables, code, lists
+  11. Article: lede, prose, tables, code, lists (incl. skill cross-references)
   12. Tabs (formidable)
   13. Prev/next + see-also
   14. Footer
@@ -1855,6 +1855,102 @@ code {
   background: color-mix(in oklch, var(--text-accent) 12%, transparent);
 }
 
+/* --- skill cross-references -------------------------------------------
+   One skill naming another. Two shapes for the same job, because the corpus
+   writes the reference two ways: usually as a `code` chip, and as bare prose
+   inside the "Not for: ... (other-skill)" line at the top of most skills.
+
+   Deliberately unscoped (a.skill-link, not .prose a.skill-link): the same
+   reference has to look the same in a skill's body, inside formidable's tab
+   panels, and in the landing page's update notes, which are three different
+   containers. Sitting immediately after .prose a is what settles the tie --
+   both are one class and one element, so source order decides, and every
+   property .prose a sets is restated here rather than left to leak through.
+
+   The chip form carries no permanent underline -- at 350+ of them across the
+   site, most packed into reference tables, permanent underlines turn the
+   densest pages into a thicket -- so the channel that says "link" has to be
+   something else, and it has to be measurable. It is the ring: a hairline
+   every linked chip has and no ordinary `code` chip has, which is presence
+   against absence rather than one colour against another, and survives a
+   reader who cannot separate gold from cream. The underline arrives on hover
+   and focus, where it confirms the target.
+
+   Every value below was measured on the built page in both themes, and the
+   two that look arbitrary are not. The fill mixes into --bg rather than into
+   --surface-hover because the first attempt did the latter and shipped a real
+   failure: in the flour theme that tint *darkens* the chip toward --text-accent
+   (gold-800, already the palette's dark accent step), closing the gap to
+   3.7:1 against a 4.5:1 floor. Mixing toward the page ground moves the fill
+   away from the text in whichever direction that theme needs -- darker in
+   crust, lighter in flour -- and lands at 7.2:1 and 4.9:1. The ring at 75% of
+   --text-accent is the lowest step that clears the 3:1 non-text floor against
+   its own fill in *both* themes (4.7:1 and 3.1:1); 60% passes in crust and
+   fails in flour, which is exactly the trap the fill fell into.
+   --------------------------------------------------------------------- */
+
+a.skill-link {
+  color: var(--text-accent);
+  text-decoration: none;
+  background: none;
+  border-radius: 6px;
+}
+
+/* inset box-shadow rather than a real border: a border would add 2px to the
+   chip's width and nudge every line of a dense table. The forced-colors block
+   below swaps in a real one, since a shadow is dropped entirely there. */
+a.skill-link > code {
+  color: var(--text-accent);
+  background: color-mix(in oklch, var(--accent) 10%, var(--bg));
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--text-accent) 75%, transparent);
+  text-decoration: inherit;
+  text-underline-offset: 0.2em;
+  transition: box-shadow var(--duration-micro) var(--ease-out);
+}
+
+a.skill-link:hover,
+a.skill-link:focus-visible {
+  text-decoration: underline;
+}
+
+/* Hover firms the ring and adds the underline, and deliberately leaves the
+   fill alone: the flour theme has only 0.35 of headroom above the contrast
+   floor at rest, and spending it on a fill shift nobody would notice next to
+   an underline appearing is a bad trade. */
+a.skill-link:hover > code,
+a.skill-link:focus-visible > code {
+  box-shadow: inset 0 0 0 1px var(--text-accent);
+}
+
+/* The bare form has no chip to carry the fill and the ring, so it takes the
+   site's ordinary inline-link treatment instead -- a permanent soft underline
+   that firms up on hover. Colour alone was never an option here. */
+a.skill-link--bare {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--text-accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+a.skill-link--bare:hover,
+a.skill-link--bare:focus-visible {
+  text-decoration-color: currentColor;
+  background: color-mix(in oklch, var(--text-accent) 12%, transparent);
+}
+
+/* Forced colours flatten every tint and ring above to the system palette, so
+   the chip stops being distinguishable by fill. LinkText plus a real border
+   is the substitute -- the same information, drawn with the two things a
+   forced palette still honours. */
+@media (forced-colors: active) {
+  a.skill-link > code {
+    color: LinkText;
+    border: 1px solid LinkText;
+    box-shadow: none;
+  }
+}
+
 /* body_html is injected verbatim (see templates.py) so we can't wrap a
    <table> in a scroll container without parsing content we've been told not
    to re-parse. Instead the table is its own scroll container: `display:
@@ -2141,7 +2237,8 @@ code {
   .card, .theme-toggle__icon, .search__field, .tabs__tab,
   .prevnext__link, .see-also__name, .site-footer__categories a,
   .skip-link, .prose a, .prose tbody tr,
-  .notes__earlier-summary, .notes__earlier-summary::before {
+  .notes__earlier-summary, .notes__earlier-summary::before,
+  a.skill-link > code, a.skill-link--bare {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }

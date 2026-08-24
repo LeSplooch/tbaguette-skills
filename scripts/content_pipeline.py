@@ -211,7 +211,8 @@ def _load_json_map(path: Path) -> dict[str, str]:
 
 
 def build_content(
-    skills_root: str, *, locale: str | None = None, locale_root: str | None = None
+    skills_root: str, *, locale: str | None = None, locale_root: str | None = None,
+    resolve_skill_link: Callable[[str], str] | None = None,
 ) -> dict:
     """Parse every skill under skills_root and assemble the content.json dict.
 
@@ -222,6 +223,15 @@ def build_content(
     directory): every skill file is then looked up under locale_root first,
     falling back to skills_root file-by-file when the translated file
     doesn't exist yet -- see build_plain_skill_entry / build_formidable_skill_entry.
+
+    Raises ValueError if a skill directory isn't covered by CATEGORIES, or if
+    resolve_skill_link, when given, turns every mention one skill makes of
+    another into a link to that skill's page. It receives a slug and returns
+    the href for it; the "is this actually a skill, and is it this page's own
+    slug" filtering happens here (see make_skill_mention_resolver), so the
+    caller only has to know how to build a URL. Omitted -- which is what a
+    standalone `python3 scripts/content_pipeline.py` run does -- mentions stay
+    plain <code>, because there is no base path to build an href from.
 
     Raises ValueError if a skill directory isn't covered by CATEGORIES, or if
     a category lists a skill_slug that doesn't exist on disk -- both would
@@ -246,6 +256,11 @@ def build_content(
 
     discovered_slugs = list_skill_slugs(root)
 
+    # One set for the whole build, so a mention only ever links to something
+    # that actually exists on disk -- a slug that was renamed or removed simply
+    # stops linking, rather than shipping 92 pages of 404s.
+    known_slugs = set(discovered_slugs)
+
     skills: dict[str, dict] = {}
     for slug in discovered_slugs:
         category = category_by_skill_slug.get(slug)
@@ -258,15 +273,23 @@ def build_content(
         locale_skill_dir = (locale_path / "skills" / slug) if locale_path else None
         fallback_description = translated_descriptions.get(slug)
         category_title = translated_categories.get(category["slug"], category["title"])
+        # Rebuilt per skill, because self-suppression needs to know whose page
+        # this is -- see make_skill_mention_resolver.
+        mention_resolver = (
+            make_skill_mention_resolver(known_slugs, resolve_skill_link, current_slug=slug)
+            if resolve_skill_link else None
+        )
         if slug == FORMIDABLE_SLUG:
             skills[slug] = build_formidable_skill_entry(
                 skill_dir, category, category_title=category_title,
                 locale_skill_dir=locale_skill_dir, fallback_description=fallback_description,
+                resolve_skill_link=mention_resolver,
             )
         else:
             skills[slug] = build_plain_skill_entry(
                 skill_dir, category, category_title=category_title,
                 locale_skill_dir=locale_skill_dir, fallback_description=fallback_description,
+                resolve_skill_link=mention_resolver,
             )
 
     for category in CATEGORIES:
@@ -308,6 +331,7 @@ def build_plain_skill_entry(
     skill_dir: Path, category: dict, *,
     category_title: str | None = None,
     locale_skill_dir: Path | None = None, fallback_description: str | None = None,
+    resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> dict:
     """Build the schema entry for one of the 73 ordinary (non-formidable) skills.
 
@@ -336,13 +360,23 @@ def build_plain_skill_entry(
 
     frontmatter, body = split_frontmatter(read_text(source_dir / SKILL_FILE_NAME))
     description = frontmatter["description"] if translated else (fallback_description or frontmatter["description"])
-    body_html = render_markdown_body(strip_title_heading(body))
+    body_html = render_markdown_body(
+        strip_title_heading(body), resolve_skill_link=resolve_skill_link
+    )
     return {
         "slug": skill_dir.name,
         "name": frontmatter["name"],
         "category_slug": category["slug"],
         "category_title": category_title if category_title is not None else category["title"],
         "description": description,
+        # The plain string above stays the source of truth for the <meta>
+        # description and for the card summary, which is itself inside an <a>
+        # and could not hold a nested link. This rendered twin exists only for
+        # the page lede, which is ordinary prose and where a skill naming
+        # another skill should be as clickable as it is in the body.
+        "description_html": render_inline_markdown(
+            description, resolve_skill_link=resolve_skill_link
+        ),
         "summary": summarize_description(description),
         "body_html": body_html,
         "is_formidable": False,
@@ -354,6 +388,7 @@ def build_formidable_skill_entry(
     skill_dir: Path, category: dict, *,
     category_title: str | None = None,
     locale_skill_dir: Path | None = None, fallback_description: str | None = None,
+    resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> dict:
     """Build the schema entry for formidable, including its inlined sub-pages.
 
@@ -413,15 +448,21 @@ def build_formidable_skill_entry(
     resolve_relative_link = make_formidable_link_resolver(anchor_id_by_filename_stem)
 
     body_html = render_markdown_body(
-        strip_title_heading(body), resolve_relative_link=resolve_relative_link
+        strip_title_heading(body),
+        resolve_relative_link=resolve_relative_link,
+        resolve_skill_link=resolve_skill_link,
     )
 
     formidable_stacks = [
-        render_formidable_subdocument(path, "stack", resolve_relative_link)
+        render_formidable_subdocument(
+            path, "stack", resolve_relative_link, resolve_skill_link=resolve_skill_link
+        )
         for path in resolved_stack_paths
     ]
     formidable_commands = [
-        render_formidable_subdocument(path, "cmd", resolve_relative_link)
+        render_formidable_subdocument(
+            path, "cmd", resolve_relative_link, resolve_skill_link=resolve_skill_link
+        )
         for path in resolved_reference_paths
         if path.stem != "craft-floor"
     ]
@@ -432,6 +473,14 @@ def build_formidable_skill_entry(
         "category_slug": category["slug"],
         "category_title": category_title if category_title is not None else category["title"],
         "description": description,
+        # The plain string above stays the source of truth for the <meta>
+        # description and for the card summary, which is itself inside an <a>
+        # and could not hold a nested link. This rendered twin exists only for
+        # the page lede, which is ordinary prose and where a skill naming
+        # another skill should be as clickable as it is in the body.
+        "description_html": render_inline_markdown(
+            description, resolve_skill_link=resolve_skill_link
+        ),
         "summary": summarize_description(description),
         "body_html": body_html,
         "is_formidable": True,
@@ -444,7 +493,8 @@ def build_formidable_skill_entry(
     if craft_floor_path.is_file():
         resolved_craft_floor, _ = resolve(craft_floor_path, locale_reference_dir)
         craft_floor_doc = render_formidable_subdocument(
-            resolved_craft_floor, "cmd", resolve_relative_link
+            resolved_craft_floor, "cmd", resolve_relative_link,
+            resolve_skill_link=resolve_skill_link,
         )
         entry["formidable_craft_floor_html"] = craft_floor_doc["html"]
 
@@ -452,7 +502,8 @@ def build_formidable_skill_entry(
 
 
 def render_formidable_subdocument(
-    path: Path, anchor_prefix: str, resolve_relative_link: Callable[[str], str | None]
+    path: Path, anchor_prefix: str, resolve_relative_link: Callable[[str], str | None],
+    resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> dict:
     """Render one formidable reference/*.md or reference/stacks/*.md file.
 
@@ -476,6 +527,7 @@ def render_formidable_subdocument(
         body,
         heading_id_prefix=f"{section_id}-",
         resolve_relative_link=resolve_relative_link,
+        resolve_skill_link=resolve_skill_link,
     )
     return {"id": section_id, "title": humanize_filename(path.stem), "html": html}
 
@@ -714,8 +766,76 @@ _INLINE_TOKEN_RE = re.compile(
 )
 
 
+# A bare cross-reference in prose: a lowercase hyphenated token, not touching a
+# word character, another hyphen, or a slash on either side. The slash guards
+# are what keep "skills/naming-things/SKILL.md" out; the hyphen guards keep
+# "--no-renames" from being read as the slug "no-renames".
+#
+# Deliberately not a list of the 92 real slugs. This matches *slug-shaped*
+# tokens and hands each one to the resolver, which is the only thing that knows
+# what exists -- so a renamed or deleted skill stops linking the moment the
+# directory moves, rather than the day someone remembers to edit a regex here.
+_BARE_SLUG_RE = re.compile(r"(?<![\w/-])([a-z0-9]+(?:-[a-z0-9]+)+)(?![\w/-])")
+
+
+def make_skill_mention_resolver(
+    known_slugs: set[str],
+    resolve: Callable[[str], str],
+    current_slug: str | None = None,
+) -> Callable[[str], str | None]:
+    """Build the callback render_inline_markdown asks about each candidate.
+
+    Returns None -- meaning "render this as ordinary text" -- for anything that
+    is not a real skill, and for the page's own slug. That second case is the
+    one worth naming: 95 of the corpus's mentions are a skill referring to
+    itself, and a link that reloads the page you are already on is worse than
+    no link, because it looks like it will take you somewhere.
+
+    `resolve` builds the actual href and belongs to the caller, not here. The
+    URL depends on the site's base path, which is a deployment fact
+    content_pipeline has no business knowing -- keeping it out is what lets
+    body_html stay the same bytes whether the site is served from a domain root
+    or from /tbaguette-skills/."""
+
+    def resolve_mention(slug: str) -> str | None:
+        if slug == current_slug or slug not in known_slugs:
+            return None
+        return resolve(slug)
+
+    return resolve_mention
+
+
+def _render_plain_run(
+    text: str, resolve_skill_link: Callable[[str], str | None] | None
+) -> str:
+    """HTML-escape a run of plain text, turning bare slug-shaped tokens that
+    the resolver recognizes into links on the way through.
+
+    Only reached for text *between* markdown tokens, so a slug inside a code
+    span, a link's label, or a link's href never arrives here."""
+    if resolve_skill_link is None:
+        return escape_html(text)
+
+    pieces: list[str] = []
+    cursor = 0
+    for match in _BARE_SLUG_RE.finditer(text):
+        href = resolve_skill_link(match.group(1))
+        if href is None:
+            continue
+        pieces.append(escape_html(text[cursor : match.start()]))
+        pieces.append(
+            f'<a class="skill-link skill-link--bare" href="{escape_html(href)}">'
+            f"{escape_html(match.group(1))}</a>"
+        )
+        cursor = match.end()
+    pieces.append(escape_html(text[cursor:]))
+    return "".join(pieces)
+
+
 def render_inline_markdown(
-    text: str, resolve_relative_link: Callable[[str], str | None] | None = None
+    text: str,
+    resolve_relative_link: Callable[[str], str | None] | None = None,
+    resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> str:
     """Render bold/italic/code/link markdown within a single run of text.
 
@@ -728,15 +848,19 @@ def render_inline_markdown(
     cursor = 0
     for match in _INLINE_TOKEN_RE.finditer(text):
         if match.start() > cursor:
-            pieces.append(escape_html(text[cursor : match.start()]))
+            pieces.append(_render_plain_run(text[cursor : match.start()], resolve_skill_link))
 
         if match.group("code") is not None:
-            pieces.append(f"<code>{escape_html(match.group('code'))}</code>")
+            pieces.append(_render_code_span(match.group("code"), resolve_skill_link))
         elif match.group("bold") is not None:
-            inner = render_inline_markdown(match.group("bold"), resolve_relative_link)
+            inner = render_inline_markdown(
+                match.group("bold"), resolve_relative_link, resolve_skill_link
+            )
             pieces.append(f"<strong>{inner}</strong>")
         elif match.group("italic") is not None:
-            inner = render_inline_markdown(match.group("italic"), resolve_relative_link)
+            inner = render_inline_markdown(
+                match.group("italic"), resolve_relative_link, resolve_skill_link
+            )
             pieces.append(f"<em>{inner}</em>")
         else:
             pieces.append(
@@ -747,8 +871,21 @@ def render_inline_markdown(
         cursor = match.end()
 
     if cursor < len(text):
-        pieces.append(escape_html(text[cursor:]))
+        pieces.append(_render_plain_run(text[cursor:], resolve_skill_link))
     return "".join(pieces)
+
+
+def _render_code_span(
+    code: str, resolve_skill_link: Callable[[str], str | None] | None
+) -> str:
+    """`naming-things` -> a link wrapping the code span, when the resolver
+    recognizes it. The <code> stays inside the <a> rather than the other way
+    round so the whole chip is the click target, not just the glyphs."""
+    rendered = f"<code>{escape_html(code)}</code>"
+    href = resolve_skill_link(code) if resolve_skill_link else None
+    if href is None:
+        return rendered
+    return f'<a class="skill-link" href="{escape_html(href)}">{rendered}</a>' 
 
 
 def _render_markdown_link(
@@ -790,6 +927,7 @@ def render_markdown_body(
     *,
     heading_id_prefix: str = "",
     resolve_relative_link: Callable[[str], str | None] | None = None,
+    resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> str:
     """Render a markdown body (without its leading `# Title`) to HTML.
 
@@ -823,16 +961,23 @@ def render_markdown_body(
 
         if _HEADING_RE.match(line):
             html, index = _consume_heading(
-                lines, index, heading_id_prefix, used_heading_ids, resolve_relative_link
+                lines, index, heading_id_prefix, used_heading_ids,
+                resolve_relative_link, resolve_skill_link,
             )
         elif _FENCE_RE.match(line.strip()):
             html, index = _consume_fenced_code_block(lines, index)
         elif _is_table_start(lines, index):
-            html, index = _consume_table(lines, index, resolve_relative_link)
+            html, index = _consume_table(
+                lines, index, resolve_relative_link, resolve_skill_link
+            )
         elif _LIST_ITEM_RE.match(line):
-            html, index = _consume_list(lines, index, resolve_relative_link)
+            html, index = _consume_list(
+                lines, index, resolve_relative_link, resolve_skill_link
+            )
         else:
-            html, index = _consume_paragraph(lines, index, resolve_relative_link)
+            html, index = _consume_paragraph(
+                lines, index, resolve_relative_link, resolve_skill_link
+            )
         blocks.append(html)
 
     return "\n".join(blocks)
@@ -869,6 +1014,7 @@ def _consume_heading(
     heading_id_prefix: str,
     used_heading_ids: set[str],
     resolve_relative_link: Callable[[str], str | None] | None,
+    resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> tuple[str, int]:
     match = _HEADING_RE.match(lines[index])
     level = len(match.group(1))
@@ -876,7 +1022,7 @@ def _consume_heading(
 
     slug = slugify(_plain_text_for_slug(raw_text))
     heading_id = _dedupe_id(f"{heading_id_prefix}{slug}", used_heading_ids)
-    inner_html = render_inline_markdown(raw_text, resolve_relative_link)
+    inner_html = render_inline_markdown(raw_text, resolve_relative_link, resolve_skill_link)
 
     tag = f"h{level}"
     return f'<{tag} id="{heading_id}">{inner_html}</{tag}>', index + 1
@@ -915,7 +1061,10 @@ def _consume_fenced_code_block(lines: list[str], index: int) -> tuple[str, int]:
 
 
 def _consume_table(
-    lines: list[str], index: int, resolve_relative_link: Callable[[str], str | None] | None
+    lines: list[str],
+    index: int,
+    resolve_relative_link: Callable[[str], str | None] | None,
+    resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> tuple[str, int]:
     header_cells = _split_table_row(lines[index])
     body_index = index + 2  # skip the header row and the |---|---| separator
@@ -926,11 +1075,13 @@ def _consume_table(
         body_index += 1
 
     header_html = "".join(
-        f"<th>{render_inline_markdown(cell, resolve_relative_link)}</th>" for cell in header_cells
+        f"<th>{render_inline_markdown(cell, resolve_relative_link, resolve_skill_link)}</th>"
+        for cell in header_cells
     )
     body_html = "".join(
         "<tr>"
-        + "".join(f"<td>{render_inline_markdown(cell, resolve_relative_link)}</td>" for cell in row)
+        + "".join(f"<td>{render_inline_markdown(cell, resolve_relative_link, resolve_skill_link)}</td>"
+            for cell in row)
         + "</tr>"
         for row in body_rows
     )
@@ -952,7 +1103,10 @@ def _split_table_row(line: str) -> list[str]:
 
 
 def _consume_list(
-    lines: list[str], index: int, resolve_relative_link: Callable[[str], str | None] | None
+    lines: list[str],
+    index: int,
+    resolve_relative_link: Callable[[str], str | None] | None,
+    resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> tuple[str, int]:
     """Consume a run of `-`/`1.` list-item lines (with up to one level of nesting).
 
@@ -983,7 +1137,7 @@ def _consume_list(
             break
         cursor += 1
 
-    html, _ = _render_list_entries(entries, 0, resolve_relative_link)
+    html, _ = _render_list_entries(entries, 0, resolve_relative_link, resolve_skill_link)
     return html, cursor
 
 
@@ -991,6 +1145,7 @@ def _render_list_entries(
     entries: list[list],
     start: int,
     resolve_relative_link: Callable[[str], str | None] | None,
+    resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> tuple[str, int]:
     """Recursively render entries[start:] at entries[start]'s indent level.
 
@@ -1006,10 +1161,10 @@ def _render_list_entries(
     parts = [f"<{tag}>"]
     cursor = start
     while cursor < len(entries) and entries[cursor][0] == base_indent:
-        item_html = render_inline_markdown(entries[cursor][2], resolve_relative_link)
+        item_html = render_inline_markdown(entries[cursor][2], resolve_relative_link, resolve_skill_link)
         cursor += 1
         if cursor < len(entries) and entries[cursor][0] > base_indent:
-            nested_html, cursor = _render_list_entries(entries, cursor, resolve_relative_link)
+            nested_html, cursor = _render_list_entries(entries, cursor, resolve_relative_link, resolve_skill_link)
             item_html += nested_html
         parts.append(f"<li>{item_html}</li>")
     parts.append(f"</{tag}>")
@@ -1017,7 +1172,10 @@ def _render_list_entries(
 
 
 def _consume_paragraph(
-    lines: list[str], index: int, resolve_relative_link: Callable[[str], str | None] | None
+    lines: list[str],
+    index: int,
+    resolve_relative_link: Callable[[str], str | None] | None,
+    resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> tuple[str, int]:
     total = len(lines)
     paragraph_lines = [lines[index].strip()]
@@ -1027,7 +1185,7 @@ def _consume_paragraph(
         cursor += 1
 
     text = " ".join(paragraph_lines)
-    return f"<p>{render_inline_markdown(text, resolve_relative_link)}</p>", cursor
+    return f"<p>{render_inline_markdown(text, resolve_relative_link, resolve_skill_link)}</p>", cursor
 
 
 # ---------------------------------------------------------------------------
@@ -1043,7 +1201,9 @@ _UPDATE_BULLET_RE = re.compile(r"^-\s+(.*)$")
 
 
 def parse_update_notes(
-    markdown_text: str, resolve_relative_link: Callable[[str], str | None] | None = None
+    markdown_text: str,
+    resolve_relative_link: Callable[[str], str | None] | None = None,
+    resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> list[dict]:
     """Parse UPDATES.md into ``[{"date", "title", "notes"}, ...]`` in the order
     the file declares, newest first, with each note already rendered to inline
@@ -1132,7 +1292,8 @@ def parse_update_notes(
 
     for entry in entries:
         entry["notes"] = [
-            render_inline_markdown(note, resolve_relative_link) for note in entry["notes"]
+            render_inline_markdown(note, resolve_relative_link, resolve_skill_link)
+            for note in entry["notes"]
         ]
     return entries
 

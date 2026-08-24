@@ -1045,6 +1045,157 @@ class LocaleBuildTests(unittest.TestCase):
             )
 
 
+class SkillMentionLinkingTests(unittest.TestCase):
+    """Cross-references between skills are the corpus's densest structure --
+    503 backticked mentions and 31 bare ones across 89 files -- and until now
+    every one of them rendered as inert text. These cover the linking, and
+    just as much the four places it must NOT reach."""
+
+    @staticmethod
+    def _resolve(slug):
+        return f"/skills/{slug}/"
+
+    def _render(self, text, current=None, known=("naming-things", "deleting-code", "crouton")):
+        resolver = content_pipeline.make_skill_mention_resolver(
+            set(known), self._resolve, current_slug=current
+        )
+        return content_pipeline.render_inline_markdown(text, resolve_skill_link=resolver)
+
+    def test_a_backticked_slug_becomes_a_link_wrapping_the_code_span(self):
+        self.assertEqual(
+            self._render("see `naming-things` first"),
+            'see <a class="skill-link" href="/skills/naming-things/">'
+            "<code>naming-things</code></a> first",
+        )
+
+    def test_a_bare_hyphenated_slug_in_prose_becomes_a_link(self):
+        self.assertEqual(
+            self._render("Not for: wording a single identifier (naming-things)."),
+            "Not for: wording a single identifier "
+            '(<a class="skill-link skill-link--bare" href="/skills/naming-things/">'
+            "naming-things</a>).",
+        )
+
+    def test_a_page_never_links_to_itself(self):
+        out = self._render("`naming-things` and `deleting-code`", current="naming-things")
+        self.assertIn("<code>naming-things</code>", out)
+        self.assertNotIn('href="/skills/naming-things/"', out)
+        self.assertIn('href="/skills/deleting-code/"', out)
+
+    def test_a_code_span_that_is_not_a_skill_stays_plain(self):
+        self.assertEqual(self._render("run `git status` now"),
+                         "run <code>git status</code> now")
+        self.assertEqual(self._render("the `--no-renames` flag"),
+                         "the <code>--no-renames</code> flag")
+
+    def test_a_single_token_slug_only_links_when_backticked(self):
+        """crouton and formidable are ordinary English words. Bare, they are
+        prose; backticked, they are identifiers. This is the whole reason bare
+        linking is restricted to hyphenated slugs."""
+        self.assertEqual(self._render("A crouton is dried bread."),
+                         "A crouton is dried bread.")
+        self.assertIn('href="/skills/crouton/"', self._render("see `crouton`"))
+
+    def test_a_slug_inside_a_path_or_url_is_not_linked(self):
+        for text in ("skills/naming-things/SKILL.md", "read naming-things/SKILL.md"):
+            with self.subTest(text=text):
+                self.assertNotIn("skill-link", self._render(text))
+
+    def test_no_resolver_means_no_links_at_all(self):
+        """content_pipeline run standalone has no base path to build hrefs
+        from, and must still produce valid body HTML."""
+        self.assertEqual(
+            content_pipeline.render_inline_markdown("`naming-things` (deleting-code)"),
+            "<code>naming-things</code> (deleting-code)",
+        )
+
+    def test_fenced_code_blocks_are_never_linked(self):
+        html = content_pipeline.render_markdown_body(
+            "```\ngit log -- naming-things `deleting-code`\n```\n",
+            resolve_skill_link=content_pipeline.make_skill_mention_resolver(
+                {"naming-things", "deleting-code"}, self._resolve),
+        )
+        self.assertNotIn("skill-link", html)
+        self.assertIn("<pre", html)
+
+    def test_linking_reaches_tables_lists_and_bold(self):
+        resolver = content_pipeline.make_skill_mention_resolver(
+            {"naming-things"}, self._resolve)
+        for label, md in (
+            ("table", "| a | b |\n| --- | --- |\n| `naming-things` | x |\n"),
+            ("list", "- see `naming-things`\n"),
+            ("bold", "**`naming-things`**\n"),
+            ("paragraph", "Plain `naming-things` prose.\n"),
+        ):
+            with self.subTest(label):
+                self.assertIn('href="/skills/naming-things/"',
+                              content_pipeline.render_markdown_body(md, resolve_skill_link=resolver))
+
+    @staticmethod
+    def _rendered_html(skill):
+        """Every HTML fragment of one skill that actually reaches a page.
+        formidable's reference tree is inlined into its page; no other skill's
+        is, so nothing else contributes beyond body_html."""
+        parts = [skill["body_html"]]
+        for key in ("formidable_stacks", "formidable_commands"):
+            parts += [doc["html"] for doc in skill.get(key, [])]
+        if skill.get("formidable_craft_floor_html"):
+            parts.append(skill["formidable_craft_floor_html"])
+        return "".join(parts)
+
+    def test_the_real_corpus_links_and_every_href_resolves(self):
+        """The end-to-end claim, counted rather than sampled: every link the
+        real corpus produces points at a slug that exists, nothing links to
+        itself, and the count matches what the source files contain."""
+        import re
+        root = Path(__file__).resolve().parent.parent / "skills"
+        if not root.is_dir():
+            self.skipTest("embedded skills/ not present")
+        known = {p.name for p in root.iterdir() if p.is_dir()}
+        content = content_pipeline.build_content(
+            str(root), resolve_skill_link=lambda slug: f"/skills/{slug}/")
+
+        code_links = bare_links = 0
+        for slug, skill in content["skills"].items():
+            for css_class, href in re.findall(
+                r'class="(skill-link[^"]*)" href="/skills/([^/]+)/"',
+                self._rendered_html(skill),
+            ):
+                self.assertIn(href, known, f"{slug} links to unknown skill {href}")
+                self.assertNotEqual(href, slug, f"{slug} links to itself")
+                if "--bare" in css_class:
+                    bare_links += 1
+                else:
+                    code_links += 1
+
+        # Counted from the source files that actually get rendered, with
+        # fenced blocks and self-mentions removed -- an exact expectation, so a
+        # regression that silently stops linking half the corpus fails here
+        # instead of sliding under a threshold.
+        expected_code = expected_bare = 0
+        multi = sorted((s for s in known if "-" in s), key=len, reverse=True)
+        code_re = re.compile(r"`(" + "|".join(map(re.escape, sorted(known, key=len, reverse=True))) + r")`")
+        bare_re = re.compile(r"(?<![`\w/-])(" + "|".join(map(re.escape, multi)) + r")(?![`\w/-])")
+        rendered_sources = list(root.glob("*/SKILL.md")) + list(
+            (root / "formidable" / "reference").rglob("*.md"))
+        for md in rendered_sources:
+            owner = md.relative_to(root).parts[0]
+            raw = md.read_text(encoding="utf-8")
+            try:
+                body = content_pipeline.split_frontmatter(raw)[1]
+            except ValueError:
+                body = raw
+            body = re.sub(r"```.*?```", "", body, flags=re.S)
+            expected_code += sum(1 for m in code_re.finditer(body) if m.group(1) != owner)
+            expected_bare += sum(1 for m in bare_re.finditer(body) if m.group(1) != owner)
+
+        self.assertEqual(code_links, expected_code,
+                         "every backticked cross-reference in a rendered file should link")
+        self.assertEqual(bare_links, expected_bare,
+                         "every bare cross-reference in a rendered file should link")
+        self.assertGreater(code_links, 300, "sanity: the corpus is densely cross-referenced")
+
+
 class UpdateNotesParsingTests(unittest.TestCase):
     """UPDATES.md is appended to by hand, once per shipped change, and nothing
     else reads it. Every check here is about a mistake made at that moment

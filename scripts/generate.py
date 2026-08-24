@@ -50,6 +50,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -283,8 +284,23 @@ def _fresh_skills(project_root: Path, *, now: datetime) -> dict[str, dict]:
     return fresh
 
 
-def _update_notes(project_root: Path) -> list[dict]:
+def _skill_link_resolver(base_path: str, locale: locales.Locale):
+    """How content_pipeline turns a slug into an href for this build.
+
+    Lives here rather than in the pipeline because base_path and the locale
+    prefix are facts about where this site is being deployed, and body_html
+    should stay the same bytes regardless -- see build_content's own note."""
+    return lambda slug: templates.skill_url(slug, base_path, locale)
+
+
+def _update_notes(project_root: Path,
+                  resolve_mention: Callable[[str], str | None] | None = None) -> list[dict]:
     """UPDATES.md parsed into entries, or [] if the file isn't there.
+
+    resolve_mention must already be a make_skill_mention_resolver, not a bare
+    URL builder: this file's bullets are full of code spans that are not skills
+    (`UPDATES.md`, `/fr/`, `scripts/generate.py`), and an unfiltered resolver
+    turns every one of them into a link to a page that does not exist.
 
     Missing is fine and silent -- a clone that has never shipped a change has
     nothing to say, and the section simply doesn't render. Present but
@@ -295,7 +311,9 @@ def _update_notes(project_root: Path) -> list[dict]:
     if not path.is_file():
         return []
     try:
-        return content_pipeline.parse_update_notes(path.read_text(encoding="utf-8"))
+        return content_pipeline.parse_update_notes(
+            path.read_text(encoding="utf-8"), resolve_skill_link=resolve_mention
+        )
     except ValueError as error:
         raise SystemExit(f"{path}: {error}") from error
 
@@ -411,7 +429,6 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
     now = datetime.now(timezone.utc)
     plugin_version = _plugin_version()
     fresh = _fresh_skills(project_root, now=now)
-    update_notes = _update_notes(project_root)
     last_updated_utc = now.isoformat(timespec="seconds")
 
     if only_locale is None:
@@ -432,10 +449,24 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
     try:
         for locale in build_locales:
             locale_root = None if locale.default else (i18n_root / locale.code)
+            resolve_skill_link = _skill_link_resolver(base_path, locale)
             content = content_pipeline.build_content(
                 str(skills_root),
                 locale=(None if locale.default else locale.code),
                 locale_root=(str(locale_root) if locale_root else None),
+                resolve_skill_link=resolve_skill_link,
+            )
+            # build_content wraps the resolver itself, once per skill, because
+            # only it knows whose page each body belongs to and therefore which
+            # mention would be a self-link. Nothing owns UPDATES.md's bodies
+            # that way, so the wrapping happens here instead -- and it is not
+            # optional: unwrapped, every code span in the notes becomes a link,
+            # `UPDATES.md` and `/fr/` included.
+            update_notes = _update_notes(
+                project_root,
+                content_pipeline.make_skill_mention_resolver(
+                    set(content["skills"]), resolve_skill_link
+                ),
             )
             if locale.default:
                 skill_count = len(content["skills"])
