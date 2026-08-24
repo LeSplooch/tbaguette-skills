@@ -1031,6 +1031,113 @@ def _consume_paragraph(
 
 
 # ---------------------------------------------------------------------------
+# Update notes (UPDATES.md)
+# ---------------------------------------------------------------------------
+
+# "## 2026-08-24 — Title", where the title (and the dash introducing it) is
+# optional. Any of the three dashes people actually type is accepted as the
+# separator, because the alternative is a build that fails on an en dash.
+_UPDATE_HEADING_RE = re.compile(r"^##\s+(\S+)(?:\s*[\u2014\u2013-]\s*(.*?))?\s*$")
+_UPDATE_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+_UPDATE_BULLET_RE = re.compile(r"^-\s+(.*)$")
+
+
+def parse_update_notes(
+    markdown_text: str, resolve_relative_link: Callable[[str], str | None] | None = None
+) -> list[dict]:
+    """Parse UPDATES.md into ``[{"date", "title", "notes"}, ...]`` in the order
+    the file declares, newest first, with each note already rendered to inline
+    HTML.
+
+    The format is deliberately a subset of markdown rather than the full body
+    grammar ``render_markdown_body`` handles: an entry is a level-2 heading
+    carrying an ISO date and an optional title, and its content is a flat list
+    of ``-`` bullets. A bullet may wrap across lines -- the repository's prose
+    wraps at ~76 columns and these notes are sentences, not labels -- and the
+    continuation lines are joined back with a single space.
+
+    Everything above the first heading is preamble (the file explains its own
+    conventions to whoever appends to it next) and is dropped.
+
+    Every way the file can be wrong raises ValueError rather than quietly
+    producing fewer entries. This file is appended to by hand, once per shipped
+    change, by whoever is finishing that change -- exactly the moment a typo is
+    least likely to be noticed and a silently dropped entry is indistinguishable
+    from having remembered to write one. The build is the only thing positioned
+    to catch it.
+    """
+    entries: list[dict] = []
+    current: dict | None = None
+    previous_date: str | None = None
+
+    for number, raw_line in enumerate(markdown_text.splitlines(), start=1):
+        line = raw_line.rstrip()
+        heading = _UPDATE_HEADING_RE.match(line)
+        if heading:
+            date, title = heading.group(1), (heading.group(2) or "").strip()
+            if not _UPDATE_DATE_RE.match(date):
+                raise ValueError(
+                    f"line {number}: update-note headings start with an ISO date "
+                    f'(## YYYY-MM-DD — Title), got "{line}"'
+                )
+            # Same-day entries are allowed -- two changes can ship in one day,
+            # and their file order is the only thing that can order them.
+            if previous_date is not None and date > previous_date:
+                raise ValueError(
+                    f"line {number}: {date} is newer than the {previous_date} entry "
+                    "above it — update notes run newest first, and the top entry is "
+                    "the one the site shows expanded"
+                )
+            if current is not None and not current["notes"]:
+                raise ValueError(
+                    f"line {number}: the {current['date']} entry has no bullets — an "
+                    "entry with a heading and nothing under it says a change shipped "
+                    "without saying what it was"
+                )
+            current = {"date": date, "title": title, "notes": []}
+            entries.append(current)
+            previous_date = date
+            continue
+
+        if current is None:
+            # Preamble, including this file's own H1 and its notes to whoever
+            # appends next. Nothing above the first entry is ever rendered.
+            continue
+
+        stripped = line.strip()
+        if not stripped:
+            continue
+
+        bullet = _UPDATE_BULLET_RE.match(stripped)
+        if bullet:
+            current["notes"].append(bullet.group(1).strip())
+        elif current["notes"]:
+            # A wrapped bullet. Joined with a space rather than a newline: the
+            # result is rendered as one inline run, where a newline would be
+            # collapsed by HTML anyway but would survive into the plain-text
+            # forms (search, meta) as a stray break.
+            current["notes"][-1] = f"{current['notes'][-1]} {stripped}"
+        else:
+            raise ValueError(
+                f"line {number}: prose between the {current['date']} heading and its "
+                f'first bullet is not rendered anywhere — got "{stripped}". Entries '
+                "are bullets only."
+            )
+
+    if current is not None and not current["notes"]:
+        raise ValueError(
+            f"the {current['date']} entry has no bullets — an entry with a heading "
+            "and nothing under it says a change shipped without saying what it was"
+        )
+
+    for entry in entries:
+        entry["notes"] = [
+            render_inline_markdown(note, resolve_relative_link) for note in entry["notes"]
+        ]
+    return entries
+
+
+# ---------------------------------------------------------------------------
 # Script entry point
 # ---------------------------------------------------------------------------
 

@@ -17,6 +17,7 @@
   8. Hero + search
   8b. "Fresh from the oven" rail (recently new/updated skills; a turning
       3D ring wherever motion, width, and forced-colors all allow it)
+  8c. Update notes (what changed, in words, read from UPDATES.md)
   9. Category sections + card grid + card (incl. change-badge: new/updated)
   10. Breadcrumb
   11. Article: lede, prose, tables, code, lists
@@ -1313,6 +1314,241 @@ code {
 }
 
 /* ---------------------------------------------------------------------------
+   8c. Update notes — what changed, in words, below the rail
+
+   Neighbour to 8b and deliberately its opposite in weight: the rail is the
+   loud thing in this band (moving, three-dimensional, twelve cards), so this
+   is quiet — one measure of text, no surface, no border box. Two loud
+   sections stacked would leave the reader nothing to look at first.
+
+   Shares 8b's head treatment exactly (icon, display-face h2, the gilded rule
+   fading right) because they are peers in the same band; repeating it is what
+   makes them read as one "what's new" idea rather than two unrelated widgets.
+
+   Native <details> for the older entries. No JS anywhere in this section — it
+   sits above the search field, so anything that could fail to initialize here
+   would strand the site's primary navigation below a half-rendered block.
+   ------------------------------------------------------------------------- */
+
+/* Matches .fresh's measure so the two gilded rules share a right edge — two
+   rules of different lengths 350px apart read as a mistake at a glance. */
+.notes { margin-top: var(--space-7); max-width: 53rem; }
+
+.notes__head {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding-bottom: var(--space-3);
+}
+
+.notes__head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    color-mix(in oklch, var(--accent) 70%, transparent),
+    color-mix(in oklch, var(--accent) 22%, transparent) 55%,
+    transparent);
+}
+
+/* icon-wheat: the third of the three marks, after the install frame's loaf
+   and the rail's grain. Same rule as 8b's — no mark appears twice in one
+   viewport, or the set reads as a repeated element instead of a system. */
+.notes__icon { color: var(--accent); width: 1.75em; height: 1.75em; }
+
+/* margin: 0 for the same load-bearing reason as .fresh__title — the global h2
+   margin-top would centre the box and drop the text half a line. */
+.notes__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-4);
+  font-weight: 620;
+  color: var(--text-primary);
+}
+
+/* Pushed to the far end of the head, where .fresh__nav sits in the band
+   above, so the two heads share an alignment grid rather than each inventing
+   one. A link and not a .tag: the archive is somewhere you can actually go,
+   and a pill that looks like the neutral "Last 48 hours" label beside it
+   would be a click target disguised as a caption. */
+.notes__history {
+  margin-inline-start: auto;
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-strong);
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out);
+}
+
+.notes__history:hover,
+.notes__history:focus-visible {
+  color: var(--text-accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Space between entries, not a border: 8b's tiles already carry every edge
+   this band can afford. The date's own weight is what separates one entry
+   from the next. */
+.notes__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-6);
+}
+
+.notes__list--earlier { margin-top: var(--space-5); }
+
+/* Section 3's `li + li { margin-top: var(--space-2) }` is written for prose
+   lists, which are not grids, and it *sums* with the gaps declared here:
+   measured before this rule existed, entries sat 32px apart where the scale
+   said 24 and bullets 16px apart where it said 8. Neither number is a step
+   on the space scale — they are two rules quietly disagreeing. The gap wins,
+   because it is the one that knows this is a grid. */
+.notes__list > li + li,
+.notes__bullets > li + li { margin-top: 0; }
+
+.notes__entry-head {
+  margin: 0 0 var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  font-size: var(--text-3);
+  font-weight: 500;
+  line-height: var(--leading-normal);
+}
+
+/* Mono and gold, tabular so a column of dates in the open <details> lines up
+   digit-for-digit. The second channel that keeps this from being colour-only
+   is the face itself: it is the one monospaced run in the whole band. */
+.notes__date {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--text-accent);
+  text-transform: uppercase;
+}
+
+.notes__entry-title {
+  font-family: var(--font-display);
+  font-size: var(--text-4);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+  /* break-word, not anywhere: a title is prose and should break at spaces
+     wherever it can. This is only the escape hatch for the one long word. */
+  overflow-wrap: break-word;
+}
+
+/* 66ch, not the section's 53rem: these are sentences, and 53rem of Work Sans
+   is ~100 characters a line — past the point where the eye reliably finds the
+   start of the next one. The left edge still aligns with everything above it;
+   only the ragged right stops short of the rule. */
+.notes__bullets {
+  margin: 0;
+  padding-inline-start: 1.15em;
+  max-width: var(--measure-prose);
+  display: grid;
+  /* Not --space-2: these bullets wrap to two and three lines, and at
+     --leading-relaxed the lines inside one bullet already sit ~10px apart.
+     An 8px gap would put barely more air between two bullets than between
+     two lines of the same bullet, and the group stops reading as a group. */
+  gap: var(--space-3);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  /* A changelog is where unbreakable identifiers turn up -- a config key, a
+     package name, a flag -- and one of them inside a <code> span is the only
+     content here that can be wider than the column it sits in. `anywhere`
+     rather than `break-word` because it also shrinks the min-content width,
+     which is what stops the token forcing the whole page sideways at 360px
+     instead of merely spilling out of its own box. */
+  overflow-wrap: anywhere;
+}
+
+/* Gold markers, unlike .prose's neutral ones: this list is scanned, not read
+   straight through, and the marker column is what the eye returns to. */
+.notes__bullets li { padding-inline-start: 0.2em; }
+.notes__bullets li::marker { color: var(--accent); }
+
+.notes__bullets code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--text-primary);
+}
+
+.notes__bullets strong { color: var(--text-primary); font-weight: 600; }
+
+.notes__earlier { margin-top: var(--space-5); }
+
+/* list-style: none removes the disclosure triangle in Firefox and Chrome;
+   the ::-webkit- pseudo-element is the same job in older Safari, which
+   ignores the property here. Both are needed and neither is redundant. */
+.notes__earlier-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  list-style: none;
+  cursor: pointer;
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  transition: color var(--duration-micro) var(--ease-out);
+}
+
+.notes__earlier-summary::-webkit-details-marker { display: none; }
+
+.notes__earlier-summary:hover,
+.notes__earlier-summary:focus-visible { color: var(--text-accent); }
+
+/* Drawn, not a glyph: two borders on a rotated box, so it inherits the
+   summary's colour and scales with its type instead of depending on whatever
+   the reader's font happens to have at U+203A. Points right when closed, down
+   when open — the direction is the state's second channel, alongside the
+   label's own "Show N earlier" wording. */
+.notes__earlier-summary::before {
+  content: '';
+  flex: none;
+  width: 0.42em;
+  height: 0.42em;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transform-origin: 55% 45%;
+  transition: transform var(--duration-micro) var(--ease-out);
+}
+
+.notes__earlier[open] > .notes__earlier-summary::before {
+  transform: rotate(135deg);
+}
+
+/* 160ms: the hero band enters on a 40ms cadence -- headline 0, install 40,
+   lede 80, rail 120 -- and this is the next step, not a rounder number. Same
+   `backwards` fill as .fresh: the element's resting style is already visible
+   (unlike .hero__headline and friends, which set opacity: 0 in their base
+   rule), so the from-state has to be applied during the delay or the section
+   pops in at full opacity and then animates from nothing. */
+@media (prefers-reduced-motion: no-preference) {
+  .notes { animation: hero-rise var(--duration-view) var(--ease-out) 160ms backwards; }
+}
+
+/* The gradient rule is invisible in a forced palette, same as 8b's — a solid
+   border in the system's own colour is the substitute. Nothing else here
+   needs help: text, markers and the drawn chevron are all currentColor. */
+@media (forced-colors: active) {
+  .notes__head::after { display: none; }
+  .notes__head { border-bottom: 1px solid CanvasText; }
+}
+
+/* ---------------------------------------------------------------------------
    9. Category sections + card grid + card
    ------------------------------------------------------------------------- */
 
@@ -1915,7 +2151,8 @@ code {
 
   .card, .theme-toggle__icon, .search__field, .tabs__tab,
   .prevnext__link, .see-also__name, .site-footer__categories a,
-  .skip-link, .prose a, .prose tbody tr {
+  .skip-link, .prose a, .prose tbody tr,
+  .notes__history, .notes__earlier-summary, .notes__earlier-summary::before {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }

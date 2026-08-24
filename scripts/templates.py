@@ -429,6 +429,18 @@ _CATEGORY_ICONS = ("icon-wheat", "icon-crust", "icon-grain")
 # _render_fresh_section() for why it is capped rather than exhaustive.
 FRESH_RAIL_LIMIT = 12
 
+# Where a "read the whole file" link points. One constant rather than a URL
+# per call site, so the day this repository moves there is one thing to edit.
+GITHUB_BLOB_BASE = "https://github.com/LeSplooch/tbaguette-skills/blob/master/"
+
+# How many update-note entries reach the page at all. UPDATES.md is append-only
+# and grows without bound; the landing page is not the archive, which is what
+# the "Full history" link beside the heading is for. Only the newest of these
+# is open by default -- see _render_update_notes.
+UPDATE_NOTES_LIMIT = 6
+
+UPDATE_NOTES_SOURCE_PATH = "UPDATES.md"
+
 _THEME_STORAGE_KEY = "tbaguette-theme"
 
 # Runs synchronously in <head>, before first paint, so the stored or
@@ -841,6 +853,7 @@ def _render_install(base_path: str = "", *,
 
 def _render_hero(skill_count: int, category_count: int, base_path: str = "", *,
                   fresh_skills: list[dict] | None = None,
+                  update_notes: list[dict] | None = None,
                   locale: "locales.Locale" = locales.DEFAULT_LOCALE,
                   strings: Strings = ENGLISH_STRINGS) -> str:
     lede = strings.hero_lede_template.format(skill_count=skill_count, category_count=category_count)
@@ -850,6 +863,7 @@ def _render_hero(skill_count: int, category_count: int, base_path: str = "", *,
     {_render_install(base_path, locale=locale, strings=strings)}
     <p class="hero__lede">{escape_html(lede)}</p>
     {_render_fresh_section(fresh_skills or [], base_path)}
+    {_render_update_notes(update_notes or [], base_path)}
     {_render_search_field(base_path, strings)}
   </div>
 </section>"""
@@ -1042,6 +1056,109 @@ def _render_fresh_section(fresh_skills: list[dict], base_path: str = "") -> str:
 </section>"""
 
 
+# Hand-rolled rather than strftime("%d %b %Y"): %b follows the build
+# machine's LC_TIME, so the same commit would render "24 Aug 2026" on one
+# machine and "24 août 2026" on another. The site is English-only (see the
+# 2026-08-23 entry in UPDATES.md itself); a date that quietly localizes to
+# whoever ran the build is a bug, not a feature.
+_MONTH_ABBREVIATIONS = (
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+)
+
+
+def _format_update_date(iso_date: str) -> str:
+    """"2026-08-24" -> "24 Aug 2026". Returns the input unchanged if it isn't
+    the shape this expects — content_pipeline.parse_update_notes already
+    rejects those at parse time, so reaching this path means something built
+    an entry by hand, and showing the raw string beats raising from inside a
+    template."""
+    parts = iso_date.split("-")
+    if len(parts) != 3:
+        return iso_date
+    year, month, day = parts
+    if not (month.isdigit() and 1 <= int(month) <= 12 and day.isdigit()):
+        return iso_date
+    return f"{int(day)} {_MONTH_ABBREVIATIONS[int(month) - 1]} {year}"
+
+
+def _render_update_entry(entry: dict) -> str:
+    """One dated entry: its heading, then its bullets.
+
+    <h3> rather than a styled <p>: this sits under the section's own <h2>, so
+    the entries form a real outline a screen reader can jump between rather
+    than one long undifferentiated list. The <time> is inside the heading
+    because the date is half of what names the entry — several entries share a
+    title shape ("Three skills sharpened"), none share a date."""
+    title = escape_html(entry.get("title", ""))
+    title_html = f'\n    <span class="notes__entry-title">{title}</span>' if title else ""
+    # Already inline HTML from content_pipeline.render_inline_markdown, which
+    # escapes every plain run it passes through — escaping again here would
+    # print the tags.
+    bullets = _join(*(
+        f'    <li>{note}</li>' for note in entry.get("notes", [])
+    ))
+    return f"""<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="{escape_html(entry['date'])}">{escape_html(_format_update_date(entry['date']))}</time>{title_html}
+  </h3>
+  <ul class="notes__bullets">
+{bullets}
+  </ul>
+</li>"""
+
+
+def _render_update_notes(entries: list[dict], base_path: str = "") -> str:
+    """The "Update notes" band, directly below the fresh rail.
+
+    The two are deliberate neighbours answering different questions: the rail
+    names *which* skills changed in the last 48 hours, this says *what*
+    changed — including the changes that touch no skill at all (the site, the
+    install command, the harness manifests), which the rail structurally
+    cannot show.
+
+    Renders nothing when UPDATES.md is missing or empty, on the same reasoning
+    as _render_fresh_section: a section whose only content is the news that it
+    has no content is worse than the space it takes.
+
+    Only the newest entry is open. Everything older sits inside a <details>,
+    which is native — no JavaScript, no ARIA to get wrong, and it still opens
+    for a visitor whose scripts failed to load. That matters more than usual
+    here: this band sits above the search field, and an unbounded changelog
+    unfolding between the two would push the site's primary navigation
+    off-screen for the benefit of readers who mostly want the top entry."""
+    if not entries:
+        return ""
+    shown = entries[:UPDATE_NOTES_LIMIT]
+    newest, earlier = shown[0], shown[1:]
+
+    if earlier:
+        count = len(earlier)
+        noun = "update" if count == 1 else "updates"
+        earlier_html = f"""
+  <details class="notes__earlier">
+    <summary class="notes__earlier-summary">
+      <span class="notes__earlier-label">Show {count} earlier {noun}</span>
+    </summary>
+    <ol class="notes__list notes__list--earlier">
+{_join(*(_render_update_entry(entry) for entry in earlier))}
+    </ol>
+  </details>"""
+    else:
+        earlier_html = ""
+
+    return f"""<section class="notes" aria-labelledby="notes-title" data-update-notes>
+  <div class="notes__head">
+    {_icon("icon-wheat", css_class="icon notes__icon", base_path=base_path)}
+    <h2 class="notes__title" id="notes-title">Update notes</h2>
+    <a class="notes__history" href="{GITHUB_BLOB_BASE}{UPDATE_NOTES_SOURCE_PATH}">Full history</a>
+  </div>
+  <ol class="notes__list">
+{_render_update_entry(newest)}
+  </ol>{earlier_html}
+</section>"""
+
+
 def _render_skill_card(skill: dict, base_path: str = "",
                         locale: "locales.Locale" = locales.DEFAULT_LOCALE,
                         strings: Strings = ENGLISH_STRINGS) -> str:
@@ -1089,12 +1206,14 @@ def _render_category_section(category: dict, skills: dict, icon_index: int,
 def render_index(categories: list[dict], skills: dict, base_path: str = "",
                   last_updated_utc: str = "", *,
                   fresh_skills: list[dict] | None = None,
+                  update_notes: list[dict] | None = None,
                   locale: "locales.Locale" = locales.DEFAULT_LOCALE,
                   strings: Strings = ENGLISH_STRINGS,
                   plugin_version: str = "") -> str:
     """Full HTML document string for the landing page. fresh_skills arrives
     already ordered newest-first from generate.py, which is the only place
-    that can know a change's real timestamp."""
+    that can know a change's real timestamp; update_notes arrives parsed from
+    UPDATES.md, in the order that file declares."""
     sections = _join(*(
         _render_category_section(cat, skills, i, base_path, locale, strings)
         for i, cat in enumerate(categories)
@@ -1103,7 +1222,8 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
     category_count = len(categories)
     main_html = _join(
         _render_hero(skill_count, category_count, base_path,
-                     fresh_skills=fresh_skills, locale=locale, strings=strings),
+                     fresh_skills=fresh_skills, update_notes=update_notes,
+                     locale=locale, strings=strings),
         _render_search_empty_state(skill_count, strings),
         f'<div data-categories>\n{sections}\n</div>',
     )
@@ -1421,10 +1541,7 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
 # ---------------------------------------------------------------------------
 
 INSTALL_TEST_SOURCE_PATH = "scripts/test_install_command.py"
-INSTALL_TEST_GITHUB_URL = (
-    "https://github.com/LeSplooch/tbaguette-skills/blob/master/"
-    + INSTALL_TEST_SOURCE_PATH
-)
+INSTALL_TEST_GITHUB_URL = GITHUB_BLOB_BASE + INSTALL_TEST_SOURCE_PATH
 
 
 def _render_code_block(highlighted_lines: list[str]) -> str:

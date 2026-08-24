@@ -20,6 +20,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import generate
+import templates
 from checker import Checker
 
 checker = Checker()
@@ -240,6 +241,54 @@ def check_freshness_window() -> None:
         shutil.rmtree(non_repo, ignore_errors=True)
 
 
+def check_update_notes_source() -> None:
+    """_update_notes() against a real file on disk. The parser's own grammar is
+    covered in test_content_pipeline; what matters here is the policy generate.py
+    layers on top — missing is silent, malformed stops the build."""
+    print("_update_notes")
+    root = Path(tempfile.mkdtemp(prefix="tbaguette-update-notes-test-"))
+    try:
+        check("no UPDATES.md at all: no notes, no error",
+              generate._update_notes(root) == [])
+
+        path = root / generate.UPDATE_NOTES_FILENAME
+        path.write_text(
+            "# Update notes\n\n## 2026-08-24 — A change\n- It changed.\n",
+            encoding="utf-8",
+        )
+        entries = generate._update_notes(root)
+        check("a well-formed file parses into entries",
+              len(entries) == 1 and entries[0]["date"] == "2026-08-24"
+              and entries[0]["notes"] == ["It changed."])
+
+        # The failure that actually happens: appending the new entry to the
+        # bottom of the file instead of the top. Nothing about the resulting
+        # page looks broken -- it just quietly shows a months-old entry as the
+        # latest news, which is worse than not shipping the section at all.
+        path.write_text(
+            "## 2026-08-20 — Older\n- A.\n\n## 2026-08-24 — Newer\n- B.\n",
+            encoding="utf-8",
+        )
+        failed = False
+        try:
+            generate._update_notes(root)
+        except SystemExit as error:
+            failed = str(generate.UPDATE_NOTES_FILENAME) in str(error)
+        check("an out-of-order file stops the build, naming the file, rather "
+              "than shipping a stale entry as the newest one", failed)
+
+        path.write_text("## Unreleased\n- A.\n", encoding="utf-8")
+        failed = False
+        try:
+            generate._update_notes(root)
+        except SystemExit:
+            failed = True
+        check("a heading that is not a date stops the build too — the site has "
+              "nowhere to put an undated entry", failed)
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
+
+
 def main() -> None:
     real_project_root = Path(__file__).resolve().parent.parent
     real_skills_root = real_project_root / "skills"
@@ -306,6 +355,12 @@ def main() -> None:
             "index links to the new skill",
             'href="/tbaguette-skills/skills/karen-and-the-manager/"' in index_html,
         )
+        check(
+            "a project root with no UPDATES.md builds a normal site with no "
+            "update-notes section — a clone that has never shipped a change "
+            "has nothing to say, and that is not a build failure",
+            "data-update-notes" not in index_html,
+        )
 
         version_txt_path = docs / "version.txt"
         check("version.txt exists after generation", version_txt_path.exists())
@@ -331,8 +386,34 @@ def main() -> None:
         # A second run proves the atomic-swap machinery is safe to repeat,
         # not just safe to run once — this is the exact property that
         # protects a real "edit a skill, rerun generate.py" workflow.
-        print("second run (repeat-safety of the atomic swap)")
+        # ...and it doubles as the run that proves UPDATES.md reaches the page,
+        # since the first one deliberately had no such file to read.
+        print("second run (repeat-safety of the atomic swap, now with UPDATES.md)")
+        real_updates = real_project_root / generate.UPDATE_NOTES_FILENAME
+        expected_notes = generate._update_notes(real_project_root)
+        shutil.copyfile(real_updates, tmp_root / generate.UPDATE_NOTES_FILENAME)
         content2 = generate.generate(tmp_root, real_skills_root, base_path="/tbaguette-skills")
+
+        index_html2 = (docs / "index.html").read_text(encoding="utf-8")
+        check(
+            "this repository's own UPDATES.md parses and reaches the built page",
+            "data-update-notes" in index_html2 and len(expected_notes) > 0,
+        )
+        check(
+            "the newest entry in the file is the one the page shows expanded",
+            f'datetime="{expected_notes[0]["date"]}"' in index_html2,
+        )
+        check(
+            "the page shows no more entries than the cap allows, however long "
+            "the file has grown",
+            index_html2.count('<li class="notes__entry">')
+            == min(len(expected_notes), templates.UPDATE_NOTES_LIMIT),
+        )
+        check(
+            "the notes land between the fresh rail and the search field, "
+            "under real data and not just in the template's own fixtures",
+            index_html2.index("data-update-notes") < index_html2.index("data-search-root"),
+        )
         check(
             "second run returns the same skill count",
             len(content2["skills"]) == len(content["skills"]),
@@ -351,6 +432,7 @@ def main() -> None:
 
     check_changed_skill_slugs()
     check_freshness_window()
+    check_update_notes_source()
 
     print(f"\n{checker.total} checks passed.")
 

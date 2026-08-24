@@ -442,6 +442,92 @@ def check_fresh_section() -> None:
           or 'style="--cf-shift: -70px"' in html)
 
 
+def check_update_notes() -> None:
+    """The "Update notes" band under the rail: present only when there are
+    notes, newest entry open and everything older folded, capped, and sitting
+    between the rail and the search field rather than anywhere else."""
+    print("update notes")
+    categories = [{"slug": "cat", "title": "Cat", "skill_slugs": []}]
+
+    def entry(date: str, title: str, *notes: str) -> dict:
+        return {"date": date, "title": title, "notes": list(notes) or ["<em>x</em>"]}
+
+    plain = render_index(categories, {})
+    check("no notes renders no section at all, not an empty-state panel",
+          "data-update-notes" not in plain and "Update notes" not in plain)
+
+    newest = entry("2026-08-24", "Newest thing", "Bullet <code>one</code>.", "Bullet two.")
+    older = entry("2026-08-20", "Older thing", "Bullet three.")
+    html = render_index(categories, {}, update_notes=[newest, older])
+
+    check("the section renders when there are notes", "data-update-notes" in html)
+    check("heading is the section's accessible name, not a bare styled div",
+          'aria-labelledby="notes-title"' in html and 'id="notes-title"' in html)
+    check("notes sit above the search field, inside the hero band rather than "
+          "somewhere down the page",
+          html.index("data-update-notes") < html.index("data-search-root"))
+    check("notes sit below the lede, not above the headline",
+          html.index("hero__headline") < html.index("data-update-notes"))
+
+    check("the newest entry renders outside the disclosure, where it is read "
+          "without a click",
+          html.index(">Newest thing<") < html.index("notes__earlier"))
+    check("older entries are folded into one native <details>",
+          '<details class="notes__earlier">' in html
+          and html.index("notes__earlier") < html.index(">Older thing<"))
+    check("the disclosure names how many entries it holds, so the control "
+          "says what opening it gets you",
+          "Show 1 earlier update<" in html)
+
+    check("a bullet keeps the inline markup content_pipeline rendered, rather "
+          "than printing its tags",
+          "<li>Bullet <code>one</code>.</li>" in html)
+    check("each entry carries a machine-readable date beside the human one",
+          '<time class="notes__date" datetime="2026-08-24">24 Aug 2026</time>' in html)
+    check("entry titles are real headings under the section's h2, not styled "
+          "paragraphs, so the entries form an outline",
+          '<h3 class="notes__entry-head">' in html)
+    check("the head links out to the whole file, since the page only shows "
+          "the newest few",
+          f'href="{templates.GITHUB_BLOB_BASE}{templates.UPDATE_NOTES_SOURCE_PATH}"' in html)
+
+    lone = render_index(categories, {}, update_notes=[newest])
+    check("a single entry gets no disclosure — there is nothing folded behind it",
+          "notes__earlier" not in lone and ">Newest thing<" in lone)
+
+    two = render_index(categories, {}, update_notes=[newest, older, entry("2026-08-19", "T")])
+    check("the disclosure pluralizes its own count",
+          "Show 2 earlier updates<" in two)
+
+    many = [entry(f"2026-08-{24 - i:02d}", f"E{i}") for i in range(20)]
+    capped = render_index(categories, {}, update_notes=many)
+    check("the page is not the archive — entries are capped, and the link to "
+          "the full file is what covers the rest",
+          capped.count('<li class="notes__entry">') == templates.UPDATE_NOTES_LIMIT)
+    check("the cap keeps the newest end of the list, not an arbitrary slice",
+          ">E0<" in capped and ">E19<" not in capped)
+
+    untitled = render_index(categories, {}, update_notes=[entry("2026-08-24", "")])
+    check("an entry with no title renders its date alone rather than an "
+          "empty span",
+          "notes__entry-title" not in untitled and ">24 Aug 2026<" in untitled)
+
+    hostile = render_index(categories, {}, update_notes=[
+        {"date": "2026-08-24", "title": "<script>x</script>", "notes": ["ok"]}])
+    check("an entry title is escaped — it is plain text from a hand-edited file",
+          "&lt;script&gt;" in hostile and "<script>x</script>" not in hostile)
+
+    check("_format_update_date: single-digit days lose the leading zero",
+          templates._format_update_date("2026-08-04") == "4 Aug 2026")
+    check("_format_update_date: every month maps to its own abbreviation",
+          templates._format_update_date("2026-01-31") == "31 Jan 2026"
+          and templates._format_update_date("2026-12-01") == "1 Dec 2026")
+    check("_format_update_date: a shape it cannot read is shown as-is rather "
+          "than raising from inside a template",
+          templates._format_update_date("whenever") == "whenever"
+          and templates._format_update_date("2026-13-01") == "2026-13-01")
+
+
 def check_i18n_content_links_and_strings() -> None:
     """Confirms a locale reaches content-level links -- cards, breadcrumb,
     prev/next, see-also. Uses a synthetic French Locale constructed
@@ -1137,6 +1223,7 @@ def main() -> None:
     check_verify_install_page()
     check_header_and_badges()
     check_fresh_section()
+    check_update_notes()
     check_i18n_content_links_and_strings()
     check_i18n_verify_install_page()
     check_i18n_fallback_banner()

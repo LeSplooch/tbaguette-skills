@@ -1045,5 +1045,129 @@ class LocaleBuildTests(unittest.TestCase):
             )
 
 
+class UpdateNotesParsingTests(unittest.TestCase):
+    """UPDATES.md is appended to by hand, once per shipped change, and nothing
+    else reads it. Every check here is about a mistake made at that moment
+    silently costing an entry rather than failing the build."""
+
+    def test_parses_dated_entries_in_file_order(self):
+        entries = content_pipeline.parse_update_notes(
+            "# Update notes\n"
+            "\n"
+            "Preamble that is never rendered.\n"
+            "\n"
+            "## 2026-08-24 — Newest thing\n"
+            "\n"
+            "- First bullet.\n"
+            "- Second bullet.\n"
+            "\n"
+            "## 2026-08-20 — Older thing\n"
+            "\n"
+            "- Only bullet.\n"
+        )
+        self.assertEqual([e["date"] for e in entries], ["2026-08-24", "2026-08-20"])
+        self.assertEqual(entries[0]["title"], "Newest thing")
+        self.assertEqual(entries[0]["notes"], ["First bullet.", "Second bullet."])
+        self.assertEqual(entries[1]["notes"], ["Only bullet."])
+
+    def test_preamble_above_the_first_heading_is_dropped(self):
+        entries = content_pipeline.parse_update_notes(
+            "# Update notes\n\nHow to append to this file.\n\n"
+            "## 2026-08-24\n- A bullet.\n"
+        )
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0]["notes"], ["A bullet."])
+
+    def test_title_is_optional(self):
+        entries = content_pipeline.parse_update_notes("## 2026-08-24\n- A bullet.\n")
+        self.assertEqual(entries[0]["title"], "")
+
+    def test_accepts_hyphen_en_dash_and_em_dash_as_the_title_separator(self):
+        for separator in ("-", "\u2013", "\u2014"):
+            with self.subTest(separator=separator):
+                entries = content_pipeline.parse_update_notes(
+                    f"## 2026-08-24 {separator} Titled\n- A bullet.\n"
+                )
+                self.assertEqual(entries[0]["title"], "Titled")
+
+    def test_wrapped_bullets_are_joined_back_into_one(self):
+        """The repository's prose wraps at ~76 columns and these bullets are
+        sentences. A continuation line has to rejoin its bullet, not vanish and
+        not become a bullet of its own."""
+        entries = content_pipeline.parse_update_notes(
+            "## 2026-08-24\n"
+            "- A bullet long enough that it\n"
+            "  wrapped onto a second line.\n"
+            "- A second bullet.\n"
+        )
+        self.assertEqual(
+            entries[0]["notes"],
+            ["A bullet long enough that it wrapped onto a second line.", "A second bullet."],
+        )
+
+    def test_inline_markdown_is_rendered_and_plain_text_escaped(self):
+        entries = content_pipeline.parse_update_notes(
+            "## 2026-08-24\n- `code`, **bold**, *italic*, and <not-a-tag>.\n"
+        )
+        self.assertEqual(
+            entries[0]["notes"][0],
+            "<code>code</code>, <strong>bold</strong>, <em>italic</em>, "
+            "and &lt;not-a-tag&gt;.",
+        )
+
+    def test_empty_input_yields_no_entries(self):
+        self.assertEqual(content_pipeline.parse_update_notes(""), [])
+        self.assertEqual(content_pipeline.parse_update_notes("# Only a preamble.\n"), [])
+
+    def test_rejects_a_heading_that_is_not_a_date(self):
+        with self.assertRaises(ValueError) as caught:
+            content_pipeline.parse_update_notes("## Unreleased\n- A bullet.\n")
+        self.assertIn("ISO date", str(caught.exception))
+
+    def test_rejects_an_out_of_order_entry(self):
+        """Appending to the bottom instead of the top is the mistake this
+        format invites, and it silently demotes the newest entry out of the
+        one slot the site shows expanded."""
+        with self.assertRaises(ValueError) as caught:
+            content_pipeline.parse_update_notes(
+                "## 2026-08-20\n- Older.\n\n## 2026-08-24\n- Newer.\n"
+            )
+        self.assertIn("newest first", str(caught.exception))
+
+    def test_allows_two_entries_on_the_same_day(self):
+        entries = content_pipeline.parse_update_notes(
+            "## 2026-08-24 — Second ship\n- B.\n\n## 2026-08-24 — First ship\n- A.\n"
+        )
+        self.assertEqual([e["title"] for e in entries], ["Second ship", "First ship"])
+
+    def test_rejects_an_entry_with_no_bullets(self):
+        for text in (
+            "## 2026-08-24 — Empty\n\n## 2026-08-20\n- A bullet.\n",
+            "## 2026-08-24 — Trailing and empty\n",
+        ):
+            with self.subTest(text=text):
+                with self.assertRaises(ValueError) as caught:
+                    content_pipeline.parse_update_notes(text)
+                self.assertIn("no bullets", str(caught.exception))
+
+    def test_rejects_prose_before_an_entrys_first_bullet(self):
+        with self.assertRaises(ValueError) as caught:
+            content_pipeline.parse_update_notes(
+                "## 2026-08-24\n\nA paragraph nobody would ever see.\n\n- A bullet.\n"
+            )
+        self.assertIn("not rendered", str(caught.exception))
+
+    def test_the_repositorys_own_updates_file_parses(self):
+        """The one check that fails when the file a human just edited is wrong,
+        rather than when the parser is."""
+        path = Path(__file__).resolve().parent.parent / "UPDATES.md"
+        if not path.is_file():
+            self.skipTest("UPDATES.md not present in this checkout")
+        entries = content_pipeline.parse_update_notes(path.read_text(encoding="utf-8"))
+        self.assertGreater(len(entries), 0)
+        for entry in entries:
+            self.assertTrue(entry["notes"], f"{entry['date']} has no bullets")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -77,6 +77,12 @@ _LOG_SCAN_LIMIT = 1000
 
 EXPECTED_LOCALE_COUNT = locales.EXPECTED_LOCALE_COUNT
 
+# Hand-written, newest-first, one entry per shipped change -- see CLAUDE.md.
+# This is the half of "what changed" that the Fresh rail structurally cannot
+# show: the rail is built from git history scoped to skills/, so a change to
+# the site, the install command, or a harness manifest is invisible to it.
+UPDATE_NOTES_FILENAME = templates.UPDATE_NOTES_SOURCE_PATH
+
 
 def _default_i18n_root(project_root: Path) -> Path:
     return project_root / "i18n"
@@ -277,6 +283,23 @@ def _fresh_skills(project_root: Path, *, now: datetime) -> dict[str, dict]:
     return fresh
 
 
+def _update_notes(project_root: Path) -> list[dict]:
+    """UPDATES.md parsed into entries, or [] if the file isn't there.
+
+    Missing is fine and silent -- a clone that has never shipped a change has
+    nothing to say, and the section simply doesn't render. Present but
+    malformed is a hard failure, on the same reasoning as a malformed ui.json:
+    it is an authoring bug in a file a human just edited, and the failure mode
+    of guessing is a site that silently drops the entry someone wrote."""
+    path = project_root / UPDATE_NOTES_FILENAME
+    if not path.is_file():
+        return []
+    try:
+        return content_pipeline.parse_update_notes(path.read_text(encoding="utf-8"))
+    except ValueError as error:
+        raise SystemExit(f"{path}: {error}") from error
+
+
 def _fresh_order(skills: dict, fresh: dict[str, dict]) -> list[dict]:
     """The fresh skills as real skill dicts, newest change first. Slugs with
     an unparseable timestamp sort last rather than crashing the build."""
@@ -324,6 +347,7 @@ def _write(path: Path, html: str) -> None:
 def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_utc: str,
                  *, locale: locales.Locale, strings: templates.Strings,
                  verify_strings: templates.VerifyInstallStrings,
+                 update_notes: list[dict] | None = None,
                  plugin_version: str = "") -> None:
     """Writes one locale's pages into output_dir, which must already exist
     and be empty. Raises on the first failure — the caller is responsible
@@ -336,6 +360,7 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
         templates.render_index(
             categories, skills, base_path, last_updated_utc=last_updated_utc,
             fresh_skills=content.get("fresh_skills", []),
+            update_notes=update_notes or [],
             locale=locale, strings=strings, plugin_version=plugin_version,
         ),
     )
@@ -386,6 +411,7 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
     now = datetime.now(timezone.utc)
     plugin_version = _plugin_version()
     fresh = _fresh_skills(project_root, now=now)
+    update_notes = _update_notes(project_root)
     last_updated_utc = now.isoformat(timespec="seconds")
 
     if only_locale is None:
@@ -436,7 +462,7 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
             _build_into(
                 locale_output_dir, content, base_path, last_updated_utc,
                 locale=locale, strings=strings, verify_strings=verify_strings,
-                plugin_version=plugin_version,
+                update_notes=update_notes, plugin_version=plugin_version,
             )
             if not locale.default:
                 swapped_names.append(locale.code)
