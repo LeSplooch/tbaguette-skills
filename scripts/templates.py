@@ -434,9 +434,9 @@ FRESH_RAIL_LIMIT = 12
 GITHUB_BLOB_BASE = "https://github.com/LeSplooch/tbaguette-skills/blob/master/"
 
 # How many update-note entries reach the page at all. UPDATES.md is append-only
-# and grows without bound; the landing page is not the archive, which is what
-# the "Full history" link beside the heading is for. Only the newest of these
-# is open by default -- see _render_update_notes.
+# and grows without bound, and the landing page is not the archive -- the file
+# itself is, in the repository, where anyone who wants the whole record already
+# is. Only the newest of these is open by default -- see _render_update_notes.
 UPDATE_NOTES_LIMIT = 6
 
 UPDATE_NOTES_SOURCE_PATH = "UPDATES.md"
@@ -1151,7 +1151,6 @@ def _render_update_notes(entries: list[dict], base_path: str = "") -> str:
   <div class="notes__head">
     {_icon("icon-wheat", css_class="icon notes__icon", base_path=base_path)}
     <h2 class="notes__title" id="notes-title">Update notes</h2>
-    <a class="notes__history" href="{GITHUB_BLOB_BASE}{UPDATE_NOTES_SOURCE_PATH}">Full history</a>
   </div>
   <ol class="notes__list">
 {_render_update_entry(newest)}

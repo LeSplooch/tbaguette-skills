@@ -487,9 +487,11 @@ def check_update_notes() -> None:
     check("entry titles are real headings under the section's h2, not styled "
           "paragraphs, so the entries form an outline",
           '<h3 class="notes__entry-head">' in html)
-    check("the head links out to the whole file, since the page only shows "
-          "the newest few",
-          f'href="{templates.GITHUB_BLOB_BASE}{templates.UPDATE_NOTES_SOURCE_PATH}"' in html)
+    check("the head carries the icon and the heading and nothing else — no "
+          "tag or link invented to fill the slot .fresh__head's timeframe "
+          "label occupies",
+          html.count('class="notes__head"') == 1
+          and "notes__history" not in html and "notes__tag" not in html)
 
     lone = render_index(categories, {}, update_notes=[newest])
     check("a single entry gets no disclosure — there is nothing folded behind it",

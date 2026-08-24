@@ -1371,33 +1371,22 @@ code {
   color: var(--text-primary);
 }
 
-/* Pushed to the far end of the head, where .fresh__nav sits in the band
-   above, so the two heads share an alignment grid rather than each inventing
-   one. A link and not a .tag: the archive is somewhere you can actually go,
-   and a pill that looks like the neutral "Last 48 hours" label beside it
-   would be a click target disguised as a caption. */
-.notes__history {
-  margin-inline-start: auto;
-  font-size: var(--text-2);
-  color: var(--text-secondary);
-  text-decoration: none;
-  border-bottom: 1px solid var(--border-strong);
-  transition: color var(--duration-micro) var(--ease-out),
-              border-color var(--duration-micro) var(--ease-out);
-}
-
-.notes__history:hover,
-.notes__history:focus-visible {
-  color: var(--text-accent);
-  border-bottom-color: var(--accent);
-}
+/* Nothing at the far end of this head, unlike .fresh__head's "Last 48 hours"
+   tag. That tag earns its place by naming a real constraint on what the rail
+   can contain; this section has no equivalent fact, and inventing something to
+   fill the slot would be decoration wearing a label's clothes. */
 
 /* Space between entries, not a border: 8b's tiles already carry every edge
    this band can afford. The date's own weight is what separates one entry
    from the next. */
 .notes__list {
   margin: 0;
-  padding: 0;
+  /* padding-top, not 0 all round: the head's gilded rule sits on its bottom
+     edge, and measured without this the first entry's date began 4px under
+     that line -- close enough to read as the rule underlining the date rather
+     than closing the head. --space-4 is what .fresh__rail puts under the same
+     rule one band up, so the two treat the gesture identically. */
+  padding: var(--space-4) 0 0;
   list-style: none;
   display: grid;
   gap: var(--space-6);
@@ -2152,7 +2141,7 @@ code {
   .card, .theme-toggle__icon, .search__field, .tabs__tab,
   .prevnext__link, .see-also__name, .site-footer__categories a,
   .skip-link, .prose a, .prose tbody tr,
-  .notes__history, .notes__earlier-summary, .notes__earlier-summary::before {
+  .notes__earlier-summary, .notes__earlier-summary::before {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
