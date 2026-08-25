@@ -13,6 +13,16 @@ Everything above the first `##` is preamble and is never rendered.
 
 ## 2026-08-25 — Eight lessons from real work, folded back in
 
+- `instrumenting-for-observability` separates *did it run* from *did it have
+  anything to work with*. Anything that learns, tunes, calibrates or ranks reads
+  a ground-truth source, and when that source is empty the component does not
+  fail — aggregates over an empty set are well defined, so sums are zero, fitness
+  functions return values, counters advance, and it looks productive on every
+  dashboard. Worse, it degrades to its prior, and priors are chosen to look
+  neutral rather than absent, so the failure arrives as a confident middling
+  number. Emit input volume and age as their own signals, carry the sample size
+  to the point of use so a consumer can tell a measurement from a default, and
+  let the component refuse below a floor instead of fitting noise.
 - `drawing-boundaries` picks up the properties that boundaries quietly destroy.
   A rule like *run the cheapest checks first* gets written for one stage, and
   that stage obeys it — while the layer above does the reverse, because a module

@@ -87,6 +87,21 @@ Measure where the user feels it — at the edge or in the client — not where i
 
 Deciding what to emit is upstream of making it safe to emit; `redacting-sensitive-output` covers the second half.
 
+## Measure what a component consumed, not that it ran
+
+Almost every counter answers *did this execute*. Very few answer *did it have anything to work with*, and those two diverge silently in one whole family of components: anything that learns, tunes, calibrates, adapts, scores, or ranks against accumulated outcomes.
+
+A component like that reads a ground-truth source — realized results, labelled outcomes, completed actions. When the source is empty, because it was never populated or because the path that fills it has never once fired, the component does not fail. **Aggregates over an empty set are well defined.** Sums are zero, means return whatever the guard returns, a fitness function produces defined values over no candidates, and a generation counter advances on schedule. So the thing runs, emits its metrics, advances its bookkeeping, and looks productive from every dashboard and log line in the system. This is the same emptiness that makes a test assertion vacuous in `writing-the-failing-test-first` — an empty collection makes a computation succeed loudly rather than fail — arriving here as a metric instead of a green test.
+
+The output is where the damage is. On an empty sample the component degrades to its prior, and priors are chosen to look *neutral* rather than to look *absent* — a middling score, a default weight, an even distribution. So the failure presents as a confident, plausible, unremarkable number rather than as an error, and nothing anywhere distinguishes "calibrated from zero observations" from "calibrated from ten thousand."
+
+Two things follow, and both are instrumentation decisions rather than modelling ones:
+
+- **Emit input volume and input age as signals in their own right**, next to the activity counter and never folded into it. "Ran 4,000 times" and "had 0 rows to read" are both true, and only the second one is news.
+- **Carry the sample size to the point of use.** A consumer that receives a score without an *n* cannot tell a measurement from a default, and will render it identically either way — which is how a number nobody measured ends up in a UI presented as a learned value.
+
+Then let the component refuse. A floor below which it declines to run and says why is better than fitting noise, and it converts a silent wrong answer into a visible abstention. Distinguishing the two reasons for an empty input matters as well: *no data yet* is a legitimate cold start that should idle and announce itself, while *the source is broken* should alarm. A volume counter that never leaves zero past a startup window is the discriminator between them, and it only exists if someone emitted it.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -101,6 +116,8 @@ Deciding what to emit is upstream of making it safe to emit; `redacting-sensitiv
 | A report is empty — or one category short — while matching records exist | A null-guard on an optional field excluded the records that legitimately lack it |
 | Secret found in the log index | Redaction by denylist, or a whole object logged for convenience |
 | DEBUG is useless because enabling it needs a deploy | Log level fixed at build time rather than adjustable at runtime |
+| An adaptive component looks healthy for months and has learned nothing | Activity was instrumented; the volume of its ground-truth input never was |
+| A learned score and a hardcoded default are indistinguishable downstream | Sample size did not travel with the value to its point of use |
 
 ## Red flags
 
@@ -112,3 +129,5 @@ Deciding what to emit is upstream of making it safe to emit; `redacting-sensitiv
 - A trace that stops at the queue boundary
 - An SLI chosen because it was already being measured
 - A report that filters out the records lacking its group-by field instead of bucketing them
+- A component that learns, tunes, or calibrates, with no metric for how many observations it actually read
+- A score, weight, or threshold presented to a user or another service without the *n* behind it
