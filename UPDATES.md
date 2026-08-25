@@ -13,6 +13,15 @@ Everything above the first `##` is preamble and is never rendered.
 
 ## 2026-08-25 — Eight lessons from real work, folded back in
 
+- `portable-shell-scripting` covers the mirror of a trap it already had. A `cd`
+  inside `$(…)` cannot escape; a `cd` at the front of one command in a session
+  that persists between commands re-roots every relative path used afterwards, by
+  every later command, including ones written by someone who never saw it. The
+  expensive part is not the breakage but that "no such file" and a grep matching
+  nothing are exactly what a real absence looks like — so the result is a
+  confident false negative that reads as a finding about the codebase. Prefer
+  `git -C`-style path options, then absolute paths, then `(cd x && …)`; and print
+  `pwd` before believing a surprising negative.
 - `writing-the-failing-test-first` gains the collection case, which the scalar
   advice about hand-deriving expected values does not reach: an assertion of the
   form *for each item in the result, assert it is well-formed* quantifies over a

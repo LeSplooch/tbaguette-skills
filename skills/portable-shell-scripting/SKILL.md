@@ -71,6 +71,25 @@ Pipeline stages run in subshells, so assignments inside `cmd | while read …; d
 
 Exit codes are 0–255 and `exit 256` becomes 0. 126 means not executable, 127 not found, 128+N a fatal signal N. Per-stage pipeline status exists only as bash `PIPESTATUS` and zsh `pipestatus`; under POSIX sh, restructure so you do not need it.
 
+## A `cd` outlives the command that ran it
+
+The trap above has a mirror image, and knowing one gives no protection against the other. `$(cd x && pwd)` runs in a subshell and leaves you where you were. `cd x && pwd`, typed at a session that persists between commands, moves you and keeps you there.
+
+Persistent sessions are now the common case rather than the exotic one: an agent driving a shell across many calls, a CI job whose steps share a working directory, a terminal someone is scripting against by hand. In all three, the working directory is state that outlives the command that set it, so one compound command beginning `cd build && …` silently re-roots every relative path used afterwards — by a different command, possibly written by someone who never saw the `cd`.
+
+What makes this expensive is not the breakage but the plausibility of the result. `no such file or directory` is exactly what a genuine absence looks like, and a grep that matches nothing looks exactly like a codebase that does not contain the pattern. The output is a confident false negative that reads as a finding about the system rather than an artifact of where the command ran, and it will be reported as one.
+
+In order of preference:
+
+| Approach | What it buys |
+|---|---|
+| Use the tool's own path option | `git -C dir`, `make -C dir`, `tar -C dir`, `rsync`'s full paths — no directory change happens at all |
+| Use absolute paths | Immune to whatever the session's directory happens to be |
+| Scope the change to a subshell | `(cd dir && …)` cannot outlive its own command, which is the whole point of the parenthesis |
+| Change directory and stay there | Only when every later command genuinely wants the new root, and only if you say so out loud |
+
+And when a path check comes back with a surprising negative, print `pwd` before believing it. That is one command against a wrong conclusion about somebody's codebase.
+
 ## Cleanup that survives signals
 
 ```sh
@@ -111,6 +130,7 @@ Choose the POSIX subset first. Where an extension is genuinely needed, probe the
 | Trailing newlines missing from captured output | `$(…)` strips every trailing newline; append a sentinel and remove it |
 | Fails on exactly one machine | GNU versus BSD flags for `sed`, `date`, `readlink`, or `stat` |
 | `pkill -f` killed the calling shell, not the target | the pattern also matched the shell's own wrapped or eval'd command line, not just the target's argv |
+| A file "does not exist" and then plainly does | A `cd` in an earlier command re-rooted every relative path after it |
 
 ## Red flags
 
@@ -120,3 +140,4 @@ Choose the POSIX subset first. Where an extension is genuinely needed, probe the
 - Adding `|| true` to silence a failure rather than to declare it non-fatal
 - The script now holds arrays of records, parses JSON or CSV with `sed`, retries with backoff, or passes 200 lines — it has outgrown shell and should become a program in a language with data structures and a test runner
 - `pkill -f` or `pgrep -f` run with a pattern nobody checked against every process it could match, including the caller's own
+- A negative result from a relative path — nothing found, no such file — trusted without checking `pwd` first
