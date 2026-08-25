@@ -13,6 +13,14 @@ Everything above the first `##` is preamble and is never rendered.
 
 ## 2026-08-25 — Eight lessons from real work, folded back in
 
+- `writing-the-failing-test-first` gains the collection case, which the scalar
+  advice about hand-deriving expected values does not reach: an assertion of the
+  form *for each item in the result, assert it is well-formed* quantifies over a
+  set the code under test chose. Drop half the input and the survivors still
+  pass; drop all of it and the loop never runs, so the test is at its most
+  confident exactly when the code has failed hardest. Get one number from outside
+  the unit — count the source, not the result — and when a loss is deliberate,
+  state the expected number rather than deriving it.
 - `threat-modeling` now asks a question that catches a whole class of bypass: a
   limit, quota or entitlement is a property of *state*, but it almost always gets
   implemented as a check on one *transition* — the interactive one someone had in

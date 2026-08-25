@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.5</span>
+      <span class="wordmark-version" dir="ltr">v0.11.6</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:07:28+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:07:28Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T13:10:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:10:07Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -127,11 +127,22 @@ Flag one more thing, because it applies to this very conversation: this session 
     <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/threat-modeling/" data-fresh-at="2026-08-25T13:07:28.197874+00:00" draggable="false" style="--cf-offset: 0">
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/writing-the-failing-test-first/" data-fresh-at="2026-08-25T13:10:07.087395+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">writing-the-failing-test-first</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T13:10:07.087395+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written.</p>
+  <span class="card__foot">
+    <span class="tag">Testing</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/threat-modeling/" data-fresh-at="2026-08-25T15:07:28+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">threat-modeling</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T13:07:28.197874+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:07:28+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</p>
   <span class="card__foot">
@@ -139,7 +150,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-fresh-at="2026-08-25T14:52:07+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-fresh-at="2026-08-25T14:52:07+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">confirming-before-claiming-done</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:52:07+02:00">Updated</span>
@@ -150,7 +161,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/least-privilege-design/" data-fresh-at="2026-08-23T20:43:36+02:00" draggable="false" style="--cf-offset: 2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/least-privilege-design/" data-fresh-at="2026-08-23T20:43:36+02:00" draggable="false" style="--cf-offset: -2">
   <span class="card__name-row">
     <span class="card__name">least-privilege-design</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-08-23T20:43:36+02:00">Updated</span>
@@ -186,6 +197,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="notes__entry-title">Eight lessons from real work, folded back in</span>
   </h3>
   <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/writing-the-failing-test-first/"><code>writing-the-failing-test-first</code></a> gains the collection case, which the scalar advice about hand-deriving expected values does not reach: an assertion of the form <em>for each item in the result, assert it is well-formed</em> quantifies over a set the code under test chose. Drop half the input and the survivors still pass; drop all of it and the loop never runs, so the test is at its most confident exactly when the code has failed hardest. Get one number from outside the unit — count the source, not the result — and when a loss is deliberate, state the expected number rather than deriving it.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/threat-modeling/"><code>threat-modeling</code></a> now asks a question that catches a whole class of bypass: a limit, quota or entitlement is a property of <em>state</em>, but it almost always gets implemented as a check on one <em>transition</em> — the interactive one someone had in mind. Seeding, import, migration, restore and sync reach the same state without passing it, usually with more authority and less scrutiny. Enumerate the producers, not the check. And ask whether anything re-examines the state after it exists, because a gate that runs only at creation cannot repair what arrived around it.</li>
   </ul>
 </li>
@@ -804,7 +816,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/writing-the-failing-test-first/" data-search-card data-search-terms="writing-the-failing-test-first use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written. testing">
   <span class="card__name-row">
     <span class="card__name">writing-the-failing-test-first</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T13:10:07.087395+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written.</p>
   <span class="card__foot">
@@ -1085,7 +1097,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/threat-modeling/" data-search-card data-search-terms="threat-modeling use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration… security (defensive)">
   <span class="card__name-row">
     <span class="card__name">threat-modeling</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T13:07:28.197874+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:07:28+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</p>
   <span class="card__foot">

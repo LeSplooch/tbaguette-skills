@@ -40,6 +40,26 @@ Run the test and read the failure. A useful failure tells you why: feature missi
 
 Deriving the expected value by hand — not by calling the same helper the code under test calls — is what makes the failure trustworthy. How to build that value well is `designing-test-data` territory; the loop only requires that it existed before green did.
 
+## An assertion over the result cannot see what the result is missing
+
+Deriving the expected value by hand covers the scalar case. The collection case slips past it, because the assertion looks like it is checking everything: *for each item in the result, assert it is well-formed.* Every item passes. The test is green.
+
+It is green because it quantifies over a set the code under test chose. If the code dropped half its input, the survivors are all still well-formed. If it dropped all of it, the loop body never runs and the assertion is vacuously true — so **the test is at its most confident exactly when the code has failed hardest**, which is the reverse of what a test is for. Lossy-by-design code makes this routine rather than exotic: a parser that skips entries it cannot read, pagination, deduplication, permission scoping, any filter with a sensible default of "leave it out."
+
+The fix is to get one number from outside the unit. Count the raw inputs, or list their keys, from the source the code read rather than from what it returned, and assert against that:
+
+```
+vacuous at zero, silent about everything dropped:
+    for each item in load_all():  assert item is well-formed
+
+fails the moment anything is dropped, including all of it:
+    assert count(load_all()) == count(files in the source directory)
+```
+
+When dropping is deliberate — the loader is *supposed* to skip malformed entries — the count assertion still works, but the expected number has to be stated rather than derived: `assert count(loaded) == count(source) - 2`, with the two known-bad fixtures named. That is the point, not an inconvenience. An intended loss written down is a specification; an intended loss left implicit is indistinguishable from the unintended kind, which is how the whole failure started.
+
+Any assertion whose expected value was produced by the code under test is self-referential, and universally-quantified ones are the dangerous shape, because emptiness makes them true rather than false. "Mutate it before you trust it" below is the check that catches it: delete the loader's body and see whether anything goes red. Nothing will.
+
 ## Green — the smallest code that passes
 
 Write just enough production code to pass the one test in front of you, not the feature you can see coming. A config flag nobody's test asked for, a caching layer nobody's test exercises, a drive-by refactor of the neighboring function — all of that is scope the test hasn't earned yet. It arrives later, with its own test, when its own red step demands it.
@@ -84,6 +104,7 @@ That check is the actual definition of done, not "coverage went up." Ship the te
 | Refactor step quietly changes an assertion | Refactor is being used to smuggle in a second, unproven change |
 | Whole suite re-run "to be safe" instead of reading the one failure | The failure message was never actually read closely enough to say why it failed |
 | Bug fixed with no test written first | The only evidence the fix works is manual checking, which leaves nothing to catch the regression |
+| A suite over a collection stays green while the collection is empty | Every assertion quantified over the result the code produced; nothing counted the input |
 | Code kept and tests backfilled because "I already know this cold" | Confidence in the solution stood in for proof a test could catch it being wrong |
 
 ## Red flags
@@ -97,3 +118,4 @@ That check is the actual definition of done, not "coverage went up." Ship the te
 - "This case is different, the rule doesn't really fit here."
 - "I already know what this should look like — rewriting it teaches me nothing."
 - "The suite's green" — said about a test nobody watched fail first.
+- Every assertion in a test iterates something the code under test returned, and no number in the test came from outside it.
