@@ -692,6 +692,57 @@ code {
   animation: hero-rise var(--duration-view) var(--ease-out) 80ms forwards;
 }
 
+.hero__jump {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: var(--text-2);
+  text-decoration: none;
+  /* Continues the hero's stagger: headline, lede at 80ms, this at 140ms. Without
+     the matching entry in the prefers-reduced-motion block below, opacity: 0 here
+     would never be undone and the control would simply never appear. */
+  opacity: 0;
+  animation: hero-rise var(--duration-view) var(--ease-out) 140ms forwards;
+  transition: border-color var(--duration-micro) var(--ease-out),
+              color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.hero__jump:hover {
+  color: var(--text-accent);
+  border-color: var(--border-strong);
+  background: var(--surface);
+}
+
+/* No transform on :active. hero-rise fills forwards, and an animation's value
+   beats a normal author declaration, so a translate here would silently do
+   nothing once the entrance has finished. */
+.hero__jump:active {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+.hero__jump-icon {
+  flex-shrink: 0;
+}
+
+/* Smooth only where the visitor has not asked for less motion; the jump still
+   lands in exactly the same place either way. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* The jump target. 50px is an explicit request rather than a scale step, which is
+   why it is a literal and not a --space-* token. */
+#skills {
+  scroll-margin-top: 50px;
+}
+
 @keyframes hero-rise {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -2226,7 +2277,7 @@ a.skill-link--bare:focus-visible {
    ------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__headline, .hero__lede {
+  .hero__headline, .hero__lede, .hero__jump {
     animation: none;
     opacity: 1;
     transform: none;

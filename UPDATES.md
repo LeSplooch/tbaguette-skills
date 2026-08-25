@@ -11,6 +11,19 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-25 — A way into the skills from the top of the page
+
+- The landing page now has a **Show me the skills** control directly under the
+  opening lede. It jumps straight to the search field at the head of the skill
+  list, which lands 50px below the top of the window rather than flush against
+  it, so the field has room to read as the start of something rather than as a
+  bar wedged under the edge.
+- It is a real link, not a scripted button, so it behaves like one: middle-click
+  and Ctrl-click open it in a new tab, the URL it produces is shareable and lands
+  in the same place, and it works with JavaScript switched off.
+- The scroll animates only if you have not asked your system for reduced motion.
+  Either way it finishes in exactly the same position.
+
 ## 2026-08-25 — Eight lessons from real work, folded back in
 
 - `instrumenting-for-observability` separates *did it run* from *did it have

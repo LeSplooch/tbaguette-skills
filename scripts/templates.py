@@ -73,6 +73,7 @@ class Strings:
     theme_toggle_switch_to_light: str
     hero_headline: str
     hero_lede_template: str
+    hero_jump: str
     search_label: str
     search_placeholder: str
     search_clear: str
@@ -142,6 +143,7 @@ ENGLISH_STRINGS = Strings(
         "automatically — and often — by Claude Opus, always its latest version, "
         "as I code."
     ),
+    hero_jump="Show me the skills",
     search_label="Search skills",
     search_placeholder="Search by name, summary, or category…",
     search_clear="Clear",
@@ -871,6 +873,10 @@ def _render_hero(skill_count: int, category_count: int, base_path: str = "", *,
     <h1 class="hero__headline">{escape_html(strings.hero_headline)}</h1>
     {_render_install(base_path, locale=locale, strings=strings)}
     <p class="hero__lede">{escape_html(lede)}</p>
+    <a class="hero__jump" href="#skills">
+      <svg class="icon hero__jump-icon" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-search"></use></svg>
+      {escape_html(strings.hero_jump)}
+    </a>
     {_render_fresh_section(fresh_skills or [], base_path)}
     {_render_update_notes(update_notes or [], base_path)}
     {_render_search_field(base_path, strings)}
@@ -879,7 +885,7 @@ def _render_hero(skill_count: int, category_count: int, base_path: str = "", *,
 
 
 def _render_search_field(base_path: str = "", strings: Strings = ENGLISH_STRINGS) -> str:
-    return f"""<div class="search" data-search-root>
+    return f"""<div class="search" id="skills" data-search-root>
   <div class="search__field">
     <svg class="icon search__icon" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-search"></use></svg>
     <label class="visually-hidden" for="skill-search">{escape_html(strings.search_label)}</label>
