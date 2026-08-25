@@ -91,6 +91,47 @@ class TestCatalogMatchesCategories(unittest.TestCase):
                 with self.subTest(category=title, skill=slug):
                     self.assertFalse((SKILLS_DIR / slug).is_dir())
 
+    def test_every_prose_skill_count_matches_reality(self):
+        """The skill count is written in prose in eight hand-maintained places
+        and nothing checked any of them.
+
+        Found by a subagent walking the ship path for a hypothetical 93rd
+        skill: it listed every file it would have to hand-edit and noted none
+        were gated. The versioned-manifest suite validates those files\' names,
+        paths and versions and deliberately never reads their descriptions.
+        A first pass at this test guarded only .claude-plugin/plugin.json --
+        the count is in seven manifests and README.md."""
+        words = {60: "Sixty", 70: "Seventy", 80: "Eighty", 90: "Ninety"}
+        ones = ["", "-one", "-two", "-three", "-four", "-five",
+                "-six", "-seven", "-eight", "-nine"]
+        on_disk = len([p for p in SKILLS_DIR.iterdir() if p.is_dir()])
+        tens, unit = (on_disk // 10) * 10, on_disk % 10
+        self.assertIn(tens, words, f"spell-out table needs extending for {on_disk}")
+        spelled, digits = words[tens] + ones[unit], str(on_disk)
+
+        # Every file carrying the count in prose, and the form it uses.
+        for rel, form in [
+            (".claude-plugin/plugin.json", spelled),
+            (".claude-plugin/marketplace.json", spelled),
+            (".codex-plugin/plugin.json", spelled),
+            (".cursor-plugin/plugin.json", spelled),
+            (".devin-plugin/plugin.json", spelled),
+            (".kimi-plugin/plugin.json", spelled),
+            ("gemini-extension.json", spelled),
+            ("README.md", digits + " skills"),
+        ]:
+            text = (REPO_ROOT / rel).read_text(encoding="utf-8")
+            with self.subTest(file=rel):
+                self.assertIn(
+                    form, text,
+                    f"{rel} does not contain {form!r}; {on_disk} skills are on disk",
+                )
+                # A stale count must not also still be present.
+                for stale in (on_disk - 1, on_disk + 1):
+                    st, su = (stale // 10) * 10, stale % 10
+                    if st in words:
+                        self.assertNotIn(words[st] + ones[su] + " ", text)
+
     def test_stated_skill_count_matches_reality(self):
         """CATALOG.md opens with 'N skills'. N is written by hand."""
         # Only the preamble, so a body line that happens to start "12 skills,"

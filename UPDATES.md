@@ -11,6 +11,34 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-25 — Two rules in one skill that cancelled each other out
+
+- `configuration-management` carried a contradiction that produced a broken
+  build if you followed it. One section tells you a switch needing to flip
+  without a restart is a flag, not config. An earlier rule says **never read
+  config at the call site** — and read together, those build a flag loaded once
+  at boot, which cannot flip during the incident it exists for. Each rule is
+  correct alone, which is why the pair survived review. The call-site rule now
+  carries an explicit carve-out, keyed to something checkable: if the value must
+  change without a restart, evaluating it at the call site is the mechanism, not
+  a violation, and what gets validated at startup is the flag client's wiring
+  rather than its value.
+- The same skill's flag-expiry rule — *delete a flag older than one release
+  cycle in one direction or the other* — is written for release flags and
+  misfires badly on an operational kill switch, where deleting toward on
+  reinstates the incident and deleting toward off removes the feature. It now
+  says which flag type it is about, and that a kill switch takes a removal
+  *condition* and a scheduled exercise instead of a date, because the arm you
+  need at 3am is the arm that never runs.
+- `authoring-a-new-skill` now warns about the gate that actually ambushes people
+  when adding a skill: the library refuses a skill that no other skill points
+  at, so a new one turns the suite red until some neighbour's "Not for:" line
+  redirects to it. You cannot get a green suite by touching only the new skill's
+  own files. That check shipped earlier the same day and its own documentation
+  was missing — the identical drift the previous entry describes.
+- The skill count is written in prose in eight hand-maintained places — seven
+  plugin manifests and the README — and nothing checked any of them. Now checked.
+
 ## 2026-08-25 — A ship step that told you to do work that no longer exists
 
 - `authoring-a-new-skill` was still instructing anyone shipping a new skill to
