@@ -80,6 +80,18 @@ Severity labels are computed for someone else's deployment. Reachability is wher
 
 Three columns: **Threat | Decision | Where it lives now.** Decisions rank in this order — design change so the threat cannot exist, mitigation with a named test, detection with a named alert and a named recipient, accepted with an owner and a review date. "We'll monitor it" without an alert name is acceptance spelled dishonestly.
 
+## A limit is a property of state, not of one transition
+
+A limit, a quota, an entitlement, a uniqueness rule — each of these is a property of a **state**, and each gets implemented as a check on a single **transition**, almost always the interactive one that was in mind when it was written. The gate is real, it works, and it guards one door of a building with several.
+
+Every other route that can reach the same state walks past it: first-run seeding that creates in bulk, import, migration, restore from backup, sync from another replica, admin tooling, an undo that re-adds what was removed. These are the paths that typically run with more authority and less scrutiny than the one that got the check, which is the wrong way round.
+
+So the question is never "is the limit enforced?" It is: **enumerate every path that can produce this state, and does each one pass the same gate?** Write the list; a limit with one enforcement site and four producers is a finding, and it is findable in minutes by grepping for writes to the thing being limited rather than for the check. `tracing-data-flow` covers doing that enumeration properly when the producers are not obvious.
+
+Then ask the second half, which is what turns a temporary breach into a permanent one: **does anything re-check the state after it exists?** A gate that runs only at creation cannot repair what arrived before it, around it, or from a version of the code that predates it. Enforcement only at creation encodes an assumption that state can only ever arrive by creation, and every item in the list above violates that assumption. Without a read-time or load-time check as well, the rule degrades into an honour system the moment a second writer appears, and the violation persists for the lifetime of the install rather than until the next request.
+
+This generalizes past security limits to any invariant worth stating: if it is only ever established, and never verified, it is a hope with a constructor.
+
 ## Assumptions are the tripwires
 
 List them at the top of the model. Each one, if false, invalidates everything below it, and each has a cheap check that almost nobody runs.
@@ -103,6 +115,8 @@ Re-run the model when any assumption changes. That change list is the trigger fo
 | Long debate on crypto choice, nothing on authorization | Novel-looking risks crowd out the common ones; broken access control outnumbers crypto flaws by a wide margin |
 | Mitigation exists, no test | A mitigation without a test is a comment; the next refactor deletes it silently |
 | "The gateway will block that" | Control placed at a layer any direct caller bypasses |
+| The paid tier stops existing for users who arrived by one particular route | A limit enforced at one write path; the bulk or seeding path never consulted it |
+| A violated invariant that never repairs itself | Checked at creation only, so nothing re-examines the state once it exists |
 
 ## Red flags
 
@@ -112,3 +126,5 @@ Re-run the model when any assumption changes. That change list is the trigger fo
 - "We'll do security after the MVP" — trust boundaries are architecture; they are not retrofitted, and the session that ends with zero design changes has already conceded this.
 - Nobody in the room can say which single credential could delete all customer data.
 - Exactly one mitigation per threat — defense in depth was never considered.
+- A rule described as "enforced" with exactly one enforcement site named, and no list of what else writes to the same state.
+- An invariant that is established at creation and never checked again, on a system that also imports, migrates, restores, or syncs.

@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.4</span>
+      <span class="wordmark-version" dir="ltr">v0.11.5</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T12:55:43+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T12:55:43Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T13:07:28+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:07:28Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -127,8 +127,19 @@ Flag one more thing, because it applies to this very conversation: this session 
     <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-fresh-at="2026-08-25T14:52:07+02:00" draggable="false" style="--cf-offset: 0">
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/threat-modeling/" data-fresh-at="2026-08-25T13:07:28.197874+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">threat-modeling</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T13:07:28.197874+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</p>
+  <span class="card__foot">
+    <span class="tag">Security (defensive)</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-fresh-at="2026-08-25T14:52:07+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">confirming-before-claiming-done</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:52:07+02:00">Updated</span>
@@ -139,7 +150,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/least-privilege-design/" data-fresh-at="2026-08-23T20:43:36+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/least-privilege-design/" data-fresh-at="2026-08-23T20:43:36+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">least-privilege-design</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-08-23T20:43:36+02:00">Updated</span>
@@ -172,14 +183,10 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-08-25">25 Aug 2026</time>
-    <span class="notes__entry-title">A check that would pass even if nothing worked</span>
+    <span class="notes__entry-title">Eight lessons from real work, folded back in</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> gains a section for the case where the check is fresh, run by you, from the right place, and green — and still measures the wrong thing. The requirement is that something comes back after a restart, survives a cold cache, or works from a fresh clone; the check to hand only observes the present.</li>
-    <li>One question separates them: would this still pass if the condition the requirement names had never once occurred? If yes, the green result is a proxy, and re-running it converts nothing. Worth asking of a service, a cache, a scheduled job, or a backup you are about to call done.</li>
-    <li>The answer is to induce the condition once rather than add another check of the same kind — but that is disruptive and frequently not yours to decide, so the section routes it through <a class="skill-link" href="/tbaguette-skills/skills/deciding-reversibility/"><code>deciding-reversibility</code></a> and the owner's go-ahead. It also closes the escape hatch: when you cannot get that go-ahead, report the requirement as configured but unverified and name the test that would settle it.</li>
-    <li>Two readings that beat a status string: a start timestamp next to a boot timestamp tells you <em>who</em> started something, and a restart counter separates coming up cleanly from being caught by a supervisor and retried.</li>
-    <li>The description carries the new trigger, so &quot;make sure it starts on boot&quot; now reaches the skill at all. Three rows join its evidence table, one of them about backups rather than services, because the same mistake is what convinces people they have one.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/threat-modeling/"><code>threat-modeling</code></a> now asks a question that catches a whole class of bypass: a limit, quota or entitlement is a property of <em>state</em>, but it almost always gets implemented as a check on one <em>transition</em> — the interactive one someone had in mind. Seeding, import, migration, restore and sync reach the same state without passing it, usually with more authority and less scrutiny. Enumerate the producers, not the check. And ask whether anything re-examines the state after it exists, because a gate that runs only at creation cannot repair what arrived around it.</li>
   </ul>
 </li>
   </ol>
@@ -188,6 +195,19 @@ Flag one more thing, because it applies to this very conversation: this session 
       <span class="notes__earlier-label">Show 5 earlier updates</span>
     </summary>
     <ol class="notes__list notes__list--earlier">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-08-25">25 Aug 2026</time>
+    <span class="notes__entry-title">A check that would pass even if nothing worked</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li>Some things you are asked to confirm are not about the present at all: that a service comes back after a restart, that a cache rebuilds cold, that a project builds from a fresh clone, that a backup restores. The check to hand almost always measures the present instead — it is running, it answers, it is set to start — and those pass just as convincingly in the world where the requirement is completely unmet.</li>
+    <li>One question tells the two apart: would this check still pass if the condition the requirement names had never once occurred? If yes, it is a proxy, and re-running it proves nothing further. Worth asking before calling anything done on a service, a cache, a scheduled job, or a backup.</li>
+    <li>What settles it is inducing the condition once — actually restarting the host, clearing the cache, cloning into an empty directory. That is disruptive and often not yours to authorise, so it now says to treat it as a reversibility decision and get the owner's go-ahead first. When you cannot, the honest report is &quot;configured but unverified&quot;, plus the test that would settle it — not the proxy dressed up as proof.</li>
+    <li>Two things read a result better than any status string: a start timestamp beside a boot timestamp tells you <em>who</em> started something, and a restart counter separates coming up cleanly from crashing and being retried, which look identical from outside.</li>
+    <li>Asking for something to be made to start on boot, survive a restart, or work from scratch now reaches <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> on its own.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-08-24">24 Aug 2026</time>
@@ -233,17 +253,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> — what to do when the thing being asked for is outside what this model or harness can actually do, rather than quietly delivering something adjacent and calling it done.</li>
     <li>The install instructions warn that a conversation already open when you install will not see the new skills. Start a fresh one.</li>
     <li>The “Fresh from the oven” carousel works again: a click on a tile reaches its skill, dragging no longer swallows that click, the fan sits level in its rail, and it stopped pushing the whole page sideways at narrow widths.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-08-20">20 Aug 2026</time>
-    <span class="notes__entry-title">Finishing, and a version you can read</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/finishing-what-you-started/"><code>finishing-what-you-started</code></a>, for long runs and multi-part requests where stopping short would go unnoticed. Write the acceptance ledger to a file before starting, and re-measure every number at report time rather than quoting it from memory.</li>
-    <li>The installed plugin’s version shows next to the wordmark in the site header, so you can tell at a glance whether what you have matches what is published.</li>
-    <li>The skill check is re-asserted every turn rather than only at the start of a session, which is where it used to quietly lapse in long conversations.</li>
   </ul>
 </li>
     </ol>
@@ -1076,7 +1085,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/threat-modeling/" data-search-card data-search-terms="threat-modeling use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration… security (defensive)">
   <span class="card__name-row">
     <span class="card__name">threat-modeling</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T13:07:28.197874+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</p>
   <span class="card__foot">

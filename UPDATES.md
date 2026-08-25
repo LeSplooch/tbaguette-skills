@@ -11,29 +11,41 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-25 — Eight lessons from real work, folded back in
+
+- `threat-modeling` now asks a question that catches a whole class of bypass: a
+  limit, quota or entitlement is a property of *state*, but it almost always gets
+  implemented as a check on one *transition* — the interactive one someone had in
+  mind. Seeding, import, migration, restore and sync reach the same state without
+  passing it, usually with more authority and less scrutiny. Enumerate the
+  producers, not the check. And ask whether anything re-examines the state after
+  it exists, because a gate that runs only at creation cannot repair what arrived
+  around it.
+
 ## 2026-08-25 — A check that would pass even if nothing worked
 
-- `confirming-before-claiming-done` gains a section for the case where the check
-  is fresh, run by you, from the right place, and green — and still measures the
-  wrong thing. The requirement is that something comes back after a restart,
-  survives a cold cache, or works from a fresh clone; the check to hand only
-  observes the present.
-- One question separates them: would this still pass if the condition the
-  requirement names had never once occurred? If yes, the green result is a proxy,
-  and re-running it converts nothing. Worth asking of a service, a cache, a
-  scheduled job, or a backup you are about to call done.
-- The answer is to induce the condition once rather than add another check of the
-  same kind — but that is disruptive and frequently not yours to decide, so the
-  section routes it through `deciding-reversibility` and the owner's go-ahead. It
-  also closes the escape hatch: when you cannot get that go-ahead, report the
-  requirement as configured but unverified and name the test that would settle it.
-- Two readings that beat a status string: a start timestamp next to a boot
-  timestamp tells you *who* started something, and a restart counter separates
-  coming up cleanly from being caught by a supervisor and retried.
-- The description carries the new trigger, so "make sure it starts on boot" now
-  reaches the skill at all. Three rows join its evidence table, one of them about
-  backups rather than services, because the same mistake is what convinces people
-  they have one.
+- Some things you are asked to confirm are not about the present at all: that a
+  service comes back after a restart, that a cache rebuilds cold, that a project
+  builds from a fresh clone, that a backup restores. The check to hand almost
+  always measures the present instead — it is running, it answers, it is set to
+  start — and those pass just as convincingly in the world where the requirement
+  is completely unmet.
+- One question tells the two apart: would this check still pass if the condition
+  the requirement names had never once occurred? If yes, it is a proxy, and
+  re-running it proves nothing further. Worth asking before calling anything done
+  on a service, a cache, a scheduled job, or a backup.
+- What settles it is inducing the condition once — actually restarting the host,
+  clearing the cache, cloning into an empty directory. That is disruptive and
+  often not yours to authorise, so it now says to treat it as a reversibility
+  decision and get the owner's go-ahead first. When you cannot, the honest report
+  is "configured but unverified", plus the test that would settle it — not the
+  proxy dressed up as proof.
+- Two things read a result better than any status string: a start timestamp
+  beside a boot timestamp tells you *who* started something, and a restart
+  counter separates coming up cleanly from crashing and being retried, which look
+  identical from outside.
+- Asking for something to be made to start on boot, survive a restart, or work
+  from scratch now reaches `confirming-before-claiming-done` on its own.
 
 ## 2026-08-24 — Skills link to each other, and the site says what changed
 
