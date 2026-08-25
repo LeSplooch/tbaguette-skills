@@ -1,6 +1,6 @@
 ---
 name: confirming-before-claiming-done
-description: Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed, or handed off on the strength of that claim; when a subagent's or tool's own success report is about to be repeated as fact; or when the only thing behind the claim is that the code looks right and nothing has actually been run. Covers naming the command that would prove the claim and running it fresh, treating a stale or partial run as current evidence, and the gap between believing something works and having confirmed it.
+description: Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed, or handed off on the strength of that claim; when a subagent's or tool's own success report is about to be repeated as fact; or when the only thing behind the claim is that the code looks right and nothing has actually been run; or when the requirement is that something survives a restart, a cold start, or a fresh checkout and the only check to hand observes the present instead. Covers naming the command that would prove the claim and running it fresh, treating a stale or partial run as current evidence, inducing the condition a requirement names rather than accepting a proxy that would pass without it, and the gap between believing something works and having confirmed it.
 ---
 
 # Confirming before claiming done
@@ -41,6 +41,9 @@ When the check itself is unreliable — an intermittent bug that only reproduces
 | It is live | A signed-out, cache-busted fetch of the published URL | It renders in your authoring session; the upload exited 0 |
 | A bug is fixed | Reproduced the original symptom on the new code, and it's gone | The diff looks like the right fix |
 | A regression test guards it | Red on the old code, green on the fix, both watched | Passes once, never run against the broken version |
+| It comes back after a restart | A real restart, then the start time within seconds of boot | It is running; the registration reported success |
+| It works from a clean checkout | A clone into an empty directory, built there | It builds in the tree you have been working in |
+| The backup is good | A restore performed from it | The backup job exited 0 and the file is the right size |
 | A subagent finished the task | The diff it actually produced, read | Its own summary of what it did |
 | Requirements are met | Checked line by line against the spec | The tests pass, so it must be done |
 
@@ -60,6 +63,22 @@ Where a check ran is part of what it proves. Confirming a published thing from t
 
 A default-private artifact is indistinguishable from a public one at the owner's seat, so a page that renders perfectly for its author returns nothing to anyone else — worse once the URL has already gone out as public. A stale cache is the mirror image: it serves the previous version after a genuinely successful deploy, so a correct check reads as a failure and invites a pointless re-push. One makes a broken thing look fine, the other makes a fine thing look broken, and a signed-out, cache-busted fetch from outside the publishing tool settles both.
 
+## The run is not the return
+
+Some requirements are not about the present at all. *Comes back after a restart. Survives a cold cache. Works from a fresh clone. Persists across a session. Recovers when the network drops.* Each of those is a claim about a condition that has not occurred yet — and the check that is conveniently available almost always measures the present instead: it is running, it answers, it is registered to start, the cache has entries in it.
+
+Those checks pass. They would also pass, identically, in the world where the requirement is entirely unmet. That is the whole problem, and it is invisible from inside the check, because nothing about a green result advertises which of the two worlds produced it.
+
+So put the check to a specific question before trusting it: **would this still pass if the condition the requirement names had never once occurred?** If the answer is yes, what you are holding is a proxy, and no amount of re-running it converts it into proof. A service started by hand reports itself running and answers on its port exactly as convincingly as one the machine brought up by itself, for as long as nobody restarts the machine.
+
+The fix is not another check of the same kind. It is to induce the condition once — to actually make the thing happen, deliberately, in a window you choose: reboot the host, delete the cache, clone into an empty directory, kill the process, pull the network. That costs a real disruption, which is why it keeps being deferred — but the condition arrives on its own schedule eventually, and that schedule is reliably worse than the one you would have picked.
+
+Which makes inducing it a decision that is not yours alone to take. On anything shared, live, or depended on by someone else, the disruption is the whole cost of the proof, so it needs the owner's go-ahead and a window agreed with them rather than the next convenient gap — and `deciding-reversibility` is the call to make first, because a restart you cannot undo from where you are sitting is a different act from one you can. Being unable to get that go-ahead is not a reason to fall back on the proxy and call it proven. It is a reason to say plainly that the requirement is configured but unverified, and to name the one test that would settle it.
+
+Two things read the result more honestly than any status string. **Timestamps say who caused something; a status string only says that it is so.** A service's start time sitting seconds after the host's boot time means the machine started it; the same service reporting itself healthy with a start time hours after boot means a person did, and the boot path has never been exercised at all. And **a restart counter separates coming up cleanly from being caught and retried** — a supervisor configured to restart on failure makes a binary that crashes on every start look permanently healthy from outside, so the count of zero is part of the evidence, not a detail.
+
+Away from services the shape is the same one every time: something was configured to happen later, and the configuring got recorded as the happening. A setting that says a thing will occur is a plan, and the only evidence it was a correct plan is the thing having occurred once. A backup is not a backup until a restore has been performed from it — the job exiting 0 attests to a file being written, which is a different claim entirely.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -71,6 +90,8 @@ A default-private artifact is indistinguishable from a public one at the owner's
 | Build green, shipped, runtime error in the first minute | Compilation was checked; behavior never was |
 | "Looks right" standing in for "ran and confirmed" | Review of your own diff mistaken for verification of its behavior |
 | One failing test out of many waved off as unrelated | A partial pass rate treated as a pass |
+| Everything reports healthy for months, then nothing comes back after a power cut | Liveness checked repeatedly; durability never once induced |
+| "It is set to start automatically" offered as evidence that it starts automatically | Configuration read as behavior, with nothing having exercised it |
 
 ## Red flags
 
@@ -80,3 +101,6 @@ A default-private artifact is indistinguishable from a public one at the owner's
 - A claim that would change if reworded, because the wording was doing the work the evidence should be doing.
 - "It's probably fine, I'm confident in the fix" as a reason to skip the command that would confirm it.
 - Tired, near the end of a long task, and tempted to call it done to stop working rather than because it's verified.
+- A requirement worded with "after," "across," "survives," or "from scratch," answered by a command that only observes right now.
+- "It's enabled, so it'll come back" — enabling is the plan; coming back is the thing being claimed.
+- Reluctance to induce the condition because it would be disruptive, on a system where the condition will occur anyway, unattended.
