@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.12.0</span>
+      <span class="wordmark-version" dir="ltr">v0.12.1</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T15:10:58+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T15:10:58Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,7 +61,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">code-archaeology</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:10:58.726434+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Reading code</span>
   <p class="lede">Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify, a comment that contradicts the code, an unexplained TODO, or a line that looks safe to delete. Also when locating the commit that introduced a behavior or regression, following a file through renames and moves, judging whether old code is still load-bearing, or when a recorded decision appears to rule out the work in front of you.</p>
@@ -74,6 +74,7 @@
 <h2 id="blames-cardinal-failure">Blame's cardinal failure</h2>
 <p>Blame answers &quot;who last wrote these bytes&quot;, never &quot;who decided this&quot;. A reformat, a lint autofix, a license header, an import reorder, or a mass rename resets blame for an entire file. When blame returns a commit titled <code>reformat</code>, <code>style</code>, <code>lint</code>, <code>bump</code>, or a tool name, you have learned nothing — blame its parent and repeat. Run with <code>-w -C -C -M</code> from the start so most of that noise never appears.</p>
 <h2 id="bisect-the-test-not-the-impression">Bisect the test, not the impression</h2>
+<p><a class="skill-link" href="/tbaguette-skills/skills/bisecting-failures/"><code>bisecting-failures</code></a> owns the search itself — the exit-code contract, the axes other than commits, and what to do when the history will not build. What matters here is that bisecting is usually cheaper than the reading this skill otherwise describes, and the threshold is low: past about a page of log, stop reading and start halving.</p>
 <p>Write the smallest command that exits nonzero on the bad behavior <em>before</em> starting the bisect. Then <code>git bisect run</code> turns a thousand commits into roughly ten builds, unattended. Doing it by hand is why people convince themselves bisecting is not worth it.</p>
 <p>Rules that make it work: the script must be robust to a tree that does not build (exit 125, or <code>git bisect skip</code>); it must not depend on state left by the previous iteration; and it must test the behavior, not a test-suite result that changed for unrelated reasons in the range.</p>
 <h2 id="read-the-siblings">Read the siblings</h2>

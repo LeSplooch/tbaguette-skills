@@ -49,7 +49,7 @@ The third term is the one that decides, and it is the one nobody prices. A backu
 - **Idempotent and resumable.** Each step checks before acting, a second run is a no-op, and a run after a partial failure completes the remainder. This matters most in exactly the situation where it is used most — after something has already gone wrong.
 - **Preflight, then mutate.** Validate every precondition, credential, and input before the first write. A tool that dies halfway leaves a state nobody has documented, and the recovery is manual, improvised, and performed under stress.
 - **Loud, not partial.** Exit non-zero, name the step that failed, state what the system's condition now is and what to run next. Never press on past an error to get most of it done: partial success is the worst available outcome because it looks like progress.
-- **Observable.** Log what changed, not that it ran. A run that changed nothing when it should have changed something must be distinguishable from a legitimate no-op, or the tool will report success for years while doing nothing.
+- **Observable.** Log what changed, not that it ran. A run that changed nothing when it should have changed something must be distinguishable from a legitimate no-op, or the tool will report success for years while doing nothing. `instrumenting-for-observability` generalises the same distinction: emitting input volume alongside the result is what separates "processed zero items" from "processed nothing because nothing arrived".
 
 ## Check before you act
 

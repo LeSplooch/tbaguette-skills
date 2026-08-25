@@ -78,7 +78,7 @@ Where a wrong default causes a security or data incident, there is no default: r
 
 ## When config is really a flag, or really a branch
 
-**A flag, not config,** when the value must change without a restart, targets a subset of users, or gets flipped during an incident. Config is deploy-scoped and fleet-wide by nature; needing it faster or narrower than that means a real flag system with runtime evaluation, targeting, an audit trail, an owner, and an expiry date. A flag with no removal date is config with extra machinery, and a flag older than one release cycle should be deleted in one direction or the other.
+**A flag, not config,** when the value must change without a restart, targets a subset of users, or gets flipped during an incident. `feature-flagging` owns what happens next — the four flag types, each with its own lifespan, and the expiry that keeps a release flag from becoming permanent. Config is deploy-scoped and fleet-wide by nature; needing it faster or narrower than that means a real flag system with runtime evaluation, targeting, an audit trail, an owner, and an expiry date. A flag with no removal date is config with extra machinery, and a flag older than one release cycle should be deleted in one direction or the other.
 
 **A code branch in disguise** when the value selects between materially different behaviors — a `mode` string that swaps algorithms, a `provider` that changes semantics rather than endpoints. That is polymorphism smuggled through a string: it doubles the test matrix, and at any moment one arm is running untested in production. Either every arm is exercised in CI and in a real environment, or the unused arm is deleted.
 

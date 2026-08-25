@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.12.0</span>
+      <span class="wordmark-version" dir="ltr">v0.12.1</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T15:10:58+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T15:10:58Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,7 +61,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">explaining-technical-work</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:10:58.726434+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Communicating</span>
   <p class="lede">Use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation, a handoff, an escalation, a design walkthrough, or a recommendation. Also when the reader is not in the code, unsure how much detail to include, or when a draft has become a narrative of what was tried. Covers leading with the conclusion, altitude, naming uncertainty, and length.</p>
@@ -77,7 +77,7 @@
 <h2 id="say-what-it-means-not-what-you-did">Say what it means, not what you did</h2>
 <ul><li>The specific failure: reporting activity where the reader needed implication. &quot;Refactored the queue consumer and added retries&quot; tells a manager nothing. &quot;Duplicate charges can no longer happen during a broker failover&quot; answers the question they actually had.</li><li>Apply <em>so what, for this reader?</em> to every sentence about your work. No answer means cut it or translate it.</li><li>Delete the process narrative. What you tried, in what order, and which dead ends you hit is rarely what was asked. Two exceptions, both narrow: when the reader would otherwise repeat the dead end, or when the process <strong>is</strong> the evidence (a bisect, a measurement) — and then it is one line, not a story.</li><li>Use the reader's vocabulary, not the system's. Internal service and class names are a private language; translate into what the reader owns — &quot;checkout&quot;, &quot;the nightly export&quot;. Introduce an internal name only when they will need it to search.</li></ul>
 <h2 id="name-uncertainty-rather-than-smoothing-it">Name uncertainty rather than smoothing it</h2>
-<ul><li>Confident prose about something half-known is the most expensive habit in technical writing, because the reader cannot separate it from the parts you are sure of and calibrates on the whole document.</li><li>Mark each load-bearing claim as verified (and how), inferred (from what), or assumed (and what would falsify it).</li><li>&quot;I believe X because Y, but I have not checked Z&quot; is more useful than &quot;X&quot; — the reader now knows exactly what to check and can do it without you.</li><li>Distinguish &quot;I do not know&quot;, &quot;nobody knows&quot;, and &quot;I did not check&quot;. They lead to three different next actions and collapsing them wastes the reader's.</li><li>State a confidence level only where it would change the reader's decision. Elsewhere it is hedging that costs a line.</li></ul>
+<ul><li>Confident prose about something half-known is the most expensive habit in technical writing, because the reader cannot separate it from the parts you are sure of and calibrates on the whole document.</li><li>Mark each load-bearing claim as verified (and how), inferred (from what), or assumed (and what would falsify it). <a class="skill-link" href="/tbaguette-skills/skills/calibrating-confidence/"><code>calibrating-confidence</code></a> owns those three tiers and how each must read in a sentence; this is where they meet a specific reader who is about to act.</li><li>&quot;I believe X because Y, but I have not checked Z&quot; is more useful than &quot;X&quot; — the reader now knows exactly what to check and can do it without you.</li><li>Distinguish &quot;I do not know&quot;, &quot;nobody knows&quot;, and &quot;I did not check&quot;. They lead to three different next actions and collapsing them wastes the reader's.</li><li>State a confidence level only where it would change the reader's decision. Elsewhere it is hedging that costs a line.</li></ul>
 <h2 id="make-claims-checkable">Make claims checkable</h2>
 <ul><li>Point at the evidence: the file and symbol, the query, the log window, the commit, the measurement and its method. A claim with a pointer can be verified without you; a claim without one must be trusted or re-derived, and both are more expensive than the pointer.</li><li>Numbers get units and a baseline: &quot;p99 fell 340ms → 90ms under the same synthetic load&quot;, not &quot;much faster&quot;.</li><li>Where a claim rests on a single observation, say so. One run is evidence; it is not a measurement.</li></ul>
 <h2 id="length-is-a-cost-the-reader-pays">Length is a cost the reader pays</h2>

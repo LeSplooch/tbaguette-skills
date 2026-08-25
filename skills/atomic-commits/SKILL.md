@@ -63,7 +63,7 @@ Land the enabling refactor first even when it is justified only by what follows.
 
 ## Where atomicity pays
 
-- **Bisect** — its resolution is your commit size. A 2,000-line culprit tells you the day, not the cause, and you are back to reading a diff. Every non-building commit forces a skip, and enough skips leave a region permanently unsearchable.
+- **Bisect** — its resolution is your commit size (`bisecting-failures` for the search itself). A 2,000-line culprit tells you the day, not the cause, and you are back to reading a diff. Every non-building commit forces a skip, and enough skips leave a region permanently unsearchable.
 - **Revert** — a mixed commit forces a hand-edited partial revert, composed under incident pressure, untested, by whoever happens to be awake.
 - **Cherry-pick** — a fix entangled with a refactor does not backport. You either drag the refactor into a stabilization branch or retype the fix by hand, creating new unreviewed code in the most conservative branch you own.
 - **Review** — defect detection drops sharply past roughly 400 changed lines in one sitting; readers switch from reading to pattern-matching. Splitting 900 lines into a 750-line mechanical commit and a 150-line semantic one is what gets the semantic part actually read.

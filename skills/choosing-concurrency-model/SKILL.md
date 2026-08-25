@@ -18,7 +18,7 @@ Pick from workload shape and failure tolerance, never from language fashion. Mos
 
 ## Three questions, in order
 
-1. **What is the work waiting on?** Measure the split between on-CPU time and time blocked in syscalls. Above ~70% waiting, you want concurrency (overlap). Above ~70% on-CPU, you want parallelism or — first — a better algorithm. Concurrency never makes CPU-bound work faster; it makes it slower and harder to debug.
+1. **What is the work waiting on?** Measure the split between on-CPU time and time blocked in syscalls — a measurement, on `performance-profiling`'s terms, taken before a model is chosen rather than after one disappoints. Above ~70% waiting, you want concurrency (overlap). Above ~70% on-CPU, you want parallelism or — first — a better algorithm. Concurrency never makes CPU-bound work faster; it makes it slower and harder to debug.
 2. **How many units at peak?** Under ~100, almost any model works and you should pick for debuggability. Into the thousands, OS threads start losing to stack reservations (typically 512KB–8MB each) and scheduler overhead. Past ~10k concurrent waits, you need async or a lightweight-task runtime.
 3. **Interactive or batch?** Interactive means a latency budget and a real cancellation story. Batch means throughput and the freedom to redo work, which makes queues far more attractive.
 
@@ -80,4 +80,4 @@ Pick from workload shape and failure tolerance, never from language fashion. Mos
 - "The timeout will handle it."
 - Choosing the model because every example in the language's documentation uses it.
 - Being unable to name the owner of each piece of mutable state in one sentence.
-- Reaching for concurrency before profiling the sequential version.
+- Reaching for concurrency before profiling the sequential version (`performance-profiling`).

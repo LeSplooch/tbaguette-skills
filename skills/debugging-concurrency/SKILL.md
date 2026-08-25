@@ -31,7 +31,7 @@ Not for: a flaky test whose cause is shared fixtures or ordering in the harness 
 | Only on more cores or under load | a legal interleaving that was previously improbable | nothing changed except probability |
 | Vanishes when observed | any of the above | the observation widened or closed the window |
 | Correct until scaled up | queue growth, pool exhaustion | backpressure and bounds |
-| Duplicate side effects | at-least-once delivery meeting non-idempotent code | idempotency key |
+| Duplicate side effects | at-least-once delivery meeting non-idempotent code | idempotency key (`designing-for-idempotency`) |
 
 ## Reason from happens-before
 
@@ -41,7 +41,7 @@ For any two operations that touch the same state, name the edge that orders them
 - **Check-then-act across an edge boundary is the dominant shape.** Exists-then-create, empty-then-take, valid-then-use, size-then-index, absent-then-insert, unlocked-then-lock. Every one needs the check and the act inside the same critical section, or a single compare-and-swap.
 - **Atomicity does not compose.** Two atomic operations are not one atomic operation, and a concurrent collection makes each call safe while leaving every sequence of two calls unsafe. This is the most common way a "thread-safe" data structure still loses updates.
 - Volatile or atomic fields give visibility, not mutual exclusion. A counter increment on an atomic field is still three operations unless the increment itself is the atomic one.
-- The class-level fix beats the instance-level one: immutability, confinement to one thread or actor, and message passing remove the whole category rather than the occurrence you found.
+- The class-level fix beats the instance-level one: immutability, confinement to one thread or actor, and message passing remove the whole category rather than the occurrence you found. That is a model change, not a patch — `choosing-concurrency-model` covers picking one that cannot express the bug, which is the only fix that does not have siblings.
 
 ## Make it more likely, not less
 

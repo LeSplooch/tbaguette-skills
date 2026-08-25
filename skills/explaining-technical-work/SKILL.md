@@ -48,7 +48,7 @@ Wrong altitude is the most common failure here and it is invisible to the writer
 ## Name uncertainty rather than smoothing it
 
 - Confident prose about something half-known is the most expensive habit in technical writing, because the reader cannot separate it from the parts you are sure of and calibrates on the whole document.
-- Mark each load-bearing claim as verified (and how), inferred (from what), or assumed (and what would falsify it).
+- Mark each load-bearing claim as verified (and how), inferred (from what), or assumed (and what would falsify it). `calibrating-confidence` owns those three tiers and how each must read in a sentence; this is where they meet a specific reader who is about to act.
 - "I believe X because Y, but I have not checked Z" is more useful than "X" — the reader now knows exactly what to check and can do it without you.
 - Distinguish "I do not know", "nobody knows", and "I did not check". They lead to three different next actions and collapsing them wastes the reader's.
 - State a confidence level only where it would change the reader's decision. Elsewhere it is hedging that costs a line.

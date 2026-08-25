@@ -11,6 +11,29 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-25 — A ship step that told you to do work that no longer exists
+
+- `authoring-a-new-skill` was still instructing anyone shipping a new skill to
+  translate its description into every locale the site builds. The site has been
+  English-only since 23 August, when `i18n/` was deleted and the locale list was
+  cut to English alone — so that step described work that cannot be done and does
+  not need doing. Removed. The same checklist named only `CATALOG.md` as the place
+  a new skill gets filed, omitting the registry in `content_pipeline.py` that
+  actually refuses to build without it; it now names both, and points at how to
+  create a category when none of the existing ones fit.
+- Ten more skills gained cross-references to the skills that own the other half
+  of their problem, found by reading all 92 end to end rather than by sampling.
+  The ones worth naming: `configuration-management`'s "this is really a flag"
+  section now hands off to `feature-flagging` instead of restating its rules;
+  `code-archaeology` and `atomic-commits` both discussed bisection at length
+  without ever naming `bisecting-failures`; `explaining-technical-work` asked you
+  to mark claims verified, inferred, or assumed without mentioning that
+  `calibrating-confidence` defines those three tiers; and `deleting-code`'s
+  proof-of-deadness step now says why it inverts the usual observability rule —
+  you are trying to emit that nothing happened, and only a counter can show that.
+- Across both of today's updates the library went from 308 cross-references to
+  355, and from three skills that referenced nothing at all to none.
+
 ## 2026-08-25 — Two new categories, and a pointer that led nowhere
 
 - The library is organised into **twelve categories instead of ten**, and eleven

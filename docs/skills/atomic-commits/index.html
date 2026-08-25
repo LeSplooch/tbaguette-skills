@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.12.0</span>
+      <span class="wordmark-version" dir="ltr">v0.12.1</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T15:10:58+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T15:10:58Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,7 +61,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">atomic-commits</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:10:58.726434+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Landing changes</span>
   <p class="lede">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit, when a diff mixes a rename or a reformat with a logic change, when a bisect lands on a commit too large to reason about, when a revert or a backport drags in changes nobody asked for, when the checkout is shared with another agent, a colleague, or a tool that writes to it, or when a reviewer cannot find the real change in a diff. Covers splitting by file and by hunk, mechanical versus semantic separation, staging in a tree you do not solely own, and commit granularity.</p>
@@ -86,7 +86,7 @@
 <p>The mixed commit is the one nobody can review and nobody can revert. A reviewer facing 700 moved lines with 6 changed ones cannot find the 6, so they approve the shape and miss the semantics. Split so that one commit changes structure with behavior fixed, and the next changes behavior with structure fixed. Each is then checkable by a different, cheaper method: the refactor by &quot;does anything observable differ&quot;, the change by &quot;is this the right behavior&quot;.</p>
 <p>Land the enabling refactor first even when it is justified only by what follows. The honest workflow is inverted: write the feature to discover what the code should have looked like, then reorder history so the refactor comes first and the feature arrives as a small diff on top. History is a designed artifact, not a transcript.</p>
 <h2 id="where-atomicity-pays">Where atomicity pays</h2>
-<ul><li><strong>Bisect</strong> — its resolution is your commit size. A 2,000-line culprit tells you the day, not the cause, and you are back to reading a diff. Every non-building commit forces a skip, and enough skips leave a region permanently unsearchable.</li><li><strong>Revert</strong> — a mixed commit forces a hand-edited partial revert, composed under incident pressure, untested, by whoever happens to be awake.</li><li><strong>Cherry-pick</strong> — a fix entangled with a refactor does not backport. You either drag the refactor into a stabilization branch or retype the fix by hand, creating new unreviewed code in the most conservative branch you own.</li><li><strong>Review</strong> — defect detection drops sharply past roughly 400 changed lines in one sitting; readers switch from reading to pattern-matching. Splitting 900 lines into a 750-line mechanical commit and a 150-line semantic one is what gets the semantic part actually read.</li></ul>
+<ul><li><strong>Bisect</strong> — its resolution is your commit size (<a class="skill-link" href="/tbaguette-skills/skills/bisecting-failures/"><code>bisecting-failures</code></a> for the search itself). A 2,000-line culprit tells you the day, not the cause, and you are back to reading a diff. Every non-building commit forces a skip, and enough skips leave a region permanently unsearchable.</li><li><strong>Revert</strong> — a mixed commit forces a hand-edited partial revert, composed under incident pressure, untested, by whoever happens to be awake.</li><li><strong>Cherry-pick</strong> — a fix entangled with a refactor does not backport. You either drag the refactor into a stabilization branch or retype the fix by hand, creating new unreviewed code in the most conservative branch you own.</li><li><strong>Review</strong> — defect detection drops sharply past roughly 400 changed lines in one sitting; readers switch from reading to pattern-matching. Splitting 900 lines into a 750-line mechanical commit and a 150-line semantic one is what gets the semantic part actually read.</li></ul>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;I will clean up the history before merging&quot; and it never happens</td><td>Splitting was deferred past the point where you still remember which hunk belonged to which idea</td></tr><tr><td>Subject line contains &quot;and&quot; or a bullet list</td><td>Two commits wearing one hat</td></tr><tr><td>Reverting a bad commit breaks something unrelated</td><td>Fix and refactor shipped together</td></tr><tr><td>Bisect lands on a 1,500-line commit</td><td>Commit boundaries were drawn by time of day, not by decision</td></tr><tr><td>Tests only pass on the branch's final commit</td><td>Commits are chapters of a story, not units of change</td></tr><tr><td>A split commit fails CI in isolation</td><td>Split by hunk without building each half</td></tr><tr><td>Reviewer asks why a file is in the diff</td><td>A drive-by edit stowed away in an unrelated change</td></tr><tr><td>A commit contains a file you never opened</td><td>The stage was drawn by location, not by authorship</td></tr><tr><td>Every commit is &quot;wip&quot;, &quot;fix&quot;, &quot;review feedback&quot;</td><td>The branch is a working log; it was never rewritten into a history</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>

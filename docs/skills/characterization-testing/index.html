@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.12.0</span>
+      <span class="wordmark-version" dir="ltr">v0.12.1</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T15:10:58+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T15:10:58Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,7 +61,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">characterization-testing</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:10:58.726434+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Testing</span>
   <p class="lede">Use when changing, refactoring, extracting, porting, or deleting code that has no tests, when the current behavior is unknown or undocumented, when a rewrite must match a legacy component output for output, or when reaching for golden files, approval tests, snapshots, or output diffs. Covers pinning existing behavior, recording known bugs, and retiring the pins.</p>
@@ -74,7 +74,7 @@
 <p><strong>Rule:</strong> the assertion must be expressible without naming a single symbol you intend to rename, move, split, inline, or delete. If the test calls the function you are about to dissolve, the refactor breaks the test and you learn nothing about behavior.</p>
 <ul><li>Pin at the <strong>stable outer boundary</strong> of the change: the module's public entry point, the HTTP handler, the command's stdout and exit code, the rows written, the messages emitted.</li><li>Pin <strong>effects as well as returns</strong>. A function whose real work is a write, a publish, or a log leaves nothing to assert on if you only capture the return value. Capture the effects through the same seam you would use to fake them.</li><li>If the only stable boundary is far too coarse — a whole application run per case — introduce one seam first, verify the seam changed nothing, and pin there. Adding a seam is a smaller risk than refactoring blind.</li></ul>
 <h2 id="building-the-pin">Building the pin</h2>
-<ol><li><strong>Draw inputs from production, not imagination.</strong> Sample real requests, records, or files. Take a <strong>stratified</strong> sample across time, size, type, and account age — the first 100 rows are the oldest and least representative data you own. 30–100 well-spread cases beat 10,000 near-identical ones.</li><li><strong>Record the output by running the code and accepting what comes out.</strong> This is the one place where a test passing on its first run is correct.</li><li><strong>Verify the pin has teeth before trusting it.</strong> Mutate the source — flip a comparison, change a constant, drop a field — and confirm the recorded output changes. Pins that assert on empty output, swallow exceptions, or capture a value nobody computes pass happily forever, and this check is the only thing that catches them.</li><li><strong>Refactor.</strong> Any diff in the pinned output is either a bug you introduced or a bug you fixed. Both require a decision. There is no third category, and &quot;probably fine&quot; is not a decision.</li></ol>
+<ol><li><strong>Draw inputs from production, not imagination.</strong> This is <a class="skill-link" href="/tbaguette-skills/skills/grounding-test-doubles/"><code>grounding-test-doubles</code></a>' capture-over-compose rule pointed at your own code rather than at a vendor's: an input you invented and the code you are pinning encode the same beliefs, so the recording proves only that you are self-consistent. Sample real requests, records, or files. Take a <strong>stratified</strong> sample across time, size, type, and account age — the first 100 rows are the oldest and least representative data you own. 30–100 well-spread cases beat 10,000 near-identical ones.</li><li><strong>Record the output by running the code and accepting what comes out.</strong> This is the one place where a test passing on its first run is correct.</li><li><strong>Verify the pin has teeth before trusting it.</strong> Mutate the source — flip a comparison, change a constant, drop a field — and confirm the recorded output changes. Pins that assert on empty output, swallow exceptions, or capture a value nobody computes pass happily forever, and this check is the only thing that catches them.</li><li><strong>Refactor.</strong> Any diff in the pinned output is either a bug you introduced or a bug you fixed. Both require a decision. There is no third category, and &quot;probably fine&quot; is not a decision.</li></ol>
 <h2 id="keeping-goldens-from-churning">Keeping goldens from churning</h2>
 <table><thead><tr><th>Churn source</th><th>Fix</th></tr></thead><tbody><tr><td>Timestamps and durations</td><td>Inject a fixed clock, or redact to a placeholder token</td></tr><tr><td>Generated ids, UUIDs, tokens</td><td>Deterministic id source, or normalize to <code>&lt;id:1&gt;</code>, <code>&lt;id:2&gt;</code> in order of appearance</td></tr><tr><td>Map, set, or query iteration order</td><td>Sort before serializing</td></tr><tr><td>Floating-point output</td><td>Round to a fixed precision at serialization</td></tr><tr><td>Absolute paths, hostnames, ports</td><td>Normalize to placeholders</td></tr><tr><td>Version and build strings</td><td>Strip them</td></tr><tr><td>Whole-object dumps</td><td>Project to the fields the change can plausibly affect</td></tr></tbody></table>
 <p>Two thresholds decide whether a golden is doing its job:</p>

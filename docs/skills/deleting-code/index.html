@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.12.0</span>
+      <span class="wordmark-version" dir="ltr">v0.12.1</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T15:10:58+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T15:10:58Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,7 +61,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">deleting-code</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:10:58.726434+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Landing changes</span>
   <p class="lede">Use when removing code, a feature, an endpoint, a config key, a column, or a dependency that appears unused, when deciding whether something is genuinely dead, when a deprecation needs a removal path and a deadline, when code has been commented out or kept &quot;just in case&quot;, or when the callers of something cannot all be seen from inside the repository. Covers proving deadness, deprecation sequences, and removing tests and config alongside.</p>
@@ -72,7 +72,7 @@
 <h2 id="proving-deadness">Proving deadness</h2>
 <p>Each layer below hides from the layer above it. A search for the symbol name finds the first two rows and nothing else.</p>
 <table><thead><tr><th>Reference kind</th><th>How it hides from search</th><th>What actually finds it</th></tr></thead><tbody><tr><td>Static call</td><td>Does not</td><td>Compiler, linker, or an index-aware search across the whole tree</td></tr><tr><td>Interface member, override</td><td>Name appears only on the base type</td><td>Delete the member and see what fails to compile</td></tr><tr><td>Reflection, annotations, DI containers</td><td>Name exists only as a string</td><td>Grep the string form in every casing convention the stack uses</td></tr><tr><td>Build-time codegen, macros</td><td>Caller is not in the source tree</td><td>Search generated output, not sources</td></tr><tr><td>Configuration and flags</td><td>Reachable only where some flag is on</td><td>Read flag state in every environment, not the default</td></tr><tr><td>Data-driven dispatch</td><td>Route table, plugin manifest, database row, message type</td><td>Query the data store, not the code</td></tr><tr><td>Persisted state</td><td>A type name is written into stored records</td><td>Cannot delete until those records are drained or migrated</td></tr><tr><td>External consumers</td><td>Not in your repository at all</td><td>Telemetry — nothing else works</td></tr><tr><td>Rare scheduled paths</td><td>Runs quarterly</td><td>Telemetry over a window longer than the period</td></tr></tbody></table>
-<p>Then instrument. Add a counter or a sampled log at the entry of the suspected-dead path, ship it, and wait longer than the longest business cycle that could reach it — 30 days as an absolute floor, and one full billing or fiscal cycle for anything customer-facing. Delete when the counter is zero <strong>and you can explain why it is zero</strong>. Zero from a build that never reached two regions is not evidence; confirm the instrumented version is actually running everywhere before you start the clock.</p>
+<p>Then instrument. This is the one case where <a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a>'s rule inverts: normally you emit what changed, here you need to emit that nothing did, and a counter that only increments is the only shape that can prove absence. Add a counter or a sampled log at the entry of the suspected-dead path, ship it, and wait longer than the longest business cycle that could reach it — 30 days as an absolute floor, and one full billing or fiscal cycle for anything customer-facing. Delete when the counter is zero <strong>and you can explain why it is zero</strong>. Zero from a build that never reached two regions is not evidence; confirm the instrumented version is actually running everywhere before you start the clock.</p>
 <p>Search the non-code artifacts too, because they fail silently rather than loudly: dashboards, alert rules, saved queries, runbooks, support macros, CI configuration, infrastructure definitions, and translation catalogs. Deleting a log line or a metric name blanks a dashboard nobody notices until an incident.</p>
 <h2 id="deprecation-is-a-schedule-not-a-label">Deprecation is a schedule, not a label</h2>
 <p>Fix the whole sequence and its dates at step 1. A deprecation notice without a removal date is a permanent annotation, and the codebase already has several.</p>

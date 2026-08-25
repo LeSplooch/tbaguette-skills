@@ -30,7 +30,7 @@ The pin must survive the refactor, and that is entirely decided before any outpu
 
 ## Building the pin
 
-1. **Draw inputs from production, not imagination.** Sample real requests, records, or files. Take a **stratified** sample across time, size, type, and account age — the first 100 rows are the oldest and least representative data you own. 30–100 well-spread cases beat 10,000 near-identical ones.
+1. **Draw inputs from production, not imagination.** This is `grounding-test-doubles`' capture-over-compose rule pointed at your own code rather than at a vendor's: an input you invented and the code you are pinning encode the same beliefs, so the recording proves only that you are self-consistent. Sample real requests, records, or files. Take a **stratified** sample across time, size, type, and account age — the first 100 rows are the oldest and least representative data you own. 30–100 well-spread cases beat 10,000 near-identical ones.
 2. **Record the output by running the code and accepting what comes out.** This is the one place where a test passing on its first run is correct.
 3. **Verify the pin has teeth before trusting it.** Mutate the source — flip a comparison, change a constant, drop a field — and confirm the recorded output changes. Pins that assert on empty output, swallow exceptions, or capture a value nobody computes pass happily forever, and this check is the only thing that catches them.
 4. **Refactor.** Any diff in the pinned output is either a bug you introduced or a bug you fixed. Both require a decision. There is no third category, and "probably fine" is not a decision.

@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.12.0</span>
+      <span class="wordmark-version" dir="ltr">v0.12.1</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T15:10:58+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T15:10:58Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,7 +61,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">configuration-management</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:10:58.726434+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Designing systems</span>
   <p class="lede">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together, when something works in staging but not in production, when a missing or malformed setting surfaces as a null or a crash hours after startup, when standing up a new environment or deployment target, or when deciding whether a value belongs in code, config, a secret store, or a feature flag system.</p>
@@ -91,7 +91,7 @@
 <table><thead><tr><th>Convenient default</th><th>Safe default</th></tr></thead><tbody><tr><td>Bind all interfaces</td><td>Bind loopback; exposure is opt-in</td></tr><tr><td>Auth or TLS verification off</td><td>On; disabling requires an explicit, logged setting</td></tr><tr><td>No timeout, infinite retries</td><td>Finite everywhere; unbounded waits are how one slow dependency stalls a fleet</td></tr><tr><td>Debug endpoints, verbose errors, profiling on</td><td>Off outside development</td></tr><tr><td>Unbounded queues, caches, upload sizes</td><td>Bounded, with the bound stated</td></tr><tr><td>Destructive operations enabled</td><td>Disabled, or gated behind a second confirmation setting</td></tr></tbody></table>
 <p>Where a wrong default causes a security or data incident, there is no default: require the value and fail to start without it. &quot;Convenient in development&quot; is served by a development config file, not by a permissive production default.</p>
 <h2 id="when-config-is-really-a-flag-or-really-a-branch">When config is really a flag, or really a branch</h2>
-<p><strong>A flag, not config,</strong> when the value must change without a restart, targets a subset of users, or gets flipped during an incident. Config is deploy-scoped and fleet-wide by nature; needing it faster or narrower than that means a real flag system with runtime evaluation, targeting, an audit trail, an owner, and an expiry date. A flag with no removal date is config with extra machinery, and a flag older than one release cycle should be deleted in one direction or the other.</p>
+<p><strong>A flag, not config,</strong> when the value must change without a restart, targets a subset of users, or gets flipped during an incident. <a class="skill-link" href="/tbaguette-skills/skills/feature-flagging/"><code>feature-flagging</code></a> owns what happens next — the four flag types, each with its own lifespan, and the expiry that keeps a release flag from becoming permanent. Config is deploy-scoped and fleet-wide by nature; needing it faster or narrower than that means a real flag system with runtime evaluation, targeting, an audit trail, an owner, and an expiry date. A flag with no removal date is config with extra machinery, and a flag older than one release cycle should be deleted in one direction or the other.</p>
 <p><strong>A code branch in disguise</strong> when the value selects between materially different behaviors — a <code>mode</code> string that swaps algorithms, a <code>provider</code> that changes semantics rather than endpoints. That is polymorphism smuggled through a string: it doubles the test matrix, and at any moment one arm is running untested in production. Either every arm is exercised in CI and in a real environment, or the unused arm is deleted.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Null or type error hours after a clean startup</td><td>Config read lazily at the call site instead of validated at boot</td></tr><tr><td>A changed setting has no effect</td><td>Two sources resolve the same key with undeclared precedence, or the process caches a value read once</td></tr><tr><td>Works in staging, fails in production</td><td>A value present in one environment and absent in the other, with a silent default filling the gap</td></tr><tr><td>Service starts and passes health checks against the wrong dependency</td><td>A typo fell back to a default endpoint instead of failing</td></tr><tr><td>Secret in a log, crash dump, or support bundle</td><td>Redaction by denylist of suspicious-looking names</td></tr><tr><td>Rotating a credential needs a code change and a release</td><td>Secret embedded at build time rather than injected at runtime</td></tr><tr><td>Config file grows to hundreds of keys nobody can explain</td><td>Values that never vary by deployment were moved out of code</td></tr><tr><td>Cannot reproduce a production issue locally</td><td>No way to dump the effective config, so the two configurations were never compared</td></tr></tbody></table>

@@ -37,6 +37,8 @@ Blame answers "who last wrote these bytes", never "who decided this". A reformat
 
 ## Bisect the test, not the impression
 
+`bisecting-failures` owns the search itself — the exit-code contract, the axes other than commits, and what to do when the history will not build. What matters here is that bisecting is usually cheaper than the reading this skill otherwise describes, and the threshold is low: past about a page of log, stop reading and start halving.
+
 Write the smallest command that exits nonzero on the bad behavior *before* starting the bisect. Then `git bisect run` turns a thousand commits into roughly ten builds, unattended. Doing it by hand is why people convince themselves bisecting is not worth it.
 
 Rules that make it work: the script must be robust to a tree that does not build (exit 125, or `git bisect skip`); it must not depend on state left by the previous iteration; and it must test the behavior, not a test-suite result that changed for unrelated reasons in the range.
