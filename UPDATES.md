@@ -13,6 +13,16 @@ Everything above the first `##` is preamble and is never rendered.
 
 ## 2026-08-25 — Eight lessons from real work, folded back in
 
+- `drawing-boundaries` picks up the properties that boundaries quietly destroy.
+  A rule like *run the cheapest checks first* gets written for one stage, and
+  that stage obeys it — while the layer above does the reverse, because a module
+  cannot observe an ordering only visible from outside it, and cannot enforce
+  what it cannot observe. Every layer passes its own review and the composition
+  stays broken. For gates the audit is mechanical: list each one, annotate cost
+  and what it needs to know, and check the ordering is monotonic *across*
+  boundaries. A gate that runs after the spend is not a gate, it is a receipt.
+  The same inversion hides in retries that multiply, inner timeouts longer than
+  outer ones, per-client rate limits that blow the aggregate, and TTLs in series.
 - `diagnosing-before-fixing` adds a signal that arrives before the expensive one.
   Re-running a failing operation is only an experiment if something differed
   between the runs; when nothing did, the second attempt is a re-observation of

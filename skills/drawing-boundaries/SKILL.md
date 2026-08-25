@@ -44,6 +44,25 @@ A boundary is a promise that two sides can change independently. If they cannot,
 
 Move outward only when a concrete requirement demands it — a divergent scaling profile, a fault-isolation requirement, a team or compliance boundary, a different release cadence. "It felt cleaner" does not pay for a network hop. **A boundary drawn as a module can be promoted outward cheaply later; one drawn as a service is very hard to pull back in.** Draw in-process, promote under demand.
 
+## A cost rule stated inside a module says nothing about the pipeline
+
+Some correctness properties are not properties of any component. Ordering is the clearest one: a rule like *run the checks cheapest and most fundamental first* gets written down for one stage, by whoever built that stage, and that stage obeys it exactly. The document is right. The module is right. The system is not, because the layer above was written at a different time by different reasoning, and nothing carries the rule outward.
+
+Nothing can. A module cannot observe an ordering that is only visible from outside it, and it cannot enforce one it cannot observe. That is the general shape worth taking from this: **a property no single component can see is precisely the kind a boundary destroys**, and it needs an owner above the boundary or it has no owner at all. Each layer then passes its own review, forever, while the composition stays broken.
+
+For gates specifically, the audit is mechanical. List every gate in the pipeline that can reject, annotate each with what it costs and with what it needs to know, and confirm the ordering is monotonic in cost *across* boundaries rather than within each one. A gate whose input is static — a feature flag, an entitlement, a mode setting, anything already in hand before the request started — costs nothing and belongs first, always. The most expensive stage in a system should be preceded by every gate capable of rejecting without it.
+
+Which gives the sharp version: **a gate that runs after the spend is not a gate, it is a receipt.** It records what happened and cannot prevent it. A pipeline that pays its largest cost and *then* consults a flag which was knowable all along has not implemented a check; it has implemented an audit log with an unusually large bill.
+
+The same inversion hides in every knob stated per-module rather than per-path:
+
+| Knob | The per-module statement | What the composition actually does |
+|---|---|---|
+| Retries | "we retry three times" at two layers | Nine attempts, and a thundering herd nobody designed |
+| Timeouts | Each stage has a sensible one | An inner timeout longer than the outer one, so the inner never fires |
+| Rate limits | Each client is limited | The aggregate across clients exceeds what the dependency can take |
+| Caching | Each layer caches correctly | Two TTLs in series, and staleness is their sum, not the smaller |
+
 ## When not to split
 
 - **The two sides share a transactional invariant.** If correctness requires both to change atomically, they are one unit; splitting buys a saga and a new class of bugs in exchange for a diagram.
@@ -69,6 +88,8 @@ Before merging two things that look alike, establish that the resemblance is a s
 | Two services share a table | The schema is the real interface, and it is unversioned |
 | N+1 calls across a service boundary | Boundary cuts through a cohesive operation |
 | An interface with exactly one implementation, forever | Extracted before a second use case existed |
+| The expensive stage runs, then a static flag discards its result | Gate ordering treated as a per-module property; the free gate sits below the costly one |
+| Every module's timeouts and retries are sensible; the system's are not | Knobs set per-module for a property that only exists per-path |
 
 ## Red flags
 
@@ -79,3 +100,5 @@ Before merging two things that look alike, establish that the resemblance is a s
 - "We'll abstract the database in case we switch" — said while copying one vendor's exact method names.
 - Any architecture diagram whose top-level boxes are all technical layers.
 - Extracting an interface to make something testable when the real problem is that it does too much.
+- A cost-ordering or retry rule written down for one stage, with nothing owning it across the stages.
+- The cheapest possible rejection — a config flag, an entitlement — consulted after the most expensive stage has already run.
