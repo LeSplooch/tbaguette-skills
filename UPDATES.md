@@ -13,6 +13,15 @@ Everything above the first `##` is preamble and is never rendered.
 
 ## 2026-08-25 — Eight lessons from real work, folded back in
 
+- `diagnosing-before-fixing` adds a signal that arrives before the expensive one.
+  Re-running a failing operation is only an experiment if something differed
+  between the runs; when nothing did, the second attempt is a re-observation of
+  the first. Byte-identical output across attempts is itself a finding — the
+  failure is deterministic, so the cause is structural, and that is the moment to
+  read the error rather than run it again. It sits in deliberate tension with the
+  reproduction step, which wants identical results: same observation, opposite
+  meaning, separated by asking what differed. The three-failed-fixes rule already
+  in the skill charges three fixes before it fires; this costs a re-read.
 - `writing-durable-docs` names the claims its own drift ladder cannot reach.
   Every rung of that ladder needs something to execute or generate, so a claim
   that something *is not* the case — no telemetry, no third-party calls, no

@@ -92,6 +92,16 @@ Make one change, addressing the cause the trace pointed at — not a bundle of a
 
 One validation point feels sufficient the day it's added and stops being sufficient the day a different call path, a test mock, or a routine refactor bypasses it. Once the trace shows where bad data enters and everywhere it does damage on the way through, validate at every layer in between. [reference/defense-in-depth.md](reference/defense-in-depth.md) has the four layers and why each one catches what the others miss.
 
+## A retry is an experiment only if something differed
+
+Re-running a failing operation feels like gathering evidence. It only is evidence if something changed between the runs — the input, the environment, the code, the credentials, the time. When nothing differed, the second run is a re-observation of the first and the third is a re-observation of the second, and the cost is paid three times for one fact.
+
+Byte-identical output across attempts is itself a finding, and a useful one: it says the failure is deterministic, so the cause is structural rather than transient. That is the moment to stop attempting and start reading — the error text word by word, the documented behaviour of whatever emitted it, the platform rule it may be quietly stating. A message that repeats to the character is very often a system telling you a fact about itself that no local change can alter.
+
+This sits in deliberate tension with the reproduction step above, and the tension is the point. Identical results are exactly what you want when confirming a reproduction is real, and exactly what should stop you when you are attempting a fix or an operation. Same observation, opposite meaning, and the question that separates them is always **what differed between those two runs?** If the honest answer is "nothing", no information was produced.
+
+Note the cost, too. The three-failed-fixes signal below is real but expensive — it charges three fixes before it fires. This one is available immediately, before any fix has been written, and it costs a re-read.
+
 ## When fixes keep failing
 
 Three failed fixes in a row is a different problem than the one being solved. If each attempt reveals the same coupling in a new place, or needs a bigger change than the last one to hold, the architecture is what's wrong — not the last three hypotheses. Say so explicitly and question the pattern before attempting a fourth; a fourth patch on a bad architecture just becomes the fifth.
@@ -110,6 +120,7 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 | "One more fix attempt" after two failures | Three failures is an architecture signal, not a reason to try a fourth patch |
 | Test written after the fix, to "prove it works" | A test that never watched the bug fail proves nothing about whether it would have caught it |
 | "I don't fully understand it, but this might work" | Uncertainty deployed instead of named — say what isn't understood and go investigate exactly that |
+| The same command run four times with the same error | A retry treated as an experiment when nothing differed between the runs |
 
 ## Red flags
 
@@ -123,3 +134,4 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 - Adding a sleep to make a flaky repro script pass, instead of waiting for the condition
 - Investigating looks like nothing's happening, visibly, in front of people who are waiting; a bad retry's cost is invisible and lands later — that asymmetry is what's pulling, not an actual difference in risk
 - "I'll skip it with a tracked TODO" — said with real intent, about a TODO that dies the moment the release ships and priorities move on
+- An operation attempted again with nothing changed between the attempts, and the identical error read as bad luck rather than as determinism
