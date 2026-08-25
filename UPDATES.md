@@ -13,6 +13,15 @@ Everything above the first `##` is preamble and is never rendered.
 
 ## 2026-08-25 — Eight lessons from real work, folded back in
 
+- `designing-ci-pipelines` names why scheduled jobs rot unnoticed. Every other
+  check in a pipeline has somebody waiting on it, so silence means no trouble. A
+  scheduled job has no audience, and its success and its total non-existence
+  produce the same silence — which is why one that has never run successfully
+  looks identical to a healthy one on any dashboard showing last-run status. It
+  surfaces as the absence of the thing the job maintained, after the deadline it
+  protected. Two habits fix it: force one run by hand when the job lands, and
+  report *age of last success* rather than status of the last run, since a job
+  suspended in March is green on the second and four months stale on the first.
 - `portable-shell-scripting` covers the mirror of a trap it already had. A `cd`
   inside `$(…)` cannot escape; a `cd` at the front of one command in a session
   that persists between commands re-roots every relative path used afterwards, by

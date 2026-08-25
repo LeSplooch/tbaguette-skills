@@ -74,6 +74,19 @@ Give every failure enough to act on: the exact command, the resolved tool versio
 - Pass secrets through the environment, not command lines — process listings and traces leak them — and treat every log line as public. Prefer short-lived federated credentials to long-lived static ones, and gate production deploys behind an approval.
 - Review pipeline definitions like production code, and require the change that edits a pipeline to be exercised by that same change, or it lands untested on the default branch by construction.
 
+## A scheduled job is untested code until it has run once
+
+Everything else in a pipeline has an audience. A pull-request check goes red and blocks a merge; somebody is standing there waiting for it. A scheduled job has nobody waiting, and that changes what its silence means: for a PR check, silence is absence of trouble, while for a scheduled job, success and total non-existence produce exactly the same nothing.
+
+So a job that has never once run successfully is indistinguishable from a healthy one on every dashboard that reports last-run status, because a job with no runs has no status to report and renders as blank, neutral, or simply missing from the list. The ways it ends up never-run are all mundane — merged before its credentials were armed, a schedule expression that parses but never matches, disabled at the platform level, pinned to a branch that was later renamed, or suspended automatically because the repository went quiet long enough for the provider to stop scheduling it.
+
+The consequence is what makes this worth a section rather than a bullet. The breakage never announces itself. It surfaces as the absence of whatever the job existed to maintain — the backup that is not there, the certificate that expired, the index that went stale, the dependency audit nobody has seen in four months — and it surfaces after the deadline the job was protecting has already passed.
+
+Two things follow:
+
+- **Force one run when the job lands, rather than waiting for its schedule.** A job's first successful run is the only evidence it can run at all; until then it is untested code that happens to have a cron expression. Treat the change as unfinished until that run is green, the same way `confirming-before-claiming-done` treats any requirement about a condition that has not occurred yet.
+- **Report age of last success, not status of last run.** These differ exactly when it matters. A job that succeeded once in March and has been suspended since is green on the second measure and four months stale on the first, and only one of those two numbers would have told anyone. Whatever surfaces job health needs to separate *passing*, *failing*, and *never executed* rather than folding the third into either of the first two.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -87,6 +100,7 @@ Give every failure enough to act on: the exact command, the resolved tool versio
 | More runners did not help | the critical path is serial, or the cache misses every run |
 | A secret leaked through a pull request | a fork's PR ran with the same permissions as a branch PR |
 | The same failure gets debugged twice | logs omitted the command and the resolved versions |
+| A scheduled job's dashboard is green and the thing it maintains is months stale | Last-run status reported where age of last success was the question |
 
 ## Red flags
 
@@ -97,3 +111,5 @@ Give every failure enough to act on: the exact command, the resolved tool versio
 - A check that has been advisory for more than a month
 - Any job holding secrets that executes code from a fork
 - "The build is red, but it's unrelated" said more than once in a week — trust is already gone, and a real failure will be rerun rather than read
+- A scheduled job merged and never once run by hand — its first real execution will be unattended, at whatever hour it fires
+- Job health shown as pass/fail, with no way to see a job that has never executed
