@@ -11,6 +11,30 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-25 — A check that would pass even if nothing worked
+
+- `confirming-before-claiming-done` gains a section for the case where the check
+  is fresh, run by you, from the right place, and green — and still measures the
+  wrong thing. The requirement is that something comes back after a restart,
+  survives a cold cache, or works from a fresh clone; the check to hand only
+  observes the present.
+- One question separates them: would this still pass if the condition the
+  requirement names had never once occurred? If yes, the green result is a proxy,
+  and re-running it converts nothing. Worth asking of a service, a cache, a
+  scheduled job, or a backup you are about to call done.
+- The answer is to induce the condition once rather than add another check of the
+  same kind — but that is disruptive and frequently not yours to decide, so the
+  section routes it through `deciding-reversibility` and the owner's go-ahead. It
+  also closes the escape hatch: when you cannot get that go-ahead, report the
+  requirement as configured but unverified and name the test that would settle it.
+- Two readings that beat a status string: a start timestamp next to a boot
+  timestamp tells you *who* started something, and a restart counter separates
+  coming up cleanly from being caught by a supervisor and retried.
+- The description carries the new trigger, so "make sure it starts on boot" now
+  reaches the skill at all. Three rows join its evidence table, one of them about
+  backups rather than services, because the same mistake is what convinces people
+  they have one.
+
 ## 2026-08-24 — Skills link to each other, and the site says what changed
 
 - Every mention one skill makes of another is now a link to that skill’s page
