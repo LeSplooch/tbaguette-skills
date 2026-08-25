@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,19 +61,19 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">tracing-data-flow</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Reading code</span>
   <p class="lede">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from, who writes it, or everything it reaches; when following a request payload, identifier, config value, or flag across modules, threads, services, or serialization boundaries; or when searching for a name returns nothing useful and the path seems to vanish.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A trace is a written artifact — a chain of file:line hops with what changed at each one. Held in memory it is re-derived every twenty minutes and is wrong by the third hop. The goal is not to understand the module; it is to enumerate every place this value is produced, altered, and read.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A value arrives wrong somewhere far from where it was set.</li><li>Assessing what a field change breaks: every writer and every reader must be named.</li><li>A name appears in two places with no visible path between them.</li><li>Auditing where sensitive or user-supplied data reaches.</li><li>Not for: diagnosing why a system misbehaves when the value is not yet identified (systematic-debugging), or module-level coupling (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/mapping-dependencies/">mapping-dependencies</a>).</li></ul>
+<ul><li>A value arrives wrong somewhere far from where it was set.</li><li>Assessing what a field change breaks: every writer and every reader must be named.</li><li>A name appears in two places with no visible path between them.</li><li>Auditing where sensitive or user-supplied data reaches — a forward trace is how <a class="skill-link" href="/tbaguette-skills/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a> gets an inventory of sinks, and how <a class="skill-link" href="/tbaguette-skills/skills/redacting-sensitive-output/"><code>redacting-sensitive-output</code></a> finds the log line nobody remembered.</li><li>Not for: diagnosing why a system misbehaves when the value is not yet identified (<a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a>), or module-level coupling (<a class="skill-link" href="/tbaguette-skills/skills/mapping-dependencies/"><code>mapping-dependencies</code></a>).</li></ul>
 <h2 id="anatomy-of-a-trace">Anatomy of a trace</h2>
 <p>Four node types. Miss one and the trace is wrong, not incomplete.</p>
 <ul><li><strong>Source</strong> — where the value enters the system: a wire payload, a database read, a config or env lookup, a clock, a random draw, a literal default. Every trace terminates upward at a source; if yours does not, you stopped early.</li><li><strong>Transform</strong> — parse, normalize, cast, round, truncate, encode, redact. Every transform is a chance for the value to change meaning without changing name.</li><li><strong>Sink</strong> — where it is observed: a query, a response, a log, a metric, a branch condition.</li><li><strong>Silent event</strong> — the four below. These are what make traces wrong.</li></ul>
 <table><thead><tr><th>Silent event</th><th>Looks like</th><th>Find it by</th></tr></thead><tbody><tr><td>Copy</td><td>a second variable, a struct clone, a spread, a snapshot into another object</td><td>searching the source expression, not the name</td></tr><tr><td>Mutate</td><td>in-place edit through an alias or a shared reference</td><td>searching the container, not the field</td></tr><tr><td>Serialize</td><td>rename at a wire, column, file, or env boundary</td><td>searching the serialized form: the JSON key, column name, protobuf field, env var</td></tr><tr><td>Default</td><td><code>?? x</code>, <code>or x</code>, <code>getOrElse</code>, a zero value, a schema or column default, an optional's fallback</td><td>searching for the default's literal value as well as the name</td></tr></tbody></table>
-<p>Defaulting costs the most: downstream, a value never set and a value deliberately set to the default are indistinguishable. If that difference matters, make it representable at the source (optional, sentinel, presence flag). No amount of further reading recovers it.</p>
+<p>Defaulting costs the most: downstream, a value never set and a value deliberately set to the default are indistinguishable. If that difference matters, make it representable at the source (optional, sentinel, presence flag). No amount of further reading recovers it — which is <a class="skill-link" href="/tbaguette-skills/skills/tracking-data-provenance/"><code>tracking-data-provenance</code></a>'s case for carrying <em>how a value was obtained</em> alongside the value itself, decided at the schema rather than recovered by a trace.</p>
 <h2 id="search-ladder">Search ladder</h2>
 <p>Run in order. Stop when the hop is found; escalate when it is not.</p>
 <table><thead><tr><th>Step</th><th>Search for</th><th>Catches</th><th>Misses</th></tr></thead><tbody><tr><td>1</td><td>The exact identifier, whole word, case-sensitive</td><td>direct reads and writes in one naming regime</td><td>every rename at a boundary</td></tr><tr><td>2</td><td>The type, struct, schema, or table that carries it</td><td>all construction sites regardless of local name</td><td>dynamically shaped containers, maps, generic payloads</td></tr><tr><td>3</td><td>Assignment and mutation forms: <code>=</code>, compound assign, setters, <code>update</code>, <code>merge</code>, <code>patch</code>, <code>with</code></td><td>the write you assumed did not exist</td><td>mutation through an alias</td></tr><tr><td>4</td><td>The serialized spelling at each boundary it crosses</td><td>the rename that broke step 1</td><td>fields renamed by a mapping table</td></tr><tr><td>5</td><td>Construction of the enclosing object, and its defaults</td><td>values injected at build time and never assigned by name</td><td>reflection-built objects</td></tr></tbody></table>
@@ -83,7 +83,7 @@
 <p>Trace backward to the source, then forward from that source once. The forward pass exists to find the second branch the backward pass never saw.</p>
 <h2 id="when-static-reading-fails">When static reading fails</h2>
 <table><thead><tr><th>Opacity</th><th>Signal</th><th>Cheapest answer</th></tr></thead><tbody><tr><td>Reflection, dynamic field access, metaprogramming</td><td>the name is assembled from a string at runtime</td><td>log every key at the dispatch point, one run</td></tr><tr><td>Polymorphism with many implementers</td><td>the interface has nine implementations, one executes</td><td>log or break on the concrete type at the call site</td></tr><tr><td>Message passing, queues, events, signals</td><td>producer and consumer share no import edge</td><td>search the topic or event name, trace each half separately, join at the payload schema</td></tr><tr><td>Config-driven wiring, DI containers, plugin registries</td><td>the graph lives in config, not code</td><td>read the config as the source and search the string keys</td></tr><tr><td>Generated code</td><td>the file has a &quot;do not edit&quot; banner</td><td>trace the schema or template, not the output</td></tr><tr><td>Concurrency</td><td>value differs between reads with no write between</td><td>log with a thread or task identity and a sequence number</td></tr></tbody></table>
-<p><strong>The 15-minute rule.</strong> After 15 minutes or three dead ends of static reading, one log line at the sink answers in one run what another hour of reading will not settle. Instrumentation is the cheaper tool past that threshold, not a concession. Log the value, its identity, and where it came from; remove it in the same change that lands the fix.</p>
+<p><strong>The 15-minute rule.</strong> After 15 minutes or three dead ends of static reading, one log line at the sink answers in one run what another hour of reading will not settle. Instrumentation is the cheaper tool past that threshold, not a concession. Log the value, its identity, and where it came from; remove it in the same change that lands the fix. A hop you have had to instrument twice is a signal the value deserves a permanent one — <a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a> covers making that call before the next incident rather than during it.</p>
 <h2 id="write-the-chain">Write the chain</h2>
 <pre class="prose-code-block"><code>tenant_id
   [source]    header X-Tenant            ingress.*:44    absent -&gt; &quot;&quot;
@@ -128,10 +128,6 @@
       <span class="see-also__name">finding-the-seam</span>
       <span class="see-also__summary">Use when deciding where in a codebase to make a change, when a fix could plausibly go in several places…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/reading-specifications/">
-      <span class="see-also__name">reading-specifications</span>
-      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
-    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/naming-things/">
       <span class="see-also__name">naming-things</span>
       <span class="see-also__summary">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…</span>
@@ -147,12 +143,14 @@
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

@@ -270,9 +270,18 @@ def check_skill_links_end_to_end(docs: Path, base_path: str) -> None:
           f"(first offenders: {unprefixed[:3]})", not unprefixed)
 
     index = (docs / "index.html").read_text(encoding="utf-8")
-    check("the update notes link their skill mentions too",
-          f'class="skill-link" href="{base_path}/skills/orchestrating-work-end-to-end/"'
-          in index)
+    # Scoped to the notes section and slug-agnostic on purpose. This used to
+    # assert one hardcoded slug appeared linked somewhere on the page, which
+    # made it a test of *which entries are currently newest*: UPDATE_NOTES_LIMIT
+    # is 6, so shipping a seventh entry silently pushed the named skill off the
+    # rendered set and failed a check about linking that linking had not broken.
+    notes_section = re.search(r'<ul class="notes__bullets">.*?</section>', index, re.S)
+    check("the update notes render at all", notes_section is not None)
+    notes_links = re.findall(
+        r'class="skill-link[^"]*" href="([^"]*)"', notes_section.group(0) if notes_section else ""
+    )
+    check(f"the update notes link their skill mentions too ({len(notes_links)} linked)",
+          any(href.strip("/").split("/")[-1] in slugs for href in notes_links))
     check("...but a code span in those notes that is not a skill stays plain — "
           "`UPDATES.md` linked to a nonexistent /skills/UPDATES.md/ until the "
           "notes path got the same known-slug filter build_content already used",

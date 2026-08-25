@@ -13,14 +13,14 @@ An estimate assembled by decomposing the plan you can see underruns systematical
 
 - Asked how long something takes, how large a change is, or whether it fits a window
 - Producing a plan with durations, a schedule, or a sequencing commitment
-- An estimate has already been overrun and a replacement number is needed
+- An estimate has already been overrun and a replacement number is needed — check first whether the overrun is the work being larger or the scope having grown, because `managing-scope-drift` treats an estimate passing roughly twice its original as a tripwire for the second, and re-estimating drifted scope just prices the drift instead of surfacing it
 - The plausible range is wide enough that a point estimate would be fiction
 - Not for: breaking work into steps — `structuring-an-implementation-plan` owns the decomposition. This owns the numbers attached to it, and whether they carry information.
 
 ## Reference class first, decomposition second
 
 1. **Name the class by shape, not domain.** "A change inside one module that already has tests." "An integration with an external service whose behaviour is undocumented." "A rename across an unknown number of call sites." The domain — billing, rendering, sync — predicts far less than the shape.
-2. **Find real outcomes.** Version-control history for comparable changes, how long the last two similar tasks actually took, elapsed wall-clock rather than remembered effort. Remembered effort systematically excludes the parts that went badly.
+2. **Find real outcomes.** Version-control history for comparable changes, how long the last two similar tasks actually took, elapsed wall-clock rather than remembered effort. `code-archaeology` is how that history gets read when the comparable work is someone else's — the repository holds the outcomes even when nobody present remembers them. Remembered effort systematically excludes the parts that went badly.
 3. **Start from that number.** Adjust only for differences you can point at. "We understand this codebase better now" is the standard unearned adjustment and is nearly always wrong, because whatever familiarity existed was already priced into the previous outcome.
 4. **Decompose as a check.** When the bottom-up sum lands well below the reference class, the decomposition is missing tasks. That is the near-universal direction of the discrepancy — not the reference class being pessimistic.
 

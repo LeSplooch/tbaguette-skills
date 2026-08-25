@@ -627,11 +627,17 @@ class BuildContentIntegrationTests(unittest.TestCase):
     def test_finds_exactly_92_skills(self):
         self.assertEqual(len(self.content["skills"]), 92)
 
-    def test_ten_categories_in_the_locked_order(self):
+    def test_categories_match_the_locked_order(self):
         actual_slugs = [c["slug"] for c in self.content["categories"]]
         expected_slugs = [c["slug"] for c in CATEGORIES]
         self.assertEqual(actual_slugs, expected_slugs)
-        self.assertEqual(len(actual_slugs), 10)
+        # The literal is a deliberate tripwire, the same species as
+        # EXPECTED_SKILL_COUNT: the line above already proves the output
+        # matches CATEGORIES, so this one exists only to make *changing the
+        # category set at all* something a human has to confirm on purpose.
+        # It used to be spelled into the test's own name ("ten categories"),
+        # which is why the name went stale before the assertion did.
+        self.assertEqual(len(actual_slugs), 12)
 
     def test_category_skill_slug_counts_sum_to_92(self):
         total = sum(len(c["skill_slugs"]) for c in self.content["categories"])

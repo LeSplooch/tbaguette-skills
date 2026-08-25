@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,7 +61,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">managing-scope-drift</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when work has grown past what was asked or the diff is larger than the request implies, when a fix seems to require touching something adjacent, when a real problem is found in passing, when tempted to also clean up, rename, refactor, or improve nearby code, or when one requested item is drifting toward being quietly omitted. Covers necessary versus adjacent versus discovered work, silent widening and narrowing, and reporting the remainder.</p>
@@ -74,16 +74,17 @@
 <table><thead><tr><th>Class</th><th>Test</th><th>Action</th></tr></thead><tbody><tr><td>Necessary</td><td>The request is blocked or broken without it</td><td>Do it. One line in the report. No permission needed</td></tr><tr><td>Adjacent</td><td>Improves code you happen to be touching; the request works regardless</td><td>Do not do it. Record it, report it</td></tr><tr><td>Discovered</td><td>A real defect or false premise found in passing, unrelated to the request</td><td>Report it. Fix only if it blocks the request, and never silently</td></tr></tbody></table>
 <p>The necessary/adjacent line is where most drift enters, always wearing the same disguise: &quot;I had to restructure it to add this cleanly.&quot; Sharper test — if the extra work were reverted and the requested change kept, would the deliverable still pass its own acceptance? If yes, it was adjacent.</p>
 <h2 id="when-to-interrupt">When to interrupt</h2>
-<p>Discovered work interrupts immediately only for: data loss or corruption, credential or secret exposure, a false premise underneath the request itself, or a discovery that makes the current approach wrong. Everything else waits for the final report.</p>
+<p>Discovered work interrupts immediately only for: data loss or corruption, credential or secret exposure, a false premise underneath the request itself (<a class="skill-link" href="/tbaguette-skills/skills/reading-specifications/"><code>reading-specifications</code></a> covers spotting one before the work rather than during it), or a discovery that makes the current approach wrong. Everything else waits for the final report.</p>
 <p>The gate matters in both directions. Interrupting for a medium-severity finding costs a context switch and teaches the user that your interruptions are skimmable, which is what makes the next high-severity one get skimmed.</p>
 <h2 id="widening-and-narrowing">Widening and narrowing</h2>
 <p><strong>Silent widening is not generosity.</strong> It inflates the diff until the requested change can no longer be reviewed on its own; it couples unrelated risk into a single revert; it spends a budget nobody agreed to; it invalidates the estimate; and it removes the option to say &quot;not now&quot;. A twelve-line change buried inside four hundred lines of cleanup gets approved without being read — the cleanup did not add value, it removed review.</p>
 <p><strong>Silent narrowing is worse</strong>, because the user believes they have something they do not. The pattern is specific and predictable: four items were requested, three were straightforward, the fourth was hard, and the report describes the three. The hardest item is the one that goes missing, and it is also the one they most needed done.</p>
 <p>The rule covering both: <strong>every item in the request appears in the report with a state</strong> — done, partial with what is missing, or not done with why. No requested item silently absent, and nothing present that was not asked for.</p>
+<p>That rule needs somewhere to live that a long task cannot erode, which is what <a class="skill-link" href="/tbaguette-skills/skills/finishing-what-you-started/"><code>finishing-what-you-started</code></a>'s acceptance ledger is: the request's items written to a file before the work, so narrowing has to happen against a list rather than against a memory of the request. Its surrender rule is this section's other half — a line marked surrendered is narrowing reported, a line quietly edited or deleted is narrowing concealed, and the second one leaves a fully checked list behind.</p>
 <h2 id="noticing-it-in-flight">Noticing it in flight</h2>
 <p>Tripwires. Any one means stop and re-read the request text, not your memory of it.</p>
 <ul><li>Files touched exceed what the request implied. Count them.</li><li>You are editing a file you did not expect to open when you started.</li><li>The justification for the current edit chains through more than one &quot;and to do that I need to&quot;.</li><li>Elapsed effort has passed roughly twice the initial estimate with no re-estimate.</li><li>You are writing something whose value you could not have justified at the start of the task.</li></ul>
-<p>When necessary work turns out to be substantial, say so before doing it rather than after: name what has to change first, its rough size, and offer the smaller alternative. One sentence, and it preserves a choice instead of presenting a completed fact.</p>
+<p>When necessary work turns out to be substantial, say so before doing it rather than after: name what has to change first, its rough size — a range, on <a class="skill-link" href="/tbaguette-skills/skills/estimating-effort/"><code>estimating-effort</code></a>'s terms, since a point estimate offered mid-drift is the least reliable number anyone will produce that day — and offer the smaller alternative. One sentence, and it preserves a choice instead of presenting a completed fact.</p>
 <h2 id="handing-off-the-remainder">Handing off the remainder</h2>
 <p>Adjacent and discovered items belong in the report as actionable one-liners: where it is, what is wrong, roughly how big. &quot;Also noticed some technical debt&quot; is not a handoff — it transfers a feeling rather than a task. An item that cannot be stated with a location and a size was not a finding, it was an impression.</p>
 <p>When the user adds scope mid-task, do not absorb that silently either. Say what it does to the current deliverable — finish first, switch now, or both with the second later — and let them choose.</p>
@@ -95,9 +96,9 @@
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← steelmanning-alternatives</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/finishing-what-you-started/">
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/revalidating-decisions/">
   <span class="prevnext__label">Next</span>
-  <span class="prevnext__name">finishing-what-you-started →</span>
+  <span class="prevnext__name">revalidating-decisions →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Judgment and meta</h2>
@@ -114,10 +115,6 @@
       <span class="see-also__name">calibrating-confidence</span>
       <span class="see-also__summary">Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/red-teaming-your-own-work/">
-      <span class="see-also__name">red-teaming-your-own-work</span>
-      <span class="see-also__summary">Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it…</span>
-    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/estimating-effort/">
       <span class="see-also__name">estimating-effort</span>
       <span class="see-also__summary">Use when asked how long something will take, how big a change is, or whether work fits a given window; when producing a plan, schedule…</span>
@@ -130,29 +127,17 @@
       <span class="see-also__name">steelmanning-alternatives</span>
       <span class="see-also__summary">Use when an approach was adopted because it was the first one that worked and no other was seriously examined…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/finishing-what-you-started/">
-      <span class="see-also__name">finishing-what-you-started</span>
-      <span class="see-also__summary">Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/knowing-when-to-stop/">
-      <span class="see-also__name">knowing-when-to-stop</span>
-      <span class="see-also__summary">Use when work looks done and the next action would be another polish, refactor…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/karen-and-the-manager/">
-      <span class="see-also__name">karen-and-the-manager</span>
-      <span class="see-also__summary">Use when work is about to be called done, shipped…</span>
-    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/revalidating-decisions/">
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">Use when a recorded decision — an ADR, design doc, wontfix, runbook line…</span>
     </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/reading-specifications/">
+      <span class="see-also__name">reading-specifications</span>
+      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
+    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/scoping-before-building/">
       <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">Use when an idea, feature request, or new project needs to become an approved design before any code gets written…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/confirming-before-claiming-done/">
-      <span class="see-also__name">confirming-before-claiming-done</span>
-      <span class="see-also__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</span>
     </a></li>
   </ul>
 </div>
@@ -165,12 +150,14 @@
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

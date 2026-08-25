@@ -35,7 +35,7 @@ A long-running data migration is a program that will be interrupted — by a tim
 
 ## Idempotency
 
-Re-running a batch must be a no-op, because after any crash you cannot know whether the last batch committed.
+Re-running a batch must be a no-op, because after any crash you cannot know whether the last batch committed. `designing-for-idempotency` is the general treatment — dedup keys, dedup windows, and why at-least-once delivery makes this a property to build rather than one to hope for; a migration is the case where the retry is your own hand on the keyboard rather than someone else's client.
 
 - Prefer transformations that are naturally idempotent: assignment, not increment; set-to-computed-value, not append. If the operation reads `x = x + 1`, it is disqualified and must be rewritten as a function of an immutable source.
 - Where the transform is not naturally idempotent, guard it: a selection predicate that matches only unprocessed records (the new representation still unset), a compare-and-set on a version, or a processed-marker written in the same transaction as the change.
@@ -66,7 +66,7 @@ The dual-write-before-backfill-before-cutover order is `schema-evolution`'s expa
 
 ## There is usually no rollback
 
-Once the old value is overwritten it is gone, and "revert the migration" is a script that must be written, tested, and run at the moment everyone is most tired. Three substitutes, in order of preference:
+Once the old value is overwritten it is gone, and "revert the migration" is a script that must be written, tested, and run at the moment everyone is most tired. That makes almost every migration a one-way door in `deciding-reversibility`'s sense, and the decision deserves the weight that comes with it — the cheapness of writing the loop is not evidence about the cheapness of being wrong. Three substitutes, in order of preference:
 
 - **Never destroy in place.** Write the new representation to a new location and leave the old one untouched. Cutover becomes a config change, and rollback becomes the same config change in reverse.
 - **Preserve the original** — a shadow column, a copy table, an export — for a stated reversibility window (30 days is a reasonable default), with a scheduled deletion that someone owns. An undated "we can clean it up later" copy becomes a permanent, unowned cost and a compliance exposure.

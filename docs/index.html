@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TBaguette’s Atelier — Claude Code skills, organized</title>
-<meta name="description" content="92 Claude Code skills for the craft between the ticket and the commit, organized into 10 categories and cross-linked for the moment you need one.">
+<meta name="description" content="92 Claude Code skills for the craft between the ticket and the commit, organized into 12 categories and cross-linked for the moment you need one.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="TBaguette’s Atelier — Claude Code skills, organized">
-<meta property="og:description" content="92 Claude Code skills for the craft between the ticket and the commit, organized into 10 categories and cross-linked for the moment you need one.">
+<meta property="og:description" content="92 Claude Code skills for the craft between the ticket and the commit, organized into 12 categories and cross-linked for the moment you need one.">
 <link rel="canonical" href="/tbaguette-skills/">
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -116,7 +116,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     </p>
   </div>
 </div>
-    <p class="hero__lede">92 Claude Code skills for the craft between the ticket and the commit, across 10 categories — findable by name, browsable below, and written like something a colleague actually handed you. Grown out of my own projects over time, this collection is created and updated automatically — and often — by Claude Opus, always its latest version, as I code.</p>
+    <p class="hero__lede">92 Claude Code skills for the craft between the ticket and the commit, across 12 categories — findable by name, browsable below, and written like something a colleague actually handed you. Grown out of my own projects over time, this collection is created and updated automatically — and often — by Claude Opus, always its latest version, as I code.</p>
     <a class="hero__jump" href="#skills">
       <svg class="icon hero__jump-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-search"></use></svg>
       Show me the skills
@@ -132,124 +132,135 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/instrumenting-for-observability/" data-fresh-at="2026-08-25T15:24:30+02:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/bisecting-failures/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
-    <span class="card__name">instrumenting-for-observability</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:24:30+02:00">Updated</span>
+    <span class="card__name">bisecting-failures</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
-  <p class="card__summary">Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed…</p>
-  <span class="card__foot">
-    <span class="tag">Designing systems</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/drawing-boundaries/" data-fresh-at="2026-08-25T15:22:01+02:00" draggable="false" style="--cf-offset: 1">
-  <span class="card__name-row">
-    <span class="card__name">drawing-boundaries</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:22:01+02:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when deciding what belongs together — module, package, crate, library, process…</p>
-  <span class="card__foot">
-    <span class="tag">Designing systems</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/diagnosing-before-fixing/" data-fresh-at="2026-08-25T15:19:53+02:00" draggable="false" style="--cf-offset: 2">
-  <span class="card__name-row">
-    <span class="card__name">diagnosing-before-fixing</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:19:53+02:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when a bug, test failure, crash, or any behavior that doesn&#x27;t match what the code is supposed to do needs a fix and none has been…</p>
+  <p class="card__summary">Use when something worked before and is broken now, when the culprit is one of many commits, config keys, dependency upgrades, data rows…</p>
   <span class="card__foot">
     <span class="tag">Debugging and performance</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/writing-durable-docs/" data-fresh-at="2026-08-25T15:18:01+02:00" draggable="false" style="--cf-offset: 3">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/caching-strategy/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
-    <span class="card__name">writing-durable-docs</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:18:01+02:00">Updated</span>
+    <span class="card__name">caching-strategy</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
-  <p class="card__summary">Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material…</p>
+  <p class="card__summary">Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change…</p>
   <span class="card__foot">
-    <span class="tag">Communicating</span>
+    <span class="tag">Designing systems</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-ci-pipelines/" data-fresh-at="2026-08-25T15:14:40+02:00" draggable="false" style="--cf-offset: 4">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/calibrating-confidence/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
-    <span class="card__name">designing-ci-pipelines</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:14:40+02:00">Updated</span>
+    <span class="card__name">calibrating-confidence</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
-  <p class="card__summary">Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI…</p>
-  <span class="card__foot">
-    <span class="tag">Environment and tooling</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/portable-shell-scripting/" data-fresh-at="2026-08-25T15:12:38+02:00" draggable="false" style="--cf-offset: 5">
-  <span class="card__name-row">
-    <span class="card__name">portable-shell-scripting</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:12:38+02:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when writing or reviewing a shell script, when a script works in one shell but fails in another…</p>
-  <span class="card__foot">
-    <span class="tag">Environment and tooling</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/writing-the-failing-test-first/" data-fresh-at="2026-08-25T15:10:07+02:00" draggable="false" style="--cf-offset: -5">
-  <span class="card__name-row">
-    <span class="card__name">writing-the-failing-test-first</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:10:07+02:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written.</p>
-  <span class="card__foot">
-    <span class="tag">Testing</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/threat-modeling/" data-fresh-at="2026-08-25T15:07:28+02:00" draggable="false" style="--cf-offset: -4">
-  <span class="card__name-row">
-    <span class="card__name">threat-modeling</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T15:07:28+02:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</p>
-  <span class="card__foot">
-    <span class="tag">Security (defensive)</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-fresh-at="2026-08-25T14:52:07+02:00" draggable="false" style="--cf-offset: -3">
-  <span class="card__name-row">
-    <span class="card__name">confirming-before-claiming-done</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:52:07+02:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</p>
+  <p class="card__summary">Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session…</p>
   <span class="card__foot">
     <span class="tag">Judgment and meta</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/least-privilege-design/" data-fresh-at="2026-08-23T20:43:36+02:00" draggable="false" style="--cf-offset: -2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/data-migrations/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: 3">
   <span class="card__name-row">
-    <span class="card__name">least-privilege-design</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-23T20:43:36+02:00">Updated</span>
+    <span class="card__name">data-migrations</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
-  <p class="card__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</p>
+  <p class="card__summary">Use when backfilling, transforming, re-encoding, or relocating data that already exists at a size too large for one transaction…</p>
   <span class="card__foot">
-    <span class="tag">Security (defensive)</span>
+    <span class="tag">Designing systems</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/feature-flagging/" data-fresh-at="2026-08-23T20:30:56+02:00" draggable="false" style="--cf-offset: -1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/estimating-effort/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: 4">
   <span class="card__name-row">
-    <span class="card__name">feature-flagging</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-23T20:30:56+02:00">Updated</span>
+    <span class="card__name">estimating-effort</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
-  <p class="card__summary">Use when hiding unfinished work behind a toggle, when planning a gradual rollout, a kill switch, or a dark launch…</p>
+  <p class="card__summary">Use when asked how long something will take, how big a change is, or whether work fits a given window; when producing a plan, schedule…</p>
   <span class="card__foot">
-    <span class="tag">Landing changes</span>
+    <span class="tag">Judgment and meta</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/keeping-tbaguette-current/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: 5">
+  <span class="card__name-row">
+    <span class="card__name">keeping-tbaguette-current</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</p>
+  <span class="card__foot">
+    <span class="tag">Environment and tooling</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/managing-scope-drift/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: 6">
+  <span class="card__name-row">
+    <span class="card__name">managing-scope-drift</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when work has grown past what was asked or the diff is larger than the request implies…</p>
+  <span class="card__foot">
+    <span class="tag">Judgment and meta</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: -5">
+  <span class="card__name-row">
+    <span class="card__name">rate-limiting-and-backpressure</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</p>
+  <span class="card__foot">
+    <span class="tag">Designing systems</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/steelmanning-alternatives/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: -4">
+  <span class="card__name-row">
+    <span class="card__name">steelmanning-alternatives</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when an approach was adopted because it was the first one that worked and no other was seriously examined…</p>
+  <span class="card__foot">
+    <span class="tag">Judgment and meta</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/testing-the-untestable/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: -3">
+  <span class="card__name-row">
+    <span class="card__name">testing-the-untestable</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables…</p>
+  <span class="card__foot">
+    <span class="tag">Testing</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/tracing-data-flow/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: -2">
+  <span class="card__name-row">
+    <span class="card__name">tracing-data-flow</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…</p>
+  <span class="card__foot">
+    <span class="tag">Reading code</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/writing-postmortems/" data-fresh-at="2026-08-25T14:07:14.932397+00:00" draggable="false" style="--cf-offset: -1">
+  <span class="card__name-row">
+    <span class="card__name">writing-postmortems</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when writing an incident review or postmortem after an outage, degradation, data loss, failed deploy…</p>
+  <span class="card__foot">
+    <span class="tag">Communicating</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -264,12 +275,12 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-08-25">25 Aug 2026</time>
-    <span class="notes__entry-title">A way into the skills from the top of the page</span>
+    <span class="notes__entry-title">Two new categories, and a pointer that led nowhere</span>
   </h3>
   <ul class="notes__bullets">
-    <li>The landing page now has a <strong>Show me the skills</strong> control directly under the opening lede. It jumps straight to the search field at the head of the skill list, which lands 50px below the top of the window rather than flush against it, so the field has room to read as the start of something rather than as a bar wedged under the edge.</li>
-    <li>It is a real link, not a scripted button, so it behaves like one: middle-click and Ctrl-click open it in a new tab, the URL it produces is shareable and lands in the same place, and it works with JavaScript switched off.</li>
-    <li>The scroll animates only if you have not asked your system for reduced motion. Either way it finishes in exactly the same position.</li>
+    <li>The library is organised into <strong>twelve categories instead of ten</strong>, and eleven skills moved. <strong>Planning and delegation</strong> collects the five skills about turning an approved design into tasks and getting those tasks done — <a class="skill-link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/"><code>working-a-plan-task-by-task</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> — which were previously split between &quot;Communicating&quot; and &quot;Environment and tooling&quot; despite each one's own text defining its edges against the others. <strong>Finishing and proving</strong> collects the five that guard the finish line: <a class="skill-link" href="/tbaguette-skills/skills/finishing-what-you-started/"><code>finishing-what-you-started</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/red-teaming-your-own-work/"><code>red-teaming-your-own-work</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/karen-and-the-manager/"><code>karen-and-the-manager</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/knowing-when-to-stop/"><code>knowing-when-to-stop</code></a>. &quot;Judgment and meta&quot; had grown to fourteen skills spanning four unrelated activities; it is now ten. <a class="skill-link" href="/tbaguette-skills/skills/reading-specifications/"><code>reading-specifications</code></a> also moved out of &quot;Reading code&quot;, where it was the one entry that is not about reading code, to sit beside <a class="skill-link" href="/tbaguette-skills/skills/scoping-before-building/"><code>scoping-before-building</code></a>. Nothing about invoking a skill changes — the names, and every skill's own page URL, are exactly as they were.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/tracing-data-flow/"><code>tracing-data-flow</code></a> had been sending readers to a skill that does not exist. Its &quot;Not for&quot; line pointed at <code>systematic-debugging</code>, which is Superpowers' name for the thing this library calls <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a>; it survived because it was written without backticks, so no search for skill names ever saw it. Fixed, and the build now refuses to ship a reference to a skill that is not installed.</li>
+    <li>Twelve skills gained cross-references to the skills that own the other half of their problem. <a class="skill-link" href="/tbaguette-skills/skills/caching-strategy/"><code>caching-strategy</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/"><code>rate-limiting-and-backpressure</code></a> previously mentioned <strong>no other skill at all</strong> — the two halves of the same overload incident, with nothing pointing between them. Also newly wired: <a class="skill-link" href="/tbaguette-skills/skills/managing-scope-drift/"><code>managing-scope-drift</code></a> to the ledger that makes silent narrowing visible, <a class="skill-link" href="/tbaguette-skills/skills/steelmanning-alternatives/"><code>steelmanning-alternatives</code></a> to the premises that expire underneath an old decision, <a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a> to the question of whether a double is faithful once the seam is in the right place, and <a class="skill-link" href="/tbaguette-skills/skills/data-migrations/"><code>data-migrations</code></a> to the fact that a migration is almost always a one-way door.</li>
   </ul>
 </li>
   </ol>
@@ -278,6 +289,17 @@ Flag one more thing, because it applies to this very conversation: this session 
       <span class="notes__earlier-label">Show 5 earlier updates</span>
     </summary>
     <ol class="notes__list notes__list--earlier">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-08-25">25 Aug 2026</time>
+    <span class="notes__entry-title">A way into the skills from the top of the page</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li>The landing page now has a <strong>Show me the skills</strong> control directly under the opening lede. It jumps straight to the search field at the head of the skill list, which lands 50px below the top of the window rather than flush against it, so the field has room to read as the start of something rather than as a bar wedged under the edge.</li>
+    <li>It is a real link, not a scripted button, so it behaves like one: middle-click and Ctrl-click open it in a new tab, the URL it produces is shareable and lands in the same place, and it works with JavaScript switched off.</li>
+    <li>The scroll animates only if you have not asked your system for reduced motion. Either way it finishes in exactly the same position.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-08-25">25 Aug 2026</time>
@@ -332,17 +354,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li>The site dropped its eleven translated locales and serves English only. Translated URLs (<code>/fr/</code>, <code>/de/</code>, and the rest) no longer exist. Nothing about installing TBaguette or about skill content changed.</li>
   </ul>
 </li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-08-22">22 Aug 2026</time>
-    <span class="notes__entry-title">The spine the rest of the library hangs off</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a>. Invoke it when a request will take more than one edit — it routes the work to a track, names the phase you are in, and says what evidence opens the next one. It is the skill that sequences the other ninety-one.</li>
-    <li>The install prompt on the site works out which harness it was pasted into and takes that route, instead of assuming Claude Code and falling through to a filesystem clone.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/"><code>rate-limiting-and-backpressure</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/deleting-code/"><code>deleting-code</code></a>, and <a class="skill-link" href="/tbaguette-skills/skills/authoring-a-new-skill/"><code>authoring-a-new-skill</code></a> each gained a case they previously got wrong.</li>
-  </ul>
-</li>
     </ol>
   </details>
 </section>
@@ -394,9 +405,9 @@ Flag one more thing, because it applies to this very conversation: this session 
     <div class="category-section__head">
       <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-crust"></use></svg>
       <h2 class="category-section__title">Judgment and meta</h2>
-      <span class="tag category-section__count" data-category-count="14"
+      <span class="tag category-section__count" data-category-count="10"
             data-i18n-singular="skill"
-            data-i18n-plural="skills">14 skills</span>
+            data-i18n-plural="skills">10 skills</span>
     </div>
     <div class="card-grid" data-card-grid>
 <a class="card" href="/tbaguette-skills/skills/using-tbaguette/" data-search-card data-search-terms="using-tbaguette use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message. judgment and meta">
@@ -424,20 +435,9 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/calibrating-confidence/" data-search-card data-search-terms="calibrating-confidence use when stating a fact, a cause, a version detail, or an api name that was not checked in this session… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">calibrating-confidence</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session…</p>
-  <span class="card__foot">
-    <span class="tag">Judgment and meta</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card" href="/tbaguette-skills/skills/red-teaming-your-own-work/" data-search-card data-search-terms="red-teaming-your-own-work use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it… judgment and meta">
-  <span class="card__name-row">
-    <span class="card__name">red-teaming-your-own-work</span>
-    
-  </span>
-  <p class="card__summary">Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it…</p>
   <span class="card__foot">
     <span class="tag">Judgment and meta</span>
     <span class="card__arrow" aria-hidden="true">→</span>
@@ -446,7 +446,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/estimating-effort/" data-search-card data-search-terms="estimating-effort use when asked how long something will take, how big a change is, or whether work fits a given window; when producing a plan, schedule… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">estimating-effort</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when asked how long something will take, how big a change is, or whether work fits a given window; when producing a plan, schedule…</p>
   <span class="card__foot">
@@ -468,7 +468,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/steelmanning-alternatives/" data-search-card data-search-terms="steelmanning-alternatives use when an approach was adopted because it was the first one that worked and no other was seriously examined… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">steelmanning-alternatives</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when an approach was adopted because it was the first one that worked and no other was seriously examined…</p>
   <span class="card__foot">
@@ -479,42 +479,9 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/managing-scope-drift/" data-search-card data-search-terms="managing-scope-drift use when work has grown past what was asked or the diff is larger than the request implies… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">managing-scope-drift</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when work has grown past what was asked or the diff is larger than the request implies…</p>
-  <span class="card__foot">
-    <span class="tag">Judgment and meta</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card" href="/tbaguette-skills/skills/finishing-what-you-started/" data-search-card data-search-terms="finishing-what-you-started use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run… judgment and meta">
-  <span class="card__name-row">
-    <span class="card__name">finishing-what-you-started</span>
-    
-  </span>
-  <p class="card__summary">Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run…</p>
-  <span class="card__foot">
-    <span class="tag">Judgment and meta</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card" href="/tbaguette-skills/skills/knowing-when-to-stop/" data-search-card data-search-terms="knowing-when-to-stop use when work looks done and the next action would be another polish, refactor… judgment and meta">
-  <span class="card__name-row">
-    <span class="card__name">knowing-when-to-stop</span>
-    
-  </span>
-  <p class="card__summary">Use when work looks done and the next action would be another polish, refactor…</p>
-  <span class="card__foot">
-    <span class="tag">Judgment and meta</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card" href="/tbaguette-skills/skills/karen-and-the-manager/" data-search-card data-search-terms="karen-and-the-manager use when work is about to be called done, shipped… judgment and meta">
-  <span class="card__name-row">
-    <span class="card__name">karen-and-the-manager</span>
-    
-  </span>
-  <p class="card__summary">Use when work is about to be called done, shipped…</p>
   <span class="card__foot">
     <span class="tag">Judgment and meta</span>
     <span class="card__arrow" aria-hidden="true">→</span>
@@ -531,6 +498,17 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
+<a class="card" href="/tbaguette-skills/skills/reading-specifications/" data-search-card data-search-terms="reading-specifications use when turning a ticket, issue, bug report, rfc, standard, design doc, or a user&#x27;s request into work; when requirements are vague… judgment and meta">
+  <span class="card__name-row">
+    <span class="card__name">reading-specifications</span>
+    
+  </span>
+  <p class="card__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</p>
+  <span class="card__foot">
+    <span class="tag">Judgment and meta</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
 <a class="card" href="/tbaguette-skills/skills/scoping-before-building/" data-search-card data-search-terms="scoping-before-building use when an idea, feature request, or new project needs to become an approved design before any code gets written… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">scoping-before-building</span>
@@ -542,14 +520,71 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-search-card data-search-terms="confirming-before-claiming-done use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed… judgment and meta">
+    </div>
+  </div>
+</section>
+<section class="category-section" id="planning-and-delegation" data-category-section>
+  <div class="container">
+    <div class="category-section__head">
+      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-grain"></use></svg>
+      <h2 class="category-section__title">Planning and delegation</h2>
+      <span class="tag category-section__count" data-category-count="5"
+            data-i18n-singular="skill"
+            data-i18n-plural="skills">5 skills</span>
+    </div>
+    <div class="card-grid" data-card-grid>
+<a class="card" href="/tbaguette-skills/skills/structuring-an-implementation-plan/" data-search-card data-search-terms="structuring-an-implementation-plan use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan… planning and delegation">
   <span class="card__name-row">
-    <span class="card__name">confirming-before-claiming-done</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:52:07+02:00">Updated</span>
+    <span class="card__name">structuring-an-implementation-plan</span>
+    
   </span>
-  <p class="card__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</p>
+  <p class="card__summary">Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan…</p>
   <span class="card__foot">
-    <span class="tag">Judgment and meta</span>
+    <span class="tag">Planning and delegation</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card" href="/tbaguette-skills/skills/working-a-plan-task-by-task/" data-search-card data-search-terms="working-a-plan-task-by-task use when a written plan is ready to execute inline… planning and delegation">
+  <span class="card__name-row">
+    <span class="card__name">working-a-plan-task-by-task</span>
+    
+  </span>
+  <p class="card__summary">Use when a written plan is ready to execute inline…</p>
+  <span class="card__foot">
+    <span class="tag">Planning and delegation</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/" data-search-card data-search-terms="delegating-tasks-with-review-gates use when executing a multi-task implementation plan task by task in the current session… planning and delegation">
+  <span class="card__name-row">
+    <span class="card__name">delegating-tasks-with-review-gates</span>
+    
+  </span>
+  <p class="card__summary">Use when executing a multi-task implementation plan task by task in the current session…</p>
+  <span class="card__foot">
+    <span class="tag">Planning and delegation</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card" href="/tbaguette-skills/skills/fanning-out-independent-work/" data-search-card data-search-terms="fanning-out-independent-work use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems… planning and delegation">
+  <span class="card__name-row">
+    <span class="card__name">fanning-out-independent-work</span>
+    
+  </span>
+  <p class="card__summary">Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems…</p>
+  <span class="card__foot">
+    <span class="tag">Planning and delegation</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card" href="/tbaguette-skills/skills/routing-around-capability-gaps/" data-search-card data-search-terms="routing-around-capability-gaps use when the work needs something the current model or harness cannot do — audio or video input, image or speech output… planning and delegation">
+  <span class="card__name-row">
+    <span class="card__name">routing-around-capability-gaps</span>
+    
+  </span>
+  <p class="card__summary">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…</p>
+  <span class="card__foot">
+    <span class="tag">Planning and delegation</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -559,11 +594,11 @@ Flag one more thing, because it applies to this very conversation: this session 
 <section class="category-section" id="reading-code" data-category-section>
   <div class="container">
     <div class="category-section__head">
-      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-grain"></use></svg>
+      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
       <h2 class="category-section__title">Reading code</h2>
-      <span class="tag category-section__count" data-category-count="8"
+      <span class="tag category-section__count" data-category-count="7"
             data-i18n-singular="skill"
-            data-i18n-plural="skills">8 skills</span>
+            data-i18n-plural="skills">7 skills</span>
     </div>
     <div class="card-grid" data-card-grid>
 <a class="card" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/" data-search-card data-search-terms="orienting-in-unfamiliar-code use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project… reading code">
@@ -580,7 +615,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/tracing-data-flow/" data-search-card data-search-terms="tracing-data-flow use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from… reading code">
   <span class="card__name-row">
     <span class="card__name">tracing-data-flow</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…</p>
   <span class="card__foot">
@@ -632,17 +667,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card" href="/tbaguette-skills/skills/reading-specifications/" data-search-card data-search-terms="reading-specifications use when turning a ticket, issue, bug report, rfc, standard, design doc, or a user&#x27;s request into work; when requirements are vague… reading code">
-  <span class="card__name-row">
-    <span class="card__name">reading-specifications</span>
-    
-  </span>
-  <p class="card__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</p>
-  <span class="card__foot">
-    <span class="tag">Reading code</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
 <a class="card" href="/tbaguette-skills/skills/naming-things/" data-search-card data-search-terms="naming-things use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading… reading code">
   <span class="card__name-row">
     <span class="card__name">naming-things</span>
@@ -660,7 +684,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <section class="category-section" id="landing-changes" data-category-section>
   <div class="container">
     <div class="category-section__head">
-      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-crust"></use></svg>
       <h2 class="category-section__title">Landing changes</h2>
       <span class="tag category-section__count" data-category-count="10"
             data-i18n-singular="skill"
@@ -783,7 +807,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <section class="category-section" id="testing" data-category-section>
   <div class="container">
     <div class="category-section__head">
-      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-crust"></use></svg>
+      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-grain"></use></svg>
       <h2 class="category-section__title">Testing</h2>
       <span class="tag category-section__count" data-category-count="10"
             data-i18n-singular="skill"
@@ -826,7 +850,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/testing-the-untestable/" data-search-card data-search-terms="testing-the-untestable use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables… testing">
   <span class="card__name-row">
     <span class="card__name">testing-the-untestable</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables…</p>
   <span class="card__foot">
@@ -906,7 +930,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <section class="category-section" id="debugging-and-performance" data-category-section>
   <div class="container">
     <div class="category-section__head">
-      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-grain"></use></svg>
+      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
       <h2 class="category-section__title">Debugging and performance</h2>
       <span class="tag category-section__count" data-category-count="8"
             data-i18n-singular="skill"
@@ -927,7 +951,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/bisecting-failures/" data-search-card data-search-terms="bisecting-failures use when something worked before and is broken now, when the culprit is one of many commits, config keys, dependency upgrades, data rows… debugging and performance">
   <span class="card__name-row">
     <span class="card__name">bisecting-failures</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when something worked before and is broken now, when the culprit is one of many commits, config keys, dependency upgrades, data rows…</p>
   <span class="card__foot">
@@ -1007,7 +1031,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <section class="category-section" id="designing-systems" data-category-section>
   <div class="container">
     <div class="category-section__head">
-      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-crust"></use></svg>
       <h2 class="category-section__title">Designing systems</h2>
       <span class="tag category-section__count" data-category-count="13"
             data-i18n-singular="skill"
@@ -1083,7 +1107,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/caching-strategy/" data-search-card data-search-terms="caching-strategy use when adding a cache, memo table, cdn layer, or precomputed read path, when users report stale or wrong data after saving a change… designing systems">
   <span class="card__name-row">
     <span class="card__name">caching-strategy</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change…</p>
   <span class="card__foot">
@@ -1105,7 +1129,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/data-migrations/" data-search-card data-search-terms="data-migrations use when backfilling, transforming, re-encoding, or relocating data that already exists at a size too large for one transaction… designing systems">
   <span class="card__name-row">
     <span class="card__name">data-migrations</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when backfilling, transforming, re-encoding, or relocating data that already exists at a size too large for one transaction…</p>
   <span class="card__foot">
@@ -1138,7 +1162,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/" data-search-card data-search-terms="rate-limiting-and-backpressure use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses… designing systems">
   <span class="card__name-row">
     <span class="card__name">rate-limiting-and-backpressure</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</p>
   <span class="card__foot">
@@ -1163,7 +1187,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <section class="category-section" id="security" data-category-section>
   <div class="container">
     <div class="category-section__head">
-      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-crust"></use></svg>
+      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-grain"></use></svg>
       <h2 class="category-section__title">Security (defensive)</h2>
       <span class="tag category-section__count" data-category-count="7"
             data-i18n-singular="skill"
@@ -1250,14 +1274,82 @@ Flag one more thing, because it applies to this very conversation: this session 
     </div>
   </div>
 </section>
+<section class="category-section" id="finishing-and-proving" data-category-section>
+  <div class="container">
+    <div class="category-section__head">
+      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <h2 class="category-section__title">Finishing and proving</h2>
+      <span class="tag category-section__count" data-category-count="5"
+            data-i18n-singular="skill"
+            data-i18n-plural="skills">5 skills</span>
+    </div>
+    <div class="card-grid" data-card-grid>
+<a class="card" href="/tbaguette-skills/skills/finishing-what-you-started/" data-search-card data-search-terms="finishing-what-you-started use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run… finishing and proving">
+  <span class="card__name-row">
+    <span class="card__name">finishing-what-you-started</span>
+    
+  </span>
+  <p class="card__summary">Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run…</p>
+  <span class="card__foot">
+    <span class="tag">Finishing and proving</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-search-card data-search-terms="confirming-before-claiming-done use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed… finishing and proving">
+  <span class="card__name-row">
+    <span class="card__name">confirming-before-claiming-done</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:52:07+02:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</p>
+  <span class="card__foot">
+    <span class="tag">Finishing and proving</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card" href="/tbaguette-skills/skills/red-teaming-your-own-work/" data-search-card data-search-terms="red-teaming-your-own-work use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it… finishing and proving">
+  <span class="card__name-row">
+    <span class="card__name">red-teaming-your-own-work</span>
+    
+  </span>
+  <p class="card__summary">Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it…</p>
+  <span class="card__foot">
+    <span class="tag">Finishing and proving</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card" href="/tbaguette-skills/skills/karen-and-the-manager/" data-search-card data-search-terms="karen-and-the-manager use when work is about to be called done, shipped… finishing and proving">
+  <span class="card__name-row">
+    <span class="card__name">karen-and-the-manager</span>
+    
+  </span>
+  <p class="card__summary">Use when work is about to be called done, shipped…</p>
+  <span class="card__foot">
+    <span class="tag">Finishing and proving</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card" href="/tbaguette-skills/skills/knowing-when-to-stop/" data-search-card data-search-terms="knowing-when-to-stop use when work looks done and the next action would be another polish, refactor… finishing and proving">
+  <span class="card__name-row">
+    <span class="card__name">knowing-when-to-stop</span>
+    
+  </span>
+  <p class="card__summary">Use when work looks done and the next action would be another polish, refactor…</p>
+  <span class="card__foot">
+    <span class="tag">Finishing and proving</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+    </div>
+  </div>
+</section>
 <section class="category-section" id="communicating" data-category-section>
   <div class="container">
     <div class="category-section__head">
-      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-grain"></use></svg>
+      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-crust"></use></svg>
       <h2 class="category-section__title">Communicating</h2>
-      <span class="tag category-section__count" data-category-count="11"
+      <span class="tag category-section__count" data-category-count="9"
             data-i18n-singular="skill"
-            data-i18n-plural="skills">11 skills</span>
+            data-i18n-plural="skills">9 skills</span>
     </div>
     <div class="card-grid" data-card-grid>
 <a class="card" href="/tbaguette-skills/skills/writing-durable-docs/" data-search-card data-search-terms="writing-durable-docs use when writing or restructuring documentation — readmes, guides, api references, onboarding material… communicating">
@@ -1296,7 +1388,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/writing-postmortems/" data-search-card data-search-terms="writing-postmortems use when writing an incident review or postmortem after an outage, degradation, data loss, failed deploy… communicating">
   <span class="card__name-row">
     <span class="card__name">writing-postmortems</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when writing an incident review or postmortem after an outage, degradation, data loss, failed deploy…</p>
   <span class="card__foot">
@@ -1359,39 +1451,17 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card" href="/tbaguette-skills/skills/structuring-an-implementation-plan/" data-search-card data-search-terms="structuring-an-implementation-plan use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan… communicating">
-  <span class="card__name-row">
-    <span class="card__name">structuring-an-implementation-plan</span>
-    
-  </span>
-  <p class="card__summary">Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan…</p>
-  <span class="card__foot">
-    <span class="tag">Communicating</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card" href="/tbaguette-skills/skills/working-a-plan-task-by-task/" data-search-card data-search-terms="working-a-plan-task-by-task use when a written plan is ready to execute inline… communicating">
-  <span class="card__name-row">
-    <span class="card__name">working-a-plan-task-by-task</span>
-    
-  </span>
-  <p class="card__summary">Use when a written plan is ready to execute inline…</p>
-  <span class="card__foot">
-    <span class="tag">Communicating</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
     </div>
   </div>
 </section>
 <section class="category-section" id="environment-and-tooling" data-category-section>
   <div class="container">
     <div class="category-section__head">
-      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-grain"></use></svg>
       <h2 class="category-section__title">Environment and tooling</h2>
-      <span class="tag category-section__count" data-category-count="10"
+      <span class="tag category-section__count" data-category-count="7"
             data-i18n-singular="skill"
-            data-i18n-plural="skills">10 skills</span>
+            data-i18n-plural="skills">7 skills</span>
     </div>
     <div class="card-grid" data-card-grid>
 <a class="card" href="/tbaguette-skills/skills/portable-shell-scripting/" data-search-card data-search-terms="portable-shell-scripting use when writing or reviewing a shell script, when a script works in one shell but fails in another… environment and tooling">
@@ -1441,7 +1511,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/keeping-tbaguette-current/" data-search-card data-search-terms="keeping-tbaguette-current use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">keeping-tbaguette-current</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</p>
   <span class="card__foot">
@@ -1455,39 +1525,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     
   </span>
   <p class="card__summary">Use when a manual sequence has been repeated often enough to consider scripting it…</p>
-  <span class="card__foot">
-    <span class="tag">Environment and tooling</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card" href="/tbaguette-skills/skills/fanning-out-independent-work/" data-search-card data-search-terms="fanning-out-independent-work use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems… environment and tooling">
-  <span class="card__name-row">
-    <span class="card__name">fanning-out-independent-work</span>
-    
-  </span>
-  <p class="card__summary">Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems…</p>
-  <span class="card__foot">
-    <span class="tag">Environment and tooling</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/" data-search-card data-search-terms="delegating-tasks-with-review-gates use when executing a multi-task implementation plan task by task in the current session… environment and tooling">
-  <span class="card__name-row">
-    <span class="card__name">delegating-tasks-with-review-gates</span>
-    
-  </span>
-  <p class="card__summary">Use when executing a multi-task implementation plan task by task in the current session…</p>
-  <span class="card__foot">
-    <span class="tag">Environment and tooling</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card" href="/tbaguette-skills/skills/routing-around-capability-gaps/" data-search-card data-search-terms="routing-around-capability-gaps use when the work needs something the current model or harness cannot do — audio or video input, image or speech output… environment and tooling">
-  <span class="card__name-row">
-    <span class="card__name">routing-around-capability-gaps</span>
-    
-  </span>
-  <p class="card__summary">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…</p>
   <span class="card__foot">
     <span class="tag">Environment and tooling</span>
     <span class="card__arrow" aria-hidden="true">→</span>
@@ -1517,12 +1554,14 @@ Flag one more thing, because it applies to this very conversation: this session 
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

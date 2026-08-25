@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,7 +61,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">keeping-tbaguette-current</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
   <p class="lede">Use at the start of every conversation, unconditionally — not gated on how long it's been since the last check — and any time the user asks whether TBaguette is current, what changed recently, or wants to sync to the latest skills. Checks the installed plugin against the published repo, updates it if it can fast-forward cleanly, and reports what changed in a short, readable summary — never a raw commit log.</p>
@@ -95,7 +95,7 @@ new_head=$(git -C ~/.claude/skills/TBaguette rev-parse HEAD)</code></pre>
 git -C ~/.claude/skills/TBaguette diff --name-status &quot;$old_head..$new_head&quot; -- skills/</code></pre>
 <p><code>--name-status</code>, not <code>--stat</code> — it prefixes every changed path with <code>A</code> (added), <code>M</code> (modified), or <code>D</code> (deleted), which is what actually tells a new skill apart from a modified one; <code>--stat</code> just shows line-count bars with no way to tell &quot;new file&quot; from &quot;big edit&quot; apart. A skill directory whose <code>SKILL.md</code> shows <code>A</code> is new; one showing <code>M</code> was changed. Read the actual commit messages too, not just subject lines — this repo's own commits explain <em>why</em>, and a good summary reflects that, not a re-typed <code>git log</code>.</p>
 <h2 id="5-report-a-summary-not-a-log-dump">5. Report — a summary, not a log dump</h2>
-<p>Three to six lines, structured, calibrated to what a <em>user of the skills</em> actually cares about: new and meaningfully-changed skills first, since that's what they're here for; a site or tooling change only if it's substantial enough to be worth a sentence (skip a typo fix or a CSS nudge unless that's literally the entire update). Illustrative shape — invented skill names and changes, to show the structure, not a real changelog entry to copy:</p>
+<p>This is <a class="skill-link" href="/tbaguette-skills/skills/writing-release-notes/"><code>writing-release-notes</code></a> applied to one specific changelog: ordered by what it costs the reader, translated out of commit language, and silent about anything that changes nothing for someone who already has the plugin installed. Three to six lines, structured, calibrated to what a <em>user of the skills</em> actually cares about: new and meaningfully-changed skills first, since that's what they're here for; a site or tooling change only if it's substantial enough to be worth a sentence (skip a typo fix or a CSS nudge unless that's literally the entire update). Illustrative shape — invented skill names and changes, to show the structure, not a real changelog entry to copy:</p>
 <p>&gt; ## TBaguette updated: v0.2.0 → v0.3.0 &gt; &gt; <strong>New</strong> &gt; - <code>some-new-skill</code> — one clause on what it's for &gt; &gt; <strong>Updated</strong> &gt; - <code>some-existing-skill</code> — one clause on what changed and why it matters &gt; &gt; Also in this update: &lt;a substantial site/tooling change, only if one shipped&gt;.</p>
 <p>If this was a background check that found and applied an update, still report it — an update that happened silently in the background is exactly the kind of thing worth one paragraph at a natural point in the conversation, just not an interruption of whatever the user actually asked for.</p>
 <h2 id="6-record-it">6. Record it</h2>
@@ -148,18 +148,6 @@ Last checked: 2026-08-14T10:03:12Z
       <span class="see-also__name">automating-repetition</span>
       <span class="see-also__summary">Use when a manual sequence has been repeated often enough to consider scripting it…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/fanning-out-independent-work/">
-      <span class="see-also__name">fanning-out-independent-work</span>
-      <span class="see-also__summary">Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/">
-      <span class="see-also__name">delegating-tasks-with-review-gates</span>
-      <span class="see-also__summary">Use when executing a multi-task implementation plan task by task in the current session…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/routing-around-capability-gaps/">
-      <span class="see-also__name">routing-around-capability-gaps</span>
-      <span class="see-also__summary">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…</span>
-    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/authoring-a-new-skill/">
       <span class="see-also__name">authoring-a-new-skill</span>
       <span class="see-also__summary">Use when creating a new skill, editing an existing one, judging whether a recurring technique is worth turning into a skill at all…</span>
@@ -175,12 +163,14 @@ Last checked: 2026-08-14T10:03:12Z
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

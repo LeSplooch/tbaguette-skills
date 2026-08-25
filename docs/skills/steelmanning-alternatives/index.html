@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,7 +61,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">steelmanning-alternatives</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when an approach was adopted because it was the first one that worked and no other was seriously examined, when a plan or design presents a single option or several that share one shape, when an alternative was dismissed in a single clause, when asked whether there is a better way, or when the chosen approach has started accumulating special cases. Covers first-idea lock-in, option generation, and recommending rather than surveying.</p>
@@ -81,10 +81,10 @@
 <p>Two serious options plus &quot;do nothing&quot; is usually the right number. A third is worth generating when the first two share an assumption — that shared assumption is where the real alternative lives. Past three you are generating rather than deciding.</p>
 <h2 id="dismissals-that-sound-like-knowledge">Dismissals that sound like knowledge</h2>
 <p>The dangerous ones arrive with a reason attached: that is slow, that will not scale, that library is unmaintained, that is not how it is done here, we cannot because of X. Each is a factual claim with a truth value.</p>
-<ul><li>A dismissal verifiable in under five minutes that has not been verified is a preference, not a reason.</li><li>&quot;We do not do that here&quot; is evidence about the past. The original reason may have expired, may have concerned a system that no longer exists, or may never have been written down because it never existed.</li><li>Inherited constraints deserve one question each: who owns it, and when was it last true.</li><li>Performance dismissals with no number attached are the most common kind and are wrong in both directions at roughly equal rates.</li></ul>
+<ul><li>A dismissal verifiable in under five minutes that has not been verified is a preference, not a reason.</li><li>&quot;We do not do that here&quot; is evidence about the past. The original reason may have expired, may have concerned a system that no longer exists, or may never have been written down because it never existed.</li><li>Inherited constraints deserve one question each: who owns it, and when was it last true. <a class="skill-link" href="/tbaguette-skills/skills/revalidating-decisions/"><code>revalidating-decisions</code></a> is the longer form of that question — separating what a past decision established in principle from the premise it rested on, and recognising which premises expire without anything committing to mark them expired.</li><li>Performance dismissals with no number attached are the most common kind and are wrong in both directions at roughly equal rates. <a class="skill-link" href="/tbaguette-skills/skills/performance-profiling/"><code>performance-profiling</code></a> is the cheap way to convert one into evidence; the point is that &quot;slow&quot; is a measurement nobody took, not a property anybody established.</li></ul>
 <h2 id="recommend-do-not-survey">Recommend, do not survey</h2>
 <p>The deliverable is a recommendation with the runner-up named, not a matrix handed back to whoever asked. A survey without a recommendation moves the work to them and conceals that you have a view.</p>
-<p>Form: recommend A, name B as the real alternative, give the one criterion on which they actually differ, and state the observable that would flip it. &quot;Recommend A. B was the genuine alternative; A wins because it adds no dependency. Switch to B if the transform set grows past a handful of cases.&quot;</p>
+<p>Form: recommend A, name B as the real alternative, give the one criterion on which they actually differ, and state the observable that would flip it — and mark which parts of that are verified rather than inferred, since <a class="skill-link" href="/tbaguette-skills/skills/calibrating-confidence/"><code>calibrating-confidence</code></a> applies hardest to the sentence someone is about to act on. When the decision is one a future reader will inherit, the flip condition is the part <a class="skill-link" href="/tbaguette-skills/skills/writing-adrs/"><code>writing-adrs</code></a> exists to preserve. &quot;Recommend A. B was the genuine alternative; A wins because it adds no dependency. Switch to B if the transform set grows past a handful of cases.&quot;</p>
 <p>The one exception: the choice turns on something only the user holds — cost tolerance, team skill, a commitment you cannot see. Then present both and name precisely which unknown decides it, rather than presenting both because you declined to decide.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The alternatives all share the first idea's shape</td><td>Generated by perturbing option A instead of re-deriving from the problem</td></tr><tr><td>The comparison table's winner was obvious before the table existed</td><td>Table built to justify a decision already made</td></tr><tr><td>&quot;That does not scale&quot;, with no number</td><td>An unverified performance claim standing in for a reason</td></tr><tr><td>Three options presented, no recommendation</td><td>Survey substituted for judgment</td></tr><tr><td>Rejected for a constraint nobody confirmed</td><td>An inherited assumption treated as a fact about the world</td></tr><tr><td>The alternative is reconsidered only once the chosen path hurts</td><td>Options generated at the point of pain rather than the point of choice</td></tr><tr><td>&quot;Do nothing&quot; never appears in the list</td><td>The problem's cost was assumed rather than estimated</td></tr></tbody></table>
@@ -113,10 +113,6 @@
       <span class="see-also__name">calibrating-confidence</span>
       <span class="see-also__summary">Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/red-teaming-your-own-work/">
-      <span class="see-also__name">red-teaming-your-own-work</span>
-      <span class="see-also__summary">Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it…</span>
-    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/estimating-effort/">
       <span class="see-also__name">estimating-effort</span>
       <span class="see-also__summary">Use when asked how long something will take, how big a change is, or whether work fits a given window; when producing a plan, schedule…</span>
@@ -129,29 +125,17 @@
       <span class="see-also__name">managing-scope-drift</span>
       <span class="see-also__summary">Use when work has grown past what was asked or the diff is larger than the request implies…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/finishing-what-you-started/">
-      <span class="see-also__name">finishing-what-you-started</span>
-      <span class="see-also__summary">Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/knowing-when-to-stop/">
-      <span class="see-also__name">knowing-when-to-stop</span>
-      <span class="see-also__summary">Use when work looks done and the next action would be another polish, refactor…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/karen-and-the-manager/">
-      <span class="see-also__name">karen-and-the-manager</span>
-      <span class="see-also__summary">Use when work is about to be called done, shipped…</span>
-    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/revalidating-decisions/">
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">Use when a recorded decision — an ADR, design doc, wontfix, runbook line…</span>
     </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/reading-specifications/">
+      <span class="see-also__name">reading-specifications</span>
+      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
+    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/scoping-before-building/">
       <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">Use when an idea, feature request, or new project needs to become an approved design before any code gets written…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/confirming-before-claiming-done/">
-      <span class="see-also__name">confirming-before-claiming-done</span>
-      <span class="see-also__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</span>
     </a></li>
   </ul>
 </div>
@@ -164,12 +148,14 @@
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

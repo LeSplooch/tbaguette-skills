@@ -32,7 +32,7 @@ The necessary/adjacent line is where most drift enters, always wearing the same 
 
 ## When to interrupt
 
-Discovered work interrupts immediately only for: data loss or corruption, credential or secret exposure, a false premise underneath the request itself, or a discovery that makes the current approach wrong. Everything else waits for the final report.
+Discovered work interrupts immediately only for: data loss or corruption, credential or secret exposure, a false premise underneath the request itself (`reading-specifications` covers spotting one before the work rather than during it), or a discovery that makes the current approach wrong. Everything else waits for the final report.
 
 The gate matters in both directions. Interrupting for a medium-severity finding costs a context switch and teaches the user that your interruptions are skimmable, which is what makes the next high-severity one get skimmed.
 
@@ -44,6 +44,8 @@ The gate matters in both directions. Interrupting for a medium-severity finding 
 
 The rule covering both: **every item in the request appears in the report with a state** — done, partial with what is missing, or not done with why. No requested item silently absent, and nothing present that was not asked for.
 
+That rule needs somewhere to live that a long task cannot erode, which is what `finishing-what-you-started`'s acceptance ledger is: the request's items written to a file before the work, so narrowing has to happen against a list rather than against a memory of the request. Its surrender rule is this section's other half — a line marked surrendered is narrowing reported, a line quietly edited or deleted is narrowing concealed, and the second one leaves a fully checked list behind.
+
 ## Noticing it in flight
 
 Tripwires. Any one means stop and re-read the request text, not your memory of it.
@@ -54,7 +56,7 @@ Tripwires. Any one means stop and re-read the request text, not your memory of i
 - Elapsed effort has passed roughly twice the initial estimate with no re-estimate.
 - You are writing something whose value you could not have justified at the start of the task.
 
-When necessary work turns out to be substantial, say so before doing it rather than after: name what has to change first, its rough size, and offer the smaller alternative. One sentence, and it preserves a choice instead of presenting a completed fact.
+When necessary work turns out to be substantial, say so before doing it rather than after: name what has to change first, its rough size — a range, on `estimating-effort`'s terms, since a point estimate offered mid-drift is the least reliable number anyone will produce that day — and offer the smaller alternative. One sentence, and it preserves a choice instead of presenting a completed fact.
 
 ## Handing off the remainder
 

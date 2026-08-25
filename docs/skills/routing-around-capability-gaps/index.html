@@ -4,10 +4,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>routing-around-capability-gaps — Environment and tooling — TBaguette’s Atelier</title>
+<title>routing-around-capability-gaps — Planning and delegation — TBaguette’s Atelier</title>
 <meta name="description" content="Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="routing-around-capability-gaps — Environment and tooling — TBaguette’s Atelier">
+<meta property="og:title" content="routing-around-capability-gaps — Planning and delegation — TBaguette’s Atelier">
 <meta property="og:description" content="Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…">
 <link rel="canonical" href="/tbaguette-skills/skills/routing-around-capability-gaps/">
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -54,7 +54,7 @@
 <nav class="container breadcrumb" aria-label="Breadcrumb">
   <a href="/tbaguette-skills/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a>
+  <a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">routing-around-capability-gaps</span>
 </nav>
@@ -63,7 +63,7 @@
     <h1 class="skill-article__title">routing-around-capability-gaps</h1>
     
   </div>
-  <span class="tag skill-article__tag">Environment and tooling</span>
+  <span class="tag skill-article__tag">Planning and delegation</span>
   <p class="lede">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output, a context larger than this window, a real browser, GPU or offline inference, a cheap pass over thousands of items — or when a file type will not open, a tool answers &quot;unsupported&quot;, a modality is missing, or the next sentence is about to describe something that was never actually read. Covers surveying what else is installed on this machine, telling installed from credentialed from reachable, preferring a deterministic local tool over a second model, the data and spend consent that crossing a provider boundary needs, driving another harness non-interactively, proving the delegate actually received the prompt, and writing a capability spec that says when it expires.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>The dangerous moment in a capability gap is not the refusal — it's the substitution. A model that cannot hear an audio file will still write a paragraph about it, sourced from the filename, the surrounding conversation, and the shape of what an answer usually looks like. Nothing in that paragraph is marked as invented. The same substitution produces summaries of unread videos, transcriptions of unopened PDFs, and descriptions of images inferred from their alt text.</p>
@@ -132,52 +132,28 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>A confident description of a file that was never opened</td><td>The gap was never named, so substitution filled it</td></tr><tr><td>&quot;Nothing else is installed&quot; after checking one remembered command</td><td>Recollection used as an inventory instead of a sweep</td></tr><tr><td>A delegate reply that reads like a greeting or a self-description</td><td>The prompt was dropped by a wrong argument form, and no canary caught it</td></tr><tr><td>A plan built on a model that turns out to be uncredentialed</td><td>A <code>models</code> listing read as an entitlement rather than a catalog</td></tr><tr><td>An hour of model calls to transcribe or extract what a local tool does exactly</td><td>Rung two skipped because a bigger model felt like the better answer</td></tr><tr><td>A whole second harness stood up to read an image</td><td>The current harness's own model selector was never checked</td></tr><tr><td>A delegate's reply gets acted on as an instruction</td><td>Output from another model treated as a command channel rather than as untrusted data</td></tr><tr><td>Another vendor's agent edits files nobody asked it to touch</td><td>The delegate was run in the repo instead of a staged scratch directory</td></tr><tr><td>The user discovers afterward that their code went to a third party</td><td>Data crossing a provider boundary treated as an implementation detail</td></tr><tr><td>A cached capability spec sends work to a harness that no longer works</td><td>The spec was stored without expiry and then trusted like a fact</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;I can't process audio&quot; as a final answer, with nothing checked.</li><li>&quot;I'll just describe what it probably contains.&quot;</li><li>Reaching for a second model before checking whether a deterministic tool owns the problem.</li><li>Piping the working directory into another vendor's CLI without asking.</li><li>Reading a delegate's stdout and repeating it as your own finding.</li><li>Trusting a remembered flag over the <code>--help</code> the installed version actually prints.</li><li>&quot;It returned something, so it worked.&quot;</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/fanning-out-independent-work/">
   <span class="prevnext__label">Previous</span>
-  <span class="prevnext__name">← delegating-tasks-with-review-gates</span>
-</a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/authoring-a-new-skill/">
-  <span class="prevnext__label">Next</span>
-  <span class="prevnext__name">authoring-a-new-skill →</span>
+  <span class="prevnext__name">← fanning-out-independent-work</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Environment and tooling</h2>
+  <h2 class="see-also__title">More in Planning and delegation</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/portable-shell-scripting/">
-      <span class="see-also__name">portable-shell-scripting</span>
-      <span class="see-also__summary">Use when writing or reviewing a shell script, when a script works in one shell but fails in another…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/">
+      <span class="see-also__name">structuring-an-implementation-plan</span>
+      <span class="see-also__summary">Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/reproducible-environments/">
-      <span class="see-also__name">reproducible-environments</span>
-      <span class="see-also__summary">Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/designing-ci-pipelines/">
-      <span class="see-also__name">designing-ci-pipelines</span>
-      <span class="see-also__summary">Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/upgrading-dependencies/">
-      <span class="see-also__name">upgrading-dependencies</span>
-      <span class="see-also__summary">Use when dependency versions have fallen behind, when a security advisory names a package in use…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/keeping-tbaguette-current/">
-      <span class="see-also__name">keeping-tbaguette-current</span>
-      <span class="see-also__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/automating-repetition/">
-      <span class="see-also__name">automating-repetition</span>
-      <span class="see-also__summary">Use when a manual sequence has been repeated often enough to consider scripting it…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/fanning-out-independent-work/">
-      <span class="see-also__name">fanning-out-independent-work</span>
-      <span class="see-also__summary">Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/">
+      <span class="see-also__name">working-a-plan-task-by-task</span>
+      <span class="see-also__summary">Use when a written plan is ready to execute inline…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/">
       <span class="see-also__name">delegating-tasks-with-review-gates</span>
       <span class="see-also__summary">Use when executing a multi-task implementation plan task by task in the current session…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/authoring-a-new-skill/">
-      <span class="see-also__name">authoring-a-new-skill</span>
-      <span class="see-also__summary">Use when creating a new skill, editing an existing one, judging whether a recurring technique is worth turning into a skill at all…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/fanning-out-independent-work/">
+      <span class="see-also__name">fanning-out-independent-work</span>
+      <span class="see-also__summary">Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems…</span>
     </a></li>
   </ul>
 </div>
@@ -190,12 +166,14 @@
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

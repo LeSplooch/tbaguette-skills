@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,7 +61,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">bisecting-failures</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Debugging and performance</span>
   <p class="lede">Use when something worked before and is broken now, when the culprit is one of many commits, config keys, dependency upgrades, data rows, or uncommitted edits, when <code>git bisect</code> runs into build failures, flaky tests, or merge-heavy history, or when there is no version control to search at all. Covers binary search over any axis of change and writing an unattended bisect script.</p>
@@ -92,9 +92,9 @@ esac</code></pre>
 <p>The change set is still a set. Halve it directly.</p>
 <ul><li>Two artifacts, one working and one not: move half the files from good to bad, test, recurse. Works on deployed bundles, containers, and firmware images.</li><li>Configuration: start from the shipped default (known good by construction) and apply half the local settings.</li><li>Dependencies: diff the two installed manifests and bisect the version differences.</li><li>Compare the running artifacts, not the sources. What is deployed and what is in the tree diverge more often than anyone expects, and that divergence is itself frequently the answer.</li></ul>
 <h2 id="common-mistakes">Common mistakes</h2>
-<table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;Bisect gave a nonsense answer&quot;</td><td>build artifacts, caches, or dependencies not reset between steps</td></tr><tr><td>Manual bisect abandoned halfway</td><td>no script, so each step cost human attention and the search was never finished</td></tr><tr><td>Bisect run takes all day</td><td>full suite per step instead of the one failing case</td></tr><tr><td>Bisect blames a whitespace or formatting commit</td><td>that commit rebuilt something the incremental build had been serving stale</td></tr><tr><td>Found the commit, still do not know why</td><td>bisection names the change, not the mechanism — the commit's diff is the start of the real investigation</td></tr><tr><td>Bisecting a bug reported today across a year of history</td><td>the failure may be environmental; verify the old build fails <em>now</em> before assuming a code cause</td></tr></tbody></table>
+<table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;Bisect gave a nonsense answer&quot;</td><td>build artifacts, caches, or dependencies not reset between steps</td></tr><tr><td>Manual bisect abandoned halfway</td><td>no script, so each step cost human attention and the search was never finished</td></tr><tr><td>Bisect run takes all day</td><td>full suite per step instead of the one failing case</td></tr><tr><td>Bisect blames a whitespace or formatting commit</td><td>that commit rebuilt something the incremental build had been serving stale</td></tr><tr><td>Found the commit, still do not know why</td><td>bisection names the change, not the mechanism — the commit's diff is the start of the real investigation, and <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> is what that investigation looks like</td></tr><tr><td>Bisecting a bug reported today across a year of history</td><td>the failure may be environmental; verify the old build fails <em>now</em> before assuming a code cause</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
-<ul><li>&quot;I'll just read the diff&quot; when the range is more than about 20 commits</li><li>Starting the search without running the test on the good end</li><li>Marking a candidate by hand because &quot;that one obviously isn't it&quot;</li><li>A bisect script with no timeout, or with no path that exits 125</li><li>Accepting the answer without reverting the accused change and confirming the failure disappears</li></ul></div></article>
+<ul><li>&quot;I'll just read the diff&quot; when the range is more than about 20 commits</li><li>Starting the search without running the test on the good end</li><li>Marking a candidate by hand because &quot;that one obviously isn't it&quot;</li><li>A bisect script with no timeout, or with no path that exits 125</li><li>Accepting the answer without reverting the accused change and confirming the failure disappears — <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> on the one claim a whole search exists to produce</li></ul></div></article>
 <nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/reproducing-bugs/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← reproducing-bugs</span>
@@ -145,12 +145,14 @@ esac</code></pre>
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

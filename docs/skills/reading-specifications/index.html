@@ -4,10 +4,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>reading-specifications — Reading code — TBaguette’s Atelier</title>
+<title>reading-specifications — Judgment and meta — TBaguette’s Atelier</title>
 <meta name="description" content="Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="reading-specifications — Reading code — TBaguette’s Atelier">
+<meta property="og:title" content="reading-specifications — Judgment and meta — TBaguette’s Atelier">
 <meta property="og:description" content="Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…">
 <link rel="canonical" href="/tbaguette-skills/skills/reading-specifications/">
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -54,7 +54,7 @@
 <nav class="container breadcrumb" aria-label="Breadcrumb">
   <a href="/tbaguette-skills/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#reading-code">Reading code</a>
+  <a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">reading-specifications</span>
 </nav>
@@ -63,7 +63,7 @@
     <h1 class="skill-article__title">reading-specifications</h1>
     
   </div>
-  <span class="tag skill-article__tag">Reading code</span>
+  <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user's request into work; when requirements are vague, contradictory, or silent on edge cases; when unsure whether to ask a clarifying question or proceed on a stated assumption; when interpreting MUST, SHOULD, and MAY; or when acceptance criteria have to be written before any code is built.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Every specification has three layers: what it states, what it implies, and what it assumed without noticing. The stated layer is the smallest and causes the least rework. Almost all disagreement surfaces in the layer nobody wrote down, and the only way to reach it is to enumerate the silence in writing before building.</p>
@@ -91,44 +91,52 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Built the wrong thing from a clear ticket</td><td>Implemented the stated layer; never enumerated the assumed one</td></tr><tr><td>Endless clarification round-trips</td><td>One question at a time, with no proposed answers attached</td></tr><tr><td>Blocked for a day on a detail that did not matter</td><td>Asked where a documented assumption would have done</td></tr><tr><td>Reviewer says &quot;obviously it should X&quot;</td><td>X lived in the silence; the checklist was never run</td></tr><tr><td>Implemented a SHOULD as a hard rejection</td><td>Treated non-normative guidance as normative; broke interoperability</td></tr><tr><td>Estimate off by 4x</td><td>Never counted the testable statements</td></tr><tr><td>Two sections of the spec implemented inconsistently</td><td>Contradiction in the stated layer, never reconciled because the doc was read once, linearly</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's obvious what they mean.&quot;</li><li>&quot;I'll work out the edge cases while coding.&quot;</li><li>&quot;The ticket says 'simply', so it's small.&quot;</li><li>&quot;I'll ask once I've started&quot; — the question gets cheaper to ask and more expensive to answer with every hour.</li><li>Writing code before a single <code>given/when/then</code> line exists.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/finding-the-seam/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/revalidating-decisions/">
   <span class="prevnext__label">Previous</span>
-  <span class="prevnext__name">← finding-the-seam</span>
+  <span class="prevnext__name">← revalidating-decisions</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/naming-things/">
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/scoping-before-building/">
   <span class="prevnext__label">Next</span>
-  <span class="prevnext__name">naming-things →</span>
+  <span class="prevnext__name">scoping-before-building →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Reading code</h2>
+  <h2 class="see-also__title">More in Judgment and meta</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/">
-      <span class="see-also__name">orienting-in-unfamiliar-code</span>
-      <span class="see-also__summary">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/using-tbaguette/">
+      <span class="see-also__name">using-tbaguette</span>
+      <span class="see-also__summary">Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message.</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/tracing-data-flow/">
-      <span class="see-also__name">tracing-data-flow</span>
-      <span class="see-also__summary">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">
+      <span class="see-also__name">orchestrating-work-end-to-end</span>
+      <span class="see-also__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/code-archaeology/">
-      <span class="see-also__name">code-archaeology</span>
-      <span class="see-also__summary">Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/calibrating-confidence/">
+      <span class="see-also__name">calibrating-confidence</span>
+      <span class="see-also__summary">Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/recovering-agent-context/">
-      <span class="see-also__name">recovering-agent-context</span>
-      <span class="see-also__summary">Use when picking up an existing project for the first time, resuming work that someone or something else started…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/estimating-effort/">
+      <span class="see-also__name">estimating-effort</span>
+      <span class="see-also__summary">Use when asked how long something will take, how big a change is, or whether work fits a given window; when producing a plan, schedule…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/mapping-dependencies/">
-      <span class="see-also__name">mapping-dependencies</span>
-      <span class="see-also__summary">Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/deciding-reversibility/">
+      <span class="see-also__name">deciding-reversibility</span>
+      <span class="see-also__summary">Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/finding-the-seam/">
-      <span class="see-also__name">finding-the-seam</span>
-      <span class="see-also__summary">Use when deciding where in a codebase to make a change, when a fix could plausibly go in several places…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/steelmanning-alternatives/">
+      <span class="see-also__name">steelmanning-alternatives</span>
+      <span class="see-also__summary">Use when an approach was adopted because it was the first one that worked and no other was seriously examined…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/naming-things/">
-      <span class="see-also__name">naming-things</span>
-      <span class="see-also__summary">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/managing-scope-drift/">
+      <span class="see-also__name">managing-scope-drift</span>
+      <span class="see-also__summary">Use when work has grown past what was asked or the diff is larger than the request implies…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/revalidating-decisions/">
+      <span class="see-also__name">revalidating-decisions</span>
+      <span class="see-also__summary">Use when a recorded decision — an ADR, design doc, wontfix, runbook line…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/scoping-before-building/">
+      <span class="see-also__name">scoping-before-building</span>
+      <span class="see-also__summary">Use when an idea, feature request, or new project needs to become an approved design before any code gets written…</span>
     </a></li>
   </ul>
 </div>
@@ -141,12 +149,14 @@
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

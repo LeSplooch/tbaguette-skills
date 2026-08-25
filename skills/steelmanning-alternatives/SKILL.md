@@ -51,14 +51,14 @@ The dangerous ones arrive with a reason attached: that is slow, that will not sc
 
 - A dismissal verifiable in under five minutes that has not been verified is a preference, not a reason.
 - "We do not do that here" is evidence about the past. The original reason may have expired, may have concerned a system that no longer exists, or may never have been written down because it never existed.
-- Inherited constraints deserve one question each: who owns it, and when was it last true.
-- Performance dismissals with no number attached are the most common kind and are wrong in both directions at roughly equal rates.
+- Inherited constraints deserve one question each: who owns it, and when was it last true. `revalidating-decisions` is the longer form of that question — separating what a past decision established in principle from the premise it rested on, and recognising which premises expire without anything committing to mark them expired.
+- Performance dismissals with no number attached are the most common kind and are wrong in both directions at roughly equal rates. `performance-profiling` is the cheap way to convert one into evidence; the point is that "slow" is a measurement nobody took, not a property anybody established.
 
 ## Recommend, do not survey
 
 The deliverable is a recommendation with the runner-up named, not a matrix handed back to whoever asked. A survey without a recommendation moves the work to them and conceals that you have a view.
 
-Form: recommend A, name B as the real alternative, give the one criterion on which they actually differ, and state the observable that would flip it. "Recommend A. B was the genuine alternative; A wins because it adds no dependency. Switch to B if the transform set grows past a handful of cases."
+Form: recommend A, name B as the real alternative, give the one criterion on which they actually differ, and state the observable that would flip it — and mark which parts of that are verified rather than inferred, since `calibrating-confidence` applies hardest to the sentence someone is about to act on. When the decision is one a future reader will inherit, the flip condition is the part `writing-adrs` exists to preserve. "Recommend A. B was the genuine alternative; A wins because it adds no dependency. Switch to B if the transform set grows past a handful of cases."
 
 The one exception: the choice turns on something only the user holds — cost tolerance, team skill, a commitment you cannot see. Then present both and name precisely which unknown decides it, rather than presenting both because you declined to decide.
 

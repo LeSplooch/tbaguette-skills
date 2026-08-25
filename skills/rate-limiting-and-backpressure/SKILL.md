@@ -17,6 +17,7 @@ When demand exceeds capacity, the only question is which work fails and how quic
 - Timeouts, pool exhaustion, or a cascading failure spreading between services
 - Retry behavior amplifying a partial failure — error rate rising after a dependency starts recovering
 - Not for: capacity planning and scaling decisions; this covers what happens in the window where capacity is already insufficient
+- Not for: load that is the same expensive answer computed repeatedly — that is `caching-strategy`'s problem, and the cheapest request is the one the origin never sees. Reach here once the work is already irreducible, or once a cache's own stampede is the load
 
 ## Shed, queue, or slow down
 
@@ -61,7 +62,7 @@ Sizing is arithmetic, not intuition. By Little's Law, wait time equals queue len
 
 ## Start the clock when the work does
 
-A per-item deadline is only meaningful if the item's clock starts when the item does. Most timeout primitives fix their deadline at construction, so building every wrapper up front — the natural shape of a fan-out — starts every clock simultaneously, including for items queued behind their own siblings on a concurrency-limited backend. Items several waves deep then spend their entire budget waiting for a slot and time out having done no work at all. Either construct the timeout inside the unit of work, downstream of whatever gate grants the item its slot, so the clock starts when the turn actually begins — or issue the work in bounded waves and create each wave's timeouts immediately before awaiting that wave.
+A per-item deadline is only meaningful if the item's clock starts when the item does. Most timeout primitives fix their deadline at construction, so building every wrapper up front — the natural shape of a fan-out — starts every clock simultaneously, including for items queued behind their own siblings on a concurrency-limited backend. Items several waves deep then spend their entire budget waiting for a slot and time out having done no work at all. Either construct the timeout inside the unit of work, downstream of whatever gate grants the item its slot, so the clock starts when the turn actually begins — or issue the work in bounded waves and create each wave's timeouts immediately before awaiting that wave. `fanning-out-independent-work` is where the wave shape gets decided; this is the constraint that decides how wide a wave may be.
 
 The diagnostic: every item times out while a single item, run alone, finishes comfortably. That is queue time inside the deadline, not slow work. The failure is also quieter than it looks — a timeout that fired before any work began is indistinguishable downstream from work that ran and produced a neutral result, so an aggregate over partial results should record how many contributors actually ran. "No agreement" among workers that never started is not disagreement.
 
@@ -73,14 +74,14 @@ The diagnostic: the same saturation symptom returns after a local bound fixed it
 
 ## Watch age, not just depth
 
-Queue depth alone is ambiguous — 10,000 items is healthy at 5,000 per second and an outage at 5 per second. Alert on **age of the oldest unstarted item**, which is directly comparable to the latency objective. Supporting indicators, all leading rather than lagging: in-use concurrency versus the limit, time spent waiting for a slot, rejections broken down by reason, and the ratio of arrival rate to service rate — sustained above 1.0, everything else is a countdown.
+Queue depth alone is ambiguous — 10,000 items is healthy at 5,000 per second and an outage at 5 per second. Alert on **age of the oldest unstarted item**, which is directly comparable to the latency objective. It is also a signal that has to be emitted deliberately: depth is what a queue reports about itself for free, and age is what `instrumenting-for-observability` calls the measurement you have to decide to take before the incident, not during it. Supporting indicators, all leading rather than lagging: in-use concurrency versus the limit, time spent waiting for a slot, rejections broken down by reason, and the ratio of arrival rate to service rate — sustained above 1.0, everything else is a countdown.
 
 ## Retries
 
 - **Exponential backoff with full jitter:** `delay = random(0, min(cap, base × 2^attempt))`. Backoff without jitter re-synchronizes every client that failed together, so they all return at the same instant and rebuild the herd that caused the failure. Jitter is not a refinement of backoff; without it, backoff schedules the next outage.
 - **Cap attempts and total elapsed time.** Three attempts within a bounded budget is a reasonable default. The deadline matters more than the count: a retry issued after the caller has given up is pure load.
 - **Retry budgets:** permit retries only up to a fraction of successful traffic — 10% is a common ceiling — and fail fast beyond it. This is the control that stops a partial outage from becoming total, because when the dependency is failing, retries triple the offered load precisely when capacity has fallen.
-- **Retry only what is safe:** idempotent operations, on retryable classes only — timeouts, connection failures, explicit 429 or 503 with a retry hint. Never retry a rejection caused by the request itself.
+- **Retry only what is safe:** idempotent operations, on retryable classes only — timeouts, connection failures, explicit 429 or 503 with a retry hint. Never retry a rejection caused by the request itself. "Idempotent" here is a property someone had to build, not one to assume from the verb — `designing-for-idempotency` covers the keys and dedup windows that make a retried write safe, and a retry policy laid over an operation that never got them is an amplifier for duplicates rather than a recovery mechanism.
 - **Retry at one layer.** Three layers retrying three times each is 27x amplification, and each layer looks reasonable in isolation. Choose the layer that owns the deadline and make the others propagate.
 
 ## Breakers and shedding
@@ -91,7 +92,7 @@ Shed by value, not uniformly. Rank traffic and reject in ascending order of wort
 
 ## Tell the caller
 
-A limit a client cannot see before hitting it forces every client to discover it by failing. Return a distinct, machine-readable status for "over your quota" versus "we are overloaded" — the first is the caller's to fix, the second is not and should be retried. Include a `Retry-After`-equivalent hint with jitter already applied, and headers or fields naming the limit, the remaining allowance, and the reset time. Document the limit, the window, the dimension, and the burst allowance. Keep the error shape identical to other errors so client code handles it on an existing path rather than a new one.
+A limit a client cannot see before hitting it forces every client to discover it by failing. Return a distinct, machine-readable status for "over your quota" versus "we are overloaded" — the first is the caller's to fix, the second is not and should be retried. That is exactly the split `modeling-errors` asks for before a mechanism gets chosen, arriving at the point where a client has to act on it: one class is a permanent answer about this request, the other is a temporary answer about the system. Include a `Retry-After`-equivalent hint with jitter already applied, and headers or fields naming the limit, the remaining allowance, and the reset time. Document the limit, the window, the dimension, and the burst allowance. Keep the error shape identical to other errors so client code handles it on an existing path rather than a new one.
 
 ## Common mistakes
 

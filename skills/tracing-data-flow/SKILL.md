@@ -14,8 +14,8 @@ A trace is a written artifact — a chain of file:line hops with what changed at
 - A value arrives wrong somewhere far from where it was set.
 - Assessing what a field change breaks: every writer and every reader must be named.
 - A name appears in two places with no visible path between them.
-- Auditing where sensitive or user-supplied data reaches.
-- Not for: diagnosing why a system misbehaves when the value is not yet identified (systematic-debugging), or module-level coupling (mapping-dependencies).
+- Auditing where sensitive or user-supplied data reaches — a forward trace is how `handling-untrusted-input` gets an inventory of sinks, and how `redacting-sensitive-output` finds the log line nobody remembered.
+- Not for: diagnosing why a system misbehaves when the value is not yet identified (`diagnosing-before-fixing`), or module-level coupling (`mapping-dependencies`).
 
 ## Anatomy of a trace
 
@@ -33,7 +33,7 @@ Four node types. Miss one and the trace is wrong, not incomplete.
 | Serialize | rename at a wire, column, file, or env boundary | searching the serialized form: the JSON key, column name, protobuf field, env var |
 | Default | `?? x`, `or x`, `getOrElse`, a zero value, a schema or column default, an optional's fallback | searching for the default's literal value as well as the name |
 
-Defaulting costs the most: downstream, a value never set and a value deliberately set to the default are indistinguishable. If that difference matters, make it representable at the source (optional, sentinel, presence flag). No amount of further reading recovers it.
+Defaulting costs the most: downstream, a value never set and a value deliberately set to the default are indistinguishable. If that difference matters, make it representable at the source (optional, sentinel, presence flag). No amount of further reading recovers it — which is `tracking-data-provenance`'s case for carrying *how a value was obtained* alongside the value itself, decided at the schema rather than recovered by a trace.
 
 ## Search ladder
 
@@ -67,7 +67,7 @@ Trace backward to the source, then forward from that source once. The forward pa
 | Generated code | the file has a "do not edit" banner | trace the schema or template, not the output |
 | Concurrency | value differs between reads with no write between | log with a thread or task identity and a sequence number |
 
-**The 15-minute rule.** After 15 minutes or three dead ends of static reading, one log line at the sink answers in one run what another hour of reading will not settle. Instrumentation is the cheaper tool past that threshold, not a concession. Log the value, its identity, and where it came from; remove it in the same change that lands the fix.
+**The 15-minute rule.** After 15 minutes or three dead ends of static reading, one log line at the sink answers in one run what another hour of reading will not settle. Instrumentation is the cheaper tool past that threshold, not a concession. Log the value, its identity, and where it came from; remove it in the same change that lands the fix. A hop you have had to instrument twice is a signal the value deserves a permanent one — `instrumenting-for-observability` covers making that call before the next incident rather than during it.
 
 ## Write the chain
 

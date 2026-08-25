@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,15 +61,16 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">calibrating-confidence</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session, when asked whether a claim is certain or being pushed back on, when a conclusion rests on recalled knowledge rather than something read, when every sentence has acquired a hedge, or when the accurate answer is that you do not know. Covers evidence tiers, false precision, probability language, and unearned certainty.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
-<p>A claim read from a file and a claim recalled from training must not sound the same. Confidence tracks evidence, not fluency — and the strongest internal signal, how smoothly an answer arrives, is uncorrelated with truth for anything version-specific, recently changed, or particular to this project.</p>
+<p>A claim read from a file and a claim recalled from training must not sound the same. <a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> covers the sharpest version of the same failure — a model that cannot open the file still produces a fluent paragraph about its contents, and nothing in that paragraph is marked as invented. Confidence tracks evidence, not fluency — and the strongest internal signal, how smoothly an answer arrives, is uncorrelated with truth for anything version-specific, recently changed, or particular to this project.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> owns that gate. This is how to speak when the check has not been run.</li></ul>
 <h2 id="three-tiers-marked-in-the-sentence">Three tiers, marked in the sentence</h2>
+<p>The same three-way split applies to data as it does to claims: <a class="skill-link" href="/tbaguette-skills/skills/tracking-data-provenance/"><code>tracking-data-provenance</code></a> carries observed, inferred, and defaulted through a system so a downstream consumer can still tell them apart. Confidence laundering is what happens when either taxonomy is dropped at a boundary — a hedged claim and an unhedged one arrive identical on the far side.</p>
 <table><thead><tr><th>Tier</th><th>What earns it</th><th>How it must read</th></tr></thead><tbody><tr><td>Verified</td><td>Observed in this session's tool output — file contents, command output, a test result, a response body</td><td>Flat assertion, source named when naming it is cheap</td></tr><tr><td>Inferred</td><td>Follows from verified facts by an argument you could write in one line</td><td>Assertion plus the inference: &quot;so X, because Y is set and Z reads it&quot;</td></tr><tr><td>Assumed</td><td>Plausible from convention, priors, or recall — including confident recall</td><td>Marked: &quot;conventionally defaults to X; not checked here&quot;</td></tr></tbody></table>
 <p>Rules that make the tiers real:</p>
 <ul><li><strong>Verification decays.</strong> A file read thirty tool calls ago and edited since is not verified. A test that passed before the last change is not evidence about the current code.</li><li><strong>Verify the claim, not its neighbour.</strong> Reading a signature does not verify what the function returns. Reading an import does not verify the symbol exists. This is the most common way a careful answer ends in a wrong leaf fact.</li><li><strong>Your own prior output is not evidence.</strong> Confidence that rises when you reread your own summary is laundering an assumption into a fact.</li><li><strong>Load-bearing assumptions get checked first.</strong> If the plan cannot survive being wrong about it, check before building on it. Everything else may stay marked and unchecked.</li></ul>
@@ -91,9 +92,9 @@
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← orchestrating-work-end-to-end</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/red-teaming-your-own-work/">
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/estimating-effort/">
   <span class="prevnext__label">Next</span>
-  <span class="prevnext__name">red-teaming-your-own-work →</span>
+  <span class="prevnext__name">estimating-effort →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Judgment and meta</h2>
@@ -105,10 +106,6 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">
       <span class="see-also__name">orchestrating-work-end-to-end</span>
       <span class="see-also__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/red-teaming-your-own-work/">
-      <span class="see-also__name">red-teaming-your-own-work</span>
-      <span class="see-also__summary">Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/estimating-effort/">
       <span class="see-also__name">estimating-effort</span>
@@ -126,29 +123,17 @@
       <span class="see-also__name">managing-scope-drift</span>
       <span class="see-also__summary">Use when work has grown past what was asked or the diff is larger than the request implies…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/finishing-what-you-started/">
-      <span class="see-also__name">finishing-what-you-started</span>
-      <span class="see-also__summary">Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/knowing-when-to-stop/">
-      <span class="see-also__name">knowing-when-to-stop</span>
-      <span class="see-also__summary">Use when work looks done and the next action would be another polish, refactor…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/karen-and-the-manager/">
-      <span class="see-also__name">karen-and-the-manager</span>
-      <span class="see-also__summary">Use when work is about to be called done, shipped…</span>
-    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/revalidating-decisions/">
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">Use when a recorded decision — an ADR, design doc, wontfix, runbook line…</span>
     </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/reading-specifications/">
+      <span class="see-also__name">reading-specifications</span>
+      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
+    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/scoping-before-building/">
       <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">Use when an idea, feature request, or new project needs to become an approved design before any code gets written…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/confirming-before-claiming-done/">
-      <span class="see-also__name">confirming-before-claiming-done</span>
-      <span class="see-also__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</span>
     </a></li>
   </ul>
 </div>
@@ -161,12 +146,14 @@
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,14 +61,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">writing-postmortems</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Communicating</span>
   <p class="lede">Use when writing an incident review or postmortem after an outage, degradation, data loss, failed deploy, or security event; when building a timeline, arguing about root cause, or drafting follow-up actions; when a draft is drifting toward blaming a person or converging on a single cause; or when deciding what to publish externally. Covers blameless analysis, contributing factors, detection and mitigation timing, and action item ownership.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A postmortem is an engineering document about conditions, not an account of who did what. Any sentence in the analysis that ends at a person is unfinished — the unwritten remainder is what made that action reasonable at the time, and that remainder is the only part you can fix.</p>
 <h2 id="when-to-use">When to use</h2>
-<p>Write one for: any customer-visible degradation, any data loss or corruption regardless of size, any security event, any incident where the mitigation was applied without understanding why it worked, and any near-miss caught by luck rather than by a control.</p>
+<p>Write one for: any customer-visible degradation, any data loss or corruption regardless of size, any security event, any incident where the mitigation was applied without understanding why it worked (that gap is the postmortem's main subject, and <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> is what closing it looks like), and any near-miss caught by luck rather than by a control.</p>
 <ul><li><strong>Not for:</strong> coordinating a live incident. Documenting a recurring procedure. Recording a decision that has not failed yet → <a class="skill-link" href="/tbaguette-skills/skills/writing-adrs/"><code>writing-adrs</code></a>.</li><li>Skip the formal document for a fully-understood single-service blip under the alerting threshold with no customer impact — but log it, because three of those are a pattern.</li></ul>
 <h2 id="blameless-in-mechanism-not-just-tone">Blameless in mechanism, not just tone</h2>
 <p>Polite language is the easy half and it fools people into thinking the work is done. The mechanism:</p>
@@ -86,7 +86,7 @@
 <h2 id="publishing">Publishing</h2>
 <ul><li><strong>Internal:</strong> the full document — timeline, evidence, factors, actions, owners — circulated as widely as the organization allows. A postmortem read only by the team that wrote it teaches only them, which is the smallest possible return on the incident.</li><li><strong>External:</strong> impact (what, when, who was affected), what was done, what changes. No internal names, no unconfirmed causes, no dates you do not control.</li><li>Draft within ~48 hours while recollection is retrievable, but publish only once the timeline is evidence-backed. A fast, wrong timeline gets cited forever.</li><li>The review meeting reads the document; it is not a presentation. If it needs slides, the document failed.</li></ul>
 <h2 id="common-mistakes">Common mistakes</h2>
-<table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The review turns into someone defending a decision</td><td>Actions were stated without stating what was visible at the time</td></tr><tr><td>Last quarter's action items are still open</td><td>Unowned, undated, or too large to finish</td></tr><tr><td>The same class of incident recurs with a new trigger</td><td>The trigger was fixed and the vulnerability was left</td></tr><tr><td>&quot;Root cause: engineer ran the wrong command&quot;</td><td>Investigation stopped at the person; the missing guardrail was the finding</td></tr><tr><td>Twenty pages nobody read</td><td>Narrative padding around a timeline and a factor list that were the whole document</td></tr><tr><td>Every incident produces &quot;add an alert&quot;</td><td>Detection is the only lever the team knows; prevent and mitigate never considered</td></tr><tr><td>Timeline assembled from memory a week later</td><td>Evidence was never captured during the incident</td></tr><tr><td>Leadership asks &quot;was this fast or slow?&quot; and nobody can say</td><td>Only total impact was measured, hiding which interval is broken</td></tr></tbody></table>
+<table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The review turns into someone defending a decision</td><td>Actions were stated without stating what was visible at the time</td></tr><tr><td>Last quarter's action items are still open</td><td>Unowned, undated, or too large to finish</td></tr><tr><td>The same class of incident recurs with a new trigger</td><td>The trigger was fixed and the vulnerability was left; <a class="skill-link" href="/tbaguette-skills/skills/regression-test-from-bug/"><code>regression-test-from-bug</code></a> covers pinning the class rather than the instance</td></tr><tr><td>&quot;Root cause: engineer ran the wrong command&quot;</td><td>Investigation stopped at the person; the missing guardrail was the finding</td></tr><tr><td>Twenty pages nobody read</td><td>Narrative padding around a timeline and a factor list that were the whole document</td></tr><tr><td>Every incident produces &quot;add an alert&quot;</td><td>Detection is the only lever the team knows; prevent and mitigate never considered</td></tr><tr><td>Timeline assembled from memory a week later</td><td>Evidence was never captured during the incident — <a class="skill-link" href="/tbaguette-skills/skills/observing-production-safely/"><code>observing-production-safely</code></a> covers taking it while the system is still in the failed state, which is the only time it is available</td></tr><tr><td>Leadership asks &quot;was this fast or slow?&quot; and nobody can say</td><td>Only total impact was measured, hiding which interval is broken</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;We just need people to be more careful&quot;</li><li>&quot;The root cause was…&quot; (singular, in a system with more than one moving part)</li><li>&quot;If they had just…&quot;</li><li>An action item with no name beside it</li><li>Writing action items before the timeline is finished</li><li>Concluding that the system worked as designed and nothing needs to change</li><li>Deciding not to write one because &quot;we already know what happened&quot;</li><li>A timeline that starts when the alert fired</li></ul></div></article>
 <nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/writing-release-notes/">
@@ -132,14 +132,6 @@
       <span class="see-also__name">verifying-review-feedback</span>
       <span class="see-also__summary">Use when code review feedback lands on your own change — from a person, a bot…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/">
-      <span class="see-also__name">structuring-an-implementation-plan</span>
-      <span class="see-also__summary">Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/">
-      <span class="see-also__name">working-a-plan-task-by-task</span>
-      <span class="see-also__summary">Use when a written plan is ready to execute inline…</span>
-    </a></li>
   </ul>
 </div>
 </main>
@@ -151,12 +143,14 @@
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

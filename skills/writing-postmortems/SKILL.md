@@ -11,7 +11,7 @@ A postmortem is an engineering document about conditions, not an account of who 
 
 ## When to use
 
-Write one for: any customer-visible degradation, any data loss or corruption regardless of size, any security event, any incident where the mitigation was applied without understanding why it worked, and any near-miss caught by luck rather than by a control.
+Write one for: any customer-visible degradation, any data loss or corruption regardless of size, any security event, any incident where the mitigation was applied without understanding why it worked (that gap is the postmortem's main subject, and `diagnosing-before-fixing` is what closing it looks like), and any near-miss caught by luck rather than by a control.
 
 - **Not for:** coordinating a live incident. Documenting a recurring procedure. Recording a decision that has not failed yet → `writing-adrs`.
 - Skip the formal document for a fully-understood single-service blip under the alerting threshold with no customer impact — but log it, because three of those are a pattern.
@@ -79,11 +79,11 @@ Each item needs four things — a specific change, one named person, a due date,
 |---|---|
 | The review turns into someone defending a decision | Actions were stated without stating what was visible at the time |
 | Last quarter's action items are still open | Unowned, undated, or too large to finish |
-| The same class of incident recurs with a new trigger | The trigger was fixed and the vulnerability was left |
+| The same class of incident recurs with a new trigger | The trigger was fixed and the vulnerability was left; `regression-test-from-bug` covers pinning the class rather than the instance |
 | "Root cause: engineer ran the wrong command" | Investigation stopped at the person; the missing guardrail was the finding |
 | Twenty pages nobody read | Narrative padding around a timeline and a factor list that were the whole document |
 | Every incident produces "add an alert" | Detection is the only lever the team knows; prevent and mitigate never considered |
-| Timeline assembled from memory a week later | Evidence was never captured during the incident |
+| Timeline assembled from memory a week later | Evidence was never captured during the incident — `observing-production-safely` covers taking it while the system is still in the failed state, which is the only time it is available |
 | Leadership asks "was this fast or slow?" and nobody can say | Only total impact was measured, hiding which interval is broken |
 
 ## Red flags

@@ -1,6 +1,6 @@
 """Content-extraction pipeline for the TBaguette skills showcase site.
 
-Reads the 90 skill directories under ``~/.claude/skills/TBaguette/skills/``
+Reads the 92 skill directories under ``~/.claude/skills/TBaguette/skills/``
 (each a ``SKILL.md`` with YAML frontmatter and a markdown body; one skill,
 ``formidable``, additionally carries a ``reference/`` tree of stack and
 command reference files) and produces a single JSON-serializable dict that
@@ -44,17 +44,35 @@ CATEGORIES: list[dict] = [
             "using-tbaguette",
             "orchestrating-work-end-to-end",
             "calibrating-confidence",
-            "red-teaming-your-own-work",
             "estimating-effort",
             "deciding-reversibility",
             "steelmanning-alternatives",
             "managing-scope-drift",
-            "finishing-what-you-started",
-            "knowing-when-to-stop",
-            "karen-and-the-manager",
             "revalidating-decisions",
+            "reading-specifications",
             "scoping-before-building",
-            "confirming-before-claiming-done",
+        ],
+    },
+    {
+        # Split out of "Judgment and meta" (2026-08-25), which had grown to
+        # fourteen skills spanning four unrelated activities. These five are
+        # one activity: turning an approved design into tasks and getting
+        # those tasks executed, whether inline, by a gated subagent, in
+        # parallel, or somewhere else entirely. Each one's "When to use"
+        # already bounded itself against the others while they sat in
+        # different categories -- working-a-plan-task-by-task and
+        # structuring-an-implementation-plan under "Communicating",
+        # delegating-tasks-with-review-gates and fanning-out-independent-work
+        # under "Environment and tooling" -- which is what made the split
+        # obvious rather than merely tidy.
+        "slug": "planning-and-delegation",
+        "title": "Planning and delegation",
+        "skill_slugs": [
+            "structuring-an-implementation-plan",
+            "working-a-plan-task-by-task",
+            "delegating-tasks-with-review-gates",
+            "fanning-out-independent-work",
+            "routing-around-capability-gaps",
         ],
     },
     {
@@ -67,7 +85,6 @@ CATEGORIES: list[dict] = [
             "recovering-agent-context",
             "mapping-dependencies",
             "finding-the-seam",
-            "reading-specifications",
             "naming-things",
         ],
     },
@@ -150,6 +167,26 @@ CATEGORIES: list[dict] = [
         ],
     },
     {
+        # The other half of the "Judgment and meta" split (2026-08-25). These
+        # five skills spend their own text defining each other's edges --
+        # finishing-what-you-started calls itself the near side of the finish
+        # line and knowing-when-to-stop the far side; karen-and-the-manager
+        # says it is invoked immediately after knowing-when-to-stop;
+        # red-teaming-your-own-work and knowing-when-to-stop both defer the
+        # evidence question to confirming-before-claiming-done. Mutual
+        # boundary-setting at that density is the tell that a set of skills is
+        # one activity, so they are filed as one.
+        "slug": "finishing-and-proving",
+        "title": "Finishing and proving",
+        "skill_slugs": [
+            "finishing-what-you-started",
+            "confirming-before-claiming-done",
+            "red-teaming-your-own-work",
+            "karen-and-the-manager",
+            "knowing-when-to-stop",
+        ],
+    },
+    {
         "slug": "communicating",
         "title": "Communicating",
         "skill_slugs": [
@@ -162,8 +199,6 @@ CATEGORIES: list[dict] = [
             "crouton",
             "handing-off-for-review",
             "verifying-review-feedback",
-            "structuring-an-implementation-plan",
-            "working-a-plan-task-by-task",
         ],
     },
     {
@@ -176,9 +211,6 @@ CATEGORIES: list[dict] = [
             "upgrading-dependencies",
             "keeping-tbaguette-current",
             "automating-repetition",
-            "fanning-out-independent-work",
-            "delegating-tasks-with-review-gates",
-            "routing-around-capability-gaps",
             "authoring-a-new-skill",
         ],
     },

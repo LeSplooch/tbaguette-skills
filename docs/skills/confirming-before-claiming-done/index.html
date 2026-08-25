@@ -4,10 +4,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>confirming-before-claiming-done — Judgment and meta — TBaguette’s Atelier</title>
+<title>confirming-before-claiming-done — Finishing and proving — TBaguette’s Atelier</title>
 <meta name="description" content="Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="confirming-before-claiming-done — Judgment and meta — TBaguette’s Atelier">
+<meta property="og:title" content="confirming-before-claiming-done — Finishing and proving — TBaguette’s Atelier">
 <meta property="og:description" content="Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…">
 <link rel="canonical" href="/tbaguette-skills/skills/confirming-before-claiming-done/">
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -54,7 +54,7 @@
 <nav class="container breadcrumb" aria-label="Breadcrumb">
   <a href="/tbaguette-skills/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a>
+  <a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">confirming-before-claiming-done</span>
 </nav>
@@ -63,7 +63,7 @@
     <h1 class="skill-article__title">confirming-before-claiming-done</h1>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:52:07+02:00">Updated</span>
   </div>
-  <span class="tag skill-article__tag">Judgment and meta</span>
+  <span class="tag skill-article__tag">Finishing and proving</span>
   <p class="lede">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed, or handed off on the strength of that claim; when a subagent's or tool's own success report is about to be repeated as fact; or when the only thing behind the claim is that the code looks right and nothing has actually been run; or when the requirement is that something survives a restart, a cold start, or a fresh checkout and the only check to hand observes the present instead. Covers naming the command that would prove the claim and running it fresh, treating a stale or partial run as current evidence, inducing the condition a requirement names rather than accepting a proxy that would pass without it, and the gap between believing something works and having confirmed it.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>&quot;It should work now&quot; and &quot;it works&quot; are different claims. The first is free — it falls out of having made the edit and having a plausible story for why the edit fixes things. The second costs one command: run the actual check, read what it actually printed, and only then use the word &quot;done.&quot; Being careful, understanding the bug deeply, or having been right the last ten times does not substitute for that command. It only means the claim hasn't been checked yet.</p>
@@ -97,64 +97,32 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;Should pass now&quot; in a commit message or handoff note</td><td>The verification step was replaced with confidence in the fix</td></tr><tr><td>Tests declared passing based on a run from before the last edit</td><td>Evidence treated as durable when it's only valid for the code it ran against</td></tr><tr><td>&quot;The agent said it completed the task&quot; reported as the task being complete</td><td>A tool's self-report repeated as independently checked fact</td></tr><tr><td>A regression test added and trusted without ever seeing it fail</td><td>Never run against the broken code, so it's unknown whether it tests anything</td></tr><tr><td>Build green, shipped, runtime error in the first minute</td><td>Compilation was checked; behavior never was</td></tr><tr><td>&quot;Looks right&quot; standing in for &quot;ran and confirmed&quot;</td><td>Review of your own diff mistaken for verification of its behavior</td></tr><tr><td>One failing test out of many waved off as unrelated</td><td>A partial pass rate treated as a pass</td></tr><tr><td>Everything reports healthy for months, then nothing comes back after a power cut</td><td>Liveness checked repeatedly; durability never once induced</td></tr><tr><td>&quot;It is set to start automatically&quot; offered as evidence that it starts automatically</td><td>Configuration read as behavior, with nothing having exercised it</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Should,&quot; &quot;probably,&quot; &quot;looks like it,&quot; or &quot;I'm fairly confident&quot; appearing anywhere near a completion claim.</li><li>Satisfaction expressed — &quot;great,&quot; &quot;done,&quot; &quot;that's it&quot; — before the check has run in this message.</li><li>About to commit, push, or open a PR, and the last thing that ran was the edit, not a check.</li><li>A claim that would change if reworded, because the wording was doing the work the evidence should be doing.</li><li>&quot;It's probably fine, I'm confident in the fix&quot; as a reason to skip the command that would confirm it.</li><li>Tired, near the end of a long task, and tempted to call it done to stop working rather than because it's verified.</li><li>A requirement worded with &quot;after,&quot; &quot;across,&quot; &quot;survives,&quot; or &quot;from scratch,&quot; answered by a command that only observes right now.</li><li>&quot;It's enabled, so it'll come back&quot; — enabling is the plan; coming back is the thing being claimed.</li><li>Reluctance to induce the condition because it would be disruptive, on a system where the condition will occur anyway, unattended.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/scoping-before-building/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/finishing-what-you-started/">
   <span class="prevnext__label">Previous</span>
-  <span class="prevnext__name">← scoping-before-building</span>
+  <span class="prevnext__name">← finishing-what-you-started</span>
+</a>
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/red-teaming-your-own-work/">
+  <span class="prevnext__label">Next</span>
+  <span class="prevnext__name">red-teaming-your-own-work →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Judgment and meta</h2>
+  <h2 class="see-also__title">More in Finishing and proving</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/using-tbaguette/">
-      <span class="see-also__name">using-tbaguette</span>
-      <span class="see-also__summary">Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message.</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">
-      <span class="see-also__name">orchestrating-work-end-to-end</span>
-      <span class="see-also__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/calibrating-confidence/">
-      <span class="see-also__name">calibrating-confidence</span>
-      <span class="see-also__summary">Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/finishing-what-you-started/">
+      <span class="see-also__name">finishing-what-you-started</span>
+      <span class="see-also__summary">Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/red-teaming-your-own-work/">
       <span class="see-also__name">red-teaming-your-own-work</span>
       <span class="see-also__summary">Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/estimating-effort/">
-      <span class="see-also__name">estimating-effort</span>
-      <span class="see-also__summary">Use when asked how long something will take, how big a change is, or whether work fits a given window; when producing a plan, schedule…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/deciding-reversibility/">
-      <span class="see-also__name">deciding-reversibility</span>
-      <span class="see-also__summary">Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/steelmanning-alternatives/">
-      <span class="see-also__name">steelmanning-alternatives</span>
-      <span class="see-also__summary">Use when an approach was adopted because it was the first one that worked and no other was seriously examined…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/managing-scope-drift/">
-      <span class="see-also__name">managing-scope-drift</span>
-      <span class="see-also__summary">Use when work has grown past what was asked or the diff is larger than the request implies…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/finishing-what-you-started/">
-      <span class="see-also__name">finishing-what-you-started</span>
-      <span class="see-also__summary">Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/knowing-when-to-stop/">
-      <span class="see-also__name">knowing-when-to-stop</span>
-      <span class="see-also__summary">Use when work looks done and the next action would be another polish, refactor…</span>
-    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/karen-and-the-manager/">
       <span class="see-also__name">karen-and-the-manager</span>
       <span class="see-also__summary">Use when work is about to be called done, shipped…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/revalidating-decisions/">
-      <span class="see-also__name">revalidating-decisions</span>
-      <span class="see-also__summary">Use when a recorded decision — an ADR, design doc, wontfix, runbook line…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/scoping-before-building/">
-      <span class="see-also__name">scoping-before-building</span>
-      <span class="see-also__summary">Use when an idea, feature request, or new project needs to become an approved design before any code gets written…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/knowing-when-to-stop/">
+      <span class="see-also__name">knowing-when-to-stop</span>
+      <span class="see-also__summary">Use when work looks done and the next action would be another polish, refactor…</span>
     </a></li>
   </ul>
 </div>
@@ -167,12 +135,14 @@
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

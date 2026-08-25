@@ -7,7 +7,7 @@ description: Use when stating a fact, a cause, a version detail, or an API name 
 
 ## Overview
 
-A claim read from a file and a claim recalled from training must not sound the same. Confidence tracks evidence, not fluency — and the strongest internal signal, how smoothly an answer arrives, is uncorrelated with truth for anything version-specific, recently changed, or particular to this project.
+A claim read from a file and a claim recalled from training must not sound the same. `routing-around-capability-gaps` covers the sharpest version of the same failure — a model that cannot open the file still produces a fluent paragraph about its contents, and nothing in that paragraph is marked as invented. Confidence tracks evidence, not fluency — and the strongest internal signal, how smoothly an answer arrives, is uncorrelated with truth for anything version-specific, recently changed, or particular to this project.
 
 ## When to use
 
@@ -19,6 +19,8 @@ A claim read from a file and a claim recalled from training must not sound the s
 - Not for: whether a completion claim has been proven by running something — `confirming-before-claiming-done` owns that gate. This is how to speak when the check has not been run.
 
 ## Three tiers, marked in the sentence
+
+The same three-way split applies to data as it does to claims: `tracking-data-provenance` carries observed, inferred, and defaulted through a system so a downstream consumer can still tell them apart. Confidence laundering is what happens when either taxonomy is dropped at a boundary — a hedged claim and an unhedged one arrive identical on the far side.
 
 | Tier | What earns it | How it must read |
 |---|---|---|

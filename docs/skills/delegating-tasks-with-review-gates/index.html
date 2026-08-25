@@ -4,10 +4,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>delegating-tasks-with-review-gates — Environment and tooling — TBaguette’s Atelier</title>
+<title>delegating-tasks-with-review-gates — Planning and delegation — TBaguette’s Atelier</title>
 <meta name="description" content="Use when executing a multi-task implementation plan task by task in the current session…">
 <meta property="og:type" content="website">
-<meta property="og:title" content="delegating-tasks-with-review-gates — Environment and tooling — TBaguette’s Atelier">
+<meta property="og:title" content="delegating-tasks-with-review-gates — Planning and delegation — TBaguette’s Atelier">
 <meta property="og:description" content="Use when executing a multi-task implementation plan task by task in the current session…">
 <link rel="canonical" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/">
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -54,7 +54,7 @@
 <nav class="container breadcrumb" aria-label="Breadcrumb">
   <a href="/tbaguette-skills/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a>
+  <a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">delegating-tasks-with-review-gates</span>
 </nav>
@@ -63,7 +63,7 @@
     <h1 class="skill-article__title">delegating-tasks-with-review-gates</h1>
     
   </div>
-  <span class="tag skill-article__tag">Environment and tooling</span>
+  <span class="tag skill-article__tag">Planning and delegation</span>
   <p class="lede">Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, or when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it. Covers dispatching a zero-context implementer subagent per task, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Execute a plan by dispatching one fresh subagent per task, gate each one with a two-stage review before the next task starts, and close with one broader review across the whole branch. A subagent that inherits your session's transcript inherits its dead ends and abandoned approaches along with it — construct exactly what each task needs instead, and nothing it doesn't, so its judgment goes into the task rather than into making sense of a conversation it never joined. The same discipline protects your own context: tracking what's done, ruling on conflicts, holding the cross-task picture no single subagent has reason to hold — that coordination work is what the controller session is for, and it stays clean only if the tasks themselves happen somewhere else.</p>
@@ -119,40 +119,24 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>A task marked complete with an open spec gap</td><td>&quot;Close enough&quot; stood in for a clean verdict — a failed spec check is not done, only fixed or parked-with-a-ruling</td></tr><tr><td>The controller edits code directly mid-review</td><td>Fixing in the controller session skips the review gate it's supposed to protect, and pollutes the context that's supposed to stay clean</td></tr><tr><td>A fix round runs six, seven, eight times on the same task</td><td>No fixed cap — rounds kept being spent hoping instead of adjudicating a structural failure</td></tr><tr><td>A fix ships with no re-review because it &quot;was small&quot;</td><td>Small fixes regress too; skipping the re-review is how they land unseen</td></tr><tr><td>The next task dispatches before this one's review is clean or parked</td><td>The task loop's gate was treated as optional under time pressure</td></tr><tr><td>A dispatch prompt balloons with several tasks' worth of pasted history</td><td>Session history got pasted in instead of handed over as an interface the brief states plainly</td></tr><tr><td>The implementer's self-review stands in for the task review</td><td>Self-review and independent review catch different things; one was skipped, not just deferred</td></tr><tr><td>An implementer spawns its own reviewer and the controller treats that as covered</td><td>A duplicate review seat, not a second opinion — the real review still has to run</td></tr><tr><td>A defect traced back to an earlier, already-closed task</td><td>Treated as the current task's finding instead of raised against the task that actually owns it</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;The self-review already looked thorough, I'll skip the task review this once.&quot;</li><li>&quot;One more fix round will probably converge&quot; — said again, past the point where it already didn't.</li><li>&quot;I'll just fix this myself instead of dispatching, it's faster.&quot;</li><li>&quot;This finding is obviously wrong, I'll drop it&quot; — with nothing written down about why.</li><li>&quot;Should I continue?&quot; surfacing after a task that closed clean, with nothing that called for a stop.</li><li>A dispatch prompt that includes &quot;here's everything that happened in the tasks before this one.&quot;</li><li>Reviewing this task's diff with the previous task's context still doing the judging.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/fanning-out-independent-work/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/">
   <span class="prevnext__label">Previous</span>
-  <span class="prevnext__name">← fanning-out-independent-work</span>
+  <span class="prevnext__name">← working-a-plan-task-by-task</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/routing-around-capability-gaps/">
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/fanning-out-independent-work/">
   <span class="prevnext__label">Next</span>
-  <span class="prevnext__name">routing-around-capability-gaps →</span>
+  <span class="prevnext__name">fanning-out-independent-work →</span>
 </a></nav>
 <div class="container see-also">
-  <h2 class="see-also__title">More in Environment and tooling</h2>
+  <h2 class="see-also__title">More in Planning and delegation</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/portable-shell-scripting/">
-      <span class="see-also__name">portable-shell-scripting</span>
-      <span class="see-also__summary">Use when writing or reviewing a shell script, when a script works in one shell but fails in another…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/">
+      <span class="see-also__name">structuring-an-implementation-plan</span>
+      <span class="see-also__summary">Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/reproducible-environments/">
-      <span class="see-also__name">reproducible-environments</span>
-      <span class="see-also__summary">Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/designing-ci-pipelines/">
-      <span class="see-also__name">designing-ci-pipelines</span>
-      <span class="see-also__summary">Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/upgrading-dependencies/">
-      <span class="see-also__name">upgrading-dependencies</span>
-      <span class="see-also__summary">Use when dependency versions have fallen behind, when a security advisory names a package in use…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/keeping-tbaguette-current/">
-      <span class="see-also__name">keeping-tbaguette-current</span>
-      <span class="see-also__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/automating-repetition/">
-      <span class="see-also__name">automating-repetition</span>
-      <span class="see-also__summary">Use when a manual sequence has been repeated often enough to consider scripting it…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/">
+      <span class="see-also__name">working-a-plan-task-by-task</span>
+      <span class="see-also__summary">Use when a written plan is ready to execute inline…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/fanning-out-independent-work/">
       <span class="see-also__name">fanning-out-independent-work</span>
@@ -161,10 +145,6 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/routing-around-capability-gaps/">
       <span class="see-also__name">routing-around-capability-gaps</span>
       <span class="see-also__summary">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/authoring-a-new-skill/">
-      <span class="see-also__name">authoring-a-new-skill</span>
-      <span class="see-also__summary">Use when creating a new skill, editing an existing one, judging whether a recurring technique is worth turning into a skill at all…</span>
     </a></li>
   </ul>
 </div>
@@ -177,12 +157,14 @@
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

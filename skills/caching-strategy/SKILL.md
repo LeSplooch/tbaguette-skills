@@ -16,6 +16,7 @@ A cache is a second copy of the truth that is permitted to be wrong. You are buy
 - The origin collapses when a hot key expires, a node restarts cold, or a deploy flushes everything
 - One tenant, locale, or permission level is served another's data
 - Not for: a derived store that must always agree with its source — that is replication, not caching, and the last section explains why the distinction decides the design
+- Not for: an origin that is overloaded by demand rather than by repeated identical work — a cache is the wrong lever there, and `rate-limiting-and-backpressure` owns shedding, queueing, and slowing the producer down. The two meet at the stampede: caching decides how many callers miss at once, backpressure decides what happens to the ones who do
 
 ## Is this cacheable at all
 
@@ -27,7 +28,7 @@ All three must hold. Two out of three ships a bug.
 | Reused | Projected hit rate ≥80% against the real key distribution, not the average case | Below ~80% the miss path pays lookup plus original work, and every write pays invalidation |
 | Stale-tolerant | You can state the budget in seconds and name who is harmed at the boundary | You need a fresh read or a replica, not a cache |
 
-Fix the source first. A cache in front of an unindexed query freezes the bad query in place and hands its full cost to the first request after every flush. Cache what is expensive to compute, not what is accidentally slow.
+Fix the source first. A cache in front of an unindexed query freezes the bad query in place and hands its full cost to the first request after every flush. Cache what is expensive to compute, not what is accidentally slow — and "expensive" is a measurement, so the miss path goes through `performance-profiling` before it goes behind a cache.
 
 ## Name the staleness budget in time
 
@@ -66,14 +67,14 @@ One popular key expires, every concurrent request misses, and the origin takes t
 2. **Serve stale while revalidating** — return the expired value immediately and refresh in the background. Requires a second, longer hard expiry, or stale becomes permanent whenever the refresh path is broken.
 3. **Early probabilistic refresh** — as expiry approaches, a random and rising fraction of readers refresh early, so the crowd never converges on one instant.
 
-Prerequisite for all three: jitter every TTL by ±10–20%. Fixed TTLs written at deploy time expire together on the same second forever. The same reasoning applies to cold start — a restarted or flushed cache is a simultaneous stampede on every key, so surviving total cache loss at peak traffic is a requirement, not a nice-to-have, and it is worth testing deliberately.
+All three bound how much work reaches the origin; none of them bounds what the origin does once it is already behind, which is `rate-limiting-and-backpressure`'s half of the same incident. Prerequisite for all three: jitter every TTL by ±10–20%. Fixed TTLs written at deploy time expire together on the same second forever. The same reasoning applies to cold start — a restarted or flushed cache is a simultaneous stampede on every key, so surviving total cache loss at peak traffic is a requirement, not a nice-to-have, and it is worth testing deliberately.
 
 ## Negative caching
 
 Cache authoritative "does not exist" answers, or a flood of misses on nonexistent keys becomes an origin denial of service that anyone can trigger by enumerating identifiers.
 
 - Negative TTL far shorter than positive; one tenth is a reasonable starting ratio
-- Cache only authoritative negatives. Never cache a timeout, an internal error, or a partially failed dependency — that pins an outage in place after the outage has ended
+- Cache only authoritative negatives. Never cache a timeout, an internal error, or a partially failed dependency — that pins an outage in place after the outage has ended. This is why the distinction `modeling-errors` draws between "the answer is no" and "I could not get an answer" has to survive into the cache layer: collapse the two and the second gets stored as the first
 - Invalidate the negative entry on create, or a just-registered entity is missing for a full TTL and the user retries into the same answer
 
 ## Key design
@@ -81,13 +82,13 @@ Cache authoritative "does not exist" answers, or a flood of misses on nonexisten
 Everything the answer depends on belongs in the key: entity id, tenant, locale, role or permission scope, serialization version, and every flag that changes the computed value. Whatever is omitted becomes a value served to the wrong asker.
 
 - Build keys in one function, never by concatenation at call sites. The multi-tenant leak is never caused by not knowing about tenant scoping; it is caused by one of eleven call sites that forgot it. Make the tenant a required parameter of the key constructor so forgetting it fails to compile or fails a test.
-- Prefix keys with a schema epoch. Bumping the epoch invalidates everything atomically, which is the only reliable mass purge and the correct move on any deploy that changes the shape of a cached value.
+- Prefix keys with a schema epoch. Bumping the epoch invalidates everything atomically, which is the only reliable mass purge and the correct move on any deploy that changes the shape of a cached value. A cache is a place a retired serialization shape outlives the code that wrote it, so it belongs in the same inventory `schema-evolution` keeps of readers you cannot deploy in lockstep.
 - Watch cardinality from both directions: keys that are near-unique per request never earn a hit and only consume memory; keys too coarse serve one asker's answer to another.
 - Cache the smallest reusable unit. A whole rendered response inherits the shortest staleness budget of any field inside it, and usually that field is a permission or a balance.
 
 ## When it is not a cache
 
-If a stale read is a correctness bug rather than a freshness trade, do not build a cache. The tell is someone proposing a TTL of zero, or saying "we will just invalidate it everywhere reliably." Reliable cross-process invalidation is distributed consensus wearing a disguise. Build a replica with a stated consistency guarantee, publish the replication lag as a number, and route the reads that cannot tolerate that lag to the authoritative copy.
+If a stale read is a correctness bug rather than a freshness trade, do not build a cache. The tell is someone proposing a TTL of zero, or saying "we will just invalidate it everywhere reliably." Reliable cross-process invalidation is distributed consensus wearing a disguise. Build a replica with a stated consistency guarantee, publish the replication lag as a number — an emitted signal, on `instrumenting-for-observability`'s terms, not a figure someone can look up during an incident — and route the reads that cannot tolerate that lag to the authoritative copy.
 
 ## Common mistakes
 

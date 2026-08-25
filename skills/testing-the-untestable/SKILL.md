@@ -14,9 +14,10 @@ Nothing is untestable; some things are un-injected. Every source of nondetermini
 - Code reads the current time, sleeps, retries with backoff, or expires something.
 - Code generates ids, tokens, salts, shuffles, or samples.
 - Code opens sockets, resolves DNS, reads files, or reads environment and config.
-- Code spawns threads, tasks, or processes and the test's outcome depends on their interleaving.
+- Code spawns threads, tasks, or processes and the test's outcome depends on their interleaving (`debugging-concurrency` once an interleaving bug is already loose, rather than being designed against).
 - A test fails only in another timezone, on the 1st of the month, or on a loaded CI worker.
 - Not for: diagnosing a suite that is already intermittently failing — that is `flaky-test-triage`.
+- Not for: deciding what the substitute on the far side of the seam should *return*. This skill places the seam; `grounding-test-doubles` decides whether the double is faithful — captured from the real thing rather than composed from memory, and raising rather than shrugging on a shape it does not recognise. A seam in the right place feeding an invented payload still ships a green suite over a broken integration.
 
 ## Own the boundary, one seam per category
 
@@ -81,7 +82,7 @@ Run these four checks; each one catches a class nothing else does.
 
 | Symptom | Real cause |
 |---|---|
-| Test passes locally, fails in CI | Ambient timezone, locale, filesystem case-sensitivity, or core count differs |
+| Test passes locally, fails in CI | Ambient timezone, locale, filesystem case-sensitivity, or core count differs — `reproducible-environments` covers pinning the ones the test never declared |
 | Test fails once a month or once a year | Wall clock read directly; month end, leap day, or DST crossed the assertion |
 | Timeout test takes 30 real seconds | No fake clock; the test is waiting rather than advancing |
 | Sleep durations keep being increased | A race is being masked; the sleep length is now load-bearing |
@@ -89,7 +90,7 @@ Run these four checks; each one catches a class nothing else does.
 | Everything is mocked and nothing catches bugs | Seams placed at every call rather than at the boundary; tests assert the mock's script |
 | Test suite hangs with no output | Global time-patching froze a library's internal timer |
 | Passes alone, fails in parallel | Process-global environment variables, a fixed port, or a shared temp path |
-| Green tests, broken production query | An in-memory substitute stood in for a real store with different semantics |
+| Green tests, broken production query | An in-memory substitute stood in for a real store with different semantics; `grounding-test-doubles` keeps one live test per integration for exactly this |
 
 ## Red flags
 

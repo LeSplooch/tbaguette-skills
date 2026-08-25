@@ -92,7 +92,7 @@ The change set is still a set. Halve it directly.
 | Manual bisect abandoned halfway | no script, so each step cost human attention and the search was never finished |
 | Bisect run takes all day | full suite per step instead of the one failing case |
 | Bisect blames a whitespace or formatting commit | that commit rebuilt something the incremental build had been serving stale |
-| Found the commit, still do not know why | bisection names the change, not the mechanism — the commit's diff is the start of the real investigation |
+| Found the commit, still do not know why | bisection names the change, not the mechanism — the commit's diff is the start of the real investigation, and `diagnosing-before-fixing` is what that investigation looks like |
 | Bisecting a bug reported today across a year of history | the failure may be environmental; verify the old build fails *now* before assuming a code cause |
 
 ## Red flags
@@ -101,4 +101,4 @@ The change set is still a set. Halve it directly.
 - Starting the search without running the test on the good end
 - Marking a candidate by hand because "that one obviously isn't it"
 - A bisect script with no timeout, or with no path that exits 125
-- Accepting the answer without reverting the accused change and confirming the failure disappears
+- Accepting the answer without reverting the accused change and confirming the failure disappears — `confirming-before-claiming-done` on the one claim a whole search exists to produce

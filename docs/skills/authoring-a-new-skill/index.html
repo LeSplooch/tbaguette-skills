@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -124,9 +124,9 @@ description: Use when A, B, or C. Covers D, E, F.
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Description reads like a changelog entry (&quot;dispatches per task with review between&quot;)</td><td>Description written to summarize the skill instead of to trigger it; agents will follow the summary and skip the body</td></tr><tr><td>A <code>reference/</code> file for a forty-line skill</td><td>Reached for progressive disclosure before checking whether it fits inline; a handful of skills out of dozens have one, each because its content is genuinely read selectively</td></tr><tr><td>Skill ships without ever running on a subagent that didn't have it</td><td>RED phase skipped — the skill addresses whatever you imagined agents would do, not what they actually do</td></tr><tr><td>A clean RED on a long-context failure reported as &quot;tested,&quot; or as proof no skill is needed</td><td>The scenario never reached the failure — context decay and cross-turn drift cannot occur inside a fresh one-shot dispatch</td></tr><tr><td>Every rule has an escape clause (&quot;...unless it doesn't make sense&quot;)</td><td>A nuance clause reopens the exact negotiation a flat rule was meant to close</td></tr><tr><td>Skill written for a project-specific convention</td><td>Belongs in that project's own CLAUDE.md, not a library that has to survive being read cold in an unrelated repo</td></tr><tr><td>A flowchart shows a linear checklist</td><td>A numbered list would read faster; the diagram is doing a list's job worse</td></tr><tr><td>New skill has no <code>CATALOG.md</code> row</td><td>Written, not shipped — the count check in <code>scripts/generate.py</code> will fail the build the moment someone notices</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's obviously clear, it doesn't need testing on a subagent.&quot;</li><li>&quot;I'll just add this section — it's small enough to skip re-testing.&quot;</li><li>&quot;This is basically the Anthropic or superpowers version, I don't need to check how this repo actually does it.&quot;</li><li>&quot;The description is a good summary of what the skill does&quot; — a good summary and a good trigger are different documents.</li><li>Reaching for a <code>reference/</code> file because the main one &quot;feels long,&quot; without checking whether anything in it actually needs to be read selectively rather than every time.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/routing-around-capability-gaps/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/automating-repetition/">
   <span class="prevnext__label">Previous</span>
-  <span class="prevnext__name">← routing-around-capability-gaps</span>
+  <span class="prevnext__name">← automating-repetition</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Environment and tooling</h2>
@@ -155,18 +155,6 @@ description: Use when A, B, or C. Covers D, E, F.
       <span class="see-also__name">automating-repetition</span>
       <span class="see-also__summary">Use when a manual sequence has been repeated often enough to consider scripting it…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/fanning-out-independent-work/">
-      <span class="see-also__name">fanning-out-independent-work</span>
-      <span class="see-also__summary">Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/">
-      <span class="see-also__name">delegating-tasks-with-review-gates</span>
-      <span class="see-also__summary">Use when executing a multi-task implementation plan task by task in the current session…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/routing-around-capability-gaps/">
-      <span class="see-also__name">routing-around-capability-gaps</span>
-      <span class="see-also__summary">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…</span>
-    </a></li>
   </ul>
 </div>
 </main>
@@ -178,12 +166,14 @@ description: Use when A, B, or C. Covers D, E, F.
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

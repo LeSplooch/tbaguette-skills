@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -140,13 +140,9 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Implementation started right after the design was presented</td><td>The design and the approval were treated as one step; presenting is not the same event as hearing yes</td></tr><tr><td>A &quot;simple&quot; task shipped with no design conversation at all</td><td>Simplicity was applied to the approval instead of to the artifact; simple still gets a design, just a short one</td></tr><tr><td>A bounded task quietly turned into a rewrite mid-implementation</td><td>Complexity was absorbed instead of triggering a stop-and-reclassify</td></tr><tr><td>Five questions sent in one message, only the first one answered</td><td>Questions weren't batched one at a time</td></tr><tr><td>A written spec reads clean but the plan built from it goes sideways</td><td>Self-review checked spelling and section balance instead of contradictions and ambiguity</td></tr><tr><td>A layout question described in three paragraphs still gets misread</td><td>The question was visual; it got the text treatment anyway</td></tr><tr><td>Exploratory code from mid-design &quot;just checking&quot; ends up in the shipped implementation</td><td>Research and building were never actually kept separate — the probe's output should have crossed back in as an answer, not as code</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;This is too small to need a design&quot; — small changes the size of the design, never whether one happens.</li><li>&quot;It's obviously bounded, I'll start while they're still reading&quot; — the gate is the wait for yes, not the design's length.</li><li>&quot;The spike answered the question, I might as well keep the code&quot; — that's a new request; classify it on its own.</li><li>&quot;It grew a little, but I'm nearly done&quot; — hidden complexity upgrades the path immediately, not once the task is finished.</li><li>&quot;They already approved the first version, so this revision doesn't need a new yes&quot; — each version gets its own approval.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/revalidating-decisions/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/reading-specifications/">
   <span class="prevnext__label">Previous</span>
-  <span class="prevnext__name">← revalidating-decisions</span>
-</a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/confirming-before-claiming-done/">
-  <span class="prevnext__label">Next</span>
-  <span class="prevnext__name">confirming-before-claiming-done →</span>
+  <span class="prevnext__name">← reading-specifications</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Judgment and meta</h2>
@@ -162,10 +158,6 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/calibrating-confidence/">
       <span class="see-also__name">calibrating-confidence</span>
       <span class="see-also__summary">Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/red-teaming-your-own-work/">
-      <span class="see-also__name">red-teaming-your-own-work</span>
-      <span class="see-also__summary">Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/estimating-effort/">
       <span class="see-also__name">estimating-effort</span>
@@ -183,25 +175,13 @@
       <span class="see-also__name">managing-scope-drift</span>
       <span class="see-also__summary">Use when work has grown past what was asked or the diff is larger than the request implies…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/finishing-what-you-started/">
-      <span class="see-also__name">finishing-what-you-started</span>
-      <span class="see-also__summary">Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/knowing-when-to-stop/">
-      <span class="see-also__name">knowing-when-to-stop</span>
-      <span class="see-also__summary">Use when work looks done and the next action would be another polish, refactor…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/karen-and-the-manager/">
-      <span class="see-also__name">karen-and-the-manager</span>
-      <span class="see-also__summary">Use when work is about to be called done, shipped…</span>
-    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/revalidating-decisions/">
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">Use when a recorded decision — an ADR, design doc, wontfix, runbook line…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/confirming-before-claiming-done/">
-      <span class="see-also__name">confirming-before-claiming-done</span>
-      <span class="see-also__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</span>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/reading-specifications/">
+      <span class="see-also__name">reading-specifications</span>
+      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
     </a></li>
   </ul>
 </div>
@@ -214,12 +194,14 @@
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

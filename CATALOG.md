@@ -27,17 +27,23 @@ TBaguette skill hands off to a neighbour.
 | `using-tbaguette` | Force-injected at every session start: check TBaguette's own skills before every response, for the whole conversation |
 | `orchestrating-work-end-to-end` | The spine the rest of the library hangs off: which track a request is on, the phase order, the evidence that opens each gate, one run record that survives compaction. Multi-file: full phase-to-skill routing index |
 | `calibrating-confidence` | Marking verified vs inferred vs assumed; false precision; saying you don't know |
-| `red-teaming-your-own-work` | A bounded adversarial pass before handing work off |
 | `estimating-effort` | Reference classes, ranges over points, the planning fallacy |
 | `deciding-reversibility` | One-way vs two-way doors; matching decision cost to decision weight |
 | `steelmanning-alternatives` | Escaping first-idea lock-in; recommending rather than surveying |
 | `managing-scope-drift` | Necessary vs adjacent vs discovered work; silent widening and narrowing |
-| `finishing-what-you-started` | The near side of the finish line: an acceptance ledger written before the work, checks watched failing first, numbers re-measured at report time |
-| `knowing-when-to-stop` | Diminishing returns, gold-plating, bounded passes, explicit handoff |
-| `karen-and-the-manager` | Persona-forced finishing pass: never-satisfied critique, then a triage pass on it. Invoke right after `knowing-when-to-stop` |
 | `revalidating-decisions` | Separating a decision's principle from its premise; which premises expire with no commit; overturning an old call on evidence |
+| `reading-specifications` | Turning ambiguous prose into testable requirements |
 | `scoping-before-building` | Turning an idea into an approved design before any code; one clarifying question at a time |
-| `confirming-before-claiming-done` | Evidence before claiming done — running the check that proves it, not trusting a stale run or a subagent's report |
+
+## Planning and delegation
+
+| Skill | For |
+|---|---|
+| `structuring-an-implementation-plan` | Turning a settled spec into bite-sized, placeholder-free tasks |
+| `working-a-plan-task-by-task` | Executing an already-written plan inline, in the current session |
+| `delegating-tasks-with-review-gates` | Fresh subagent per task, gated by a two-stage review, with a bounded fix loop |
+| `fanning-out-independent-work` | Telling genuine independence from work that only looks independent; avoiding collisions |
+| `routing-around-capability-gaps` | When this model or harness can't do it: surveying what else is on the machine, deterministic tools before a second model, consent before data crosses a provider |
 
 ## Reading code
 
@@ -49,7 +55,6 @@ TBaguette skill hands off to a neighbour.
 | `recovering-agent-context` | What prior AI sessions across every tool already learned here — transcripts, instruction files, dead ends already paid for |
 | `mapping-dependencies` | The real graph; cycles, layering, blast radius |
 | `finding-the-seam` | Where to make a change so the blast radius is smallest |
-| `reading-specifications` | Turning ambiguous prose into testable requirements |
 | `naming-things` | Names as the cheapest documentation and the costliest to change late |
 
 ## Landing changes
@@ -125,6 +130,16 @@ TBaguette skill hands off to a neighbour.
 | `auditing-dependencies` | Code you ship and did not review; triage by reachability |
 | `least-privilege-design` | Default deny; blast radius as the design metric |
 
+## Finishing and proving
+
+| Skill | For |
+|---|---|
+| `finishing-what-you-started` | The near side of the finish line: an acceptance ledger written before the work, checks watched failing first, numbers re-measured at report time |
+| `confirming-before-claiming-done` | Evidence before claiming done — running the check that proves it, not trusting a stale run or a subagent's report |
+| `red-teaming-your-own-work` | A bounded adversarial pass before handing work off |
+| `karen-and-the-manager` | Persona-forced finishing pass: never-satisfied critique, then a triage pass on it. Invoke right after `knowing-when-to-stop` |
+| `knowing-when-to-stop` | Diminishing returns, gold-plating, bounded passes, explicit handoff |
+
 ## Communicating
 
 | Skill | For |
@@ -138,8 +153,6 @@ TBaguette skill hands off to a neighbour.
 | `crouton` | Terse on purpose: what really costs tokens, which words survive any cut, where compression stops |
 | `handing-off-for-review` | What a reviewer needs up front; when a request is premature |
 | `verifying-review-feedback` | Verifying feedback before acting on it; fix vs. pushback vs. clarifying question |
-| `structuring-an-implementation-plan` | Turning a settled spec into bite-sized, placeholder-free tasks |
-| `working-a-plan-task-by-task` | Executing an already-written plan inline, in the current session |
 
 ## Environment and tooling
 
@@ -151,8 +164,5 @@ TBaguette skill hands off to a neighbour.
 | `upgrading-dependencies` | Routine and cheap, or one forced upgrade during an incident |
 | `keeping-tbaguette-current` | Checks the installed TBaguette plugin against the published repo, updates it if it can fast-forward cleanly, keeps a local changelog |
 | `automating-repetition` | When a manual sequence should become a tool, and when it should not |
-| `fanning-out-independent-work` | Telling genuine independence from work that only looks independent; avoiding collisions |
-| `delegating-tasks-with-review-gates` | Fresh subagent per task, gated by a two-stage review, with a bounded fix loop |
-| `routing-around-capability-gaps` | When this model or harness can't do it: surveying what else is on the machine, deterministic tools before a second model, consent before data crosses a provider |
 | `authoring-a-new-skill` | What makes a skill worth writing, the frontmatter register, testing it before it ships |
 | `play-console` † | Google Play Console workflows |

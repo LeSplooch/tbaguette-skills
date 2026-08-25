@@ -36,6 +36,8 @@ SUITES = [
     ("i18n", [sys.executable, "test_i18n.py"]),
     ("hooks", [sys.executable, "test_hooks.py"]),
     ("harness manifests", [sys.executable, "test_harness_manifests.py"]),
+    ("CATALOG.md vs CATEGORIES", [sys.executable, "test_catalog.py"]),
+    ("skill cross-references", [sys.executable, "test_skill_references.py"]),
     # The only suite that hits the network (clones the real, published repo
     # from GitHub several times against throwaway HOME directories) — a
     # flaky connection can fail this one without meaning anything else is

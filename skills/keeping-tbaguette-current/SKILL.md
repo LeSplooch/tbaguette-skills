@@ -136,7 +136,10 @@ commits explain *why*, and a good summary reflects that, not a re-typed
 
 ## 5. Report — a summary, not a log dump
 
-Three to six lines, structured, calibrated to what a *user of the skills*
+This is `writing-release-notes` applied to one specific changelog: ordered by
+what it costs the reader, translated out of commit language, and silent about
+anything that changes nothing for someone who already has the plugin
+installed. Three to six lines, structured, calibrated to what a *user of the skills*
 actually cares about: new and meaningfully-changed skills first, since
 that's what they're here for; a site or tooling change only if it's
 substantial enough to be worth a sentence (skip a typo fix or a CSS nudge

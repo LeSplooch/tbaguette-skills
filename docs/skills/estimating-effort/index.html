@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.11.13</span>
+      <span class="wordmark-version" dir="ltr">v0.12.0</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-25T13:39:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T13:39:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-25T14:07:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-25T14:07:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,16 +61,16 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">estimating-effort</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T14:07:14.932397+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when asked how long something will take, how big a change is, or whether work fits a given window; when producing a plan, schedule, or sequencing commitment with durations attached; when a previous estimate has already been overrun and a new number is needed; or when the spread is wide enough that any single number would be invented. Covers reference classes, ranges, the planning fallacy, spikes, and re-estimation.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>An estimate assembled by decomposing the plan you can see underruns systematically, because the visible plan is the part that goes right. Anchor on how comparable work actually went, adjust only for differences you can name, and use decomposition as a cross-check rather than a source.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Asked how long something takes, how large a change is, or whether it fits a window</li><li>Producing a plan with durations, a schedule, or a sequencing commitment</li><li>An estimate has already been overrun and a replacement number is needed</li><li>The plausible range is wide enough that a point estimate would be fiction</li><li>Not for: breaking work into steps — <a class="skill-link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a> owns the decomposition. This owns the numbers attached to it, and whether they carry information.</li></ul>
+<ul><li>Asked how long something takes, how large a change is, or whether it fits a window</li><li>Producing a plan with durations, a schedule, or a sequencing commitment</li><li>An estimate has already been overrun and a replacement number is needed — check first whether the overrun is the work being larger or the scope having grown, because <a class="skill-link" href="/tbaguette-skills/skills/managing-scope-drift/"><code>managing-scope-drift</code></a> treats an estimate passing roughly twice its original as a tripwire for the second, and re-estimating drifted scope just prices the drift instead of surfacing it</li><li>The plausible range is wide enough that a point estimate would be fiction</li><li>Not for: breaking work into steps — <a class="skill-link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a> owns the decomposition. This owns the numbers attached to it, and whether they carry information.</li></ul>
 <h2 id="reference-class-first-decomposition-second">Reference class first, decomposition second</h2>
-<ol><li><strong>Name the class by shape, not domain.</strong> &quot;A change inside one module that already has tests.&quot; &quot;An integration with an external service whose behaviour is undocumented.&quot; &quot;A rename across an unknown number of call sites.&quot; The domain — billing, rendering, sync — predicts far less than the shape.</li><li><strong>Find real outcomes.</strong> Version-control history for comparable changes, how long the last two similar tasks actually took, elapsed wall-clock rather than remembered effort. Remembered effort systematically excludes the parts that went badly.</li><li><strong>Start from that number.</strong> Adjust only for differences you can point at. &quot;We understand this codebase better now&quot; is the standard unearned adjustment and is nearly always wrong, because whatever familiarity existed was already priced into the previous outcome.</li><li><strong>Decompose as a check.</strong> When the bottom-up sum lands well below the reference class, the decomposition is missing tasks. That is the near-universal direction of the discrepancy — not the reference class being pessimistic.</li></ol>
+<ol><li><strong>Name the class by shape, not domain.</strong> &quot;A change inside one module that already has tests.&quot; &quot;An integration with an external service whose behaviour is undocumented.&quot; &quot;A rename across an unknown number of call sites.&quot; The domain — billing, rendering, sync — predicts far less than the shape.</li><li><strong>Find real outcomes.</strong> Version-control history for comparable changes, how long the last two similar tasks actually took, elapsed wall-clock rather than remembered effort. <a class="skill-link" href="/tbaguette-skills/skills/code-archaeology/"><code>code-archaeology</code></a> is how that history gets read when the comparable work is someone else's — the repository holds the outcomes even when nobody present remembers them. Remembered effort systematically excludes the parts that went badly.</li><li><strong>Start from that number.</strong> Adjust only for differences you can point at. &quot;We understand this codebase better now&quot; is the standard unearned adjustment and is nearly always wrong, because whatever familiarity existed was already priced into the previous outcome.</li><li><strong>Decompose as a check.</strong> When the bottom-up sum lands well below the reference class, the decomposition is missing tasks. That is the near-universal direction of the discrepancy — not the reference class being pessimistic.</li></ol>
 <h2 id="why-decomposition-alone-makes-it-worse">Why decomposition alone makes it worse</h2>
 <p>Decomposition enumerates the tasks you can name. The cost lives in the ones you cannot: integration between the pieces, the second-order change to callers, review latency and the revision it produces, environment and build breakage, and the repair for whatever verification turns up. Missing tasks are asymmetric — they only add. Every named subtask can be estimated correctly and the total still underruns.</p>
 <p>&quot;Double it&quot; works because it approximates the missing mass, and it is still a poor estimate: it conceals which unknowns dominate, so no one can act on it. Naming the top two unknowns and how far each swings the number is strictly more useful than any multiplier.</p>
@@ -90,9 +90,9 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Every task lands on roughly the same unit</td><td>The number is a comfortable rhythm, not a forecast</td></tr><tr><td>A point estimate with no range</td><td>A range would expose that the number is a guess</td></tr><tr><td>Bottom-up sum well under the last comparable job</td><td>The decomposition captured the plan rather than the work</td></tr><tr><td>Estimate produced after the deadline was mentioned</td><td>Anchored on the asker's number</td></tr><tr><td>Overrun explained as &quot;unexpected issues&quot;</td><td>The unknowns were never named, so every one is unexpected by construction</td></tr><tr><td>The revised estimate is wrong in the same direction</td><td>Re-derived from the plan again instead of from elapsed evidence</td></tr><tr><td>&quot;It depends&quot; offered in place of a number</td><td>A range is how &quot;it depends&quot; gets said usefully</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Should be quick&quot;, &quot;just a config change&quot;, &quot;one-line fix&quot; said before opening the file</li><li>A number produced before any comparable past outcome was recalled</li><li>An estimate covering the happy path with nothing for integration, review, or fixing what verification finds</li><li>A schedule that assumes nothing else lands in the same window</li><li>Reporting progress against the original estimate while privately knowing it is gone</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/red-teaming-your-own-work/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/calibrating-confidence/">
   <span class="prevnext__label">Previous</span>
-  <span class="prevnext__name">← red-teaming-your-own-work</span>
+  <span class="prevnext__name">← calibrating-confidence</span>
 </a>
 <a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/deciding-reversibility/">
   <span class="prevnext__label">Next</span>
@@ -113,10 +113,6 @@
       <span class="see-also__name">calibrating-confidence</span>
       <span class="see-also__summary">Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/red-teaming-your-own-work/">
-      <span class="see-also__name">red-teaming-your-own-work</span>
-      <span class="see-also__summary">Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it…</span>
-    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/deciding-reversibility/">
       <span class="see-also__name">deciding-reversibility</span>
       <span class="see-also__summary">Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library…</span>
@@ -129,29 +125,17 @@
       <span class="see-also__name">managing-scope-drift</span>
       <span class="see-also__summary">Use when work has grown past what was asked or the diff is larger than the request implies…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/finishing-what-you-started/">
-      <span class="see-also__name">finishing-what-you-started</span>
-      <span class="see-also__summary">Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/knowing-when-to-stop/">
-      <span class="see-also__name">knowing-when-to-stop</span>
-      <span class="see-also__summary">Use when work looks done and the next action would be another polish, refactor…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/karen-and-the-manager/">
-      <span class="see-also__name">karen-and-the-manager</span>
-      <span class="see-also__summary">Use when work is about to be called done, shipped…</span>
-    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/revalidating-decisions/">
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">Use when a recorded decision — an ADR, design doc, wontfix, runbook line…</span>
     </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/reading-specifications/">
+      <span class="see-also__name">reading-specifications</span>
+      <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
+    </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/scoping-before-building/">
       <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">Use when an idea, feature request, or new project needs to become an approved design before any code gets written…</span>
-    </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/confirming-before-claiming-done/">
-      <span class="see-also__name">confirming-before-claiming-done</span>
-      <span class="see-also__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</span>
     </a></li>
   </ul>
 </div>
@@ -164,12 +148,14 @@
       <ul class="site-footer__categories">
 <li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
 <li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
 <li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
 <li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
 <li><a href="/tbaguette-skills/#testing">Testing</a></li>
 <li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
 <li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
 <li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
+<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
 <li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
 <li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
       </ul>

@@ -11,6 +11,40 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-25 — Two new categories, and a pointer that led nowhere
+
+- The library is organised into **twelve categories instead of ten**, and eleven
+  skills moved. **Planning and delegation** collects the five skills about turning
+  an approved design into tasks and getting those tasks done —
+  `structuring-an-implementation-plan`, `working-a-plan-task-by-task`,
+  `delegating-tasks-with-review-gates`, `fanning-out-independent-work` and
+  `routing-around-capability-gaps` — which were previously split between
+  "Communicating" and "Environment and tooling" despite each one's own text
+  defining its edges against the others. **Finishing and proving** collects the
+  five that guard the finish line: `finishing-what-you-started`,
+  `confirming-before-claiming-done`, `red-teaming-your-own-work`,
+  `karen-and-the-manager` and `knowing-when-to-stop`. "Judgment and meta" had
+  grown to fourteen skills spanning four unrelated activities; it is now ten.
+  `reading-specifications` also moved out of "Reading code", where it was the one
+  entry that is not about reading code, to sit beside `scoping-before-building`.
+  Nothing about invoking a skill changes — the names, and every skill's own page
+  URL, are exactly as they were.
+- `tracing-data-flow` had been sending readers to a skill that does not exist.
+  Its "Not for" line pointed at `systematic-debugging`, which is Superpowers'
+  name for the thing this library calls `diagnosing-before-fixing`; it survived
+  because it was written without backticks, so no search for skill names ever
+  saw it. Fixed, and the build now refuses to ship a reference to a skill that
+  is not installed.
+- Twelve skills gained cross-references to the skills that own the other half of
+  their problem. `caching-strategy` and `rate-limiting-and-backpressure`
+  previously mentioned **no other skill at all** — the two halves of the same
+  overload incident, with nothing pointing between them. Also newly wired:
+  `managing-scope-drift` to the ledger that makes silent narrowing visible,
+  `steelmanning-alternatives` to the premises that expire underneath an old
+  decision, `testing-the-untestable` to the question of whether a double is
+  faithful once the seam is in the right place, and `data-migrations` to the
+  fact that a migration is almost always a one-way door.
+
 ## 2026-08-25 — A way into the skills from the top of the page
 
 - The landing page now has a **Show me the skills** control directly under the
