@@ -52,6 +52,20 @@ Ordered least to most durable. Move each doc up the ladder until the cost stops 
 
 Rule of thumb: any code block over ~5 lines that nothing executes will be wrong within two releases. Either execute it or shorten it below the length at which it can be subtly wrong. Never hand-edit generated reference — the edit is lost and the reviewer learns to ignore that file.
 
+## The claims no build can check
+
+Every rung of that ladder needs something to execute or generate. A claim that something **is** the case has a mechanism behind it; a claim that something is **not** the case has nothing to run, so it is pinned at the top rung — prose, silent rot — permanently.
+
+*Contains no telemetry. Sends nothing to a third party. Has no runtime dependencies. Never writes outside its own directory. Stores no personal data.* These are the sentences readers rely on hardest, because they are usually promises about privacy, licensing, or safety rather than descriptions of a parameter list. They are also the ones nothing in the ladder above can protect.
+
+They break differently, too, and that is what makes them slip. A positive claim goes stale when the thing it describes changes — the same diff is at least in the neighbourhood. A negative claim goes false when something is **added somewhere else entirely**, in a change that never touches the document and has no reason to. Nobody wiring up a new dependency thinks to grep the README for a sentence denying that dependencies exist. So a doc asserting what the software does is part of the software's surface: treat every such claim as a call site of the behaviour, and a behaviour change is not finished while a call site still says the opposite.
+
+The defense is to invert the check rather than execute the doc. Assert the absence the sentence claims, as a test that fails when the forbidden thing appears: grep the built artifact for network calls, fail the build on a non-empty dependency list, assert the written-paths set. That drops an uncheckable prose promise to the bottom rung, where drift breaks a build. Where no such test is possible, the claim needs an owner and a review date like any unowned doc — and it needs to be written down somewhere the person adding the forbidden thing will actually pass, which is next to the code, not in the docs directory.
+
+## A mirror with no generation step is a fork
+
+The same document in two locations is two documents. They drift from the system independently, and from each other, and nothing enforces the mirror because nothing knows it is one. Generate one copy from the other, or diff them in CI; those are the only two states that stay true. When you suspect drift and want it located cheaply, count occurrences of the load-bearing term in each copy — a large asymmetry points straight at the paragraph that moved in one and not the other.
+
 ## Colocation and ownership
 
 - A doc lives beside the thing it describes, in the same repo, ideally the same directory. Then a behavior change and its doc land in one diff and a reviewer sees the omission.
@@ -80,6 +94,8 @@ Rule of thumb: any code block over ~5 lines that nothing executes will be wrong 
 | Reference page disagrees with the schema | Hand-maintained copy of a source of truth |
 | "We'll document it after the refactor" | Docs treated as a separate artifact instead of part of the change |
 | Team writes docs, then answers the same questions in chat anyway | Doc answers the question the author had, not the one readers arrive with |
+| A published doc denies a feature the software shipped weeks ago | A negative claim, which no example or generated reference can ever check |
+| Two copies of one document disagree | Mirrored by hand, so there is no generation step and no diff to fail |
 
 ## Red flags
 
@@ -90,3 +106,5 @@ Rule of thumb: any code block over ~5 lines that nothing executes will be wrong 
 - A page that explains the architecture to a reader who wanted one command
 - Keeping a stale page "for reference"
 - Documenting a workaround instead of deleting the reason for it
+- A document promising the absence of something, with no test that fails when it appears
+- The same guide living at two paths, neither generated from the other

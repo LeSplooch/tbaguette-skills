@@ -13,6 +13,16 @@ Everything above the first `##` is preamble and is never rendered.
 
 ## 2026-08-25 — Eight lessons from real work, folded back in
 
+- `writing-durable-docs` names the claims its own drift ladder cannot reach.
+  Every rung of that ladder needs something to execute or generate, so a claim
+  that something *is not* the case — no telemetry, no third-party calls, no
+  runtime dependencies, stores no personal data — is stuck at silent rot
+  permanently. Those are also the sentences readers lean on hardest, because they
+  are promises rather than descriptions. And they break backwards: a negative
+  claim goes false when something is added somewhere else entirely, in a diff
+  with no reason to touch the doc. Invert the check — a test that fails when the
+  forbidden thing appears — and treat a doc asserting behaviour as a call site of
+  it. Plus: two copies of one document with no generation step is a fork.
 - `designing-ci-pipelines` names why scheduled jobs rot unnoticed. Every other
   check in a pipeline has somebody waiting on it, so silence means no trouble. A
   scheduled job has no audience, and its success and its total non-existence
