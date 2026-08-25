@@ -282,10 +282,21 @@ def check_skill_links_end_to_end(docs: Path, base_path: str) -> None:
     )
     check(f"the update notes link their skill mentions too ({len(notes_links)} linked)",
           any(href.strip("/").split("/")[-1] in slugs for href in notes_links))
-    check("...but a code span in those notes that is not a skill stays plain — "
-          "`UPDATES.md` linked to a nonexistent /skills/UPDATES.md/ until the "
-          "notes path got the same known-slug filter build_content already used",
-          "/skills/UPDATES.md/" not in index and "<code>UPDATES.md</code>" in index)
+    # Same brittleness as the check above, and it bit for the same reason: this
+    # asserted the literal "<code>UPDATES.md</code>", which only holds while the
+    # entry that happens to mention UPDATES.md is inside UPDATE_NOTES_LIMIT.
+    # Three entries shipped in one day pushed it out and reddened a check about
+    # linking that linking had not broken. Assert the property instead.
+    notes_html = notes_section.group(0) if notes_section else ""
+    code_spans = re.findall(r"<code>([^<]+)</code>", notes_html)
+    non_skill_spans = [c for c in code_spans if c not in slugs]
+    check(f"...but a code span in those notes that is not a skill stays plain "
+          f"({len(non_skill_spans)} of {len(code_spans)} are non-skill) — a bare "
+          f"`UPDATES.md` linked to a nonexistent /skills/UPDATES.md/ until the "
+          f"notes path got the same known-slug filter build_content already used",
+          non_skill_spans and not re.search(
+              r'class="skill-link[^"]*" href="[^"]*/skills/(?:' +
+              "|".join(re.escape(c) for c in non_skill_spans) + r')/"', notes_html))
 
     own = (docs / "skills" / "naming-things" / "index.html").read_text(encoding="utf-8")
     check("a page never links to itself",
