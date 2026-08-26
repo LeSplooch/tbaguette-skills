@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-26T14:03:19+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-26T14:03:19Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-26T14:05:54+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-26T14:05:54Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -278,7 +278,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="notes__entry-title">One name for the site, and a hook that survives a clone</span>
   </h3>
   <ul class="notes__bullets">
-    <li>The site is <strong>TBaguette's Atelier</strong> everywhere now. The footer used to carry a second brand — &quot;La Boulangerie TBaguette is home to TBaguette's Atelier&quot; — which is one name more than the title has. Collapsing it needed the sentence rewritten rather than the name swapped, since substituting alone would have produced &quot;TBaguette's Atelier is home to TBaguette's Atelier&quot;; the descriptive half is what survived. The stylesheet, icon sprite and script headers carry the one name too. Design specs and plans under <code>superpowers/</code> keep the old name on purpose — they record what was decided at the time, and editing them would make them lie about it.</li>
+    <li>The site is <strong>TBaguette's Atelier</strong> everywhere now. The footer used to open with a second, older brand name and then say it was &quot;home to&quot; the Atelier — one name more than the title has. Collapsing that needed the sentence rewritten rather than the name swapped, since substituting alone would have produced &quot;X is home to X&quot;; the descriptive half is what survived. The stylesheet, icon sprite and script headers carry the one name too. Design specs and plans under <code>superpowers/</code> keep the old name on purpose — they record what was decided at the time, and editing them would make them lie about it.</li>
     <li><strong>Cloning this repo now gets you the pre-commit hook.</strong> It never used to. The hook regenerates the site before every commit, and since GitHub Pages serves <code>docs/</code> straight off master, a clone without it commits a skill change with a stale site attached and publishes exactly that. git will not wire hooks on clone — deliberately, since a repository that could would be one that runs code on <code>git clone</code> — so <code>run_tests.py</code> now does it on first run and says so. It never overwrites a <code>core.hooksPath</code> you set yourself.</li>
   </ul>
 </li>

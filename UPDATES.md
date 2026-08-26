@@ -13,12 +13,11 @@ Everything above the first `##` is preamble and is never rendered.
 
 ## 2026-08-25 — One name for the site, and a hook that survives a clone
 
-- The site is **TBaguette's Atelier** everywhere now. The footer used to carry a
-  second brand — "La Boulangerie TBaguette is home to TBaguette's Atelier" —
-  which is one name more than the title has. Collapsing it needed the sentence
-  rewritten rather than the name swapped, since substituting alone would have
-  produced "TBaguette's Atelier is home to TBaguette's Atelier"; the descriptive
-  half is what survived. The stylesheet, icon sprite and script headers carry the
+- The site is **TBaguette's Atelier** everywhere now. The footer used to open with
+  a second, older brand name and then say it was "home to" the Atelier — one name
+  more than the title has. Collapsing that needed the sentence rewritten rather
+  than the name swapped, since substituting alone would have produced "X is home
+  to X"; the descriptive half is what survived. The stylesheet, icon sprite and script headers carry the
   one name too. Design specs and plans under `superpowers/` keep the old name on
   purpose — they record what was decided at the time, and editing them would make
   them lie about it.
