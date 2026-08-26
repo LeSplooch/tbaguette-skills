@@ -1,6 +1,6 @@
 ---
 name: authoring-a-new-skill
-description: Use when creating a new skill, editing an existing one, judging whether a recurring technique is worth turning into a skill at all, or moving a drafted skill from a file on disk to something actually shipped in this repo. Covers the name/description frontmatter register, when a reference file is warranted versus keeping everything inline, testing a skill on a fresh subagent before trusting it, writing guidance an agent won't skip under pressure, and CATALOG.md placement.
+description: Use when creating a new skill, editing an existing one, judging whether a recurring technique is worth turning into a skill at all, or moving a drafted skill from a file on disk to something actually shipped. Covers the name/description frontmatter register, when a reference file is warranted versus keeping everything inline, testing a skill on a fresh subagent before trusting it, writing guidance an agent won't skip under pressure, and getting a new skill registered where its library's build will actually find it.
 ---
 
 # Authoring a new skill
@@ -14,7 +14,7 @@ A skill is a judgment call, captured once so it doesn't get re-derived — worse
 - Deciding whether a recurring technique, house convention, or hard-won judgment call is worth a skill at all — versus a one-off comment, an instruction in a project's own CLAUDE.md, or nothing.
 - Drafting a new skill: naming it, writing its frontmatter, deciding what belongs inline versus in a reference file. (`naming-things` covers identifier judgment generally; this skill covers the narrower register a skill's own name and description need in order to trigger correctly.)
 - An existing skill gets skipped, applied inconsistently, or visibly rationalized around under pressure — it needs editing, not a louder version of the same text.
-- Moving a finished draft from a file in `skills/` to something actually live: cataloged, translated, gated, and on the deployed site.
+- Moving a finished draft from a file on disk to something actually live: registered, counted, gated, and published.
 - Not for: using an already-written skill to do the task in front of you — see `using-tbaguette`.
 
 ## Is this worth a skill
@@ -25,7 +25,7 @@ Don't write one when it's a single-project convention — that belongs in that p
 
 That first exclusion is stricter here than in general skill-authoring advice: every skill in this repo is project-, stack-, and language-agnostic by constitution, not by convention. A skill that only makes sense inside one specific codebase is a defect in this library, however well it reads.
 
-Check first whether an existing skill already covers this — skim `CATALOG.md`'s categories, not just the one that feels closest. A near-duplicate is usually a sign to extend or cross-reference the existing skill instead of shipping a second one that'll drift from it.
+Check first whether an existing skill already covers this — skim the library's whole catalog by category, not just the category that feels closest. A near-duplicate is usually a sign to extend or cross-reference the existing skill instead of shipping a second one that'll drift from it.
 
 | Shape | Answers | Example here |
 |---|---|---|
@@ -119,17 +119,20 @@ A skill nobody has watched fail is a skill being guessed at. This matters most f
 
 `reference/testing-skills-with-subagents.md` has the full protocol: how to write a scenario with real teeth (concrete options, real constraints, no easy out that avoids actually choosing), the pressure types worth combining, and a worked example of bulletproofing a skill across several rounds.
 
-## From draft to shipped
+## Writing it is not shipping it
 
-Writing the file is maybe a third of the job. In this repo specifically, committed and shipped are different states, and the gap between them is mechanical rather than creative:
+Writing the file is maybe a third of the job, and the rest is mechanical rather than creative. A skill library is a published artifact: the file existing on disk and the skill being usable are different states, and the gap between them belongs to whatever owns that library's pipeline, not here.
 
-- **Both category registries, not one.** `scripts/content_pipeline.py`'s `CATEGORIES` is authoritative — the site is built from it and `build_content` refuses to build if a skill directory isn't listed under some category. `CATALOG.md` is the human mirror: find the matching category's table and add one row, the skill name and a phrase-length description in the existing terse register. No dagger (†): that mark means "hands off to a skill outside this repo," which a new TBaguette-native skill, by definition, isn't. `scripts/test_catalog.py` compares the two, so filing in only one fails the suite rather than shipping. If no existing category fits, creating one is a legitimate move rather than a last resort — `tending-tbaguette` carries the bar and the mechanics.
-- **A skill count, in three places.** `CATALOG.md`'s own header states the total; `scripts/generate.py` enforces the same number separately as `EXPECTED_SKILL_COUNT`, and the build fails if the two disagree. `.claude-plugin/plugin.json`'s prose description spells it out in words ("Ninety-two ... skills") and is checked too.
-- **An inbound cross-reference from a skill that already exists**, and this is the step that ambushes people. `scripts/test_skill_references.py` refuses a skill directory that nothing else in the library points at — deliberately zero-tolerance, so a new skill turns the suite red until some neighbour's "Not for:" line redirects to it. You cannot get a green suite by touching only the new skill's own files. That is the intended forcing function rather than a bug in the test: a skill worth adding is one some existing skill should be handing off to, and writing that handoff is what proves the new skill has a place rather than a topic.
-- **A quality gate.** `karen-and-the-manager` is this repo's standard pre-ship adversarial pass. A normal review having already come back clean is exactly when it's most warranted, not a reason to skip it.
-- **A green test suite and a regenerated site.** `python3 scripts/run_tests.py`, then `python3 scripts/generate.py`.
+What to expect in that gap, in roughly every library that has one:
 
-None of that mechanism is this skill's job to re-explain in full. The pipeline itself — every step in order, including how to verify the deploy actually went live — lives in `tending-tbaguette`, which is a local-only skill under `~/.claude/skills/` rather than part of this plugin, so don't expect to invoke it as `TBaguette:tending-tbaguette`. Without it, `CATALOG.md` and `scripts/generate.py` are the authorities on what a shipped skill has to satisfy. This skill's job ends at producing a draft worth running through it.
+- **A registry the build actually reads**, which is usually not the same file as the human-readable catalog. Where both exist, filing in one and not the other is the standard way a skill ships invisible — and worth checking whether anything compares them, because often nothing does.
+- **A count written down somewhere**, frequently in several somewheres, at least one of which nothing verifies.
+- **A reachability requirement** — some libraries refuse a skill that no existing skill points at. Where that gate exists it cannot be satisfied by touching only the new skill's own files, which surprises people; where it does not exist, writing the inbound cross-reference anyway is still the thing that proves the new skill has a place rather than merely a topic.
+- **A quality gate before publication**, and a green suite and a rebuilt artifact after.
+
+Find that pipeline before writing the first line, because what it demands shapes the file: a library whose catalog wants a phrase-length summary is one where you write that phrase deliberately rather than deriving it from a paragraph later.
+
+In this library the pipeline is `tending-tbaguette` — a local-only skill under `~/.claude/skills/`, not part of this plugin, so it is not invocable as `TBaguette:tending-tbaguette`. It carries every step in order, including how to verify a deploy actually went live. This skill's job ends at producing a draft worth running through it.
 
 ## Common mistakes
 
@@ -142,7 +145,7 @@ None of that mechanism is this skill's job to re-explain in full. The pipeline i
 | Every rule has an escape clause ("...unless it doesn't make sense") | A nuance clause reopens the exact negotiation a flat rule was meant to close |
 | Skill written for a project-specific convention | Belongs in that project's own CLAUDE.md, not a library that has to survive being read cold in an unrelated repo |
 | A flowchart shows a linear checklist | A numbered list would read faster; the diagram is doing a list's job worse |
-| New skill has no `CATALOG.md` row | Written, not shipped — the count check in `scripts/generate.py` will fail the build the moment someone notices |
+| The skill is on disk and nothing can find it | Written, not shipped — it never reached the registry the build reads, which is rarely the same file as the catalog humans read |
 
 ## Red flags
 
