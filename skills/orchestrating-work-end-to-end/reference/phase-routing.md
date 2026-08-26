@@ -278,6 +278,5 @@ These do not belong to a phase. They govern the run itself, or the library.
 | `calibrating-confidence` | Any phase reporting something as known that is inferred |
 | `knowing-when-to-stop` | Any phase whose returns have started shrinking |
 | `managing-scope-drift` | Any phase where the work is quietly widening or narrowing |
-| `authoring-a-new-skill` | A judgment call from this run will recur and is worth capturing |
 | `keeping-tbaguette-current` | The installed library is behind what has been published |
 | `writing-postmortems` | The run itself failed in a way worth learning from |

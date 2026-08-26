@@ -1,6 +1,6 @@
 # TBaguette
 
-92 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+91 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -164,5 +164,4 @@ TBaguette skill hands off to a neighbour.
 | `upgrading-dependencies` | Routine and cheap, or one forced upgrade during an incident |
 | `keeping-tbaguette-current` | Checks the installed TBaguette plugin against the published repo, updates it if it can fast-forward cleanly, keeps a local changelog |
 | `automating-repetition` | When a manual sequence should become a tool, and when it should not |
-| `authoring-a-new-skill` | What makes a skill worth writing, the frontmatter register, testing it before it ships |
 | `play-console` † | Google Play Console workflows |
