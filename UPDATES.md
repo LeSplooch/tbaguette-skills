@@ -24,6 +24,26 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-25 — The orchestrator now owns the documents a run leaves behind
+
+- `orchestrating-work-end-to-end` treated writing things down as a landing chore:
+  `writing-durable-docs` and `writing-adrs` were reachable only from the final
+  phase, while the design phase's own gate already required "a written spec" and
+  said nothing about how to write one, where to put it, or who keeps it true. Both
+  now sit in the design phase too, alongside `reading-specifications` for when a
+  spec is the input rather than the output.
+- It also distinguishes the four things a run produces, which get confused in one
+  direction: the spec and the ADR outlive the branch and are maintained as though
+  they were scratch, while the plan and the run ledger are scratch and get left in
+  the repo for a year. Each now has a stated lifespan, and phase 8 has to decide
+  what happens to the scaffolding rather than leaving it because nobody looked.
+- The rule that costs most to miss: routing backward to the design phase leaves
+  the spec describing an approach that lost. Leaving it is worse than never having
+  written one, because the next reader gets a confident description of the wrong
+  design with nothing marking it as dead. The skill now says the document changes
+  in the same move that reopens the phase — and that the rejected approach and the
+  reason for rejecting it are what a later reader most needs, not what to delete.
+
 ## 2026-08-25 — Two rules in one skill that cancelled each other out
 
 - `configuration-management` carried a contradiction that produced a broken

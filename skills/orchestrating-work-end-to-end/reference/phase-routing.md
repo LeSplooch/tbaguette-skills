@@ -61,6 +61,9 @@ the placement.
 | `steelmanning-alternatives` | A single approach is about to be presented as the approach |
 | `deciding-reversibility` | Choosing how much design rigor this decision actually deserves |
 | `revalidating-decisions` | An existing decision constrains this one, and its premises may have expired |
+| `writing-durable-docs` | The design is being written down rather than said — this phase's gate depends on that document being readable months later, not just today |
+| `writing-adrs` | A choice made here will look wrong to a competent newcomer, or has already been argued twice |
+| `reading-specifications` | A spec, ticket or standard is the input to this design rather than its output |
 
 **Shape and structure**
 

@@ -111,6 +111,47 @@ Three rules make it worth keeping. **Append, never rewrite** — a rewritten log
 
 After a compaction, the record and `git log` outrank your own recollection, and it is not close. A controller that trusts its memory re-dispatches work that is already committed — the single most expensive mistake this loop can make, and the one it is most confident about while making it.
 
+## The artifacts that outlive the run
+
+The run record is scaffolding. A run also produces things meant to be read long
+after the branch is gone, and the two get confused in one specific direction:
+the durable artifact is maintained like scaffolding — written once, never
+revisited — while the scaffolding is kept like an artifact, sitting in the repo
+for a year because nobody decided it was finished.
+
+| Artifact | Written at | Lifespan | Owner skill |
+|---|---|---|---|
+| Spec — what is being built and why this shape | Phase 2, before the yes | Outlives the branch | `scoping-before-building` writes it, `writing-durable-docs` decides what keeps |
+| Plan — the tasks, in order | Phase 4 | Dies when its last box is ticked | `structuring-an-implementation-plan` |
+| ADR — one decision, its forces, and what would reopen it | Whenever a decision gets made that a later reader will have to re-judge | Longest-lived thing here | `writing-adrs` |
+| Run record / ledger | Phase 1, appended throughout | Dies with the run | `finishing-what-you-started` |
+
+Three rules, and each exists because its absence has a recognisable symptom.
+
+**One location, stated once.** "Where is the spec for X" must have an answer that
+does not depend on who wrote it. Pick whichever directory the repository already
+uses and put it there; the failure worth checking for first is a repository that
+uses two, since design documents split across a served directory and an internal
+one accumulate by whichever the author happened to know about, and the honest
+answer to the question becomes "look in both". A phase-log line naming the path
+is what makes the artifact findable from the run that produced it; a spec nobody
+can locate was written for nobody.
+
+**The artifact changes when the decision does.** Routing backward to phase 2
+means the spec is now describing an approach that lost, and leaving it is worse
+than never having written it: the next reader gets a confident description of the
+wrong design, with no marker saying so. Update it in the same move that reopens
+the phase, and say what changed rather than silently overwriting — the rejected
+approach and the reason it was rejected are the parts `writing-adrs` says a future
+reader most needs, and the parts most often deleted as obsolete.
+
+**Decide what happens to the scaffolding at phase 8.** The plan and the run record
+have done their job the moment the work lands. Deliberately delete them, or
+deliberately keep them and say why; what is not allowed is leaving them because
+nobody looked. A repository accumulating half-ticked plans from finished work is
+one where nobody can tell an abandoned run from a completed one, which is exactly
+the question `recovering-agent-context` will be asking six months from now.
+
 ## Resume before you restart
 
 Work arriving mid-flight gets the record read before anything else happens: the ledger file, the plan's checkboxes, `git log` on the branch. `recovering-agent-context` covers the wider sweep — other sessions, other agents, other tools that touched this repo and paid for dead ends you would otherwise pay for again.
@@ -124,7 +165,7 @@ A failed gate is information about which phase was wrong, and it is almost never
 | What the failure says | Where it goes back to |
 |---|---|
 | A task cannot be implemented as written | Phase 4 — the plan, not the implementer |
-| Review finds the approach wrong, not the code | Phase 2 — the design, and the yes it was given under |
+| Review finds the approach wrong, not the code | Phase 2 — the design, the yes it was given under, and the spec that still describes the approach that lost |
 | Proof finds an acceptance line nothing satisfies | Phase 4 or 5, depending on whether the plan omitted it or the work did |
 | A finding indicts an already-closed task | The task that owns it, surfaced by name, with what has been built on top of it since |
 | The request itself changed | Phase 1, and the ledger changes visibly rather than quietly |

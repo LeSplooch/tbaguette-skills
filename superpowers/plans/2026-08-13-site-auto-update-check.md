@@ -318,7 +318,7 @@ Open `docs/assets/site.js`. Find the top-of-file comment:
 
 ```js
 /*
- * La Boulangerie TBaguette — site.js
+ * TBaguette’s Atelier — site.js
  * Vanilla JS, no dependencies. Five independent features, each a no-op if
  * its markup isn't on the current page:
  *   - theme toggle   (every page)
@@ -337,7 +337,7 @@ Replace with:
 
 ```js
 /*
- * La Boulangerie TBaguette — site.js
+ * TBaguette’s Atelier — site.js
  * Vanilla JS, no dependencies. Seven independent features, each a no-op if
  * its markup isn't on the current page:
  *   - theme toggle   (every page)

@@ -140,8 +140,8 @@ Every count-interpolated string is a template with a named placeholder
 around a quantity varies by language, so concatenation would silently
 produce ungrammatical output in several of the 15.
 
-Brand identity — "TBaguette", "TBaguette's Atelier", "La Boulangerie
-TBaguette" — stays literal in every locale, the same way the install
+Brand identity — "TBaguette", "TBaguette's Atelier" — stays literal
+in every locale, the same way the install
 command's shell syntax does; only the descriptive copy around those names
 translates.
 

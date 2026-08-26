@@ -8,7 +8,7 @@ at `~/.claude/skills/TBaguette/` (the live install location on the author's mach
 this repo now embeds its own copy at `skills/` and is the source of truth for anything
 this site builds from — see the Structure section below.
 
-## Concept: La Boulangerie TBaguette
+## Concept: TBaguette’s Atelier
 
 An atelier for skills, not a novelty bread site. The bakery concept lives in brand
 voice, palette, type, and a small set of restrained line-marks (wheat sheaf, crust
