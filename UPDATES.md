@@ -5,29 +5,24 @@ rather than for someone reading the diff. The landing page renders the most
 recent entries below the “Fresh from the oven” rail; this file is the whole
 record.
 
+**Scope: the plugin, and only what a user of it would notice.** An entry earns
+its place if someone who has TBaguette installed would act differently for
+having read it — a new skill, a skill that now says something different, a
+change to how skills are named, grouped, or installed. Everything else stays
+out, and the two categories that keep trying to get in are this repo's own
+tooling (test suites, build gates, registries, version bumps) and the showcase
+site's furniture (its layout, its search, its animations, its chrome). Both are
+real work and neither is news about the plugin. They belong in the commit log.
+
+The test is the reader, not the effort: a change can be the hardest thing
+shipped that week and still not belong here, and a one-line fix to a skill's
+wording can belong here absolutely.
+
 Writing an entry is part of shipping a change here — see CLAUDE.md. The shape
 is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 `scripts/generate.py` refuses to build a site if that shape or that order
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
-
-## 2026-08-25 — One name for the site, and a hook that survives a clone
-
-- The site is **TBaguette's Atelier** everywhere now. The footer used to open with
-  a second, older brand name and then say it was "home to" the Atelier — one name
-  more than the title has. Collapsing that needed the sentence rewritten rather
-  than the name swapped, since substituting alone would have produced "X is home
-  to X"; the descriptive half is what survived. The stylesheet, icon sprite and script headers carry the
-  one name too. Design specs and plans under `superpowers/` keep the old name on
-  purpose — they record what was decided at the time, and editing them would make
-  them lie about it.
-- **Cloning this repo now gets you the pre-commit hook.** It never used to. The
-  hook regenerates the site before every commit, and since GitHub Pages serves
-  `docs/` straight off master, a clone without it commits a skill change with a
-  stale site attached and publishes exactly that. git will not wire hooks on
-  clone — deliberately, since a repository that could would be one that runs code
-  on `git clone` — so `run_tests.py` now does it on first run and says so. It
-  never overwrites a `core.hooksPath` you set yourself.
 
 ## 2026-08-25 — Two rules in one skill that cancelled each other out
 
@@ -51,11 +46,8 @@ Everything above the first `##` is preamble and is never rendered.
 - `authoring-a-new-skill` now warns about the gate that actually ambushes people
   when adding a skill: the library refuses a skill that no other skill points
   at, so a new one turns the suite red until some neighbour's "Not for:" line
-  redirects to it. You cannot get a green suite by touching only the new skill's
-  own files. That check shipped earlier the same day and its own documentation
-  was missing — the identical drift the previous entry describes.
-- The skill count is written in prose in eight hand-maintained places — seven
-  plugin manifests and the README — and nothing checked any of them. Now checked.
+  redirects to it — a skill worth adding is one some existing skill should be
+  handing off to.
 
 ## 2026-08-25 — A ship step that told you to do work that no longer exists
 
@@ -102,8 +94,7 @@ Everything above the first `##` is preamble and is never rendered.
   Its "Not for" line pointed at `systematic-debugging`, which is Superpowers'
   name for the thing this library calls `diagnosing-before-fixing`; it survived
   because it was written without backticks, so no search for skill names ever
-  saw it. Fixed, and the build now refuses to ship a reference to a skill that
-  is not installed.
+  saw it. Fixed.
 - Twelve skills gained cross-references to the skills that own the other half of
   their problem. `caching-strategy` and `rate-limiting-and-backpressure`
   previously mentioned **no other skill at all** — the two halves of the same
@@ -113,19 +104,6 @@ Everything above the first `##` is preamble and is never rendered.
   decision, `testing-the-untestable` to the question of whether a double is
   faithful once the seam is in the right place, and `data-migrations` to the
   fact that a migration is almost always a one-way door.
-
-## 2026-08-25 — A way into the skills from the top of the page
-
-- The landing page now has a **Show me the skills** control directly under the
-  opening lede. It jumps straight to the search field at the head of the skill
-  list, which lands 50px below the top of the window rather than flush against
-  it, so the field has room to read as the start of something rather than as a
-  bar wedged under the edge.
-- It is a real link, not a scripted button, so it behaves like one: middle-click
-  and Ctrl-click open it in a new tab, the URL it produces is shareable and lands
-  in the same place, and it works with JavaScript switched off.
-- The scroll animates only if you have not asked your system for reduced motion.
-  Either way it finishes in exactly the same position.
 
 ## 2026-08-25 — Eight lessons from real work, folded back in
 
@@ -228,26 +206,7 @@ Everything above the first `##` is preamble and is never rendered.
 - Asking for something to be made to start on boot, survive a restart, or work
   from scratch now reaches `confirming-before-claiming-done` on its own.
 
-## 2026-08-24 — Skills link to each other, and the site says what changed
-
-- Every mention one skill makes of another is now a link to that skill’s page
-  — 362 of them across the site. The library is densely cross-referenced and
-  none of it was navigable before; `diagnosing-before-fixing` naming
-  `regression-test-from-bug` was a dead string.
-- Both forms link: the `code`-span mentions that run through the bodies and
-  tables, and the bare ones in the “Not for: … (other-skill)” line at the top
-  of most skills. A page never links to itself, and a code span that is not a
-  skill stays plain.
-- The landing page carries an **Update notes** section under the “Fresh from
-  the oven” rail: the newest entry’s bullets in full, everything earlier
-  folded behind one disclosure that needs no JavaScript to open.
-- Notes come from `UPDATES.md` at the repo root, not from the commit log, so
-  an entry can say what is different for you rather than which files moved.
-- The rail and the notes answer different questions side by side. The rail
-  names *which* skills changed in the last 48 hours; the notes say *what*
-  changed, including work that touches no skill at all.
-
-## 2026-08-23 — Three skills sharpened, and English-only again
+## 2026-08-23 — Three skills sharpened
 
 - `least-privilege-design` now covers being asked to justify a permission
   something already holds: check what actually calls it before defending it
@@ -258,9 +217,6 @@ Everything above the first `##` is preamble and is never rendered.
 - `feature-flagging` says to pin the value of a flag that suspends a rule, so
   a test proves the suspension instead of inheriting whatever the environment
   happened to have set.
-- The site dropped its eleven translated locales and serves English only.
-  Translated URLs (`/fr/`, `/de/`, and the rest) no longer exist. Nothing
-  about installing TBaguette or about skill content changed.
 
 ## 2026-08-22 — The spine the rest of the library hangs off
 
@@ -268,9 +224,6 @@ Everything above the first `##` is preamble and is never rendered.
   take more than one edit — it routes the work to a track, names the phase
   you are in, and says what evidence opens the next one. It is the skill that
   sequences the other ninety-one.
-- The install prompt on the site works out which harness it was pasted into
-  and takes that route, instead of assuming Claude Code and falling through
-  to a filesystem clone.
 - `rate-limiting-and-backpressure`, `instrumenting-for-observability`,
   `deleting-code`, and `authoring-a-new-skill` each gained a case they
   previously got wrong.
@@ -280,20 +233,14 @@ Everything above the first `##` is preamble and is never rendered.
 - New skill: `routing-around-capability-gaps` — what to do when the thing
   being asked for is outside what this model or harness can actually do,
   rather than quietly delivering something adjacent and calling it done.
-- The install instructions warn that a conversation already open when you
-  install will not see the new skills. Start a fresh one.
-- The “Fresh from the oven” carousel works again: a click on a tile reaches
-  its skill, dragging no longer swallows that click, the fan sits level in
-  its rail, and it stopped pushing the whole page sideways at narrow widths.
+- A conversation that was already open when you install will not pick up the
+  new skills. Start a fresh one.
 
-## 2026-08-20 — Finishing, and a version you can read
+## 2026-08-20 — Finishing what you started
 
 - New skill: `finishing-what-you-started`, for long runs and multi-part
   requests where stopping short would go unnoticed. Write the acceptance
   ledger to a file before starting, and re-measure every number at report
   time rather than quoting it from memory.
-- The installed plugin’s version shows next to the wordmark in the site
-  header, so you can tell at a glance whether what you have matches what is
-  published.
 - The skill check is re-asserted every turn rather than only at the start of
   a session, which is where it used to quietly lapse in long conversations.

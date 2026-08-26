@@ -10,8 +10,17 @@ Write it for someone who has TBaguette installed, not for someone reading the
 diff — the observable difference, not which files moved. `writing-release-notes`
 is the register: order by what it costs the reader, translate commit language
 into reader language, and omit anything you cannot finish without naming an
-internal that reader has never heard of. Internal refactors, test changes and
-site plumbing with no visible effect belong in the commit log, not here.
+internal that reader has never heard of.
+
+**Scope is the plugin, and only what a user of it would notice.** A new skill, a
+skill that now says something different, a change to how skills are named,
+grouped, or installed. Not this repo's tooling — test suites, build gates,
+registries, version bumps — and not the showcase site's furniture: its layout,
+search, animations, or chrome. Those are real work and they are not news about
+the plugin; they go in the commit log. The test is the reader rather than the
+effort, so the hardest change of the week can be out of scope while a one-line
+wording fix to a skill is in it. Shipping something that is entirely site or
+tooling work means the correct number of update-note entries is zero.
 
 The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date at
 the top of the file. A bullet may wrap across lines. The build refuses to run

@@ -38,7 +38,7 @@
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-26T14:05:54+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-26T14:05:54Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-26T15:25:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-26T15:25:53Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -275,11 +275,12 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-08-25">25 Aug 2026</time>
-    <span class="notes__entry-title">One name for the site, and a hook that survives a clone</span>
+    <span class="notes__entry-title">Two rules in one skill that cancelled each other out</span>
   </h3>
   <ul class="notes__bullets">
-    <li>The site is <strong>TBaguette's Atelier</strong> everywhere now. The footer used to open with a second, older brand name and then say it was &quot;home to&quot; the Atelier — one name more than the title has. Collapsing that needed the sentence rewritten rather than the name swapped, since substituting alone would have produced &quot;X is home to X&quot;; the descriptive half is what survived. The stylesheet, icon sprite and script headers carry the one name too. Design specs and plans under <code>superpowers/</code> keep the old name on purpose — they record what was decided at the time, and editing them would make them lie about it.</li>
-    <li><strong>Cloning this repo now gets you the pre-commit hook.</strong> It never used to. The hook regenerates the site before every commit, and since GitHub Pages serves <code>docs/</code> straight off master, a clone without it commits a skill change with a stale site attached and publishes exactly that. git will not wire hooks on clone — deliberately, since a repository that could would be one that runs code on <code>git clone</code> — so <code>run_tests.py</code> now does it on first run and says so. It never overwrites a <code>core.hooksPath</code> you set yourself.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/configuration-management/"><code>configuration-management</code></a> carried a contradiction that produced a broken build if you followed it. One section tells you a switch needing to flip without a restart is a flag, not config. An earlier rule says <strong>never read config at the call site</strong> — and read together, those build a flag loaded once at boot, which cannot flip during the incident it exists for. Each rule is correct alone, which is why the pair survived review. The call-site rule now carries an explicit carve-out, keyed to something checkable: if the value must change without a restart, evaluating it at the call site is the mechanism, not a violation, and what gets validated at startup is the flag client's wiring rather than its value.</li>
+    <li>The same skill's flag-expiry rule — <em>delete a flag older than one release cycle in one direction or the other</em> — is written for release flags and misfires badly on an operational kill switch, where deleting toward on reinstates the incident and deleting toward off removes the feature. It now says which flag type it is about, and that a kill switch takes a removal <em>condition</em> and a scheduled exercise instead of a date, because the arm you need at 3am is the arm that never runs.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/authoring-a-new-skill/"><code>authoring-a-new-skill</code></a> now warns about the gate that actually ambushes people when adding a skill: the library refuses a skill that no other skill points at, so a new one turns the suite red until some neighbour's &quot;Not for:&quot; line redirects to it — a skill worth adding is one some existing skill should be handing off to.</li>
   </ul>
 </li>
   </ol>
@@ -288,18 +289,6 @@ Flag one more thing, because it applies to this very conversation: this session 
       <span class="notes__earlier-label">Show 5 earlier updates</span>
     </summary>
     <ol class="notes__list notes__list--earlier">
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-08-25">25 Aug 2026</time>
-    <span class="notes__entry-title">Two rules in one skill that cancelled each other out</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/configuration-management/"><code>configuration-management</code></a> carried a contradiction that produced a broken build if you followed it. One section tells you a switch needing to flip without a restart is a flag, not config. An earlier rule says <strong>never read config at the call site</strong> — and read together, those build a flag loaded once at boot, which cannot flip during the incident it exists for. Each rule is correct alone, which is why the pair survived review. The call-site rule now carries an explicit carve-out, keyed to something checkable: if the value must change without a restart, evaluating it at the call site is the mechanism, not a violation, and what gets validated at startup is the flag client's wiring rather than its value.</li>
-    <li>The same skill's flag-expiry rule — <em>delete a flag older than one release cycle in one direction or the other</em> — is written for release flags and misfires badly on an operational kill switch, where deleting toward on reinstates the incident and deleting toward off removes the feature. It now says which flag type it is about, and that a kill switch takes a removal <em>condition</em> and a scheduled exercise instead of a date, because the arm you need at 3am is the arm that never runs.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/authoring-a-new-skill/"><code>authoring-a-new-skill</code></a> now warns about the gate that actually ambushes people when adding a skill: the library refuses a skill that no other skill points at, so a new one turns the suite red until some neighbour's &quot;Not for:&quot; line redirects to it. You cannot get a green suite by touching only the new skill's own files. That check shipped earlier the same day and its own documentation was missing — the identical drift the previous entry describes.</li>
-    <li>The skill count is written in prose in eight hand-maintained places — seven plugin manifests and the README — and nothing checked any of them. Now checked.</li>
-  </ul>
-</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-08-25">25 Aug 2026</time>
@@ -318,19 +307,8 @@ Flag one more thing, because it applies to this very conversation: this session 
   </h3>
   <ul class="notes__bullets">
     <li>The library is organised into <strong>twelve categories instead of ten</strong>, and eleven skills moved. <strong>Planning and delegation</strong> collects the five skills about turning an approved design into tasks and getting those tasks done — <a class="skill-link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/"><code>working-a-plan-task-by-task</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> — which were previously split between &quot;Communicating&quot; and &quot;Environment and tooling&quot; despite each one's own text defining its edges against the others. <strong>Finishing and proving</strong> collects the five that guard the finish line: <a class="skill-link" href="/tbaguette-skills/skills/finishing-what-you-started/"><code>finishing-what-you-started</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/red-teaming-your-own-work/"><code>red-teaming-your-own-work</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/karen-and-the-manager/"><code>karen-and-the-manager</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/knowing-when-to-stop/"><code>knowing-when-to-stop</code></a>. &quot;Judgment and meta&quot; had grown to fourteen skills spanning four unrelated activities; it is now ten. <a class="skill-link" href="/tbaguette-skills/skills/reading-specifications/"><code>reading-specifications</code></a> also moved out of &quot;Reading code&quot;, where it was the one entry that is not about reading code, to sit beside <a class="skill-link" href="/tbaguette-skills/skills/scoping-before-building/"><code>scoping-before-building</code></a>. Nothing about invoking a skill changes — the names, and every skill's own page URL, are exactly as they were.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/tracing-data-flow/"><code>tracing-data-flow</code></a> had been sending readers to a skill that does not exist. Its &quot;Not for&quot; line pointed at <code>systematic-debugging</code>, which is Superpowers' name for the thing this library calls <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a>; it survived because it was written without backticks, so no search for skill names ever saw it. Fixed, and the build now refuses to ship a reference to a skill that is not installed.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/tracing-data-flow/"><code>tracing-data-flow</code></a> had been sending readers to a skill that does not exist. Its &quot;Not for&quot; line pointed at <code>systematic-debugging</code>, which is Superpowers' name for the thing this library calls <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a>; it survived because it was written without backticks, so no search for skill names ever saw it. Fixed.</li>
     <li>Twelve skills gained cross-references to the skills that own the other half of their problem. <a class="skill-link" href="/tbaguette-skills/skills/caching-strategy/"><code>caching-strategy</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/"><code>rate-limiting-and-backpressure</code></a> previously mentioned <strong>no other skill at all</strong> — the two halves of the same overload incident, with nothing pointing between them. Also newly wired: <a class="skill-link" href="/tbaguette-skills/skills/managing-scope-drift/"><code>managing-scope-drift</code></a> to the ledger that makes silent narrowing visible, <a class="skill-link" href="/tbaguette-skills/skills/steelmanning-alternatives/"><code>steelmanning-alternatives</code></a> to the premises that expire underneath an old decision, <a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a> to the question of whether a double is faithful once the seam is in the right place, and <a class="skill-link" href="/tbaguette-skills/skills/data-migrations/"><code>data-migrations</code></a> to the fact that a migration is almost always a one-way door.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-08-25">25 Aug 2026</time>
-    <span class="notes__entry-title">A way into the skills from the top of the page</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li>The landing page now has a <strong>Show me the skills</strong> control directly under the opening lede. It jumps straight to the search field at the head of the skill list, which lands 50px below the top of the window rather than flush against it, so the field has room to read as the start of something rather than as a bar wedged under the edge.</li>
-    <li>It is a real link, not a scripted button, so it behaves like one: middle-click and Ctrl-click open it in a new tab, the URL it produces is shareable and lands in the same place, and it works with JavaScript switched off.</li>
-    <li>The scroll animates only if you have not asked your system for reduced motion. Either way it finishes in exactly the same position.</li>
   </ul>
 </li>
 <li class="notes__entry">
@@ -347,6 +325,30 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/portable-shell-scripting/"><code>portable-shell-scripting</code></a> covers the mirror of a trap it already had. A <code>cd</code> inside <code>$(…)</code> cannot escape; a <code>cd</code> at the front of one command in a session that persists between commands re-roots every relative path used afterwards, by every later command, including ones written by someone who never saw it. The expensive part is not the breakage but that &quot;no such file&quot; and a grep matching nothing are exactly what a real absence looks like — so the result is a confident false negative that reads as a finding about the codebase. Prefer <code>git -C</code>-style path options, then absolute paths, then <code>(cd x &amp;&amp; …)</code>; and print <code>pwd</code> before believing a surprising negative.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/writing-the-failing-test-first/"><code>writing-the-failing-test-first</code></a> gains the collection case, which the scalar advice about hand-deriving expected values does not reach: an assertion of the form <em>for each item in the result, assert it is well-formed</em> quantifies over a set the code under test chose. Drop half the input and the survivors still pass; drop all of it and the loop never runs, so the test is at its most confident exactly when the code has failed hardest. Get one number from outside the unit — count the source, not the result — and when a loss is deliberate, state the expected number rather than deriving it.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/threat-modeling/"><code>threat-modeling</code></a> now asks a question that catches a whole class of bypass: a limit, quota or entitlement is a property of <em>state</em>, but it almost always gets implemented as a check on one <em>transition</em> — the interactive one someone had in mind. Seeding, import, migration, restore and sync reach the same state without passing it, usually with more authority and less scrutiny. Enumerate the producers, not the check. And ask whether anything re-examines the state after it exists, because a gate that runs only at creation cannot repair what arrived around it.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-08-25">25 Aug 2026</time>
+    <span class="notes__entry-title">A check that would pass even if nothing worked</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li>Some things you are asked to confirm are not about the present at all: that a service comes back after a restart, that a cache rebuilds cold, that a project builds from a fresh clone, that a backup restores. The check to hand almost always measures the present instead — it is running, it answers, it is set to start — and those pass just as convincingly in the world where the requirement is completely unmet.</li>
+    <li>One question tells the two apart: would this check still pass if the condition the requirement names had never once occurred? If yes, it is a proxy, and re-running it proves nothing further. Worth asking before calling anything done on a service, a cache, a scheduled job, or a backup.</li>
+    <li>What settles it is inducing the condition once — actually restarting the host, clearing the cache, cloning into an empty directory. That is disruptive and often not yours to authorise, so it now says to treat it as a reversibility decision and get the owner's go-ahead first. When you cannot, the honest report is &quot;configured but unverified&quot;, plus the test that would settle it — not the proxy dressed up as proof.</li>
+    <li>Two things read a result better than any status string: a start timestamp beside a boot timestamp tells you <em>who</em> started something, and a restart counter separates coming up cleanly from crashing and being retried, which look identical from outside.</li>
+    <li>Asking for something to be made to start on boot, survive a restart, or work from scratch now reaches <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> on its own.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-08-23">23 Aug 2026</time>
+    <span class="notes__entry-title">Three skills sharpened</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a> now covers being asked to justify a permission something already holds: check what actually calls it before defending it in the abstract.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> closes the gap between “pushed” and “reached the user” — a deploy nothing has fetched yet is not evidence the change landed.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/feature-flagging/"><code>feature-flagging</code></a> says to pin the value of a flag that suspends a rule, so a test proves the suspension instead of inheriting whatever the environment happened to have set.</li>
   </ul>
 </li>
     </ol>
