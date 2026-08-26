@@ -1,5 +1,5 @@
 /*
- * La Boulangerie TBaguette — site.js
+ * TBaguette’s Atelier — site.js
  * Vanilla JS, no dependencies. Ten independent features, each a no-op if
  * its markup isn't on the current page:
  *   - theme toggle   (every page)

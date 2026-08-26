@@ -246,10 +246,13 @@ def check_header_and_badges() -> None:
           '<span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>' in html)
     check("document <title> is TBaguette’s Atelier, not the retired La Boulangerie form",
           "<title>TBaguette’s Atelier — Claude Code skills, organized</title>" in html
-          and "La Boulangerie TBaguette —" not in html)
-    check("footer still names La Boulangerie TBaguette as the place, without repeating "
-          "\"atelier\" awkwardly now that the title itself is TBaguette's Atelier",
-          "La Boulangerie TBaguette</strong> is home to TBaguette&rsquo;s Atelier" in html)
+          and "La Boulangerie TBaguette" not in html)
+    check("footer names the site by its one brand — the two-name form "
+          "(\"La Boulangerie TBaguette is home to TBaguette's Atelier\") was retired "
+          "in favour of the title, and collapsing it by substitution alone would have "
+          "produced \"X is home to X\"",
+          "<strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls" in html
+          and "is home to" not in html)
 
     check("exactly two change-badges rendered (fresh and revised only, not untouched)",
           html.count('class="change-badge') == 2)

@@ -1,5 +1,5 @@
 /*
-  La Boulangerie TBaguette — design system
+  TBaguette’s Atelier — design system
   =========================================
   One stylesheet, hand-authored. Token layer (primitive -> semantic) feeds every
   component below it; components reference roles (--surface, --text-primary, ...),

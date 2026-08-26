@@ -25,6 +25,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import githooks
+
 SCRIPTS_DIR = Path(__file__).resolve().parent
 
 SUITES = [
@@ -37,6 +39,7 @@ SUITES = [
     ("hooks", [sys.executable, "test_hooks.py"]),
     ("harness manifests", [sys.executable, "test_harness_manifests.py"]),
     ("CATALOG.md vs CATEGORIES", [sys.executable, "test_catalog.py"]),
+    ("git hooks", [sys.executable, "test_githooks.py"]),
     ("skill cross-references", [sys.executable, "test_skill_references.py"]),
     # The only suite that hits the network (clones the real, published repo
     # from GitHub several times against throwaway HOME directories) — a
@@ -63,6 +66,11 @@ def _extract_count(text: str) -> int | None:
 
 
 def main() -> int:
+    # git cannot wire its own hooks on clone, by design, so .githooks/ ships
+    # inert until something points core.hooksPath at it. This is the first
+    # command a contributor runs, which makes it the place that closes the gap.
+    githooks.ensure_wired()
+
     failures = []
     total = 0
     for label, cmd in SUITES:

@@ -12,10 +12,13 @@
 # styles.css-only commit shipped without regenerating, leaving the header's
 # "Updated" time pointing at the previous commit instead).
 #
-# One-time setup after cloning (not automatic — git only reads hooks from
-# .git/hooks by default; this file lives in the repo so it travels with it,
-# but core.hooksPath is what points git at it, and that setting is itself
-# local, not versioned):
+# Wiring, after cloning: git only reads hooks from .git/hooks by default, and
+# core.hooksPath — the setting that points it here instead — is local to each
+# clone and cannot be committed. That is deliberate on git's part: a repo able
+# to install its own hooks is a repo that runs code on `git clone`.
+#
+# So this is done by scripts/githooks.py, called from run_tests.py, which a
+# contributor runs before anything else. To do it by hand instead:
 #   git config core.hooksPath .githooks
 
 set -e

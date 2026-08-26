@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
   <!--
-    La Boulangerie TBaguette — line-mark sprite.
+    TBaguette’s Atelier — line-mark sprite.
     Single stroke weight throughout (consumers set stroke-width via the
     shared .icon class in styles.css; these symbols carry no fill/stroke
     styling of their own so they inherit currentColor correctly in both

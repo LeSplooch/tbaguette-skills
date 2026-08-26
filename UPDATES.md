@@ -11,6 +11,25 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-25 — One name for the site, and a hook that survives a clone
+
+- The site is **TBaguette's Atelier** everywhere now. The footer used to carry a
+  second brand — "La Boulangerie TBaguette is home to TBaguette's Atelier" —
+  which is one name more than the title has. Collapsing it needed the sentence
+  rewritten rather than the name swapped, since substituting alone would have
+  produced "TBaguette's Atelier is home to TBaguette's Atelier"; the descriptive
+  half is what survived. The stylesheet, icon sprite and script headers carry the
+  one name too. Design specs and plans under `superpowers/` keep the old name on
+  purpose — they record what was decided at the time, and editing them would make
+  them lie about it.
+- **Cloning this repo now gets you the pre-commit hook.** It never used to. The
+  hook regenerates the site before every commit, and since GitHub Pages serves
+  `docs/` straight off master, a clone without it commits a skill change with a
+  stale site attached and publishes exactly that. git will not wire hooks on
+  clone — deliberately, since a repository that could would be one that runs code
+  on `git clone` — so `run_tests.py` now does it on first run and says so. It
+  never overwrites a `core.hooksPath` you set yourself.
+
 ## 2026-08-25 — Two rules in one skill that cancelled each other out
 
 - `configuration-management` carried a contradiction that produced a broken

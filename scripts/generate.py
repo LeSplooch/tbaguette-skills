@@ -55,6 +55,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import content_pipeline
+import githooks
 import locales
 import python_highlight
 import templates

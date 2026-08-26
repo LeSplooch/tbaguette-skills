@@ -1,4 +1,4 @@
-"""La Boulangerie TBaguette — page templates.
+"""TBaguette’s Atelier — page templates.
 
 Stdlib-only HTML string builder for the showcase site. No Jinja, no template
 engine, no third-party dependency: every function returns a plain ``str``,
@@ -186,9 +186,8 @@ ENGLISH_STRINGS = Strings(
     install_copy_copied="Copied!",
     install_copy_aria_label="Copy install command",
     footer_brand_html_template=(
-        "<strong>{brand_bakery}</strong> is home to {brand_atelier} — the judgment "
-        "calls that sit between the ticket and the commit, organized like a proper "
-        "bench."
+        "<strong>{brand_atelier}</strong> — the judgment calls that sit between "
+        "the ticket and the commit, organized like a proper bench."
     ),
     footer_categories_label="Categories",
     breadcrumb_home="Home",
@@ -415,7 +414,6 @@ ENGLISH_VERIFY_INSTALL_STRINGS = VerifyInstallStrings(
 # translate instead of a number that must always agree grammatically.
 BRAND_NAME = "TBaguette"
 BRAND_ATELIER = "TBaguette&rsquo;s Atelier"
-BRAND_BAKERY = "La Boulangerie TBaguette"
 
 
 # ---------------------------------------------------------------------------
@@ -607,9 +605,7 @@ def _render_footer(categories: list[dict], base_path: str = "",
         f'<li><a href="{index_url}#{escape_html(cat["slug"])}">{escape_html(cat["title"])}</a></li>'
         for cat in categories
     ))
-    brand_html = strings.footer_brand_html_template.format(
-        brand_bakery=BRAND_BAKERY, brand_atelier=BRAND_ATELIER
-    )
+    brand_html = strings.footer_brand_html_template.format(brand_atelier=BRAND_ATELIER)
     return f"""<footer class="site-footer">
   <div class="container site-footer__inner">
     <p class="site-footer__brand">{brand_html}</p>

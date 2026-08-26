@@ -97,16 +97,23 @@ three test files). Design rationale — the palette, the content schema, why it 
 like a bakery — is in
 [`superpowers/specs/2026-08-13-tbaguette-showcase-design.md`](superpowers/specs/2026-08-13-tbaguette-showcase-design.md).
 
-One-time setup after cloning, if you'll be committing:
+No setup step after cloning. `python3 scripts/run_tests.py` wires the pre-commit
+hook itself the first time you run it, and says so when it does.
+
+The hook lives in [`.githooks/`](.githooks/pre-commit) and regenerates the site before
+every commit, unconditionally — including a CSS- or skills-only change, which is still
+"the site was updated." It exists because that got missed manually once: a styles-only
+commit shipped without regenerating, leaving the header's own "Updated" timestamp
+pointing at the previous commit instead of itself.
+
+It needs wiring because git will not read it otherwise: hooks come from `.git/hooks` by
+default, and `core.hooksPath` — the setting that redirects it — is local to each clone
+and cannot be committed. That is deliberate on git's part, since a repository able to
+install its own hooks is a repository that runs code on `git clone`. Nothing can change
+that; what [`scripts/githooks.py`](scripts/githooks.py) does is make the wiring happen
+the first time you run anything here, rather than the first time somebody remembers.
+It never overwrites a `core.hooksPath` you set yourself, and to do it by hand instead:
 
 ```bash
 git config core.hooksPath .githooks
 ```
-
-This points git at the tracked pre-commit hook in [`.githooks/`](.githooks/pre-commit),
-which regenerates the site before every commit, unconditionally — including a
-CSS- or skills-only change, which is still "the site was updated." It exists because
-that got missed manually once: a styles-only commit shipped without regenerating,
-leaving the header's own "Updated" timestamp pointing at the previous commit instead of
-itself. `core.hooksPath` is local to your clone (git only reads `.git/hooks` by
-default), so this one command is what actually turns the hook on.
