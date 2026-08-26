@@ -24,26 +24,6 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-08-25 — `authoring-a-new-skill` works outside this repo now
-
-- The skill carried a ship checklist naming `CATALOG.md`, `content_pipeline.py`,
-  `EXPECTED_SKILL_COUNT` and this repo's own test files — four sections after
-  telling you that a skill which only makes sense inside one codebase is a defect
-  in this library. It broke its own rule, and read as a puzzle to anyone applying
-  it to a different skill library. That section is now about what to expect in
-  *any* library's publish gap: a registry the build reads that is usually not the
-  catalog humans read, a count written in more places than are checked, a
-  reachability requirement where one exists, a quality gate. The specifics for
-  this repo live in its own pipeline, which the skill points at rather than
-  restates.
-- The advice that survived the move is the part worth having anyway: find the
-  pipeline *before* writing the first line, because what it demands shapes the
-  file — a library whose catalog wants a phrase-length summary is one where you
-  write that phrase deliberately instead of deriving it from a paragraph later.
-- Two leftovers from the locale removal went with it. The skill still listed
-  "translated" among the things a draft becomes on its way to being live, and a
-  Common-mistakes row still pointed at a specific build script by name.
-
 ## 2026-08-25 — The orchestrator now owns the documents a run leaves behind
 
 - `orchestrating-work-end-to-end` treated writing things down as a landing chore:
