@@ -1915,7 +1915,7 @@ code {
    token that would otherwise overflow, so every span that already fits is
    laid out exactly as before. Scoped to .prose so the install frame's own
    command chip, which lives in a real scroll container, keeps scrolling. */
-.prose code { overflow-wrap: break-word; }
+.prose code, .tabs__panel code { overflow-wrap: break-word; }
 .prose li::marker { color: var(--text-secondary); }
 .prose ul ul, .prose ol ol, .prose ul ol, .prose ol ul { margin-top: var(--space-2); }
 
@@ -2061,7 +2061,15 @@ a.skill-link--bare:focus-visible {
    block` lets `overflow-x: auto` take effect directly on the table element
    while its row/cell children keep their table-layout roles from the UA
    stylesheet, which is what keeps columns aligned inside the scroll area. */
-.prose table {
+/* Tab panels carry running content too — formidable alone puts 16 tables in
+   them — but they are not .prose, so until this selector list included them
+   every one of those tables fell back to the bare `border-collapse: collapse`
+   in section 3: 1px of default cell padding, no borders, no radius, no font
+   step, and (the visible symptom that found this) no overflow container, so a
+   table wider than a 320px viewport pushed the whole page sideways instead of
+   scrolling inside its own box the way an identical table three sections up
+   already did. */
+.prose table, .tabs__panel table {
   display: block;
   margin-top: var(--space-6);
   width: 100%;
@@ -2073,14 +2081,15 @@ a.skill-link--bare:focus-visible {
   border-radius: var(--radius-md);
 }
 
-.prose th, .prose td {
+.prose th, .prose td,
+.tabs__panel th, .tabs__panel td {
   padding: var(--space-3) var(--space-4);
   text-align: start;
   vertical-align: top;
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.prose thead th {
+.prose thead th, .tabs__panel thead th {
   font-family: var(--font-body);
   font-weight: 600;
   color: var(--text-primary);
@@ -2089,12 +2098,13 @@ a.skill-link--bare:focus-visible {
   white-space: nowrap;
 }
 
-.prose tbody tr {
+.prose tbody tr, .tabs__panel tbody tr {
   transition: background-color var(--duration-micro) var(--ease-out);
 }
 
-.prose tbody tr:hover { background: var(--surface); }
-.prose tbody tr:last-child td { border-bottom: none; }
+.prose tbody tr:hover, .tabs__panel tbody tr:hover { background: var(--surface); }
+.prose tbody tr:last-child td,
+.tabs__panel tbody tr:last-child td { border-bottom: none; }
 
 /* ---------------------------------------------------------------------------
    12. Tabs (formidable stacks / commands)
@@ -2372,7 +2382,7 @@ a.skill-link--bare:focus-visible {
   .card, .theme-toggle__icon, .search__field, .tabs__tab,
   .prevnext__link, .see-also__name, .site-footer__categories a,
   .site-header__nav-link, .site-footer__start a,
-  .skip-link, .prose a, .prose tbody tr,
+  .skip-link, .prose a, .prose tbody tr, .tabs__panel tbody tr,
   .notes__earlier-summary, .notes__earlier-summary::before,
   a.skill-link > code, a.skill-link--bare {
     transition-duration: 0.01ms !important;

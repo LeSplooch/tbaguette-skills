@@ -30,6 +30,11 @@ plugin — invoke any skill directly (`TBaguette:formidable`, `TBaguette:knowing
 or let them trigger automatically when your situation matches. Run the same command again
 later to pull updates in place.
 
+New to it? **[Getting started](https://lesplooch.github.io/tbaguette-skills/getting-started/)**
+is the first session in the order you actually hit it: the reload, why the conversation you
+installed from is the one that won't pick it up, how to prove it landed, six skills worth
+trying on purpose, and what to check when nothing seems to be happening.
+
 This installs for **Claude Code** specifically. The general Claude Desktop app and claude.ai
 chat don't read `~/.claude/skills/` at all — they load whatever skills are enabled on your
 claude.ai account instead, synced separately. Cloning this repo won't make these skills show
