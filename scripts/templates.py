@@ -71,6 +71,8 @@ class Strings:
     header_updated_value_template: str
     theme_toggle_switch_to_dark: str
     theme_toggle_switch_to_light: str
+    nav_aria_label: str
+    nav_getting_started: str
     hero_headline: str
     hero_lede_template: str
     hero_jump: str
@@ -91,6 +93,7 @@ class Strings:
     install_frame_label_template: str
     install_note_verified_text: str
     install_note_see_how: str
+    install_note_new_here_html_template: str
     install_note_restart_html_template: str
     install_note_session_html_template: str
     install_tab_posix_label: str
@@ -102,6 +105,7 @@ class Strings:
     install_copy_copied: str
     install_copy_aria_label: str
     footer_brand_html_template: str
+    footer_start_here_html_template: str
     footer_categories_label: str
     breadcrumb_home: str
     breadcrumb_aria_label: str
@@ -134,6 +138,14 @@ ENGLISH_STRINGS = Strings(
     header_updated_value_template="{local} your time · {utc} UTC",
     theme_toggle_switch_to_dark="Switch to dark theme",
     theme_toggle_switch_to_light="Switch to light theme",
+    # The header's only navigation. Deliberately one link rather than a menu:
+    # every other destination on this site is a skill, and search plus the
+    # category rail already own that. What the header could not reach before
+    # is the one page a first-time visitor needs and a returning one never
+    # does -- so it gets the seat, and nothing else competes with it for the
+    # attention the wordmark and the theme toggle already spend.
+    nav_aria_label="Site",
+    nav_getting_started="Getting started",
     hero_headline="An atelier for the way you build.",
     hero_lede_template=(
         "{skill_count} Claude Code skills for the craft between the ticket and the "
@@ -164,6 +176,11 @@ ENGLISH_STRINGS = Strings(
         "just claimed."
     ),
     install_note_see_how="See how",
+    install_note_new_here_html_template=(
+        "New to {brand}? <a href=\"{url}\">Getting started</a> walks through the "
+        "reload, how skills fire without being asked, and what to do when nothing "
+        "seems to happen."
+    ),
     install_note_restart_html_template=(
         "Restart your agent (in Claude Code, <code>/reload-plugins</code>), then "
         "invoke a skill as <code>{brand}:skill-name</code>. On Claude that means "
@@ -188,6 +205,9 @@ ENGLISH_STRINGS = Strings(
     footer_brand_html_template=(
         "<strong>{brand_atelier}</strong> — the judgment calls that sit between "
         "the ticket and the commit, organized like a proper bench."
+    ),
+    footer_start_here_html_template=(
+        "New here? Start with <a href=\"{url}\">Getting started</a>."
     ),
     footer_categories_label="Categories",
     breadcrumb_home="Home",
@@ -406,6 +426,300 @@ ENGLISH_VERIFY_INSTALL_STRINGS = VerifyInstallStrings(
     ),
 )
 
+@dataclass(frozen=True)
+class GettingStartedStrings:
+    """The getting-started page's prose, kept as its own catalog for the same
+    reason VerifyInstallStrings is: it belongs to one page rather than to
+    site-wide chrome, and it maps to its own i18n/<lang>/getting-started.json
+    the way that one maps to verify-install.json.
+
+    Same two conventions as VerifyInstallStrings, for the same reasons. Every
+    *_html field is pre-formatted HTML injected verbatim per this module's
+    trust-boundary convention. Every *_template field carries {placeholders}
+    rather than a literal, so a translator never retypes a URL or the brand
+    name -- and the anchor markup lives inside the translatable string with
+    only the *URL* spliced in, so link text stays translatable while the href
+    stays correct. Skill slugs inside those anchors (`diagnosing-before-fixing`
+    and friends) are left literal on the same reasoning that leaves a
+    filesystem path literal there: a slug is a URL segment, not prose.
+
+    The starter picks are the one thing not shaped like a flat field per
+    sentence. Their slugs live in GETTING_STARTED_STARTERS below, paired with
+    the name of the field holding that pick's reason, so the render loop is
+    data-driven without coupling a translated string to a list position -- the
+    failure mode a bare tuple-of-reasons would have introduced the first time
+    someone reordered the list."""
+
+    title: str
+    lede_html: str
+    install_heading: str
+    install_html_template: str
+    reload_heading: str
+    reload_html: str
+    reload_session_html_template: str
+    reload_desktop_html: str
+    confirm_heading: str
+    confirm_html_template: str
+    how_they_fire_heading: str
+    how_they_fire_html_template: str
+    how_they_fire_examples_html_template: str
+    by_name_heading: str
+    by_name_html_template: str
+    starters_heading: str
+    starters_intro: str
+    starter_formidable_html: str
+    starter_diagnosing_before_fixing_html: str
+    starter_writing_the_failing_test_first_html: str
+    starter_confirming_before_claiming_done_html: str
+    starter_orchestrating_work_end_to_end_html: str
+    starter_knowing_when_to_stop_html: str
+    bigger_work_heading: str
+    bigger_work_html_template: str
+    bigger_work_practical_html: str
+    updating_heading: str
+    updating_html: str
+    updating_automatic_html_template: str
+    other_agents_heading: str
+    other_agents_html_template: str
+    troubleshooting_heading: str
+    troubleshooting_intro: str
+    troubleshooting_session_html_template: str
+    troubleshooting_desktop_html: str
+    troubleshooting_triggers_html: str
+    troubleshooting_path_html: str
+    next_heading: str
+    next_html_template: str
+    breadcrumb_current: str
+    meta_description_template: str
+
+
+ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
+    title="How to actually use these skills",
+    lede_html=(
+        "Installing is one command, and the rest of this site already covers it. "
+        "The part nobody mentions is what happens after: most skills fire without "
+        "you asking for them, the ones that don\u2019t you call by name, and a job "
+        "bigger than one edit wants a different opening move than a small one. "
+        "This is the first session, in the order you\u2019ll actually hit it."
+    ),
+    install_heading="Install it, if you haven\u2019t",
+    install_html_template=(
+        "The install box on <a href=\"{home_url}\">the landing page</a> carries a "
+        "prompt rather than a command \u2014 you paste it into whichever coding agent "
+        "you use, and it works out which harness it\u2019s in and takes that "
+        "harness\u2019s route. On Claude Code that route is a clone-or-pull into "
+        "<code>~/.claude/skills/TBaguette</code>, and nothing else on your machine "
+        "is touched. <a href=\"{verify_url}\">Install verification</a> is the page "
+        "that proves that claim, with the actual test source rather than the claim "
+        "restated in different words."
+    ),
+    reload_heading="Reload \u2014 and know that the conversation you installed from won\u2019t",
+    reload_html=(
+        "A running agent holds the skill list it started with. Restart it \u2014 in "
+        "Claude Code, <code>/reload-plugins</code> does it without a restart \u2014 and "
+        "every new conversation picks the library up."
+    ),
+    reload_session_html_template=(
+        "The conversation you ran the install from is the exception worth naming, "
+        "because it\u2019s the one you\u2019re most likely to test in. It started before "
+        "the install, so it still has the old list, and nothing you just did "
+        "changes that. Open a new conversation, or invoke "
+        "<code>{brand}:using-tbaguette</code> in the old one to load the entry "
+        "point by hand."
+    ),
+    reload_desktop_html=(
+        "One more place this bites, on Claude specifically: this is Claude "
+        "<em>Code</em>. The Claude Desktop app and claude.ai chat don\u2019t read "
+        "<code>~/.claude/skills/</code> at all \u2014 they load whatever is enabled on "
+        "your account, synced separately \u2014 so cloning here will never make these "
+        "show up there. Enable them from <strong>Customize</strong> in the Desktop "
+        "sidebar or the skills settings on claude.ai instead."
+    ),
+    confirm_heading="Confirm it landed",
+    confirm_html_template=(
+        "Ask your agent to invoke <code>{brand}:using-tbaguette</code>. If the "
+        "install worked, it comes back with a short notice about checking skills "
+        "before every response \u2014 that notice is the library\u2019s entry point, and "
+        "seeing it is proof the whole thing is loaded and callable, not just "
+        "present on disk. If you get \u201cno such skill\u201d instead, the clone "
+        "isn\u2019t where your agent reads from, and the install prompt\u2019s own "
+        "verification steps will say which case you\u2019re in."
+    ),
+    how_they_fire_heading="Most of the time you won\u2019t invoke anything",
+    how_they_fire_html_template=(
+        "Every skill carries a trigger description \u2014 the situations it is for, "
+        "written out at length rather than summarized into a category. Your agent "
+        "matches what you are doing against those, and "
+        "<code>{brand}:using-tbaguette</code> is the piece that makes that check "
+        "habitual rather than occasional."
+    ),
+    how_they_fire_examples_html_template=(
+        "So the ordinary experience is that you never type a skill name. You say "
+        "<em>fix this bug</em>, and <a class=\"skill-link\" "
+        "href=\"{diagnosing_url}\"><code>diagnosing-before-fixing</code></a> arrives "
+        "before a patch does \u2014 a reproduction first, then the cause, then the "
+        "fix. You ask for an interface, and <a class=\"skill-link\" "
+        "href=\"{formidable_url}\"><code>formidable</code></a> turns up with the "
+        "questions a designer would have asked. You do not have to memorize "
+        "{skill_count} names, and you should not try."
+    ),
+    by_name_heading="When you do want one by name",
+    by_name_html_template=(
+        "Invoke it directly \u2014 <code>{brand}:formidable</code>, "
+        "<code>{brand}:knowing-when-to-stop</code>, whichever one you mean. There "
+        "are two honest reasons to override the automatic path. The first is that "
+        "you know your own situation better than a trigger description can: the "
+        "work does not look like the skill\u2019s trigger, but the discipline still "
+        "applies. The second is timing \u2014 you want it before your agent has "
+        "decided this task is simple enough to skip it, which is reliably the "
+        "moment it is not."
+    ),
+    starters_heading="Six worth trying on purpose",
+    starters_intro=(
+        "Not a ranking, and not the six that matter most \u2014 the six whose effect "
+        "you can watch inside a single session, which makes them the fastest way "
+        "to find out whether any of this is for you."
+    ),
+    starter_formidable_html=(
+        "The flagship, and the one with the most visible before-and-after. Design "
+        "craft for every stack there is \u2014 web, terminal, native, game HUD, print, "
+        "voice \u2014 so it applies to the interface you actually have rather than the "
+        "one a web tutorial assumed you had."
+    ),
+    starter_diagnosing_before_fixing_html=(
+        "Turns <em>fix this</em> into a reproduction before a patch. The fastest "
+        "way to see the difference: hand it a bug whose obvious fix you already "
+        "have in mind, and watch where it goes first."
+    ),
+    starter_writing_the_failing_test_first_html=(
+        "The most concrete behavior change on this list. One test that fails for "
+        "the right reason before any production code exists \u2014 a different thing "
+        "from a test written afterwards that has never once been red."
+    ),
+    starter_confirming_before_claiming_done_html=(
+        "For anyone who has been told something was finished and found out "
+        "otherwise. It replaces <em>this should work</em> with a command that was "
+        "actually run, and treats a tool\u2019s own success report as a claim rather "
+        "than as evidence."
+    ),
+    starter_orchestrating_work_end_to_end_html=(
+        "The entry point for anything bigger than a single edit \u2014 which is the "
+        "next section, because it is the one piece of this that changes how a "
+        "whole run is shaped rather than how one response is."
+    ),
+    starter_knowing_when_to_stop_html=(
+        "The counterweight to everything above. Bounded passes, diminishing "
+        "returns, and naming what is being left undone instead of quietly "
+        "polishing until the context runs out."
+    ),
+    bigger_work_heading="Anything bigger than one edit starts somewhere else",
+    bigger_work_html_template=(
+        "One skill covers one stretch of work. A feature, a bug with no known "
+        "cause, a migration, an audit \u2014 those take several of them, in an order, "
+        "and that order is its own skill: <a class=\"skill-link\" "
+        "href=\"{orchestrating_url}\"><code>orchestrating-work-end-to-end</code></a>. "
+        "It routes the request to the lightest track that fits, says which phase "
+        "the work is in, and names the evidence that has to exist before the next "
+        "phase is allowed to open."
+    ),
+    bigger_work_practical_html=(
+        "The practical version, for you: describe what you want, and let it open "
+        "with scoping rather than with an editor. What comes back first is a "
+        "design to say yes or no to \u2014 which is a great deal cheaper to argue "
+        "with than a finished implementation of the wrong thing."
+    ),
+    updating_heading="Keeping it current",
+    updating_html=(
+        "Run the same install prompt again \u2014 it takes whichever route it took "
+        "the first time. On the Claude Code route that route is a clone-or-pull, "
+        "so a second run updates in place rather than erroring, duplicating "
+        "anything, or touching whatever else lives beside it. On a harness with "
+        "its own plugin command, the prompt hands back to that command, and "
+        "updating is whatever that harness already does."
+    ),
+    updating_automatic_html_template=(
+        "Mostly you will not have to remember. <a class=\"skill-link\" "
+        "href=\"{keeping_current_url}\"><code>keeping-tbaguette-current</code></a> "
+        "runs that check at the start of a conversation and reports what changed "
+        "in readable terms rather than as a commit log. This site\u2019s own header "
+        "carries the published version and the moment it was last built, if you "
+        "would rather compare by hand."
+    ),
+    other_agents_heading="Not on Claude Code?",
+    other_agents_html_template=(
+        "{brand} ships an integration for Codex, Cursor, Copilot CLI, Devin, "
+        "Gemini CLI, Hermes, Kimi Code, OpenCode, and Pi as well. Those installs "
+        "differ in kind rather than just in path \u2014 a plugin command here, an "
+        "extension there, a line in a config file somewhere else \u2014 which is "
+        "exactly why the install box carries one prompt instead of ten recipes. "
+        "It identifies its own harness and takes the matching route, and when it "
+        "cannot identify one it stops and asks rather than inventing a path. "
+        "<a href=\"{porting_url}\">PORTING.md</a> has the harness-by-harness "
+        "breakdown of what each one loads."
+    ),
+    troubleshooting_heading="If nothing seems to be happening",
+    troubleshooting_intro=(
+        "Roughly in the order worth checking, cheapest first:"
+    ),
+    troubleshooting_session_html_template=(
+        "<strong>The conversation predates the install</strong> \u2014 including the "
+        "one you installed from. Open a new one, or invoke "
+        "<code>{brand}:using-tbaguette</code> to load the entry point by hand."
+    ),
+    troubleshooting_desktop_html=(
+        "<strong>You are in Claude Desktop or claude.ai chat, not Claude Code.</strong> "
+        "Those load skills from your account rather than from "
+        "<code>~/.claude/skills/</code>, so nothing you cloned is visible to them."
+    ),
+    troubleshooting_triggers_html=(
+        "<strong>Your agent has them and simply is not reaching for them.</strong> "
+        "Invoke one by name. If that works, the install is fine and what you are "
+        "watching is trigger matching \u2014 say what you are doing in plainer terms, "
+        "or name the skill yourself."
+    ),
+    troubleshooting_path_html=(
+        "<strong>The clone is not where your agent reads from.</strong> Check that "
+        "<code>~/.claude/skills/TBaguette/CATALOG.md</code> exists. If that "
+        "directory is there but has no <code>.git</code> inside it, what you have "
+        "is a previous install that lost its own history rather than a fresh one "
+        "\u2014 the install prompt recognizes that case and asks before moving "
+        "anything aside."
+    ),
+    next_heading="Where to go from here",
+    next_html_template=(
+        "Every skill on this site is readable in full and searchable by name, "
+        "summary, or category, grouped into categories on <a "
+        "href=\"{home_url}\">the landing page</a>. <a "
+        "href=\"{catalog_url}\">CATALOG.md</a> is that same catalog as a single "
+        "file, which is the better one to hand your agent when you want it to "
+        "read rather than search."
+    ),
+    breadcrumb_current="Getting started",
+    meta_description_template=(
+        "What to do after you install {brand}: the reload new conversations need, "
+        "how skills fire without being invoked, six worth trying first, and what "
+        "to check when nothing seems to happen."
+    ),
+)
+
+# Slug paired with the GettingStartedStrings field holding that pick's reason.
+# Data-driven so the render loop stays one loop, and named rather than
+# positional so reordering this tuple can never silently attach a reason to
+# the wrong skill -- the mistake a bare tuple-of-reasons invites the first
+# time someone reorders it. Every slug here must be a real skill: the built
+# site's cross-reference check (test_generate.py) walks every rendered
+# skill-link on every page and fails on one that points nowhere, so a typo
+# here reddens the suite rather than shipping a dead link.
+GETTING_STARTED_STARTERS: tuple[tuple[str, str], ...] = (
+    ("formidable", "starter_formidable_html"),
+    ("diagnosing-before-fixing", "starter_diagnosing_before_fixing_html"),
+    ("writing-the-failing-test-first", "starter_writing_the_failing_test_first_html"),
+    ("confirming-before-claiming-done", "starter_confirming_before_claiming_done_html"),
+    ("orchestrating-work-end-to-end", "starter_orchestrating_work_end_to_end_html"),
+    ("knowing-when-to-stop", "starter_knowing_when_to_stop_html"),
+)
+
+
 # Brand identity -- stays literal in every locale (see this plan's Global
 # Constraints). Every *_template Strings field that mentions the brand
 # names splices one of these in via str.format() rather than embedding the
@@ -414,6 +728,13 @@ ENGLISH_VERIFY_INSTALL_STRINGS = VerifyInstallStrings(
 # translate instead of a number that must always agree grammatically.
 BRAND_NAME = "TBaguette"
 BRAND_ATELIER = "TBaguette&rsquo;s Atelier"
+# The same name for the two places that need it as *text* rather than as
+# markup: a <title>, and any other value _render_head escapes on the way
+# out. BRAND_ATELIER above carries a literal HTML entity and is only ever
+# injected verbatim (the footer brand line); handing it to escape_html
+# renders "TBaguette&amp;rsquo;s Atelier" on the tab, which is exactly the
+# trap this constant exists to close.
+BRAND_ATELIER_TEXT = "TBaguette’s Atelier"
 
 
 # ---------------------------------------------------------------------------
@@ -440,6 +761,11 @@ GITHUB_BLOB_BASE = "https://github.com/LeSplooch/tbaguette-skills/blob/master/"
 UPDATE_NOTES_LIMIT = 6
 
 UPDATE_NOTES_SOURCE_PATH = "UPDATES.md"
+
+# The getting-started page's path suffix, in one place rather than in the
+# five call sites that need it (the page itself, the header nav on every
+# page, the footer, the install frame, and generate.py's output path).
+GETTING_STARTED_PATH = "getting-started/"
 
 _THEME_STORAGE_KEY = "tbaguette-theme"
 
@@ -567,12 +893,26 @@ def _render_plugin_version(version: str) -> str:
     return f'<span class="wordmark-version" dir="ltr">v{escape_html(version)}</span>'
 
 
+def _render_header_nav(base_path: str, locale: "locales.Locale", path_suffix: str,
+                        strings: Strings) -> str:
+    """The header's one navigation link. aria-current marks it on its own
+    page rather than leaving a link that appears to go somewhere and does
+    not -- the same page this nav points at is the one a first-time visitor
+    is most likely to already be standing on when they look for it."""
+    current = ' aria-current="page"' if path_suffix == GETTING_STARTED_PATH else ""
+    href = _locale_url(locale, base_path, GETTING_STARTED_PATH)
+    return f"""<nav class="site-header__nav" aria-label="{escape_html(strings.nav_aria_label)}">
+        <a class="site-header__nav-link" href="{href}"{current}>{escape_html(strings.nav_getting_started)}</a>
+      </nav>"""
+
+
 def _render_header(base_path: str = "", last_updated_utc: str = "",
                     *, locale: "locales.Locale" = locales.DEFAULT_LOCALE,
                     path_suffix: str = "", strings: Strings = ENGLISH_STRINGS,
                     plugin_version: str = "") -> str:
     updated_html = _render_updated_time(last_updated_utc, base_path, strings) if last_updated_utc else ""
     version_html = _render_plugin_version(plugin_version) if plugin_version else ""
+    nav_html = _render_header_nav(base_path, locale, path_suffix, strings)
     return f"""<header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -584,6 +924,7 @@ def _render_header(base_path: str = "", last_updated_utc: str = "",
       {version_html}
     </div>
     <div class="site-header__actions">
+      {nav_html}
       {updated_html}
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="{escape_html(strings.theme_toggle_switch_to_light)}"
@@ -606,9 +947,21 @@ def _render_footer(categories: list[dict], base_path: str = "",
         for cat in categories
     ))
     brand_html = strings.footer_brand_html_template.format(brand_atelier=BRAND_ATELIER)
+    start_here_html = strings.footer_start_here_html_template.format(
+        url=_locale_url(locale, base_path, GETTING_STARTED_PATH)
+    )
+    # Brand and pointer share one grid cell rather than becoming a third
+    # child of .site-footer__inner: at >=720px that grid is two columns, and
+    # a third child would land the pointer under the brand *only* by
+    # auto-flow accident -- and would put it after the category list on
+    # mobile, which is the one width where a first-time visitor is most
+    # likely to be scrolling to the bottom looking for exactly this.
     return f"""<footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__brand">{brand_html}</p>
+    <div class="site-footer__brand-col">
+      <p class="site-footer__brand">{brand_html}</p>
+      <p class="site-footer__start">{start_here_html}</p>
+    </div>
     <nav aria-label="{escape_html(strings.footer_categories_label)}">
       <p class="site-footer__nav-title">{escape_html(strings.footer_categories_label)}</p>
       <ul class="site-footer__categories">
@@ -824,6 +1177,9 @@ def _render_install(base_path: str = "", *,
     frame_label = strings.install_frame_label_template.format(brand=BRAND_NAME)
     restart_note_html = strings.install_note_restart_html_template.format(brand=BRAND_NAME)
     session_note_html = strings.install_note_session_html_template.format(brand=BRAND_NAME)
+    new_here_html = strings.install_note_new_here_html_template.format(
+        brand=BRAND_NAME, url=_locale_url(locale, base_path, GETTING_STARTED_PATH)
+    )
     return f"""<div class="install-frame">
   <p class="install-frame__label">
     {_icon("icon-crust", base_path=base_path)}
@@ -853,6 +1209,10 @@ def _render_install(base_path: str = "", *,
     <p class="install-frame__note">
       {_icon("icon-check", base_path=base_path)}
       <span>{session_note_html}</span>
+    </p>
+    <p class="install-frame__note install-frame__note--pointer">
+      {_icon("icon-grain", base_path=base_path)}
+      <span>{new_here_html}</span>
     </p>
   </div>
 </div>"""
@@ -1550,6 +1910,14 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
 # Install verification page
 # ---------------------------------------------------------------------------
 
+# Repo files the getting-started page sends a reader to. Both are read on
+# GitHub rather than mirrored onto this site: PORTING.md changes with every
+# harness that gets added, and CATALOG.md is the same content this site
+# already renders one skill per page -- a second copy of either would be a
+# second thing to keep true.
+PORTING_GITHUB_URL = GITHUB_BLOB_BASE + "PORTING.md"
+CATALOG_GITHUB_URL = GITHUB_BLOB_BASE + "CATALOG.md"
+
 INSTALL_TEST_SOURCE_PATH = "scripts/test_install_command.py"
 INSTALL_TEST_GITHUB_URL = GITHUB_BLOB_BASE + INSTALL_TEST_SOURCE_PATH
 
@@ -1644,7 +2012,7 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
 
     main_html = _join(breadcrumb, article)
     return _render_document(
-        title=f"{v.title} — TBaguette’s Atelier",
+        title=f"{v.title} — {BRAND_ATELIER_TEXT}",
         meta_description=meta_description,
         body_class="page-skill",
         main_html=main_html,
@@ -1653,6 +2021,145 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
         last_updated_utc=last_updated_utc,
         locale=locale,
         path_suffix="verify-install/",
+        strings=strings,
+        plugin_version=plugin_version,
+    )
+
+
+def _render_getting_started_starters(base_path: str, locale: "locales.Locale",
+                                      getting_started: GettingStartedStrings) -> str:
+    """One list item per starter pick, slug chip linked to that skill's own
+    page. Same skill-link markup content_pipeline emits for a skill that
+    mentions another, so a pick here looks and behaves like a cross-reference
+    anywhere else on the site rather than like a bespoke list."""
+    items = []
+    for slug, field in GETTING_STARTED_STARTERS:
+        href = skill_url(slug, base_path, locale)
+        reason_html = getattr(getting_started, field)
+        items.append(
+            f'<li><a class="skill-link" href="{href}"><code>{escape_html(slug)}</code></a>'
+            f" &mdash; {reason_html}</li>"
+        )
+    return _join(*items)
+
+
+def render_getting_started_page(categories: list[dict], base_path: str = "",
+                                 last_updated_utc: str = "", *,
+                                 skill_count: int = 0,
+                                 locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                                 strings: Strings = ENGLISH_STRINGS,
+                                 getting_started: GettingStartedStrings = ENGLISH_GETTING_STARTED_STRINGS,
+                                 plugin_version: str = "") -> str:
+    """Full HTML document for /getting-started/ — the first session with the
+    library, in the order a new user actually hits it: install, reload, prove
+    it landed, how skills fire unasked, how to override that, six to try, the
+    spine for work bigger than one edit, updating, other harnesses, and what
+    to check when nothing happens.
+
+    Every *_html field is injected verbatim, same trust-boundary contract as
+    skill body_html and the verify-install page's prose. Every URL is built
+    here rather than written into a string, so base_path and locale stay this
+    module's business — see GettingStartedStrings' own docstring on why the
+    anchor markup nonetheless lives inside the translatable string."""
+    g = getting_started
+    home_url = _locale_url(locale, base_path, "")
+    breadcrumb = f"""<nav class="container breadcrumb" aria-label="{escape_html(strings.breadcrumb_aria_label)}">
+  <a href="{home_url}">{escape_html(strings.breadcrumb_home)}</a>
+  <span class="breadcrumb__sep" aria-hidden="true">/</span>
+  <span class="breadcrumb__current" aria-current="page">{escape_html(g.breadcrumb_current)}</span>
+</nav>"""
+
+    install_html = g.install_html_template.format(
+        home_url=home_url, verify_url=_locale_url(locale, base_path, "verify-install/")
+    )
+    reload_session_html = g.reload_session_html_template.format(brand=BRAND_NAME)
+    confirm_html = g.confirm_html_template.format(brand=BRAND_NAME)
+    how_they_fire_html = g.how_they_fire_html_template.format(brand=BRAND_NAME)
+    how_they_fire_examples_html = g.how_they_fire_examples_html_template.format(
+        skill_count=skill_count,
+        diagnosing_url=skill_url("diagnosing-before-fixing", base_path, locale),
+        formidable_url=skill_url("formidable", base_path, locale),
+    )
+    by_name_html = g.by_name_html_template.format(brand=BRAND_NAME)
+    bigger_work_html = g.bigger_work_html_template.format(
+        orchestrating_url=skill_url("orchestrating-work-end-to-end", base_path, locale)
+    )
+    updating_automatic_html = g.updating_automatic_html_template.format(
+        keeping_current_url=skill_url("keeping-tbaguette-current", base_path, locale)
+    )
+    other_agents_html = g.other_agents_html_template.format(
+        brand=BRAND_NAME, porting_url=PORTING_GITHUB_URL
+    )
+    troubleshooting_session_html = g.troubleshooting_session_html_template.format(brand=BRAND_NAME)
+    next_html = g.next_html_template.format(home_url=home_url, catalog_url=CATALOG_GITHUB_URL)
+    meta_description = g.meta_description_template.format(brand=BRAND_NAME)
+
+    article = f"""<article class="container skill-article">
+  <div class="skill-article__head">
+    <h1 class="skill-article__title">{escape_html(g.title)}</h1>
+    <p class="lede">{g.lede_html}</p>
+  </div>
+
+  <div class="prose">
+    <h2 id="install">{escape_html(g.install_heading)}</h2>
+    <p>{install_html}</p>
+
+    <h2 id="reload">{escape_html(g.reload_heading)}</h2>
+    <p>{g.reload_html}</p>
+    <p>{reload_session_html}</p>
+    <p>{g.reload_desktop_html}</p>
+
+    <h2 id="confirm">{escape_html(g.confirm_heading)}</h2>
+    <p>{confirm_html}</p>
+
+    <h2 id="how-skills-fire">{escape_html(g.how_they_fire_heading)}</h2>
+    <p>{how_they_fire_html}</p>
+    <p>{how_they_fire_examples_html}</p>
+
+    <h2 id="by-name">{escape_html(g.by_name_heading)}</h2>
+    <p>{by_name_html}</p>
+
+    <h2 id="starter-set">{escape_html(g.starters_heading)}</h2>
+    <p>{escape_html(g.starters_intro)}</p>
+    <ul>
+{_render_getting_started_starters(base_path, locale, g)}
+    </ul>
+
+    <h2 id="bigger-work">{escape_html(g.bigger_work_heading)}</h2>
+    <p>{bigger_work_html}</p>
+    <p>{g.bigger_work_practical_html}</p>
+
+    <h2 id="updating">{escape_html(g.updating_heading)}</h2>
+    <p>{g.updating_html}</p>
+    <p>{updating_automatic_html}</p>
+
+    <h2 id="other-agents">{escape_html(g.other_agents_heading)}</h2>
+    <p>{other_agents_html}</p>
+
+    <h2 id="nothing-happened">{escape_html(g.troubleshooting_heading)}</h2>
+    <p>{escape_html(g.troubleshooting_intro)}</p>
+    <ul>
+      <li>{troubleshooting_session_html}</li>
+      <li>{g.troubleshooting_desktop_html}</li>
+      <li>{g.troubleshooting_triggers_html}</li>
+      <li>{g.troubleshooting_path_html}</li>
+    </ul>
+
+    <h2 id="next">{escape_html(g.next_heading)}</h2>
+    <p>{next_html}</p>
+  </div>
+</article>"""
+
+    return _render_document(
+        title=f"{g.title} — {BRAND_ATELIER_TEXT}",
+        meta_description=meta_description,
+        body_class="page-skill",
+        main_html=_join(breadcrumb, article),
+        categories=categories,
+        base_path=base_path,
+        last_updated_utc=last_updated_utc,
+        locale=locale,
+        path_suffix=GETTING_STARTED_PATH,
         strings=strings,
         plugin_version=plugin_version,
     )

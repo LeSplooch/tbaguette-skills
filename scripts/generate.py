@@ -5,11 +5,13 @@ the static site.
     python3 scripts/generate.py --base-path /tbaguette-skills  # GitHub Pages build
 
 Stdlib only. Regenerates docs/index.html, every docs/skills/<slug>/index.html,
-and docs/verify-install/index.html (the install command's explanation +
+docs/verify-install/index.html (the install command's explanation +
 syntax-highlighted source, built from scripts/test_install_command.py at
-generation time — see python_highlight.py) from the skill files embedded in
+generation time — see python_highlight.py), and docs/getting-started/index.html
+(the first session with the library: reload, how skills fire unasked, what to
+try, what to check when nothing happens) from the skill files embedded in
 this repo at skills/. That embedded copy is the single source of truth for a
-build. All three generated paths should never be hand-edited, since the next
+build. All four generated paths should never be hand-edited, since the next
 run overwrites them; docs/assets/ is the one thing under docs/ this script
 never touches — it's hand-authored CSS/JS/fonts/icons, not generated, and
 lives under docs/ only because GitHub Pages serves everything from one
@@ -20,7 +22,7 @@ native source folders (the other being the branch root) — no separate
 gh-pages branch or Actions workflow needed to publish it.
 
 The write is atomic: the site is built into a fresh temporary directory
-first, and the three generated paths are only swapped into place — each as
+first, and the four generated paths are only swapped into place — each as
 its own independent rename, preceded by moving the previous version aside
 rather than deleting it first — after every page has been written
 successfully. A process killed mid-run (Ctrl-C, OOM, disk full, a CI timeout)
@@ -125,6 +127,28 @@ def _load_verify_install_strings(locale: locales.Locale, i18n_root: Path) -> tem
         raise SystemExit(
             f"{path} exists but doesn't match VerifyInstallStrings' exact key set "
             f"— refusing to generate a site with a malformed verify-install catalog "
+            f"for locale {locale.code!r}: {error}"
+        ) from error
+
+
+def _load_getting_started_strings(locale: locales.Locale, i18n_root: Path) -> templates.GettingStartedStrings:
+    """Same contract as _load_verify_install_strings, one file over: absent is
+    a silent fall back to English (a locale can route before its per-page prose
+    is written), present-but-malformed is a hard failure (that is an authoring
+    bug in a file a human just edited, and guessing past it ships a page with
+    half its sections silently missing)."""
+    if locale.default:
+        return templates.ENGLISH_GETTING_STARTED_STRINGS
+    path = i18n_root / locale.code / "getting-started.json"
+    if not path.is_file():
+        return templates.ENGLISH_GETTING_STARTED_STRINGS
+    data = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        return templates.GettingStartedStrings(**data)
+    except TypeError as error:
+        raise SystemExit(
+            f"{path} exists but doesn't match GettingStartedStrings' exact key set "
+            f"— refusing to generate a site with a malformed getting-started catalog "
             f"for locale {locale.code!r}: {error}"
         ) from error
 
@@ -366,6 +390,7 @@ def _write(path: Path, html: str) -> None:
 def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_utc: str,
                  *, locale: locales.Locale, strings: templates.Strings,
                  verify_strings: templates.VerifyInstallStrings,
+                 getting_started_strings: templates.GettingStartedStrings,
                  update_notes: list[dict] | None = None,
                  plugin_version: str = "") -> None:
     """Writes one locale's pages into output_dir, which must already exist
@@ -402,6 +427,13 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
         plugin_version=plugin_version,
     )
     _write(output_dir / "verify-install" / "index.html", verify_html)
+
+    getting_started_html = templates.render_getting_started_page(
+        categories, base_path, last_updated_utc=last_updated_utc,
+        skill_count=len(skills), locale=locale, strings=strings,
+        getting_started=getting_started_strings, plugin_version=plugin_version,
+    )
+    _write(output_dir / templates.GETTING_STARTED_PATH / "index.html", getting_started_html)
 
 
 def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
@@ -445,7 +477,7 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
     staging_dir = Path(tempfile.mkdtemp(prefix=".docs.build.", dir=project_root))
 
     english_content: dict | None = None
-    swapped_names = ["index.html", "skills", "verify-install", "version.txt"]
+    swapped_names = ["index.html", "skills", "verify-install", "getting-started", "version.txt"]
 
     try:
         for locale in build_locales:
@@ -490,10 +522,12 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
 
             strings = _load_strings(locale, i18n_root)
             verify_strings = _load_verify_install_strings(locale, i18n_root)
+            getting_started_strings = _load_getting_started_strings(locale, i18n_root)
             locale_output_dir = staging_dir if locale.default else (staging_dir / locale.code)
             _build_into(
                 locale_output_dir, content, base_path, last_updated_utc,
                 locale=locale, strings=strings, verify_strings=verify_strings,
+                getting_started_strings=getting_started_strings,
                 update_notes=update_notes, plugin_version=plugin_version,
             )
             if not locale.default:

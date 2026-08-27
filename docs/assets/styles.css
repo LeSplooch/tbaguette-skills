@@ -13,7 +13,7 @@
   4. Utilities (visually-hidden, skip-link, container, measure)
   5. Type
   6. Icons
-  7. Header / wordmark / theme toggle / updated-time
+  7. Header / wordmark / nav / theme toggle / updated-time
   8. Hero + search
   8b. "Fresh from the oven" rail (recently new/updated skills; a turning
       3D ring wherever motion, width, and forced-colors all allow it)
@@ -471,7 +471,7 @@ code {
 }
 
 /* ---------------------------------------------------------------------------
-   7. Header / wordmark / theme toggle / updated-time
+   7. Header / wordmark / nav / theme toggle / updated-time
    ------------------------------------------------------------------------- */
 
 .site-header {
@@ -631,6 +631,39 @@ code {
 }
 
 .site-header__updated-value { font-variant-numeric: tabular-nums; }
+
+/* The header's only nav link. A pill rather than the mono/uppercase register
+   its two neighbours use, and deliberately: everything else in this corner is
+   metadata *about* the page (version, build time) and reads as label-plus-value.
+   This is the one thing here you can go somewhere with, so it borrows the
+   footer's category-pill treatment instead — same border, same radius, same
+   hover — which is the shape this site already uses to mean "navigable". */
+.site-header__nav-link {
+  display: inline-block;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out);
+}
+
+.site-header__nav-link:hover {
+  color: var(--text-accent);
+  border-color: var(--border-strong);
+}
+
+/* On its own page the link stays a link (it still scrolls you back to the
+   top of it) but stops advertising itself as somewhere to go. Colour plus
+   border, not colour alone: aria-current already carries this for a screen
+   reader, and the visual half should not rest on hue for everyone else. */
+.site-header__nav-link[aria-current="page"] {
+  color: var(--text-accent);
+  border-color: var(--border-strong);
+  background: color-mix(in oklch, var(--accent) 10%, transparent);
+}
 
 .theme-toggle {
   position: relative;
@@ -824,6 +857,16 @@ code {
 .install-frame__note a:hover {
   text-decoration-color: currentColor;
   background: color-mix(in oklch, var(--text-accent) 12%, transparent);
+}
+
+/* The three notes above this one all answer "is this safe / what do I do to
+   finish installing". This one answers "how do I use it", which is a
+   different question and a different destination, so it gets a hairline to
+   sit behind rather than becoming a fourth item in a list it isn't part of. */
+.install-frame__note--pointer {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .install {
@@ -1863,6 +1906,16 @@ code {
 }
 
 .prose li { padding-inline-start: 0.2em; }
+
+/* A file path or a skill name inside running prose is one unbreakable token,
+   and at 320px `~/.claude/skills/TBaguette/CATALOG.md` is wider than the
+   column it sits in — which pushes the whole page sideways, since an inline
+   <code> has no overflow container of its own the way .prose-code-block and
+   .code-block do. break-word rather than anywhere: it only ever breaks a
+   token that would otherwise overflow, so every span that already fits is
+   laid out exactly as before. Scoped to .prose so the install frame's own
+   command chip, which lives in a real scroll container, keeps scrolling. */
+.prose code { overflow-wrap: break-word; }
 .prose li::marker { color: var(--text-secondary); }
 .prose ul ul, .prose ol ol, .prose ul ol, .prose ol ul { margin-top: var(--space-2); }
 
@@ -2235,6 +2288,37 @@ a.skill-link--bare:focus-visible {
   color: var(--text-primary);
 }
 
+/* Brand and pointer are one grid cell, not two children of the footer grid.
+   That grid is two columns at >=720px, so a third child would place this by
+   auto-flow accident, and on mobile it would fall *after* the category list —
+   the one width where someone scrolling to the bottom is most plausibly
+   looking for where to start. */
+.site-footer__brand-col {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+}
+
+.site-footer__start {
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+}
+
+.site-footer__start a {
+  color: var(--text-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--text-accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  border-radius: 3px;
+  transition: text-decoration-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.site-footer__start a:hover {
+  text-decoration-color: currentColor;
+  background: color-mix(in oklch, var(--text-accent) 12%, transparent);
+}
+
 .site-footer__nav-title {
   font-family: var(--font-mono);
   font-size: var(--text-1);
@@ -2287,6 +2371,7 @@ a.skill-link--bare:focus-visible {
 
   .card, .theme-toggle__icon, .search__field, .tabs__tab,
   .prevnext__link, .see-also__name, .site-footer__categories a,
+  .site-header__nav-link, .site-footer__start a,
   .skip-link, .prose a, .prose tbody tr,
   .notes__earlier-summary, .notes__earlier-summary::before,
   a.skill-link > code, a.skill-link--bare {

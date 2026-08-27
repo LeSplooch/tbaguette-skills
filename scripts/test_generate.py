@@ -446,6 +446,29 @@ def main() -> None:
             "data-update-notes" not in index_html,
         )
 
+        gs_path = docs / "getting-started" / "index.html"
+        check("docs/getting-started/index.html exists after a real build", gs_path.exists())
+        gs_html = gs_path.read_text(encoding="utf-8") if gs_path.exists() else ""
+        check(
+            "...and carries the generated-file header, so nobody hand-edits a page "
+            "the next build overwrites",
+            gs_html.startswith(generate.GENERATED_HEADER),
+        )
+        check(
+            "its skill-count sentence is interpolated from the real catalog, which "
+            "is the number this build actually shipped",
+            f"memorize {generate.EXPECTED_SKILL_COUNT} names" in gs_html,
+        )
+        check(
+            "the landing page reaches it from all three agreed entry points "
+            "(header nav, install frame, footer)",
+            index_html.count('href="/tbaguette-skills/getting-started/"') == 3,
+        )
+        check(
+            "and so does a skill page's header, on a real build rather than a fixture",
+            'href="/tbaguette-skills/getting-started/"' in karen_html,
+        )
+
         version_txt_path = docs / "version.txt"
         check("version.txt exists after generation", version_txt_path.exists())
         version_txt_content = version_txt_path.read_text(encoding="utf-8")

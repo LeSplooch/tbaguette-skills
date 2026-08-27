@@ -8,12 +8,15 @@ Usage:
     python3 scripts/test_templates.py
 """
 
+import re
 from pathlib import Path
 
 import templates
 from checker import Checker
 from templates import (
+    ENGLISH_GETTING_STARTED_STRINGS,
     ENGLISH_STRINGS,
+    GETTING_STARTED_STARTERS,
     INSTALL_COMMAND,
     INSTALL_COMMAND_CMD,
     INSTALL_COMMAND_POWERSHELL,
@@ -21,6 +24,7 @@ from templates import (
     INSTALL_TEST_GITHUB_URL,
     escape_html,
     render_index,
+    render_getting_started_page,
     render_skill_page,
     render_verify_install_page,
 )
@@ -208,6 +212,145 @@ def check_verify_install_page() -> None:
           == html.count('class="code-block__line-code"'))
     check("but the page chrome around it is still prefixed like every other page",
           f'"{base}/assets/styles.css"' in prefixed)
+
+
+def _article_of(html: str) -> str:
+    """Just the page's own body, without the <head> (whose inline theme-bootstrap
+    script is full of braces) — so a placeholder scan below can be about the prose
+    rather than about JavaScript."""
+    return html.split("<article", 1)[1].split("</article>", 1)[0]
+
+
+_PLACEHOLDER_RE = re.compile(r"\{[a-z_]+\}")
+
+
+def check_getting_started_page() -> None:
+    """render_getting_started_page on its own. The checks that matter here are
+    not "does it contain the words" — they are the two ways this page can break
+    silently: a *_template field whose .format() call was never wired up (the
+    reader gets a literal {brand} mid-sentence), and a starter pick whose slug
+    and reason drifted apart."""
+    print("getting-started page check")
+    categories = FIXTURE["categories"]
+
+    html = render_getting_started_page(categories, skill_count=92)
+    check("looks like a document", "<html" in html)
+    check("its <title> carries the page title and the atelier suffix",
+          "<title>How to actually use these skills — TBaguette’s Atelier</title>" in html)
+    check("breadcrumb names the page and marks it current",
+          '<span class="breadcrumb__current" aria-current="page">Getting started</span>' in html)
+
+    article = _article_of(html)
+    leftovers = _PLACEHOLDER_RE.findall(article)
+    check(f"no *_template field reached the page unformatted — a missed .format() "
+          f"renders a literal placeholder in running prose and nothing else fails "
+          f"(found: {sorted(set(leftovers))[:5]})", not leftovers)
+    check("the brand placeholder really was substituted, so the check above is "
+          "proving substitution happened rather than that no field uses one",
+          "TBaguette:using-tbaguette" in article)
+    check("{skill_count} is interpolated from the real catalog size, not hardcoded "
+          "in the prose where it would go stale on the next skill added",
+          "memorize 92 names" in article)
+
+    check(f"every starter pick renders, one list item each "
+          f"({len(GETTING_STARTED_STARTERS)} of them)",
+          all(f"<code>{slug}</code>" in article for slug, _ in GETTING_STARTED_STARTERS))
+    check("each pick's slug links to that same slug's page — the pairing in "
+          "GETTING_STARTED_STARTERS is what makes a reorder safe, so it is worth "
+          "asserting rather than assuming",
+          all(f'href="/skills/{slug}/"><code>{slug}</code></a>' in article
+              for slug, _ in GETTING_STARTED_STARTERS))
+    check("every starter's reason field exists on the strings catalog — a typo in "
+          "the constant would otherwise surface as an AttributeError at build time "
+          "rather than here",
+          all(hasattr(ENGLISH_GETTING_STARTED_STRINGS, field)
+              for _, field in GETTING_STARTED_STARTERS))
+    skills_dir = Path(__file__).resolve().parent.parent / "skills"
+    missing = [slug for slug, _ in GETTING_STARTED_STARTERS
+               if not (skills_dir / slug / "SKILL.md").is_file()]
+    check(f"every starter pick names a skill that actually exists under skills/ — "
+          f"the href check above is self-consistent by construction (a typo'd slug "
+          f"renders a matching link to nowhere and passes), so this is the one that "
+          f"actually catches it (missing: {missing})", not missing)
+    check("no pick is listed twice",
+          len({slug for slug, _ in GETTING_STARTED_STARTERS}) == len(GETTING_STARTED_STARTERS))
+
+    check("sends the reader to the install verification page rather than restating "
+          "the safety claim a second time", 'href="/verify-install/"' in article)
+    check("names the four things to check when nothing happens",
+          article.count("<li><strong>") == 4)
+    check("the troubleshooting section leads with the cause that is actually most "
+          "common — a session that predates the install",
+          "The conversation predates the install" in article)
+
+    base = "/tbaguette-skills"
+    prefixed_article = _article_of(render_getting_started_page(categories, base_path=base, skill_count=92))
+    internal = re.findall(r'href="(/[^"]*)"', prefixed_article)
+    check(f"every internal link carries the deployment base path, so the page works "
+          f"on the published site and not only at a domain root "
+          f"(offenders: {[h for h in internal if not h.startswith(base + '/')][:3]})",
+          internal and all(h.startswith(base + "/") for h in internal))
+    check("...and the two GitHub links are left absolute rather than base-path'd "
+          "into a page that does not exist",
+          "https://github.com/LeSplooch/tbaguette-skills/blob/master/PORTING.md" in prefixed_article
+          and "https://github.com/LeSplooch/tbaguette-skills/blob/master/CATALOG.md" in prefixed_article)
+
+
+def check_getting_started_is_reachable() -> None:
+    """The page is worth nothing if nothing points at it. Three entry points
+    were agreed: the header nav on every page, the hero's install frame, and
+    the footer — so all three are asserted on pages that actually render them,
+    not just on the one page that happens to be under test."""
+    print("getting-started reachability check")
+    index_html = render_index(FIXTURE["categories"], FIXTURE["skills"])
+    check("the landing page's header carries the nav link",
+          '<a class="site-header__nav-link" href="/getting-started/">Getting started</a>' in index_html)
+    check("...the install frame points at it too, where a first-time visitor is "
+          "already looking", 'install-frame__note--pointer' in index_html
+          and index_html.count('href="/getting-started/"') >= 2)
+    check("...and so does the footer, for a reader who scrolled past the hero",
+          '<p class="site-footer__start">' in index_html)
+    check("the footer pointer sits in the brand column rather than becoming a "
+          "third child of the two-column footer grid",
+          '<div class="site-footer__brand-col">' in index_html)
+
+    skill_html = render_skill_page(
+        FIXTURE["skills"]["formidable"], prev_skill=None, next_skill=None,
+        siblings=[], categories=FIXTURE["categories"],
+    )
+    check("a skill page — which has no install frame — still reaches it from the "
+          "header and the footer", 'class="site-header__nav-link"' in skill_html
+          and '<p class="site-footer__start">' in skill_html)
+    check("...and does NOT claim to be the getting-started page itself",
+          'aria-current="page"' not in skill_html.split("<main", 1)[0])
+
+    own_html = render_getting_started_page(FIXTURE["categories"])
+    check("the nav link marks itself current on its own page, so it stops "
+          "advertising a destination the reader is already standing on",
+          'href="/getting-started/" aria-current="page"' in own_html)
+
+    base = "/tbaguette-skills"
+    prefixed_index = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path=base)
+    check("all three entry points carry the base path",
+          prefixed_index.count(f'href="{base}/getting-started/"') == 3)
+
+
+def check_i18n_getting_started_page() -> None:
+    """Same synthetic-locale approach as check_i18n_verify_install_page — the
+    registry is English-only, the locale-aware rendering is not."""
+    import locales
+
+    fr = locales.Locale(code="fr", hreflang="fr", name="French", endonym="Français", dir="ltr")
+    html_fr = render_getting_started_page(FIXTURE["categories"], base_path="", locale=fr)
+    check("French getting-started page's canonical points at /fr/getting-started/",
+          '<link rel="canonical" href="/fr/getting-started/">' in html_fr)
+    check("its breadcrumb Home link points at /fr/, not the site root",
+          '<a href="/fr/">' in html_fr)
+    check("its starter picks link into /fr/skills/, so a locale build never sends "
+          "a reader back to the English page mid-list",
+          'href="/fr/skills/formidable/"' in html_fr)
+    check("and the header nav on a French page points at the French page",
+          'href="/fr/getting-started/"' in html_fr)
 
 
 def check_header_and_badges() -> None:
@@ -1226,11 +1369,14 @@ def main() -> None:
     check_escaping()
     check_base_path()
     check_verify_install_page()
+    check_getting_started_page()
+    check_getting_started_is_reachable()
     check_header_and_badges()
     check_fresh_section()
     check_update_notes()
     check_i18n_content_links_and_strings()
     check_i18n_verify_install_page()
+    check_i18n_getting_started_page()
     check_i18n_fallback_banner()
     check_i18n_tab_group_heading_ids_are_translation_independent()
     check_i18n_updated_time_glue()
