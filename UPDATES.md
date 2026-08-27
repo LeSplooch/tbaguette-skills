@@ -24,6 +24,30 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-28 — TBaguette is free software, and it can now be improved from your side
+
+- TBaguette is licensed under the GNU General Public License, version 2, from
+  this release on. It was MIT before. The practical difference for you: if you
+  pass a changed copy of these skills on to anyone, it goes on under the same
+  terms, with source. Nothing about how you *use* the skills changes.
+- New skill: `tending-tbaguette`. It watches for the moments worth keeping —
+  a correction that generalizes past the codebase you are in, a gap you hit in
+  a skill while that skill was running — writes them to a queue, and turns them
+  into a pull request here. It asks you before anything is pushed, every time,
+  and it never treats a yes for one contribution as a yes for the next.
+- A skill you edit in your own install can never reach you again.
+  `keeping-tbaguette-current` refuses to update a plugin directory that has
+  local changes in it, so a hand-edit silently pins your install at that commit
+  for as long as it sits there. `tending-tbaguette` is the way out: it gets the
+  change into a pull request and, once merged, back to you through the ordinary
+  update — along with everyone else's.
+- `keeping-tbaguette-current` now says what it is *not* for, and hands the
+  local-changes case over instead of leaving you with a status command and no
+  next step.
+- `orchestrating-work-end-to-end` runs `tending-tbaguette` immediately after the
+  currency check, before the track is named. The two are the same loop from both
+  ends — one pulls improvements in, the other pushes them back out.
+
 ## 2026-08-27 — Saying something is not installed now has a rule of its own
 
 - `confirming-before-claiming-done` names another way a check goes wrong, and it is

@@ -1,14 +1,14 @@
 {
   "name": "TBaguette",
-  "version": "0.14.4",
-  "description": "Ninety-two project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling.",
+  "version": "1.0.0",
+  "description": "Ninety-three project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling.",
   "author": {
     "name": "verderosa2",
     "email": "verderosa2@gmail.com"
   },
   "homepage": "https://github.com/LeSplooch/tbaguette-skills",
   "repository": "https://github.com/LeSplooch/tbaguette-skills",
-  "license": "MIT",
+  "license": "GPL-2.0-only",
   "keywords": [
     "skills",
     "code-review",

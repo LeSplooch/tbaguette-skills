@@ -697,6 +697,168 @@ code {
    8. Hero + search
    ------------------------------------------------------------------------- */
 
+/* The 1.0.0 milestone plaque, first thing in the hero.
+
+   It renders only while the plugin version is exactly 1.0.0 -- see
+   templates._render_milestone -- so it retires itself on the next release
+   instead of needing a second commit to take it down. That is deliberate:
+   a celebration banner nobody remembered to remove is what makes the next
+   visitor read the whole site as stale.
+
+   The texture is the one piece of pure decoration here, and it is the reason
+   this looks like this site rather than like any other release banner:
+   repeating diagonal slashes standing in for the scoring cuts across a
+   baguette's crust. It lives on a ::before layer behind the content, masked
+   so it fades out well before it reaches the text, and it carries no
+   information at all -- everything the plaque says, it says in words. */
+.milestone {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+  margin-bottom: var(--space-7);
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid var(--border-subtle);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  /* The tint is theme-aware because the two themes have completely different
+     amounts of room, and a single percentage that suits one sits on a cliff in
+     the other. Every percent of gold mixed into the surface closes the gap
+     against the gold border and the gold numeral from both ends, since the
+     background moves toward the very hue they are made of.
+
+     Crust has room to spare -- measured at 6%: border and numeral 6.5:1, body
+     7.4:1 -- so it takes the richer tint.
+
+     Flour does not, and the reason is in the palette rather than in this
+     component: --accent resolves to gold-700 there, and gold-700 on a flour
+     surface is a ~3.2:1 pairing at *zero* mix (the same measurement the
+     --gold-800 note at the top of this file records). 6% spent almost all of
+     that on tint and landed at 3.01:1 against a 3:1 floor, with 8% already
+     failing at 2.95:1. 3% keeps the tint visible and leaves real margin:
+     border 3.11:1, numeral 4.71:1, body 5.12:1. */
+  background: color-mix(in oklch, var(--accent) 6%, var(--surface));
+  opacity: 0;
+  animation: hero-rise var(--duration-view) var(--ease-out) forwards;
+}
+
+[data-theme='flour'] .milestone {
+  background: color-mix(in oklch, var(--accent) 3%, var(--surface));
+}
+
+.milestone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: repeating-linear-gradient(
+    115deg,
+    transparent 0 22px,
+    color-mix(in oklch, var(--accent) 34%, transparent) 22px 24px
+  );
+  opacity: 0.3;
+  -webkit-mask-image: linear-gradient(to left, #000, transparent 62%);
+  mask-image: linear-gradient(to left, #000, transparent 62%);
+  pointer-events: none;
+}
+
+.milestone__mark {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  /* Fraunces ships oldstyle figures on some axes; a version number wants
+     lining, and tabular keeps the two zeroes optically identical. */
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+  color: var(--text-accent);
+}
+
+.milestone__body {
+  flex: 1 1 24ch;
+  min-width: 0;
+}
+
+/* The plaque clips (overflow: hidden holds the texture and the sheen inside the
+   rounded corners), so a token too long to wrap does not overflow visibly -- it
+   silently disappears at the edge. Measured at a 320px viewport: a 57-character
+   unbreakable word lost its tail with no scrollbar to reveal it. English copy
+   never reaches that, which is exactly why it would have shipped; a translation,
+   a pasted URL, or a long skill slug all can. */
+.milestone__title,
+.milestone__text {
+  overflow-wrap: anywhere;
+}
+
+.milestone__title {
+  font-size: var(--text-4);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+}
+
+.milestone__text {
+  margin-top: var(--space-2);
+  max-width: 58ch;
+  font-size: var(--text-2);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.milestone__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text-accent);
+  font-size: var(--text-2);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              color var(--duration-micro) var(--ease-out);
+}
+
+.milestone__link:hover {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+  color: var(--accent-hover);
+}
+
+.milestone__link:active {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+}
+
+.milestone__link-arrow {
+  transition: transform var(--duration-micro) var(--ease-out);
+}
+
+.milestone__link:hover .milestone__link-arrow {
+  transform: translateX(2px);
+}
+
+@media (max-width: 33rem) {
+  .milestone {
+    padding: var(--space-4) var(--space-5);
+    gap: var(--space-3) var(--space-5);
+  }
+
+  .milestone__link {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .hero {
   padding-block: var(--space-8) var(--space-9);
 }
@@ -2384,13 +2546,44 @@ a.skill-link--bare:focus-visible {
    and both are removed (not shortened) under reduced motion.
    ------------------------------------------------------------------------- */
 
+/* The milestone plaque's one celebratory flourish: a single sheen crossing the
+   crust texture, once, on load. Once is the whole design -- a loop would turn a
+   release announcement into an ad, and this band sits directly above the page's
+   own headline. It rides the decorative ::after layer behind the content, so it
+   never passes over text, and it exists only inside no-preference: there is no
+   reduced-motion variant to shorten because the plaque is complete without it. */
+@media (prefers-reduced-motion: no-preference) {
+  .milestone::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -45%;
+    width: 45%;
+    z-index: -1;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      color-mix(in oklch, var(--accent) 24%, transparent),
+      transparent
+    );
+    animation: milestone-sheen 1500ms var(--ease-out) 500ms 1 both;
+    pointer-events: none;
+  }
+}
+
+@keyframes milestone-sheen {
+  from { transform: translateX(0); }
+  to   { transform: translateX(330%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* .install-frame animates with the same hero-rise keyframes as the three
      above and was never listed here, so it kept rising for a reader who asked
      for no motion — while everything around it held still, which is worse than
      either behaviour on its own. It matters more now that the frame renders on
      the getting-started page too, i.e. somewhere that is not a hero at all. */
-  .hero__headline, .hero__lede, .hero__jump, .install-frame {
+  .hero__headline, .hero__lede, .hero__jump, .install-frame, .milestone {
     animation: none;
     opacity: 1;
     transform: none;

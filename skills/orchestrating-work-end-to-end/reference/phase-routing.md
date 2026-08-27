@@ -39,6 +39,7 @@ Ahead of orienting, ahead of framing, ahead of naming the track.
 | Skill | Reach for it when |
 |---|---|
 | `keeping-tbaguette-current` | Always — first, before anything else. Usually already answered by the start-of-session check, in which case read that answer instead of re-fetching. Reports and moves on; never blocks the run |
+| `tending-tbaguette` | Always — immediately after the currency check, and then continuously for the rest of the run. It is the outbound half of the same loop: what this run learns that generalizes goes back upstream as a pull request rather than staying in one install. Capture never interrupts a phase; contributing waits for a lull and for its approval gate |
 
 ## Before phase 1 — arriving cold
 

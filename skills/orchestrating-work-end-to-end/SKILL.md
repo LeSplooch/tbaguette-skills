@@ -21,7 +21,7 @@ This skill is the spine those skills hang off. It answers four questions continu
 - Not for: judging whether some specific skill applies to the response you are about to write. `using-tbaguette` owns that gate, it runs on every single turn, and it keeps running inside every phase of this one.
 - Not for: a genuine one-liner with a known cause and a test that already covers it. Fix it, prove it, say so.
 
-## Before the route: is the library current
+## Before the route: the library itself
 
 Everything below this line gets decided by skills from one library, so the first question is not about the work. It is whether the copy of that library about to run the work is the published one. A whole spine executed against stale guidance is not a run with a version problem — it is a run orchestrated by decisions somebody already replaced, and nothing in the phase log will say so.
 
@@ -34,6 +34,27 @@ Everything below this line gets decided by skills from one library, so the first
 | Behind, could not update — local changes, no network, a conflict | Say so once, name what is stale, and route anyway |
 
 That last row is the point: this gate reports, it does not block. A library that cannot be updated is worth knowing about and is not worth refusing to start a run over.
+
+Then, immediately after it and still before the track is named,
+`tending-tbaguette` runs. The two are one loop seen from both ends: the
+currency check pulls the library's improvements *in*, and tending is what
+pushes this run's improvements back *out*. It goes here rather than at
+phase 8 because it has to be watching from the first turn — a correction
+generalizes at the moment it lands, and a watcher started once the work is
+finished has already missed everything worth catching.
+
+| Its state | What the run does |
+|---|---|
+| Nothing queued | Nothing, and say nothing. It is now watching for the rest of the run |
+| Candidates already queued | Contribute at the next natural lull — never mid-phase, and never without its own approval gate |
+| A candidate lands mid-run | Two sentences into the queue file, then straight back into the open phase |
+
+The third row of the table above and this one are the same fact seen twice.
+A library that could not update because the install carries local changes is
+a library with an uncontributed change sitting inside it, and
+`tending-tbaguette` owns getting that change out of the working tree and
+into a pull request — where the licence, and everyone else running these
+skills, needs it to go.
 
 ## Route before you run
 

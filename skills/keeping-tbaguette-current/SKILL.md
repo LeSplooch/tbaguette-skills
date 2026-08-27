@@ -87,6 +87,14 @@ automatic update was skipped, and point them at
 `git -C ~/.claude/skills/TBaguette status` to see what's there. Never
 discard local changes on someone's behalf to force an update through.
 
+Then hand it to `tending-tbaguette`, which owns the other half of this
+situation. Local changes here are not just an obstacle to updating — they
+are an improvement somebody made that no one else can ever receive, and
+leaving them in place trades the whole rest of the library for one edit.
+That skill saves the diff, captures it as a contribution candidate, and
+gets it upstream as a pull request, after which this one can fast-forward
+normally again and the change comes back merged.
+
 A clean tree is the common case (this is meant to be a pure installed
 dependency, not something anyone edits directly) — this check exists for
 the exception, not the rule.
@@ -206,3 +214,6 @@ on its own, going back as far as this skill has been running.
   and `hooks/session-start` for exactly what it runs.
 - **Never discards local changes** to force an update through — see the
   safety gate above.
+- **Never sends anything upstream.** It is the inbound half of the loop
+  only. Getting a local improvement out of an install and into the
+  published repo belongs to `tending-tbaguette`.

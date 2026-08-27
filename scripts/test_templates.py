@@ -224,6 +224,55 @@ def _article_of(html: str) -> str:
 _PLACEHOLDER_RE = re.compile(r"\{[a-z_]+\}")
 
 
+def check_milestone_plaque() -> None:
+    """_render_milestone on its own. Two things here can only fail silently.
+
+    The first is the version gate. A release banner is correct for exactly one
+    release, and the way it goes wrong is that nobody notices it is still up --
+    there is no error, no failing page, just a site that quietly reads as
+    stale. So the gate is asserted in both directions, not just the one that
+    renders something.
+
+    The second is the skill count. It is passed in rather than typed into the
+    copy on purpose: the count is already maintained by hand in eight other
+    places (see test_catalog.test_every_prose_skill_count_matches_reality) and
+    this would have been the ninth, in prose, on the most-visited page.
+    """
+    print("1.0.0 milestone plaque check")
+
+    shown = templates._render_milestone("1.0.0", 93, has_update_notes=True)
+    check("renders at exactly the milestone version", '<aside class="milestone"' in shown)
+    check("the version reads from the module constant, so the markup and the "
+          "gate can never disagree", f">{templates.MILESTONE_VERSION}<" in shown)
+
+    for other in ("1.0.1", "1.1.0", "0.14.4", "2.0.0", ""):
+        check(f"renders nothing at v{other or '(unset)'} — the banner retires "
+              f"itself on the next release rather than waiting to be noticed",
+              templates._render_milestone(other, 93, has_update_notes=True) == "")
+
+    check("the skill count is interpolated, not written into the copy where it "
+          "would silently go stale on the next skill added", "93 skills" in shown)
+    check("...and really is the argument, not a coincidence",
+          "128 skills" in templates._render_milestone("1.0.0", 128, has_update_notes=True))
+
+    check("links to the update notes when there are any", 'href="#notes-title"' in shown)
+    no_notes = templates._render_milestone("1.0.0", 93, has_update_notes=False)
+    check("drops that link when UPDATES.md rendered nothing — _render_update_notes "
+          "returns \"\" for an empty file, and a control that scrolls nowhere is "
+          "worse than no control", "#notes-title" not in no_notes)
+    check("but still renders the plaque itself without it", '<aside class="milestone"' in no_notes)
+
+    check("carries no heading — it sits above the page's <h1>, and an <h2> there "
+          "would put the document outline out of order", "<h2" not in shown and "<h1" not in shown)
+    check("labels itself for assistive tech instead", 'aria-label="Release announcement"' in shown)
+    check("the decorative numeral is hidden from screen readers, which already "
+          "get the version from the title copy",
+          '<p class="milestone__mark" aria-hidden="true">' in shown)
+    check("the arrow glyph is decorative too", '<span class="milestone__link-arrow" aria-hidden="true">' in shown)
+    check("the link's accessible name contains its visible text, per label-in-name",
+          'aria-label="What changed in 1.0.0"' in shown and ">What changed" in shown)
+
+
 def check_getting_started_page() -> None:
     """render_getting_started_page on its own. The checks that matter here are
     not "does it contain the words" — they are the two ways this page can break
@@ -1381,6 +1430,7 @@ def main() -> None:
     check_base_path()
     check_verify_install_page()
     check_getting_started_page()
+    check_milestone_plaque()
     check_getting_started_is_reachable()
     check_header_and_badges()
     check_fresh_section()

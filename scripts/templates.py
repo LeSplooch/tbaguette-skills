@@ -1231,14 +1231,71 @@ def _render_install(base_path: str = "", *,
 </div>"""
 
 
+MILESTONE_VERSION = "1.0.0"
+
+
+def _render_milestone(plugin_version: str, skill_count: int, *,
+                       has_update_notes: bool = False) -> str:
+    """The 1.0.0 release plaque at the top of the hero.
+
+    Gated on an exact version match rather than a hand-flipped flag, so it
+    takes itself down at 1.0.1 without anyone remembering to. A celebration
+    banner left up past its release is how a live site starts reading as
+    abandoned, and that failure is silent -- nobody files a bug about a
+    banner that is merely old.
+
+    An <aside> with aria-label, not a <section> with a heading: this sits
+    above the page's <h1>, and an <h2> there would put the document's
+    outline out of order for the sake of something that is an announcement
+    rather than a section of the page. It looks like a heading and is not
+    one, which is exactly the intent.
+
+    The skill count is passed in, never written into the copy -- it is
+    already maintained by hand in eight places (see test_catalog) and this
+    is not becoming the ninth.
+    """
+    if plugin_version != MILESTONE_VERSION:
+        return ""
+    # The count leads the clause but not the sentence: a sentence opening on a
+    # numeral is the one typographic rule every style guide agrees on, and this
+    # is the largest body copy on the landing page.
+    text = (
+        f"A library of {skill_count} skills, and a shape that has stopped moving. "
+        "It ships as free software under the GPL from here on \u2014 so every "
+        "improvement, including the ones you send back, reaches everyone."
+    )
+    link = ""
+    if has_update_notes:
+        # Only when there is something to jump to: _render_update_notes
+        # renders nothing at all for an empty UPDATES.md, and a control that
+        # scrolls nowhere is worse than no control.
+        # aria-label rather than the bare visible text: "What changed" alone is
+        # thin in a screen reader's link list. It still *contains* the visible
+        # string, which is what WCAG's label-in-name rule requires.
+        link = ('\n    <a class="milestone__link" href="#notes-title"'
+                ' aria-label="What changed in 1.0.0">What changed'
+                '<span class="milestone__link-arrow" aria-hidden="true">\u2192</span></a>')
+    return f"""<aside class="milestone" aria-label="Release announcement">
+    <p class="milestone__mark" aria-hidden="true">{escape_html(MILESTONE_VERSION)}</p>
+    <div class="milestone__body">
+      <p class="milestone__title">TBaguette reaches {MILESTONE_VERSION}</p>
+      <p class="milestone__text">{escape_html(text)}</p>
+    </div>{link}
+  </aside>"""
+
+
 def _render_hero(skill_count: int, category_count: int, base_path: str = "", *,
                   fresh_skills: list[dict] | None = None,
                   update_notes: list[dict] | None = None,
                   locale: "locales.Locale" = locales.DEFAULT_LOCALE,
-                  strings: Strings = ENGLISH_STRINGS) -> str:
+                  strings: Strings = ENGLISH_STRINGS,
+                  plugin_version: str = "") -> str:
     lede = strings.hero_lede_template.format(skill_count=skill_count, category_count=category_count)
+    milestone = _render_milestone(plugin_version, skill_count,
+                                  has_update_notes=bool(update_notes))
     return f"""<section class="hero">
   <div class="container">
+    {milestone}
     <h1 class="hero__headline">{escape_html(strings.hero_headline)}</h1>
     {_render_install(base_path, locale=locale, strings=strings)}
     <p class="hero__lede">{escape_html(lede)}</p>
@@ -1606,7 +1663,8 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
     main_html = _join(
         _render_hero(skill_count, category_count, base_path,
                      fresh_skills=fresh_skills, update_notes=update_notes,
-                     locale=locale, strings=strings),
+                     locale=locale, strings=strings,
+                     plugin_version=plugin_version),
         _render_search_empty_state(skill_count, strings),
         f'<div data-categories>\n{sections}\n</div>',
     )
@@ -1673,7 +1731,7 @@ def _render_prose(body_html: str, *, lang: str | None = None,
     # an RTL page the fallback body would otherwise inherit <html dir="rtl">
     # and lay out English as an RTL paragraph — every trailing colon, period
     # and parenthesis jumps to the start of its visual line ("Core
-    # principles:" renders with the colon leading). Since all 92 skill bodies
+    # principles:" renders with the colon leading). Since all 93 skill bodies
     # are still English-only, that was every /ar/skills/* page.
     #
     # text_dir is its own parameter rather than being implied by lang's

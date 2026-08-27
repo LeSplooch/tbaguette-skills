@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.14.4</span>
+      <span class="wordmark-version" dir="ltr">v1.0.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-27T14:37:35+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-27T14:37:35Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-27T23:23:15+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-27T23:23:15Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">automating-repetition</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T17:10:58+02:00">Updated</span>
+    
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
   <p class="lede">Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, or when a manual step is risky, irreversible, or easy to get wrong by hand.</p>
@@ -94,9 +94,9 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Three scripts do nearly the same thing</td><td>none was discoverable; each author assumed nothing existed</td></tr><tr><td>The tool went unused by the people it was written for</td><td>not findable, named for its mechanism, or it never said what it does</td></tr><tr><td>A scheduled job had been failing for weeks</td><td>success was inferred from silence; no heartbeat, only failure output was wired up</td></tr><tr><td>Re-running it made things worse</td><td>steps act blindly instead of converging; not idempotent</td></tr><tr><td>Left the system in an undocumented middle state</td><td>preconditions were checked lazily, after the first mutation had run</td></tr><tr><td>Works only for the person who wrote it</td><td>it depends on their shell state, credentials, or local paths</td></tr><tr><td>Maintenance costs more than the manual task</td><td>it is coupled to something that changes weekly, usually another tool's human-readable output</td></tr><tr><td>It broke and nobody could do the task by hand</td><td>the manual path was deleted along with the tedium</td></tr><tr><td>A day of work saved five minutes a year</td><td>the rule of three was applied to effort rather than to frequency</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>Running the same handful of commands &quot;quickly&quot; for the third time this month</li><li>A destructive tool with no dry-run and no confirmation step</li><li>&quot;It's fine, I'll remember the order&quot;</li><li>Failure output going only to a log nobody reads on a schedule nobody watches</li><li>Adding a retry loop around an operation that should not be failing</li><li>Automation that only runs from one person's machine</li><li>A generated report nobody has opened in three months — the automation now produces waste on a schedule</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/keeping-tbaguette-current/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/tending-tbaguette/">
   <span class="prevnext__label">Previous</span>
-  <span class="prevnext__name">← keeping-tbaguette-current</span>
+  <span class="prevnext__name">← tending-tbaguette</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Environment and tooling</h2>
@@ -120,6 +120,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/keeping-tbaguette-current/">
       <span class="see-also__name">keeping-tbaguette-current</span>
       <span class="see-also__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/tending-tbaguette/">
+      <span class="see-also__name">tending-tbaguette</span>
+      <span class="see-also__summary">Use at the start of every conversation, in any project or repo…</span>
     </a></li>
   </ul>
 </div>

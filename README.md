@@ -1,6 +1,6 @@
 # TBaguette's Atelier
 
-92 skills for [Claude Code](https://claude.com/claude-code) — judgment calls, code
+93 skills for [Claude Code](https://claude.com/claude-code) — judgment calls, code
 comprehension, change discipline, testing, debugging, systems design, defensive
 security, communication, and tooling. Every one is project-agnostic, stack-agnostic,
 and language-agnostic, so the same skill works whether you're in a Rust firmware repo
@@ -122,3 +122,23 @@ It never overwrites a `core.hooksPath` you set yourself, and to do it by hand in
 ```bash
 git config core.hooksPath .githooks
 ```
+
+## Licence
+
+TBaguette is free software under the [GNU General Public License, version 2](LICENSE).
+Copyright © 2026 LeSplooch.
+
+That choice is load-bearing rather than decorative. The library is only as good as
+what it absorbs from real work, so the terms are the ones that keep improvements
+flowing back instead of accumulating privately in a hundred separate installs. If you
+change a skill and pass that changed copy on to anyone, GPLv2 requires you to pass on
+the source under these same terms.
+
+Upstream contribution is a step further than the licence compels, and it is how this
+repo expects to be used anyway: the `tending-tbaguette` skill turns a lesson learned
+while using TBaguette into a pull request here, so it reaches everyone else the next
+time `keeping-tbaguette-current` runs.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
