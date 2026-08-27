@@ -24,6 +24,25 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-27 — Saying something is not installed now has a rule of its own
+
+- `confirming-before-claiming-done` names another way a check goes wrong, and it is
+  the first one in that skill about claiming something is *not* there. Open the one
+  place a plugin, a patch, a hook, or a migration would live, find it untouched,
+  report "not installed" — fresh evidence, gathered first-hand, and wrong. That
+  location was the right one for an earlier version and stays untouched forever now
+  that nothing writes to it, so the check returns the same clean answer whether the
+  thing is installed or not.
+- What it tells you to do instead: sweep the whole target tree for the artifact's own
+  name, ask the running process what it actually has open and loaded, and read which
+  candidate the runtime's resolution order really selects. A location you know about
+  can confirm presence the moment the thing turns up in it, and can never establish
+  absence — so an absence is only ever earned by a search, and the claim should name
+  what was searched.
+- The skill now fires on negative claims too. Asking it to check whether something is
+  installed, applied, or registered used to reach nothing: its triggers were all
+  claims that something was done, fixed, or passing.
+
 ## 2026-08-27 — Work now ends with a choice instead of a paragraph
 
 - New skill, `offering-the-next-move`: a run closes by offering what to do next
