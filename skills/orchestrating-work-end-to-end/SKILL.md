@@ -68,7 +68,7 @@ Each phase names what lets you in, who owns it, and the evidence that opens the 
 | 5 | Implement | A plan exists, or the change is small enough not to need one | `delegating-tasks-with-review-gates`, `working-a-plan-task-by-task`, `fanning-out-independent-work` | Every task closed with its own verification actually run — `writing-the-failing-test-first` governs the order inside each task |
 | 6 | Review | Every task is closed | `handing-off-for-review`, `reviewing-code-deeply`, `verifying-review-feedback` | Every finding fixed, refuted with a reason, or parked with a ruling. None dropped in silence |
 | 7 | Prove | The tree is believed finished | `confirming-before-claiming-done`, `finishing-what-you-started` | Every acceptance line carries evidence measured *now*, not recalled. Surrendered lines are marked surrendered, not deleted. Findings parked at phase 6 are triaged here, not inherited in silence |
-| 8 | Land | The proof holds | `landing-a-finished-branch`, `atomic-commits`, `writing-commit-messages` | The branch is where it belongs, the workspace is cleaned up, and anything left undone is named to whoever owns it next |
+| 8 | Land | The proof holds | `landing-a-finished-branch`, `atomic-commits`, `writing-commit-messages`, `offering-the-next-move` | The branch is where it belongs, the workspace is cleaned up, anything left undone is named to whoever owns it next, and the run closes by offering the next move as a choice rather than describing it in a paragraph |
 
 Phases 6 and 7 are separate on purpose, and collapsing them is the most common way a run ends badly. Review asks whether the work is any good. Prove asks whether the thing that was actually asked for is actually there. A clean review of the wrong deliverable passes phase 6 every time.
 
@@ -151,6 +151,12 @@ deliberately keep them and say why; what is not allowed is leaving them because
 nobody looked. A repository accumulating half-ticked plans from finished work is
 one where nobody can tell an abandoned run from a completed one, which is exactly
 the question `recovering-agent-context` will be asking six months from now.
+
+Whichever way that goes, one thing precedes it. The record's surrendered lines and
+its rulings are what `offering-the-next-move` harvests the run's closing choice from,
+so the offer gets assembled while the record still exists. Tear it down first and
+that choice is reconstructed from memory, which reliably yields the obvious next
+step and nothing that was actually learned.
 
 ## Resume before you restart
 

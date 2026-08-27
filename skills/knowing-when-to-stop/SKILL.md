@@ -79,6 +79,8 @@ Whatever is not done gets stated with four things: what it is, where it is, why 
 
 This includes checks you chose not to run. "Not exercised against real data", "not tested under concurrency", "not run on the second platform" is what the reader needs in order to decide what happens next, and omitting it is the same failure as omitting a broken feature.
 
+Naming it is where this skill's obligation ends and `offering-the-next-move` begins. What gets named here is the raw material for the choice the work closes with, and a remainder left in prose is one the reader still has to turn into a decision themselves.
+
 ## Common mistakes
 
 | Symptom | Real cause |

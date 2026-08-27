@@ -1300,7 +1300,7 @@ def _render_prose(body_html: str, *, lang: str | None = None,
     # an RTL page the fallback body would otherwise inherit <html dir="rtl">
     # and lay out English as an RTL paragraph — every trailing colon, period
     # and parenthesis jumps to the start of its visual line ("Core
-    # principles:" renders with the colon leading). Since all 91 skill bodies
+    # principles:" renders with the colon leading). Since all 92 skill bodies
     # are still English-only, that was every /ar/skills/* page.
     #
     # text_dir is its own parameter rather than being implied by lang's

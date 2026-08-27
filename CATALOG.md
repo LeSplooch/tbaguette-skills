@@ -1,6 +1,6 @@
 # TBaguette
 
-91 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+92 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -139,6 +139,7 @@ TBaguette skill hands off to a neighbour.
 | `red-teaming-your-own-work` | A bounded adversarial pass before handing work off |
 | `karen-and-the-manager` | Persona-forced finishing pass: never-satisfied critique, then a triage pass on it. Invoke right after `knowing-when-to-stop` |
 | `knowing-when-to-stop` | Diminishing returns, gold-plating, bounded passes, explicit handoff |
+| `offering-the-next-move` | Closing a run with the next move already assembled: options harvested from the ledger and the record rather than invented, ranked, and recommended |
 
 ## Communicating
 

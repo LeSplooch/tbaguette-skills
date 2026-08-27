@@ -211,6 +211,7 @@ the placement.
 | `deleting-code` | The old path a migration replaced is now genuinely dead |
 | `feature-flagging` | A flag introduced during the run now needs a removal date |
 | `knowing-when-to-stop` | Naming what is deliberately left undone, rather than drifting into it |
+| `offering-the-next-move` | Always — the last beat: the run closes with the next move offered as a choice, not described |
 
 ## Diagnose track
 
@@ -245,6 +246,7 @@ the placement.
 | `calibrating-confidence` | Always — the close-out gate: verified, inferred, or assumed, marked per claim |
 | `explaining-technical-work` | Always — conclusion first, altitude set by what the reader will do next |
 | `crouton` | The answer has a length budget |
+| `offering-the-next-move` | Always — the report closes with the choice it implies, assembled rather than left to the reader |
 
 ## Change-in-place track
 

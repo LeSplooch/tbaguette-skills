@@ -24,6 +24,32 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-27 — Work now ends with a choice instead of a paragraph
+
+- New skill, `offering-the-next-move`: a run closes by offering what to do next
+  as a selectable set of options through your harness's question tool, rather
+  than describing the possibilities in a summary paragraph and leaving you to
+  turn them back into a decision.
+- The options are harvested, not invented. It reads the acceptance line that was
+  surrendered, the ruling that could have gone the other way, the scope pushed
+  out on purpose, and the thing found in passing and never chased — then ranks
+  them by one test: would you have thought of this without the run? The obvious
+  next step ranks last, because you would have asked for it anyway. Expect the
+  menu to name things you did not know were on the table.
+- It refuses a few things on your behalf. No option for work that was already
+  inside the agreed scope — that gets finished first rather than handed back as
+  a question. No option it would argue against if you picked it. No two options
+  that mean the same thing padded out to fill the widget. And one option always
+  ends the work, with a real read on whether stopping there is defensible, so a
+  menu can never be four flavors of more.
+- A run that failed or stalled gets an offer too, and that is where it pays
+  most: what blocked it, what would unblock it, and what is worth doing instead.
+- `orchestrating-work-end-to-end` now runs it as the last beat of landing and of
+  any investigation's report, and says to assemble the offer before the run
+  record is torn down — the record is where most of the options come from.
+- Nothing is listening on a headless or scheduled run, so there the same ranked
+  list goes into the report instead of into a prompt nobody would see.
+
 ## 2026-08-25 — The orchestrator now owns the documents a run leaves behind
 
 - `orchestrating-work-end-to-end` treated writing things down as a landing chore:
