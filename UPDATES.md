@@ -56,6 +56,22 @@ Everything above the first `##` is preamble and is never rendered.
   runner. That's my first job tomorrow.* All the information arrives and none of
   the decision does. The skill now says that outright — a closing sentence in the
   first person and the future tense is a decision that was never offered.
+- The wrap-up you were already getting does not shrink to make room for the
+  options. The report comes first and in full — what was done, the evidence, what
+  is not done and why — and the offer sits underneath it. The test the skill sets
+  itself: if you ignore the options entirely you should be no worse off than if
+  none of this existed, so anything you would lose by skipping them was in the
+  wrong place.
+- The offer arrives through your harness's question tool, so a direction is one
+  click rather than a sentence you have to type back. Options written into the
+  message body are a fallback for harnesses that have no such tool, not a
+  shortcut when one is sitting there.
+- `orchestrating-work-end-to-end` now opens by checking that TBaguette itself is
+  current, ahead of naming the track and ahead of any work. Nothing to do on your
+  side: where the start-of-session check has already answered, it reads that
+  answer instead of hitting the network again, it stays silent when you are up to
+  date, and it never blocks a run — a library that cannot update is reported and
+  the work carries on.
 
 ## 2026-08-25 — The orchestrator now owns the documents a run leaves behind
 

@@ -1,6 +1,6 @@
 ---
 name: offering-the-next-move
-description: Use at the end of every task that produced something — a change, an artifact, an answer someone will act on — and before the turn that reports it ends; when a run is about to close with a summary and a general invitation to say what's next; when the ledger holds a surrendered line, the record holds a ruling that could have gone the other way, or something turned up in passing and was never pursued; when the options in hand would fit any task of this shape; or when landing is about to tear down the plan and record those options would have come from. Covers harvesting options from what the run already wrote down instead of inventing them, ranking by what it costs the reader not to be asked, the anatomy of a real option and the four never to offer, recommending without hedging, one question rather than four, and routing the answer back through the track selector.
+description: Use at the end of every task that produced something — a change, an artifact, an answer someone will act on — and before the turn that reports it ends; when a run is about to close with a summary and a general invitation to say what's next; when the ledger holds a surrendered line, the record holds a ruling that could have gone the other way, or something turned up in passing and was never pursued; when the options in hand would fit any task of this shape; or when landing is about to tear down the plan and record those options would have come from. Covers keeping the full report the run would have produced and putting the offer underneath it, delivering it through the harness's own question tool rather than as prose, harvesting options from what the run already wrote down instead of inventing them, ranking by what it costs the reader not to be asked, the anatomy of a real option and the four never to offer, recommending without hedging, one question rather than four, and routing the answer back through the track selector.
 ---
 
 # Offering the next move
@@ -9,7 +9,9 @@ description: Use at the end of every task that produced something — a change, 
 
 The end of a run is the moment you know the most you will ever know about what should happen next, and the moment that knowledge is most likely to be thrown away. The ledger holds a line that was surrendered. The record holds a ruling that could have gone the other way. Somewhere in the transcript is the thing you found on the way past and did not chase. None of it is in front of your human partner, who gets a summary and an invitation to think of something.
 
-So end with the choice already assembled. Not because asking is polite — because the option set is itself a deliverable, built from information only this run has, and a summary discards it. The failure this exists against is not forgetting to ask. It is asking generically: a menu derived from the *kind* of work rather than from this instance of it, which looks like a considered handoff and carries none of the run's actual information. And it is the quieter version of the same thing, which is the more common one — a close that surfaces every finding correctly, in good prose, and then announces what happens next instead of asking. The reader gets all of the information and none of the decision.
+So the run ends with two things rather than one. The summary is not the problem and does not shrink to make room; the option set is a second deliverable sitting under it, built from information only this run has, doing the one thing a summary cannot. A summary tells them what happened. No amount of good prose in it becomes a decision they can make by picking it.
+
+The failure this exists against is not forgetting to ask. It is asking generically: a menu derived from the *kind* of work rather than from this instance of it, which looks like a considered handoff and carries none of the run's actual information. And it is the quieter version of the same thing, which is the more common one — a close that surfaces every finding correctly, in good prose, and then announces what happens next instead of asking. The reader gets all of the information and none of the decision.
 
 ## When to use
 
@@ -41,6 +43,16 @@ There are four ways the rule gets talked out of, and none of them holds:
 | "I already listed the next steps in the summary." | A paragraph is not a set of choices. The reader still has to re-read it, extract the forks, weigh them, and compose a reply. That is the work the offer exists to have already done. |
 
 One objection is not a rationalization and deserves a real answer. A harness that ships a question tool usually tells you to reserve it for decisions you cannot resolve yourself — do not ask what you could infer, do not ask what has an obvious default. That rule governs questions that *block* work, where interrupting to ask something you could have looked up spends your partner's attention to save your own. This is the opposite moment: the work is finished, nothing is waiting on the answer, and the question is not what you should do but which of what this run turned up they want. The first rule does not reach the second, and applying it there does not avoid an interruption — it withholds information.
+
+## The report comes first, in full
+
+The offer is added to the closing message, never substituted for it. Write the wrap-up you would have written with this skill switched off — what was done, what the evidence was, what is not done and why, what turned up along the way — and put the offer underneath it.
+
+Nothing gets cut from the report to make room. What goes wrong here is that an agent who would have written four paragraphs writes one, because the options "already cover it" — and that is worth naming because it does not feel like a loss while you are doing it. It feels like editing. But a few words of label and a line of description can say what might happen next and nothing whatever about what happened. Those are two jobs and the offer is only good at one of them.
+
+The test is the reader who ignores the offer completely: they should be no worse off than if this skill had never run. If skipping the menu costs them a fact about the work, that fact was in the wrong place.
+
+Only one order works: the report, then the offer. Options first make the reader choose before they know what they are choosing about, and a menu threaded through the prose is neither a report nor a set of options.
 
 ## Harvest, do not invent
 
@@ -104,9 +116,11 @@ The most common legitimate second axis is *what next* alongside *how this lands*
 
 ## Mechanics
 
-Your harness probably has a structured question tool under some name — `AskUserQuestion`, an elicitation call, a prompt with selectable options. Use it. Options written into prose are options the reader has to retype.
+Find out what your harness actually gives you before writing a single option into prose. Where there is a structured question tool — `AskUserQuestion`, an elicitation call, a multiple-choice prompt, whatever yours calls it — the offer goes through it. Not into the message body beside it, and not into a numbered list because that was easier to write.
 
-What holds across implementations, and what each one costs you:
+That is not a formatting preference. An option in a tool is a decision the reader makes by picking it; the same words in a paragraph are a decision they make by retyping them. That gap is the handover itself: a reader who has to reconstruct the option before choosing it has been handed a summary again, whatever the words say.
+
+Once you are in the tool, four constraints hold across implementations, and each one costs you something:
 
 | Constraint | Consequence |
 |---|---|
@@ -115,7 +129,7 @@ What holds across implementations, and what each one costs you:
 | Free text stays reachable regardless | Never spend a slot on "something else"; it is already there and the slot is not |
 | One selection unless the tool is told otherwise | Options that are not mutually exclusive need the multi-select flag, or they need to be one option |
 
-Where no such tool exists, none of the content rules change: a numbered list, one line each, and "reply with a number." Where nobody is listening at all — a headless run, a scheduled job, a subagent reporting to a controller rather than to a person — the offer goes into the report as that same ranked list and the run ends. It still gets assembled; it is simply delivered to whoever reads the report instead of to a prompt no one will see. The widget is the delivery. The harvest, the ranking, and the recommendation are the skill.
+The prose fallback exists for genuine absence and for nothing else. "A numbered list is basically the same thing" is the rationalization that quietly turns the offer back into the summary it was supposed to sit under. Where the tool really is missing — or where nobody is listening at all: a headless run, a scheduled job, a subagent reporting to a controller rather than to a person — none of the content rules change. Same harvest, same ranking, same recommendation, delivered as a numbered list with "reply with a number," or to whoever reads the report later instead of to a prompt nobody will see. The widget is the delivery; the harvest, the ranking, and the recommendation are the skill.
 
 ## Where the answer goes
 
@@ -128,6 +142,8 @@ The offer goes into the run record before it is retired, because it is part of w
 | Symptom | Real cause |
 |---|---|
 | The close names every finding, then says what you will do about them | The next move was announced rather than offered; the information transferred and the decision did not |
+| The report shrank to a paragraph once the options were written | The offer was mistaken for a summary; a reader who skips it now loses facts about the work |
+| A question tool was available and the options went into the message body | The prose fallback is for absence, not for convenience |
 | The menu would fit any task of this shape | Options generated from the category of work; the harvest never ran |
 | Four options, two of which mean the same thing | A thin harvest padded to fill the widget instead of offered short |
 | The reader picks the free-text option nearly every time | The real fork was never on the menu — rows 1 through 4 were skipped in favor of row 5 |
@@ -143,6 +159,8 @@ The offer goes into the run record before it is retired, because it is part of w
 - "There's obviously nothing left to offer."
 - "This was too small to bother asking about."
 - "Tonight I'll…", "that's my first job tomorrow", "I'll take it from there" — a closing sentence in the first person and the future tense is a decision that was never offered.
+- "The options cover it, so the summary can be short."
+- "A numbered list in the message is basically the same as the tool."
 - Filling the fourth slot because there is a fourth slot.
 - A recommendation withheld because both options seem fine — they seem fine to the one person who watched the run.
 - Offering something you would argue against if they picked it.

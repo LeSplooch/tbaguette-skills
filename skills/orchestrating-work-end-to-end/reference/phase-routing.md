@@ -16,6 +16,7 @@ the placement.
 
 ## Contents
 
+- [Before the run — the library itself](#before-the-run--the-library-itself)
 - [Before phase 1 — arriving cold](#before-phase-1--arriving-cold)
 - [Phase 1 — Frame](#phase-1--frame)
 - [Phase 2 — Design](#phase-2--design)
@@ -30,6 +31,14 @@ the placement.
 - [Investigate track](#investigate-track)
 - [Change-in-place track](#change-in-place-track)
 - [Outside the spine](#outside-the-spine)
+
+## Before the run — the library itself
+
+Ahead of orienting, ahead of framing, ahead of naming the track.
+
+| Skill | Reach for it when |
+|---|---|
+| `keeping-tbaguette-current` | Always — first, before anything else. Usually already answered by the start-of-session check, in which case read that answer instead of re-fetching. Reports and moves on; never blocks the run |
 
 ## Before phase 1 — arriving cold
 
@@ -280,5 +289,4 @@ These do not belong to a phase. They govern the run itself, or the library.
 | `calibrating-confidence` | Any phase reporting something as known that is inferred |
 | `knowing-when-to-stop` | Any phase whose returns have started shrinking |
 | `managing-scope-drift` | Any phase where the work is quietly widening or narrowing |
-| `keeping-tbaguette-current` | The installed library is behind what has been published |
 | `writing-postmortems` | The run itself failed in a way worth learning from |

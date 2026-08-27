@@ -33,12 +33,12 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.14.1</span>
+      <span class="wordmark-version" dir="ltr">v0.14.2</span>
     </div>
     <div class="site-header__actions">
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-27T04:22:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-27T04:22:06Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-27T12:22:46+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-27T12:22:46Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -61,7 +61,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">orchestrating-work-end-to-end</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-27T06:10:50+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-27T12:22:46.295885+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature, a bug with no known cause, a migration, an audit, a review; when several skills each cover one stretch of the work and nothing is sequencing them; when a run has to survive compaction, a handoff, or a fresh session picking it up mid-flight; or when it is unclear which phase the work is in, what would prove that phase finished, or which phase a new finding sends it back to. Covers routing a request to the lightest track that fits, the phase order each track runs, the evidence that opens each gate, one run record that outlives the context that wrote it, and where the rest of the library plugs in.</p>
@@ -70,6 +70,11 @@
 <p>This skill is the spine those skills hang off. It answers four questions continuously — which track this work is on, which phase it is in, what has to be true before the next phase starts, and where that is written down — and it treats the answers as gates rather than as suggestions. The failure it exists to prevent is not chaos. It is a plausible-looking run that skipped a gate nobody noticed was there.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A request will take more than a single edit, and how much process it needs is still open.</li><li>Several skills each cover one stretch of the work and nothing is putting them in order.</li><li>Mid-flight, and which phase this is — or what would prove it finished — has gone fuzzy.</li><li>The run has to survive compaction, a handoff, or a different session picking it up.</li><li>A finding has just arrived that might belong to an earlier phase than the current one.</li><li>Not for: judging whether some specific skill applies to the response you are about to write. <a class="skill-link" href="/tbaguette-skills/skills/using-tbaguette/"><code>using-tbaguette</code></a> owns that gate, it runs on every single turn, and it keeps running inside every phase of this one.</li><li>Not for: a genuine one-liner with a known cause and a test that already covers it. Fix it, prove it, say so.</li></ul>
+<h2 id="before-the-route-is-the-library-current">Before the route: is the library current</h2>
+<p>Everything below this line gets decided by skills from one library, so the first question is not about the work. It is whether the copy of that library about to run the work is the published one. A whole spine executed against stale guidance is not a run with a version problem — it is a run orchestrated by decisions somebody already replaced, and nothing in the phase log will say so.</p>
+<p><a class="skill-link" href="/tbaguette-skills/skills/keeping-tbaguette-current/"><code>keeping-tbaguette-current</code></a> owns the check, and usually it does not need running here. A harness that injects the library's start-of-session notice has already run it and attached the answer; read that answer rather than paying for the same network round trip twice. Where nothing is attached — a fresh harness, a session that began before the check existed, a run resumed from a transcript — run it now, before the track is named.</p>
+<table><thead><tr><th>Result</th><th>What the run does</th></tr></thead><tbody><tr><td>Current</td><td>Nothing, and say nothing. Carry on to the route</td></tr><tr><td>Behind, updated cleanly</td><td>Record the new version on the run record's first line, then route — a skill changed underneath this run and that is worth being able to see later</td></tr><tr><td>Behind, could not update — local changes, no network, a conflict</td><td>Say so once, name what is stale, and route anyway</td></tr></tbody></table>
+<p>That last row is the point: this gate reports, it does not block. A library that cannot be updated is worth knowing about and is not worth refusing to start a run over.</p>
 <h2 id="route-before-you-run">Route before you run</h2>
 <p>Say the track out loud before the first action, the way <a class="skill-link" href="/tbaguette-skills/skills/scoping-before-building/"><code>scoping-before-building</code></a> requires the size to be said out loud — a track chosen silently is a track nobody can correct.</p>
 <pre class="prose-code-block"><code>digraph track_selection {

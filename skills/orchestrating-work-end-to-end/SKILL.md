@@ -21,6 +21,20 @@ This skill is the spine those skills hang off. It answers four questions continu
 - Not for: judging whether some specific skill applies to the response you are about to write. `using-tbaguette` owns that gate, it runs on every single turn, and it keeps running inside every phase of this one.
 - Not for: a genuine one-liner with a known cause and a test that already covers it. Fix it, prove it, say so.
 
+## Before the route: is the library current
+
+Everything below this line gets decided by skills from one library, so the first question is not about the work. It is whether the copy of that library about to run the work is the published one. A whole spine executed against stale guidance is not a run with a version problem — it is a run orchestrated by decisions somebody already replaced, and nothing in the phase log will say so.
+
+`keeping-tbaguette-current` owns the check, and usually it does not need running here. A harness that injects the library's start-of-session notice has already run it and attached the answer; read that answer rather than paying for the same network round trip twice. Where nothing is attached — a fresh harness, a session that began before the check existed, a run resumed from a transcript — run it now, before the track is named.
+
+| Result | What the run does |
+|---|---|
+| Current | Nothing, and say nothing. Carry on to the route |
+| Behind, updated cleanly | Record the new version on the run record's first line, then route — a skill changed underneath this run and that is worth being able to see later |
+| Behind, could not update — local changes, no network, a conflict | Say so once, name what is stale, and route anyway |
+
+That last row is the point: this gate reports, it does not block. A library that cannot be updated is worth knowing about and is not worth refusing to start a run over.
+
 ## Route before you run
 
 Say the track out loud before the first action, the way `scoping-before-building` requires the size to be said out loud — a track chosen silently is a track nobody can correct.
