@@ -27,12 +27,24 @@ JSON_MANIFESTS = [
     "package.json",
 ]
 
+# .claude-plugin/plugin.json is absent on purpose: it is the source of truth
+# every entry here is compared against, not a follower.
+#
+# package.json is here because it is a harness manifest like the rest -- the
+# declared entry point for two of the eight reference integrations (OpenCode
+# reads "main", Pi reads the "pi" field; see PORTING.md). It was left out
+# originally with no reason recorded, and drifted to 0.9.0 against a plugin at
+# 0.14.2 -- five minor versions, silently, because nothing compared them. Its
+# npm-ness is incidental: this repo publishes nothing to npm and has no release
+# automation at all, so the version field has exactly one job here, the same one
+# it has in the other six.
 VERSIONED_MANIFESTS = [
     ".codex-plugin/plugin.json",
     ".cursor-plugin/plugin.json",
     ".devin-plugin/plugin.json",
     ".kimi-plugin/plugin.json",
     "gemini-extension.json",
+    "package.json",
 ]
 
 
