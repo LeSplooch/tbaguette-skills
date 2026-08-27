@@ -17,6 +17,7 @@ An explanation is written for one named reader with one pending question. Everyt
 - A draft has grown a chronology of what was tried
 - Readers keep replying with questions the document already answered
 - **Not for:** documentation that must outlive this exchange → `writing-durable-docs`. Version-to-version changes → `writing-release-notes`. Incident analysis → `writing-postmortems`.
+- **Not for:** the set of choices that goes underneath the report → `offering-the-next-move`. They are two deliverables in one message, and the length budget above applies to this one only — the explanation does not get shorter to make room for the options.
 
 ## Answer first
 

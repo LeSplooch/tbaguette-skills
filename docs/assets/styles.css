@@ -1896,16 +1896,28 @@ code {
 
 .prose > :first-child { margin-top: 0; }
 
-.prose h2, .prose h3 { scroll-margin-top: var(--space-6); }
+/* Everything from here down styles content *inside* running prose, and a tab
+   panel is running content, so each of these carries .tabs__panel too. The
+   container rule above is deliberately not extended: it sets the 66ch measure,
+   and a panel is laid out by .tabs, not by the prose column.
 
-.prose p { color: var(--text-primary); }
+   Splitting it that way is the whole lesson from how this was found. The table
+   rules further down had drifted out of tab panels unnoticed for as long as
+   formidable has had them, because nothing said which half of .prose a panel
+   was supposed to inherit — so each new rule got scoped to .prose by default
+   and the gap widened one rule at a time. The line is now stated: content
+   rules take both selectors, the measure does not. */
+.prose h2, .prose h3, .tabs__panel h2, .tabs__panel h3 { scroll-margin-top: var(--space-6); }
 
-.prose ul, .prose ol {
+.prose p, .tabs__panel p { color: var(--text-primary); }
+
+.prose ul, .prose ol,
+.tabs__panel ul, .tabs__panel ol {
   margin-top: var(--space-4);
   padding-inline-start: 1.4em;
 }
 
-.prose li { padding-inline-start: 0.2em; }
+.prose li, .tabs__panel li { padding-inline-start: 0.2em; }
 
 /* A file path or a skill name inside running prose is one unbreakable token,
    and at 320px `~/.claude/skills/TBaguette/CATALOG.md` is wider than the
@@ -1916,8 +1928,10 @@ code {
    laid out exactly as before. Scoped to .prose so the install frame's own
    command chip, which lives in a real scroll container, keeps scrolling. */
 .prose code, .tabs__panel code { overflow-wrap: break-word; }
-.prose li::marker { color: var(--text-secondary); }
-.prose ul ul, .prose ol ol, .prose ul ol, .prose ol ul { margin-top: var(--space-2); }
+.prose li::marker, .tabs__panel li::marker { color: var(--text-secondary); }
+.prose ul ul, .prose ol ol, .prose ul ol, .prose ol ul,
+.tabs__panel ul ul, .tabs__panel ol ol,
+.tabs__panel ul ol, .tabs__panel ol ul { margin-top: var(--space-2); }
 
 /* A plain-text code box in running prose: the PowerShell/cmd.exe one-liners
    on the install-verification page, and every fenced ``` block inside a
@@ -1944,7 +1958,7 @@ code {
   color: var(--text-primary);
 }
 
-.prose a {
+.prose a, .tabs__panel a {
   color: var(--text-accent);
   text-decoration: underline;
   text-decoration-color: color-mix(in oklch, var(--text-accent) 45%, transparent);
@@ -1954,7 +1968,7 @@ code {
               background-color var(--duration-micro) var(--ease-out);
 }
 
-.prose a:hover {
+.prose a:hover, .tabs__panel a:hover {
   text-decoration-color: currentColor;
   background: color-mix(in oklch, var(--text-accent) 12%, transparent);
 }
@@ -2371,7 +2385,12 @@ a.skill-link--bare:focus-visible {
    ------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__headline, .hero__lede, .hero__jump {
+  /* .install-frame animates with the same hero-rise keyframes as the three
+     above and was never listed here, so it kept rising for a reader who asked
+     for no motion — while everything around it held still, which is worse than
+     either behaviour on its own. It matters more now that the frame renders on
+     the getting-started page too, i.e. somewhere that is not a hero at all. */
+  .hero__headline, .hero__lede, .hero__jump, .install-frame {
     animation: none;
     opacity: 1;
     transform: none;
@@ -2382,7 +2401,8 @@ a.skill-link--bare:focus-visible {
   .card, .theme-toggle__icon, .search__field, .tabs__tab,
   .prevnext__link, .see-also__name, .site-footer__categories a,
   .site-header__nav-link, .site-footer__start a,
-  .skip-link, .prose a, .prose tbody tr, .tabs__panel tbody tr,
+  .skip-link, .prose a, .tabs__panel a,
+  .prose tbody tr, .tabs__panel tbody tr,
   .notes__earlier-summary, .notes__earlier-summary::before,
   a.skill-link > code, a.skill-link--bare {
     transition-duration: 0.01ms !important;

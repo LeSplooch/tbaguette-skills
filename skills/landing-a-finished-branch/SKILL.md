@@ -15,6 +15,7 @@ A branch is finished when its tests are green on the tree that's actually about 
 - Choosing between merging locally, pushing a pull request, or leaving a branch exactly as it is.
 - Tearing down a worktree and its branch once work has landed — not as routine housekeeping before then.
 - Not for: isolating work before it starts (see `isolating-work-with-worktrees`).
+- Not for: what to say once it has landed — `offering-the-next-move` closes the run out. Worth reading before the cleanup below rather than after: part of what it offers is harvested from the plan and run record that cleanup is about to delete.
 - By the time these decisions apply, the branch's commits should already read the way `atomic-commits` describes — one commit, one decision. That's the history a merge or rebase preserves and a squash throws away.
 
 ## Deciding it's actually finished

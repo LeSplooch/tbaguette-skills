@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.14.2</span>
+      <span class="wordmark-version" dir="ltr">v0.14.3</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-27T12:53:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-27T12:53:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-27T12:59:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-27T12:59:17Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,14 +64,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">calibrating-confidence</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-25T16:07:14+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-27T12:59:17.578308+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session, when asked whether a claim is certain or being pushed back on, when a conclusion rests on recalled knowledge rather than something read, when every sentence has acquired a hedge, or when the accurate answer is that you do not know. Covers evidence tiers, false precision, probability language, and unearned certainty.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A claim read from a file and a claim recalled from training must not sound the same. <a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> covers the sharpest version of the same failure — a model that cannot open the file still produces a fluent paragraph about its contents, and nothing in that paragraph is marked as invented. Confidence tracks evidence, not fluency — and the strongest internal signal, how smoothly an answer arrives, is uncorrelated with truth for anything version-specific, recently changed, or particular to this project.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> owns that gate. This is how to speak when the check has not been run.</li></ul>
+<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> owns that gate. This is how to speak when the check has not been run.</li><li>Not for: turning a named unknown into something the reader can act on — <a class="skill-link" href="/tbaguette-skills/skills/offering-the-next-move/"><code>offering-the-next-move</code></a> does that when the work closes. Marking a claim assumed says how much to trust it; an assumption that would change what happens next is also an option, and belongs on the menu rather than only in a caveat.</li></ul>
 <h2 id="three-tiers-marked-in-the-sentence">Three tiers, marked in the sentence</h2>
 <p>The same three-way split applies to data as it does to claims: <a class="skill-link" href="/tbaguette-skills/skills/tracking-data-provenance/"><code>tracking-data-provenance</code></a> carries observed, inferred, and defaulted through a system so a downstream consumer can still tell them apart. Confidence laundering is what happens when either taxonomy is dropped at a boundary — a hedged claim and an unhedged one arrive identical on the far side.</p>
 <table><thead><tr><th>Tier</th><th>What earns it</th><th>How it must read</th></tr></thead><tbody><tr><td>Verified</td><td>Observed in this session's tool output — file contents, command output, a test result, a response body</td><td>Flat assertion, source named when naming it is cheap</td></tr><tr><td>Inferred</td><td>Follows from verified facts by an argument you could write in one line</td><td>Assertion plus the inference: &quot;so X, because Y is set and Z reads it&quot;</td></tr><tr><td>Assumed</td><td>Plausible from convention, priors, or recall — including confident recall</td><td>Marked: &quot;conventionally defaults to X; not checked here&quot;</td></tr></tbody></table>

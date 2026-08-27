@@ -275,6 +275,17 @@ def check_getting_started_page() -> None:
     check("no pick is listed twice",
           len({slug for slug, _ in GETTING_STARTED_STARTERS}) == len(GETTING_STARTED_STARTERS))
 
+    check("carries the actual install box, not just a pointer back to the landing "
+          "page for it — the whole point of repeating the frame here",
+          'class="install-frame"' in html and 'id="install-prompt-command"' in html)
+    check("exactly one frame on the page, not the hero's as well",
+          html.count('class="install-frame"') == 1)
+    check("...and that frame drops its \u2018new here? see getting started\u2019 note, which "
+          "on this page is a link to the page you are already on",
+          "install-frame__note--pointer" not in html)
+    check("the landing page's copy of the same frame keeps that note",
+          "install-frame__note--pointer" in render_index(FIXTURE["categories"], FIXTURE["skills"]))
+
     check("sends the reader to the install verification page rather than restating "
           "the safety claim a second time", 'href="/verify-install/"' in article)
     check("names the four things to check when nothing happens",

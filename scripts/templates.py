@@ -504,14 +504,15 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
     ),
     install_heading="Install it, if you haven\u2019t",
     install_html_template=(
-        "The install box on <a href=\"{home_url}\">the landing page</a> carries a "
-        "prompt rather than a command \u2014 you paste it into whichever coding agent "
-        "you use, and it works out which harness it\u2019s in and takes that "
-        "harness\u2019s route. On Claude Code that route is a clone-or-pull into "
-        "<code>~/.claude/skills/TBaguette</code>, and nothing else on your machine "
-        "is touched. <a href=\"{verify_url}\">Install verification</a> is the page "
-        "that proves that claim, with the actual test source rather than the claim "
-        "restated in different words."
+        "Here it is \u2014 the same box <a href=\"{home_url}\">the landing page</a> "
+        "leads with, repeated so this page does not send you elsewhere for the one "
+        "thing you have to paste. It carries a prompt rather than a command: put it "
+        "into whichever coding agent you use, and it works out which harness it\u2019s "
+        "in and takes that harness\u2019s route. On Claude Code that route is a "
+        "clone-or-pull into <code>~/.claude/skills/TBaguette</code>, and nothing else "
+        "on your machine is touched. <a href=\"{verify_url}\">Install verification</a> "
+        "is the page that proves that claim, with the actual test source rather than "
+        "the claim restated in different words."
     ),
     reload_heading="Reload \u2014 and know that the conversation you installed from won\u2019t",
     reload_html=(
@@ -1172,14 +1173,29 @@ Flag one more thing, because it applies to this very conversation: this session 
 
 def _render_install(base_path: str = "", *,
                      locale: "locales.Locale" = locales.DEFAULT_LOCALE,
-                     strings: Strings = ENGLISH_STRINGS) -> str:
+                     strings: Strings = ENGLISH_STRINGS,
+                     show_getting_started_pointer: bool = True) -> str:
+    """The install box. Rendered twice on this site: the hero leads with it,
+    and the getting-started page repeats it under its own install heading,
+    because a page telling you how to install something should not send you to
+    a different page to get the thing you paste.
+
+    show_getting_started_pointer is what makes the second rendering honest --
+    the frame's last note points at /getting-started/, and on /getting-started/
+    itself that is a link to the page you are already reading."""
     escaped_prompt = escape_html(INSTALL_PROMPT)
     frame_label = strings.install_frame_label_template.format(brand=BRAND_NAME)
     restart_note_html = strings.install_note_restart_html_template.format(brand=BRAND_NAME)
     session_note_html = strings.install_note_session_html_template.format(brand=BRAND_NAME)
-    new_here_html = strings.install_note_new_here_html_template.format(
-        brand=BRAND_NAME, url=_locale_url(locale, base_path, GETTING_STARTED_PATH)
-    )
+    pointer_html = ""
+    if show_getting_started_pointer:
+        new_here_html = strings.install_note_new_here_html_template.format(
+            brand=BRAND_NAME, url=_locale_url(locale, base_path, GETTING_STARTED_PATH)
+        )
+        pointer_html = f'''<p class="install-frame__note install-frame__note--pointer">
+      {_icon("icon-grain", base_path=base_path)}
+      <span>{new_here_html}</span>
+    </p>'''
     return f"""<div class="install-frame">
   <p class="install-frame__label">
     {_icon("icon-crust", base_path=base_path)}
@@ -1210,10 +1226,7 @@ def _render_install(base_path: str = "", *,
       {_icon("icon-check", base_path=base_path)}
       <span>{session_note_html}</span>
     </p>
-    <p class="install-frame__note install-frame__note--pointer">
-      {_icon("icon-grain", base_path=base_path)}
-      <span>{new_here_html}</span>
-    </p>
+    {pointer_html}
   </div>
 </div>"""
 
@@ -2103,7 +2116,12 @@ def render_getting_started_page(categories: list[dict], base_path: str = "",
   <div class="prose">
     <h2 id="install">{escape_html(g.install_heading)}</h2>
     <p>{install_html}</p>
+  </div>
 
+  {_render_install(base_path, locale=locale, strings=strings,
+                   show_getting_started_pointer=False)}
+
+  <div class="prose">
     <h2 id="reload">{escape_html(g.reload_heading)}</h2>
     <p>{g.reload_html}</p>
     <p>{reload_session_html}</p>

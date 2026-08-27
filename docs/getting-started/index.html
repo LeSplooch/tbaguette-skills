@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v0.14.2</span>
+      <span class="wordmark-version" dir="ltr">v0.14.3</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-27T12:53:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-27T12:53:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-27T12:59:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-27T12:59:17Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -67,8 +67,74 @@
 
   <div class="prose">
     <h2 id="install">Install it, if you haven’t</h2>
-    <p>The install box on <a href="/tbaguette-skills/">the landing page</a> carries a prompt rather than a command — you paste it into whichever coding agent you use, and it works out which harness it’s in and takes that harness’s route. On Claude Code that route is a clone-or-pull into <code>~/.claude/skills/TBaguette</code>, and nothing else on your machine is touched. <a href="/tbaguette-skills/verify-install/">Install verification</a> is the page that proves that claim, with the actual test source rather than the claim restated in different words.</p>
+    <p>Here it is — the same box <a href="/tbaguette-skills/">the landing page</a> leads with, repeated so this page does not send you elsewhere for the one thing you have to paste. It carries a prompt rather than a command: put it into whichever coding agent you use, and it works out which harness it’s in and takes that harness’s route. On Claude Code that route is a clone-or-pull into <code>~/.claude/skills/TBaguette</code>, and nothing else on your machine is touched. <a href="/tbaguette-skills/verify-install/">Install verification</a> is the page that proves that claim, with the actual test source rather than the claim restated in different words.</p>
+  </div>
 
+  <div class="install-frame">
+  <p class="install-frame__label">
+    <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-crust"></use></svg>
+    Install TBaguette’s skills
+  </p>
+  <div class="install-frame__body">
+    <div class="install">
+      <code class="install__command" id="install-prompt-command">Install (or update) TBaguette — a skills library for coding agents — into whichever agent you are. Use your shell tool.
+
+Before you start: confirm git is available (git --version). If it isn&#x27;t, tell me and stop — there&#x27;s nothing else to try.
+
+TBaguette is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Copilot CLI, Devin, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can&#x27;t tell which one you are, say so and ask me, rather than falling through to the first route below.
+
+Route A — you read Claude Code&#x27;s skills directory. Target: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\.claude\skills\TBaguette). Figure out which case applies:
+
+1. &lt;target&gt;/.git exists — update in place: git -C &lt;target&gt; pull.
+2. &lt;target&gt; doesn&#x27;t exist, or exists and is empty — install fresh:
+   git clone https://github.com/LeSplooch/tbaguette-skills.git &lt;target&gt;.
+3. &lt;target&gt; exists, has content, isn&#x27;t a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a &quot;naming collision&quot;, and ask me whether to move it aside and re-clone, rather than doing that yourself.
+4. Anything else already at that path — stop. Do not delete or modify it. Tell me there&#x27;s a naming collision that needs a manual look.
+
+Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. If it&#x27;s a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
+
+Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is &quot;tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git&quot;, added to the &quot;plugin&quot; array in opencode.json.
+
+Route D — none of those. Don&#x27;t invent a path. Find the directory your harness actually reads: its own dotdir in my home directory, or an existing skills/, plugins/, or extensions/ folder — confirmed to be there, not assumed. Clone-or-pull into a TBaguette-named directory inside it, following Route A&#x27;s four cases. If nothing you find is clearly right, clone nothing: tell me what you checked and ask.
+
+Whichever route: never delete, move, or overwrite anything to make room. If the clone or pull command itself fails (network, permissions, auth), show me the actual error rather than retrying blindly or guessing why.
+
+After a successful install, verify rather than assume. For a clone you placed yourself:
+- &lt;target&gt;/.git exists and git -C &lt;target&gt; rev-parse HEAD succeeds.
+- &lt;target&gt;/CATALOG.md exists and &lt;target&gt;/skills/ is non-empty.
+- Read &lt;target&gt;/.claude-plugin/plugin.json&#x27;s &quot;version&quot; field, if present, so you can tell me which version I&#x27;m now on.
+For a harness-managed install, verify it the way your harness reports installed plugins.
+
+Then tell me what happened (installed fresh, updated, or already current), which version, and the reload step for my agent specifically — restarting it, Claude Code&#x27;s /reload-plugins, Kimi Code&#x27;s /new. Skills then invoke as TBaguette:skill-name.
+
+Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke TBaguette:using-tbaguette here (if you have no skill tool, read skills/using-tbaguette/SKILL.md from the install instead).</code>
+      <button class="install__copy" type="button" data-copy-target="install-prompt-command"
+              aria-label="Copy install command">
+        <span class="install__copy-icons">
+          <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-copy"></use></svg>
+          <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
+        </span>
+        <span data-copy-label>Copy</span>
+      </button>
+    </div>
+    <p class="install__hint">Paste into whichever coding agent you use — it works out which harness it&#x27;s in and installs the right way for it. It needs a shell tool, which rules out Claude Desktop; on Claude Code it&#x27;s been exercised against Claude Sonnet (Max).</p>
+    <p class="install-frame__note">
+      <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
+      <span>Only ever touches this folder — verified against your other skills, not just claimed. <a href="/tbaguette-skills/verify-install/">See how</a>.</span>
+    </p>
+    <p class="install-frame__note">
+      <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
+      <span>Restart your agent (in Claude Code, <code>/reload-plugins</code>), then invoke a skill as <code>TBaguette:skill-name</code>. On Claude that means Claude Code specifically — the Claude Desktop app and claude.ai chat load skills from your account instead of this folder, so cloning here won’t make them appear there.</span>
+    </p>
+    <p class="install-frame__note">
+      <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
+      <span>A conversation that was already open when you installed or updated — including the one you installed from — is still running on the skill list it started with. Open a new conversation to pick up the latest, or invoke <code>TBaguette:using-tbaguette</code> in the old one.</span>
+    </p>
+    
+  </div>
+</div>
+
+  <div class="prose">
     <h2 id="reload">Reload — and know that the conversation you installed from won’t</h2>
     <p>A running agent holds the skill list it started with. Restart it — in Claude Code, <code>/reload-plugins</code> does it without a restart — and every new conversation picks the library up.</p>
     <p>The conversation you ran the install from is the exception worth naming, because it’s the one you’re most likely to test in. It started before the install, so it still has the old list, and nothing you just did changes that. Open a new conversation, or invoke <code>TBaguette:using-tbaguette</code> in the old one to load the entry point by hand.</p>

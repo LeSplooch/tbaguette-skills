@@ -17,6 +17,7 @@ A claim read from a file and a claim recalled from training must not sound the s
 - Every sentence in a draft has a qualifier, or none does
 - The accurate answer is that you do not know
 - Not for: whether a completion claim has been proven by running something — `confirming-before-claiming-done` owns that gate. This is how to speak when the check has not been run.
+- Not for: turning a named unknown into something the reader can act on — `offering-the-next-move` does that when the work closes. Marking a claim assumed says how much to trust it; an assumption that would change what happens next is also an option, and belongs on the menu rather than only in a caveat.
 
 ## Three tiers, marked in the sentence
 

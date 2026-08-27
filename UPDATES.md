@@ -72,6 +72,14 @@ Everything above the first `##` is preamble and is never rendered.
   answer instead of hitting the network again, it stays silent when you are up to
   date, and it never blocks a run — a library that cannot update is reported and
   the work carries on.
+- Four more skills now hand off to that close-out, so it reaches you from where
+  runs actually end rather than only from the orchestrator: landing a branch,
+  writing up technical work, marking what you are confident about, and
+  surrendering an acceptance line. The last of those is the one worth knowing —
+  a criterion you asked for and did not get is the first thing the close reaches
+  for, so it comes back to you as a decision rather than as a footnote in the
+  report. Landing also now says to assemble the offer before cleanup deletes the
+  plan and run record it draws on.
 
 ## 2026-08-25 — The orchestrator now owns the documents a run leaves behind
 
