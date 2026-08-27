@@ -49,6 +49,13 @@ Everything above the first `##` is preamble and is never rendered.
   record is torn down — the record is where most of the options come from.
 - Nothing is listening on a headless or scheduled run, so there the same ranked
   list goes into the report instead of into a prompt nobody would see.
+- Sharpened after watching fresh agents close the same finished task with and
+  without it. The failure worth naming turned out not to be the obviously generic
+  menu — it is the polite one: a wrap-up that reports every finding accurately and
+  then tells you what it intends to do about them. *Tonight I'll rebuild the
+  runner. That's my first job tomorrow.* All the information arrives and none of
+  the decision does. The skill now says that outright — a closing sentence in the
+  first person and the future tense is a decision that was never offered.
 
 ## 2026-08-25 — The orchestrator now owns the documents a run leaves behind
 

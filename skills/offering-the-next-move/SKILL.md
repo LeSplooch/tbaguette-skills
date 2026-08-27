@@ -9,7 +9,7 @@ description: Use at the end of every task that produced something — a change, 
 
 The end of a run is the moment you know the most you will ever know about what should happen next, and the moment that knowledge is most likely to be thrown away. The ledger holds a line that was surrendered. The record holds a ruling that could have gone the other way. Somewhere in the transcript is the thing you found on the way past and did not chase. None of it is in front of your human partner, who gets a summary and an invitation to think of something.
 
-So end with the choice already assembled. Not because asking is polite — because the option set is itself a deliverable, built from information only this run has, and a summary discards it. The failure this exists against is not forgetting to ask. It is asking generically: a menu derived from the *kind* of work rather than from this instance of it, which looks like a considered handoff and carries none of the run's actual information.
+So end with the choice already assembled. Not because asking is polite — because the option set is itself a deliverable, built from information only this run has, and a summary discards it. The failure this exists against is not forgetting to ask. It is asking generically: a menu derived from the *kind* of work rather than from this instance of it, which looks like a considered handoff and carries none of the run's actual information. And it is the quieter version of the same thing, which is the more common one — a close that surfaces every finding correctly, in good prose, and then announces what happens next instead of asking. The reader gets all of the information and none of the decision.
 
 ## When to use
 
@@ -28,6 +28,8 @@ Every task that produced something ends with an offer. The size of the task is n
 The boundary is what the turn produced, not how long it took. An exchange that changed nothing is not a run and closes normally. Everything else gets the offer.
 
 A run that failed or stalled gets one too, and it is where the offer is worth the most. What blocked it, what would unblock it, and what is worth doing instead are three real options that nobody outside the run can assemble. `knowing-when-to-stop` covers stopping while blocked; this is what that stop hands over.
+
+**Announcing the next move is not offering it.** This is how the rule fails most often, and it does not look like a failure: the closing message names every finding accurately and then ends with what you intend to do about them — *tonight I'll rebuild the runner*, *that's my first job tomorrow*, *after your meeting send me the pivot year and I'll take it from there*. Each of those is a decision taken on the reader's behalf in a sentence shaped like a courtesy. If your closing sentence has you as its subject and a verb in the future tense, the decision never left the room. Options are things they pick, not things you report having picked.
 
 There are four ways the rule gets talked out of, and none of them holds:
 
@@ -125,6 +127,7 @@ The offer goes into the run record before it is retired, because it is part of w
 
 | Symptom | Real cause |
 |---|---|
+| The close names every finding, then says what you will do about them | The next move was announced rather than offered; the information transferred and the decision did not |
 | The menu would fit any task of this shape | Options generated from the category of work; the harvest never ran |
 | Four options, two of which mean the same thing | A thin harvest padded to fill the widget instead of offered short |
 | The reader picks the free-text option nearly every time | The real fork was never on the menu — rows 1 through 4 were skipped in favor of row 5 |
@@ -139,6 +142,7 @@ The offer goes into the run record before it is retired, because it is part of w
 - "I'll summarize and let them tell me what they want next."
 - "There's obviously nothing left to offer."
 - "This was too small to bother asking about."
+- "Tonight I'll…", "that's my first job tomorrow", "I'll take it from there" — a closing sentence in the first person and the future tense is a decision that was never offered.
 - Filling the fourth slot because there is a fourth slot.
 - A recommendation withheld because both options seem fine — they seem fine to the one person who watched the run.
 - Offering something you would argue against if they picked it.
