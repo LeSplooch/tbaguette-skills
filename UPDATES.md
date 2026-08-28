@@ -42,6 +42,15 @@ Everything above the first `##` is preamble and is never rendered.
 - `orchestrating-work-end-to-end` now runs it immediately after the currency
   check, and `keeping-tbaguette-current` hands the local-changes case over
   instead of leaving you at a status command with no next step.
+- `tending-tbaguette` names where a project-specific rule actually belongs: the
+  project's own `CLAUDE.md`, which sits *above* a library skill instead of
+  modifying it. Most edits someone wants to make to an installed skill are not
+  corrections to it — they are one project's fact colliding with a deliberately
+  general rule, and that was never an upstream change to begin with.
+- It also corrects the belief that makes hand-editing feel harmless: that the
+  next update quietly overwrites your edit. It does not. The update reads the
+  tree, backs off rather than discarding your work, and stops there — so the
+  edit persists and blocks every update behind it.
 
 ## 2026-08-27 — Saying something is not installed now has a rule of its own
 

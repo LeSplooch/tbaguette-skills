@@ -62,6 +62,14 @@ entire install at that commit, silently, for as long as it exists. You
 traded every future skill in the library for one local edit, and nothing
 announces the trade.
 
+One specific wrong belief is what makes people comfortable doing this, and it
+is worth naming because it is the one they actually hold: *the next update
+will quietly overwrite my edit anyway, so it is temporary.* It will not, and
+it is not. The update reads the tree before it touches anything and backs off
+rather than discarding your work. The edit is not a sandcastle waiting for
+the tide — it is a wedge holding the door shut, and it holds until somebody
+removes it by hand.
+
 **The direction of travel.** An edit that stays local decays. Upstream
 moves, your copy does not, and the improvement you were proud of becomes a
 merge conflict nobody remembers the reason for. The same edit, merged, comes
@@ -69,6 +77,38 @@ back to you automatically — and to everyone else — the next time
 `keeping-tbaguette-current` runs. That is the whole point: **your
 improvements reach you through the update path, not through your working
 tree.**
+
+## Where a project-specific rule actually belongs
+
+Most edits someone wants to make to an installed skill are not corrections to
+that skill at all. They are a *local* fact — this estate is camelCase, this
+service already validates upstream, this team does not use feature flags —
+colliding with a library that is deliberately project-agnostic. The skill is
+not wrong; it is general, and that generality is the entire reason it works
+in a repo it has never seen.
+
+A local fact has a home, and the home is not inside the plugin. It goes in
+the project's own instructions: `CLAUDE.md` at the repo root, or a
+project-level skill living in the repo. Either one sits *above* a library
+skill rather than modifying it, and that buys four things a hand-edit cannot:
+
+- It is version-controlled where the team can see it, rather than sitting in
+  one person's home directory.
+- It reaches everyone working in that repo, rather than one machine.
+- It survives every update, because nothing overwrites it.
+- The install stays clean and keeps updating.
+
+**Reach for this first, every time.** Then ask the separate question: is the
+skill *also* wrong in a way that would be wrong in any repo? If yes, that
+part goes upstream as a pull request. If no, there was never an upstream
+change to make here — only a project that needed to say something about
+itself.
+
+Getting this backwards is the expensive mistake in both directions. A
+collision between one project and a general rule, sent upstream, asks a
+maintainer to make the library worse for everyone else. The same collision
+hand-edited into the install freezes the install. The project's own
+instructions are where it belonged from the start.
 
 ## The bar: what actually belongs in TBaguette
 
@@ -391,6 +431,12 @@ through. Save, ask, then restore.
 ## Red flags
 
 - "It's a one-line fix, I'll just edit the installed copy."
+- "The next update will overwrite it anyway, so it's temporary." — it will
+  not; it will stop updating instead.
+- "It's only my machine, it affects nobody else." — it affects every future
+  version of every skill you have, which is the opposite of nobody.
+- "Keeping the install pristine is superstition." — it is not kept clean for
+  its own sake; clean is the precondition for it ever changing again.
 - "I'll open the PR and mention it to them after."
 - "They said yes to the last one, so this one's fine."
 - "I'll scrub the project name out of it later, before it merges."

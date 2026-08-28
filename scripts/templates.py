@@ -1231,18 +1231,23 @@ def _render_install(base_path: str = "", *,
 </div>"""
 
 
-MILESTONE_VERSION = "1.0.0"
+MILESTONE_LINE = "1.0"
 
 
 def _render_milestone(plugin_version: str, skill_count: int, *,
                        has_update_notes: bool = False) -> str:
     """The 1.0.0 release plaque at the top of the hero.
 
-    Gated on an exact version match rather than a hand-flipped flag, so it
-    takes itself down at 1.0.1 without anyone remembering to. A celebration
-    banner left up past its release is how a live site starts reading as
-    abandoned, and that failure is silent -- nobody files a bug about a
-    banner that is merely old.
+    Gated on the version rather than on a hand-flipped flag, so it takes
+    itself down without anyone remembering to. A celebration banner left up
+    past its release is how a live site starts reading as abandoned, and that
+    failure is silent -- nobody files a bug about a banner that is merely old.
+
+    The gate is the 1.0 *line*, not the exact patch. Crossing 1.0 is the
+    milestone; 1.0.1 is still that milestone, and a plaque that vanished on
+    the first bugfix would be celebrating a version number instead of the
+    release. It retires at 1.1.0, which is the next thing actually worth
+    saying something about.
 
     An <aside> with aria-label, not a <section> with a heading: this sits
     above the page's <h1>, and an <h2> there would put the document's
@@ -1254,7 +1259,7 @@ def _render_milestone(plugin_version: str, skill_count: int, *,
     already maintained by hand in eight places (see test_catalog) and this
     is not becoming the ninth.
     """
-    if plugin_version != MILESTONE_VERSION:
+    if not plugin_version.startswith(MILESTONE_LINE + "."):
         return ""
     # The count leads the clause but not the sentence: a sentence opening on a
     # numeral is the one typographic rule every style guide agrees on, and this
@@ -1273,12 +1278,12 @@ def _render_milestone(plugin_version: str, skill_count: int, *,
         # thin in a screen reader's link list. It still *contains* the visible
         # string, which is what WCAG's label-in-name rule requires.
         link = ('\n    <a class="milestone__link" href="#notes-title"'
-                ' aria-label="What changed in 1.0.0">What changed'
+                ' aria-label="What changed in 1.0">What changed'
                 '<span class="milestone__link-arrow" aria-hidden="true">\u2192</span></a>')
     return f"""<aside class="milestone" aria-label="Release announcement">
-    <p class="milestone__mark" aria-hidden="true">{escape_html(MILESTONE_VERSION)}</p>
+    <p class="milestone__mark" aria-hidden="true">{escape_html(MILESTONE_LINE)}</p>
     <div class="milestone__body">
-      <p class="milestone__title">TBaguette reaches {MILESTONE_VERSION}</p>
+      <p class="milestone__title">TBaguette reaches {MILESTONE_LINE}</p>
       <p class="milestone__text">{escape_html(text)}</p>
     </div>{link}
   </aside>"""

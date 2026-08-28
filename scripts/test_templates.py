@@ -241,13 +241,19 @@ def check_milestone_plaque() -> None:
     print("1.0.0 milestone plaque check")
 
     shown = templates._render_milestone("1.0.0", 93, has_update_notes=True)
-    check("renders at exactly the milestone version", '<aside class="milestone"' in shown)
+    check("renders on the milestone version", '<aside class="milestone"' in shown)
     check("the version reads from the module constant, so the markup and the "
-          "gate can never disagree", f">{templates.MILESTONE_VERSION}<" in shown)
+          "gate can never disagree", f">{templates.MILESTONE_LINE}<" in shown)
 
-    for other in ("1.0.1", "1.1.0", "0.14.4", "2.0.0", ""):
+    for patch in ("1.0.1", "1.0.9", "1.0.14"):
+        check(f"still renders at v{patch} — the milestone is crossing 1.0, not a "
+              f"particular patch, and a plaque that vanished on the first bugfix "
+              f"would be celebrating a version number instead of the release",
+              templates._render_milestone(patch, 93, has_update_notes=True) != "")
+
+    for other in ("1.1.0", "0.14.4", "2.0.0", "10.0.0", ""):
         check(f"renders nothing at v{other or '(unset)'} — the banner retires "
-              f"itself on the next release rather than waiting to be noticed",
+              f"itself once the 1.0 line ends, rather than waiting to be noticed",
               templates._render_milestone(other, 93, has_update_notes=True) == "")
 
     check("the skill count is interpolated, not written into the copy where it "
@@ -270,7 +276,7 @@ def check_milestone_plaque() -> None:
           '<p class="milestone__mark" aria-hidden="true">' in shown)
     check("the arrow glyph is decorative too", '<span class="milestone__link-arrow" aria-hidden="true">' in shown)
     check("the link's accessible name contains its visible text, per label-in-name",
-          'aria-label="What changed in 1.0.0"' in shown and ">What changed" in shown)
+          'aria-label="What changed in 1.0"' in shown and ">What changed" in shown)
 
 
 def check_getting_started_page() -> None:
