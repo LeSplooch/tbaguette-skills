@@ -16,6 +16,7 @@ because those are exactly the cases a minimal fixture would never exercise.
 from __future__ import annotations
 
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -537,6 +538,99 @@ class FencedCodeBlockTests(unittest.TestCase):
         html = render_markdown_body(markdown)
         self.assertIn('<pre class="prose-code-block"><code>echo hi</code></pre>', html)
         self.assertNotIn("sh\n", html)
+
+
+class ImportantCalloutTests(unittest.TestCase):
+    def test_block_becomes_a_labelled_callout_not_escaped_tag_text(self):
+        html = render_markdown_body(
+            "<EXTREMELY-IMPORTANT>\nNo skill gets changed in place.\n"
+            "</EXTREMELY-IMPORTANT>\n"
+        )
+        self.assertIn('<div class="prose-callout">', html)
+        self.assertIn(
+            '<p class="prose-callout__label">Extremely important</p>', html
+        )
+        self.assertIn("<p>No skill gets changed in place.</p>", html)
+        # The regression this whole component exists for: before it, the tags
+        # rendered as literal text in the middle of the paragraph.
+        self.assertNotIn("&lt;EXTREMELY", html)
+        self.assertNotIn("EXTREMELY-IMPORTANT&gt;", html)
+
+    def test_inner_content_gets_ordinary_markdown_treatment(self):
+        html = render_markdown_body(
+            "<EXTREMELY-IMPORTANT>\n- **Never** edit `SKILL.md` in place.\n"
+            "- Open a pull request instead.\n</EXTREMELY-IMPORTANT>\n"
+        )
+        self.assertIn("<ul>", html)
+        self.assertIn("<strong>Never</strong>", html)
+        self.assertIn("<code>SKILL.md</code>", html)
+
+    def test_underscore_and_space_spellings_are_recognized_too(self):
+        for opener, closer in (
+            ("<EXTREMELY_IMPORTANT>", "</EXTREMELY_IMPORTANT>"),
+            ("<extremely-important>", "</extremely-important>"),
+        ):
+            with self.subTest(opener=opener):
+                html = render_markdown_body(f"{opener}\nRule.\n{closer}\n")
+                self.assertIn('<div class="prose-callout">', html)
+                self.assertNotIn("&lt;", html)
+
+    def test_surrounding_prose_still_renders_around_the_callout(self):
+        html = render_markdown_body(
+            "## The approval gate\n\n<EXTREMELY-IMPORTANT>\nAsk first.\n"
+            "</EXTREMELY-IMPORTANT>\n\nAfterwards, proceed.\n"
+        )
+        self.assertIn('<h2 id="the-approval-gate">', html)
+        self.assertIn("<p>Afterwards, proceed.</p>", html)
+        self.assertEqual(html.count('class="prose-callout"'), 1)
+
+    def test_opening_tag_with_no_blank_line_before_it_is_not_eaten(self):
+        # _is_block_start has to know the tag, or the lead-in paragraph
+        # swallows it and the callout never forms.
+        html = render_markdown_body(
+            "Here is the rule.\n<EXTREMELY-IMPORTANT>\nAsk first.\n"
+            "</EXTREMELY-IMPORTANT>\n"
+        )
+        self.assertIn("<p>Here is the rule.</p>", html)
+        self.assertIn('<div class="prose-callout">', html)
+
+    def test_two_callouts_in_one_document_get_separate_panels(self):
+        html = render_markdown_body(
+            "<EXTREMELY-IMPORTANT>\nFirst rule.\n</EXTREMELY-IMPORTANT>\n\n"
+            "<EXTREMELY-IMPORTANT>\nSecond rule.\n</EXTREMELY-IMPORTANT>\n"
+        )
+        self.assertEqual(html.count('class="prose-callout"'), 2)
+        self.assertIn("First rule.", html)
+        self.assertIn("Second rule.", html)
+
+    def test_headings_in_two_callouts_do_not_collide_on_ids(self):
+        html = render_markdown_body(
+            "<EXTREMELY-IMPORTANT>\n### The rule\n</EXTREMELY-IMPORTANT>\n\n"
+            "<EXTREMELY-IMPORTANT>\n### The rule\n</EXTREMELY-IMPORTANT>\n"
+        )
+        ids = re.findall(r'<h3 id="([^"]+)"', html)
+        self.assertEqual(len(ids), 2)
+        self.assertEqual(len(set(ids)), 2, f"duplicate heading ids: {ids}")
+
+    def test_unclosed_block_keeps_its_content_rather_than_dropping_it(self):
+        html = render_markdown_body(
+            "<EXTREMELY-IMPORTANT>\nThe rule nobody may skip.\n"
+        )
+        self.assertIn('<div class="prose-callout">', html)
+        self.assertIn("The rule nobody may skip.", html)
+
+    def test_the_real_corpus_callouts_all_render_as_panels(self):
+        content = build_content(REAL_SKILLS_ROOT)
+        bodies = {
+            slug: skill["body_html"] for slug, skill in content["skills"].items()
+        }
+        panels = sum(b.count('class="prose-callout"') for b in bodies.values())
+        self.assertEqual(panels, 3, "expected the 3 callouts the corpus has")
+        self.assertEqual(bodies["using-tbaguette"].count('class="prose-callout"'), 1)
+        self.assertEqual(bodies["tending-tbaguette"].count('class="prose-callout"'), 2)
+        # No skill page may ship a raw tag as visible text.
+        for slug, body in bodies.items():
+            self.assertNotIn("EXTREMELY", body, f"{slug} leaks a raw callout tag")
 
 
 class ParagraphRenderingTests(unittest.TestCase):

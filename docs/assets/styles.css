@@ -139,6 +139,19 @@
      is its light-theme counterpart, built the same way (warm brown, not gray),
      measured at >=5.2:1 on both flour surfaces. */
   --ink-700: #6b5642;
+  /* ember-500/700: the second hue this palette carries, and the only one.
+     Added rather than borrowed because of what it is for -- the panel a skill
+     wraps around its one non-negotiable rule -- and gold is this site's
+     *ambient* colour. A gold "extremely important" panel reads as one more
+     gold thing on a page made of gold things, which is precisely the failure
+     mode for the element whose whole job is to be the loudest thing there.
+     Built as a sibling of the golds, not an import: same warm family, hue
+     pushed from ~65 to ~37 (scorched crust, not a generic alert red), and the
+     two steps relate exactly as gold-500/gold-800 do -- a light-on-dark value
+     for crust, a dark-on-light one for flour. Every pairing measured in
+     OKLCh; the figures are on --critical-surface below. */
+  --ember-500: #eb7955;
+  --ember-700: #9a2d0a;
 
   /* --- semantic (tier 2: the only tier components should reference) ---
      Dark ("crust") is the default; no [data-theme] attribute needed. */
@@ -168,6 +181,29 @@
   --accent-solid: var(--gold-500);
   --accent-solid-hover: var(--gold-400);
   --text-on-accent-solid: var(--crust-950);
+  /* usage: the non-negotiable-rule callout -- panel rule, glyph, label fill.
+     Severity, not decoration: nothing else on the site may reach for it, or
+     it stops meaning anything. Never used as text on --bg or --surface, only
+     on --critical-surface, which is the only backdrop it was measured on. */
+  --critical: var(--ember-500);
+  /* Tint percentages differ per theme for the same reason .milestone's do,
+     and were derived the same way: every percent of the accent mixed into
+     the surface closes the gap against anything painted in that accent.
+     Crust at 10% -- panel rule and glyph 4.88:1, body text 11.64:1, an
+     inline gold link 6.28:1, label ink on the fill 6.47:1.
+     Flour is the tighter theme and 4% is not a round-number choice. The
+     binding constraint is a gold link inside the panel (--text-accent is
+     gold-800 there): 4.58:1 at 4%, 4.51:1 at 5% -- passing, but sitting on
+     the 4.5:1 floor exactly, where any later nudge to flour-100 or gold-800
+     breaks it silently -- and outright failing at 7% (4.39:1). 4% buys back
+     a real margin and costs almost nothing visible, because the tint was
+     never what carries this panel in flour; the 3px rule is. No callout
+     currently contains a link, so this is the pairing being kept safe for
+     the first one that does. Everything else has room -- panel rule and
+     glyph 5.49:1, body text 12.27:1, label on the fill 6.50:1. */
+  --critical-surface: color-mix(in oklch, var(--critical) 10%, var(--surface));
+  /* usage: label text on a --critical fill, nowhere else */
+  --text-on-critical: var(--crust-950);
   /* usage: hairline dividers, card borders at rest */
   --border-subtle: rgb(245 234 217 / 10%);
   --border-strong: rgb(245 234 217 / 20%);
@@ -274,6 +310,9 @@
   /* accent-solid / text-on-accent-solid intentionally NOT remapped: the solid
      gold-500 fill + near-black label is the one brand mark that stays
      identical in both themes, like a foil stamp — see .btn-accent notes. */
+  --critical: var(--ember-700);
+  --critical-surface: color-mix(in oklch, var(--critical) 4%, var(--surface));
+  --text-on-critical: var(--flour-50);
   --border-subtle: rgb(36 26 18 / 10%);
   --border-strong: rgb(36 26 18 / 20%);
   --focus-ring: var(--gold-700);
@@ -2118,6 +2157,109 @@ code {
   font-size: var(--text-1);
   white-space: pre;
   color: var(--text-primary);
+}
+
+/* The <EXTREMELY-IMPORTANT> block a skill wraps around its one rule that has
+   no exceptions -- rendered by content_pipeline's _consume_important_callout.
+   Three channels carry "this one is different", so none of them is load-
+   bearing alone: the ember hue, the written label, and the panel structure
+   itself. Colour is never the only signal, which matters for the ~8% of
+   readers with a colour vision deficiency and for anyone in forced-colors.
+
+   Structurally a sibling of .milestone -- same 1px hairline plus a 3px
+   inline-start rule, same radius -- because they are the same kind of object
+   at different volumes, and the second variant of an idea needs a reason to
+   look different, not a reason to look the same. What differs is the hue and
+   the label, which is exactly the difference being expressed.
+
+   No entrance animation on purpose. The prose body it sits in does not
+   animate, and one component animating alone is a scattered effect rather
+   than an authored moment. */
+.prose-callout {
+  margin-top: var(--space-5);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  background: var(--critical-surface);
+  border: 1px solid var(--border-subtle);
+  border-inline-start: 3px solid var(--critical);
+  border-radius: var(--radius-md);
+}
+
+/* Deliberately the same metrics as .change-badge: mono, --text-1, weight 500,
+   uppercase, 0.06em, full radius. This site already has one small-label
+   idiom, and a callout label is not a good enough reason to invent a second.
+
+   Selector carries .prose/.tabs__panel because it has to out-specify
+   `.prose p { color: var(--text-primary) }` above -- a bare
+   .prose-callout__label loses that tie and the label renders as body text on
+   its own ember fill. Not left to source order: order is not a guarantee
+   anyone reading this file would know they were relying on. */
+.prose .prose-callout__label,
+.tabs__panel .prose-callout__label {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45em;
+  /* A chip is an inline-flex box, and an inline-flex box sizes to its text
+     and then refuses to shrink -- the anonymous flex item holding the label
+     is floored at its longest word. Measured at 320px under 400% text-only
+     zoom, that put the chip 554px past the prose column while a heading and
+     a paragraph beside it sat at 0. `anywhere` rather than `break-word` is
+     the operative half: only `anywhere` actually lowers the min-content
+     size, which is the number doing the damage. Same fix the base h1-h4
+     rule already uses, for the same reason. */
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  margin-top: 0;
+  padding: 0.3em 0.75em 0.3em 0.6em;
+  color: var(--text-on-critical);
+  background: var(--critical);
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  font-weight: 500;
+  line-height: var(--leading-normal);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: var(--radius-full);
+}
+
+/* A mask rather than a sprite <use>, and this is the one component on the
+   site where that is the right call. content_pipeline emits this markup and
+   deliberately knows nothing about the deployment's base path (see its
+   make_skill_mention_resolver note), so it cannot write a correct
+   /assets/icons.svg href -- while a stylesheet can, because a URL in here
+   resolves against the stylesheet's own location. Painted with
+   `background: currentColor` so it inherits the label's colour in both
+   themes and remaps correctly under forced-colors, exactly as the sprite's
+   currentColor strokes do. stroke-width 2 rather than the sprite's 1.5:
+   at ~15px the 1.5 weight goes visibly thin against 500-weight mono, and
+   optical weight beats nominal weight. */
+.prose-callout__label::before {
+  content: "";
+  width: 1.15em;
+  height: 1.15em;
+  flex-shrink: 0;
+  background: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.6 22 20.4H2Z'/%3E%3Cpath d='M12 10v4.2'/%3E%3Cpath d='M12 17.6h.01'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.6 22 20.4H2Z'/%3E%3Cpath d='M12 10v4.2'/%3E%3Cpath d='M12 17.6h.01'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Tight inside the group: the label and the rule it introduces are one
+   thought, so they sit closer together than the --space-4 a bare `p` would
+   take, and closer than the panel's own padding sets them from everything
+   outside it. */
+.prose-callout__body > :first-child { margin-top: var(--space-3); }
+
+/* In a forced palette the fill and the panel tint both collapse to Canvas,
+   which would leave the label as unbounded text and lose the chip entirely.
+   The border restores its shape; the glyph and the inline-start rule survive
+   unaided (currentColor and a solid border respectively). */
+@media (forced-colors: active) {
+  .prose .prose-callout__label,
+  .tabs__panel .prose-callout__label { border: 1px solid CanvasText; }
 }
 
 .prose a, .tabs__panel a {

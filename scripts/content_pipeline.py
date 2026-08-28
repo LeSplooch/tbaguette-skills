@@ -954,6 +954,20 @@ _TABLE_ROW_RE = re.compile(r"^\s*\|.*\|\s*$")
 _TABLE_SEPARATOR_RE = re.compile(r"^\s*\|[\s:|-]+\|\s*$")
 _UNESCAPED_PIPE_RE = re.compile(r"(?<!\\)\|")
 
+# The <EXTREMELY-IMPORTANT> ... </EXTREMELY-IMPORTANT> block a skill wraps
+# around its one non-negotiable rule. Written for the model reading SKILL.md,
+# where a shouty tag is the point; on the site it has to become a real
+# component, because left alone it renders as escaped angle brackets sitting
+# in the middle of a paragraph.
+#
+# Separator is [-_ ] rather than the literal hyphen the three current blocks
+# all use. The failure this guards against is silent: a future skill typing
+# EXTREMELY_IMPORTANT gets no error, just the escaped-tag rendering back
+# again, in the one block on the page nobody can afford to have look broken.
+_CALLOUT_OPEN_RE = re.compile(r"^\s*<EXTREMELY[-_ ]IMPORTANT>\s*$", re.IGNORECASE)
+_CALLOUT_CLOSE_RE = re.compile(r"^\s*</EXTREMELY[-_ ]IMPORTANT>\s*$", re.IGNORECASE)
+CALLOUT_LABEL = "Extremely important"
+
 
 def render_markdown_body(
     markdown_text: str,
@@ -997,6 +1011,11 @@ def render_markdown_body(
                 lines, index, heading_id_prefix, used_heading_ids,
                 resolve_relative_link, resolve_skill_link,
             )
+        elif _CALLOUT_OPEN_RE.match(line):
+            html, index = _consume_important_callout(
+                lines, index, heading_id_prefix, used_heading_ids,
+                resolve_relative_link, resolve_skill_link,
+            )
         elif _FENCE_RE.match(line.strip()):
             html, index = _consume_fenced_code_block(lines, index)
         elif _is_table_start(lines, index):
@@ -1036,6 +1055,8 @@ def _is_block_start(lines: list[str], index: int) -> bool:
     return bool(
         _HEADING_RE.match(line)
         or _FENCE_RE.match(line.strip())
+        or _CALLOUT_OPEN_RE.match(line)
+        or _CALLOUT_CLOSE_RE.match(line)
         or _is_table_start(lines, index)
         or _LIST_ITEM_RE.match(line)
     )
@@ -1089,6 +1110,58 @@ def _consume_fenced_code_block(lines: list[str], index: int) -> tuple[str, int]:
     next_index = closing_index + 1 if closing_index < total else closing_index
     return (
         f'<pre class="prose-code-block"><code>{escape_html(code_text)}</code></pre>',
+        next_index,
+    )
+
+
+def _consume_important_callout(
+    lines: list[str],
+    index: int,
+    heading_id_prefix: str,
+    used_heading_ids: set[str],
+    resolve_relative_link: Callable[[str], str | None] | None,
+    resolve_skill_link: Callable[[str], str | None] | None = None,
+) -> tuple[str, int]:
+    """Consume an <EXTREMELY-IMPORTANT> block into a `.prose-callout` panel.
+
+    The contents are ordinary markdown and get the ordinary treatment -- the
+    tag changes how the passage is *framed*, not what it may contain -- so
+    the inner lines go back through render_markdown_body rather than being
+    flattened into one paragraph. Today all three blocks in the corpus are a
+    single paragraph; a bulleted rule would render correctly without anyone
+    having to come back here.
+
+    That recursion gets its own heading-id namespace, keyed on the opening
+    tag's line number so two callouts in one file can't collide with each
+    other (tending-tbaguette has two). `used_heading_ids` is therefore
+    accepted and deliberately not threaded down: ids minted inside a callout
+    are already unreachable from the outer document's set, and passing it
+    would only let an outer heading steal a name the callout had reserved.
+
+    An unclosed block consumes to the end of the body instead of dropping
+    it. Losing the one passage a skill marked as non-negotiable is a far
+    worse failure than rendering a too-long panel, and the missing closing
+    tag is visible on the page either way.
+    """
+    del used_heading_ids  # see docstring
+    total = len(lines)
+    closing_index = index + 1
+    while closing_index < total and not _CALLOUT_CLOSE_RE.match(lines[closing_index]):
+        closing_index += 1
+    inner = "\n".join(lines[index + 1 : closing_index])
+    next_index = closing_index + 1 if closing_index < total else closing_index
+
+    inner_html = render_markdown_body(
+        inner,
+        heading_id_prefix=f"{heading_id_prefix}callout-{index}-",
+        resolve_relative_link=resolve_relative_link,
+        resolve_skill_link=resolve_skill_link,
+    )
+    return (
+        '<div class="prose-callout">'
+        f'<p class="prose-callout__label">{escape_html(CALLOUT_LABEL)}</p>'
+        f'<div class="prose-callout__body">{inner_html}</div>'
+        "</div>",
         next_index,
     )
 
