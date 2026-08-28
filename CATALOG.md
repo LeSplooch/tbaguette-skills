@@ -1,4 +1,4 @@
-# TBaguette
+# TBaguette's Atelier
 
 93 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
@@ -8,9 +8,9 @@ matches the situation. This file is for humans browsing what exists.
 - Inventory and token cost: `claude plugin details TBaguette`
 - Turn the whole group off: `claude plugin disable TBaguette@skills-dir`
 
-Skills marked † are **not** part of TBaguette — they live loose in `~/.claude/skills/`
-or come from the `superpowers` plugin, and are listed here only to show where a
-TBaguette skill hands off to a neighbour.
+Skills marked † are **not** part of the Atelier — they live loose in `~/.claude/skills/`
+or come from the `superpowers` plugin, and are listed here only to show where an
+Atelier skill hands off to a neighbour.
 
 ## UI and design
 
@@ -24,7 +24,7 @@ TBaguette skill hands off to a neighbour.
 
 | Skill | For |
 |---|---|
-| `using-tbaguette` | Force-injected at every session start: check TBaguette's own skills before every response, for the whole conversation |
+| `using-tbaguette` | Force-injected at every session start: check the Atelier's own skills before every response, for the whole conversation |
 | `orchestrating-work-end-to-end` | The spine the rest of the library hangs off: which track a request is on, the phase order, the evidence that opens each gate, one run record that survives compaction. Multi-file: full phase-to-skill routing index |
 | `calibrating-confidence` | Marking verified vs inferred vs assumed; false precision; saying you don't know |
 | `estimating-effort` | Reference classes, ranges over points, the planning fallacy |
@@ -163,7 +163,7 @@ TBaguette skill hands off to a neighbour.
 | `reproducible-environments` | The "works on my machine" taxonomy; verifying by building twice |
 | `designing-ci-pipelines` | Cost-to-signal ordering; cache correctness; required vs advisory |
 | `upgrading-dependencies` | Routine and cheap, or one forced upgrade during an incident |
-| `keeping-tbaguette-current` | Checks the installed TBaguette plugin against the published repo, updates it if it can fast-forward cleanly, keeps a local changelog |
+| `keeping-tbaguette-current` | Checks the installed Atelier plugin against the published repo, updates it if it can fast-forward cleanly, keeps a local changelog |
 | `tending-tbaguette` | Capturing a project-agnostic lesson while it is still in the transcript, and contributing it back as a pull request |
 | `automating-repetition` | When a manual sequence should become a tool, and when it should not |
 | `play-console` † | Google Play Console workflows |

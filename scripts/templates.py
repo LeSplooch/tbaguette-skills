@@ -170,14 +170,14 @@ ENGLISH_STRINGS = Strings(
     sentence_end=".",
     category_count_singular="skill",
     category_count_plural="skills",
-    install_frame_label_template="Install {brand}’s skills",
+    install_frame_label_template="Install {brand_atelier}",
     install_note_verified_text=(
         "Only ever touches this folder — verified against your other skills, not "
         "just claimed."
     ),
     install_note_see_how="See how",
     install_note_new_here_html_template=(
-        "New to {brand}? <a href=\"{url}\">Getting started</a> walks through the "
+        "New to the {brand_short}? <a href=\"{url}\">Getting started</a> walks through the "
         "reload, how skills fire without being asked, and what to do when nothing "
         "seems to happen."
     ),
@@ -249,11 +249,16 @@ class VerifyInstallStrings:
     {test_source_path} placeholders rather than a literal URL, so a
     translator never has to retype (and risk mistyping) that link.
     Likewise, three fields that mention the brand by name outside of a
-    literal file path -- four_scenarios_intro_html_template,
-    scenario_c_html_template, meta_description_template -- carry a
-    {brand} placeholder rather than embedding "TBaguette" directly,
-    formatted with the same BRAND_NAME constant Task 3 introduced (see
-    this plan's Global Constraints on brand identity). The several
+    literal file path carry a placeholder rather than embedding the name
+    directly, formatted with the brand constants below (see this plan's
+    Global Constraints on brand identity). Which placeholder depends on
+    which name the sentence needs: four_scenarios_intro_html_template and
+    scenario_c_html_template both name the install *directory*, so they
+    take {brand} / BRAND_NAME, the identifier that must keep matching what
+    is on disk. meta_description_template names the *product* to a reader
+    who has no page chrome around it -- search results carry no wordmark --
+    so it takes {brand_atelier} / BRAND_ATELIER_TEXT, the full public name.
+    The several
     ~/.claude/skills/TBaguette *path* mentions elsewhere in this class
     (lede_html, what_it_does_html, why_html) are deliberately left as
     plain literals -- a full filesystem path is already exactly as
@@ -420,8 +425,8 @@ ENGLISH_VERIFY_INSTALL_STRINGS = VerifyInstallStrings(
     ),
     breadcrumb_current="Install verification",
     meta_description_template=(
-        "How the {brand} install command is verified never to alter, "
-        "overwrite, or merge into any other skill or plugin you already "
+        "How the install command for {brand_atelier} is verified never to "
+        "alter, overwrite, or merge into any other skill or plugin you already "
         "have — with the actual test source, not just a claim."
     ),
 )
@@ -648,7 +653,7 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
     ),
     other_agents_heading="Not on Claude Code?",
     other_agents_html_template=(
-        "{brand} ships an integration for Codex, Cursor, Copilot CLI, Devin, "
+        "{brand_atelier} ships an integration for Codex, Cursor, Copilot CLI, Devin, "
         "Gemini CLI, Hermes, Kimi Code, OpenCode, and Pi as well. Those installs "
         "differ in kind rather than just in path \u2014 a plugin command here, an "
         "extension there, a line in a config file somewhere else \u2014 which is "
@@ -697,7 +702,7 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
     ),
     breadcrumb_current="Getting started",
     meta_description_template=(
-        "What to do after you install {brand}: the reload new conversations need, "
+        "What to do after you install {brand_atelier}: the reload new conversations need, "
         "how skills fire without being invoked, six worth trying first, and what "
         "to check when nothing seems to happen."
     ),
@@ -736,6 +741,13 @@ BRAND_ATELIER = "TBaguette&rsquo;s Atelier"
 # renders "TBaguette&amp;rsquo;s Atelier" on the tab, which is exactly the
 # trap this constant exists to close.
 BRAND_ATELIER_TEXT = "TBaguette’s Atelier"
+# Second-reference form. Every page's header wordmark and footer brand line
+# already carry the full name, so body prose that names the product again
+# reads better short than repeating "TBaguette’s Atelier" three times down
+# one page. Bare "Atelier" rather than "the Atelier" so the template decides
+# its own capitalization -- "New to the {brand_short}?" and "The
+# {brand_short} ships ..." both come out right from one constant.
+BRAND_SHORT = "Atelier"
 
 
 # ---------------------------------------------------------------------------
@@ -1138,11 +1150,11 @@ INSTALL_COMMAND_CMD = (
 # model choice to a visitor with no way to know it matters — a
 # recommendation, not a claim that nothing else works.
 INSTALL_PROMPT_HINT = "Paste into whichever coding agent you use — it works out which harness it's in and installs the right way for it. It needs a shell tool, which rules out Claude Desktop; on Claude Code it's been exercised against Claude Sonnet (Max)."
-INSTALL_PROMPT = """Install (or update) TBaguette — a skills library for coding agents — into whichever agent you are. Use your shell tool.
+INSTALL_PROMPT = """Install (or update) TBaguette’s Atelier — a skills library for coding agents — into whichever agent you are. Use your shell tool.
 
 Before you start: confirm git is available (git --version). If it isn't, tell me and stop — there's nothing else to try.
 
-TBaguette is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Copilot CLI, Devin, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can't tell which one you are, say so and ask me, rather than falling through to the first route below.
+It is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Copilot CLI, Devin, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can't tell which one you are, say so and ask me, rather than falling through to the first route below.
 
 Route A — you read Claude Code's skills directory. Target: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\\.claude\\skills\\TBaguette). Figure out which case applies:
 
@@ -1184,13 +1196,13 @@ def _render_install(base_path: str = "", *,
     the frame's last note points at /getting-started/, and on /getting-started/
     itself that is a link to the page you are already reading."""
     escaped_prompt = escape_html(INSTALL_PROMPT)
-    frame_label = strings.install_frame_label_template.format(brand=BRAND_NAME)
+    frame_label = strings.install_frame_label_template.format(brand_atelier=BRAND_ATELIER_TEXT)
     restart_note_html = strings.install_note_restart_html_template.format(brand=BRAND_NAME)
     session_note_html = strings.install_note_session_html_template.format(brand=BRAND_NAME)
     pointer_html = ""
     if show_getting_started_pointer:
         new_here_html = strings.install_note_new_here_html_template.format(
-            brand=BRAND_NAME, url=_locale_url(locale, base_path, GETTING_STARTED_PATH)
+            brand_short=BRAND_SHORT, url=_locale_url(locale, base_path, GETTING_STARTED_PATH)
         )
         pointer_html = f'''<p class="install-frame__note install-frame__note--pointer">
       {_icon("icon-grain", base_path=base_path)}
@@ -1283,7 +1295,7 @@ def _render_milestone(plugin_version: str, skill_count: int, *,
     return f"""<aside class="milestone" aria-label="Release announcement">
     <p class="milestone__mark" aria-hidden="true">{escape_html(MILESTONE_LINE)}</p>
     <div class="milestone__body">
-      <p class="milestone__title">TBaguette reaches {MILESTONE_LINE}</p>
+      <p class="milestone__title">{BRAND_ATELIER} reaches {MILESTONE_LINE}</p>
       <p class="milestone__text">{escape_html(text)}</p>
     </div>{link}
   </aside>"""
@@ -2038,7 +2050,7 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
     )
     four_scenarios_intro_html = v.four_scenarios_intro_html_template.format(brand=BRAND_NAME)
     scenario_c_html = v.scenario_c_html_template.format(brand=BRAND_NAME)
-    meta_description = v.meta_description_template.format(brand=BRAND_NAME)
+    meta_description = v.meta_description_template.format(brand_atelier=BRAND_ATELIER_TEXT)
 
     article = f"""<article class="container skill-article">
   <div class="skill-article__head">
@@ -2164,11 +2176,11 @@ def render_getting_started_page(categories: list[dict], base_path: str = "",
         keeping_current_url=skill_url("keeping-tbaguette-current", base_path, locale)
     )
     other_agents_html = g.other_agents_html_template.format(
-        brand=BRAND_NAME, porting_url=PORTING_GITHUB_URL
+        brand_atelier=BRAND_ATELIER, porting_url=PORTING_GITHUB_URL
     )
     troubleshooting_session_html = g.troubleshooting_session_html_template.format(brand=BRAND_NAME)
     next_html = g.next_html_template.format(home_url=home_url, catalog_url=CATALOG_GITHUB_URL)
-    meta_description = g.meta_description_template.format(brand=BRAND_NAME)
+    meta_description = g.meta_description_template.format(brand_atelier=BRAND_ATELIER_TEXT)
 
     article = f"""<article class="container skill-article">
   <div class="skill-article__head">

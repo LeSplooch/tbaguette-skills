@@ -1,7 +1,7 @@
 {
   "name": "tbaguette-dev",
   "interface": {
-    "displayName": "TBaguette Dev"
+    "displayName": "TBaguette's Atelier (dev)"
   },
   "plugins": [
     {

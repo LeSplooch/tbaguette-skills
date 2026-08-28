@@ -1,18 +1,18 @@
-# Porting TBaguette to a new harness
+# Porting TBaguette's Atelier to a new harness
 
 This is a condensed adaptation of the `superpowers` plugin's own
 [porting guide](https://github.com/obra/superpowers/blob/main/docs/porting-to-a-new-harness.md)
 — credit there for the methodology and the vocabulary this document reuses
-(shapes A/B/C, the capability checklist). TBaguette's own harness layer was
+(shapes A/B/C, the capability checklist). The Atelier's own harness layer was
 built by following it. If you're adding harness #11, read the source guide
 in full for the parts condensed away here (live-instance verification via a
 driven TUI, distribution/release mechanics, Windows specifics, PR process);
-this file covers the invariants and points you at TBaguette's own reference
+this file covers the invariants and points you at the Atelier's own reference
 implementations to copy instead of superpowers'.
 
 ## How this works across harnesses
 
-TBaguette's content is the same everywhere. What changes per harness is a
+The Atelier's content is the same everywhere. What changes per harness is a
 thin delivery layer:
 
 1. **Skills (harness-agnostic).** Everything in `skills/` is the source of
@@ -44,7 +44,7 @@ thin delivery layer:
 ## Can a harness be supported?
 
 **Hard requirement: automatic session-start injection**, with no
-per-session opt-in from the user. If the only way to get TBaguette in
+per-session opt-in from the user. If the only way to get the Atelier in
 front of the model is to paste a prompt or flip a mode by hand each
 session, it can't be properly supported — full stop, before writing
 anything.
@@ -52,7 +52,7 @@ anything.
 **Strongly wanted, not required: a per-turn re-injection point.** Session
 start alone is measurably not enough. Across real Claude Code sessions,
 the start-of-session notice landed 95% of the time, yet only ~42% of
-substantive sessions ever invoked a TBaguette skill — sessions running
+substantive sessions ever invoked an Atelier skill — sessions running
 hundreds of turns would invoke one, or none. A single message at position
 zero loses against a long context no matter how forcefully it's worded, so
 where a harness offers a per-prompt hook, use it: Claude Code does this
@@ -85,12 +85,12 @@ repo-root `package.json` (`main` for an OpenCode-style loader, the `pi`
 field for a Pi-style one) — a JS/TS adapter file that nothing declares is
 never loaded.
 
-## TBaguette's current reference integrations
+## The Atelier's current reference integrations
 
 | Harness | Entry point | Bootstrap mechanism | Tool mapping |
 |---|---|---|---|
 | Claude Code | `.claude-plugin/plugin.json` + `hooks/hooks.json` | shell hook → `hooks/session-start`, plus per-turn `hooks/user-prompt-submit` | native `Skill` tool; no adapter needed |
-| Codex | `.codex-plugin/plugin.json` (empty `hooks`) | native skill discovery, no session-start hook | none shipped yet — no TBaguette skill has needed one so far |
+| Codex | `.codex-plugin/plugin.json` (empty `hooks`) | native skill discovery, no session-start hook | none shipped yet — no Atelier skill has needed one so far |
 | Cursor | `.cursor-plugin/plugin.json` + `hooks/hooks-cursor.json` | shell hook → `hooks/session-start`; no per-turn hook wired up yet | none needed (Claude Code–compatible tool surface) |
 | Copilot CLI | shares the Claude Code hook path | shell hook → `hooks/session-start` | none needed | 
 | Devin | `.devin-plugin/plugin.json` | Devin's own `skills/` convention | none shipped |
@@ -106,7 +106,7 @@ gives, still true here.
 ## Gotchas carried over from the source guide
 
 - **Opt-in isn't a port.** If a person has to do anything per session to
-  get TBaguette in front of the model, it doesn't count.
+  get the Atelier in front of the model, it doesn't count.
 - **Hook-config schema varies per harness.** Cursor's `hooks-cursor.json`
   looks nothing like Claude Code's (`version`, lowercase `sessionStart`,
   relative command, no `matcher`/`type`/`async`). Match the closest

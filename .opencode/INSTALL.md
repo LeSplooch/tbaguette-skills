@@ -1,4 +1,4 @@
-# Installing TBaguette for OpenCode
+# Installing TBaguette's Atelier for OpenCode
 
 ## Prerequisites
 
@@ -6,7 +6,7 @@
 
 ## Installation
 
-Add TBaguette to the `plugin` array in your `opencode.json` (global or project-level):
+Add the Atelier to the `plugin` array in your `opencode.json` (global or project-level):
 
 ```json
 {
@@ -20,11 +20,11 @@ registers all skills.
 Verify by asking: "Tell me about your TBaguette skills"
 
 OpenCode uses its own plugin install. If you also use Claude Code, Codex, or
-another harness, install TBaguette separately for each one.
+another harness, install the Atelier separately for each one.
 
 ## Migrating from the old symlink-based install
 
-If you previously installed TBaguette using `git clone` and symlinks, remove the old setup:
+If you previously installed the Atelier using `git clone` and symlinks, remove the old setup:
 
 ```bash
 # Remove old symlinks
@@ -50,9 +50,9 @@ use skill tool to load brainstorming
 
 ## Updating
 
-OpenCode installs TBaguette through a git-backed package spec. Some OpenCode
+OpenCode installs the Atelier through a git-backed package spec. Some OpenCode
 and Bun versions pin that resolved git dependency in a lockfile or cache, so a
-restart may not pick up the newest TBaguette commit. If updates do not appear,
+restart may not pick up the newest Atelier commit. If updates do not appear,
 clear OpenCode's package cache or reinstall the plugin.
 
 To pin a specific version:

@@ -1,6 +1,6 @@
-# TBaguette for Kimi Code
+# TBaguette's Atelier for Kimi Code
 
-Complete guide for using TBaguette with [Kimi Code](https://github.com/MoonshotAI/kimi-code).
+Complete guide for using the Atelier with [Kimi Code](https://github.com/MoonshotAI/kimi-code).
 
 ## Installation
 
@@ -23,13 +23,13 @@ The manifest does three things:
 2. Loads `using-tbaguette` at session start through `sessionStart.skill`.
 3. Provides Kimi-specific tool mapping through `skillInstructions`.
 
-Kimi Code reads TBaguette skills from this repository. There are no copied
+Kimi Code reads the Atelier's skills from this repository. There are no copied
 skills, symlinks, hooks, or extra runtime dependencies.
 
 ## Tool Mapping
 
 Skills describe actions instead of hard-coding one runtime's tool names.
-TBaguette's skills are, with one exception, written this way already — a
+The Atelier's skills are, with one exception, written this way already — a
 grep across the whole library found only `using-tbaguette` naming a
 specific tool (`Skill`). On Kimi Code:
 
@@ -39,7 +39,7 @@ specific tool (`Skill`). On Kimi Code:
 - "Search file contents" -> `Grep`
 - "Find files by path or pattern" -> `Glob`
 
-If a future TBaguette skill needs to dispatch a subagent, track a todo, or
+If a future Atelier skill needs to dispatch a subagent, track a todo, or
 ask the user a multiple-choice question, `.kimi-plugin/plugin.json`'s
 `skillInstructions` already covers the mapping (`Agent`, `TodoList`,
 `AskUserQuestion` respectively) — extend that block rather than this file
@@ -53,7 +53,7 @@ Use Kimi Code's plugin manager:
 /plugins
 ```
 
-Select TBaguette and update it from there. Start a fresh session with
+Select TBaguette's Atelier and update it from there. Start a fresh session with
 `/new` after updating.
 
 ## Troubleshooting

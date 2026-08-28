@@ -51,6 +51,11 @@ Everything above the first `##` is preamble and is never rendered.
   next update quietly overwrites your edit. It does not. The update reads the
   tree, backs off rather than discarding your work, and stops there — so the
   edit persists and blocks every update behind it.
+- The library now goes by its full name, **TBaguette's Atelier**, on the site, in
+  the READMEs, and wherever your agent lists its installed plugins. Nothing you
+  type changes: the plugin is still `TBaguette`, skills are still
+  `TBaguette:<skill-name>`, and the install still lands in
+  `~/.claude/skills/TBaguette`.
 
 ## 2026-08-27 — Saying something is not installed now has a rule of its own
 

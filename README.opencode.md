@@ -1,10 +1,10 @@
-# TBaguette for OpenCode
+# TBaguette's Atelier for OpenCode
 
-Complete guide for using TBaguette with [OpenCode.ai](https://opencode.ai).
+Complete guide for using the Atelier with [OpenCode.ai](https://opencode.ai).
 
 ## Installation
 
-Add TBaguette to the `plugin` array in your `opencode.json` (global or
+Add the Atelier to the `plugin` array in your `opencode.json` (global or
 project-level):
 
 ```json
@@ -19,7 +19,7 @@ registers all skills.
 Verify by asking: "Tell me about your TBaguette skills"
 
 OpenCode uses its own plugin install. If you also use Claude Code, Codex, or
-another harness, install TBaguette separately for each one — see
+another harness, install the Atelier separately for each one — see
 [README.md](README.md) for the Claude Code install command.
 
 ## Usage
@@ -40,15 +40,15 @@ use skill tool to load orienting-in-unfamiliar-code
 
 ### Project and Personal Skills
 
-TBaguette's skills sit alongside whatever OpenCode already discovers in
+The Atelier's skills sit alongside whatever OpenCode already discovers in
 `~/.config/opencode/skills/` (personal) or `.opencode/skills/` (project) —
-those still take priority over TBaguette's if a name collides.
+those still take priority over the Atelier's if a name collides.
 
 ## Updating
 
-OpenCode installs TBaguette through a git-backed package spec. Some
+OpenCode installs the Atelier through a git-backed package spec. Some
 OpenCode and Bun versions pin that resolved git dependency in a lockfile or
-cache, so a restart may not pick up the newest TBaguette commit. If updates
+cache, so a restart may not pick up the newest Atelier commit. If updates
 do not appear, clear OpenCode's package cache or reinstall the plugin.
 
 To pin a specific commit or tag instead of tracking `master`:
@@ -63,8 +63,8 @@ To pin a specific commit or tag instead of tracking `master`:
 
 The plugin does two things:
 
-1. **Injects bootstrap context** via the `experimental.chat.messages.transform` hook, adding TBaguette awareness to every conversation.
-2. **Registers the skills directory** via the `config` hook, so OpenCode discovers all TBaguette skills without symlinks or manual config.
+1. **Injects bootstrap context** via the `experimental.chat.messages.transform` hook, adding Atelier awareness to every conversation.
+2. **Registers the skills directory** via the `config` hook, so OpenCode discovers all Atelier skills without symlinks or manual config.
 
 ### Tool Mapping
 

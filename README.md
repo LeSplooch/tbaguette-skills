@@ -58,7 +58,7 @@ Command Prompt equivalent too at
 
 ### Other agents
 
-The commands above are the Claude Code install. TBaguette isn't Claude Code-only,
+The commands above are the Claude Code install. The Atelier isn't Claude Code-only,
 though: this same repo ships an integration for Codex, Cursor, Copilot CLI, Devin,
 Gemini CLI, Hermes, Kimi Code, OpenCode, and Pi — see [`PORTING.md`](PORTING.md)
 for what each one loads and how, plus [`README.opencode.md`](README.opencode.md)
@@ -125,8 +125,8 @@ git config core.hooksPath .githooks
 
 ## Licence
 
-TBaguette is free software under the [GNU General Public License, version 2](LICENSE).
-Copyright © 2026 LeSplooch.
+TBaguette's Atelier is free software under the
+[GNU General Public License, version 2](LICENSE). Copyright © 2026 LeSplooch.
 
 That choice is load-bearing rather than decorative. The library is only as good as
 what it absorbs from real work, so the terms are the ones that keep improvements
@@ -136,7 +136,7 @@ the source under these same terms.
 
 Upstream contribution is a step further than the licence compels, and it is how this
 repo expects to be used anyway: the `tending-tbaguette` skill turns a lesson learned
-while using TBaguette into a pull request here, so it reaches everyone else the next
+while using the Atelier into a pull request here, so it reaches everyone else the next
 time `keeping-tbaguette-current` runs.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY

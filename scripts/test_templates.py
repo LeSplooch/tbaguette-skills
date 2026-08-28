@@ -184,6 +184,9 @@ def check_verify_install_page() -> None:
     check("title names what the page proves", "only touches one folder" in html)
     check("this page's <title> also ends in TBaguette’s Atelier, not the retired name",
           "<title>The install command only touches one folder — TBaguette’s Atelier</title>" in html)
+    check("meta description names the product in full — a search result carries no "
+          "wordmark to supply it",
+          'content="How the install command for TBaguette\u2019s Atelier is verified' in html)
     check("links out to the real file on GitHub as provenance",
           f'href="{INSTALL_TEST_GITHUB_URL}"' in html)
     check("renders one list item per source line",
@@ -242,6 +245,9 @@ def check_milestone_plaque() -> None:
 
     shown = templates._render_milestone("1.0.0", 93, has_update_notes=True)
     check("renders on the milestone version", '<aside class="milestone"' in shown)
+    check("names the product in full — this is an announcement headline, and the "
+          "wordmark above it is a logo rather than a sentence",
+          "<p class=\"milestone__title\">TBaguette&rsquo;s Atelier reaches" in shown)
     check("the version reads from the module constant, so the markup and the "
           "gate can never disagree", f">{templates.MILESTONE_LINE}<" in shown)
 
@@ -294,6 +300,9 @@ def check_getting_started_page() -> None:
           "<title>How to actually use these skills — TBaguette’s Atelier</title>" in html)
     check("breadcrumb names the page and marks it current",
           '<span class="breadcrumb__current" aria-current="page">Getting started</span>' in html)
+    check("the other-agents section names the product in full — it is this page's "
+          "first prose mention, every earlier one being a TBaguette:<skill> literal",
+          "TBaguette&rsquo;s Atelier ships an integration for Codex" in html)
 
     article = _article_of(html)
     leftovers = _PLACEHOLDER_RE.findall(article)
@@ -1251,8 +1260,12 @@ def main() -> None:
           < index_html.index("hero__lede"))
     check("has a copy button wired to the prompt",
           'data-copy-target="install-prompt-command"' in index_html)
-    check("install frame is wrapped in its labeled frame",
-          index_html.index("install-frame") < index_html.index("Install TBaguette")
+    check("install frame is wrapped in its labeled frame, and the label names the "
+          "product in full — \"Install TBaguette\" alone would still pass while the "
+          "brand silently reverted, since it is a prefix of the real string",
+          "Install TBaguette\u2019s Atelier" in index_html
+          and index_html.index("install-frame")
+          < index_html.index("Install TBaguette\u2019s Atelier")
           < index_html.index('id="install-prompt-command"'))
     label_start = index_html.index('install-frame__label')
     label_end = index_html.index('</p>', label_start)
@@ -1293,6 +1306,21 @@ def main() -> None:
           < index_html.index("hero__lede"))
     check("no platform-picker tabs remain now that there's a single universal prompt",
           'data-autoselect-platform' not in index_html and 'tab-install-posix' not in index_html)
+    check("the getting-started pointer uses the short brand form — the wordmark and "
+          "the install label above it have both already said the name in full",
+          "New to the Atelier?" in index_html)
+
+    # --- the rename is prose-only: everything a reader would type must still be
+    # bare "TBaguette". This is the check that would catch a well-meaning
+    # search-and-replace reaching into the identifiers. ---
+    check("the invocation prefix is untouched by the brand name",
+          "TBaguette:skill-name" in index_html
+          and "TBaguette&rsquo;s Atelier:" not in index_html
+          and "TBaguette\u2019s Atelier:" not in index_html)
+    check("the install path in the pasted prompt is untouched by the brand name",
+          "~/.claude/skills/TBaguette" in index_html
+          and "skills/TBaguette&rsquo;s" not in index_html
+          and "skills/TBaguette\u2019s" not in index_html)
 
     # --- the prompt's embedded facts must not drift from the tested shell
     # commands (INSTALL_COMMAND covers POSIX + the repo URL, INSTALL_COMMAND_CMD
