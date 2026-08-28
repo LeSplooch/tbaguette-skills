@@ -484,6 +484,12 @@ class GettingStartedStrings:
     updating_heading: str
     updating_html: str
     updating_automatic_html_template: str
+    coexistence_heading: str
+    coexistence_install_html_template: str
+    coexistence_names_html_template: str
+    coexistence_notices_html_template: str
+    coexistence_removal_html_template: str
+    coexistence_removal_command: str
     other_agents_heading: str
     other_agents_html_template: str
     troubleshooting_heading: str
@@ -651,6 +657,43 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
         "carries the published version and the moment it was last built, if you "
         "would rather compare by hand."
     ),
+    coexistence_heading="Living beside your other skills",
+    coexistence_install_html_template=(
+        "Installing {brand} adds exactly one directory, "
+        "<code>~/.claude/skills/TBaguette</code>, and touches nothing else \u2014 "
+        "not another library\u2019s skills, not a plugin you already run, not your "
+        "settings. If that one path is already occupied by something unrelated, "
+        "the install refuses outright rather than merging into it, so a name "
+        "collision fails loudly instead of quietly costing you whatever was "
+        "there. <a href=\"{verify_url}\">Install verification</a> is where that "
+        "is proved against the real command rather than asserted."
+    ),
+    coexistence_names_html_template=(
+        "Skill <em>names</em> can repeat across libraries, and that is fine, "
+        "because {brand}\u2019s are called with its prefix. "
+        "<code>TBaguette:naming-things</code> is always this library\u2019s; the "
+        "same name without the prefix is whoever else\u2019s. Two skills that "
+        "share a name stay separately reachable and neither one shadows the "
+        "other \u2014 so nothing has to be uninstalled to make room."
+    ),
+    coexistence_notices_html_template=(
+        "If you also run a library that injects its own check-the-skills-first "
+        "notice \u2014 Superpowers is the one you are most likely to have \u2014 "
+        "both fire, and both apply. They are not competing for the same job: "
+        "<a class=\"skill-link\" href=\"{using_url}\"><code>using-tbaguette</code></a> "
+        "speaks only for {brand}\u2019s own skills and says nothing about anyone "
+        "else\u2019s. When the other library has the better answer for the job in "
+        "front of you, that is the one to use. The rule here is to check what is "
+        "available before answering, never to prefer this library\u2019s skill "
+        "because it is this library\u2019s."
+    ),
+    coexistence_removal_html_template=(
+        "And if it does get in your way, removing it is deleting that one "
+        "directory. There is no uninstaller, no settings entry to unpick, and "
+        "nothing else on your machine to unwind \u2014 on Windows, delete the "
+        "same folder."
+    ),
+    coexistence_removal_command="rm -rf ~/.claude/skills/TBaguette",
     other_agents_heading="Not on Claude Code?",
     other_agents_html_template=(
         "{brand_atelier} ships an integration for Codex, Cursor, Copilot CLI, Devin, "
@@ -2175,6 +2218,15 @@ def render_getting_started_page(categories: list[dict], base_path: str = "",
     updating_automatic_html = g.updating_automatic_html_template.format(
         keeping_current_url=skill_url("keeping-tbaguette-current", base_path, locale)
     )
+    coexistence_install_html = g.coexistence_install_html_template.format(
+        brand=BRAND_NAME, verify_url=_locale_url(locale, base_path, "verify-install/")
+    )
+    coexistence_names_html = g.coexistence_names_html_template.format(brand=BRAND_NAME)
+    coexistence_notices_html = g.coexistence_notices_html_template.format(
+        brand=BRAND_NAME,
+        using_url=skill_url("using-tbaguette", base_path, locale),
+    )
+    coexistence_removal_html = g.coexistence_removal_html_template.format(brand=BRAND_NAME)
     other_agents_html = g.other_agents_html_template.format(
         brand_atelier=BRAND_ATELIER, porting_url=PORTING_GITHUB_URL
     )
@@ -2225,6 +2277,13 @@ def render_getting_started_page(categories: list[dict], base_path: str = "",
     <h2 id="updating">{escape_html(g.updating_heading)}</h2>
     <p>{g.updating_html}</p>
     <p>{updating_automatic_html}</p>
+
+    <h2 id="alongside-others">{escape_html(g.coexistence_heading)}</h2>
+    <p>{coexistence_install_html}</p>
+    <p>{coexistence_names_html}</p>
+    <p>{coexistence_notices_html}</p>
+    <p>{coexistence_removal_html}</p>
+    <pre class="prose-code-block" dir="ltr"><code>{escape_html(g.coexistence_removal_command)}</code></pre>
 
     <h2 id="other-agents">{escape_html(g.other_agents_heading)}</h2>
     <p>{other_agents_html}</p>

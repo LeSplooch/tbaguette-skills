@@ -24,6 +24,24 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-28 — Running TBaguette next to the other libraries you already have
+
+- Getting started now answers the question nobody asks until something looks
+  broken: what happens when another skill library is installed beside this one.
+  Nothing has to be uninstalled to make room. Two skills that share a name stay
+  separately reachable, because TBaguette's are always called with its prefix —
+  `TBaguette:naming-things` is this library's, the same name without the prefix
+  is whoever else's.
+- If you also run something that injects its own check-the-skills-first notice,
+  Superpowers being the likely one, both fire and both apply. They are not
+  competing: `using-tbaguette` speaks only for TBaguette's own skills. When the
+  other library has the better skill for what you are doing, that is the one to
+  use — the rule was always to check what is available, never to prefer this
+  library's answer for being this library's.
+- Removing it is deleting one directory, and the page now says so outright:
+  `~/.claude/skills/TBaguette` and nothing else. No uninstaller, no settings
+  entry to unpick, nothing left behind to unwind later.
+
 ## 2026-08-28 — TBaguette is free software, and you can improve it from your side
 
 - TBaguette is licensed under the GNU General Public License, version 2. Pass a

@@ -352,6 +352,33 @@ def check_getting_started_page() -> None:
 
     check("sends the reader to the install verification page rather than restating "
           "the safety claim a second time", 'href="/verify-install/"' in article)
+
+    check("carries the section on living beside other libraries, anchored so it can "
+          "be linked to directly",
+          '<h2 id="alongside-others">Living beside your other skills</h2>' in article)
+    check("...which points at using-tbaguette for the both-notices-apply rule "
+          "rather than restating that skill's own wording here, where it would "
+          "drift the first time the skill is edited",
+          'href="/skills/using-tbaguette/"' in article)
+    check("...and names the prefix that keeps a same-named skill from another "
+          "library reachable, since that is the whole mechanism",
+          "<code>TBaguette:naming-things</code>" in article)
+
+    # The one string on this site that deletes something. Pinned two ways: it
+    # must be exactly the install path, and that path is read back out of
+    # INSTALL_COMMAND rather than retyped here -- a widened path (`~/.claude`,
+    # or `~/.claude/skills`) is the difference between removing this library and
+    # removing every skill the reader owns, and it would pass any check that
+    # only asserted the command "mentions TBaguette".
+    removal = ENGLISH_GETTING_STARTED_STRINGS.coexistence_removal_command
+    check(f"the uninstall command is exactly the one directory the installer "
+          f"creates, character for character (got: {removal!r})",
+          removal == "rm -rf ~/.claude/skills/TBaguette")
+    check("...and that path is the same one INSTALL_COMMAND clones into, so the "
+          "two cannot drift apart",
+          removal.removeprefix("rm -rf ").strip() in INSTALL_COMMAND)
+    check("the uninstall command reaches the page as an escaped code block",
+          f"<code>{removal}</code>" in article)
     check("names the four things to check when nothing happens",
           article.count("<li><strong>") == 4)
     check("the troubleshooting section leads with the cause that is actually most "

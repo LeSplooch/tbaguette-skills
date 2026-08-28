@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-28T16:22:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-28T16:22:06Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-28T16:23:15+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-28T16:23:15Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -168,6 +168,13 @@ Flag one more thing, because it applies to this very conversation: this session 
     <h2 id="updating">Keeping it current</h2>
     <p>Run the same install prompt again — it takes whichever route it took the first time. On the Claude Code route that route is a clone-or-pull, so a second run updates in place rather than erroring, duplicating anything, or touching whatever else lives beside it. On a harness with its own plugin command, the prompt hands back to that command, and updating is whatever that harness already does.</p>
     <p>Mostly you will not have to remember. <a class="skill-link" href="/tbaguette-skills/skills/keeping-tbaguette-current/"><code>keeping-tbaguette-current</code></a> runs that check at the start of a conversation and reports what changed in readable terms rather than as a commit log. This site’s own header carries the published version and the moment it was last built, if you would rather compare by hand.</p>
+
+    <h2 id="alongside-others">Living beside your other skills</h2>
+    <p>Installing TBaguette adds exactly one directory, <code>~/.claude/skills/TBaguette</code>, and touches nothing else — not another library’s skills, not a plugin you already run, not your settings. If that one path is already occupied by something unrelated, the install refuses outright rather than merging into it, so a name collision fails loudly instead of quietly costing you whatever was there. <a href="/tbaguette-skills/verify-install/">Install verification</a> is where that is proved against the real command rather than asserted.</p>
+    <p>Skill <em>names</em> can repeat across libraries, and that is fine, because TBaguette’s are called with its prefix. <code>TBaguette:naming-things</code> is always this library’s; the same name without the prefix is whoever else’s. Two skills that share a name stay separately reachable and neither one shadows the other — so nothing has to be uninstalled to make room.</p>
+    <p>If you also run a library that injects its own check-the-skills-first notice — Superpowers is the one you are most likely to have — both fire, and both apply. They are not competing for the same job: <a class="skill-link" href="/tbaguette-skills/skills/using-tbaguette/"><code>using-tbaguette</code></a> speaks only for TBaguette’s own skills and says nothing about anyone else’s. When the other library has the better answer for the job in front of you, that is the one to use. The rule here is to check what is available before answering, never to prefer this library’s skill because it is this library’s.</p>
+    <p>And if it does get in your way, removing it is deleting that one directory. There is no uninstaller, no settings entry to unpick, and nothing else on your machine to unwind — on Windows, delete the same folder.</p>
+    <pre class="prose-code-block" dir="ltr"><code>rm -rf ~/.claude/skills/TBaguette</code></pre>
 
     <h2 id="other-agents">Not on Claude Code?</h2>
     <p>TBaguette&rsquo;s Atelier ships an integration for Codex, Cursor, Copilot CLI, Devin, Gemini CLI, Hermes, Kimi Code, OpenCode, and Pi as well. Those installs differ in kind rather than just in path — a plugin command here, an extension there, a line in a config file somewhere else — which is exactly why the install box carries one prompt instead of ten recipes. It identifies its own harness and takes the matching route, and when it cannot identify one it stops and asks rather than inventing a path. <a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/PORTING.md">PORTING.md</a> has the harness-by-harness breakdown of what each one loads.</p>

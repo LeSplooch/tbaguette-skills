@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-28T16:22:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-28T16:22:06Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-28T16:23:15+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-28T16:23:15Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -268,6 +268,23 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-08-28">28 Aug 2026</time>
+    <span class="notes__entry-title">Running TBaguette next to the other libraries you already have</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li>Getting started now answers the question nobody asks until something looks broken: what happens when another skill library is installed beside this one. Nothing has to be uninstalled to make room. Two skills that share a name stay separately reachable, because TBaguette's are always called with its prefix — <code>TBaguette:naming-things</code> is this library's, the same name without the prefix is whoever else's.</li>
+    <li>If you also run something that injects its own check-the-skills-first notice, Superpowers being the likely one, both fire and both apply. They are not competing: <a class="skill-link" href="/tbaguette-skills/skills/using-tbaguette/"><code>using-tbaguette</code></a> speaks only for TBaguette's own skills. When the other library has the better skill for what you are doing, that is the one to use — the rule was always to check what is available, never to prefer this library's answer for being this library's.</li>
+    <li>Removing it is deleting one directory, and the page now says so outright: <code>~/.claude/skills/TBaguette</code> and nothing else. No uninstaller, no settings entry to unpick, nothing left behind to unwind later.</li>
+  </ul>
+</li>
+  </ol>
+  <details class="notes__earlier">
+    <summary class="notes__earlier-summary">
+      <span class="notes__earlier-label">Show 5 earlier updates</span>
+    </summary>
+    <ol class="notes__list notes__list--earlier">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-08-28">28 Aug 2026</time>
     <span class="notes__entry-title">TBaguette is free software, and you can improve it from your side</span>
   </h3>
   <ul class="notes__bullets">
@@ -280,12 +297,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li>The library now goes by its full name, <strong>TBaguette's Atelier</strong>, on the site, in the READMEs, and wherever your agent lists its installed plugins. Nothing you type changes: the plugin is still <code>TBaguette</code>, skills are still <code>TBaguette:&lt;skill-name&gt;</code>, and the install still lands in <code>~/.claude/skills/TBaguette</code>.</li>
   </ul>
 </li>
-  </ol>
-  <details class="notes__earlier">
-    <summary class="notes__earlier-summary">
-      <span class="notes__earlier-label">Show 5 earlier updates</span>
-    </summary>
-    <ol class="notes__list notes__list--earlier">
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-08-27">27 Aug 2026</time>
@@ -336,17 +347,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/configuration-management/"><code>configuration-management</code></a> carried a contradiction that produced a broken build if you followed it. One section tells you a switch needing to flip without a restart is a flag, not config. An earlier rule says <strong>never read config at the call site</strong> — and read together, those build a flag loaded once at boot, which cannot flip during the incident it exists for. Each rule is correct alone, which is why the pair survived review. The call-site rule now carries an explicit carve-out, keyed to something checkable: if the value must change without a restart, evaluating it at the call site is the mechanism, not a violation, and what gets validated at startup is the flag client's wiring rather than its value.</li>
     <li>The same skill's flag-expiry rule — <em>delete a flag older than one release cycle in one direction or the other</em> — is written for release flags and misfires badly on an operational kill switch, where deleting toward on reinstates the incident and deleting toward off removes the feature. It now says which flag type it is about, and that a kill switch takes a removal <em>condition</em> and a scheduled exercise instead of a date, because the arm you need at 3am is the arm that never runs.</li>
     <li><code>authoring-a-new-skill</code> now warns about the gate that actually ambushes people when adding a skill: the library refuses a skill that no other skill points at, so a new one turns the suite red until some neighbour's &quot;Not for:&quot; line redirects to it — a skill worth adding is one some existing skill should be handing off to.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-08-25">25 Aug 2026</time>
-    <span class="notes__entry-title">A ship step that told you to do work that no longer exists</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><code>authoring-a-new-skill</code> was still instructing anyone shipping a new skill to translate its description into every locale the site builds. The site has been English-only since 23 August, when <code>i18n/</code> was deleted and the locale list was cut to English alone — so that step described work that cannot be done and does not need doing. Removed. The same checklist named only <code>CATALOG.md</code> as the place a new skill gets filed, omitting the registry in <code>content_pipeline.py</code> that actually refuses to build without it; it now names both, and points at how to create a category when none of the existing ones fit.</li>
-    <li>Ten more skills gained cross-references to the skills that own the other half of their problem, found by reading all 92 end to end rather than by sampling. The ones worth naming: <a class="skill-link" href="/tbaguette-skills/skills/configuration-management/"><code>configuration-management</code></a>'s &quot;this is really a flag&quot; section now hands off to <a class="skill-link" href="/tbaguette-skills/skills/feature-flagging/"><code>feature-flagging</code></a> instead of restating its rules; <a class="skill-link" href="/tbaguette-skills/skills/code-archaeology/"><code>code-archaeology</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/atomic-commits/"><code>atomic-commits</code></a> both discussed bisection at length without ever naming <a class="skill-link" href="/tbaguette-skills/skills/bisecting-failures/"><code>bisecting-failures</code></a>; <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a> asked you to mark claims verified, inferred, or assumed without mentioning that <a class="skill-link" href="/tbaguette-skills/skills/calibrating-confidence/"><code>calibrating-confidence</code></a> defines those three tiers; and <a class="skill-link" href="/tbaguette-skills/skills/deleting-code/"><code>deleting-code</code></a>'s proof-of-deadness step now says why it inverts the usual observability rule — you are trying to emit that nothing happened, and only a counter can show that.</li>
-    <li>Across both of today's updates the library went from 308 cross-references to 355, and from three skills that referenced nothing at all to none.</li>
   </ul>
 </li>
     </ol>
