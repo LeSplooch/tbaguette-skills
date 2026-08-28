@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-27T23:23:15+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-27T23:23:15Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-28T00:25:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-28T00:25:17Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -147,10 +147,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/keeping-tbaguette-current/" data-fresh-at="2026-08-27T23:23:15.406043+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/keeping-tbaguette-current/" data-fresh-at="2026-08-28T01:23:15+02:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">keeping-tbaguette-current</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-27T23:23:15.406043+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-28T01:23:15+02:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</p>
   <span class="card__foot">
@@ -158,10 +158,10 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-08-27T23:23:15.406043+00:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-08-28T01:23:15+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">orchestrating-work-end-to-end</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-27T23:23:15.406043+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-28T01:23:15+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</p>
   <span class="card__foot">
@@ -169,10 +169,10 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-08-27T23:23:15.406043+00:00" draggable="false" style="--cf-offset: 2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-08-28T01:23:15+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-08-27T23:23:15.406043+00:00">New</span>
+    <span class="change-badge change-badge--new" data-fresh-at="2026-08-28T01:23:15+02:00">New</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">
@@ -268,14 +268,13 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-08-28">28 Aug 2026</time>
-    <span class="notes__entry-title">TBaguette is free software, and it can now be improved from your side</span>
+    <span class="notes__entry-title">TBaguette is free software, and you can improve it from your side</span>
   </h3>
   <ul class="notes__bullets">
-    <li>TBaguette is licensed under the GNU General Public License, version 2, from this release on. It was MIT before. The practical difference for you: if you pass a changed copy of these skills on to anyone, it goes on under the same terms, with source. Nothing about how you <em>use</em> the skills changes.</li>
-    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a>. It watches for the moments worth keeping — a correction that generalizes past the codebase you are in, a gap you hit in a skill while that skill was running — writes them to a queue, and turns them into a pull request here. It asks you before anything is pushed, every time, and it never treats a yes for one contribution as a yes for the next.</li>
-    <li>A skill you edit in your own install can never reach you again. <a class="skill-link" href="/tbaguette-skills/skills/keeping-tbaguette-current/"><code>keeping-tbaguette-current</code></a> refuses to update a plugin directory that has local changes in it, so a hand-edit silently pins your install at that commit for as long as it sits there. <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> is the way out: it gets the change into a pull request and, once merged, back to you through the ordinary update — along with everyone else's.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/keeping-tbaguette-current/"><code>keeping-tbaguette-current</code></a> now says what it is <em>not</em> for, and hands the local-changes case over instead of leaving you with a status command and no next step.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> runs <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> immediately after the currency check, before the track is named. The two are the same loop from both ends — one pulls improvements in, the other pushes them back out.</li>
+    <li>TBaguette is licensed under the GNU General Public License, version 2. Pass a changed copy of these skills on to anyone and it goes on under the same terms, with source. Nothing about how you <em>use</em> them changes.</li>
+    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a>. It catches the lessons worth keeping while you work — a correction that generalizes past the codebase you are in, a gap you hit in a skill while that skill was running — and turns them into a pull request here. It asks before anything is pushed, every time, and a yes for one contribution is never a yes for the next.</li>
+    <li>Editing a skill inside your own install is a dead end: <a class="skill-link" href="/tbaguette-skills/skills/keeping-tbaguette-current/"><code>keeping-tbaguette-current</code></a> will not update a plugin directory that has local changes, so a hand-edit silently pins your install at that commit for as long as it sits there. <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> is the way out, and a merged change comes back to you through the ordinary update.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> now runs it immediately after the currency check, and <a class="skill-link" href="/tbaguette-skills/skills/keeping-tbaguette-current/"><code>keeping-tbaguette-current</code></a> hands the local-changes case over instead of leaving you at a status command with no next step.</li>
   </ul>
 </li>
   </ol>
@@ -417,7 +416,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-search-card data-search-terms="orchestrating-work-end-to-end use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">orchestrating-work-end-to-end</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-27T23:23:15.406043+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-28T01:23:15+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</p>
   <span class="card__foot">
@@ -1515,7 +1514,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/keeping-tbaguette-current/" data-search-card data-search-terms="keeping-tbaguette-current use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">keeping-tbaguette-current</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-27T23:23:15.406043+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-28T01:23:15+02:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</p>
   <span class="card__foot">
@@ -1526,7 +1525,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/tending-tbaguette/" data-search-card data-search-terms="tending-tbaguette use at the start of every conversation, in any project or repo… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-08-27T23:23:15.406043+00:00">New</span>
+    <span class="change-badge change-badge--new" data-fresh-at="2026-08-28T01:23:15+02:00">New</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">
