@@ -73,6 +73,22 @@ Everything above the first `##` is preamble and is never rendered.
   reading one file, a track named after the first three edits. None are banned.
   Reaching for one when the choice was free means you were performing process
   rather than routing.
+- Later the same day, two of the three new skills were reshaped to lead with
+  what they make you **write down** rather than with the judgment they argue
+  for. `responding-to-incidents` now opens on the six artifacts an incident
+  produces — declaration, impact statement, timeline, evidence manifest, comms
+  cadence, handback note — each with required fields and each with a note on
+  why it does not get written by itself. The cadence in particular is now an
+  artifact with a form: a stated interval, honoured even when nothing has
+  changed, rather than an intention to keep people posted.
+- `checkpointing-long-runs` gained the thing it was missing: what a single
+  checkpoint has to contain, and a required four-part form for a dead end —
+  what was tried, the narrow thing it actually rules out, what it *looks* like
+  it ruled out and did not, and how many trials the null rests on. "Pinned the
+  clock, no change" reads as "not a timing issue" and means nothing of the
+  sort; every cache, database, and broker keeps its own clock and none of them
+  was pinned. Deprioritized is not eliminated, and the difference now belongs
+  in the file rather than in the head of whoever ran it.
 
 ## 2026-08-28 — Running TBaguette next to the other libraries you already have
 

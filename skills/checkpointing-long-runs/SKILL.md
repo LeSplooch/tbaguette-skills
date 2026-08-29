@@ -19,6 +19,13 @@ already proven empty, and re-opens a decision already made, all while feeling
 completely oriented. That is the most expensive mistake in this class of work
 and the one it is most confident about while making it.
 
+Knowing this is not the hard part, and neither is intending to write things
+down. What fails is the writing itself: a note taken at the moment it would
+help is always the least urgent thing available, and the note taken later is
+taken by the memory it was supposed to guard against. So this skill is mostly
+about **what a written checkpoint has to contain** — because a checkpoint with
+the wrong fields in it costs the same to write and buys nothing.
+
 `recovering-agent-context` is the receiving end of this problem — what to do
 when you arrive cold to someone else's half-finished work. This is the sending
 end: what to leave so that arrival is cheap, whether the arriver is another
@@ -44,6 +51,54 @@ agent, another session, a person, or you in two hours with a compacted context.
 A record assembled at the end is a record written by whatever survived, which
 is precisely the memory that cannot be trusted. Every rule below is a
 specialization of this one.
+
+## What one checkpoint has to contain
+
+A checkpoint is not a status update, and the difference is three fields. A line
+missing any of them is a sentence about the past rather than something the next
+actor can act on.
+
+| Field | What it is | Without it |
+|---|---|---|
+| **Anchor** | Something outside the conversation — a commit hash, a path, a command and the output it printed | "Task 3 done" is a claim. "Task 3 done, a1b2c3d, 48/48" is a checkpoint. Only one of them survives being doubted |
+| **Establishes** | What is now known that was not known before, stated narrowly | A line that records activity rather than knowledge, so the next actor cannot tell what they may build on |
+| **Leaves open** | What this specifically does not settle | The most expensive omission here, and it has its own section below |
+
+## A negative result has two halves, and only one gets written
+
+"I tried X and it didn't work" is half a finding. It is the half everyone
+writes, and on its own it is worse than nothing, because it reads as closing a
+door it did not close.
+
+The missing half is the **boundary**: what the attempt actually ruled out, and
+what it left standing. Those are almost never the same size as they look.
+
+Pinning the clock and seeing no change reads as *time is not involved*. What it
+establishes is far narrower — the clock **in this process** is not involved. A
+cache with its own expiry, a database with its own `now()`, a broker with its
+own visibility timeout each keep their own clock, and none of them was pinned.
+The next actor reads "not a timing issue," skips the whole family, and pays for
+it a day later.
+
+There is a second boundary that gets lost the same way: **what the null
+actually rests on**. A negative measured against an intermittent failure needs
+enough trials to mean anything at all, and three clean runs against a
+one-in-six failure rate is not evidence of anything. A negative result that
+does not say how hard it was tested will be read as conclusive, because that is
+how a flat statement reads.
+
+So the required form of a dead end is four parts, and it is barely longer than
+the one part usually written:
+
+```
+Tried:       what was done, concretely enough to not repeat it
+Ruled out:   the narrow thing this actually eliminates
+Still open:  what it looks like it eliminated and did not
+Rests on:    how many trials, against what base rate — or "not measured"
+```
+
+**Deprioritized is not eliminated**, and the difference belongs in the file
+rather than in the head of whoever ran it.
 
 ## What goes in, in order of what it costs to lose
 
@@ -114,13 +169,15 @@ not a measured one.
 
 ## Handing to a successor
 
-A brief, not an archive. Enough for someone to take the next action without
-reading the run:
+A brief, not an archive, and a brief is a set of named sections rather than a
+short essay — a successor scanning for one of these should find it as a heading,
+not as a clause inside a paragraph:
 
 - **The goal, in the requester's own words**, quoted rather than paraphrased.
 - **Where it is now** — anchored to commits and paths.
 - **The single next action**, specific enough to start.
-- **What is known not to work**, with reasons.
+- **What is known not to work**, each one in the four-part form above. This is
+  the section that is worth the whole brief, and the first one cut for length.
 - **Every open assumption and ruling.**
 - **What would make this run stop** if the successor is also unattended.
 
@@ -134,6 +191,8 @@ compressing it was easier than writing it.
 |---|---|
 | A second session redoes committed work | Recollection trusted over `git log`, which is the default after a compaction |
 | The same dead end explored twice | Negative results were never written; only forward progress was |
+| A whole family of causes skipped, wrongly | A dead end recorded without its boundary, so "pinning the clock changed nothing" was read as "not a timing issue" |
+| A negative result quoted later as settled fact | It never said what it rested on, and a flat statement reads as conclusive |
 | The plan's checkboxes are all empty at task six | Progress lived in context. A compaction now costs the entire run |
 | A decision gets re-argued with nobody remembering why | Rulings never recorded, so the reasoning left with the context |
 | The handoff brief is accurate and useless | Written for someone who was there — pronouns, shorthand, unstated referents |
@@ -145,6 +204,8 @@ compressing it was easier than writing it.
 - "I'm holding it all fine" — said by a context about to be compacted.
 - "I'll write it all up at the end."
 - "That didn't work, moving on" — with nothing written down about what didn't.
+- "Ruled that out" — said about an attempt whose boundary was never established.
+- "It's not a timing issue" — from one clock, in one process.
 - "I think task 4 was done?"
 - "The summary can just say what I remember doing."
 - "Checkpointing is overhead on a run this size" — the runs that need it are
