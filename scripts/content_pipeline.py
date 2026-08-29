@@ -73,6 +73,8 @@ CATEGORIES: list[dict] = [
             "delegating-tasks-with-review-gates",
             "fanning-out-independent-work",
             "routing-around-capability-gaps",
+            "bounding-autonomous-work",
+            "checkpointing-long-runs",
         ],
     },
     {
@@ -132,6 +134,7 @@ CATEGORIES: list[dict] = [
             "performance-profiling",
             "finding-resource-leaks",
             "diagnosing-before-fixing",
+            "responding-to-incidents",
         ],
     },
     {

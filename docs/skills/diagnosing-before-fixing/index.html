@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-28T16:23:15+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-28T16:23:15Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-29T05:00:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-29T05:00:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,14 +64,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">diagnosing-before-fixing</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-29T05:00:32.941959+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Debugging and performance</span>
   <p class="lede">Use when a bug, test failure, crash, or any behavior that doesn't match what the code is supposed to do needs a fix and none has been proposed yet, especially when the obvious quick fix is tempting under time pressure or an earlier attempted fix didn't hold. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it actually originates rather than where it surfaced, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A fix aimed at where a failure was noticed and a fix aimed at where it was caused are usually different changes — only the second one stays fixed. The loop is mechanical: reproduce the failure on demand, form one hypothesis specific enough to be wrong, design the smallest test that could prove it wrong, run it, and act on what comes back. Guessing under pressure feels faster; a thrash of unverified fixes is not — the systematic pass wins on wall-clock time, not just on correctness.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A test fails, a process crashes, or output stops matching what the code is supposed to do, and no cause has been named yet.</li><li>A fix is about to be proposed for where the error surfaced rather than for why it happened.</li><li>Under time pressure, when the fastest-looking change is also the one nobody has verified explains anything.</li><li>A first fix didn't hold, or a second one didn't either.</li><li>The failure crosses more than one component — client and service, build and sign step, app and database — and it isn't yet clear which one is actually at fault.</li><li>Not for: the specific technique once you're already inside the loop — isolating which change introduced a regression (<a class="skill-link" href="/tbaguette-skills/skills/bisecting-failures/"><code>bisecting-failures</code></a>), interpreting a crash or trace (<a class="skill-link" href="/tbaguette-skills/skills/reading-stack-traces/"><code>reading-stack-traces</code></a>), a failure tied to timing or interleaving (<a class="skill-link" href="/tbaguette-skills/skills/debugging-concurrency/"><code>debugging-concurrency</code></a>), memory or handles that grow without bound (<a class="skill-link" href="/tbaguette-skills/skills/finding-resource-leaks/"><code>finding-resource-leaks</code></a>), or a failure that only sometimes happens (<a class="skill-link" href="/tbaguette-skills/skills/flaky-test-triage/"><code>flaky-test-triage</code></a>). This skill owns the loop; those five own the specialized ground inside it.</li></ul>
+<ul><li>A test fails, a process crashes, or output stops matching what the code is supposed to do, and no cause has been named yet.</li><li>A fix is about to be proposed for where the error surfaced rather than for why it happened.</li><li>Under time pressure, when the fastest-looking change is also the one nobody has verified explains anything.</li><li>A first fix didn't hold, or a second one didn't either.</li><li>The failure crosses more than one component — client and service, build and sign step, app and database — and it isn't yet clear which one is actually at fault.</li><li>Not for: a failure that is harming users, data, or money <em>right now</em>. The loop below reproduces before it fixes, and during an outage every minute spent reproducing is spent on the people affected — <a class="skill-link" href="/tbaguette-skills/skills/responding-to-incidents/"><code>responding-to-incidents</code></a> inverts the order, and hands back here once they are safe.</li><li>Not for: the specific technique once you're already inside the loop — isolating which change introduced a regression (<a class="skill-link" href="/tbaguette-skills/skills/bisecting-failures/"><code>bisecting-failures</code></a>), interpreting a crash or trace (<a class="skill-link" href="/tbaguette-skills/skills/reading-stack-traces/"><code>reading-stack-traces</code></a>), a failure tied to timing or interleaving (<a class="skill-link" href="/tbaguette-skills/skills/debugging-concurrency/"><code>debugging-concurrency</code></a>), memory or handles that grow without bound (<a class="skill-link" href="/tbaguette-skills/skills/finding-resource-leaks/"><code>finding-resource-leaks</code></a>), or a failure that only sometimes happens (<a class="skill-link" href="/tbaguette-skills/skills/flaky-test-triage/"><code>flaky-test-triage</code></a>). This skill owns the loop; those five own the specialized ground inside it.</li></ul>
 <h2 id="the-loop">The loop</h2>
 <ol><li><strong>Reproduce.</strong> Trigger it on demand, or measure a rate if it won't reproduce every time. Nothing to trigger yet at all — that's <a class="skill-link" href="/tbaguette-skills/skills/reproducing-bugs/"><code>reproducing-bugs</code></a>. Intermittent, and the failing thing is specifically a test — that's <a class="skill-link" href="/tbaguette-skills/skills/flaky-test-triage/"><code>flaky-test-triage</code></a>.</li><li><strong>Hypothesize.</strong> State one specific cause: &quot;X is happening because Y.&quot; If you can't say what result would prove it wrong, it isn't a hypothesis yet — it's a hunch with better grammar.</li><li><strong>Test.</strong> Design the smallest change or probe that could falsify the hypothesis. One variable. Run it.</li><li><strong>Act.</strong> Confirmed — fix at the source. Refuted — form a new hypothesis with what was just learned. Don't bolt a second untested change onto the first.</li></ol>
 <p>Repeat from step 2 on a refuted hypothesis. Repeat from step 1 if the investigation reveals the reproduction was never actually triggering the reported failure.</p>
@@ -120,6 +120,10 @@ after — waits for the condition:
 <nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/finding-resource-leaks/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← finding-resource-leaks</span>
+</a>
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/responding-to-incidents/">
+  <span class="prevnext__label">Next</span>
+  <span class="prevnext__name">responding-to-incidents →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Debugging and performance</h2>
@@ -151,6 +155,10 @@ after — waits for the condition:
 <li><a class="see-also__link" href="/tbaguette-skills/skills/finding-resource-leaks/">
       <span class="see-also__name">finding-resource-leaks</span>
       <span class="see-also__summary">Use when memory, file descriptors, sockets, threads, connections, timers, or event subscriptions grow without bound…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/responding-to-incidents/">
+      <span class="see-also__name">responding-to-incidents</span>
+      <span class="see-also__summary">Use when something is broken in production right now — an outage, a degradation, a bad deploy, data going wrong in flight…</span>
     </a></li>
   </ul>
 </div>

@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-28T16:23:15+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-28T16:23:15Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-29T05:00:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-29T05:00:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,14 +64,14 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">delegating-tasks-with-review-gates</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-29T05:00:32.941959+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Planning and delegation</span>
   <p class="lede">Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, or when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it. Covers dispatching a zero-context implementer subagent per task, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Execute a plan by dispatching one fresh subagent per task, gate each one with a two-stage review before the next task starts, and close with one broader review across the whole branch. A subagent that inherits your session's transcript inherits its dead ends and abandoned approaches along with it — construct exactly what each task needs instead, and nothing it doesn't, so its judgment goes into the task rather than into making sense of a conversation it never joined. The same discipline protects your own context: tracking what's done, ruling on conflicts, holding the cross-task picture no single subagent has reason to hold — that coordination work is what the controller session is for, and it stays clean only if the tasks themselves happen somewhere else.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A plan exists — typically written by <a class="skill-link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a> — and it's ready to execute task by task in the current session.</li><li>Each task should go to a subagent that starts with none of the session's accumulated history: clean judgment instead of a growing transcript to make sense of.</li><li>A task's work needs an independent check — against what it was asked to build and against how well it was built — before the next task is safe to build on top of it.</li><li>Not for: two or more tasks that are genuinely independent of each other and can run concurrently, with nothing gating one on another's result (see <a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a>).</li><li>Not for: running a plan's tasks inline in the current session's main thread, with no fresh subagent per task (see <a class="skill-link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/"><code>working-a-plan-task-by-task</code></a>).</li></ul>
+<ul><li>A plan exists — typically written by <a class="skill-link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a> — and it's ready to execute task by task in the current session.</li><li>Each task should go to a subagent that starts with none of the session's accumulated history: clean judgment instead of a growing transcript to make sense of.</li><li>A task's work needs an independent check — against what it was asked to build and against how well it was built — before the next task is safe to build on top of it.</li><li>Not for: deciding what a delegate may settle on its own when it cannot ask, and what must stop the run instead — <a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a> owns the bounds a task is dispatched with; this skill owns the review gates it comes back through.</li><li>Not for: two or more tasks that are genuinely independent of each other and can run concurrently, with nothing gating one on another's result (see <a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a>).</li><li>Not for: running a plan's tasks inline in the current session's main thread, with no fresh subagent per task (see <a class="skill-link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/"><code>working-a-plan-task-by-task</code></a>).</li></ul>
 <h2 id="before-task-one">Before task one</h2>
 <p>Do this work in an isolated workspace — a worktree or a feature branch, never a shared trunk directly (see <a class="skill-link" href="/tbaguette-skills/skills/isolating-work-with-worktrees/"><code>isolating-work-with-worktrees</code></a> for setting one up).</p>
 <p>Read the plan once. If it names a spec, read that too: the spec is the authority the plan argues from, and where the two disagree, the spec wins. A plan with no reachable spec still runs, but treat every ruling you make under it as provisional.</p>
@@ -148,6 +148,14 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/routing-around-capability-gaps/">
       <span class="see-also__name">routing-around-capability-gaps</span>
       <span class="see-also__summary">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/bounding-autonomous-work/">
+      <span class="see-also__name">bounding-autonomous-work</span>
+      <span class="see-also__summary">Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/checkpointing-long-runs/">
+      <span class="see-also__name">checkpointing-long-runs</span>
+      <span class="see-also__summary">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files…</span>
     </a></li>
   </ul>
 </div>

@@ -17,6 +17,7 @@ the placement.
 ## Contents
 
 - [Before the run — the library itself](#before-the-run--the-library-itself)
+- [Before the run — naming the envelope](#before-the-run--naming-the-envelope)
 - [Before phase 1 — arriving cold](#before-phase-1--arriving-cold)
 - [Phase 1 — Frame](#phase-1--frame)
 - [Phase 2 — Design](#phase-2--design)
@@ -28,6 +29,9 @@ the placement.
 - [Phase 7 — Prove](#phase-7--prove)
 - [Phase 8 — Land](#phase-8--land)
 - [Diagnose track](#diagnose-track)
+- [Respond track](#respond-track)
+- [Review track](#review-track)
+- [Author track](#author-track)
 - [Investigate track](#investigate-track)
 - [Change-in-place track](#change-in-place-track)
 - [Outside the spine](#outside-the-spine)
@@ -41,11 +45,26 @@ Ahead of orienting, ahead of framing, ahead of naming the track.
 | `keeping-tbaguette-current` | Always — first, before anything else. Usually already answered by the start-of-session check, in which case read that answer instead of re-fetching. Reports and moves on; never blocks the run |
 | `tending-tbaguette` | Always — immediately after the currency check, and then continuously for the rest of the run. It is the outbound half of the same loop: what this run learns that generalizes goes back upstream as a pull request rather than staying in one install. Capture never interrupts a phase; contributing waits for a lull and for its approval gate |
 
+## Before the run — naming the envelope
+
+The track is half the route. These three are pulled by the *other* half — the
+dials in `reference/envelopes.md` — and each is read before the first action,
+not once the run is already in trouble.
+
+| Skill | Reach for it when |
+|---|---|
+| `bounding-autonomous-work` | Presence is `autonomous` or `unattended` — nobody will answer a gate before the run ends. Also the moment a question has been asked into a silence and the run is about to continue anyway |
+| `checkpointing-long-runs` | Amplitude is `campaign` — the work will outlive the context holding it. Also the moment a compaction becomes plausible in a run that started as `standard` |
+| `deciding-reversibility` | Blast radius is `live`, or is about to become live at one specific command |
+| `isolating-work-with-worktrees` | Crew is `shared tree`, or the run wants a radius of `sandbox` it does not currently have |
+| `fanning-out-independent-work` | Crew is `fanned` — the split has to be by file boundary and the merge is yours |
+
 ## Before phase 1 — arriving cold
 
 | Skill | Reach for it when |
 |---|---|
 | `recovering-agent-context` | Anything here was touched by a prior session or another agent — their dead ends are already paid for |
+| `checkpointing-long-runs` | What you leave behind will be somebody's cold arrival — read it before framing, and start writing it from the first phase |
 | `orienting-in-unfamiliar-code` | Nobody present wrote this code and the request assumes you know where things are |
 | `code-archaeology` | The current shape only makes sense as the result of decisions nobody wrote down |
 | `reading-specifications` | A ticket, RFC, or standard is the input, and it has to become testable requirements before it can be framed |
@@ -161,6 +180,8 @@ Ahead of orienting, ahead of framing, ahead of naming the track.
 | `atomic-commits` | The task's tree has grown more than one logical change |
 | `resolving-merge-conflicts` | The branch has diverged from its base far enough to need integrating mid-run |
 | `automating-repetition` | The same edit is being repeated by hand across many files |
+| `checkpointing-long-runs` | The task list is longer than the context holding it, or a compaction happened mid-task |
+| `bounding-autonomous-work` | The tasks are being executed with nobody available to answer what they raise |
 
 ## Inside phase 5 — when implementation stalls
 
@@ -240,6 +261,66 @@ Ahead of orienting, ahead of framing, ahead of naming the track.
 | `regression-test-from-bug` | The gate after the fix: named for the defect, failing before, passing after |
 | `writing-postmortems` | The failure reached users, or would have |
 
+## Respond track
+
+Something is broken now. This track inverts the Diagnose order on purpose:
+mitigate first, understand second. Everything here runs against a clock.
+
+| Skill | Reach for it when |
+|---|---|
+| `responding-to-incidents` | Always — this track's owner, from declaring it out loud to handing back |
+| `observing-production-safely` | Any look at the live system, which is most of this track. An investigation that becomes a second incident is its own category |
+| `deciding-reversibility` | Every mitigation is ranked by how easily it comes back out, not by how right it is |
+| `feature-flagging` | The fastest reversible mitigation available, when one exists |
+| `instrumenting-for-observability` | The incident cannot be assessed because nothing emits what would answer the question |
+| `redacting-sensitive-output` | The timeline, the logs, and the status updates are about to be shared more widely than usual |
+| `diagnosing-before-fixing` | The handback: users are safe, so this is now an ordinary defect |
+| `regression-test-from-bug` | What turns "we rolled back" into "this cannot happen again" |
+| `writing-postmortems` | Always — including when the cause turned out obvious in hindsight |
+| `explaining-technical-work` | Every status update during, and the summary after |
+
+## Review track
+
+You did not write this. The deliverable is findings someone else will act on,
+and the gate is coverage of the diff rather than confidence in a conclusion.
+
+| Skill | Reach for it when |
+|---|---|
+| `reviewing-code-deeply` | Always — in priority order, including what is absent from the change |
+| `handing-off-for-review` | Read backwards: it says what a reviewer needs, which is what to ask for when it was not supplied |
+| `verifying-review-feedback` | The return leg — findings came back argued, and each needs verifying before it is conceded or held |
+| `orienting-in-unfamiliar-code` | The diff is in code nobody present wrote, and the change cannot be judged without the shape around it |
+| `mapping-dependencies` | The diff's blast radius is larger than the files it touches |
+| `auditing-dependencies` | The change added, bumped, or replaced a third-party package |
+| `secrets-hygiene` | Always, as a scan of what the diff actually contains |
+| `handling-untrusted-input` | The diff parses anything from outside its own trust boundary |
+| `judging-duplication` | The review found repetition and it needs deciding rather than noting |
+| `calibrating-confidence` | Findings are being reported with more certainty than the reading behind them supports |
+| `red-teaming-your-own-work` | The review came back clean and nothing was tried to make it look otherwise |
+| `explaining-technical-work` | Delivering the findings to someone who has to act on them |
+| `offering-the-next-move` | Always — the review closes with the choice it implies |
+
+## Author track
+
+The deliverable is a document. Its verify phase is the one that gets skipped:
+a document's claims are checked against the thing they describe, not against
+the memory of it.
+
+| Skill | Reach for it when |
+|---|---|
+| `writing-durable-docs` | Always — it decides what will still be true in a year and what should never have been written down |
+| `explaining-technical-work` | Always — the altitude is set by what the reader will do next |
+| `writing-adrs` | The document is one decision, its forces, and what would reopen it |
+| `writing-release-notes` | Someone downstream has to decide whether to take this |
+| `writing-postmortems` | The document is about a failure, and blame would make it useless |
+| `crouton` | The document has a length budget it is about to lose to completeness |
+| `reading-specifications` | A spec, standard, or ticket is the source, and the document must not quietly change what it requires |
+| `code-archaeology` | The document explains why, and the why is in the history rather than in anyone's memory |
+| `calibrating-confidence` | Claims are going in that are inferred, and the reader will treat every sentence as verified |
+| `naming-things` | The document introduces vocabulary the codebase will inherit from it |
+| `confirming-before-claiming-done` | The verify phase: every command, path, and count in the document run and read now |
+| `offering-the-next-move` | Always — the document lands with the choice it implies |
+
 ## Investigate track
 
 | Skill | Reach for it when |
@@ -291,3 +372,5 @@ These do not belong to a phase. They govern the run itself, or the library.
 | `knowing-when-to-stop` | Any phase whose returns have started shrinking |
 | `managing-scope-drift` | Any phase where the work is quietly widening or narrowing |
 | `writing-postmortems` | The run itself failed in a way worth learning from |
+| `bounding-autonomous-work` | Any phase entered with nobody available to answer its gate |
+| `checkpointing-long-runs` | Any phase whose progress would be lost if the context ended here |

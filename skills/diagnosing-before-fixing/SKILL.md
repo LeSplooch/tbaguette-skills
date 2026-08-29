@@ -16,6 +16,7 @@ A fix aimed at where a failure was noticed and a fix aimed at where it was cause
 - Under time pressure, when the fastest-looking change is also the one nobody has verified explains anything.
 - A first fix didn't hold, or a second one didn't either.
 - The failure crosses more than one component — client and service, build and sign step, app and database — and it isn't yet clear which one is actually at fault.
+- Not for: a failure that is harming users, data, or money *right now*. The loop below reproduces before it fixes, and during an outage every minute spent reproducing is spent on the people affected — `responding-to-incidents` inverts the order, and hands back here once they are safe.
 - Not for: the specific technique once you're already inside the loop — isolating which change introduced a regression (`bisecting-failures`), interpreting a crash or trace (`reading-stack-traces`), a failure tied to timing or interleaving (`debugging-concurrency`), memory or handles that grow without bound (`finding-resource-leaks`), or a failure that only sometimes happens (`flaky-test-triage`). This skill owns the loop; those five own the specialized ground inside it.
 
 ## The loop

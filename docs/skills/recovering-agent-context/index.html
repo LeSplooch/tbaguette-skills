@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-28T16:23:15+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-28T16:23:15Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-29T05:00:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-29T05:00:32Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">recovering-agent-context</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-29T05:00:32.941959+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Reading code</span>
   <p class="lede">Use when picking up an existing project for the first time, resuming work that someone or something else started, inheriting a repo that shows signs of prior AI agent work, or being told to continue or finish a task with no handoff attached. Covers sweeping every assistant that touched the repo rather than only your own, finding session transcripts and instruction files by shape when vendor paths have moved, searching huge transcript stores without reading them whole, telling an executed plan from an abandoned one, and turning what you find into a resume brief.</p>
@@ -72,7 +72,7 @@
 <p>Someone worked on this repo before you, and on an existing project it was rarely a person alone. Git records what shipped. Agent sessions record what was tried and thrown away, which options were rejected and why, and every instruction the human gave that never became a file — the three things that separate resuming from restarting.</p>
 <p>The same sessions also record plans that were never executed, APIs that never existed, and decisions reversed four turns later, in identical prose. What you recover is testimony, not ground truth.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>First contact with an existing repo, running alongside <a class="skill-link" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/"><code>orienting-in-unfamiliar-code</code></a>.</li><li>The task is phrased as <em>continue</em>, <em>finish</em>, or <em>pick up where it left off</em>, with no handoff attached.</li><li>An instruction file, plan directory, or spec folder exists that nobody in this conversation wrote.</li><li>You are about to re-derive a decision, retry an approach, or ask the human something they have plainly answered before.</li><li>Not for: why one line exists (<a class="skill-link" href="/tbaguette-skills/skills/code-archaeology/"><code>code-archaeology</code></a>), what the code does (<a class="skill-link" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/"><code>orienting-in-unfamiliar-code</code></a>), or the coupling graph (<a class="skill-link" href="/tbaguette-skills/skills/mapping-dependencies/"><code>mapping-dependencies</code></a>).</li></ul>
+<ul><li>First contact with an existing repo, running alongside <a class="skill-link" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/"><code>orienting-in-unfamiliar-code</code></a>.</li><li>The task is phrased as <em>continue</em>, <em>finish</em>, or <em>pick up where it left off</em>, with no handoff attached.</li><li>An instruction file, plan directory, or spec folder exists that nobody in this conversation wrote.</li><li>You are about to re-derive a decision, retry an approach, or ask the human something they have plainly answered before.</li><li>Not for: leaving a trail rather than following one. This skill is the cold arrival; <a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> is what the previous run owed you, and what you owe the next one.</li><li>Not for: why one line exists (<a class="skill-link" href="/tbaguette-skills/skills/code-archaeology/"><code>code-archaeology</code></a>), what the code does (<a class="skill-link" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/"><code>orienting-in-unfamiliar-code</code></a>), or the coupling graph (<a class="skill-link" href="/tbaguette-skills/skills/mapping-dependencies/"><code>mapping-dependencies</code></a>).</li></ul>
 <h2 id="check-every-provider-and-not-your-own-first">Check every provider, and not your own first</h2>
 <p>The default failure is searching your own tool's store, finding a session, and stopping there. Your own history is the <em>least</em> likely to hold what you are missing — if you had done this work, you would know about it. The gap is in the tool you do not use.</p>
 <p>Enumerate every store before opening any. Then:</p>

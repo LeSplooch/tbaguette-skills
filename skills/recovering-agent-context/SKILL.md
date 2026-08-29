@@ -17,6 +17,7 @@ The same sessions also record plans that were never executed, APIs that never ex
 - The task is phrased as *continue*, *finish*, or *pick up where it left off*, with no handoff attached.
 - An instruction file, plan directory, or spec folder exists that nobody in this conversation wrote.
 - You are about to re-derive a decision, retry an approach, or ask the human something they have plainly answered before.
+- Not for: leaving a trail rather than following one. This skill is the cold arrival; `checkpointing-long-runs` is what the previous run owed you, and what you owe the next one.
 - Not for: why one line exists (`code-archaeology`), what the code does (`orienting-in-unfamiliar-code`), or the coupling graph (`mapping-dependencies`).
 
 ## Check every provider, and not your own first

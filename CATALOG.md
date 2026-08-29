@@ -1,6 +1,6 @@
 # TBaguette's Atelier
 
-93 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+96 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -25,7 +25,7 @@ Atelier skill hands off to a neighbour.
 | Skill | For |
 |---|---|
 | `using-tbaguette` | Force-injected at every session start: check the Atelier's own skills before every response, for the whole conversation |
-| `orchestrating-work-end-to-end` | The spine the rest of the library hangs off: which track a request is on, the phase order, the evidence that opens each gate, one run record that survives compaction. Multi-file: full phase-to-skill routing index |
+| `orchestrating-work-end-to-end` | The spine the rest of the library hangs off: which of seven tracks a request is on, the envelope the run executes in, the phase order, the evidence that opens each gate, what a gate becomes when nobody is there to answer it, one run record that survives compaction. Multi-file: envelope dials, the express lane, full phase-to-skill routing index |
 | `calibrating-confidence` | Marking verified vs inferred vs assumed; false precision; saying you don't know |
 | `estimating-effort` | Reference classes, ranges over points, the planning fallacy |
 | `deciding-reversibility` | One-way vs two-way doors; matching decision cost to decision weight |
@@ -44,6 +44,8 @@ Atelier skill hands off to a neighbour.
 | `delegating-tasks-with-review-gates` | Fresh subagent per task, gated by a two-stage review, with a bounded fix loop |
 | `fanning-out-independent-work` | Telling genuine independence from work that only looks independent; avoiding collisions |
 | `routing-around-capability-gaps` | When this model or harness can't do it: surveying what else is on the machine, deterministic tools before a second model, consent before data crosses a provider |
+| `bounding-autonomous-work` | Work that finishes before anyone reads it: substituting each gate rather than skipping it, four pre-committed stop conditions, the actions no confidence licenses without a human |
+| `checkpointing-long-runs` | Work that outlives the context holding it: what to write and when, the seams worth a checkpoint, re-reading rather than recalling, the brief a successor can act on |
 
 ## Reading code
 
@@ -99,6 +101,7 @@ Atelier skill hands off to a neighbour.
 | `performance-profiling` | Baselines, percentiles, flame graphs, benchmark traps |
 | `finding-resource-leaks` | Growth over time; retention vs allocation; error-path leaks |
 | `diagnosing-before-fixing` | The general hypothesis-driven loop; tracing a symptom back to where it actually originates |
+| `responding-to-incidents` | Something is broken now: mitigating before diagnosing, preserving the evidence the mitigation would destroy, holding all three roles alone, handing back once users are safe |
 
 ## Designing systems
 

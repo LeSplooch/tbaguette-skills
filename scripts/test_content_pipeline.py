@@ -718,8 +718,12 @@ class BuildContentIntegrationTests(unittest.TestCase):
     def setUpClass(cls):
         cls.content = build_content(str(REAL_SKILLS_ROOT))
 
-    def test_finds_exactly_91_skills(self):
-        self.assertEqual(len(self.content["skills"]), 93)
+    def test_finds_every_skill_on_disk(self):
+        # The literal is a deliberate tripwire, like EXPECTED_SKILL_COUNT:
+        # adding or removing a skill is something a human confirms on
+        # purpose. It lives only in the assertion -- spelling it into the
+        # test's name is what let the name go stale last time.
+        self.assertEqual(len(self.content["skills"]), 96)
 
     def test_categories_match_the_locked_order(self):
         actual_slugs = [c["slug"] for c in self.content["categories"]]
@@ -733,9 +737,9 @@ class BuildContentIntegrationTests(unittest.TestCase):
         # which is why the name went stale before the assertion did.
         self.assertEqual(len(actual_slugs), 12)
 
-    def test_category_skill_slug_counts_sum_to_91(self):
+    def test_category_skill_slug_counts_sum_to_the_skill_count(self):
         total = sum(len(c["skill_slugs"]) for c in self.content["categories"])
-        self.assertEqual(total, 93)
+        self.assertEqual(total, 96)
 
     def test_formidable_entry_has_stacks_commands_and_craft_floor(self):
         formidable = self.content["skills"]["formidable"]

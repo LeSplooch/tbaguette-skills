@@ -14,6 +14,7 @@ Execute a plan by dispatching one fresh subagent per task, gate each one with a 
 - A plan exists — typically written by `structuring-an-implementation-plan` — and it's ready to execute task by task in the current session.
 - Each task should go to a subagent that starts with none of the session's accumulated history: clean judgment instead of a growing transcript to make sense of.
 - A task's work needs an independent check — against what it was asked to build and against how well it was built — before the next task is safe to build on top of it.
+- Not for: deciding what a delegate may settle on its own when it cannot ask, and what must stop the run instead — `bounding-autonomous-work` owns the bounds a task is dispatched with; this skill owns the review gates it comes back through.
 - Not for: two or more tasks that are genuinely independent of each other and can run concurrently, with nothing gating one on another's result (see `fanning-out-independent-work`).
 - Not for: running a plan's tasks inline in the current session's main thread, with no fresh subagent per task (see `working-a-plan-task-by-task`).
 

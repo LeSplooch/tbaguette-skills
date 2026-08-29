@@ -24,6 +24,56 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-29 — The orchestrator now asks who is answering, not just what the work is
+
+- `orchestrating-work-end-to-end` reads a second thing before the first action:
+  not just what shape the work is, but what the run may assume about the world
+  it runs in. Who answers a gate — someone replying within a turn, someone
+  replying tomorrow, or nobody at all. How much run the work is worth. What a
+  wrong turn costs. Who else is writing to the same tree. Its gates were always
+  written for one setting of those four, and nothing ever said so.
+- Work that nobody will see until it is finished now has an answer that is not
+  "use your judgment". New skill: `bounding-autonomous-work`. A gate whose
+  answerer is absent gets **substituted, not skipped** — an approval becomes a
+  written design carrying the approach that lost and a condition that fires if
+  it turns out wrong; a clarifying question becomes a recorded ruling naming the
+  reading that lost, never a fact. It adds the four stop conditions a long
+  unattended run needs written down before it starts, and the one gate that has
+  no substitute in any circumstances: an irreversible action still gets a human,
+  however obviously correct it looks at hour six.
+- Small changes get a real lane rather than a warning. Express runs four beats
+  instead of eight, behind entry conditions you check rather than hope — the
+  target already known, one reviewable diff, proof a line away, nothing live,
+  nothing new introduced. The floor under it is lower and is not zero, and it
+  only ever promotes: the judgment that says "this got smaller" is made by the
+  part of a run that most wants to be finished.
+- New skill: `checkpointing-long-runs`, for work that outlives the context
+  holding it. Its point is that a long run does not fail by forgetting — it
+  fails by remembering fluently and partially, so the account you hold of your
+  own run is confident and missing exactly what was never restated. It ranks
+  what to write by what it costs to lose, and the top of that list is the dead
+  ends, which almost nobody writes down.
+- New skill: `responding-to-incidents`, and a Respond track to run it from.
+  Ordinary debugging reproduces first and fixes second; an outage inverts that,
+  because every minute spent reproducing is spent on users. It covers declaring
+  it out loud early, preserving the evidence your own mitigation is about to
+  destroy, ranking mitigations by how easily they come back out rather than by
+  how right they are, holding all three incident roles when you are the only
+  responder, and handing back to an ordinary diagnosis once people are safe.
+- Two more tracks that were missing: **Review**, for judging work you did not
+  write, where the gate is coverage of the diff rather than confidence in a
+  conclusion; and **Author**, for a deliverable that is a document, whose verify
+  phase is the one that always gets skipped. The skill had been describing
+  reviews as something it routed since it shipped, with no row for one.
+- The orchestrator can now be called directly with a verb — `route` to name the
+  track and the dials and stop there, `resume` to enter at the first gate not
+  yet met, `gate` to say what evidence is missing, `record`, `handoff`, `abort`.
+- It also gained a Refuse list, in the same register as `formidable`'s: a plan
+  document for a two-task change, a clarifying question you could answer by
+  reading one file, a track named after the first three edits. None are banned.
+  Reaching for one when the choice was free means you were performing process
+  rather than routing.
+
 ## 2026-08-28 — Running TBaguette next to the other libraries you already have
 
 - Getting started now answers the question nobody asks until something looks

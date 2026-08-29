@@ -1,6 +1,8 @@
 ---
 name: orchestrating-work-end-to-end
-description: Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature, a bug with no known cause, a migration, an audit, a review; when several skills each cover one stretch of the work and nothing is sequencing them; when a run has to survive compaction, a handoff, or a fresh session picking it up mid-flight; or when it is unclear which phase the work is in, what would prove that phase finished, or which phase a new finding sends it back to. Covers routing a request to the lightest track that fits, the phase order each track runs, the evidence that opens each gate, one run record that outlives the context that wrote it, and where the rest of the library plugs in.
+description: Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature, a bug with no known cause, a migration, an audit, a review, a production incident, a document someone will rely on; when several skills each cover one stretch of the work and nothing is sequencing them; when a run has to survive compaction, a handoff, or a fresh session picking it up mid-flight; when nobody will be there to answer a gate, or the change is small enough that the full ceremony would be a defect; or when it is unclear which phase the work is in, what would prove that phase finished, or which phase a new finding sends it back to. Covers routing a request to the lightest track that fits, naming the envelope the run executes in, the phase order each track runs, the evidence that opens each gate, what a gate becomes when its answerer is absent, one run record that outlives the context that wrote it, and where the rest of the library plugs in.
+user-invocable: true
+argument-hint: "[route|resume|gate|record|handoff|abort] [request or target]"
 ---
 
 # Orchestrating work end to end
@@ -9,7 +11,9 @@ description: Use when a request will take more than one edit and nothing has dec
 
 A library of skills is not a method. Each one is sharp about its own stretch of the work and silent about what comes before and after it, which is why an agent holding all of them can still run a build in the wrong order: implementing before anyone agreed what to build, reviewing a diff against criteria nobody wrote down, calling it done because the last thing tried finally worked. Every individual step looks defensible. The run is still wrong.
 
-This skill is the spine those skills hang off. It answers four questions continuously — which track this work is on, which phase it is in, what has to be true before the next phase starts, and where that is written down — and it treats the answers as gates rather than as suggestions. The failure it exists to prevent is not chaos. It is a plausible-looking run that skipped a gate nobody noticed was there.
+This skill is the spine those skills hang off. It answers five questions continuously — which track this work is on, what envelope the run executes in, which phase it is in, what has to be true before the next phase starts, and where that is written down — and it treats the answers as gates rather than as suggestions. The failure it exists to prevent is not chaos. It is a plausible-looking run that skipped a gate nobody noticed was there.
+
+Track and envelope are two axes, not one. The track says what shape the work is; the envelope says what the run may assume about the world it executes in — who answers a gate, how much run this is worth, what a wrong turn costs, who else is writing. The spine's gates are written for one setting of that second axis, and that setting is right often enough to be dangerous.
 
 ## When to use
 
@@ -18,6 +22,9 @@ This skill is the spine those skills hang off. It answers four questions continu
 - Mid-flight, and which phase this is — or what would prove it finished — has gone fuzzy.
 - The run has to survive compaction, a handoff, or a different session picking it up.
 - A finding has just arrived that might belong to an earlier phase than the current one.
+- Nobody will be there to answer a gate, or nobody has answered the last one.
+- The change looks small enough that running the whole spine would itself be the defect.
+- The conditions changed underneath a run that is already going.
 - Not for: judging whether some specific skill applies to the response you are about to write. `using-tbaguette` owns that gate, it runs on every single turn, and it keeps running inside every phase of this one.
 - Not for: a genuine one-liner with a known cause and a test that already covers it. Fix it, prove it, say so.
 
@@ -63,19 +70,29 @@ Say the track out loud before the first action, the way `scoping-before-building
 ```dot
 digraph track_selection {
     "What does this request want?" [shape=diamond];
+    "Harm happening right now?" [shape=diamond];
     "Cause known?" [shape=diamond];
     "Deliverable is an answer,\nnot a change?" [shape=diamond];
+    "A document someone\nwill read later?" [shape=diamond];
     "Build" [shape=box];
+    "Respond" [shape=box];
     "Diagnose" [shape=box];
     "Investigate" [shape=box];
+    "Author" [shape=box];
+    "Review" [shape=box];
     "Change in place" [shape=box];
 
     "What does this request want?" -> "Build" [label="something that\ndoes not exist yet"];
-    "What does this request want?" -> "Cause known?" [label="something is\nbehaving wrong"];
+    "What does this request want?" -> "Harm happening right now?" [label="something is\nbehaving wrong"];
+    "Harm happening right now?" -> "Respond" [label="yes — users, data,\nor money exposed"];
+    "Harm happening right now?" -> "Cause known?" [label="no"];
     "Cause known?" -> "Build" [label="yes — it is a\nchange now"];
     "Cause known?" -> "Diagnose" [label="no"];
+    "What does this request want?" -> "Review" [label="a judgment on work\nsomeone else wrote"];
     "What does this request want?" -> "Deliverable is an answer,\nnot a change?" [label="a question about\nwhat is already there"];
-    "Deliverable is an answer,\nnot a change?" -> "Investigate" [label="yes"];
+    "Deliverable is an answer,\nnot a change?" -> "A document someone\nwill read later?" [label="yes"];
+    "A document someone\nwill read later?" -> "Author" [label="yes"];
+    "A document someone\nwill read later?" -> "Investigate" [label="no"];
     "Deliverable is an answer,\nnot a change?" -> "Build" [label="no — it became\na change"];
     "What does this request want?" -> "Change in place" [label="move, upgrade, or remove\nsomething already live"];
 }
@@ -85,10 +102,42 @@ digraph track_selection {
 |---|---|---|
 | **Build** | Something that does not exist yet, or behavior nobody has signed off on changing | The full spine below |
 | **Diagnose** | Something is wrong and the cause is not known | Reproduce, locate, fix, pin — then rejoins Build at review |
+| **Respond** | Something is broken *now*, with a clock and an audience | Declare, assess, preserve, mitigate, stabilize — then hands back to Diagnose |
 | **Investigate** | A question, an audit, a feasibility check; the deliverable is an answer, not a diff | Orient, gather, conclude, report — no branch to land |
+| **Review** | A judgment on work you did not write; the deliverable is findings someone else acts on | Orient, cover, judge, deliver — no branch of your own to land |
+| **Author** | The deliverable is a document people will read long after this run | Frame the reader, gather, draft, verify, land |
 | **Change in place** | An upgrade, a migration, a deletion, a live-system operation | Reversibility first, then the specific skill — then rejoins Build at prove |
 
 Two rules govern the choice, both inherited from `scoping-before-building` because a track and a size are the same kind of judgment: **torn between two tracks, take the heavier one**, and **the classification only moves one way**. A Diagnose run that turns out to need a new subsystem becomes a Build run and picks up the design gate it skipped. Nothing downgrades mid-run, however trivial the remainder looks in hindsight.
+
+## Then name the envelope
+
+The track is only half the route. Every gate below is answered by someone, at some size, against something that can or cannot be undone, in a tree that may have another writer in it — and the spine is written for exactly one setting of those: a human replying within a turn or two, a change worth eight phases, a mistake that can be walked back, one writer. Each of those is load-bearing on a gate, none of them is stated, and a default that is usually right is a default nobody notices being wrong.
+
+Read all four dials, say them out loud alongside the track, and put them on the run record's first line. [reference/envelopes.md](reference/envelopes.md) has how to read each one, what each changes, and which combinations carry a rule that no single dial carries alone.
+
+| Dial | Values | Decides |
+|---|---|---|
+| **Presence** | paired · async · autonomous · unattended | Who answers a gate |
+| **Amplitude** | express · standard · campaign | How much run the work is worth |
+| **Blast radius** | sandbox · repo · live | What a wrong turn costs |
+| **Crew** | solo · fanned · shared tree | Who else is writing to this tree |
+
+Three settings route somewhere specific, before the first action rather than after:
+
+- `autonomous` or `unattended` → `bounding-autonomous-work`. Every gate that was a question becomes a written self-answer carrying a stop condition, and the door bound stands in every envelope.
+- `express` → [reference/express.md](reference/express.md). Four beats rather than eight, behind entry conditions that get checked rather than hoped.
+- `campaign` → `checkpointing-long-runs`. The record stops being scaffolding and becomes the run's only memory.
+
+Amplitude obeys the same rule as the track and for the same reason: **it only ratchets up**. Express promotes to standard the instant an entry condition turns out false; standard promotes to campaign the instant the context holding the run gets close to full. Nothing demotes on your own judgment, because the judgment that says "this got smaller" is made by the part of the run that most wants to be finished.
+
+### A gate whose answerer is missing is substituted, not skipped
+
+This is the single most common way an unsupervised run goes wrong, and it never looks like a shortcut at the time. A question gets asked, nothing answers it, and the run continues — having quietly settled the question itself, without recording that it did. Six hours of competent work then rest on an answer nobody chose.
+
+`bounding-autonomous-work` owns the substitutions in full. The shape of all of them: the gate keeps its job and changes its mechanism. An approval becomes a written design carrying the approach that lost, a reversibility bound, and a stop condition that fires if it turns out wrong. A clarifying question becomes an answer taken from the code, or a ruling naming the reading that lost — never a fact. A second pair of eyes becomes `red-teaming-your-own-work` and `karen-and-the-manager` run as hard gates rather than as a courtesy.
+
+One gate has no substitute in any envelope: **an irreversible action gets a human.** An autonomous run may prepare it completely and may not take it. Reaching that point is not the run failing — it is the run ending correctly, with one step left for someone who can own it.
 
 ## The build spine
 
@@ -96,8 +145,8 @@ Each phase names what lets you in, who owns it, and the evidence that opens the 
 
 | # | Phase | Enter when | Owner skill | Gate — what opens the next phase |
 |---|---|---|---|---|
-| 1 | Frame | The request has arrived | `scoping-before-building`, `finishing-what-you-started` | Track and size said out loud; the acceptance ledger exists as a file, each line derived from the request's own words and watched failing once |
-| 2 | Design | The work is understood well enough to propose a shape | `scoping-before-building` | An explicit yes from your human partner. Architectural work has a written spec; bounded work has a few sentences in chat. The gate itself never shrinks |
+| 1 | Frame | The request has arrived | `scoping-before-building`, `finishing-what-you-started` | Track and envelope said out loud; the acceptance ledger exists as a file, each line derived from the request's own words and watched failing once |
+| 2 | Design | The work is understood well enough to propose a shape | `scoping-before-building` | An explicit yes from your human partner. Architectural work has a written spec; bounded work has a few sentences in chat. The gate itself never shrinks — with nobody there to say yes it is substituted, per `bounding-autonomous-work`, not skipped |
 | 3 | Isolate | The design is approved | `isolating-work-with-worktrees` | Work is off the shared trunk, and the test suite was run once, before any change, so the baseline is measured rather than assumed |
 | 4 | Plan | An approved design exists and the work is more than a couple of tasks | `structuring-an-implementation-plan` | Every task bite-sized, individually verifiable, no placeholders, `- [ ]` on each |
 | 5 | Implement | A plan exists, or the change is small enough not to need one | `delegating-tasks-with-review-gates`, `working-a-plan-task-by-task`, `fanning-out-independent-work` | Every task closed with its own verification actually run — `writing-the-failing-test-first` governs the order inside each task |
@@ -107,17 +156,31 @@ Each phase names what lets you in, who owns it, and the evidence that opens the 
 
 Phases 6 and 7 are separate on purpose, and collapsing them is the most common way a run ends badly. Review asks whether the work is any good. Prove asks whether the thing that was actually asked for is actually there. A clean review of the wrong deliverable passes phase 6 every time.
 
-The other three tracks reuse this spine rather than replacing it:
+The other tracks reuse this spine rather than replacing it:
 
 - **Diagnose** keeps phases 1 and 3 — a bug still gets a ledger and still gets off the trunk — and runs reproduce → locate → fix → pin in place of phases 2, 4, and 5, under `diagnosing-before-fixing`. It rejoins at phase 6. Its gate before any fix is a reproduction that fails on demand; its gate after is a regression test that failed before the fix and passes after (`regression-test-from-bug`).
+- **Respond** is the one track that does not open with a ledger — there is no request to derive one from. Its equivalent is the **impact statement**: who is affected, how badly, and whether it is growing, written in user terms, and the first gate is that the harm stopped rather than that it is understood. `responding-to-incidents` owns declare → assess → preserve → mitigate → stabilize, and inverts the usual order deliberately: mitigate before you diagnose. The moment users are safe it hands back to **Diagnose**, which picks up the spine normally. Its close-out is `writing-postmortems`, and skipping that because the cause turned out obvious in hindsight is how the same incident returns next quarter.
 - **Investigate** runs orient → gather → conclude → report. It reaches phase 8 only if it produced an artifact that has to land — a doc, an ADR, a spec. Its close-out gate is `calibrating-confidence`: every claim in the report marked verified, inferred, or assumed, with the unknowns named rather than smoothed over.
+- **Review** runs orient → cover → judge → deliver, under `handing-off-for-review` and `reviewing-code-deeply`. Its gate is **coverage of the diff**, not confidence in a conclusion: every changed file actually seen, and what is *absent* from the change weighed alongside what is in it. It ends at delivery rather than at landing, because the branch belongs to whoever wrote it, and `verifying-review-feedback` governs the return leg when the findings come back argued.
+- **Author** runs frame the reader → gather → draft → verify → land. The phase that gets skipped is verify, every time: a document's claims are checked against the thing they describe, the same way code's are, rather than against the memory of it. `writing-durable-docs` decides what will still be true in a year, `explaining-technical-work` sets the altitude, and the specific form — `writing-adrs`, `writing-release-notes`, `writing-postmortems` — owns the shape.
 - **Change in place** opens with `deciding-reversibility` — a one-way door is a different piece of work from a two-way one — then runs its own skill from the routing reference, and rejoins at phase 6. An upgrade or a migration is reviewed like any other diff; arriving with no new code of its own is not a reason to skip the seat.
+
+## The floor: what survives every envelope
+
+Six things do not scale down. Not with amplitude, not with presence, not with how obviously correct the work is. An envelope that cannot afford one of these owes a cheaper mechanism for it, never a shrug — the same way a sixteen-color terminal still owes the contrast guarantee.
+
+- **The track and the envelope are said out loud before the first action**, and both land on the record. A route chosen silently is a route nobody can correct.
+- **Something outside your own confidence closes the run.** A person, or a command whose output you read. Re-reading the diff is not proof of anything except that you read it.
+- **What would prove this done is written down before the work**, in the request's own words, and backed by a check that was watched failing once. Express gets one line; a campaign gets many; Respond writes an impact statement instead, because there is no request to quote. Zero is not an amplitude.
+- **A one-way door gets a human.** No envelope, no confidence level, and no deadline converts this into a self-answer.
+- **What was not done is named** to whoever owns it next. Silence is not a report, and it reads as completeness to everyone who was not there.
+- **The record is written when the thing happens.** A record assembled at the end was written by whatever survived, which is exactly the memory it existed to guard against.
 
 ## Pull in the specialists
 
 The spine names one owner per phase. It is not the only skill that phase needs, and treating it as the whole answer is how a library this size gets used like a library of eight.
 
-At each phase boundary, check what the *content* of this work calls for, not just its stage: an API in the design phase pulls `designing-apis` and `drawing-boundaries`; anything parsing input someone else controls pulls `handling-untrusted-input` and `threat-modeling` before implementation rather than after review; a slow endpoint pulls `performance-profiling` before anyone optimizes anything. `reference/phase-routing.md` indexes every skill in the library against the phase where it earns its place, so the check is a lookup rather than a memory exercise. Consult the phase you are entering, not the whole file.
+At each phase boundary, check what the *content* of this work calls for, not just its stage: an API in the design phase pulls `designing-apis` and `drawing-boundaries`; anything parsing input someone else controls pulls `handling-untrusted-input` and `threat-modeling` before implementation rather than after review; a slow endpoint pulls `performance-profiling` before anyone optimizes anything. [reference/phase-routing.md](reference/phase-routing.md) indexes every skill in the library against the phase where it earns its place, so the check is a lookup rather than a memory exercise. Consult the phase you are entering, not the whole file.
 
 Two of those pulls are load-bearing enough to name here. Before phase 1 on any inherited or unfamiliar work, `recovering-agent-context` and `orienting-in-unfamiliar-code` come first — a run framed against a codebase you have not looked at frames the wrong thing. And after phase 7 believes it is finished, `red-teaming-your-own-work` and then `karen-and-the-manager` are this library's standard adversarial close, most warranted exactly when the ordinary review came back clean.
 
@@ -125,10 +188,11 @@ Two of those pulls are load-bearing enough to name here. Before phase 1 on any i
 
 Conversation memory does not survive compaction; a file does. Keep one record for the whole run, in the same file the acceptance ledger already lives in — `finishing-what-you-started` owns that ledger's contents and its `LEDGER.md` default, and a second file competing with it is two accounts of progress that will disagree by phase 5.
 
-Add three things to it that the acceptance ledger alone does not carry:
+Add four things to it that the acceptance ledger alone does not carry:
 
 ```
-Track: build | diagnose | investigate | change-in-place
+Track: build | diagnose | respond | investigate | review | author | change-in-place
+Envelope: presence=paired | amplitude=standard | radius=repo | crew=solo
 Phase: <name> — entered <when>, gate: <what will prove it>
 
 ## Phase log            (append only; never rewrite a line)
@@ -140,11 +204,17 @@ Phase: <name> — entered <when>, gate: <what will prove it>
 
 ## Rulings             (every decision that could be questioned later)
 - task 2: reviewer flagged the retry cap as magic; plan mandates 5 — plan governs, recorded
+
+## Stop conditions     (autonomous and unattended runs; written before the work)
+- budget: three failed attempts at one green test
+- surprise: anything outside src/api/ or its tests
+- door: any push, deploy, or write to real data
+- drift: any edit to an acceptance line
 ```
 
-Three rules make it worth keeping. **Append, never rewrite** — a rewritten log is a log that agrees with whatever you now believe. **Every skipped phase gets a line saying why**, because that is what makes a skip a decision instead of an omission. **Every ruling gets a line**, because a finding dropped with nothing written down resurfaces later with no memory of why it was let go.
+Four rules make it worth keeping. **Append, never rewrite** — a rewritten log is a log that agrees with whatever you now believe. **Every skipped phase gets a line saying why**, because that is what makes a skip a decision instead of an omission. **Every ruling gets a line**, because a finding dropped with nothing written down resurfaces later with no memory of why it was let go. And **every envelope change gets a line**, because a run whose conditions moved silently is running a process nobody chose.
 
-After a compaction, the record and `git log` outrank your own recollection, and it is not close. A controller that trusts its memory re-dispatches work that is already committed — the single most expensive mistake this loop can make, and the one it is most confident about while making it.
+After a compaction, the record and `git log` outrank your own recollection, and it is not close. A controller that trusts its memory re-dispatches work that is already committed — the single most expensive mistake this loop can make, and the one it is most confident about while making it. `checkpointing-long-runs` owns what goes into the record, when, and in what order of value; its headline is that the cheap half gets written and the expensive half — the dead ends — gets lost.
 
 ## The artifacts that outlive the run
 
@@ -199,6 +269,8 @@ Work arriving mid-flight gets the record read before anything else happens: the 
 
 Resuming means entering at the first phase whose gate is not yet met, not at the first phase. A run whose plan is written and whose tasks 1-3 are committed resumes at task 4, not at design. And a phase log whose last line is a task mid-fix-loop resumes inside that loop, not at the top of the task.
 
+Resume the envelope too, and do not inherit it. The dials that were true when the record was written may not be true now — the human who was answering has gone, the tree has acquired a second writer, the small change is now a campaign. Re-read all four before entering the phase, the same way the track gets re-read.
+
 ## When a gate fails, route backward
 
 A failed gate is information about which phase was wrong, and it is almost never the one currently open.
@@ -213,13 +285,55 @@ A failed gate is information about which phase was wrong, and it is almost never
 
 Pushing forward through a failed gate is the failure mode this whole skill exists against. It always looks cheaper in the moment, because the cost lands on whichever phase is unlucky enough to be open when the problem finally becomes undeniable.
 
+## When the envelope changes mid-run
+
+The track rarely moves. The envelope moves constantly, usually without anyone noticing, and every one of these is a decision that belongs on the record.
+
+| What you notice | The dial that moved | What the run does |
+|---|---|---|
+| The replies have stopped | presence: paired → async | Batch the open questions into one message; continue on everything that does not depend on the answers, park what does |
+| You are about to answer your own question | presence: async → autonomous | Stop here. `bounding-autonomous-work` first — the substitutions and the stop conditions get written now, not at the end |
+| The small change reached a second subsystem | amplitude: express → standard | Pick up the gates express skipped, design gate first |
+| The context is filling and the work is not close to done | amplitude: standard → campaign | Write the record now, while the memory writing it is still good |
+| The next command pushes, deploys, sends, or writes real data | radius: → live | Re-read reversibility before that command, not after it |
+| The diff shows files you never opened | crew: solo → shared tree | Nothing destructive, nothing stashed, nothing reset. Stage by hunk and re-read before writing |
+| Users started being affected while you investigated | track: diagnose → respond | The only upward track move that is urgent rather than procedural. Declare it out loud, then `responding-to-incidents` |
+
+## Commands
+
+Invoked directly, this skill takes a verb. With none, it runs as the spine: route, name the envelope, and enter at the first phase whose gate is not yet met.
+
+| Command | Does |
+|---|---|
+| `route [request]` | Name the track and the four dials, and stop there. Useful before committing to a run, and as a second opinion on one already going |
+| `resume` | Read the record, the plan's boxes, and `git log`, then enter at the first gate not yet met — never at the first phase |
+| `gate` | Name the evidence that would open the phase currently blocking, and say plainly whether it exists yet |
+| `record` | Write or refresh the run record — track, envelope, phase log, rulings, stop conditions — from what is actually on disk rather than from memory |
+| `handoff` | Produce the brief a successor needs to take the next action without reading the run, per `checkpointing-long-runs` |
+| `abort` | Stop cleanly: tree recoverable, record current, and a report naming what fired, what was done, and what remains |
+
 ## What this skill does not decide
 
 It sequences; it does not overrule. The owner skill for a phase governs how that phase runs, and where the two appear to disagree, the owner wins — this file is a map, not a second opinion about territory it does not cover.
 
 Two boundaries in particular. `using-tbaguette` still governs every individual turn, including turns inside a phase this skill opened. And nothing here licenses skipping the approval gate at phase 2: an orchestrated run that never got a yes is a faster way to build the wrong thing, not a substitute for asking.
 
-Your human partner can move the track in either direction, including down — they own the scope, and "just make the edit, skip the ceremony" is an instruction, not a rationalization to argue with. You cannot. A downgrade you chose yourself is the doubt talking; a downgrade they asked for is a decision, and it goes in the record as one, named and attributed, so the run still says what process it actually ran.
+Your human partner can move the track or the envelope in either direction, including down — they own the scope, and "just make the edit, skip the ceremony" is an instruction, not a rationalization to argue with. You cannot. A downgrade you chose yourself is the doubt talking; a downgrade they asked for is a decision, and it goes in the record as one, named and attributed, so the run still says what process it actually ran.
+
+## Refuse
+
+Category defaults, not bans. Any of these can be right in a specific run — but reaching for one when the axis was free means you were performing process rather than routing.
+
+- A plan document for a change with two tasks.
+- A clarifying question you could have answered by reading one file. `paired` makes questions cheap, not free.
+- An acceptance line that restates the request instead of naming what would prove it.
+- A worktree for a run that was never going to leave the branch it is already on.
+- A subagent fan-out for work that is two edits in one file.
+- A design gate performed at a partner who already said "just do it" — they moved the amplitude down, and re-asking is not rigor.
+- A phase log written at the end, from memory, in one pass.
+- A track named after the first three edits, describing what already happened.
+- Narrating the phases to a reader who wanted the finding.
+- Ceremony offered as evidence. "I ran the full spine" is not a claim about the work.
 
 ## Common mistakes
 
@@ -228,7 +342,12 @@ Your human partner can move the track in either direction, including down — th
 | A perfect implementation of something nobody asked for | Phase 2 approved a design the ledger at phase 1 was never checked against |
 | The run is "basically done" for three more hours | Phases 6 and 7 collapsed into each other; the review passed, so the proof was assumed |
 | A second session redoes committed work | No run record, or a record trusted less than the context that had already lost the thread |
-| Every phase ran, on a two-line change | The lightest track that fit was available and the heaviest one got run anyway; process theater is its own defect |
+| Every phase ran, on a two-line change | Amplitude never read. `standard` was taken as the default rather than as a judgment, and express was available |
+| A question was asked into a silence and then answered by the asker | Presence never read. The gate had no answerer, so it was skipped rather than substituted |
+| A careful six-hour run that was reckless in its final command | Blast radius read once at the start, when nothing was irreversible yet |
+| An unsupervised run finished confidently and built the wrong thing | No stop condition named drift, so the ledger got edited to match the build |
+| A production outage worked from the top of the Diagnose track | Wrong track: Respond mitigates before it reproduces, and every minute spent reproducing was spent on users |
+| Two agents' work landed and one of them silently vanished | Crew read as `solo` because the tree happened to look quiet when it was read |
 | A phase was skipped and nobody can say why | Skipped silently instead of recorded as skipped with a reason |
 | A finding from phase 6 gets fixed inside phase 5's task | Routed forward into whatever was open instead of backward to the phase that owns it |
 | The spine named an owner and nothing else in the library came up | The owner skill was treated as the phase's whole answer rather than its first move |
@@ -243,3 +362,8 @@ Your human partner can move the track in either direction, including down — th
 - "The ledger is overhead, I'm holding it all fine" — said by a context that is about to be compacted.
 - "It's faster to fix this myself than to send it back to the phase that owns it."
 - "We're past that phase now" — offered as a reason not to go back to it.
+- "Nobody's around, so I'll use my judgment" — said instead of writing the judgment down.
+- "It's technically irreversible, but it's obviously fine."
+- "This is small, I'll skip the ledger" — the floor is one line, not zero.
+- "I'll promote it to a real run if it turns out bigger" — said for the fourth time.
+- "Let me understand this properly first" — with users currently broken.
