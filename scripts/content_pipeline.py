@@ -369,7 +369,15 @@ def build_plain_skill_entry(
     locale_skill_dir: Path | None = None, fallback_description: str | None = None,
     resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> dict:
-    """Build the schema entry for one of the 73 ordinary (non-formidable) skills.
+    """Build the schema entry for one ordinary (non-formidable) skill.
+
+    A skill with its own reference/*.md files gets them rendered too, as
+    "reference_sections" -- same subdocument renderer and same relative-link
+    rewriting formidable has always had, minus the stacks/ tree and the
+    craft-floor special case, which are formidable's alone. Before this,
+    reference files were reachable only by an agent reading the plugin
+    directory: on the site their content was absent and the SKILL.md links
+    to them rendered as inert plain text.
 
     locale_skill_dir, when given, is checked for a translated SKILL.md
     first; missing it falls back to skill_dir (English) and marks the
@@ -396,10 +404,43 @@ def build_plain_skill_entry(
 
     frontmatter, body = split_frontmatter(read_text(source_dir / SKILL_FILE_NAME))
     description = frontmatter["description"] if translated else (fallback_description or frontmatter["description"])
+
+    reference_dir = skill_dir / "reference"
+    reference_paths = sorted(p for p in reference_dir.glob("*.md") if p.is_file()) \
+        if reference_dir.is_dir() else []
+    locale_reference_dir = (locale_skill_dir / "reference") if locale_skill_dir else None
+
+    resolve_relative_link = make_reference_link_resolver(
+        {path.stem: f"ref-{path.stem}" for path in reference_paths}
+    ) if reference_paths else None
+
     body_html = render_markdown_body(
-        strip_title_heading(body), resolve_skill_link=resolve_skill_link
+        strip_title_heading(body),
+        resolve_relative_link=resolve_relative_link,
+        resolve_skill_link=resolve_skill_link,
     )
-    return {
+
+    reference_sections = []
+    for path in reference_paths:
+        # Same per-file fallback rule as formidable's: a translated reference
+        # file keeps its English filename, so one can be translated while its
+        # neighbour is not. A missing one falls back to English rather than
+        # dropping the section.
+        source = path
+        if locale_reference_dir is not None:
+            candidate = locale_reference_dir / path.name
+            if candidate.is_file():
+                source = candidate
+            else:
+                translated = False
+        reference_sections.append(
+            render_reference_subdocument(
+                source, "ref", resolve_relative_link,
+                resolve_skill_link=resolve_skill_link,
+            )
+        )
+
+    entry = {
         "slug": skill_dir.name,
         "name": frontmatter["name"],
         "category_slug": category["slug"],
@@ -418,6 +459,9 @@ def build_plain_skill_entry(
         "is_formidable": False,
         "translated": translated,
     }
+    if reference_sections:
+        entry["reference_sections"] = reference_sections
+    return entry
 
 
 def build_formidable_skill_entry(
@@ -481,7 +525,7 @@ def build_formidable_skill_entry(
 
     anchor_id_by_filename_stem = {path.stem: f"stack-{path.stem}" for path in stack_paths}
     anchor_id_by_filename_stem.update({path.stem: f"cmd-{path.stem}" for path in reference_paths})
-    resolve_relative_link = make_formidable_link_resolver(anchor_id_by_filename_stem)
+    resolve_relative_link = make_reference_link_resolver(anchor_id_by_filename_stem)
 
     body_html = render_markdown_body(
         strip_title_heading(body),
@@ -490,13 +534,13 @@ def build_formidable_skill_entry(
     )
 
     formidable_stacks = [
-        render_formidable_subdocument(
+        render_reference_subdocument(
             path, "stack", resolve_relative_link, resolve_skill_link=resolve_skill_link
         )
         for path in resolved_stack_paths
     ]
     formidable_commands = [
-        render_formidable_subdocument(
+        render_reference_subdocument(
             path, "cmd", resolve_relative_link, resolve_skill_link=resolve_skill_link
         )
         for path in resolved_reference_paths
@@ -528,7 +572,7 @@ def build_formidable_skill_entry(
     craft_floor_path = reference_dir / "craft-floor.md"
     if craft_floor_path.is_file():
         resolved_craft_floor, _ = resolve(craft_floor_path, locale_reference_dir)
-        craft_floor_doc = render_formidable_subdocument(
+        craft_floor_doc = render_reference_subdocument(
             resolved_craft_floor, "cmd", resolve_relative_link,
             resolve_skill_link=resolve_skill_link,
         )
@@ -537,11 +581,11 @@ def build_formidable_skill_entry(
     return entry
 
 
-def render_formidable_subdocument(
+def render_reference_subdocument(
     path: Path, anchor_prefix: str, resolve_relative_link: Callable[[str], str | None],
     resolve_skill_link: Callable[[str], str | None] | None = None,
 ) -> dict:
-    """Render one formidable reference/*.md or reference/stacks/*.md file.
+    """Render one reference/*.md or reference/stacks/*.md file.
 
     Returns {"id", "title", "html"} per the schema. id is
     "<anchor_prefix>-<filename stem>" (e.g. "stack-web", "cmd-shape") --
@@ -558,20 +602,36 @@ def render_formidable_subdocument(
     would collide and anchors would silently point at the wrong section.
     """
     section_id = f"{anchor_prefix}-{path.stem}"
+
+    def resolve(href: str) -> str | None:
+        # A reference file's own "Contents" list points at its own headings
+        # with GitHub's fragment spelling ("#phase-1--frame"). On the page
+        # those headings carry this section's prefix, and their ids come
+        # from slugify(), whose [^a-z0-9]+ collapse turns GitHub's doubled
+        # hyphen (an em-dash's two surrounding spaces) into one. Re-slugging
+        # the fragment applies the same collapse, so the two agree -- and
+        # slugify is idempotent, so a fragment that already matched still
+        # does. Without this the resolver returns None for every "#..." and
+        # the whole contents list renders as inert plain text, which is how
+        # it shipped before anyone rendered these files at all.
+        if href.startswith("#"):
+            return f"#{section_id}-{slugify(href[1:])}"
+        return resolve_relative_link(href) if resolve_relative_link else None
+
     body = strip_title_heading(read_text(path))
     html = render_markdown_body(
         body,
         heading_id_prefix=f"{section_id}-",
-        resolve_relative_link=resolve_relative_link,
+        resolve_relative_link=resolve,
         resolve_skill_link=resolve_skill_link,
     )
     return {"id": section_id, "title": humanize_filename(path.stem), "html": html}
 
 
-def make_formidable_link_resolver(
+def make_reference_link_resolver(
     anchor_id_by_filename_stem: dict[str, str],
 ) -> Callable[[str], str | None]:
-    """Build a resolver for formidable's internal relative `.md` links.
+    """Build a resolver for a skill's internal relative `.md` links.
 
     Every such link in the corpus (in formidable/SKILL.md and in
     reference/color.md) points at a reference or stacks file using a

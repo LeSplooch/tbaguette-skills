@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-08-29T05:00:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-29T05:00:32Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-08-29T12:17:57+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-08-29T12:17:57Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">delegating-tasks-with-review-gates</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-29T05:00:32.941959+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-08-29T07:00:32+02:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Planning and delegation</span>
   <p class="lede">Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, or when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it. Covers dispatching a zero-context implementer subagent per task, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.</p>
@@ -91,7 +91,7 @@
 <p>Never the rest of the plan, and never a summary of the session so far — a dispatch describes one task, not the controller's history. Hand over the brief and the report as file paths, not pasted text: anything pasted into a dispatch, or printed back by a subagent, stays resident in your own context for the rest of the session and gets re-read on every later turn.</p>
 <p>Dispatch one implementer at a time. Two working the same tree at once is a conflict waiting to resolve itself badly. Invite questions before it starts work and answer them completely — an implementer that guesses instead of asking is a defect in the dispatch, not in the implementer. The implementer never spawns subagents of its own, and especially never a reviewer of its own: the review seat is already scheduled, dispatched by you once the report lands, and a self-spawned second opinion duplicates it at full cost while counting for nothing.</p>
 <p>If several tasks in the plan are the same small edit repeated across files — the same constant, the same one-line fix — compose one dispatch listing every file and its change rather than one subagent per task, and review the batch as a single diff. Save one-dispatch-per-task for work that actually needs its own judgment, its own tests, or its own review.</p>
-<p>Template: reference/implementer-prompt.md</p>
+<p>Template: <a href="#ref-implementer-prompt">reference/implementer-prompt.md</a></p>
 <h2 id="handle-what-comes-back">Handle what comes back</h2>
 <table><thead><tr><th>Status</th><th>What it means</th><th>What you do</th></tr></thead><tbody><tr><td>DONE</td><td>Work complete, self-reviewed, committed</td><td>Move to review</td></tr><tr><td>DONE_WITH_CONCERNS</td><td>Complete, but the implementer has doubts</td><td>Read the concerns first — resolve anything about correctness or scope before review; note-only observations can wait for review</td></tr><tr><td>NEEDS_CONTEXT</td><td>Missing information blocked progress</td><td>Supply what's missing, re-dispatch</td></tr><tr><td>BLOCKED</td><td>Cannot complete as given</td><td>Diagnose why, then act</td></tr></tbody></table>
 <p>A BLOCKED report is a signal to change something, not a cue to retry unchanged: more context if the gap is understanding, a stronger model if the task needs more reasoning than the current one has, a smaller task if it's simply too large, or a correction — ruled on and recorded — if the plan itself is wrong. Forcing the same model to retry a task it already called too hard wastes the round and tells you nothing new.</p>
@@ -102,12 +102,12 @@
 <ul><li><strong>Spec compliance</strong> — does the diff match what the task asked for: nothing missing, nothing extra, nothing solved the wrong way.</li><li><strong>Code quality</strong> — is it well-built: clean separation, real error handling, tests that verify behavior rather than mocks, no file quietly outgrowing its one job.</li></ul>
 <p>Give the reviewer a real scope, not an open-ended one: the diff and the brief, plus the global constraints copied verbatim from the plan or spec — exact values, exact formats, the relationships between components the plan actually states. It should read the diff and the implementer's report, not crawl the wider codebase or re-run a suite the implementer already ran and reported on; a focused check is warranted only against a specific, named doubt. Never pre-judge a finding for it — &quot;don't flag X&quot; or &quot;at most Minor&quot; is you grading the work in advance, which is exactly what the second reviewer exists to avoid.</p>
 <p>The reviewer may flag a requirement it cannot verify from the diff alone — something that lives in unchanged code or spans several tasks. That doesn't block anything by itself, but it's yours to resolve, not the reviewer's: you hold the cross-task context it doesn't. Confirm it one way or the other; a confirmed gap is a failed spec review and enters the fix loop like any other finding.</p>
-<p>Template: reference/reviewer-prompt.md, full-review mode.</p>
+<p>Template: <a href="#ref-reviewer-prompt">reference/reviewer-prompt.md</a>, full-review mode.</p>
 <h2 id="when-review-finds-problems-the-fix-loop">When review finds problems: the fix loop</h2>
 <p>Two kinds of finding leave the loop before it starts:</p>
 <ul><li><strong>Minor findings</strong> get noted in the running record and deferred to the final review, which decides what actually needs fixing before merge. They never trigger a round.</li><li><strong>A finding that conflicts with what the plan's text actually mandates</strong> is yours to rule on, the same way any plan conflict is: weigh it against the spec, decide, write down why. Don't dismiss the finding just because the plan called for it, and don't dispatch a fix that overrides the plan without a recorded ruling either.</li></ul>
 <p>Everything else enters the loop. One round is one fix dispatch plus one scoped re-review:</p>
-<ul><li><strong>Early rounds resume the implementer that did the work.</strong> It still has the task, the code, and its own reasoning intact — hand it the open findings verbatim.</li><li><strong>A loop that survives a couple of rounds with the same implementer</strong> is usually telling you it can't see its own problem, not that it needs one more try. Move to a fresh implementer with no sunk cost in the current approach, on a model at least one tier stronger, and say plainly that a prior attempt is written up in the report file for it to read.</li><li><strong>Every round ends the same way.</strong> The implementer fixes, re-runs the tests that cover the amended code, and appends a fix report: what changed, which tests, the command, the output. Then a re-review, scoped to exactly two questions — was each finding actually addressed, and did the fix itself break something new. Anything the re-reviewer notices outside that scope goes to the deferred list, not back into the loop. Template: reference/reviewer-prompt.md, scoped-re-review mode.</li></ul>
+<ul><li><strong>Early rounds resume the implementer that did the work.</strong> It still has the task, the code, and its own reasoning intact — hand it the open findings verbatim.</li><li><strong>A loop that survives a couple of rounds with the same implementer</strong> is usually telling you it can't see its own problem, not that it needs one more try. Move to a fresh implementer with no sunk cost in the current approach, on a model at least one tier stronger, and say plainly that a prior attempt is written up in the report file for it to read.</li><li><strong>Every round ends the same way.</strong> The implementer fixes, re-runs the tests that cover the amended code, and appends a fix report: what changed, which tests, the command, the output. Then a re-review, scoped to exactly two questions — was each finding actually addressed, and did the fix itself break something new. Anything the re-reviewer notices outside that scope goes to the deferred list, not back into the loop. Template: <a href="#ref-reviewer-prompt">reference/reviewer-prompt.md</a>, scoped-re-review mode.</li></ul>
 <p>Give the loop a small, fixed cap rather than letting it run open-ended. A loop that hasn't converged in a handful of rounds is a structural problem, and more rounds spent hoping is not a strategy. At the cap, stop dispatching and adjudicate every open finding yourself:</p>
 <ul><li>Wrong, or genuinely arguable: park it, with the reasoning recorded, so the final review sees both sides.</li><li>Real, but nothing later depends on it: park it too, with a ruling that says it's real and deliberately deferred.</li><li>Real and load-bearing — a later task builds on it, or it reveals a defect in the plan itself: rule on the smallest change that unblocks what depends on it, record what you decided, and carry that ruling into the next task's dispatch.</li></ul>
 <p>Every adjudication is a recorded ruling. A finding dropped with no line explaining why is a defect that will resurface later with no memory of why it was let go.</p>
@@ -121,7 +121,445 @@
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>A task marked complete with an open spec gap</td><td>&quot;Close enough&quot; stood in for a clean verdict — a failed spec check is not done, only fixed or parked-with-a-ruling</td></tr><tr><td>The controller edits code directly mid-review</td><td>Fixing in the controller session skips the review gate it's supposed to protect, and pollutes the context that's supposed to stay clean</td></tr><tr><td>A fix round runs six, seven, eight times on the same task</td><td>No fixed cap — rounds kept being spent hoping instead of adjudicating a structural failure</td></tr><tr><td>A fix ships with no re-review because it &quot;was small&quot;</td><td>Small fixes regress too; skipping the re-review is how they land unseen</td></tr><tr><td>The next task dispatches before this one's review is clean or parked</td><td>The task loop's gate was treated as optional under time pressure</td></tr><tr><td>A dispatch prompt balloons with several tasks' worth of pasted history</td><td>Session history got pasted in instead of handed over as an interface the brief states plainly</td></tr><tr><td>The implementer's self-review stands in for the task review</td><td>Self-review and independent review catch different things; one was skipped, not just deferred</td></tr><tr><td>An implementer spawns its own reviewer and the controller treats that as covered</td><td>A duplicate review seat, not a second opinion — the real review still has to run</td></tr><tr><td>A defect traced back to an earlier, already-closed task</td><td>Treated as the current task's finding instead of raised against the task that actually owns it</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
-<ul><li>&quot;The self-review already looked thorough, I'll skip the task review this once.&quot;</li><li>&quot;One more fix round will probably converge&quot; — said again, past the point where it already didn't.</li><li>&quot;I'll just fix this myself instead of dispatching, it's faster.&quot;</li><li>&quot;This finding is obviously wrong, I'll drop it&quot; — with nothing written down about why.</li><li>&quot;Should I continue?&quot; surfacing after a task that closed clean, with nothing that called for a stop.</li><li>A dispatch prompt that includes &quot;here's everything that happened in the tasks before this one.&quot;</li><li>Reviewing this task's diff with the previous task's context still doing the judging.</li></ul></div></article>
+<ul><li>&quot;The self-review already looked thorough, I'll skip the task review this once.&quot;</li><li>&quot;One more fix round will probably converge&quot; — said again, past the point where it already didn't.</li><li>&quot;I'll just fix this myself instead of dispatching, it's faster.&quot;</li><li>&quot;This finding is obviously wrong, I'll drop it&quot; — with nothing written down about why.</li><li>&quot;Should I continue?&quot; surfacing after a task that closed clean, with nothing that called for a stop.</li><li>A dispatch prompt that includes &quot;here's everything that happened in the tasks before this one.&quot;</li><li>Reviewing this task's diff with the previous task's context still doing the judging.</li></ul></div><div class="formidable-extra"><section class="formidable-extra__group" aria-labelledby="reference-heading">
+  <h2 id="reference-heading" class="formidable-extra__subtitle">Reference</h2>
+  <div class="tabs" data-tabs>
+    <div class="tabs__list" role="tablist" aria-label="Reference">
+      <button class="tabs__tab" type="button" role="tab" id="tab-ref-implementer-prompt" aria-controls="ref-implementer-prompt" aria-selected="true" tabindex="0">Implementer Prompt</button><button class="tabs__tab" type="button" role="tab" id="tab-ref-reviewer-prompt" aria-controls="ref-reviewer-prompt" aria-selected="false" tabindex="-1">Reviewer Prompt</button>
+    </div>
+    <div class="tabs__panels">
+      <div class="tabs__panel" role="tabpanel" id="ref-implementer-prompt" aria-labelledby="tab-ref-implementer-prompt" tabindex="0"><h2 id="ref-implementer-prompt-contents">Contents</h2>
+<ul><li>The template</li><li>Placeholders</li><li>What the implementer returns</li></ul>
+<p>Use this template when dispatching an implementer subagent for one task.</p>
+<h2 id="ref-implementer-prompt-the-template">The template</h2>
+<pre class="prose-code-block"><code>Dispatch a fresh subagent:
+  description: &quot;Implement Task N: [task name]&quot;
+  model: [MODEL — REQUIRED: choose per SKILL.md's &quot;Choosing a model for each role&quot; table. An
+         unspecified model silently inherits the session's own, usually the
+         most expensive one available.]
+  prompt: |
+    You are implementing Task N: [task name]
+
+    ## Task Description
+
+    Read your task brief first: [BRIEF_FILE]
+    It contains the full task text from the plan.
+
+    ## Context
+
+    [Scene-setting: where this fits, dependencies, architectural context]
+
+    ## Before You Begin
+
+    If you have questions about:
+    - The requirements or acceptance criteria
+    - The approach or implementation strategy
+    - Dependencies or assumptions
+    - Anything unclear in the task description
+
+    **Ask them now.** Raise any concerns before starting work.
+
+    ## Your Job
+
+    Once you're clear on requirements:
+    1. Implement exactly what the task specifies
+    2. Write tests (following TDD if the task says to)
+    3. Verify the implementation works
+    4. Commit your work
+    5. Self-review (see below)
+    6. Report back
+
+    Work from: [directory]
+
+    **While you work:** if you encounter something unexpected or unclear,
+    ask questions. It's always OK to pause and clarify — don't guess or
+    make assumptions.
+
+    While iterating, run the focused test for what you're changing; run the
+    full suite once before committing, not after every edit.
+
+    ## You Do Not Dispatch Subagents
+
+    Do all of this task's work yourself. Never spawn a subagent to
+    implement part of the task, and above all never spawn a reviewer to
+    check your work. Self-review (below) means reading your own diff.
+    Review is the controller's job: after you report, it dispatches a
+    fresh reviewer against your diff. A reviewer you spawn duplicates
+    that review at full cost, and its approval counts for nothing in
+    the process. If you catch yourself thinking &quot;an independent review
+    would strengthen my report,&quot; that review is already scheduled —
+    report instead.
+
+    ## Code Organization
+
+    You reason best about code you can hold in context at once, and your
+    edits are more reliable when files are focused. Keep this in mind:
+    - Follow the file structure the plan defines
+    - Each file should have one clear responsibility with a well-defined interface
+    - If a file you're creating is growing beyond the plan's intent, stop and
+      report it as DONE_WITH_CONCERNS — don't split files on your own without
+      plan guidance
+    - If an existing file you're modifying is already large or tangled, work
+      carefully and note it as a concern in your report
+    - In an existing codebase, follow its established patterns. Improve code
+      you're touching the way a good developer would, but don't restructure
+      things outside your task.
+
+    ## When You're in Over Your Head
+
+    It is always OK to stop and say &quot;this is too hard for me.&quot; Bad work is
+    worse than no work. You will not be penalized for escalating.
+
+    **STOP and escalate when:**
+    - The task requires architectural decisions with multiple valid approaches
+    - You need to understand code beyond what was provided and can't find clarity
+    - You feel uncertain about whether your approach is correct
+    - The task involves restructuring existing code in ways the plan didn't anticipate
+    - You've been reading file after file trying to understand the system without progress
+
+    **How to escalate:** report back with status BLOCKED or NEEDS_CONTEXT.
+    Describe specifically what you're stuck on, what you've tried, and what
+    kind of help you need. The controller can provide more context,
+    re-dispatch with a more capable model, or break the task into smaller
+    pieces.
+
+    ## Before Reporting Back: Self-Review
+
+    Review your work with fresh eyes. Ask yourself:
+
+    **Completeness:**
+    - Did I fully implement everything in the spec?
+    - Did I miss any requirements?
+    - Are there edge cases I didn't handle?
+
+    **Quality:**
+    - Is this my best work?
+    - Are names clear and accurate (matching what things do, not how they work)?
+    - Is the code clean and maintainable?
+
+    **Discipline:**
+    - Did I avoid overbuilding (YAGNI)?
+    - Did I only build what was requested?
+    - Did I follow existing patterns in the codebase?
+
+    **Testing:**
+    - Do tests actually verify behavior, not just mock behavior?
+    - Did I follow TDD if required?
+    - Are tests comprehensive?
+    - Is the test output pristine — no stray warnings or noise?
+
+    If you find issues during self-review, fix them now, before reporting.
+    Self-review is real and worth doing, but it does not replace the task
+    review that follows — a second, independent reviewer is still coming.
+
+    ## After Review Findings
+
+    If the task review finds issues, you will be resumed with the findings.
+    Fix them, re-run the tests that cover the amended code, and append a fix
+    report to your report file: what you changed, the covering tests you
+    ran, the command, and the output. The reviewer will not re-run tests for
+    you — your report is the test evidence. Then reply with the same short
+    status contract as your first report.
+
+    ## Report Format
+
+    Write your full report to [REPORT_FILE]:
+    - What you implemented (or what you attempted, if blocked)
+    - What you tested and the test results
+    - **TDD evidence** (if TDD was required for this task):
+      - RED: command run, the relevant failing output before implementation,
+        and why that failure was expected
+      - GREEN: command run and the relevant passing output after implementation
+    - Files changed
+    - Self-review findings, if any
+    - Any issues or concerns
+
+    Then report back with ONLY the following (under 15 lines — the detail
+    lives in the report file):
+    - **Status:** DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+    - Commits created (short SHA + subject)
+    - One-line test summary (e.g. &quot;14/14 passing, output pristine&quot;)
+    - Your concerns, if any
+    - The report file path
+
+    If BLOCKED or NEEDS_CONTEXT, put the specifics in the final message
+    itself — the controller acts on it directly.
+
+    Use DONE_WITH_CONCERNS if you completed the work but have doubts about
+    correctness. Use BLOCKED if you cannot complete the task. Use
+    NEEDS_CONTEXT if you need information that wasn't provided. Never
+    silently produce work you're unsure about.</code></pre>
+<h2 id="ref-implementer-prompt-placeholders">Placeholders</h2>
+<ul><li><code>[MODEL]</code> — REQUIRED: implementer model per SKILL.md's &quot;Choosing a model for each role&quot; table</li><li><code>[task name]</code> — this task's name from the plan</li><li><code>[BRIEF_FILE]</code> — the file holding this task's full requirements, extracted from the plan</li><li><code>[Scene-setting...]</code> — one line on where this task fits, plus any interfaces or decisions from earlier tasks the brief itself has no way to know about</li><li><code>[directory]</code> — where the implementer works from</li><li><code>[REPORT_FILE]</code> — the file the implementer writes its report to; name it so it's obviously paired with the brief (for example, a task's brief and report share a number)</li></ul>
+<h2 id="ref-implementer-prompt-what-the-implementer-returns">What the implementer returns</h2>
+<p>A short status contract (DONE, DONE_WITH_CONCERNS, BLOCKED, or NEEDS_CONTEXT), the commits it created, a one-line test summary, any concerns, and the report file path — never the full report inline.</p></div><div class="tabs__panel" role="tabpanel" id="ref-reviewer-prompt" aria-labelledby="tab-ref-reviewer-prompt" tabindex="0" hidden><h2 id="ref-reviewer-prompt-contents">Contents</h2>
+<ul><li>Shared reviewer discipline</li><li>Full task review</li><li>Scoped re-review (after a fix round)</li><li>Preparing the diff file, either mode</li></ul>
+<p>The review loop dispatches the same kind of reviewer at two different points: a full review of a task's diff the first time, and a scoped re-review after a fix round. Same reviewer, same discipline, same severity scale — what changes is scope and what gets reported back. This file covers both: the discipline they share, then each mode's own template.</p>
+<h2 id="ref-reviewer-prompt-shared-reviewer-discipline">Shared reviewer discipline</h2>
+<p>Both templates below carry this block inside the actual dispatch prompt, not just as background for you — copy it in verbatim wherever a mode's template says to.</p>
+<pre class="prose-code-block"><code>Your review is read-only on this checkout. Do not mutate the working tree,
+the index, HEAD, or branch state in any way.
+
+## You Do Not Dispatch Subagents
+
+Do all of this review yourself. Never spawn a subagent to review part of
+the diff, and never spawn another reviewer for a second opinion. This
+process already provides every review seat the work gets; a reviewer you
+spawn duplicates one of them at full cost, and its verdict counts for
+nothing. If the diff feels too large for one pass, review it in passes
+yourself and say so in your report.
+
+## Do Not Trust the Report
+
+Treat the implementer's report as unverified claims about the code, not as
+fact. It may be incomplete, inaccurate, or optimistic — verify every claim
+against the diff. A stated rationale for a design choice is a claim too:
+&quot;kept it simple deliberately,&quot; &quot;left it per YAGNI,&quot; or any other
+justification is the implementer grading its own work, and on its own it
+never downgrades a finding's severity.
+
+## Tests
+
+Do not re-run the suite to confirm what's reported. Run a focused test
+only when reading the code raises a specific doubt that no existing run
+answers, and then a single focused test — never a package-wide suite, a
+race-detector run, or a repeated/high-count loop. If heavy validation
+seems warranted, recommend it in your report instead of running it
+yourself. If you cannot run commands in this environment, name the test
+you would run.
+
+Warnings or other noise in reported test output are findings in
+themselves — test output should be pristine.
+
+Evidence you cannot see is not evidence that doesn't exist. If a report or
+its test evidence looks truncated, or you can't locate results it claims,
+re-read the file at its stated path before concluding it's genuinely
+missing. Re-running something to regenerate what you failed to read is not
+verification, and illegible evidence is not invalidated evidence.
+
+## Calibration
+
+Categorize every finding by actual severity. Not everything is Critical.
+Important means the work cannot be trusted until this is fixed: incorrect
+or fragile behavior, a missed requirement, or maintainability damage you'd
+block a merge over — verbatim duplication of a logic block, a swallowed
+error, a test that asserts nothing. Broader-coverage suggestions and
+polish are Minor.
+
+If the brief or plan explicitly mandates something this discipline calls a
+defect, that is still a finding — report it as Important, labeled
+plan-mandated. The plan's own authorship does not grade its own work.
+
+Acknowledge what was done well before listing problems. Accurate praise is
+part of what makes the rest of the feedback worth trusting.</code></pre>
+<h2 id="ref-reviewer-prompt-full-task-review">Full task review</h2>
+<p>Dispatched once per task, right after the implementer reports DONE or DONE_WITH_CONCERNS. Verifies the diff against the task's requirements, then against how well it's built. This is a task-scoped gate, not a merge review — the broad whole-branch review happens once, separately, after every task is done.</p>
+<pre class="prose-code-block"><code>Dispatch a fresh subagent:
+  description: &quot;Review Task N (spec + quality)&quot;
+  model: [MODEL — REQUIRED: choose per SKILL.md's &quot;Choosing a model for each role&quot; table,
+         scaled to this diff's size and risk.]
+  prompt: |
+    You are reviewing one task's implementation: first whether it matches
+    its requirements, then whether it is well-built. This is a
+    task-scoped gate, not a merge review — a broad whole-branch review
+    happens separately once every task is complete.
+
+    ## What Was Requested
+
+    Read the task brief: [BRIEF_FILE]
+
+    Global constraints from the spec or plan that bind this task:
+    [GLOBAL_CONSTRAINTS]
+
+    ## What the Implementer Claims They Built
+
+    Read the implementer's report: [REPORT_FILE]
+
+    ## Diff Under Review
+
+    **Base:** [BASE_SHA]
+    **Head:** [HEAD_SHA]
+    **Diff file:** [DIFF_FILE]
+
+    Read the diff file once — it holds the commit list, a stat summary,
+    and the full diff with surrounding context, and it is your view of
+    the change. The diff's context lines ARE the changed files: do not
+    read a changed file separately unless a hunk you must judge is cut
+    off mid-function, and say so in your report if that happens. Do not
+    crawl the broader codebase. Inspect code outside the diff only to
+    evaluate a concrete risk you can name — one focused check per named
+    risk, naming both the risk and what you checked. Cross-cutting
+    changes are legitimate named risks: if the diff changes lock
+    ordering, a function or API contract, or shared mutable state,
+    checking the call sites is the right method.
+
+    [SHARED REVIEWER DISCIPLINE — insert the block from this file's
+    &quot;Shared reviewer discipline&quot; section, verbatim]
+
+    ## Part 1: Spec Compliance
+
+    Compare the diff against What Was Requested:
+
+    - **Missing:** requirements skipped, missed, or claimed without being
+      implemented
+    - **Extra:** features that weren't requested, over-engineering,
+      unneeded &quot;nice to haves&quot;
+    - **Misunderstood:** the right feature built the wrong way, or the
+      wrong problem solved
+
+    If the brief lists several files each with its own change (a batched
+    dispatch), check the diff against that list file by file: every
+    listed file must have its corresponding hunk. A listed file the diff
+    never touches is a Missing finding, no matter how clean the rest of
+    the batch looks.
+
+    If a requirement cannot be verified from this diff alone — it lives
+    in unchanged code, or spans tasks — report it as a flagged item
+    instead of broadening your search.
+
+    ## Part 2: Code Quality
+
+    **Code quality:**
+    - Clean separation of concerns?
+    - Proper error handling?
+    - DRY without premature abstraction?
+    - Edge cases handled?
+
+    **Tests:**
+    - Do the new and changed tests verify real behavior, not mocks?
+    - Are the task's edge cases covered?
+
+    **Structure:**
+    - Does each file have one clear responsibility with a well-defined interface?
+    - Are units decomposed so they can be understood and tested independently?
+    - Does the implementation follow the file structure the plan set out?
+    - Did this change create new files that are already large, or grow
+      existing ones significantly? (Don't flag pre-existing file sizes —
+      focus on what this change contributed.)
+
+    Point at evidence: give a file:line reference for every finding, and
+    for any check you'd otherwise answer with a bare &quot;yes.&quot;
+
+    Your final message is the report itself: begin directly with the
+    spec-compliance verdict. Every line is a verdict, a finding with
+    file:line, or a check you ran — no preamble, no process narration, no
+    closing summary.
+
+    ## Output Format
+
+    ### Spec Compliance
+
+    - Compliant, or issues found: [what's missing/extra/misunderstood,
+      with file:line references]
+    - Cannot verify from diff: [requirements you could not verify from
+      the diff alone, and what the controller should check — report this
+      alongside the compliant/issues verdict for everything you could
+      verify]
+
+    ### Strengths
+    [What's well done? Be specific.]
+
+    ### Issues
+
+    #### Critical (Must Fix)
+    #### Important (Should Fix)
+    #### Minor (Nice to Have)
+
+    For each issue: file:line, what's wrong, why it matters, and how to
+    fix it if that's not obvious.
+
+    ### Assessment
+
+    **Task quality:** [Approved | Needs fixes]
+
+    **Reasoning:** [1-2 sentence technical assessment]</code></pre>
+<p><strong>Placeholders:</strong></p>
+<ul><li><code>[MODEL]</code> — REQUIRED: reviewer model per SKILL.md's &quot;Choosing a model for each role&quot; table</li><li><code>[BRIEF_FILE]</code> — REQUIRED: the task's brief file, the same one the implementer worked from</li><li><code>[GLOBAL_CONSTRAINTS]</code> — the binding requirements copied verbatim from the plan's constraints or the spec: exact values, formats, and the stated relationships between components (not process rules — the shared discipline block already carries those)</li><li><code>[REPORT_FILE]</code> — REQUIRED: the file the implementer wrote its report to</li><li><code>[BASE_SHA]</code> — the commit before this task started</li><li><code>[HEAD_SHA]</code> — the current commit</li><li><code>[DIFF_FILE]</code> — REQUIRED: a file holding the commit list, a stat summary, and the full diff for that range — see &quot;Preparing the diff file, either mode&quot; below</li></ul>
+<p><strong>Returns:</strong> a spec-compliance verdict, strengths, findings by severity, and a task-quality assessment (Approved or Needs fixes).</p>
+<h2 id="ref-reviewer-prompt-scoped-re-review-after-a-fix-round">Scoped re-review (after a fix round)</h2>
+<p>Dispatched once per fix round, after an implementer has attempted to address a prior review's findings. Verdicts each finding and inspects the fix diff for new breakage — nothing else. This is not a fresh review; the full review already happened.</p>
+<pre class="prose-code-block"><code>Dispatch a fresh subagent:
+  description: &quot;Re-review Task N fix round R&quot;
+  model: [MODEL — REQUIRED: choose per SKILL.md's &quot;Choosing a model for each role&quot; table.
+         Scoped re-reviews of small fix diffs usually take a
+         cheap-to-mid tier.]
+  prompt: |
+    You are re-reviewing one task's fix round. A previous review produced
+    findings; an implementer has attempted to fix them. Your job is to
+    verdict each finding and inspect the fix diff — nothing else.
+
+    ## The Task
+
+    Read the task brief: [BRIEF_FILE]
+
+    ## The Findings Under Verification
+
+    [FINDINGS]
+
+    ## The Fix
+
+    Read the implementer's report (fix reports are appended at the end):
+    [REPORT_FILE]
+
+    **Fix base:** [FIX_BASE_SHA] (the head the previous review saw)
+    **Head:** [HEAD_SHA]
+    **Diff file:** [DIFF_FILE]
+
+    Read the diff file once — it holds the fix commits, a stat summary,
+    and the fix diff with surrounding context.
+
+    [SHARED REVIEWER DISCIPLINE — insert the block from this file's
+    &quot;Shared reviewer discipline&quot; section, verbatim]
+
+    ## Scope
+
+    Your scope is the findings list and the fix diff. Verdict every
+    finding. Inspect the fix diff for new problems the fix itself
+    introduced. Do not re-review code the fix did not touch: if you
+    notice an issue entirely outside the fix diff, report it under
+    Out-of-Scope Observations — it does not block this task and does not
+    extend the loop. A broad whole-branch review happens once every task
+    is complete.
+
+    ## Output Format
+
+    Your final message is the report itself: begin directly with the
+    first finding's verdict. Every line is a verdict, a finding with
+    file:line, or a check you ran — no preamble, no process narration.
+
+    ### Finding Verdicts
+
+    For each finding in The Findings Under Verification, in order:
+    - **[finding one-liner]** — Addressed or Not addressed, with
+      file:line evidence. Attempted is not addressed: the specific
+      defect must no longer exist.
+
+    ### New Breakage in the Fix Diff
+
+    Anything the fix itself broke or introduced, with severity
+    (Critical/Important/Minor) and file:line. &quot;None&quot; if clean.
+
+    ### Out-of-Scope Observations
+
+    Issues noticed entirely outside the fix diff. Non-blocking; the
+    controller carries these into the final review. &quot;None&quot; if none.
+
+    ### Verdict
+
+    **Fix round:** [All findings addressed, no new Critical/Important
+    breakage | Findings remain open] — list the open ones.</code></pre>
+<p><strong>Placeholders:</strong></p>
+<ul><li><code>[MODEL]</code> — REQUIRED: reviewer model per SKILL.md's &quot;Choosing a model for each role&quot; table</li><li><code>[BRIEF_FILE]</code> — the task brief file, the same one the implementer worked from</li><li><code>[FINDINGS]</code> — the Critical/Important findings and spec gaps from the previous review, copied verbatim, one per bullet</li><li><code>[REPORT_FILE]</code> — the implementer's report file (fix reports are appended to it)</li><li><code>[FIX_BASE_SHA]</code> — the head the previous review saw</li><li><code>[HEAD_SHA]</code> — the current commit</li><li><code>[DIFF_FILE]</code> — a file holding the fix commits, a stat summary, and the fix diff for that range — see &quot;Preparing the diff file, either mode&quot; below</li></ul>
+<p><strong>Returns:</strong> a per-finding verdict (Addressed / Not addressed), any new breakage the fix diff introduced, out-of-scope observations, and a round verdict.</p>
+<h2 id="ref-reviewer-prompt-preparing-the-diff-file-either-mode">Preparing the diff file, either mode</h2>
+<p>Neither template re-derives the diff itself — that's the controller's job, done once, outside the reviewer's own context:</p>
+<pre class="prose-code-block"><code>git log --oneline BASE..HEAD
+git diff --stat BASE..HEAD
+git diff -U10 BASE..HEAD</code></pre>
+<p>Redirect all three into one file and hand the reviewer that path. It reads one file instead of re-deriving the range with its own git commands, and the output never has to pass through your own context either. Use the true base every time — the commit recorded before the implementer was dispatched, or the head the previous review saw for a fix round — never an assumed single-commit parent, which silently drops everything but a task's last commit when it made several.</p></div>
+    </div>
+  </div>
+</section></div></article>
 <nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← working-a-plan-task-by-task</span>

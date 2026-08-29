@@ -124,6 +124,10 @@ class Strings:
     update_modal_body: str
     update_modal_reload_button: str
     translation_fallback_banner_template: str
+    # Defaulted, unlike its neighbours: it arrived after the locale
+    # machinery, and a default keeps every existing Strings construction
+    # valid rather than turning one new heading into a breaking change.
+    reference_heading: str = "Reference"
 
 
 ENGLISH_STRINGS = Strings(
@@ -219,6 +223,7 @@ ENGLISH_STRINGS = Strings(
     formidable_stacks_heading="Stacks",
     formidable_commands_heading="Commands",
     formidable_craft_floor_heading="Craft floor",
+    reference_heading="Reference",
     change_badge_new="New",
     change_badge_updated="Updated",
     index_title_suffix="Claude Code skills, organized",
@@ -1894,6 +1899,29 @@ def _render_craft_floor(skill: dict, strings: Strings = ENGLISH_STRINGS, *,
 </section>"""
 
 
+def _render_reference_sections(skill: dict, strings: Strings = ENGLISH_STRINGS, *,
+                               lang: str | None = None, text_dir: str | None = None) -> str:
+    """Reference files for an ordinary skill, as one tab group.
+
+    formidable has its own richer treatment (two groups plus the craft
+    floor), so it is excluded here rather than rendered twice. Everything
+    else with a reference/ tree -- orchestrating-work-end-to-end today --
+    gets the same tab chrome under one heading, and the anchor ids are the
+    "ref-<stem>" the content pipeline rewrites its SKILL.md links to, so
+    those links land on the section instead of rendering as plain text.
+    """
+    if skill.get("is_formidable"):
+        return ""
+    items = skill.get("reference_sections") or []
+    if not items:
+        return ""
+    group = _render_tab_group(group_id="reference", heading=strings.reference_heading,
+                              items=items, lang=lang, text_dir=text_dir)
+    if not group:
+        return ""
+    return f'<div class="formidable-extra">{group}</div>'
+
+
 def _render_formidable_extras(skill: dict, strings: Strings = ENGLISH_STRINGS, *,
                                lang: str | None = None, text_dir: str | None = None) -> str:
     if not skill.get("is_formidable"):
@@ -2011,6 +2039,7 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
         + banner
         + _render_prose(skill.get("body_html", ""), lang=body_lang, text_dir=body_dir)
         + _render_formidable_extras(skill, strings, lang=body_lang, text_dir=body_dir)
+        + _render_reference_sections(skill, strings, lang=body_lang, text_dir=body_dir)
         + "</article>"
     )
     main_html = _join(

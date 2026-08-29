@@ -31,7 +31,7 @@ from content_pipeline import (
     build_content,
     escape_html,
     humanize_filename,
-    make_formidable_link_resolver,
+    make_reference_link_resolver,
     render_inline_markdown,
     render_markdown_body,
     slugify,
@@ -646,7 +646,7 @@ class ParagraphRenderingTests(unittest.TestCase):
 
 class FormidableLinkResolutionTests(unittest.TestCase):
     def setUp(self):
-        self.resolve = make_formidable_link_resolver(
+        self.resolve = make_reference_link_resolver(
             {"web": "stack-web", "craft-floor": "cmd-craft-floor"}
         )
 
@@ -760,6 +760,47 @@ class BuildContentIntegrationTests(unittest.TestCase):
         self.assertFalse(skill["is_formidable"])
         self.assertNotIn("formidable_stacks", skill)
         self.assertNotIn("formidable_commands", skill)
+
+    def test_skill_without_a_reference_dir_has_no_reference_sections(self):
+        self.assertNotIn("reference_sections", self.content["skills"]["atomic-commits"])
+
+    def test_ordinary_skill_with_a_reference_dir_renders_it(self):
+        """reference/*.md on a non-formidable skill used to be invisible.
+
+        Its content was absent from the page and the SKILL.md links to it
+        rendered as plain text with the href dropped, so the only way to
+        read it was to have the plugin directory checked out. formidable
+        had the rendering; nothing else could reach it."""
+        skill = self.content["skills"]["orchestrating-work-end-to-end"]
+        self.assertFalse(skill["is_formidable"])
+        sections = skill["reference_sections"]
+        self.assertEqual(
+            [s["id"] for s in sections],
+            ["ref-envelopes", "ref-express", "ref-phase-routing"],
+        )
+        self.assertTrue(all(s["html"] for s in sections))
+        self.assertNotIn("<h1", "".join(s["html"] for s in sections))
+
+    def test_reference_links_in_the_body_resolve_to_their_section(self):
+        body = self.content["skills"]["orchestrating-work-end-to-end"]["body_html"]
+        for stem in ("envelopes", "express", "phase-routing"):
+            with self.subTest(reference=stem):
+                self.assertIn(f'href="#ref-{stem}"', body)
+
+    def test_a_reference_files_own_contents_list_stays_clickable(self):
+        """The fragment is written GitHub's way ("#phase-1--frame") and the
+        rendered heading id is slugify's ("phase-1-frame"), prefixed by the
+        section. Resolving one to the other is what keeps a 300-line
+        reference file navigable once it is inlined onto a skill page."""
+        sections = {
+            s["id"]: s["html"]
+            for s in self.content["skills"]["orchestrating-work-end-to-end"]["reference_sections"]
+        }
+        routing = sections["ref-phase-routing"]
+        self.assertIn('href="#ref-phase-routing-phase-1-frame"', routing)
+        self.assertIn('id="ref-phase-routing-phase-1-frame"', routing)
+        self.assertIn('href="#ref-phase-routing-respond-track"', routing)
+        self.assertIn('id="ref-phase-routing-respond-track"', routing)
 
     def test_every_skill_body_html_has_no_leading_h1(self):
         for slug, skill in self.content["skills"].items():
