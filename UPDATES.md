@@ -24,6 +24,18 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-08-30 — Diagnosing: a factor that never varied is not a factor you ruled out
+
+- `diagnosing-before-fixing` now names the dismissal that survives a whole
+  investigation: deciding a cause is eliminated because every run so far shows
+  it was the same. A factor that never varies cannot explain variance, which is
+  not the same as it not being the cause — and the check is one question, "name
+  the run where it was different."
+- It carries the reason the mistake is expensive rather than merely wrong: the
+  dismissal is made once, early, in half a sentence, and every later hypothesis
+  is built on top of it. When several individually-sound fixes have all failed,
+  the thing to look at is the factor all of them held fixed.
+
 ## 2026-08-29 — The orchestrator now asks who is answering, not just what the work is
 
 - `orchestrating-work-end-to-end` reads a second thing before the first action:

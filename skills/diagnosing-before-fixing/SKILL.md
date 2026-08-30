@@ -103,6 +103,18 @@ This sits in deliberate tension with the reproduction step above, and the tensio
 
 Note the cost, too. The three-failed-fixes signal below is real but expensive — it charges three fixes before it fires. This one is available immediately, before any fix has been written, and it costs a re-read.
 
+## A factor that never varied has not been ruled out
+
+Something gets dismissed early — the machine, the time of day, which of two paths the input took, which backend served the request — because every run so far shows it was the same. That is not elimination. A factor that never varies cannot *explain* variance, and that is a different statement from it not being the cause: the runs that would have shown its effect were never taken.
+
+The tell is cheap and always available: **name the run where that factor was different.** If you cannot, it was observed, not tested.
+
+The mistake is expensive because it is quiet. The dismissal is made once, early, in half a sentence, and everything after it is built on top — so the same wrong assumption survives every later hypothesis, including the sound ones.
+
+It also survives the evidence that should kill it. A harness can be *recording* the factor on every single run, and a value that never changes reads as reassurance rather than as an untested variable — the data that would overturn the assumption is right there, being read as confirmation of it. When several individually-reasonable fixes have all failed, the thing to look for is not another hypothesis but the factor every one of them held fixed.
+
+Vary it on purpose. That is the whole fix, and it is usually cheaper than the fix you were about to attempt — a routing flag, a different host, forcing the other branch. When the un-varied factor is *which commit*, that is what `bisecting-failures` is for. If varying it is genuinely impossible, say so and record it as an *assumption* rather than a *finding*.
+
 ## When fixes keep failing
 
 Three failed fixes in a row is a different problem than the one being solved. If each attempt reveals the same coupling in a new place, or needs a bigger change than the last one to hold, the architecture is what's wrong — not the last three hypotheses. Say so explicitly and question the pattern before attempting a fourth; a fourth patch on a bad architecture just becomes the fifth.
@@ -122,6 +134,7 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 | Test written after the fix, to "prove it works" | A test that never watched the bug fail proves nothing about whether it would have caught it |
 | "I don't fully understand it, but this might work" | Uncertainty deployed instead of named — say what isn't understood and go investigate exactly that |
 | The same command run four times with the same error | A retry treated as an experiment when nothing differed between the runs |
+| "We already ruled that out" | The factor was the same in every run, so it was observed rather than tested |
 
 ## Red flags
 
@@ -136,3 +149,4 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 - Investigating looks like nothing's happening, visibly, in front of people who are waiting; a bad retry's cost is invisible and lands later — that asymmetry is what's pulling, not an actual difference in risk
 - "I'll skip it with a tracked TODO" — said with real intent, about a TODO that dies the moment the release ships and priorities move on
 - An operation attempted again with nothing changed between the attempts, and the identical error read as bad luck rather than as determinism
+- "That's the same for every run, so it can't be that"
