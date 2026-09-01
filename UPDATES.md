@@ -24,6 +24,21 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — A threshold that measures consistency will adopt changes nobody can feel
+
+- `performance-profiling` now says what a significance test actually answers.
+  It asks whether a difference is *reliable*, never whether it is *large* — so a
+  variant better by one percent on every trial has a tiny difference, a tinier
+  spread, and a ratio between them that clears any threshold effortlessly. The
+  rule is working as designed and promoting changes that will never be observed.
+- Every significance threshold now gets a minimum effect size beside it, written
+  in the units of the decision: milliseconds at p95, bytes, queries, dollars.
+  Both clear or the change does not land.
+- It also carries a diagnostic that needs no statistics: run the whole procedure
+  twice and see which decisions move. The settings that wander between two runs
+  of identical code are exactly the ones the criterion was never really
+  deciding.
+
 ## 2026-09-02 — "Did this help?" is a question about a run that did not happen
 
 - `confirming-before-claiming-done` gains a section on the baseline that has to

@@ -76,6 +76,33 @@ Before optimizing anything, measure the fraction *f* of total time it occupies. 
 
 Interleaving A and B runs is the cheapest defense available and almost nobody does it: it converts a slow machine drift into noise instead of a fake win.
 
+## Reliable is not large
+
+Once A and B are being compared properly, the rule that decides which one wins
+becomes its own defect. A significance test — paired, bootstrapped, whatever the
+tooling offers — answers whether a difference is **consistent**, and consistency
+is not size. A variant that is better by one percent on every single trial has a
+tiny difference and a tinier spread, so the ratio between them is enormous and
+clears any threshold trivially. The criterion is behaving exactly as designed
+and adopting changes that will never be observable.
+
+It compounds where the decision is automated — an autotuning loop, a regression
+gate, an alert threshold, a rollout that promotes on a p-value. Every pass
+accretes another change that is real and pointless, and complexity is permanent
+while a one-percent win is not.
+
+So pair every significance threshold with a **minimum effect size, written in
+the units of the thing being decided**: milliseconds at p95, bytes, queries,
+dollars. Both must clear, or the change does not land.
+
+There is a diagnostic for this that needs no statistics at all, and it is worth
+running on any loop that has been making decisions for a while: **run the whole
+procedure twice and see which decisions move.** The parameters that come out
+different between two runs of identical code are precisely the ones whose
+measured effect is too small to survive noise — while anything with a decisive
+effect lands identically both times. A list of the settings that wander is a
+list of the settings the criterion was never really deciding.
+
 ## Stopping
 
 - Stop when the target is met. Re-measure the **whole** workload — a component that got 10× faster while the end-to-end metric did not move is not a win, and this is the most common way a week of profiling work ends up worthless.
@@ -94,6 +121,7 @@ Interleaving A and B runs is the cheapest defense available and almost nobody do
 | Users still complain after the mean improved | the complaint was the tail; the mean is the wrong statistic for it |
 | Latency degraded after a throughput optimization | batching and higher utilization were traded for queueing delay, on purpose, without saying so |
 | Optimization work never ends | no target was written down before starting |
+| A tuning loop keeps adopting changes and the end-to-end number never moves | the accept rule tested whether a difference was consistent, never whether it was big enough to matter |
 
 ## Red flags
 
@@ -103,3 +131,4 @@ Interleaving A and B runs is the cheapest defense available and almost nobody do
 - A benchmark result that is a suspiciously round multiple, or that does not vary with input size
 - Reading a CPU flame graph for a service that spends its time waiting
 - Continuing to optimize after the target was met
+- An accept-or-reject rule stated only as a p-value or a confidence level, with no minimum effect size beside it
