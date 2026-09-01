@@ -24,6 +24,18 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Shell: don't put the cleanup and the relaunch in one command
+
+- `portable-shell-scripting` already warned that a pattern kill can match the shell
+  that runs it. It now covers the neighbouring case: `pkill -f foo; start foo &`
+  reads as stop-then-start and is not. The replacement can already be in the process
+  table when the pattern is evaluated, so the kill takes the very process it was run
+  to make room for.
+- The symptom is what makes this expensive. The job reports starting and then
+  produces nothing, which reads as the job failing rather than as the cleanup having
+  killed it — so the debugging goes to the wrong process. Kill, confirm the target
+  is gone, then start.
+
 ## 2026-09-01 — Release notes: a fix line claims the reader had the bug
 
 - `writing-release-notes` now names the check that separates a fix from internal

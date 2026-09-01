@@ -109,6 +109,7 @@ trap 'cleanup; exit 143' TERM HUP
 - Prefer a saved PID over pattern matching: write `$!` to a file right after starting the background process, then `kill "$(cat "$pidfile")"` to stop it later. No pattern, no risk of matching something else.
 - If `-f` is unavoidable, check what it would hit before running it. `pgrep -f 'pattern'` lists the matching PIDs; `ps -o pid,args= -p <pids>` shows their exact command lines, including, potentially, the shell about to run the `pkill`. (GNU `pgrep -a` does both in one step; it's a procps extension, not available on BSD/macOS `pgrep`.)
 - Anchor the pattern on something only the target has — a unique flag, a full path — not a bare project or script name.
+- Never put the cleanup and the relaunch in one command. `pkill -f foo; start foo &` reads as stop-then-start and is not: by the time the pattern is evaluated the replacement can already be in the process table, so the kill takes the process it was run to make room for. The symptom is the reason this one costs so much — the job reports starting and then produces nothing, which reads as the job failing rather than as the cleanup having killed it, and every subsequent minute is spent debugging the wrong process. Kill, confirm the target is gone, then start.
 - `pkill` without `-f` matches only the process's short kernel-tracked name (`comm`), which is immune to `argv[0]` spoofing but not to how the target was launched: for a script run directly (`./script.sh`), `comm` is the script's own basename, narrow enough to target; for a script run through an explicit interpreter (`bash script.sh`), `comm` is the *interpreter's* name, which matches every other script running under that interpreter too.
 
 ## Same name, different tool
@@ -130,6 +131,7 @@ Choose the POSIX subset first. Where an extension is genuinely needed, probe the
 | Trailing newlines missing from captured output | `$(…)` strips every trailing newline; append a sentinel and remove it |
 | Fails on exactly one machine | GNU versus BSD flags for `sed`, `date`, `readlink`, or `stat` |
 | `pkill -f` killed the calling shell, not the target | the pattern also matched the shell's own wrapped or eval'd command line, not just the target's argv |
+| A restarted background job reports starting, then does nothing | cleanup and relaunch ran in one command; the pattern matched the replacement, which was already in the process table |
 | A file "does not exist" and then plainly does | A `cd` in an earlier command re-rooted every relative path after it |
 
 ## Red flags
