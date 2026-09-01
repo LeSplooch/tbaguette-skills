@@ -76,6 +76,14 @@ Installed-but-inert is the normal state, not the exception — tools ship withou
 
 `reference/surveying-the-machine.md` has the sweep: where these tools install, which config and credential paths reveal what's authenticated, how to enumerate models, and the known non-interactive invocation forms.
 
+## An environment that answers can still be missing a service
+
+The third layer asks whether a real call returns a real answer. That is the right question for one tool and not enough for a whole environment brought up to close the gap — a virtual display, an emulator, a container, a sandboxed browser. None of those is a smaller version of the real thing. Each is the real thing minus a particular set of services, the environment will not tell you which ones, and everything that does not need what is absent behaves perfectly.
+
+Nothing about the working parts warns you. On a bare virtual display, clicks land, navigation works and screenshots come back correct, because none of those need a window manager; keyboard input silently does nothing, because setting input focus does. Nothing errors and nothing is logged, so the natural reading of a keystroke with no effect is that the application ignored it, and the attempts that follow go into the application. **A capability you exercised says nothing about one you did not, and a missing service rarely errors — it no-ops.**
+
+So enumerate the interactions the work actually needs — click, type, focus, drag, copy, drop a file, print, play sound — and prove each one against something whose correct response is already known, before anything is built on top. There is a second reason to do that first: completing one of these environments is not additive. Starting a window manager to get focus working also gives every window a titlebar, which moves every screen coordinate down by its height and invalidates a click map that was working a minute earlier. Finding out what is missing is cheapest while nothing yet depends on the geometry.
+
 ## Discovery is a sweep, never a recollection
 
 There are well over a hundred agent CLIs in circulation and the set turns over monthly. Any list held in memory — including any list in this skill — is a set of hints to test, never an inventory to trust. Two failure modes come straight from treating memory as inventory: trying one remembered command, finding it absent, and concluding nothing is available; or believing a remembered flag over the `--help` output actually printed by the version installed here.
@@ -142,6 +150,7 @@ Two conditions justify routing without a hard capability gap, both observable: t
 | Another vendor's agent edits files nobody asked it to touch | The delegate was run in the repo instead of a staged scratch directory |
 | The user discovers afterward that their code went to a third party | Data crossing a provider boundary treated as an implementation detail |
 | A cached capability spec sends work to a harness that no longer works | The spec was stored without expiry and then trusted like a fact |
+| Several fixes aimed at the application and the symptom never moves | The environment was stood up by whoever is debugging, so it never became a suspect |
 
 ## Red flags
 
@@ -152,3 +161,4 @@ Two conditions justify routing without a hard capability gap, both observable: t
 - Reading a delegate's stdout and repeating it as your own finding.
 - Trusting a remembered flag over the `--help` the installed version actually prints.
 - "It returned something, so it worked."
+- Building a coordinate map or a fixture against an environment you stood up, before checking what it lacks.

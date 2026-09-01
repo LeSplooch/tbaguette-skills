@@ -24,6 +24,27 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Capability gaps: the environment you stood up answers, and is still missing services
+
+- `routing-around-capability-gaps` checks a tool on three layers — installed,
+  credentialed, reachable — and the third asks whether a real call returns a real
+  answer. That is the right question for one tool and not enough for a whole
+  environment brought up to close a gap: a virtual display, an emulator, a container,
+  a sandboxed browser. None of those is a smaller version of the real thing. Each is
+  the real thing minus a particular set of services, the environment will not tell you
+  which ones, and everything that does not need what is absent behaves perfectly.
+- The example the skill now carries: on a bare virtual display, clicks land, navigation
+  works and screenshots come back correct, because none of that needs a window manager
+  — and keyboard input silently does nothing, because setting input focus does. Nothing
+  errors, nothing is logged, and the natural reading of a keystroke with no effect is
+  that the application ignored it.
+- So: enumerate the interactions the work needs — click, type, focus, drag, copy, drop
+  a file — and prove each one against a known-correct response before anything is built
+  on top. That order matters more than it looks, because completing such an environment
+  is not additive. Starting a window manager to fix focus also gives every window a
+  titlebar, which moves every screen coordinate down by its height and invalidates a
+  click map that was working a minute earlier.
+
 ## 2026-09-01 — Confirming done: read the payload, not the code that writes it
 
 - `confirming-before-claiming-done` now covers the questions that are about something
