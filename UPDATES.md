@@ -24,6 +24,26 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Test scope: a hundred passing tests can agree with each other and be wrong
+
+- `choosing-test-scope` answers "a bug escaped every layer" by asking which is the
+  lowest layer that could have caught it. It now covers the case where the honest
+  answer is "no layer", because the escape was never about layers. A systematic
+  offset — a per-unit figure that omits a fee the total includes, a rate applied at
+  the wrong precision throughout — makes every number wrong in the same way and every
+  number plausible, and a test checking one of them passes whenever the expectation
+  holds the same mistake. It usually does: it came from the same reading of the same
+  specification by the same person.
+- The skill already named that failure for fixtures — one party, no second party to
+  disagree, the same misreading encoded twice and passing forever. This is the
+  arithmetic form of it, and adding more point-checks does not escape it at any layer.
+- What does: a quantity computed by a *different route* and asserted against the
+  first. A running total accumulated from individual events against the same figure
+  derived from opening and closing balances; inventory on hand against receipts minus
+  shipments. Neither route is the authority — the assertion is that they agree. It is
+  normally one test per accumulator, and the one condition on the layer is that the two
+  routes must not both run through the function that holds the error.
+
 ## 2026-09-01 — Determinism: seeding everything and it still differs every run
 
 - `testing-the-untestable` now covers the source of randomness that survives seeding.

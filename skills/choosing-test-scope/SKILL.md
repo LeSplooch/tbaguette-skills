@@ -93,6 +93,14 @@ For each defect that reached production, ask one question: **what is the lowest 
 
 If the honest answer is "only end-to-end", the behavior exists solely in the wiring, and that is a design finding rather than a testing one — extract a seam so the decision lives somewhere addressable. Answering the question with "add another end-to-end scenario" every time is how the end-to-end suite reaches the size at which it stops working.
 
+## An accumulator is checked against a second derivation
+
+Sometimes the honest answer is "no layer", because the escape was never about layers. A systematic offset — a per-unit figure that omits a fee the total includes, a rate applied at the wrong precision throughout — makes every individual number wrong in the same way and every individual number plausible, and anything that accumulates carries that error into every contribution it adds up. A test checking one of those numbers passes whenever the expectation holds the same mistake, and the expectation usually does, because it came from the same reading of the same specification by the same person. This is the one-party problem from "Where a double's content comes from" arriving as arithmetic rather than as a fixture: one belief, written down twice, agreeing with itself.
+
+Adding more point-checks does not escape that. A hundred of them agree a hundred times, at whichever layer they run. What breaks the tie is a quantity computed by a **different route** and asserted against the first: a running total accumulated from individual events against the same figure derived from opening and closing balances; inventory on hand against receipts minus shipments; a queue's processed count against enqueued minus remaining. Neither route is the authority. The assertion is that they agree, and a disagreement names a defect without yet saying which side holds it.
+
+This is cheap and it is normally one test per accumulator — money, inventory, quotas, counters, capacity, anything that adds up over time. The layer follows the one-reason rule as usual, with a condition on top of it: the two routes have to be genuinely independent, so a layer at which both of them run through the function that holds the error buys nothing. That test agrees with itself for the same reason the point-checks did.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -105,6 +113,7 @@ If the honest answer is "only end-to-end", the behavior exists solely in the wir
 | Every mocked test passes; the first real call returns nothing | Fixtures were written from a reading of the provider, so the suite tests the reading |
 | A shape change surfaces as an empty result rather than an error | The boundary parses leniently; an unrecognized payload must raise, not yield nothing |
 | Coverage is 90% and bugs still escape | Coverage measures execution, not assertion; branches are run, not checked |
+| Every figure in a report is individually plausible and the total is wrong | Each expectation came from the same understanding of the rules the code did; nothing computed the answer by a second route |
 | A well-tested guard function that nothing calls | Coverage of the callee cannot answer a question about its callers, and a guard that never runs produces no symptom to notice |
 | Integration suite has thousands of cases | Business-rule permutations tested through the database instead of in the domain |
 | Dependency upgrade needs a week of manual testing | No pinned-assumption tests; the boundary's behavior was never written down |
@@ -116,6 +125,7 @@ If the honest answer is "only end-to-end", the behavior exists solely in the wir
 - "Add a browser test for that validation rule."
 - "Mock the database, it's faster" — for a behavior the database decides.
 - "We need 100% coverage."
+- "Every line item has a test" — said about a total that nothing recomputes independently.
 - "The redaction/permission/validation function is thoroughly tested" — said without having checked that the pipeline calls it.
 - "The pyramid says we need more unit tests" — stated with no failing behavior in mind.
 - Writing a test at a given layer because the harness there was already set up.
