@@ -57,6 +57,20 @@ The safe first version reports and changes nothing. Ship that, run it alongside 
 
 Progress along this ladder deliberately: report only, then print a plan without applying it, then act with confirmation, then act unattended. Jumping straight to the last rung for anything destructive is the standard origin story of a cleanup job that deleted live data.
 
+## A bulk edit runs once, so the ladder does not apply
+
+The ladder assumes a tool with a future — run it beside the manual process, compare, promote it a rung. A one-shot mechanical edit has no future to earn trust in. Thousands of generated values across dozens of files get exactly one run, and the review that would normally catch a mistake is precisely the review that a diff of that size defeats: nobody reads the four-thousandth line with the attention they gave the first.
+
+So the trust has to be built into the applier instead, and it takes two checks that fail in unrelated ways.
+
+**Structural — write the tool to refuse, not to report.** For each file, assert every property that must hold before a single byte is written: every key present in the reference set and absent from the target, every format placeholder surviving unchanged, no value using an escaping form the target renders literally. Then refuse the file outright when any assertion fails. Apply-and-report is the weaker shape by a wide margin, because it produces exactly the artifact nobody can review — a mostly-correct bulk diff with the failures narrated somewhere above it.
+
+Such a validator commonly catches nothing on the day it runs, and that is not evidence it was unnecessary. Its value is that it made a whole class of error impossible to commit, which is a property of the tool rather than an event in the log.
+
+**Semantic — then ask what that tool cannot see.** The structural check is blind by construction to anything shaped correctly and meaning the wrong thing: a value in the wrong language entirely, a description attached to the wrong key, a number in the right format and the wrong unit. Every assertion above passes on all of them. Catching that needs a second check aimed at content rather than shape, and it usually looks nothing like the first — scanning each file for characters, units, or vocabulary that have no business being in that file at all.
+
+The transferable move is the question, not either check: **what class of error would pass every assertion I just wrote?** Ask it while the assertions are fresh, because that is the only moment their blind spot is obvious. A tool that validates and refuses, with nothing aimed at what it cannot see, feels like a safety net and is half of one.
+
 ## Keep the manual path working
 
 Document the manual sequence beside the tool and mark which steps the tool performs. The automation is the fast path, never the only path, and the day it breaks is disproportionately likely to be the day it is needed — both usually fail from the same upstream change.
@@ -83,6 +97,7 @@ Exercise the manual path at least annually, and whenever the tool changes owner.
 | Maintenance costs more than the manual task | it is coupled to something that changes weekly, usually another tool's human-readable output |
 | It broke and nobody could do the task by hand | the manual path was deleted along with the tedium |
 | A day of work saved five minutes a year | the rule of three was applied to effort rather than to frequency |
+| Every file passed the bulk applier's checks and one was still wrong | the checks asserted shape; the error was in the content, which a structural assertion cannot see by construction |
 
 ## Red flags
 

@@ -24,6 +24,21 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Automating repetition: the one-shot bulk edit, and the check its validator cannot be
+
+- `automating-repetition` now covers the case its ladder never fitted. The
+  report-then-plan-then-act progression assumes a tool that will run many times and
+  can earn trust across them; a one-shot mechanical edit across thousands of
+  generated values gets a single run, and a diff that size defeats the review that
+  would normally catch the mistake.
+- What replaces the ladder is two checks that fail in unrelated ways: an applier
+  written to refuse a file rather than apply-and-report, and a second check aimed at
+  content rather than shape. The first is blind by construction to anything shaped
+  correctly and meaning the wrong thing.
+- The section also names the question that generates the second check — what class
+  of error would pass every assertion I just wrote? — and the reason a validator
+  that catches nothing was still worth writing.
+
 ## 2026-09-01 — Diagnosing: a result that is wrong in several ways at once is a broken experiment
 
 - `diagnosing-before-fixing` now separates a refuted hypothesis from a
