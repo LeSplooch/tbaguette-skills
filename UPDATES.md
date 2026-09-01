@@ -24,6 +24,20 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — The person you are working with is the bottom rung of the routing ladder
+
+- `routing-around-capability-gaps` extends its capability-not-preference
+  guardrail to cover the user. Handing someone a block of commands to paste is a
+  routing decision — it asserts *this cannot be done from here* — and it is wrong
+  more often than a model swap is, because the alternative usually went
+  unchecked. A permission prompt is not a capability gap; neither is a slow
+  command, nor a step that merely feels like it ought to be theirs.
+- Three things do belong to the user, recognizable by what they need rather than
+  how they feel: a secret only they hold, a decision that is theirs, and an
+  irreversible action a run may prepare but not take. Everything else handed over
+  is an unchecked capability claim — the same substitution this skill exists to
+  prevent, aimed at the person instead of at the work.
+
 ## 2026-09-02 — A run is not finished while the things it started are still running
 
 - `finishing-what-you-started` now covers the part of a run that never gets a

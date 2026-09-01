@@ -136,12 +136,32 @@ Route when the current setup **cannot** do the thing. Do not route because anoth
 
 Two conditions justify routing without a hard capability gap, both observable: the volume is large enough that a cheaper model changes the cost by an order of magnitude, or the current provider is down, rate-limited, or out of quota. Anything else is benchmark-shopping.
 
+The user is on this ladder too, on the bottom rung, and the same guardrail
+governs reaching for them. Handing someone a block of commands to paste is a
+routing decision — it says *this cannot be done from here* — and it is wrong far
+more often than a model swap is, because the alternative was never checked. A
+permission prompt is not a capability gap. Neither is a command that would take
+a while, a step that feels like it ought to be theirs, or an action that is
+merely mildly consequential. Before printing a command for someone else to run,
+answer the same question rung zero asks about everything else: **is there a tool
+here that does this?** Usually there is, and the honest form of the sentence was
+not "you'll need to run these" but running them.
+
+Three cases genuinely belong to the user, and they are recognizable by what
+they need rather than by how they feel: a credential or a secret only they hold,
+a decision that is theirs to make, and an irreversible action a run may prepare
+but not take (`bounding-autonomous-work` owns that last one). Everything else
+handed over is a capability claim, and an unchecked capability claim is the
+substitution this whole skill exists to prevent — pointed at the person instead
+of at the work.
+
 ## Common mistakes
 
 | Symptom | Real cause |
 |---|---|
 | A confident description of a file that was never opened | The gap was never named, so substitution filled it |
 | "Nothing else is installed" after checking one remembered command | Recollection used as an inventory instead of a sweep |
+| "Why are you asking me to run this?" from a user who has the same shell you do | A step was routed to the person without checking rung zero; the gap was a permission prompt or an inconvenience, not a capability |
 | A delegate reply that reads like a greeting or a self-description | The prompt was dropped by a wrong argument form, and no canary caught it |
 | A plan built on a model that turns out to be uncredentialed | A `models` listing read as an entitlement rather than a catalog |
 | An hour of model calls to transcribe or extract what a local tool does exactly | Rung two skipped because a bigger model felt like the better answer |
@@ -162,3 +182,4 @@ Two conditions justify routing without a hard capability gap, both observable: t
 - Trusting a remembered flag over the `--help` the installed version actually prints.
 - "It returned something, so it worked."
 - Building a coordinate map or a fixture against an environment you stood up, before checking what it lacks.
+- A block of commands printed for the user to paste, from a session that has a shell.
