@@ -1,6 +1,6 @@
 ---
 name: portable-shell-scripting
-description: Use when writing or reviewing a shell script, when a script works in one shell but fails in another, when it breaks on filenames with spaces or newlines, or when a failing command does not stop the script. Covers quoting and word splitting, set -e exemptions, lost variable assignments after a pipeline, exit codes and pipeline status, cleanup traps, POSIX sh versus bash-isms, GNU versus BSD tool differences, and when a script has outgrown shell.
+description: Use when writing or reviewing a shell script, when a script works in one shell but fails in another, when it breaks on filenames with spaces or newlines, when a failing command does not stop the script, or when a script kills a process by matching its command line or loops waiting for one to disappear. Covers quoting and word splitting, set -e exemptions, lost variable assignments after a pipeline, exit codes and pipeline status, cleanup traps, matching processes by pattern for kills and wait loops, POSIX sh versus bash-isms, GNU versus BSD tool differences, and when a script has outgrown shell.
 ---
 
 # Portable shell scripting
@@ -102,15 +102,20 @@ trap 'cleanup; exit 143' TERM HUP
 
 `mktemp` rather than a `$$`-derived name: a predictable path in a world-writable directory is a symlink attack and a collision. An EXIT trap does not reliably fire on a signal in every shell, so name the signals and re-raise `INT` so callers see a real interrupt. SIGKILL and power loss cannot be trapped, so keep scratch data under the system temp root where the OS reclaims it, and make cleanup idempotent.
 
-## Killing processes by pattern
+## Killing and waiting on processes by pattern
 
-`pkill -f` and `pgrep -f` match against a process's *entire* command line, not just its name — every argument, every embedded string, whatever ends up in argv. That's most dangerous when the caller and the target share a harness — an `eval`, a heredoc, a wrapper script — because the same substring that identifies the target then also shows up in the caller's own command line.
+`pkill -f` and `pgrep -f` match against a process's *entire* command line, not just its name — every argument, every embedded string, whatever ends up in argv. That's most dangerous when the caller and the target share a harness — an `eval`, a heredoc, a wrapper script — because the same substring that identifies the target then also shows up in the caller's own command line. The bullets below are about killing by pattern; waiting on one fails through the same mechanism in the opposite direction, and is covered after them.
 
 - Prefer a saved PID over pattern matching: write `$!` to a file right after starting the background process, then `kill "$(cat "$pidfile")"` to stop it later. No pattern, no risk of matching something else.
 - If `-f` is unavoidable, check what it would hit before running it. `pgrep -f 'pattern'` lists the matching PIDs; `ps -o pid,args= -p <pids>` shows their exact command lines, including, potentially, the shell about to run the `pkill`. (GNU `pgrep -a` does both in one step; it's a procps extension, not available on BSD/macOS `pgrep`.)
 - Anchor the pattern on something only the target has — a unique flag, a full path — not a bare project or script name.
+- A precise pattern is still not a private one. Anchoring narrows the match to one program; it does not narrow it to *your copy* of that program. The process table is a single machine-wide namespace, shared with the user's editor, window manager, and browser, and with any other agent session running the same tooling — so a pattern can be exactly right and still name a process you did not start. Defeating self-match — the `'[p]attern'` bracket trick, a tighter anchor — closes that direction and leaves this one wide open, so on a shared or desktop machine assume a pattern naming a common binary also matches a stranger's copy of it. The saved PID above is the only handle that cannot.
 - Never put the cleanup and the relaunch in one command. `pkill -f foo; start foo &` reads as stop-then-start and is not: by the time the pattern is evaluated the replacement can already be in the process table, so the kill takes the process it was run to make room for. The symptom is the reason this one costs so much — the job reports starting and then produces nothing, which reads as the job failing rather than as the cleanup having killed it, and every subsequent minute is spent debugging the wrong process. Kill, confirm the target is gone, then start.
 - `pkill` without `-f` matches only the process's short kernel-tracked name (`comm`), which is immune to `argv[0]` spoofing but not to how the target was launched: for a script run directly (`./script.sh`), `comm` is the script's own basename, narrow enough to target; for a script run through an explicit interpreter (`bash script.sh`), `comm` is the *interpreter's* name, which matches every other script running under that interpreter too.
+
+The same match used as a *wait condition* fails in the opposite direction, and is much easier to miss. `until ! pgrep -f foo; do sleep 20; done` never exits: the waiting shell's own command line contains the pattern, so the loop is waiting for itself to stop existing. Nothing is killed and nothing errors, so the shape reads as correct and gets written again — what a later observer finds is several loops that will never exit and that, from the process table, look exactly like several concurrent copies of the job. A kill that matches wrong is loud and gets debugged in the minute it happens; a wait that matches wrong is silent and accumulates for hours.
+
+The fix is not a better pattern. Wait on the thing you actually care about: the artifact the job writes, a file it touches on completion, or — when this shell started the job — its own exit status, via `cmd & pid=$!` then `wait "$pid"`, which is POSIX and reports the job's own status. A completion file has to be removed before the job starts, or the previous run's copy satisfies the wait instantly. Whatever the condition, bound the loop with a counter, since `timeout` is not POSIX, and fail with a message naming what it waited for — so a wait that is wrong anyway gives up in minutes rather than at whatever hour someone happens to look. (`diagnosing-before-fixing` has the general form: poll the real condition, never a proxy, always with a bound.)
 
 ## Same name, different tool
 
@@ -132,6 +137,8 @@ Choose the POSIX subset first. Where an extension is genuinely needed, probe the
 | Fails on exactly one machine | GNU versus BSD flags for `sed`, `date`, `readlink`, or `stat` |
 | `pkill -f` killed the calling shell, not the target | the pattern also matched the shell's own wrapped or eval'd command line, not just the target's argv |
 | A restarted background job reports starting, then does nothing | cleanup and relaunch ran in one command; the pattern matched the replacement, which was already in the process table |
+| A `pgrep -f` wait loop never finishes, and there are now several of them | the pattern matched the waiting shell itself, so each loop waits for its own exit |
+| A `pkill` aimed at the script's job took down one of the user's | the pattern named a program, not an instance; every copy on the machine matched |
 | A file "does not exist" and then plainly does | A `cd` in an earlier command re-rooted every relative path after it |
 
 ## Red flags
@@ -141,5 +148,6 @@ Choose the POSIX subset first. Where an extension is genuinely needed, probe the
 - A second level of quoting inside `ssh`, `sudo sh -c`, or a generated command line
 - Adding `|| true` to silence a failure rather than to declare it non-fatal
 - The script now holds arrays of records, parses JSON or CSV with `sed`, retries with backoff, or passes 200 lines — it has outgrown shell and should become a program in a language with data structures and a test runner
-- `pkill -f` or `pgrep -f` run with a pattern nobody checked against every process it could match, including the caller's own
+- `pkill -f` or `pgrep -f` run with a pattern nobody checked against every process it could match — the caller's own, and the user's
+- A loop that waits for a process matching a string to disappear — the shell running the loop matches the string too
 - A negative result from a relative path — nothing found, no such file — trusted without checking `pwd` first

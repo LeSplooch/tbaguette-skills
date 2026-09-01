@@ -24,6 +24,26 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Shell: a loop that waits for a process can be waiting on itself
+
+- `portable-shell-scripting` covered killing a process by pattern. It now covers
+  waiting on one, which is the same bug wearing the opposite symptom:
+  `until ! pgrep -f 'thing'; do sleep 20; done` never exits, because the waiting
+  shell's own command line contains the pattern. Nothing dies and nothing errors, so
+  there is no failure to notice — only a loop that runs for hours, and a second copy
+  of it the next time the shape looks obviously right.
+- The half worth having is what to wait on instead: the artifact the job produces, a
+  file it touches when it finishes, or the job's own exit status via `wait "$pid"` —
+  and always with a timeout, so a wait that is wrong anyway gives up in minutes. The
+  section is now headed "Killing and waiting on processes by pattern" and the skill's
+  description names wait loops, since nobody writing one was ever going to look under
+  a heading about killing.
+- Also new: a precise pattern is still not a private one. Defeating self-match with
+  the bracket trick or a tighter anchor closes one direction and leaves the other
+  open — the process table is shared with the user's editor, window manager and
+  browser, so a pattern naming a common binary matches a stranger's copy of it and
+  the kill takes that one too. The PID saved at spawn is the only handle that cannot.
+
 ## 2026-09-01 — Contributing: the description cap, and checking your words against the glossary
 
 - `tending-tbaguette` now warns about the one build gate that fires on the easy path
