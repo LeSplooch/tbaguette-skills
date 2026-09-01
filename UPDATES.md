@@ -24,6 +24,18 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — Let the harness fire the checkpoint you were going to forget
+
+- `checkpointing-long-runs` says to checkpoint when the context is visibly
+  filling, and that has always been the weakest line on its list: it asks the
+  part of a run least able to judge its own state to judge its own state.
+- The skill now points at the alternative. Where a harness exposes the boundary
+  as an event — a callback before compaction, at session end, when a subagent
+  returns, when a worktree is removed — wiring the checkpoint to it turns a
+  discipline into a mechanism. Pre-compaction in particular is the exact instant
+  the section was asking you to notice, handed over as something that cannot
+  forget.
+
 ## 2026-09-02 — Auditing a dependency whose payload is prose, not code
 
 - `auditing-dependencies` now fires on the question "should I install this

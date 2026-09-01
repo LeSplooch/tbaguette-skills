@@ -152,6 +152,17 @@ reconstruct:
 - **When the context is visibly filling.** Not after — the checkpoint written
   under compaction pressure is written from a memory already degrading.
 
+That last one is a discipline, which makes it the weakest entry on the list: it
+asks the part of the run least able to judge its own state to notice its own
+state. Where the harness exposes the boundary as an event — a hook that fires
+before compaction, at session end, when a subagent returns, when a worktree is
+removed — wire the checkpoint to it and the discipline becomes a mechanism.
+Harnesses have accumulated a lot of these, and pre-compaction in particular is
+the exact moment this section is asking you to remember, offered as a callback
+that cannot forget. `automating-repetition` owns the general judgment about when
+a habit is worth turning into machinery; a checkpoint whose entire purpose is
+surviving an event the harness already announces is near the top of that list.
+
 ## After a boundary, read; do not recall
 
 At the far side of a compaction, a session restart, or a handoff, the order of
@@ -189,6 +200,7 @@ compressing it was easier than writing it.
 
 | Symptom | Real cause |
 |---|---|
+| The record's last entry is always just before the gap, never inside it | Checkpointing was left to a judgment call at the boundary, where the harness offered an event that fires there on its own |
 | A second session redoes committed work | Recollection trusted over `git log`, which is the default after a compaction |
 | The same dead end explored twice | Negative results were never written; only forward progress was |
 | A whole family of causes skipped, wrongly | A dead end recorded without its boundary, so "pinning the clock changed nothing" was read as "not a timing issue" |
@@ -210,3 +222,5 @@ compressing it was easier than writing it.
 - "The summary can just say what I remember doing."
 - "Checkpointing is overhead on a run this size" — the runs that need it are
   exactly the ones where it feels like overhead early.
+- Relying on noticing the context filling, in a harness that will announce the
+  compaction to a hook you never wired.
