@@ -43,6 +43,22 @@ A lockfile pins the full transitive graph with integrity hashes. Without one, tw
 - **Read the lockfile diff.** A one-line manifest change that produces 60 new lockfile entries is the actual change under review. This is the most-skipped step in dependency management.
 - Prefer resolution that fails on conflict over silently installing two copies — with two copies, "we patched it" can be false for one of them.
 
+## When there is no hash to check, compose the weak signals
+
+Everything above assumes the canonical signal exists. Sometimes it does not, and always for the artifact least covered by the rest of this: the one-off download outside any package manager — a standalone installer, a binary release asset, a vendored blob. The publisher's release metadata may carry no digest for that file at all, because the field postdates the release or was never populated.
+
+The reflex at that point is a false binary — verify, or accept it on trust — and trust wins, because there is a task waiting on the other side of the decision. A missing hash is not permission to skip verification. It removes the one check that would have settled the question alone, and leaves several that settle it together.
+
+Pick signals that an attacker would have to satisfy **simultaneously**, and that come from different places:
+
+- Exact byte size against the size published alongside the release.
+- The container's magic bytes and structure matching the format it claims.
+- A build timestamp inside the archive consistent with the release date.
+- The archive's own file listing containing the expected entry point, under the expected name, in the expected place.
+- The same artifact fetched again from a different network path, byte-identical.
+
+None of these is a signature and the section does not pretend otherwise; the standard remains a publisher digest or a signature where one exists, and asking for one is worth doing. What this buys is a real check where the alternative was none — substituting a *number* of independent things that would all have to have been forged, for a single thing that would have to have been broken. Record which signals were used and that the canonical one was absent, so the next person inherits a verification with a known shape rather than an unexamined "we checked it".
+
 ## Transitive dependencies are the majority of the risk
 
 Depth two and beyond is typically 80–95% of the shipped third-party code and 100% of the packages nobody evaluated. Your direct list is a review artifact; the lockfile is what ships. Each direct dependency's author performed your adoption review for you, at their standards, against their threat model.
@@ -103,6 +119,7 @@ Options, in order: replace with a maintained equivalent; absorb it — read the 
 | CI compromised through a dependency | Install ran in a job holding publish or cloud credentials |
 | The wrong package installed under a plausible name | Name typed from memory or copied from a search result |
 | A dependency cannot be removed | Its types leaked into the domain model; no adapter boundary was ever drawn |
+| A downloaded artifact accepted unverified | Its publisher listed no hash, and a missing canonical signal was read as permission to skip the check rather than as a reason to compose several |
 
 ## Red flags
 
@@ -113,3 +130,4 @@ Options, in order: replace with a maintained equivalent; absorb it — read the 
 - "We'll deal with the unmaintained one when it breaks."
 - A dependency being added during an incident, at speed, from a search result.
 - A public registry configured as a fallback for a private namespace.
+- "There's no published checksum for this one, so there's nothing to verify."

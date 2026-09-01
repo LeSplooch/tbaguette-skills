@@ -24,6 +24,23 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Dependencies: what to do when there is no hash to check
+
+- `auditing-dependencies` assumed throughout that the canonical integrity signal
+  exists. It now covers the artifact least protected by the rest of the skill — the
+  one-off download outside any package manager, whose publisher lists no digest for
+  that file at all.
+- A missing hash is not permission to skip verification. It removes the one check
+  that would have settled the question alone and leaves several that settle it
+  together: exact byte size against the published size, container magic and
+  structure, an internal build timestamp consistent with the release date, the
+  archive's own listing carrying the expected entry point, the same bytes fetched
+  over a different network path.
+- The skill is explicit that this is not a signature and does not replace asking for
+  one. It trades a single thing that would have to be broken for several independent
+  things that would all have to be forged, and says to record which signals were
+  used so the next reader inherits a verification with a known shape.
+
 ## 2026-09-01 — Test scope: a guard nothing calls passes every test written for it
 
 - `choosing-test-scope` now separates guard code from ordinary code when picking a
