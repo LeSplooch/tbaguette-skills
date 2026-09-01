@@ -24,6 +24,18 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Diagnosing: a result that is wrong in several ways at once is a broken experiment
+
+- `diagnosing-before-fixing` now separates a refuted hypothesis from a
+  malfunctioning experiment. When the test you built to settle a hypothesis comes
+  back far worse than the baseline, that reads as a refutation — and it is one only
+  if the experiment actually ran.
+- The discriminator is a count, available before any analysis: one wrong idea about
+  the cause produces one deviation, so a run that is anomalous in several unrelated
+  ways at once is describing the instrument, not the world. The verdict on it is
+  "no result", not "refuted" — which matters because a hypothesis dropped this way
+  leaves nothing behind pointing back at itself.
+
 ## 2026-09-01 — Two skills now fit inside the Agent Skills description limit
 
 - `confirming-before-claiming-done` and `offering-the-next-move` had descriptions

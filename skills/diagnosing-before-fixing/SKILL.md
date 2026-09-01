@@ -115,6 +115,14 @@ It also survives the evidence that should kill it. A harness can be *recording* 
 
 Vary it on purpose. That is the whole fix, and it is usually cheaper than the fix you were about to attempt — a routing flag, a different host, forcing the other branch. When the un-varied factor is *which commit*, that is what `bisecting-failures` is for. If varying it is genuinely impossible, say so and record it as an *assumption* rather than a *finding*.
 
+## Several anomalies at once describe the apparatus, not the hypothesis
+
+The loop's **Act** step takes the result and reads it as confirmation or refutation. That reading assumes something nobody checked: that the experiment ran. A test built to settle a hypothesis is new code, and new code has its own bugs — so a bad result has two possible authors, the world or the instrument, and they call for opposite responses. Believing the instrument retires a hypothesis that may be correct, and retires it silently, because a refuted hypothesis leaves nothing behind pointing at itself.
+
+The discriminator is available before any analysis, and the counting is the whole of it: **count the ways the result is anomalous, and ask whether one wrong idea explains all of them.** A wrong hypothesis is a single mistaken belief about the cause, so it usually surfaces as a single deviation — the number moved the wrong way, or failed to move. A run that simultaneously never finishes a third of its attempts, triples its latency, and contains none of the category the change was built to select for is three unrelated failures, and no one wrong idea about the cause produces three unrelated failures. That is the signature of an apparatus that is broken, and the honest verdict on it is *no result*, not *refuted*.
+
+One anomaly is evidence and several are a symptom, which inverts the usual instinct that a worse result is a stronger signal. When the count is high, stop reading the verdict and go read the new code — the hypothesis has not been tested yet, whatever the numbers say.
+
 ## When fixes keep failing
 
 Three failed fixes in a row is a different problem than the one being solved. If each attempt reveals the same coupling in a new place, or needs a bigger change than the last one to hold, the architecture is what's wrong — not the last three hypotheses. Say so explicitly and question the pattern before attempting a fourth; a fourth patch on a bad architecture just becomes the fifth.
@@ -135,6 +143,7 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 | "I don't fully understand it, but this might work" | Uncertainty deployed instead of named — say what isn't understood and go investigate exactly that |
 | The same command run four times with the same error | A retry treated as an experiment when nothing differed between the runs |
 | "We already ruled that out" | The factor was the same in every run, so it was observed rather than tested |
+| A hypothesis dropped on a result that was anomalous in several unrelated ways | One wrong idea does not produce several unrelated failures; the experiment broke, so it returned no verdict to act on |
 
 ## Red flags
 

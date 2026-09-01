@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.3</span>
+      <span class="wordmark-version" dir="ltr">v1.0.4</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-01T13:18:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-01T13:18:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-01T13:21:23+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-01T13:21:23Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -146,11 +146,22 @@ Flag one more thing, because it applies to this very conversation: this session 
     <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-fresh-at="2026-09-01T13:18:53.029463+00:00" draggable="false" style="--cf-offset: 0">
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/diagnosing-before-fixing/" data-fresh-at="2026-09-01T13:21:23.627191+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">diagnosing-before-fixing</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T13:21:23.627191+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a bug, test failure, crash, or any behavior that doesn&#x27;t match what the code is supposed to do needs a fix and none has been…</p>
+  <span class="card__foot">
+    <span class="tag">Debugging and performance</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-fresh-at="2026-09-01T15:18:52+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">confirming-before-claiming-done</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T13:18:53.029463+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T15:18:52+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</p>
   <span class="card__foot">
@@ -158,10 +169,10 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/offering-the-next-move/" data-fresh-at="2026-09-01T13:18:53.029463+00:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/offering-the-next-move/" data-fresh-at="2026-09-01T15:18:52+02:00" draggable="false" style="--cf-offset: -1">
   <span class="card__name-row">
     <span class="card__name">offering-the-next-move</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T13:18:53.029463+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T15:18:52+02:00">Updated</span>
   </span>
   <p class="card__summary">Use at the end of every task that produced something — a change, an artifact…</p>
   <span class="card__foot">
@@ -180,11 +191,11 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
-    <span class="notes__entry-title">Two skills now fit inside the Agent Skills description limit</span>
+    <span class="notes__entry-title">Diagnosing: a result that is wrong in several ways at once is a broken experiment</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/offering-the-next-move/"><code>offering-the-next-move</code></a> had descriptions of 1107 and 1037 characters. The Agent Skills format caps a description at 1024, so on any harness that validates the frontmatter rather than merely reading it, those two skills were the ones that could fail to load — quietly, and only on the harness furthest from where they were written.</li>
-    <li>Both are now under the cap with every routing trigger intact. Nothing about when either skill fires has changed; they say the same things in fewer words.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> now separates a refuted hypothesis from a malfunctioning experiment. When the test you built to settle a hypothesis comes back far worse than the baseline, that reads as a refutation — and it is one only if the experiment actually ran.</li>
+    <li>The discriminator is a count, available before any analysis: one wrong idea about the cause produces one deviation, so a run that is anomalous in several unrelated ways at once is describing the instrument, not the world. The verdict on it is &quot;no result&quot;, not &quot;refuted&quot; — which matters because a hypothesis dropped this way leaves nothing behind pointing back at itself.</li>
   </ul>
 </li>
   </ol>
@@ -193,6 +204,16 @@ Flag one more thing, because it applies to this very conversation: this session 
       <span class="notes__earlier-label">Show 5 earlier updates</span>
     </summary>
     <ol class="notes__list notes__list--earlier">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
+    <span class="notes__entry-title">Two skills now fit inside the Agent Skills description limit</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/offering-the-next-move/"><code>offering-the-next-move</code></a> had descriptions of 1107 and 1037 characters. The Agent Skills format caps a description at 1024, so on any harness that validates the frontmatter rather than merely reading it, those two skills were the ones that could fail to load — quietly, and only on the harness furthest from where they were written.</li>
+    <li>Both are now under the cap with every routing trigger intact. Nothing about when either skill fires has changed; they say the same things in fewer words.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-08-30">30 Aug 2026</time>
@@ -245,17 +266,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> names where a project-specific rule actually belongs: the project's own <code>CLAUDE.md</code>, which sits <em>above</em> a library skill instead of modifying it. Most edits someone wants to make to an installed skill are not corrections to it — they are one project's fact colliding with a deliberately general rule, and that was never an upstream change to begin with.</li>
     <li>It also corrects the belief that makes hand-editing feel harmless: that the next update quietly overwrites your edit. It does not. The update reads the tree, backs off rather than discarding your work, and stops there — so the edit persists and blocks every update behind it.</li>
     <li>The library now goes by its full name, <strong>TBaguette's Atelier</strong>, on the site, in the READMEs, and wherever your agent lists its installed plugins. Nothing you type changes: the plugin is still <code>TBaguette</code>, skills are still <code>TBaguette:&lt;skill-name&gt;</code>, and the install still lands in <code>~/.claude/skills/TBaguette</code>.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-08-27">27 Aug 2026</time>
-    <span class="notes__entry-title">Saying something is not installed now has a rule of its own</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> names another way a check goes wrong, and it is the first one in that skill about claiming something is <em>not</em> there. Open the one place a plugin, a patch, a hook, or a migration would live, find it untouched, report &quot;not installed&quot; — fresh evidence, gathered first-hand, and wrong. That location was the right one for an earlier version and stays untouched forever now that nothing writes to it, so the check returns the same clean answer whether the thing is installed or not.</li>
-    <li>What it tells you to do instead: sweep the whole target tree for the artifact's own name, ask the running process what it actually has open and loaded, and read which candidate the runtime's resolution order really selects. A location you know about can confirm presence the moment the thing turns up in it, and can never establish absence — so an absence is only ever earned by a search, and the claim should name what was searched.</li>
-    <li>The skill now fires on negative claims too. Asking it to check whether something is installed, applied, or registered used to reach nothing: its triggers were all claims that something was done, fixed, or passing.</li>
   </ul>
 </li>
     </ol>
@@ -943,7 +953,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/diagnosing-before-fixing/" data-search-card data-search-terms="diagnosing-before-fixing use when a bug, test failure, crash, or any behavior that doesn&#x27;t match what the code is supposed to do needs a fix and none has been… debugging and performance">
   <span class="card__name-row">
     <span class="card__name">diagnosing-before-fixing</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T13:21:23.627191+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when a bug, test failure, crash, or any behavior that doesn&#x27;t match what the code is supposed to do needs a fix and none has been…</p>
   <span class="card__foot">
@@ -1235,7 +1245,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-search-card data-search-terms="confirming-before-claiming-done use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed… finishing and proving">
   <span class="card__name-row">
     <span class="card__name">confirming-before-claiming-done</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T13:18:53.029463+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T15:18:52+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</p>
   <span class="card__foot">
@@ -1279,7 +1289,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/offering-the-next-move/" data-search-card data-search-terms="offering-the-next-move use at the end of every task that produced something — a change, an artifact… finishing and proving">
   <span class="card__name-row">
     <span class="card__name">offering-the-next-move</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T13:18:53.029463+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T15:18:52+02:00">Updated</span>
   </span>
   <p class="card__summary">Use at the end of every task that produced something — a change, an artifact…</p>
   <span class="card__foot">
