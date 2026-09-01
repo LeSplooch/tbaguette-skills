@@ -24,6 +24,22 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — Feeding both variants the same inputs, and knowing when that stops helping
+
+- `performance-profiling` picks up the rung above interleaved A/B runs: give
+  both variants the same inputs in the same order and difference them per input
+  instead of comparing averages. Whatever made input 47 slow made it slow for
+  both arms, so the subtraction cancels it. Same generator, same seed, fed
+  twice — and on a noisy workload it is often the difference between a result
+  and a shrug.
+- It also says what to report alongside: the correlation between the two arms'
+  per-input results. How much the pairing buys is a property of the pair, not of
+  the technique, and quoting the reduction on its own reads as though it were the
+  technique's. A low correlation has a usual cause worth naming — the change
+  altered *which work happens* rather than how fast the work went, so most of
+  each input's difficulty was never common to both and had nothing to cancel
+  against.
+
 ## 2026-09-02 — A threshold that measures consistency will adopt changes nobody can feel
 
 - `performance-profiling` now says what a significance test actually answers.

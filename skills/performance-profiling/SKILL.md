@@ -76,6 +76,23 @@ Before optimizing anything, measure the fraction *f* of total time it occupies. 
 
 Interleaving A and B runs is the cheapest defense available and almost nobody does it: it converts a slow machine drift into noise instead of a fake win.
 
+The next rung up is to stop comparing averages at all. Give both variants the
+**same inputs**, in the same order, and difference them per input rather than in
+aggregate: whatever made input 47 slow made it slow for both arms, so
+subtracting cancels it and leaves the effect of the change. It is nearly free —
+the same generator, the same seed, fed twice — and on a noisy workload it is
+often the difference between a result and a shrug.
+
+How much it buys is not a property of the technique, though, and reporting the
+variance reduction alone reads as if it were. It is a property of the **pair
+being compared**, and the quantity that says so is the correlation between the
+two arms' per-input results. Report it beside the reduction. When it is low the
+pairing is barely working, and there is usually one reason: the change altered
+*which work happens* rather than only how fast the work went, so the two arms
+met the same input very differently and most of that input's inherent difficulty
+was never common to both and had nothing to cancel against. Pairing pays well
+for a change that alters outcomes and much less for one that alters the path.
+
 ## Reliable is not large
 
 Once A and B are being compared properly, the rule that decides which one wins
@@ -129,6 +146,7 @@ list of the settings the criterion was never really deciding.
 - Optimizing before a baseline exists, or "we'll measure after"
 - A speedup reported from a single run of each variant
 - A benchmark result that is a suspiciously round multiple, or that does not vary with input size
+- A variance reduction quoted as a property of the method, with no correlation between the two arms beside it
 - Reading a CPU flame graph for a service that spends its time waiting
 - Continuing to optimize after the target was met
 - An accept-or-reject rule stated only as a p-value or a confidence level, with no minimum effect size beside it
