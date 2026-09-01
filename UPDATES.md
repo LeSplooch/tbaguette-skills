@@ -24,6 +24,22 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Test scope: a guard nothing calls passes every test written for it
+
+- `choosing-test-scope` now separates guard code from ordinary code when picking a
+  layer. An unwired feature does nothing and somebody notices, because what they
+  asked for is visibly missing. An unwired redaction step, permission check, or
+  validator leaves nothing missing at all — the output still appears and the check
+  simply never ran, while its unit suite goes on passing.
+- The skill now says why that suite could never have helped: whether anything calls
+  a function is a question about its callers, and coverage of the callee does not
+  answer it. The test that carries the weight runs a real input through the real
+  call path and asserts on what the pipeline emitted.
+- It also names the reason these survive so long. The failure usually errs safe, and
+  a safety property that is accidentally too strong produces no symptom — so an
+  audit that only looks for the too-weak direction finds nothing and concludes all
+  is well.
+
 ## 2026-09-01 — Shell: don't put the cleanup and the relaunch in one command
 
 - `portable-shell-scripting` already warned that a pattern kill can match the shell

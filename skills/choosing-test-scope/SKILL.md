@@ -74,6 +74,19 @@ Every end-to-end scenario must be a user-visible journey no other layer can cove
 
 Ratios are an output, not a target. A codebase that is mostly glue is legitimately integration-heavy; a codebase with a rich domain model is legitimately unit-heavy. Coverage percentage is a floor detector — it can prove a module has none — and stops being informative as a target above roughly 80%, where teams start writing tests without assertions to reach the number.
 
+## Code whose job is to prevent something is tested at its call path
+
+The table puts wiring in the end-to-end row, and for ordinary code that is unremarkable: an unwired feature does nothing, somebody notices within the day, because the thing they asked for is visibly missing.
+
+Guard code inverts it. A redaction step, a permission check, an input validator, a rate limiter — when one of those is not wired in, nothing is missing. The output still appears, the request still completes, and the check simply never ran. A thorough unit suite over the function goes on passing, and it never could have said otherwise: "is anything calling this" is a question about the caller, and no quantity of coverage of the callee answers a question about its callers.
+
+The failure also tends to err *safe*, which removes the last mechanism that would have surfaced it. A stripping step that runs on an empty input strips nothing and lets nothing through either; a filter that is never consulted, in a pipeline that defaults to rejecting, rejects. Nobody is harmed, so nobody reports it, and the documentation describing the check keeps being true about the code and false about the system. **A safety property that is accidentally too strong produces no symptom at all** — only the too-weak direction ever complains, which is why an audit that checks one direction finds nothing and concludes the right thing is happening.
+
+Two consequences worth making explicit:
+
+- The test that carries the weight feeds a real input the guard should act on through the real call path, and asserts on what the pipeline actually emitted. The unit tests stay; they stop being the evidence.
+- When auditing a safety property, deliberately check whether it is too strong as well as whether it is too weak. Both are defects. Only one of them will ever come to find you.
+
 ## When a bug escapes every layer
 
 For each defect that reached production, ask one question: **what is the lowest layer that could have caught this?** Add the test there, and only there.
@@ -92,6 +105,7 @@ If the honest answer is "only end-to-end", the behavior exists solely in the wir
 | Every mocked test passes; the first real call returns nothing | Fixtures were written from a reading of the provider, so the suite tests the reading |
 | A shape change surfaces as an empty result rather than an error | The boundary parses leniently; an unrecognized payload must raise, not yield nothing |
 | Coverage is 90% and bugs still escape | Coverage measures execution, not assertion; branches are run, not checked |
+| A well-tested guard function that nothing calls | Coverage of the callee cannot answer a question about its callers, and a guard that never runs produces no symptom to notice |
 | Integration suite has thousands of cases | Business-rule permutations tested through the database instead of in the domain |
 | Dependency upgrade needs a week of manual testing | No pinned-assumption tests; the boundary's behavior was never written down |
 | The team reruns CI as a first response | A suite past its wall-clock budget; rerunning is now cheaper than reading |
@@ -102,6 +116,7 @@ If the honest answer is "only end-to-end", the behavior exists solely in the wir
 - "Add a browser test for that validation rule."
 - "Mock the database, it's faster" — for a behavior the database decides.
 - "We need 100% coverage."
+- "The redaction/permission/validation function is thoroughly tested" — said without having checked that the pipeline calls it.
 - "The pyramid says we need more unit tests" — stated with no failing behavior in mind.
 - Writing a test at a given layer because the harness there was already set up.
 - "I built the mocks from their reference implementation, so they're accurate."
