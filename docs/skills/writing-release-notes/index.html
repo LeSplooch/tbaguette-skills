@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.6</span>
+      <span class="wordmark-version" dir="ltr">v1.0.7</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-01T13:25:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-01T13:25:17Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-01T13:28:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-01T13:28:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">writing-release-notes</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T13:28:40.459972+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Communicating</span>
   <p class="lede">Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes, deprecations, removals, or anything a consumer must act on; when turning commit subjects into user-facing text; or when consumers keep asking what they must change to upgrade. Covers ordering by reader impact, per-audience tagging, migration steps, deprecation timelines, and what to leave out.</p>
@@ -81,6 +81,12 @@
 <h2 id="every-entry-names-its-audience">Every entry names its audience</h2>
 <p>This is where most notes fail: every reader reads every line to discover that 90% of it does not apply to them.</p>
 <ul><li>Tag each entry with who it affects — <code>[API consumers]</code>, <code>[self-hosted operators]</code>, <code>[plugin authors]</code>, <code>[CLI users]</code> — or split the document by audience with a nav line at the top.</li><li>Target: a reader in one audience can skip to their part and read under ~20% of the document.</li><li>An entry you cannot attribute to an audience is usually an internal change that should be omitted.</li></ul>
+<h2 id="a-fix-line-claims-the-reader-had-the-bug">A fix line claims the reader had the bug</h2>
+<p>&quot;Fixed: X&quot; carries a premise nobody states: that this reader could have run into X. The commit log cannot settle it — the log records when a bug was fixed, never whether anyone outside the team was exposed to it. Only one span can, and it is the span the notes are actually for: from the build this audience is on to the build they are getting.</p>
+<p>Two kinds of entry fail that test while looking like real fixes in the diff.</p>
+<ul><li><strong>Introduced and fixed inside the same window.</strong> The ordering list above states the easy version of this — a fix to code shipped in this same release is not a fix. The window is the reader's, though, not the release's: an audience three versions behind never met a bug that appeared and died in the two versions between. Both commits are legitimately in range, so nothing in the log marks it.</li><li><strong>The fix had no symptom.</strong> The platform silently ignored the malformed attribute, the wrong value was never read, the broken branch was unreachable. The repair is genuine and there was nothing for the reader to have suffered.</li></ul>
+<p>The cheap tell for the first: <strong>does the entry reference a feature this audience has never had?</strong> If the fix only makes sense to someone who ran a build between two of yours, it is not news to them.</p>
+<p>Keeping such a line anyway is a legitimate call — some projects want the record complete, and a fix with no symptom can still be worth stating where a reader is auditing rather than upgrading. Running the check is what makes that a decision instead of an accident.</p>
 <h2 id="breaking-changes-carry-the-step-not-the-difference">Breaking changes carry the step, not the difference</h2>
 <p>The entry contains the literal action, not a description of what is now different.</p>
 <ul><li>Weak: &quot;<code>parse</code> now returns a result type instead of throwing.&quot;</li><li>Strong: &quot;<code>parse</code> returns a result instead of throwing. Update call sites: <code>x = parse(s)</code> → <code>x = parse(s).or_default()</code>. Find them by searching <code>parse(</code>. A codemod is available at &lt;link&gt;.&quot;</li></ul>
@@ -95,9 +101,9 @@
 <p>Internal refactors, test and CI changes, formatting, dependency bumps with no observable effect, changes behind an off flag, and fixes to unreleased code. Any entry you cannot finish without naming an internal module the reader has never heard of.</p>
 <p>Omission is not concealment — the changelog has all of it. Padding the notes with internals trains readers to skim, and the first thing a skimming reader skips is section 1.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
-<table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Users hit a break that &quot;was in the notes&quot;</td><td>It was, below 40 lines of internal changes</td></tr><tr><td>&quot;What do I actually have to change?&quot; in support</td><td>Differences described, migration steps never given</td></tr><tr><td>Notes are a bulleted list of commit subjects</td><td>Generated changelog shipped as notes with no human pass</td></tr><tr><td>Every release says &quot;various fixes and improvements&quot;</td><td>Written from the version number, not from the diff</td></tr><tr><td>Deprecation warnings ignored for a year, then removal breaks everyone</td><td>No removal version or date, and no repetition in intervening releases</td></tr><tr><td>Long notes for a patch, thin notes for a major</td><td>Length tracked commit count instead of reader impact</td></tr><tr><td>Notes assembled at tag time from memory</td><td>The user-facing line was not captured when the change was made</td></tr><tr><td>Readers on one platform read four screens that do not apply</td><td>No audience tagging</td></tr></tbody></table>
+<table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Users hit a break that &quot;was in the notes&quot;</td><td>It was, below 40 lines of internal changes</td></tr><tr><td>&quot;What do I actually have to change?&quot; in support</td><td>Differences described, migration steps never given</td></tr><tr><td>Notes are a bulleted list of commit subjects</td><td>Generated changelog shipped as notes with no human pass</td></tr><tr><td>Every release says &quot;various fixes and improvements&quot;</td><td>Written from the version number, not from the diff</td></tr><tr><td>Deprecation warnings ignored for a year, then removal breaks everyone</td><td>No removal version or date, and no repetition in intervening releases</td></tr><tr><td>Long notes for a patch, thin notes for a major</td><td>Length tracked commit count instead of reader impact</td></tr><tr><td>Notes assembled at tag time from memory</td><td>The user-facing line was not captured when the change was made</td></tr><tr><td>Readers on one platform read four screens that do not apply</td><td>No audience tagging</td></tr><tr><td>A fix entry nobody recognises, for a bug nobody reported</td><td>The bug was introduced and fixed between two of this audience's builds, so the log had it in range and the reader never met it</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
-<ul><li>&quot;It's a small change, they'll figure it out&quot;</li><li>Writing the notes from the commit log alone, without reading the public surface</li><li>A breaking-change entry with no code in it</li><li>Publishing &quot;no breaking changes&quot; without having checked the exported interface</li><li>An entry only comprehensible to someone who read the pull request</li><li>Announcing a deprecation with no removal date because the team has not agreed on one</li><li>Writing the notes after the tag is already published</li></ul></div></article>
+<ul><li>&quot;It's a small change, they'll figure it out&quot;</li><li>Writing the notes from the commit log alone, without reading the public surface</li><li>A breaking-change entry with no code in it</li><li>Publishing &quot;no breaking changes&quot; without having checked the exported interface</li><li>An entry only comprehensible to someone who read the pull request</li><li>Announcing a deprecation with no removal date because the team has not agreed on one</li><li>Writing the notes after the tag is already published</li><li>A &quot;Fixed:&quot; line for a bug that never had a symptom, kept because the commit was real</li></ul></div></article>
 <nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/writing-adrs/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← writing-adrs</span>

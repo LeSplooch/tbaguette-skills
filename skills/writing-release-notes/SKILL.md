@@ -47,6 +47,19 @@ This is where most notes fail: every reader reads every line to discover that 90
 - Target: a reader in one audience can skip to their part and read under ~20% of the document.
 - An entry you cannot attribute to an audience is usually an internal change that should be omitted.
 
+## A fix line claims the reader had the bug
+
+"Fixed: X" carries a premise nobody states: that this reader could have run into X. The commit log cannot settle it — the log records when a bug was fixed, never whether anyone outside the team was exposed to it. Only one span can, and it is the span the notes are actually for: from the build this audience is on to the build they are getting.
+
+Two kinds of entry fail that test while looking like real fixes in the diff.
+
+- **Introduced and fixed inside the same window.** The ordering list above states the easy version of this — a fix to code shipped in this same release is not a fix. The window is the reader's, though, not the release's: an audience three versions behind never met a bug that appeared and died in the two versions between. Both commits are legitimately in range, so nothing in the log marks it.
+- **The fix had no symptom.** The platform silently ignored the malformed attribute, the wrong value was never read, the broken branch was unreachable. The repair is genuine and there was nothing for the reader to have suffered.
+
+The cheap tell for the first: **does the entry reference a feature this audience has never had?** If the fix only makes sense to someone who ran a build between two of yours, it is not news to them.
+
+Keeping such a line anyway is a legitimate call — some projects want the record complete, and a fix with no symptom can still be worth stating where a reader is auditing rather than upgrading. Running the check is what makes that a decision instead of an accident.
+
 ## Breaking changes carry the step, not the difference
 
 The entry contains the literal action, not a description of what is now different.
@@ -95,6 +108,7 @@ Omission is not concealment — the changelog has all of it. Padding the notes w
 | Long notes for a patch, thin notes for a major | Length tracked commit count instead of reader impact |
 | Notes assembled at tag time from memory | The user-facing line was not captured when the change was made |
 | Readers on one platform read four screens that do not apply | No audience tagging |
+| A fix entry nobody recognises, for a bug nobody reported | The bug was introduced and fixed between two of this audience's builds, so the log had it in range and the reader never met it |
 
 ## Red flags
 
@@ -105,3 +119,4 @@ Omission is not concealment — the changelog has all of it. Padding the notes w
 - An entry only comprehensible to someone who read the pull request
 - Announcing a deprecation with no removal date because the team has not agreed on one
 - Writing the notes after the tag is already published
+- A "Fixed:" line for a bug that never had a symptom, kept because the commit was real

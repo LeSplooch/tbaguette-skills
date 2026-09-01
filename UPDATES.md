@@ -24,6 +24,19 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Release notes: a fix line claims the reader had the bug
+
+- `writing-release-notes` now names the check that separates a fix from internal
+  churn. A `Fixed:` line quietly asserts that this reader could have run into the
+  bug, and the commit log cannot settle that — it records when a bug was fixed,
+  never whether anyone outside the team was ever exposed to it.
+- The span that can settle it is the one the notes are for: from the build this
+  audience is on to the build they are getting. Two entries fail it while looking
+  like real fixes — a bug introduced and fixed between two of their builds, and a
+  fix for something that never produced a symptom at all.
+- Keeping such a line is still a legitimate call. The skill's point is that running
+  the check makes it a decision rather than an accident.
+
 ## 2026-09-01 — Naming: when the same string is both a display name and an identifier
 
 - `naming-things` now covers the rename its cost table could not express. That table

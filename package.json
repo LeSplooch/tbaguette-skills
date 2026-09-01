@@ -1,6 +1,6 @@
 {
   "name": "tbaguette-skills",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Skills and runtime bootstrap for coding agents, from TBaguette's Atelier",
   "license": "GPL-2.0-only",
   "type": "module",

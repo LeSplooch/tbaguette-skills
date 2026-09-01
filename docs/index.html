@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.6</span>
+      <span class="wordmark-version" dir="ltr">v1.0.7</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-01T13:25:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-01T13:25:17Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-01T13:28:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-01T13:28:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -147,10 +147,21 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/naming-things/" data-fresh-at="2026-09-01T13:25:17.261858+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/writing-release-notes/" data-fresh-at="2026-09-01T13:28:40.459972+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">writing-release-notes</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T13:28:40.459972+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes…</p>
+  <span class="card__foot">
+    <span class="tag">Communicating</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/naming-things/" data-fresh-at="2026-09-01T15:25:17+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">naming-things</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T13:25:17.261858+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T15:25:17+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…</p>
   <span class="card__foot">
@@ -158,7 +169,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/automating-repetition/" data-fresh-at="2026-09-01T15:23:22+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/automating-repetition/" data-fresh-at="2026-09-01T15:23:22+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">automating-repetition</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T15:23:22+02:00">Updated</span>
@@ -169,7 +180,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/diagnosing-before-fixing/" data-fresh-at="2026-09-01T15:21:23+02:00" draggable="false" style="--cf-offset: 2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/diagnosing-before-fixing/" data-fresh-at="2026-09-01T15:21:23+02:00" draggable="false" style="--cf-offset: 3">
   <span class="card__name-row">
     <span class="card__name">diagnosing-before-fixing</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T15:21:23+02:00">Updated</span>
@@ -213,12 +224,12 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
-    <span class="notes__entry-title">Naming: when the same string is both a display name and an identifier</span>
+    <span class="notes__entry-title">Release notes: a fix line claims the reader had the bug</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/naming-things/"><code>naming-things</code></a> now covers the rename its cost table could not express. That table sorts occurrences by where the name lives, which works while every occurrence is the same kind of thing. Renaming a product whose old spelling stays valid for users is not that: the same string is a word a human reads in some places and a token something resolves in others — a path segment, an invocation prefix, a manifest field, a config key — and the two are not separable by file.</li>
-    <li>The skill now says to partition by role before touching anything, asking it per occurrence rather than per file, and to leave every resolved occurrence alone. A search-and-replace is wrong on all of those, and wrong silently.</li>
-    <li>It also names what to do afterwards: pin the identifiers with a test, because both spellings now sit in the same files and the next reader will tidy the inconsistency. That is a regression test guarding against the change after this one rather than against this one.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/writing-release-notes/"><code>writing-release-notes</code></a> now names the check that separates a fix from internal churn. A <code>Fixed:</code> line quietly asserts that this reader could have run into the bug, and the commit log cannot settle that — it records when a bug was fixed, never whether anyone outside the team was ever exposed to it.</li>
+    <li>The span that can settle it is the one the notes are for: from the build this audience is on to the build they are getting. Two entries fail it while looking like real fixes — a bug introduced and fixed between two of their builds, and a fix for something that never produced a symptom at all.</li>
+    <li>Keeping such a line is still a legitimate call. The skill's point is that running the check makes it a decision rather than an accident.</li>
   </ul>
 </li>
   </ol>
@@ -227,6 +238,17 @@ Flag one more thing, because it applies to this very conversation: this session 
       <span class="notes__earlier-label">Show 5 earlier updates</span>
     </summary>
     <ol class="notes__list notes__list--earlier">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
+    <span class="notes__entry-title">Naming: when the same string is both a display name and an identifier</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/naming-things/"><code>naming-things</code></a> now covers the rename its cost table could not express. That table sorts occurrences by where the name lives, which works while every occurrence is the same kind of thing. Renaming a product whose old spelling stays valid for users is not that: the same string is a word a human reads in some places and a token something resolves in others — a path segment, an invocation prefix, a manifest field, a config key — and the two are not separable by file.</li>
+    <li>The skill now says to partition by role before touching anything, asking it per occurrence rather than per file, and to leave every resolved occurrence alone. A search-and-replace is wrong on all of those, and wrong silently.</li>
+    <li>It also names what to do afterwards: pin the identifiers with a test, because both spellings now sit in the same files and the next reader will tidy the inconsistency. That is a regression test guarding against the change after this one rather than against this one.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
@@ -266,24 +288,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> now names the dismissal that survives a whole investigation: deciding a cause is eliminated because every run so far shows it was the same. A factor that never varies cannot explain variance, which is not the same as it not being the cause — and the check is one question, &quot;name the run where it was different.&quot;</li>
     <li>It carries the reason the mistake is expensive rather than merely wrong: the dismissal is made once, early, in half a sentence, and every later hypothesis is built on top of it. When several individually-sound fixes have all failed, the thing to look at is the factor all of them held fixed.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-08-29">29 Aug 2026</time>
-    <span class="notes__entry-title">The orchestrator now asks who is answering, not just what the work is</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> reads a second thing before the first action: not just what shape the work is, but what the run may assume about the world it runs in. Who answers a gate — someone replying within a turn, someone replying tomorrow, or nobody at all. How much run the work is worth. What a wrong turn costs. Who else is writing to the same tree. Its gates were always written for one setting of those four, and nothing ever said so.</li>
-    <li>Work that nobody will see until it is finished now has an answer that is not &quot;use your judgment&quot;. New skill: <a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a>. A gate whose answerer is absent gets <strong>substituted, not skipped</strong> — an approval becomes a written design carrying the approach that lost and a condition that fires if it turns out wrong; a clarifying question becomes a recorded ruling naming the reading that lost, never a fact. It adds the four stop conditions a long unattended run needs written down before it starts, and the one gate that has no substitute in any circumstances: an irreversible action still gets a human, however obviously correct it looks at hour six.</li>
-    <li>Small changes get a real lane rather than a warning. Express runs four beats instead of eight, behind entry conditions you check rather than hope — the target already known, one reviewable diff, proof a line away, nothing live, nothing new introduced. The floor under it is lower and is not zero, and it only ever promotes: the judgment that says &quot;this got smaller&quot; is made by the part of a run that most wants to be finished.</li>
-    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a>, for work that outlives the context holding it. Its point is that a long run does not fail by forgetting — it fails by remembering fluently and partially, so the account you hold of your own run is confident and missing exactly what was never restated. It ranks what to write by what it costs to lose, and the top of that list is the dead ends, which almost nobody writes down.</li>
-    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/responding-to-incidents/"><code>responding-to-incidents</code></a>, and a Respond track to run it from. Ordinary debugging reproduces first and fixes second; an outage inverts that, because every minute spent reproducing is spent on users. It covers declaring it out loud early, preserving the evidence your own mitigation is about to destroy, ranking mitigations by how easily they come back out rather than by how right they are, holding all three incident roles when you are the only responder, and handing back to an ordinary diagnosis once people are safe.</li>
-    <li>Two more tracks that were missing: <strong>Review</strong>, for judging work you did not write, where the gate is coverage of the diff rather than confidence in a conclusion; and <strong>Author</strong>, for a deliverable that is a document, whose verify phase is the one that always gets skipped. The skill had been describing reviews as something it routed since it shipped, with no row for one.</li>
-    <li>The orchestrator can now be called directly with a verb — <code>route</code> to name the track and the dials and stop there, <code>resume</code> to enter at the first gate not yet met, <code>gate</code> to say what evidence is missing, <code>record</code>, <code>handoff</code>, <code>abort</code>.</li>
-    <li>It also gained a Refuse list, in the same register as <a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>'s: a plan document for a two-task change, a clarifying question you could answer by reading one file, a track named after the first three edits. None are banned. Reaching for one when the choice was free means you were performing process rather than routing.</li>
-    <li>Later the same day, two of the three new skills were reshaped to lead with what they make you <strong>write down</strong> rather than with the judgment they argue for. <a class="skill-link" href="/tbaguette-skills/skills/responding-to-incidents/"><code>responding-to-incidents</code></a> now opens on the six artifacts an incident produces — declaration, impact statement, timeline, evidence manifest, comms cadence, handback note — each with required fields and each with a note on why it does not get written by itself. The cadence in particular is now an artifact with a form: a stated interval, honoured even when nothing has changed, rather than an intention to keep people posted.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> gained the thing it was missing: what a single checkpoint has to contain, and a required four-part form for a dead end — what was tried, the narrow thing it actually rules out, what it <em>looks</em> like it ruled out and did not, and how many trials the null rests on. &quot;Pinned the clock, no change&quot; reads as &quot;not a timing issue&quot; and means nothing of the sort; every cache, database, and broker keeps its own clock and none of them was pinned. Deprioritized is not eliminated, and the difference now belongs in the file rather than in the head of whoever ran it.</li>
   </ul>
 </li>
     </ol>
@@ -624,7 +628,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/naming-things/" data-search-card data-search-terms="naming-things use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading… reading code">
   <span class="card__name-row">
     <span class="card__name">naming-things</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T13:25:17.261858+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T15:25:17+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…</p>
   <span class="card__foot">
@@ -1353,7 +1357,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/writing-release-notes/" data-search-card data-search-terms="writing-release-notes use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes… communicating">
   <span class="card__name-row">
     <span class="card__name">writing-release-notes</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T13:28:40.459972+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes…</p>
   <span class="card__foot">
