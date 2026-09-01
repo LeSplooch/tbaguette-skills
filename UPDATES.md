@@ -24,6 +24,20 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — "Did this help?" is a question about a run that did not happen
+
+- `confirming-before-claiming-done` gains a section on the baseline that has to
+  be built rather than read. Any claim that a cache, an index, a retry policy, a
+  compression step or a tuned parameter *helped* is a comparison against a run
+  where it was switched off — and the number that is actually to hand is another
+  reading off the treated run, close enough to the result to look like the other
+  half of the ratio.
+- The discriminator is one question asked before the division: if the
+  intervention were switched off, would this denominator change? A `no` means it
+  is a second measurement of the treated run, not a baseline. The failure it
+  catches runs in the costly direction — it reports no effect for something that
+  is working, and the sensible response to no effect is removal.
+
 ## 2026-09-02 — The determinism test that could not see the clock it depended on
 
 - `testing-the-untestable`'s "same seed, twice" check now carries the flaw that

@@ -106,6 +106,29 @@ So produce one payload and read it. Serialize a single real value and print it; 
 
 There is a second reason, and it is the sharper one. A grep, a regex, or a throwaway script written to answer the question is code that has existed for a minute and has never been tested, and it can be wrong in the direction that costs the most: reporting the absence of what is there. `diagnosing-before-fixing` covers separating a broken instrument from a refuted hypothesis once a result is in hand, and its discriminator is that a broken apparatus usually fails in several ways at once. A pattern that is quietly too narrow fails in exactly one way: it returns nothing, cleanly, and nothing about that looks like a malfunction. So the cheaper move is not to build the checker at all — and where one has already run, treat a negative result from it as unconfirmed until something independent agrees.
 
+## A neighbouring number is not a baseline
+
+A claim that something *helped* — the cache, the index, the retry policy, the
+compression step, the tuned parameter — is a comparison against a world where
+it was not applied. That world does not exist in the run being measured, so its
+number has to be constructed. It is never lying around waiting to be read.
+
+What is lying around is a different number, produced by the same treated run,
+about roughly the same thing, and sitting close enough to the result to look
+like the other half of a ratio. Divide by it and the arithmetic works, the
+units cancel, and the figure that comes out is a confident measurement of
+nothing. The direction it fails in is the expensive one: it reports "no effect"
+for an intervention that is working, and the reasonable response to no effect
+is to remove the intervention.
+
+One question settles it, and it costs nothing to ask before writing the ratio:
+**if the intervention were switched off, would this denominator change?** If it
+would not, it is not a baseline — it is a second reading off the treated run.
+Construct the real one instead: run the workload with the intervention disabled,
+replay the same inputs through the previous version, or derive analytically what
+the untreated result would have been. `performance-profiling`'s interleaved A/B
+runs are the same discipline applied to timings, and for the same reason.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -119,6 +142,7 @@ There is a second reason, and it is the sharper one. A grep, a regex, or a throw
 | One failing test out of many waved off as unrelated | A partial pass rate treated as a pass |
 | Everything reports healthy for months, then nothing comes back after a power cut | Liveness checked repeatedly; durability never once induced |
 | "It is set to start automatically" offered as evidence that it starts automatically | Configuration read as behavior, with nothing having exercised it |
+| An improvement measured at "no change" and abandoned, then found later to have worked | The denominator of the ratio was another quantity from the treated run, so switching the intervention off would not have moved it |
 
 ## Red flags
 
@@ -131,3 +155,4 @@ There is a second reason, and it is the sharper one. A grep, a regex, or a throw
 - A requirement worded with "after," "across," "survives," or "from scratch," answered by a command that only observes right now.
 - "It's enabled, so it'll come back" — enabling is the plan; coming back is the thing being claimed.
 - Reluctance to induce the condition because it would be disruptive, on a system where the condition will occur anyway, unattended.
+- A before/after ratio whose two terms were both produced by the "after" run.

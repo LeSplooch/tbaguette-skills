@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.18</span>
+      <span class="wordmark-version" dir="ltr">v1.0.19</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-01T22:41:29+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-01T22:41:29Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-01T22:42:57+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-01T22:42:57Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -147,10 +147,21 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/testing-the-untestable/" data-fresh-at="2026-09-01T22:41:29.526576+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-fresh-at="2026-09-01T22:42:57.893737+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">confirming-before-claiming-done</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T22:42:57.893737+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</p>
+  <span class="card__foot">
+    <span class="tag">Finishing and proving</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/testing-the-untestable/" data-fresh-at="2026-09-02T00:41:29+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">testing-the-untestable</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T22:41:29.526576+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:41:29+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables…</p>
   <span class="card__foot">
@@ -158,7 +169,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/routing-around-capability-gaps/" data-fresh-at="2026-09-01T18:48:41+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/routing-around-capability-gaps/" data-fresh-at="2026-09-01T18:48:41+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">routing-around-capability-gaps</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T18:48:41+02:00">Updated</span>
@@ -166,17 +177,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   <p class="card__summary">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…</p>
   <span class="card__foot">
     <span class="tag">Planning and delegation</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-fresh-at="2026-09-01T18:43:14+02:00" draggable="false" style="--cf-offset: 2">
-  <span class="card__name-row">
-    <span class="card__name">confirming-before-claiming-done</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T18:43:14+02:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</p>
-  <span class="card__foot">
-    <span class="tag">Finishing and proving</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -290,11 +290,11 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
-    <span class="notes__entry-title">The determinism test that could not see the clock it depended on</span>
+    <span class="notes__entry-title">&quot;Did this help?&quot; is a question about a run that did not happen</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a>'s &quot;same seed, twice&quot; check now carries the flaw that makes it pass over a system that is not deterministic at all. Two runs held back to back in one process read the same clock, the same environment, the same working directory and the same machine identity, so a system genuinely depending on any of them still emits identical output and the check goes green — for as long as the two runs stay adjacent.</li>
-    <li>The skill now says to vary the ambient condition <em>between</em> the pair rather than around it, and what to do when varying it is genuinely impossible: the test still earns its place, and its name is where the narrower guarantee gets written down, so a later reader is not told <code>is_deterministic</code> about something that was only ever checked inside one process.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> gains a section on the baseline that has to be built rather than read. Any claim that a cache, an index, a retry policy, a compression step or a tuned parameter <em>helped</em> is a comparison against a run where it was switched off — and the number that is actually to hand is another reading off the treated run, close enough to the result to look like the other half of the ratio.</li>
+    <li>The discriminator is one question asked before the division: if the intervention were switched off, would this denominator change? A <code>no</code> means it is a second measurement of the treated run, not a baseline. The failure it catches runs in the costly direction — it reports no effect for something that is working, and the sensible response to no effect is removal.</li>
   </ul>
 </li>
   </ol>
@@ -303,6 +303,16 @@ Flag one more thing, because it applies to this very conversation: this session 
       <span class="notes__earlier-label">Show 5 earlier updates</span>
     </summary>
     <ol class="notes__list notes__list--earlier">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
+    <span class="notes__entry-title">The determinism test that could not see the clock it depended on</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a>'s &quot;same seed, twice&quot; check now carries the flaw that makes it pass over a system that is not deterministic at all. Two runs held back to back in one process read the same clock, the same environment, the same working directory and the same machine identity, so a system genuinely depending on any of them still emits identical output and the check goes green — for as long as the two runs stay adjacent.</li>
+    <li>The skill now says to vary the ambient condition <em>between</em> the pair rather than around it, and what to do when varying it is genuinely impossible: the test still earns its place, and its name is where the narrower guarantee gets written down, so a later reader is not told <code>is_deterministic</code> about something that was only ever checked inside one process.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
@@ -345,17 +355,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a> now covers the source of randomness that survives seeding. Its seam table gives identifiers their own row and their own injection point, and skipping that row is what this failure is made of: v4 UUIDs, session tokens and generated slugs are usually minted by a library drawing on the operating system's entropy, not on the generator you seeded. Seed every source you own and the ids keep changing anyway — so the same-seed check still comes back with a difference, and the search sets off after a second bug that does not exist.</li>
     <li>Where that difference does the most damage is a sort. A comparator's final term decides the order of every pair the earlier terms tied on, so <code>(created_at, id)</code> with a randomly generated <code>id</code> breaks each of those ties at random. The code reads as careful, because it is a deliberate total ordering — just a different one each time.</li>
     <li>The rule the skill lands on: tiebreak on something intrinsic to the record — a natural key, its insertion index, a hash of its content — never on an id minted alongside it. And ties are the normal case rather than the edge case: any batch that stamps its rows from a clock read once at the top gives every one of them the same value, so across that batch the tiebreak is not breaking ties, it is the sort.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
-    <span class="notes__entry-title">Confirming done: a green suite is not a program that starts</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> already named several ways a check can be fresh, first-hand and still not prove the claim. It now names one more: the check that ran in the wrong <em>context</em>. Anything placed inside a hook a framework calls — a setup or init function, a registration callback, a plugin entry point, an installer's post-install step — is compiled as ordinary code and does not execute under the conditions the rest of the program executes under. It runs where the framework decided: possibly before the async runtime is up, before there is a window to draw into, on a thread that does not own what the line touches, or before configuration has been read.</li>
-    <li>Nothing at the call site says so, which is why the usual evidence misses it. A test that calls the hook directly supplies the test's surroundings rather than the framework's, so build, typecheck and every last test can be green on something that fails on every single start.</li>
-    <li>The tell the skill hands you costs nothing to look for: if the framework ships its own version of the thing you were about to call — its own spawn, its own timer, its own way onto the main thread — that wrapper exists because the general-purpose one does not work there. The claims table gains a starting-up row, whose only real evidence is starting it the way it will actually be started and watching it get past the hook.</li>
   </ul>
 </li>
     </ol>
@@ -876,7 +875,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/testing-the-untestable/" data-search-card data-search-terms="testing-the-untestable use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables… testing">
   <span class="card__name-row">
     <span class="card__name">testing-the-untestable</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T22:41:29.526576+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:41:29+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables…</p>
   <span class="card__foot">
@@ -1335,7 +1334,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-search-card data-search-terms="confirming-before-claiming-done use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed… finishing and proving">
   <span class="card__name-row">
     <span class="card__name">confirming-before-claiming-done</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T18:43:14+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T22:42:57.893737+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed…</p>
   <span class="card__foot">
