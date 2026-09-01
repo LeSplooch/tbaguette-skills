@@ -41,6 +41,7 @@ When the check itself is unreliable — an intermittent bug that only reproduces
 | It starts up | Started the way it will actually be started, watched past the point the framework calls the hook | It compiles and the suite is green; the same function passes when a test calls it directly |
 | It is live | A signed-out, cache-busted fetch of the published URL | It renders in your authoring session; the upload exited 0 |
 | It is not installed | The whole target tree searched for the artifact's own name; the running process's open files and loaded modules read | The one location you knew to check is untouched |
+| The encoded form is this | One real value put through the real encoder, and the output printed | The type's declaration read, annotations and all; a grep for the spelling |
 | A bug is fixed | Reproduced the original symptom on the new code, and it's gone | The diff looks like the right fix |
 | A regression test guards it | Red on the old code, green on the fix, both watched | Passes once, never run against the broken version |
 | It comes back after a restart | A real restart, then the start time within seconds of boot | It is running; the registration reported success |
@@ -96,6 +97,14 @@ The usual complaint about a green build is that nothing actually ran. This failu
 Nothing at the call site carries any of that. The hook's signature looks like every other function's, so no static check can see the difference — and neither can a test that calls the hook directly, because calling it supplies the test's surroundings instead of the framework's. That is what makes this failure quiet: the suite is not wrong about what it measured, it measured a context the program will never be in. Compile, typecheck and every last test can be green on something that fails on every single start.
 
 There is a tell, and it costs nothing to look for. **If the framework exports its own version of the thing you were about to call — its own spawn, its own timer, its own way onto the main thread, its own handle to the running application — that wrapper exists because the general-purpose one does not work here.** Reaching past that wrapper is the shape of this bug, and the only check that observes the framework's context is the expensive one it was tempting to skip: start the program the way it will actually be started, and watch it get past the point the hook runs.
+
+## The declaration is not the payload
+
+Some questions are about a thing the system produces rather than about whether it works: what key this ends up under, what that enum looks like once it is serialized, what is actually in the column, what the header says. The reflex is to read the code that produces it, and for this class of question the code is the wrong place to look. An attribute or annotation renames and re-cases fields, a custom encoder overrides the declaration entirely, an inherited default supplies a policy written nowhere near the type, and a library changes its own default between releases. The declaration is a request. The bytes are the answer.
+
+So produce one payload and read it. Serialize a single real value and print it; read one stored row; dump the header off one real request. That is usually one command; it costs less than the reading it replaces; and it settles the question outright instead of raising confidence in a guess. **Reading the code is a hypothesis; producing the payload is evidence.**
+
+There is a second reason, and it is the sharper one. A grep, a regex, or a throwaway script written to answer the question is code that has existed for a minute and has never been tested, and it can be wrong in the direction that costs the most: reporting the absence of what is there. `diagnosing-before-fixing` covers separating a broken instrument from a refuted hypothesis once a result is in hand, and its discriminator is that a broken apparatus usually fails in several ways at once. A pattern that is quietly too narrow fails in exactly one way: it returns nothing, cleanly, and nothing about that looks like a malfunction. So the cheaper move is not to build the checker at all — and where one has already run, treat a negative result from it as unconfirmed until something independent agrees.
 
 ## Common mistakes
 

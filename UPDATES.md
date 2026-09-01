@@ -24,6 +24,30 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Confirming done: read the payload, not the code that writes it
+
+- `confirming-before-claiming-done` now covers the questions that are about something
+  the system produces rather than about whether it works — what key a field ends up
+  under, what an enum looks like once it is serialized, what is actually in the column.
+  Reading the code that produces it is the reflex and it is the wrong place: an
+  annotation re-cases the name, a custom encoder overrides the declaration, an
+  inherited default comes from nowhere near the type, and a library changes its own
+  default between releases. The declaration is a request; the bytes are the answer.
+- Produce one payload and read it. Serialize a single real value and print it, read
+  one stored row, dump the header off one real request — usually one command, usually
+  faster than the reading it replaces, and it settles the question instead of raising
+  confidence in a guess. Reading the code is a hypothesis; producing the payload is
+  evidence. The claims table gains a row for it, whose only real evidence is one real
+  value put through the real encoder with the output printed.
+- The half that costs the most when it is missed: a grep or a throwaway script written
+  to answer the question is untested code, and it can be wrong in the direction that
+  costs the most — reporting the absence of what is there. `diagnosing-before-fixing`
+  already covers telling a broken instrument from a refuted hypothesis, and its
+  discriminator is that a broken apparatus usually fails in several ways at once. A
+  pattern that is quietly too narrow fails in exactly one way: it returns nothing,
+  cleanly, and nothing about that looks like a malfunction. Which is the argument for
+  not building the checker in the first place.
+
 ## 2026-09-01 — Test scope: a hundred passing tests can agree with each other and be wrong
 
 - `choosing-test-scope` answers "a bug escaped every layer" by asking which is the
