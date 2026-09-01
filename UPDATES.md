@@ -24,6 +24,20 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Contributing: the description cap, and checking your words against the glossary
+
+- `tending-tbaguette` now warns about the one build gate that fires on the easy path
+  — editing an existing skill rather than adding a new one. `description` is capped
+  at 1024 characters by the Agent Skills format, and the suite enforces it, so past
+  the cap a newly-noticed trigger has to displace an older one instead of joining
+  the list. That can make a description tweak an edit to a sentence you did not come
+  to touch.
+- It also adds a check nothing automated can do: grep the library for your key noun
+  before adopting it. A captured observation arrives in whatever words were to hand,
+  and some of them already mean something narrower here — `seam` is spoken for. That
+  is how a second, vaguer sense of a defined term gets into the corpus, and it is one
+  `grep` to avoid.
+
 ## 2026-09-01 — Dependencies: what to do when there is no hash to check
 
 - `auditing-dependencies` assumed throughout that the canonical integrity signal

@@ -287,6 +287,28 @@ clean so it can keep updating.
    `skills/<slug>/SKILL.md`, or a reference file under that skill's own
    directory. This is the common case and by far the easier review.
 
+   One gate fires on that easy path too, and it is the only one that does.
+   `description` is capped at 1024 characters by the Agent Skills format
+   itself, not by this repo, and the suite enforces it. Descriptions are
+   the field under permanent pressure to grow, because the natural way to
+   make a skill fire on a newly-noticed trigger is to append that trigger
+   to the list. Past the cap, the next trigger has to **displace** an older
+   one rather than join it — so a description change is sometimes an edit
+   to a sentence you did not come here to touch. Compressing the "Covers"
+   half is usually where the room is, since it tends to restate triggers
+   the "Use when" half already made.
+
+   **Grep the library for your key noun before you adopt it.** A captured
+   observation arrives in the words you happened to use at the time, and
+   some of those words are already load-bearing here with a narrower
+   meaning — `seam` means a place where behavior can be changed without
+   editing the thing whose behavior changes, and `finding-the-seam` owns
+   it. Shipping a capture's wording verbatim is how a second, vaguer sense
+   of a defined term enters the corpus, and nothing in the suite can see
+   that. One `grep -rn` over `skills/` costs seconds and is the difference
+   between a reviewer reading your change and a reviewer teaching you the
+   glossary.
+
    A genuinely new skill has more to satisfy, because the build gates it.
    The suite tells you which of these you missed, so run it early rather
    than working from this table:
@@ -294,6 +316,7 @@ clean so it can keep updating.
    | What the repo demands | Where |
    |---|---|
    | Frontmatter with exactly `name` and `description`, in the "Use when A, B, or C. Covers D, E, F." register | `skills/<slug>/SKILL.md` |
+   | A `name` matching the directory exactly, and a `description` under 1024 characters | `skills/<slug>/SKILL.md`, per the note above |
    | Filed under a category in the registry the build reads | `CATEGORIES` in `scripts/content_pipeline.py` |
    | Filed in the same category in the human-readable mirror | `CATALOG.md` |
    | The skill count, which is asserted, not derived | `EXPECTED_SKILL_COUNT` in `scripts/generate.py`, plus every manifest description |
@@ -423,6 +446,7 @@ through. Save, ask, then restore.
 | A pull request nobody can evaluate | The observation behind it was scrubbed into meaninglessness, or never included at all |
 | Three unrelated changes in one pull request | Batched candidates; a reviewer who wants two of them now has to reject all three |
 | The suite is red on a new skill and the new files all look right | The registry, the count, or the inbound cross-reference — none of which live in the new skill's own directory |
+| A one-word description tweak turned the suite red | The description was already near the 1024-character cap the format sets; past it, a new trigger has to displace an old one |
 | A pull request opened, then a correction pushed two minutes later | The approval gate was treated as the review, instead of running after one |
 | A candidate captured mid-task, and the task never got finished | Capture is two sentences; anything longer is the contribute phase running at the wrong time |
 | The same idea proposed twice | It was never moved to `## Shipped` with its URL |
