@@ -24,6 +24,22 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — Choosing between an agent that starts cold and one that inherits everything
+
+- `fanning-out-independent-work` assumed a dispatched agent gets a context built
+  only for its slice, because for a long time there was no other kind. Harnesses
+  now also offer a forked agent that inherits the whole session and its warm
+  cache — genuinely cheaper, and the wrong instrument for a fan-out.
+- The skill now says why: every discipline it teaches is enforced by the agent
+  knowing nothing. The prompt has to be complete because nothing else is there;
+  the write scope has to be stated because it cannot be inferred; the report has
+  to stand alone because the reader shares no memory. A fork removes the cold
+  start and all three forcing functions with it, and several forks of one session
+  are several copies of one set of assumptions.
+- A short table splits it by what the task needs to know, and the section puts
+  the cost multiplier of running work across several agents into the judgment
+  rather than leaving it as a background fact.
+
 ## 2026-09-02 — Let the harness fire the checkpoint you were going to forget
 
 - `checkpointing-long-runs` says to checkpoint when the context is visibly

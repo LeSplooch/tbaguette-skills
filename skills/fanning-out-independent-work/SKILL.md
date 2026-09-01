@@ -30,6 +30,38 @@ For every pair of tasks headed to separate agents, ask one question: would eithe
 
 A numbered or bulleted list is not evidence of independence. It's evidence someone wrote a list.
 
+## A cold start is a feature, and it is now optional
+
+The isolation above used to be automatic: a dispatched agent got a context built
+only for its slice because there was no other kind. Harnesses now also offer the
+opposite — an agent that *forks* the current session, inheriting the whole
+conversation and the warm prompt cache with it, which makes it markedly cheaper
+than a cold one for anything that needs what this session already knows.
+
+That is a real saving and it is the wrong instrument for a fan-out, for the
+reason the cold start exists. Every discipline in this skill is enforced by the
+dispatched agent knowing nothing: the prompt has to be complete because nothing
+else will be there, the write scope has to be stated because it cannot be
+inferred, and the report has to stand on its own because the reader has no
+shared memory to fill gaps from. A fork removes the cold start and every one of
+those forcing functions with it — the prompt that would have failed loudly now
+succeeds quietly, on context the agent should not have been reasoning from. And
+several forks of the same session are several copies of the same assumptions,
+which is the opposite of what dispatching separate agents was for.
+
+Split it by what the task needs to know:
+
+| The task needs | Use | Because |
+|---|---|---|
+| Only its own slice | A fresh agent | Isolation is what makes the parallelism safe, and the cold start is what keeps the prompt honest |
+| Everything this session has established — a review of the diff just written, a second read of the current design | A fork | Reconstructing that context in a prompt is expensive, error-prone, and the part most likely to be summarized wrong |
+
+Cost belongs in the judgment either way, because the multiplier is larger than
+it feels: running work across several agents is commonly several times the token
+spend of doing it in one session, and every fresh agent pays to rebuild
+understanding this session already has. Fan out for isolation and for wall-clock
+time — never because a list has more than one item on it.
+
 ## Avoiding collisions
 
 Independence in the problem doesn't guarantee independence in the solution — two agents can have unrelated goals and still collide if what they write overlaps. Partition by write-set, not by topic:
@@ -61,6 +93,7 @@ An agent that quietly did more than its assignment — fixed something adjacent,
 
 | Symptom | Real cause |
 |---|---|
+| Parallel agents all made the same wrong assumption | They were forked from one session rather than started cold, so they inherited one set of assumptions instead of testing the prompt against none |
 | Two agents' diffs conflict on the same file | Write-sets were assumed disjoint, never actually checked |
 | A "fixed" task breaks a sibling task | The two shared a root cause and needed one investigation, not two |
 | Integration trusted a summary that said "done" | The combined result was never re-verified |
@@ -75,3 +108,4 @@ An agent that quietly did more than its assignment — fixed something adjacent,
 - No stated output shape, on the assumption the agent will report something useful.
 - Treating "all tests pass" in a summary as true without re-running it.
 - A task list whose order turns out to matter, discovered only after two agents are already running.
+- Reaching for a forked agent because it is cheaper, on work whose whole point was that it starts cold.
