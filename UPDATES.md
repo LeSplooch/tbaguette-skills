@@ -24,6 +24,20 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — A run is not finished while the things it started are still running
+
+- `finishing-what-you-started` now covers the part of a run that never gets a
+  ledger line: the backgrounded build, the watcher, the long benchmark, the dev
+  server, the dispatched agent. None of them is a deliverable, so none of them
+  is in the acceptance criteria, and every one of them outlives the report that
+  says the work is done.
+- The close-out gains one more question, answered by looking rather than by
+  remembering: what did this run start that is still running? Every answer gets
+  a disposition — stopped, or deliberately left running and said so, with what it
+  is and how to stop it. Left running on purpose is a fine outcome; left running
+  silently is a cost the reader discovers hours later, and it reads to them like
+  the run losing track of itself.
+
 ## 2026-09-02 — The check that refuses to run has already told you something
 
 - `diagnosing-before-fixing` adds the case where the instrument declines to take

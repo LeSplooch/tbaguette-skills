@@ -93,6 +93,33 @@ What the ledger adds is what makes handing work to a fresh context safe: the uni
 
 The reverse case needs naming too. A set of individually complete units can still compose into a broken whole, so the seam where they join gets ledger lines of its own — merged, interfaces matching, end-to-end behaviour observed. Those are the lines skipped most often, because by the time anyone reaches the seam, every part is already reporting done.
 
+## What you started includes the processes you started
+
+A ledger tracks deliverables, so it quietly scopes "finished" to artifacts —
+files written, tests green, a branch landed. The run also starts *things*: a
+backgrounded build, a watcher, a long benchmark, a dev server, a subagent, a
+polling loop. None of those has a ledger line, none of them is a deliverable,
+and every one of them survives the report that says the work is done.
+
+They are cheap to forget for a structural reason: a background job's whole
+purpose is to stop demanding attention. It gets started at a point where waiting
+was the wrong move, the work moves on, and the only later evidence of it is a
+process nobody is looking at. The person who finds it is the user, hours later,
+noticing that something has been running since the morning — which is not a
+report, it is a discovery.
+
+So the close-out has one more question, and it is answered by looking rather
+than by remembering: **what did this run start that is still running?** List the
+processes, the jobs, the servers, the watchers, the dispatched agents. Then each
+one gets a disposition — stopped, or deliberately left running and *said so*, in
+the report, with what it is and how to stop it. A long-lived process left behind
+on purpose is a fine outcome. A long-lived process left behind silently is a leak
+the user pays for, and it reads to them exactly like the run losing track of
+itself.
+
+Same rule as a surrendered criterion, applied to something with a PID: it is
+named, or it did not happen.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -106,6 +133,7 @@ The reverse case needs naming too. A set of individually complete units can stil
 | Numbers in the summary contradict the artifacts they describe | Written from memory at report time instead of measured |
 | The long run's last hour produced summaries and no work | Recap mistaken for progress once the criteria stopped being visible |
 | Thirty units each reporting done, the assembled result broken | Criteria existed only at the leaves, never at the seam |
+| The user asks hours later whether tasks are still running, and they are | The close-out counted deliverables; the processes the run started had no ledger line and no disposition |
 
 ## Red flags
 
@@ -117,3 +145,4 @@ The reverse case needs naming too. A set of individually complete units can stil
 - Deciding a criterion was never really part of the request, at the exact point where satisfying it would be the remaining work.
 - Relief at how close this looks to finished, immediately before writing the report.
 - Sampling a large set, finding the sample clean, and describing the set.
+- Writing the final report without having looked at what this run left running.
