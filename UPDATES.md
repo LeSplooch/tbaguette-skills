@@ -24,6 +24,25 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — Auditing a dependency whose payload is prose, not code
+
+- `auditing-dependencies` now fires on the question "should I install this
+  skill, plugin, extension, or tool server?" and answers it. Every other check
+  in that skill assumes a dependency is code with a call site; an artifact made
+  of instructions takes effect the moment something reads it, with the reader's
+  full privileges and none of its own. The footprint row and the install-script
+  row both see nothing, and the thing still changes what your tooling does.
+- Three questions the code-shaped checks miss: does every instruction serve the
+  stated purpose, is there anything here you cannot see (instructions have been
+  hidden in non-printing characters that survive visual review and reach the
+  model intact), and does it write into anything that outlives it — because an
+  instruction that edits your repository's own instruction file turns a
+  removable dependency into a resident one.
+- The upside the section leans on: this is the only dependency class you can
+  realistically read in full. A library is fifty thousand lines you will never
+  open. A skill is a page of English, which makes the review tedious rather than
+  impossible and removes the usual excuse.
+
 ## 2026-09-02 — The person you are working with is the bottom rung of the routing ladder
 
 - `routing-around-capability-gaps` extends its capability-not-preference

@@ -1,6 +1,6 @@
 ---
 name: auditing-dependencies
-description: Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries, when a vulnerability scanner or advisory alert fires and needs triage, when a dependency looks unmaintained, abandoned, or has changed owners, or when weighing supply chain risk, install and postinstall scripts, typosquatting and dependency confusion, vendoring, pinning, mirrors, and provenance.
+description: Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries, when a vulnerability scanner or advisory alert fires and needs triage, when a dependency looks unmaintained, abandoned, or has changed owners, when deciding whether to install a third-party agent skill, plugin, extension bundle, or tool server whose payload is prose the agent will obey, or when weighing supply chain risk, install and postinstall scripts, typosquatting and dependency confusion, concealed instructions, vendoring, pinning, mirrors, and provenance.
 ---
 
 # Auditing Dependencies
@@ -90,6 +90,52 @@ Typosquatting and its harder variants: a hyphen or underscore swap, a scoped ver
 - Dependency confusion is fixed by configuration, not vigilance: bind your internal namespace to your internal registry and never configure a public registry as a fallback for internal names. It is the one attack in this list that succeeds with nobody making a mistake at the keyboard. Reserve your internal names publicly where the ecosystem allows it.
 - This check does not exist at runtime. Once installed, a squatted package is indistinguishable from the real one.
 
+## When the payload is prose rather than code
+
+Every check above assumes a dependency is code: it has a call site, it runs when
+invoked, and the questions worth asking are about sockets, install scripts, and
+native extensions. A growing class of dependency does not work like that. An
+agent skill, an extension bundle, an instruction file a tool reads from the
+repository root, a server whose tool descriptions arrive as text — their payload
+is *prose*, it takes effect the moment something reads it, and it takes effect
+with the reader's full privileges rather than any of its own. The footprint row
+sees nothing. The install-script row sees nothing. Nothing in the table fires,
+and the artifact still changes what your tooling does.
+
+Two properties make this worth its own pass. The first is that the risk is not
+theoretical: an audit of roughly four thousand published agent skills in early
+2026 found about one in eight carrying a critical issue and better than a third
+carrying at least one, and registries have absorbed coordinated uploads of
+malicious entries in the four figures. The second is more useful — **this is the
+only dependency class you can realistically read all of.** A library is fifty
+thousand lines you will never open. A skill is a page of English. The review that
+is impossible everywhere else is merely tedious here, which removes the usual
+excuse.
+
+So read it, all of it, and ask three questions the code-shaped checks do not:
+
+- **Does every instruction serve the stated purpose?** The tell is a directive
+  that has nothing to do with the job: appending a value to an outbound URL,
+  reading a file the task never mentioned, "always run this first", contacting a
+  host. A formatting helper has no reason to know your environment variables.
+- **Is there anything here you cannot see?** Instructions have been concealed in
+  non-printing characters — the Unicode tag block at `U+E0000`–`U+E007F` is the
+  documented case — which survive visual review perfectly and reach the model
+  intact. Pipe the file through something that shows non-ASCII and zero-width
+  characters rather than trusting a rendered view of it.
+- **Does it write into anything that outlives it?** The instruction that matters
+  most is the one telling the agent to add a line to a repository's own
+  instruction file or memory. That converts a removable dependency into a
+  resident one: uninstalling the original leaves the compromise behind, in a
+  file nobody thinks of as a dependency at all.
+
+Then treat adoption as it deserves: pin to a commit rather than a moving
+branch, review the diff when it moves the way you would review a pull request,
+and prefer the narrow well-attributed thing over the bundle of four hundred.
+Name confusion applies here with extra force, because the names are chosen to be
+guessed at — and as with every squat, once it is installed there is no runtime
+check that will tell them apart.
+
 ## Vendoring and pinning
 
 | Approach | Buys | Costs | Use when |
@@ -111,6 +157,7 @@ Options, in order: replace with a maintained equivalent; absorb it — read the 
 
 | Symptom | Real cause |
 |---|---|
+| A dependency was added, removed, and something it configured stayed behind | Its payload was prose, and one of its instructions wrote into a file that is not a dependency and does not get uninstalled |
 | Scanner alerts ignored in bulk | Triaged by severity rather than reachability; the queue filled with unreachable findings and lost credibility |
 | "We upgraded" but the vulnerable version is still installed | Two copies in the tree; the transitive one was never overridden |
 | Lockfile committed, CI still resolves new versions | Install not run in frozen/locked mode |
@@ -131,3 +178,5 @@ Options, in order: replace with a maintained equivalent; absorb it — read the 
 - A dependency being added during an incident, at speed, from a search result.
 - A public registry configured as a fallback for a private namespace.
 - "There's no published checksum for this one, so there's nothing to verify."
+- "It's just a prompt, it isn't code" — it is instructions to something holding all of your privileges.
+- Adopting a skill, plugin, or instruction file without having read the whole of it, when the whole of it is a page.
