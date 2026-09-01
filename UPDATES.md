@@ -24,6 +24,28 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Confirming done: a green suite is not a program that starts
+
+- `confirming-before-claiming-done` already named several ways a check can be fresh,
+  first-hand and still not prove the claim. It now names one more: the check that ran
+  in the wrong *context*. Anything placed inside a hook a framework calls — a setup or
+  init function, a registration callback, a plugin entry point, an installer's
+  post-install step — is compiled as ordinary code and does not execute under the
+  conditions the rest of the program executes under. It runs where the framework
+  decided: possibly before the async runtime is up, before there is a window to draw
+  into, on a thread that does not own what the line touches, or before configuration
+  has been read.
+- Nothing at the call site says so, which is why the usual evidence misses it. A test
+  that calls the hook directly supplies the test's surroundings rather than the
+  framework's, so build, typecheck and every last test can be green on something that
+  fails on every single start.
+- The tell the skill hands you costs nothing to look for: if the framework ships its
+  own version of the thing you were about to call — its own spawn, its own timer, its
+  own way onto the main thread — that wrapper exists because the general-purpose one
+  does not work there. The claims table gains a starting-up row, whose only real
+  evidence is starting it the way it will actually be started and watching it get past
+  the hook.
+
 ## 2026-09-01 — Shell: a loop that waits for a process can be waiting on itself
 
 - `portable-shell-scripting` covered killing a process by pattern. It now covers
