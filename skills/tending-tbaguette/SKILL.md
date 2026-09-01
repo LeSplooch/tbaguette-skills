@@ -1,6 +1,6 @@
 ---
 name: tending-tbaguette
-description: Use at the start of every conversation, in any project or repo, and keep watching for the rest of it — the moment a genuinely project-agnostic lesson shows up while using TBaguette, capture it. Triggers include a correction that generalizes past this one codebase, a gap or wrong assumption found in a skill while that skill was running, a recurring judgment call nothing covers yet, a TBaguette skill that looks wrong enough to want editing, an installed plugin that already carries hand-edits, or any question about how to contribute to TBaguette. Covers the bar a candidate has to clear, capturing one without derailing the current task, scrubbing it of anything project-specific, the approval gate that runs before anything is pushed anywhere, opening the pull request from a fork, restoring an install that was edited in place, and how a merged change comes back through keeping-tbaguette-current.
+description: Use at the start of every conversation, in any project or repo, and keep watching for the rest of it — the moment a genuinely project-agnostic lesson shows up while using TBaguette, capture it. Triggers include a correction that generalizes past this one codebase, a gap or wrong assumption found in a skill while that skill was running, a recurring judgment call nothing covers yet, a TBaguette skill that looks wrong enough to want editing, an installed plugin that already carries hand-edits, or any question about how to contribute to TBaguette. Covers the bar a candidate has to clear, capturing one without derailing the current task, scrubbing it of anything project-specific, choosing which existing skill a lesson belongs in, the approval gate that runs before anything is pushed anywhere and why nobody being there does not lift it, opening the pull request from a fork, restoring an install that was edited in place, and how a merged change comes back through keeping-tbaguette-current.
 ---
 
 # Tending TBaguette
@@ -246,6 +246,18 @@ a yes given for a previous contribution in this same session; and the user
 having invoked this skill at all. Approval is per-pull-request. Getting one
 yes does not bank a second.
 
+**In a run with nobody there, this gate is not substituted — it is where the
+run ends.** That is worth stating plainly, because the library's own
+`bounding-autonomous-work` says an unanswered gate keeps its job and changes its
+mechanism, and an autonomous run reading that rule alone could reason its way
+into writing itself a self-approval here. It does not apply. Opening a public
+pull request is outward-facing and permanent from the instant it happens, which
+is the one category no confidence level and no envelope converts into a
+self-answer. So an unattended run does everything up to it — the edit, the
+suite, the adversarial pass, the commit on a local branch — and then stops with
+the work staged and a report saying exactly what is waiting for a yes. Reaching
+that point is the run finishing correctly, not failing.
+
 ## Contribution procedure
 
 Run once per candidate, fully, before starting the next. Never batch
@@ -297,6 +309,30 @@ clean so it can keep updating.
    to a sentence you did not come here to touch. Compressing the "Covers"
    half is usually where the room is, since it tends to restate triggers
    the "Use when" half already made.
+
+   **Decide which skill owns it before writing a word of it.** A candidate
+   usually arrives naming a topic, and the topic points at the wrong file
+   surprisingly often. File by the *family of judgments the lesson belongs to*,
+   not by its subject matter: a lesson about an installer that refused to run
+   because a version check fired is not a dependency lesson, it is a
+   reading-the-instrument lesson, and it belongs next to the other
+   reading-the-instrument judgments even though nothing in it mentions
+   debugging. The test that settles it is neighbourliness — read the section
+   headings of the candidate file and ask whether yours would look like a
+   sibling or like a visitor. A lesson filed into the least-wrong skill is not
+   safely parked; it is invisible to everyone who would have needed it, which
+   is the same failure as filing a new skill under the least-wrong category and
+   is much easier to commit because no registry complains.
+
+   **Then check the description would actually route someone to it.** This is
+   the step with no gate behind it, and it is the one that quietly wastes the
+   work. A skill's description is the only part always loaded, so it is the
+   whole of the routing: a section added to a file whose description never
+   mentions the question it answers is unreachable, and the suite is perfectly
+   happy — the prose is there, it is correct, and nothing will ever surface it.
+   After the edit, read the description back and ask whether the sentence that
+   made you write this would land on this file. If not, the description is part
+   of the change, under the cap and its displacement rule above.
 
    **Grep the library for your key noun before you adopt it.** A captured
    observation arrives in the words you happened to use at the time, and
@@ -451,6 +487,8 @@ through. Save, ask, then restore.
 | A candidate captured mid-task, and the task never got finished | Capture is two sentences; anything longer is the contribute phase running at the wrong time |
 | The same idea proposed twice | It was never moved to `## Shipped` with its URL |
 | "Contributed to TBaguette" reported for an open pull request | Opened and merged are different states, and only one of them reaches other users |
+| A well-written section that nobody ever seems to reach | It answers a question the skill's description does not mention, so nothing routes there |
+| A lesson filed somewhere defensible that no reader would think to look in | Filed by its subject matter rather than beside the family of judgments it belongs to |
 
 ## Red flags
 
@@ -468,3 +506,5 @@ through. Save, ask, then restore.
   seconds and does not freeze your install.
 - "I'll batch these three candidates so it's one review."
 - "Nobody will notice the install is pinned."
+- "The prose is in the file, so the change is done" — with a description that would never send anyone there.
+- "Nobody is around to approve it, so I'll substitute the gate" — every other gate, yes; this one is the stop.

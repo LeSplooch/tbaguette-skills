@@ -24,6 +24,27 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — Contributing: pick the right file, make it reachable, and stop at the gate
+
+- `tending-tbaguette` now covers the step that used to be left to instinct:
+  which existing skill a lesson belongs in. File by the family of judgments the
+  lesson joins, not by its subject — a lesson about an installer refusing to run
+  is a reading-the-instrument lesson, not a dependency one. The test is
+  neighbourliness: read the candidate file's section headings and ask whether
+  yours reads as a sibling or a visitor.
+- It also adds the check with no build gate behind it, and the one that quietly
+  wastes the work. A skill's `description:` is the only part of it that is always
+  loaded, so
+  it is the whole of the routing — a new section in a file whose description
+  never mentions the question it answers is unreachable, and every suite stays
+  green. If the sentence that made you write it would not land on that file, the
+  description is part of the change.
+- And the approval gate now says what happens when nobody is there to answer it:
+  nothing. It is not substituted the way other gates are. An unattended run does
+  the edit, the suite, the adversarial pass and the local commit, then stops with
+  the work staged and says what is waiting on a yes — which is the run ending
+  correctly rather than failing.
+
 ## 2026-09-02 — Choosing between an agent that starts cold and one that inherits everything
 
 - `fanning-out-independent-work` assumed a dispatched agent gets a context built
@@ -62,9 +83,9 @@ Everything above the first `##` is preamble and is never rendered.
   row both see nothing, and the thing still changes what your tooling does.
 - Three questions the code-shaped checks miss: does every instruction serve the
   stated purpose, is there anything here you cannot see (instructions have been
-  hidden in non-printing characters that survive visual review and reach the
-  model intact), and does it write into anything that outlives it — because an
-  instruction that edits your repository's own instruction file turns a
+  hidden in the `U+E0000` tag block, where they survive visual review and reach
+  the model intact), and does it write into anything that outlives it — because
+  an instruction that edits your repository's own instruction file turns a
   removable dependency into a resident one.
 - The upside the section leans on: this is the only dependency class you can
   realistically read in full. A library is fifty thousand lines you will never
