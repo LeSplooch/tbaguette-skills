@@ -41,6 +41,8 @@ SUITES = [
     ("CATALOG.md vs CATEGORIES", [sys.executable, "test_catalog.py"]),
     ("git hooks", [sys.executable, "test_githooks.py"]),
     ("skill cross-references", [sys.executable, "test_skill_references.py"]),
+    ("skill frontmatter limits",
+     [sys.executable, "-m", "unittest", "test_skill_frontmatter", "-v"]),
     # The only suite that hits the network (clones the real, published repo
     # from GitHub several times against throwaway HOME directories) — a
     # flaky connection can fail this one without meaning anything else is

@@ -24,6 +24,16 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Two skills now fit inside the Agent Skills description limit
+
+- `confirming-before-claiming-done` and `offering-the-next-move` had descriptions
+  of 1107 and 1037 characters. The Agent Skills format caps a description at 1024,
+  so on any harness that validates the frontmatter rather than merely reading it,
+  those two skills were the ones that could fail to load — quietly, and only on the
+  harness furthest from where they were written.
+- Both are now under the cap with every routing trigger intact. Nothing about when
+  either skill fires has changed; they say the same things in fewer words.
+
 ## 2026-08-30 — Diagnosing: a factor that never varied is not a factor you ruled out
 
 - `diagnosing-before-fixing` now names the dismissal that survives a whole
