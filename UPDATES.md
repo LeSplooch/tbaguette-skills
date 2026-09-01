@@ -24,6 +24,25 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Determinism: seeding everything and it still differs every run
+
+- `testing-the-untestable` now covers the source of randomness that survives seeding.
+  Its seam table gives identifiers their own row and their own injection point, and
+  skipping that row is what this failure is made of: v4 UUIDs, session tokens and
+  generated slugs are usually minted by a library drawing on the operating system's
+  entropy, not on the generator you seeded. Seed every source you own and the ids keep
+  changing anyway — so the same-seed check still comes back with a difference, and the
+  search sets off after a second bug that does not exist.
+- Where that difference does the most damage is a sort. A comparator's final term
+  decides the order of every pair the earlier terms tied on, so `(created_at, id)` with
+  a randomly generated `id` breaks each of those ties at random. The code reads as
+  careful, because it is a deliberate total ordering — just a different one each time.
+- The rule the skill lands on: tiebreak on something intrinsic to the record — a
+  natural key, its insertion index, a hash of its content — never on an id minted
+  alongside it. And ties are the normal case rather than the edge case: any batch that
+  stamps its rows from a clock read once at the top gives every one of them the same
+  value, so across that batch the tiebreak is not breaking ties, it is the sort.
+
 ## 2026-09-01 — Confirming done: a green suite is not a program that starts
 
 - `confirming-before-claiming-done` already named several ways a check can be fresh,

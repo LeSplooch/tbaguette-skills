@@ -78,6 +78,14 @@ Run these four checks; each one catches a class nothing else does.
 - **Shifted environment** — a clock offset of +6 months, a non-UTC timezone with a non-hour offset (`Asia/Kathmandu`, +05:45), and a non-English locale. This finds date-arithmetic, formatting, and collation assumptions in one run.
 - **Constrained CPU** — one core, or the suite under load. Races surface here and nowhere else.
 
+## Ordering, and the tiebreak that is randomness
+
+Seeding the generator is the first thing to reach for when a run stops reproducing, and it leaves a gap that is easy to miss. The seam table above gives identifiers their own row and their own injection point, separate from randomness, and skipping that row is what this failure is made of: v4 UUIDs, session tokens and generated slugs are usually minted by a library drawing on the operating system's entropy, not on the generator you seeded. Seed every source you own and the ids keep changing anyway — so the same-seed check comes back with a difference, and the search sets off after a second bug that does not exist.
+
+The place that difference does the most damage is a sort. A comparator's final term decides the order of every pair the earlier terms tied on, so a final term that is a randomly-generated id breaks each of those ties at random. Nothing about the code looks careless: `(created_at, id)` reads as a deliberate total ordering, and it is one — it is simply a different one each time.
+
+Tiebreak on something intrinsic to the record instead: a natural key the domain already has, its insertion index, a hash of its content — anything derived from the record rather than minted alongside it. This matters more often than it sounds, because **ties are the normal case rather than the edge case.** Any batch that stamps its rows from a clock read once at the top gives every one of them the same value, so across that batch the tiebreak is not breaking ties, it is the sort.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -87,6 +95,7 @@ Run these four checks; each one catches a class nothing else does.
 | Timeout test takes 30 real seconds | No fake clock; the test is waiting rather than advancing |
 | Sleep durations keep being increased | A race is being masked; the sleep length is now load-bearing |
 | Reproducing a failure requires the original machine | Randomness or id generation unseeded and unrecorded |
+| Every generator is seeded and the output still differs run to run | Ids minted from the OS entropy rather than the seeded generator, and something downstream sorts on one |
 | Everything is mocked and nothing catches bugs | Seams placed at every call rather than at the boundary; tests assert the mock's script |
 | Test suite hangs with no output | Global time-patching froze a library's internal timer |
 | Passes alone, fails in parallel | Process-global environment variables, a fixed port, or a shared temp path |
@@ -100,4 +109,5 @@ Run these four checks; each one catches a class nothing else does.
 - "The mock verifies we call the service correctly" — for behavior no user can observe.
 - Setting an environment variable inside a test and restoring it in teardown.
 - A test asserting on an id with a pattern match because the id could be anything.
+- A randomly generated id as the last term of a sort key.
 - Retrying a whole test to deal with a race.
