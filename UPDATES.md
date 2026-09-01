@@ -24,6 +24,22 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-01 — Naming: when the same string is both a display name and an identifier
+
+- `naming-things` now covers the rename its cost table could not express. That table
+  sorts occurrences by where the name lives, which works while every occurrence is
+  the same kind of thing. Renaming a product whose old spelling stays valid for users
+  is not that: the same string is a word a human reads in some places and a token
+  something resolves in others — a path segment, an invocation prefix, a manifest
+  field, a config key — and the two are not separable by file.
+- The skill now says to partition by role before touching anything, asking it per
+  occurrence rather than per file, and to leave every resolved occurrence alone. A
+  search-and-replace is wrong on all of those, and wrong silently.
+- It also names what to do afterwards: pin the identifiers with a test, because both
+  spellings now sit in the same files and the next reader will tidy the
+  inconsistency. That is a regression test guarding against the change after this
+  one rather than against this one.
+
 ## 2026-09-01 — Automating repetition: the one-shot bulk edit, and the check its validator cannot be
 
 - `automating-repetition` now covers the case its ladder never fitted. The

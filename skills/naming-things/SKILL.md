@@ -87,6 +87,14 @@ Rename in its own commit, containing nothing else, so review and revert both sta
 
 **The second signal: you cannot think of a name at all.** Five minutes of not naming something usually means the thing is two things. That is a design problem presenting as a vocabulary problem, and no amount of thesaurus work resolves it.
 
+## One string doing two jobs
+
+The table above sorts occurrences by where the name lives, which works while every occurrence is the same kind of thing. Some names are two kinds at once: a display word a human reads, and a token something resolves — a path segment, an invocation prefix, a manifest `name` field, a config key, a URL. Renaming a product while its old spelling stays valid for users is the common case, and the two roles are not separable by file. One page holds both, occasionally one sentence does.
+
+So partition by role before touching anything, and ask it of each occurrence rather than of each file: **does a human read this, or does something resolve it?** Rename the first kind. Leave the second entirely alone. A search-and-replace is wrong on every occurrence of the second kind, and it is wrong silently — nothing fails at the moment of the edit, because a config key that no longer matches anything is a valid string.
+
+Then pin what you left. The rename has made the *next* mistake more likely rather than less: both spellings now sit in the same files, and whoever reads them next sees an inconsistency and tidies it. Care does not survive that reading; a test asserting the identifiers are still bare does. This is the unusual rename whose regression test guards against the change after it rather than against itself.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -99,6 +107,7 @@ Rename in its own commit, containing nothing else, so review and revert both sta
 | A `get` accessor that makes a network call | Prefix contract broken; callers put it in a loop |
 | Rename buried inside a behavior change | Neither reviewable; the revert takes both |
 | Five minutes stuck on a name | The thing is two things |
+| A rename landed and a config key, route, or manifest field broke | Occurrences were partitioned by file; the same string was a display name in some of them and an identifier in others |
 
 ## Red flags
 
@@ -107,3 +116,4 @@ Rename in its own commit, containing nothing else, so review and revert both sta
 - "It's just a temp variable."
 - "I'll add a comment explaining what it holds."
 - "The existing name is wrong, so I'll use the right one for mine."
+- "Both spellings are in this file, let me make them consistent."
