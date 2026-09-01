@@ -2,6 +2,6 @@
   "name": "TBaguette",
   "license": "GPL-2.0-only",
   "description": "Ninety-six project-, stack-, and language-agnostic skills for judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, and tooling.",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "contextFileName": "GEMINI.md"
 }

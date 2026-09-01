@@ -123,6 +123,29 @@ The discriminator is available before any analysis, and the counting is the whol
 
 One anomaly is evidence and several are a symptom, which inverts the usual instinct that a worse result is a stronger signal. When the count is high, stop reading the verdict and go read the new code — the hypothesis has not been tested yet, whatever the numbers say.
 
+## A guard that refuses to run has already measured something
+
+The instrument can also refuse to take a reading, and a refusal arrives looking
+like an obstacle rather than like data. A preflight check, a version gate, a
+compatibility guard, a health probe that declines to proceed — the immediate
+reflex is to find the flag that suppresses it, because the goal was to run the
+thing and the guard is what is between here and running it.
+
+That reflex discards the most informative result available. A guard exists
+because somebody knew something about the target that whoever is bypassing it
+does not, and it fires precisely when that knowledge applies. An installer that
+notices it predates its host by dozens of releases and exits cleanly is not
+being fussy: forced past, it would have produced a confident, silent no-op
+against an integration point that no longer exists. The refusal was the accurate
+statement about fitness, and it was free.
+
+So read the guard before overriding it — what condition does it test, and is
+that condition true here? A guard that turns out to be wrong is worth suppressing
+and worth *fixing*, and a suppression flag with no answer to that question behind
+it converts a clean failure into a confusing success. The urge to bypass is
+strongest exactly when the guard is most load-bearing, because that is when it is
+most in the way.
+
 ## When fixes keep failing
 
 Three failed fixes in a row is a different problem than the one being solved. If each attempt reveals the same coupling in a new place, or needs a bigger change than the last one to hold, the architecture is what's wrong — not the last three hypotheses. Say so explicitly and question the pattern before attempting a fourth; a fourth patch on a bad architecture just becomes the fifth.
@@ -134,6 +157,7 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 | Symptom | Real cause |
 |---|---|
 | "The issue is simple, I don't need the loop" | Simple bugs have root causes too; skipping the loop on an easy-looking one is how it comes back twice |
+| A tool ran, reported success, and changed nothing | A guard was suppressed rather than read; it was refusing because the target no longer matched what the tool acts on |
 | Fix applied, same class of bug reappears elsewhere | The trace stopped at the first plausible cause instead of the actual origin |
 | "Let me just try changing this and see" | A change made before a hypothesis exists is a guess wearing an experiment's clothes |
 | Several changes made, then the test run once | Whichever result comes back, nothing was isolated — pass or fail explains neither change |
@@ -159,3 +183,4 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 - "I'll skip it with a tracked TODO" — said with real intent, about a TODO that dies the moment the release ships and priorities move on
 - An operation attempted again with nothing changed between the attempts, and the identical error read as bad luck rather than as determinism
 - "That's the same for every run, so it can't be that"
+- Reaching for the flag that suppresses a preflight check before answering what condition the check tests

@@ -24,6 +24,19 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — The check that refuses to run has already told you something
+
+- `diagnosing-before-fixing` adds the case where the instrument declines to take
+  a reading at all: a preflight check, a version gate, a compatibility guard, a
+  health probe that will not proceed. It arrives looking like an obstacle, and
+  the reflex is to hunt for the flag that turns it off.
+- The skill now says to read the guard before overriding it — what condition does
+  it test, and is that condition true here? A guard fires because somebody knew
+  something about the target that whoever is bypassing it does not, and forcing
+  past it converts a clean, free failure into a confident silent no-op. A guard
+  that really is wrong is worth suppressing *and* worth fixing; a `--force` with
+  no answer behind it is neither.
+
 ## 2026-09-02 — Feeding both variants the same inputs, and knowing when that stops helping
 
 - `performance-profiling` picks up the rung above interleaved A/B runs: give
