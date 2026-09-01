@@ -24,6 +24,20 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — The determinism test that could not see the clock it depended on
+
+- `testing-the-untestable`'s "same seed, twice" check now carries the flaw that
+  makes it pass over a system that is not deterministic at all. Two runs held
+  back to back in one process read the same clock, the same environment, the
+  same working directory and the same machine identity, so a system genuinely
+  depending on any of them still emits identical output and the check goes
+  green — for as long as the two runs stay adjacent.
+- The skill now says to vary the ambient condition *between* the pair rather
+  than around it, and what to do when varying it is genuinely impossible: the
+  test still earns its place, and its name is where the narrower guarantee gets
+  written down, so a later reader is not told `is_deterministic` about something
+  that was only ever checked inside one process.
+
 ## 2026-09-01 — Capability gaps: the environment you stood up answers, and is still missing services
 
 - `routing-around-capability-gaps` checks a tool on three layers — installed,

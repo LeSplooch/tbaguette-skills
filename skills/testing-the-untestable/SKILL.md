@@ -78,6 +78,24 @@ Run these four checks; each one catches a class nothing else does.
 - **Shifted environment** — a clock offset of +6 months, a non-UTC timezone with a non-hour offset (`Asia/Kathmandu`, +05:45), and a non-English locale. This finds date-arithmetic, formatting, and collation assumptions in one run.
 - **Constrained CPU** — one core, or the suite under load. Races surface here and nowhere else.
 
+The first check has a failure mode of its own, and it is the reason the third
+one is on the list rather than being folded into it. **Two runs that share an
+ambient condition are blind to dependence on it.** Run "same seed, twice" back
+to back in one process and both invocations read the same clock, the same
+environment, the same working directory, the same machine identity, the same
+free disk — so a system genuinely reading any of those produces identical
+output, the check passes, and it passes for as long as the two runs stay
+adjacent. A determinism test that holds an input fixed across both of its own
+runs is certifying independence from exactly the thing it never varied.
+
+So vary the ambient condition *between* the two runs rather than around them:
+different clock values, separate processes, different working directories,
+different environments — the shifted-environment check applied to the pair
+rather than to the suite. Where varying it genuinely is not possible, the test
+still has value and is weaker than its name claims, and the name is where to
+say so: `same_seed_same_output_within_one_process` tells a later reader what
+was not covered, and `is_deterministic` does not.
+
 ## Ordering, and the tiebreak that is randomness
 
 Seeding the generator is the first thing to reach for when a run stops reproducing, and it leaves a gap that is easy to miss. The seam table above gives identifiers their own row and their own injection point, separate from randomness, and skipping that row is what this failure is made of: v4 UUIDs, session tokens and generated slugs are usually minted by a library drawing on the operating system's entropy, not on the generator you seeded. Seed every source you own and the ids keep changing anyway — so the same-seed check comes back with a difference, and the search sets off after a second bug that does not exist.
@@ -96,6 +114,7 @@ Tiebreak on something intrinsic to the record instead: a natural key the domain 
 | Sleep durations keep being increased | A race is being masked; the sleep length is now load-bearing |
 | Reproducing a failure requires the original machine | Randomness or id generation unseeded and unrecorded |
 | Every generator is seeded and the output still differs run to run | Ids minted from the OS entropy rather than the seeded generator, and something downstream sorts on one |
+| A determinism test passed for months over a system that was reading the clock | Both of its runs read the same clock; the ambient input it existed to exclude was held fixed across the pair |
 | Everything is mocked and nothing catches bugs | Seams placed at every call rather than at the boundary; tests assert the mock's script |
 | Test suite hangs with no output | Global time-patching froze a library's internal timer |
 | Passes alone, fails in parallel | Process-global environment variables, a fixed port, or a shared temp path |
@@ -110,4 +129,5 @@ Tiebreak on something intrinsic to the record instead: a natural key the domain 
 - Setting an environment variable inside a test and restoring it in teardown.
 - A test asserting on an id with a pattern match because the id could be anything.
 - A randomly generated id as the last term of a sort key.
+- A determinism check whose two runs happen back to back, in one process, on one clock.
 - Retrying a whole test to deal with a race.
