@@ -14,11 +14,35 @@
 # staying in force. It deliberately does NOT repeat the whole SKILL.md --
 # SessionStart already did that, and every TBaguette skill's trigger
 # description is already in the available-skills context. All this needs to
-# do is put the check back in front of Claude before it starts responding.
+# do is put the check back in front of the model before it starts responding.
+#
+# Usage: user-prompt-submit [claude|copilot]
+#
+# The nudge is the same text either way; the delivery is not, because the
+# two harnesses offer different doors. Claude Code's UserPromptSubmit takes
+# additionalContext, which lands beside the prompt and leaves it alone.
+# Copilot CLI's userPromptSubmitted takes only modifiedPrompt -- there is no
+# additionalContext on that event -- so the only way in is to hand back the
+# user's own prompt with the nudge prepended.
+#
+# That difference is why the copilot branch is written the way it is. Claude
+# Code's path cannot damage anything: it adds a field and the prompt is
+# untouched. Copilot's path is holding the user's prompt in its hands, and a
+# parse that goes wrong there does not degrade the nudge, it corrupts what
+# the user actually typed. So every failure in that branch -- no stdin, no
+# JSON runtime, malformed input, a payload with no string prompt -- exits 0
+# with an empty object, which Copilot reads as "no modification." A missing
+# nudge costs one turn's reminder. A mangled prompt costs the turn.
 
 set -euo pipefail
 
+OUTPUT_FORMAT="${1:-claude}"
+
 nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see TBaguette:using-tbaguette. If one plausibly applies, invoke it -- Skill tool, \`TBaguette:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
+
+# Same nudge, minus the tool that does not exist here. Copilot CLI reaches a
+# skill by description match or by the /TBaguette:<skill-name> slash command.
+copilot_nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see TBaguette:using-tbaguette. If one plausibly applies, invoke it as \`/TBaguette:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
 
 escape_for_json() {
     local s="$1"
@@ -29,6 +53,61 @@ escape_for_json() {
     s="${s//$'\t'/\\t}"
     printf '%s' "$s"
 }
+
+if [ "$OUTPUT_FORMAT" = "copilot" ]; then
+    # No stdin to read means no prompt to rebuild. Emitting the empty object
+    # is the whole recovery -- never guess at a prompt.
+    if [ -t 0 ]; then
+        printf '{}\n'
+        exit 0
+    fi
+
+    payload=$(cat)
+
+    TBAGUETTE_NUDGE="<TBAGUETTE_SKILL_CHECK>
+${copilot_nudge}
+</TBAGUETTE_SKILL_CHECK>"
+    export TBAGUETTE_NUDGE
+
+    # node first: Copilot CLI ships as an npm package, so a Node runtime is
+    # the one interpreter that is certainly on a machine running it. python3
+    # is the fallback for anywhere that stops being true. Output is captured
+    # whole and only printed once it exists, so a runtime that dies halfway
+    # cannot leave half a JSON object on stdout ahead of the fallback's.
+    out=""
+    if command -v node >/dev/null 2>&1; then
+        out=$(printf '%s' "$payload" | node -e '
+const fs = require("fs");
+let out = "{}";
+try {
+  const input = JSON.parse(fs.readFileSync(0, "utf8"));
+  if (typeof input.prompt === "string") {
+    out = JSON.stringify({ modifiedPrompt: process.env.TBAGUETTE_NUDGE + "\n\n" + input.prompt });
+  }
+} catch (e) {}
+process.stdout.write(out);
+' 2>/dev/null) || out=""
+    fi
+
+    if [ -z "$out" ] && command -v python3 >/dev/null 2>&1; then
+        out=$(printf '%s' "$payload" | python3 -c '
+import json, os, sys
+out = "{}"
+try:
+    data = json.loads(sys.stdin.read())
+    prompt = data.get("prompt")
+    if isinstance(prompt, str):
+        out = json.dumps({"modifiedPrompt": os.environ["TBAGUETTE_NUDGE"] + "\n\n" + prompt})
+except Exception:
+    pass
+sys.stdout.write(out)
+' 2>/dev/null) || out=""
+    fi
+
+    [ -n "$out" ] || out='{}'
+    printf '%s\n' "$out"
+    exit 0
+fi
 
 context="<TBAGUETTE_SKILL_CHECK>\n$(escape_for_json "$nudge")\n</TBAGUETTE_SKILL_CHECK>"
 

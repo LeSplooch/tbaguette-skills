@@ -40,7 +40,10 @@ If another plugin also injects a "check skills first" notice — Superpowers' `u
 
 If you're running on a harness other than Claude Code, read its reference file for special instructions:
 
+- GitHub Copilot CLI: `references/copilot-tools.md`
 - Hermes Agent: `references/hermes-tools.md`
+
+Copilot CLI is on that list for one reason: it has no Skill tool, so the sentence above telling you to invoke `TBaguette:<skill-name>` with one names something you cannot find. There it is a slash command, and skills also load on their own when a prompt matches their description.
 
 Other harnesses TBaguette ships a manifest for (Codex, Cursor, Devin, Gemini CLI, Kimi Code, OpenCode, Pi) don't currently need a separate reference file here — their tool mapping either lives inline in that harness's own manifest (Kimi's `skillInstructions`) or needs none at all, since most TBaguette skills describe actions rather than naming a specific tool. See `PORTING.md` at the repo root for the full harness-by-harness breakdown.
 

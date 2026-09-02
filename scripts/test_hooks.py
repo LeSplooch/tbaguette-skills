@@ -1,5 +1,6 @@
-"""Tests for the TBaguette plugin's hooks: hooks/hooks.json's declared
-shape, hooks/user-prompt-submit's per-turn skill-check nudge, and
+"""Tests for the TBaguette plugin's hooks: hooks/hooks.json's and
+hooks/hooks-copilot.json's declared shapes, hooks/user-prompt-submit's
+per-turn skill-check nudge in both of its output modes, and
 hooks/session-start's actual behavior -- that it emits
 well-formed additionalContext carrying using-tbaguette's SKILL.md verbatim,
 and that keeping-tbaguette-current's step 1 (fetch, compare, working-tree
@@ -38,6 +39,7 @@ HOOKS_DIR = REPO_ROOT / "hooks"
 SESSION_START = HOOKS_DIR / "session-start"
 USER_PROMPT_SUBMIT = HOOKS_DIR / "user-prompt-submit"
 RUN_HOOK_CMD = HOOKS_DIR / "run-hook.cmd"
+HOOKS_COPILOT_JSON = HOOKS_DIR / "hooks-copilot.json"
 
 USING_TBAGUETTE_FIXTURE = (
     "---\nname: using-tbaguette\ndescription: fixture for test_hooks.py\n---\n\n"
@@ -108,10 +110,13 @@ def clone(origin: Path, dest: Path) -> None:
     )
 
 
-def run_session_start(plugin_root: Path) -> dict:
+def run_session_start(plugin_root: Path, output_format: str | None = None) -> dict:
     script = plugin_root / "hooks" / "session-start"
+    argv = ["bash", str(script)]
+    if output_format is not None:
+        argv.append(output_format)
     result = subprocess.run(
-        ["bash", str(script)], capture_output=True, text=True, check=False,
+        argv, capture_output=True, text=True, check=False,
     )
     check(f"session-start exits 0 (root={plugin_root.name})", result.returncode == 0)
     if result.returncode != 0:
@@ -346,11 +351,146 @@ def check_user_prompt_submit() -> None:
     )
 
 
+# ---------------------------------------------------------------------------
+# Copilot CLI: a second hook config, and the same two scripts in a second mode
+# ---------------------------------------------------------------------------
+
+
+def check_hooks_copilot_json_shape() -> None:
+    print("hooks-copilot.json shape")
+    data = json.loads(HOOKS_COPILOT_JSON.read_text(encoding="utf-8"))
+    # Copilot CLI requires this and requires it to be 1; Claude Code's own
+    # hooks.json has no such key, which is the shortest proof the two files
+    # are not interchangeable however similar they look.
+    check("declares version 1", data.get("version") == 1)
+
+    hooks = data.get("hooks", {})
+    check("uses Copilot's camelCase event names, not Claude Code's PascalCase",
+          set(hooks) == {"sessionStart", "userPromptSubmitted"})
+
+    for event, script in (("sessionStart", "session-start"),
+                          ("userPromptSubmitted", "user-prompt-submit")):
+        entries = hooks.get(event, [])
+        check(f"{event} declares exactly one hook", len(entries) == 1)
+        entry = entries[0] if entries else {}
+        check(f"{event} type is command", entry.get("type") == "command")
+        # Both are required, not belt-and-braces: Copilot picks by platform, so
+        # a missing powershell key is a Windows install with no bootstrap.
+        for shell in ("bash", "powershell"):
+            command = entry.get(shell, "")
+            check(f"{event} declares a {shell} command", bool(command))
+            check(f"{event}'s {shell} command runs run-hook.cmd",
+                  "run-hook.cmd" in command)
+            check(f"{event}'s {shell} command names {script}",
+                  script in command)
+            # The argument is the entire difference between emitting Copilot's
+            # envelope and emitting Claude Code's. Drop it and the hook still
+            # runs, still exits 0, and delivers nothing Copilot can read --
+            # a silent no-op, which is the worst shape a bootstrap failure
+            # can take.
+            check(f"{event}'s {shell} command passes the copilot format argument",
+                  command.rstrip().endswith("copilot"))
+            check(f"{event}'s {shell} command resolves the plugin root",
+                  "PLUGIN_ROOT" in command)
+        check(f"{event} bounds its runtime", isinstance(entry.get("timeoutSec"), int))
+
+
+def check_session_start_copilot_shape() -> None:
+    print("session-start: Copilot output envelope")
+    with tempfile.TemporaryDirectory() as tmp:
+        plugin_root = make_plugin_root(Path(tmp), "plugin")
+        payload = run_session_start(plugin_root, "copilot")
+
+        # Copilot's sessionStart reads a bare additionalContext. Claude Code's
+        # nesting would parse as JSON and carry nothing.
+        check("top-level key is additionalContext, unnested",
+              list(payload.keys()) == ["additionalContext"])
+        ctx = payload["additionalContext"]
+        check("carries using-tbaguette's SKILL.md verbatim",
+              USING_TBAGUETTE_FIXTURE.rstrip("\n") in ctx)
+        check("still carries the update-check block",
+              "not a git clone" in ctx)
+        # The one sentence that is genuinely per-harness. Copilot has no Skill
+        # tool, so naming one here would send the model looking for something
+        # it cannot find, on the line whose whole job is reaching the other 95
+        # skills.
+        check("names the slash-command form Copilot actually has",
+              "/TBaguette:<skill-name>" in ctx)
+        check("does not name a Skill tool Copilot does not have",
+              "use the 'Skill' tool" not in ctx)
+        check("points at the Copilot tool mapping",
+              "references/copilot-tools.md" in ctx)
+
+
+def run_prompt_hook(stdin: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["bash", str(USER_PROMPT_SUBMIT), "copilot"],
+        input=stdin, capture_output=True, text=True, check=False,
+    )
+
+
+def check_user_prompt_submit_copilot() -> None:
+    print("user-prompt-submit: Copilot modifiedPrompt mode")
+    prompt = "fix the login bug"
+    result = run_prompt_hook(json.dumps({
+        "sessionId": "s", "timestamp": 0, "cwd": "/tmp", "prompt": prompt,
+    }))
+    check("exits 0", result.returncode == 0)
+    payload = json.loads(result.stdout)
+    check("returns modifiedPrompt, the only field this event accepts",
+          list(payload.keys()) == ["modifiedPrompt"])
+    modified = payload["modifiedPrompt"]
+    check("the user's own prompt survives, last and intact",
+          modified.endswith(prompt))
+    check("the nudge is prepended, delimited so it does not read as the user",
+          modified.startswith("<TBAGUETTE_SKILL_CHECK>"))
+    check("nudge names Copilot's invocation form", "/TBaguette:<skill-name>" in modified)
+    check("nudge does not name Claude Code's Skill tool", "Skill tool" not in modified)
+    check("closes the 'just a question' loophole", "Questions" in modified)
+    check("closes the 'too small' loophole", "too small" in modified)
+
+    # This is the assertion the whole branch exists for. Unlike Claude Code's
+    # additionalContext, this hook holds the user's prompt in its hands: a
+    # quoting bug here does not weaken a reminder, it rewrites what the person
+    # typed. Anything a real prompt can contain has to come back byte for byte.
+    nasty = 'say "hi"\nline 2\ttabbed\\backslash C:\\Users é 🥖 {"json":true}'
+    payload = json.loads(run_prompt_hook(json.dumps({"prompt": nasty})).stdout)
+    check("a prompt full of quotes, newlines, tabs, backslashes, unicode and "
+          "JSON round-trips byte for byte",
+          payload["modifiedPrompt"].endswith(nasty))
+
+    # Every way this can go wrong ends the same way: no modification. Copilot
+    # reads {} as "leave the prompt alone", so a lost nudge costs one turn's
+    # reminder and nothing else.
+    for label, stdin in (
+        ("stdin is not JSON at all", "not json"),
+        ("stdin is empty", ""),
+        ("payload carries no prompt", '{"sessionId": "s"}'),
+        ("prompt is not a string", '{"prompt": 42}'),
+        ("prompt is null", '{"prompt": null}'),
+        ("stdin is JSON but not an object", '["prompt"]'),
+    ):
+        result = run_prompt_hook(stdin)
+        check(f"{label}: exits 0", result.returncode == 0)
+        check(f"{label}: emits an empty object, modifying nothing",
+              json.loads(result.stdout) == {})
+
+    wrapped = subprocess.run(
+        ["bash", str(RUN_HOOK_CMD), "user-prompt-submit", "copilot"],
+        input=json.dumps({"prompt": prompt}), capture_output=True, text=True,
+    )
+    check("run-hook.cmd forwards the format argument and stdin both",
+          json.loads(wrapped.stdout)["modifiedPrompt"].endswith(prompt))
+
+
 def main() -> None:
     check_hooks_json_shape()
+    check_hooks_copilot_json_shape()
     check_executable_bits()
     check_user_prompt_submit()
+    check_user_prompt_submit_copilot()
     check_session_start_basic_shape()
+    check_session_start_copilot_shape()
     check_run_hook_cmd_unix_passthrough()
     check_update_check_same_sha()
     check_update_check_update_available()

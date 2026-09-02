@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-01T23:00:51+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-01T23:00:51Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T04:33:47+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T04:33:47Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -76,7 +76,7 @@
 
 Before you start: confirm git is available (git --version). If it isn&#x27;t, tell me and stop — there&#x27;s nothing else to try.
 
-It is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Copilot CLI, Devin, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can&#x27;t tell which one you are, say so and ask me, rather than falling through to the first route below.
+It is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Devin, GitHub Copilot CLI, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can&#x27;t tell which one you are, say so and ask me, rather than falling through to the first route below.
 
 Route A — you read Claude Code&#x27;s skills directory. Target: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\.claude\skills\TBaguette). Figure out which case applies:
 
@@ -86,7 +86,7 @@ Route A — you read Claude Code&#x27;s skills directory. Target: ~/.claude/skil
 3. &lt;target&gt; exists, has content, isn&#x27;t a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a &quot;naming collision&quot;, and ask me whether to move it aside and re-clone, rather than doing that yourself.
 4. Anything else already at that path — stop. Do not delete or modify it. Tell me there&#x27;s a naming collision that needs a manual look.
 
-Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. If it&#x27;s a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
+Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install TBaguette@tbaguette-dev`. If it&#x27;s a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
 
 Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is &quot;tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git&quot;, added to the &quot;plugin&quot; array in opencode.json.
 
@@ -147,10 +147,21 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-09-01T23:00:51.280692+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/using-tbaguette/" data-fresh-at="2026-09-02T04:33:47.058505+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">using-tbaguette</span>
+    <span class="change-badge change-badge--new" data-fresh-at="2026-09-02T04:33:47.058505+00:00">New</span>
+  </span>
+  <p class="card__summary">Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message.</p>
+  <span class="card__foot">
+    <span class="tag">Judgment and meta</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-09-02T01:00:51+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T23:00:51.280692+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T01:00:51+02:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">
@@ -158,7 +169,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/fanning-out-independent-work/" data-fresh-at="2026-09-02T00:56:10+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/fanning-out-independent-work/" data-fresh-at="2026-09-02T00:56:10+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">fanning-out-independent-work</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:56:10+02:00">Updated</span>
@@ -169,7 +180,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/checkpointing-long-runs/" data-fresh-at="2026-09-02T00:54:30+02:00" draggable="false" style="--cf-offset: 2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/checkpointing-long-runs/" data-fresh-at="2026-09-02T00:54:30+02:00" draggable="false" style="--cf-offset: 3">
   <span class="card__name-row">
     <span class="card__name">checkpointing-long-runs</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:54:30+02:00">Updated</span>
@@ -180,7 +191,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/auditing-dependencies/" data-fresh-at="2026-09-02T00:52:57+02:00" draggable="false" style="--cf-offset: 3">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/auditing-dependencies/" data-fresh-at="2026-09-02T00:52:57+02:00" draggable="false" style="--cf-offset: 4">
   <span class="card__name-row">
     <span class="card__name">auditing-dependencies</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:52:57+02:00">Updated</span>
@@ -191,7 +202,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/routing-around-capability-gaps/" data-fresh-at="2026-09-02T00:50:51+02:00" draggable="false" style="--cf-offset: 4">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/routing-around-capability-gaps/" data-fresh-at="2026-09-02T00:50:51+02:00" draggable="false" style="--cf-offset: 5">
   <span class="card__name-row">
     <span class="card__name">routing-around-capability-gaps</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:50:51+02:00">Updated</span>
@@ -202,7 +213,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/finishing-what-you-started/" data-fresh-at="2026-09-02T00:49:20+02:00" draggable="false" style="--cf-offset: 5">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/finishing-what-you-started/" data-fresh-at="2026-09-02T00:49:20+02:00" draggable="false" style="--cf-offset: 6">
   <span class="card__name-row">
     <span class="card__name">finishing-what-you-started</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:49:20+02:00">Updated</span>
@@ -213,7 +224,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/diagnosing-before-fixing/" data-fresh-at="2026-09-02T00:47:32+02:00" draggable="false" style="--cf-offset: 6">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/diagnosing-before-fixing/" data-fresh-at="2026-09-02T00:47:32+02:00" draggable="false" style="--cf-offset: -5">
   <span class="card__name-row">
     <span class="card__name">diagnosing-before-fixing</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:47:32+02:00">Updated</span>
@@ -224,7 +235,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/performance-profiling/" data-fresh-at="2026-09-02T00:45:51+02:00" draggable="false" style="--cf-offset: -5">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/performance-profiling/" data-fresh-at="2026-09-02T00:45:51+02:00" draggable="false" style="--cf-offset: -4">
   <span class="card__name-row">
     <span class="card__name">performance-profiling</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:45:51+02:00">Updated</span>
@@ -235,7 +246,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-fresh-at="2026-09-02T00:42:57+02:00" draggable="false" style="--cf-offset: -4">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-fresh-at="2026-09-02T00:42:57+02:00" draggable="false" style="--cf-offset: -3">
   <span class="card__name-row">
     <span class="card__name">confirming-before-claiming-done</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:42:57+02:00">Updated</span>
@@ -246,7 +257,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/testing-the-untestable/" data-fresh-at="2026-09-02T00:41:29+02:00" draggable="false" style="--cf-offset: -3">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/testing-the-untestable/" data-fresh-at="2026-09-02T00:41:29+02:00" draggable="false" style="--cf-offset: -2">
   <span class="card__name-row">
     <span class="card__name">testing-the-untestable</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:41:29+02:00">Updated</span>
@@ -257,7 +268,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/choosing-test-scope/" data-fresh-at="2026-09-01T18:37:36+02:00" draggable="false" style="--cf-offset: -2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/choosing-test-scope/" data-fresh-at="2026-09-01T18:37:36+02:00" draggable="false" style="--cf-offset: -1">
   <span class="card__name-row">
     <span class="card__name">choosing-test-scope</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T18:37:36+02:00">Updated</span>
@@ -265,17 +276,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   <p class="card__summary">Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test…</p>
   <span class="card__foot">
     <span class="tag">Testing</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/portable-shell-scripting/" data-fresh-at="2026-09-01T18:10:19+02:00" draggable="false" style="--cf-offset: -1">
-  <span class="card__name-row">
-    <span class="card__name">portable-shell-scripting</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T18:10:19+02:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when writing or reviewing a shell script, when a script works in one shell but fails in another…</p>
-  <span class="card__foot">
-    <span class="tag">Environment and tooling</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -290,12 +290,12 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
-    <span class="notes__entry-title">Contributing: pick the right file, make it reachable, and stop at the gate</span>
+    <span class="notes__entry-title">GitHub Copilot CLI is a real install now, not a footnote</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> now covers the step that used to be left to instinct: which existing skill a lesson belongs in. File by the family of judgments the lesson joins, not by its subject — a lesson about an installer refusing to run is a reading-the-instrument lesson, not a dependency one. The test is neighbourliness: read the candidate file's section headings and ask whether yours reads as a sibling or a visitor.</li>
-    <li>It also adds the check with no build gate behind it, and the one that quietly wastes the work. A skill's <code>description:</code> is the only part of it that is always loaded, so it is the whole of the routing — a new section in a file whose description never mentions the question it answers is unreachable, and every suite stays green. If the sentence that made you write it would not land on that file, the description is part of the change.</li>
-    <li>And the approval gate now says what happens when nobody is there to answer it: nothing. It is not substituted the way other gates are. An unattended run does the edit, the suite, the adversarial pass and the local commit, then stops with the work staged and says what is waiting on a yes — which is the run ending correctly rather than failing.</li>
+    <li>TBaguette installs into GitHub Copilot CLI, with the same standing check-the-skills-first rule it sets up everywhere else — injected when a session starts, and put back in front of the model on every turn after that. Two steps, because Copilot wants a marketplace before it wants a plugin: <code>copilot plugin marketplace add LeSplooch/tbaguette-skills</code>, then <code>copilot plugin install TBaguette@tbaguette-dev</code>. The install prompt on the site knows both, so pasting it into Copilot is enough.</li>
+    <li>Copilot has no Skill tool, so being told to use one was sending you looking for a button that isn't there. On Copilot a skill is a slash command — <code>/TBaguette:orienting-in-unfamiliar-code</code> — and skills also load on their own when what you're asking matches one. The bootstrap now says that, instead of saying Claude Code's version of it.</li>
+    <li>The previous claim that Copilot CLI was already supported was optimistic. It could find the skills; nothing ever put the rule in front of the model, which is the part that makes them fire. If you set Copilot up on that basis before today, it is worth installing again.</li>
   </ul>
 </li>
   </ol>
@@ -304,6 +304,17 @@ Flag one more thing, because it applies to this very conversation: this session 
       <span class="notes__earlier-label">Show 5 earlier updates</span>
     </summary>
     <ol class="notes__list notes__list--earlier">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
+    <span class="notes__entry-title">Contributing: pick the right file, make it reachable, and stop at the gate</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> now covers the step that used to be left to instinct: which existing skill a lesson belongs in. File by the family of judgments the lesson joins, not by its subject — a lesson about an installer refusing to run is a reading-the-instrument lesson, not a dependency one. The test is neighbourliness: read the candidate file's section headings and ask whether yours reads as a sibling or a visitor.</li>
+    <li>It also adds the check with no build gate behind it, and the one that quietly wastes the work. A skill's <code>description:</code> is the only part of it that is always loaded, so it is the whole of the routing — a new section in a file whose description never mentions the question it answers is unreachable, and every suite stays green. If the sentence that made you write it would not land on that file, the description is part of the change.</li>
+    <li>And the approval gate now says what happens when nobody is there to answer it: nothing. It is not substituted the way other gates are. An unattended run does the edit, the suite, the adversarial pass and the local commit, then stops with the work staged and says what is waiting on a yes — which is the run ending correctly rather than failing.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
@@ -344,16 +355,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> extends its capability-not-preference guardrail to cover the user. Handing someone a block of commands to paste is a routing decision — it asserts <em>this cannot be done from here</em> — and it is wrong more often than a model swap is, because the alternative usually went unchecked. A permission prompt is not a capability gap; neither is a slow command, nor a step that merely feels like it ought to be theirs.</li>
     <li>Three things do belong to the user, recognizable by what they need rather than how they feel: a secret only they hold, a decision that is theirs, and an irreversible action a run may prepare but not take. Everything else handed over is an unchecked capability claim — the same substitution this skill exists to prevent, aimed at the person instead of at the work.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
-    <span class="notes__entry-title">A run is not finished while the things it started are still running</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/finishing-what-you-started/"><code>finishing-what-you-started</code></a> now covers the part of a run that never gets a ledger line: the backgrounded build, the watcher, the long benchmark, the dev server, the dispatched agent. None of them is a deliverable, so none of them is in the acceptance criteria, and every one of them outlives the report that says the work is done.</li>
-    <li>The close-out gains one more question, answered by looking rather than by remembering: what did this run start that is still running? Every answer gets a disposition — stopped, or deliberately left running and said so, with what it is and how to stop it. Left running on purpose is a fine outcome; left running silently is a cost the reader discovers hours later, and it reads to them like the run losing track of itself.</li>
   </ul>
 </li>
     </ol>
@@ -415,7 +416,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/using-tbaguette/" data-search-card data-search-terms="using-tbaguette use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message. judgment and meta">
   <span class="card__name-row">
     <span class="card__name">using-tbaguette</span>
-    
+    <span class="change-badge change-badge--new" data-fresh-at="2026-09-02T04:33:47.058505+00:00">New</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message.</p>
   <span class="card__foot">
@@ -1568,7 +1569,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/tending-tbaguette/" data-search-card data-search-terms="tending-tbaguette use at the start of every conversation, in any project or repo… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T23:00:51.280692+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T01:00:51+02:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">

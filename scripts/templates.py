@@ -701,8 +701,8 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
     coexistence_removal_command="rm -rf ~/.claude/skills/TBaguette",
     other_agents_heading="Not on Claude Code?",
     other_agents_html_template=(
-        "{brand_atelier} ships an integration for Codex, Cursor, Copilot CLI, Devin, "
-        "Gemini CLI, Hermes, Kimi Code, OpenCode, and Pi as well. Those installs "
+        "{brand_atelier} ships an integration for Codex, Cursor, Devin, GitHub Copilot "
+        "CLI, Gemini CLI, Hermes, Kimi Code, OpenCode, and Pi as well. Those installs "
         "differ in kind rather than just in path \u2014 a plugin command here, an "
         "extension there, a line in a config file somewhere else \u2014 which is "
         "exactly why the install box carries one prompt instead of ten recipes. "
@@ -1202,7 +1202,7 @@ INSTALL_PROMPT = """Install (or update) TBaguette’s Atelier — a skills libra
 
 Before you start: confirm git is available (git --version). If it isn't, tell me and stop — there's nothing else to try.
 
-It is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Copilot CLI, Devin, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can't tell which one you are, say so and ask me, rather than falling through to the first route below.
+It is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Devin, GitHub Copilot CLI, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can't tell which one you are, say so and ask me, rather than falling through to the first route below.
 
 Route A — you read Claude Code's skills directory. Target: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\\.claude\\skills\\TBaguette). Figure out which case applies:
 
@@ -1212,7 +1212,7 @@ Route A — you read Claude Code's skills directory. Target: ~/.claude/skills/TB
 3. <target> exists, has content, isn't a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a "naming collision", and ask me whether to move it aside and re-clone, rather than doing that yourself.
 4. Anything else already at that path — stop. Do not delete or modify it. Tell me there's a naming collision that needs a manual look.
 
-Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. If it's a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
+Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install TBaguette@tbaguette-dev`. If it's a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
 
 Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is "tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git", added to the "plugin" array in opencode.json.
 

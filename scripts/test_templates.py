@@ -1425,6 +1425,11 @@ def main() -> None:
         ("hermes plugins install LeSplooch/tbaguette-skills", ".hermes-plugin/__init__.py"),
         ("/plugins install https://github.com/LeSplooch/tbaguette-skills", "README.kimi.md"),
         ("tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git", "README.opencode.md"),
+        # Copilot's pair is the one place the prompt publishes a two-step
+        # install. That the second step names a marketplace that actually
+        # exists is checked separately, in test_harness_manifests.py.
+        ("copilot plugin marketplace add LeSplooch/tbaguette-skills", "PORTING.md"),
+        ("copilot plugin install TBaguette@tbaguette-dev", "PORTING.md"),
     ):
         check(f"prompt's {line!r} still matches {doc_rel}",
               line in INSTALL_PROMPT

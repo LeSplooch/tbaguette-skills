@@ -59,7 +59,7 @@ Command Prompt equivalent too at
 ### Other agents
 
 The commands above are the Claude Code install. The Atelier isn't Claude Code-only,
-though: this same repo ships an integration for Codex, Cursor, Copilot CLI, Devin,
+though: this same repo ships an integration for Codex, Cursor, Devin, GitHub Copilot CLI,
 Gemini CLI, Hermes, Kimi Code, OpenCode, and Pi — see [`PORTING.md`](PORTING.md)
 for what each one loads and how, plus [`README.opencode.md`](README.opencode.md)
 and [`README.kimi.md`](README.kimi.md) for the two with enough surface to need

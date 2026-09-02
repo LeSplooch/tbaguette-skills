@@ -20,9 +20,11 @@ JSON_MANIFESTS = [
     ".codex-plugin/plugin.json",
     ".cursor-plugin/plugin.json",
     ".devin-plugin/plugin.json",
+    ".github/plugin/plugin.json",
     ".kimi-plugin/plugin.json",
     "gemini-extension.json",
     "hooks/hooks.json",
+    "hooks/hooks-copilot.json",
     "hooks/hooks-cursor.json",
     "package.json",
 ]
@@ -42,6 +44,7 @@ VERSIONED_MANIFESTS = [
     ".codex-plugin/plugin.json",
     ".cursor-plugin/plugin.json",
     ".devin-plugin/plugin.json",
+    ".github/plugin/plugin.json",
     ".kimi-plugin/plugin.json",
     "gemini-extension.json",
     "package.json",
@@ -75,6 +78,57 @@ class TestHarnessManifests(unittest.TestCase):
         agents_md = REPO_ROOT / "AGENTS.md"
         self.assertTrue(agents_md.is_symlink(), "AGENTS.md must be a symlink")
         self.assertEqual(agents_md.resolve(), (REPO_ROOT / "CLAUDE.md").resolve())
+
+    def test_copilot_manifest_declares_its_own_hook_file(self):
+        """Copilot CLI resolves a plugin's hooks by searching for hooks.json or
+        hooks/hooks.json when the manifest doesn't name one -- and this repo has
+        a hooks/hooks.json in Claude Code's incompatible schema. So the Copilot
+        manifest naming its own hook file is not tidiness, it is the thing
+        keeping Copilot off a config it cannot parse."""
+        manifest = _load_json(".github/plugin/plugin.json")
+        hooks_rel = manifest.get("hooks")
+        self.assertEqual(hooks_rel, "./hooks/hooks-copilot.json")
+        self.assertTrue((REPO_ROOT / "hooks/hooks-copilot.json").is_file())
+        self.assertEqual(manifest.get("skills"), "./skills/")
+
+    def test_copilot_manifest_is_not_moved_to_the_conventional_name(self):
+        """Every other integration here lives in .<harness>-plugin/, so this one
+        looks like the odd one out and reads as something to tidy up. It is not.
+        Copilot CLI searches a fixed list -- .plugin/plugin.json, plugin.json,
+        .github/plugin/plugin.json, .claude-plugin/plugin.json -- and
+        .copilot-plugin/ is not on it. Renaming for consistency would leave a
+        manifest that is never read, and nothing else in this suite would
+        notice, because every other assertion about it would still pass.
+
+        Guarding the absence rather than the presence is the point: that the
+        file exists is already covered above, and this is the failure mode that
+        would otherwise ship silently."""
+        self.assertFalse(
+            (REPO_ROOT / ".copilot-plugin").exists(),
+            ".copilot-plugin/ is not a location Copilot CLI searches -- the "
+            "Copilot manifest belongs at .github/plugin/plugin.json",
+        )
+
+    def test_published_copilot_install_command_names_a_real_marketplace(self):
+        """`copilot plugin install TBaguette@tbaguette-dev` is printed on the
+        live site. Both halves of that spec come from marketplace.json, and
+        neither is derived at build time -- renaming either field would leave
+        the site publishing an install command for a marketplace and a plugin
+        that no longer exist, with every other suite still green."""
+        marketplace = _load_json(".claude-plugin/marketplace.json")
+        plugin_name = marketplace["plugins"][0]["name"]
+        spec = f"{plugin_name}@{marketplace['name']}"
+        self.assertEqual(spec, "TBaguette@tbaguette-dev")
+
+        porting = (REPO_ROOT / "PORTING.md").read_text(encoding="utf-8")
+        self.assertIn(f"copilot plugin install {spec}", porting)
+
+        # Copilot resolves that entry's source to the repo root and searches
+        # there for a manifest -- so the source has to point at a directory
+        # this repo actually gives it one in.
+        source = marketplace["plugins"][0]["source"]
+        self.assertEqual(source, "./")
+        self.assertTrue((REPO_ROOT / source / ".github/plugin/plugin.json").is_file())
 
     def test_package_json_points_at_real_files(self):
         package = _load_json("package.json")

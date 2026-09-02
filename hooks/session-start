@@ -10,8 +10,22 @@
 #      working-tree status. Steps 2-6 (safety gate, fast-forward update,
 #      report, log) are judgment calls and stay with Claude, following that
 #      skill's own instructions using the data injected here.
+#
+# Usage: session-start [claude|copilot]
+#
+# The context it builds is identical either way -- only the JSON envelope
+# around it differs, because the two harnesses spell the same event
+# differently. Claude Code wants it nested under hookSpecificOutput with the
+# event named back at it; Copilot CLI's sessionStart wants a bare
+# {"additionalContext": ...}. That is one branch at the very bottom rather
+# than a second script, so the update-check logic above it -- the part with
+# four states and a network call -- stays single-sourced. A second copy of
+# it is a second thing to keep correct, and the copy nobody runs locally is
+# the one that rots.
 
 set -euo pipefail
+
+OUTPUT_FORMAT="${1:-claude}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -83,8 +97,26 @@ escape_for_json() {
 using_tbaguette_escaped=$(escape_for_json "$using_tbaguette_content")
 update_check_escaped=$(escape_for_json "$update_check_block")
 
-session_context="<EXTREMELY_IMPORTANT>\nYou have TBaguette.\n\n**Below is the full content of your 'TBaguette:using-tbaguette' skill - for all other TBaguette skills, use the 'Skill' tool with 'TBaguette:<skill-name>':**\n\n${using_tbaguette_escaped}\n</EXTREMELY_IMPORTANT>\n\n<TBAGUETTE_UPDATE_CHECK>\n${update_check_escaped}\n</TBAGUETTE_UPDATE_CHECK>"
+# The one sentence in this bootstrap that is not harness-agnostic: it names
+# the mechanism for reaching every *other* skill, and the harnesses disagree
+# about what that mechanism is. Claude Code has a Skill tool. Copilot CLI does
+# not -- its skills load on description match and are invoked as slash
+# commands -- so telling it to use a Skill tool would name a tool it cannot
+# find, on the one line whose whole job is making the other 95 skills
+# reachable.
+if [ "$OUTPUT_FORMAT" = "copilot" ]; then
+    invocation_sentence="**Below is the full content of your 'TBaguette:using-tbaguette' skill. Every other TBaguette skill loads automatically when a prompt matches its description, and you can invoke one deliberately as the slash command '/TBaguette:<skill-name>'; skills/using-tbaguette/references/copilot-tools.md in this plugin has the rest of the mapping:**"
+else
+    invocation_sentence="**Below is the full content of your 'TBaguette:using-tbaguette' skill - for all other TBaguette skills, use the 'Skill' tool with 'TBaguette:<skill-name>':**"
+fi
+invocation_escaped=$(escape_for_json "$invocation_sentence")
 
-printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
+session_context="<EXTREMELY_IMPORTANT>\nYou have TBaguette.\n\n${invocation_escaped}\n\n${using_tbaguette_escaped}\n</EXTREMELY_IMPORTANT>\n\n<TBAGUETTE_UPDATE_CHECK>\n${update_check_escaped}\n</TBAGUETTE_UPDATE_CHECK>"
+
+if [ "$OUTPUT_FORMAT" = "copilot" ]; then
+    printf '{\n  "additionalContext": "%s"\n}\n' "$session_context"
+else
+    printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
+fi
 
 exit 0

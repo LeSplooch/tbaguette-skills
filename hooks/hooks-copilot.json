@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "bash \"${PLUGIN_ROOT:-.}/hooks/run-hook.cmd\" session-start copilot",
+        "powershell": "& \"$(if ($env:PLUGIN_ROOT) { $env:PLUGIN_ROOT } else { '.' })/hooks/run-hook.cmd\" session-start copilot",
+        "timeoutSec": 30
+      }
+    ],
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "bash": "bash \"${PLUGIN_ROOT:-.}/hooks/run-hook.cmd\" user-prompt-submit copilot",
+        "powershell": "& \"$(if ($env:PLUGIN_ROOT) { $env:PLUGIN_ROOT } else { '.' })/hooks/run-hook.cmd\" user-prompt-submit copilot",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}
