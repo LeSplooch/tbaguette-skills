@@ -758,6 +758,32 @@ def check_update_notes() -> None:
           html.count('class="notes__head"') == 1
           and "notes__history" not in html and "notes__tag" not in html)
 
+    # A CSS assertion from a template test is unusual and this one earns it.
+    # A modal <dialog> is centred by `margin: auto` in the UA stylesheet, and
+    # this site's reset opens with `* { margin: 0 }` — an author rule, so it
+    # wins, and the dialog lands in the top-left corner with `inset: 0` still
+    # resolved. Nothing about the symptom points at a margin. The restored
+    # declaration reads as redundant next to a UA default that "already does
+    # that", which is exactly why it would be removed by a tidy-up, and the
+    # regression is invisible to every other check here.
+    styles = (Path(__file__).resolve().parent.parent / "docs/assets/styles.css").read_text(encoding="utf-8")
+    # Brace-matched rather than split on the first "}": the rule's own comment
+    # quotes `* { margin: 0 }`, and a naive split truncates there and reports
+    # the declaration missing whether or not it is present — a check that
+    # cannot pass is worth no more than one that cannot fail.
+    start = styles.index(".notes-dialog {") + len(".notes-dialog {")
+    depth, end = 1, start
+    while depth:
+        end += 1
+        if styles[end] == "{":
+            depth += 1
+        elif styles[end] == "}":
+            depth -= 1
+    dialog_rule = styles[start:end]
+    check("the archive dialog restores the margin the reset took from it, "
+          "which is the whole of its centring",
+          "margin: auto;" in dialog_rule)
+
     lone = render_index(categories, {}, update_notes=[newest])
     check("a single entry gets no archive control — opening a dialog to read "
           "the entry already on the page is a control that does nothing",

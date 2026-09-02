@@ -1876,6 +1876,18 @@ code {
 /* --- the dialog itself --------------------------------------------- */
 
 .notes-dialog {
+  /* A modal <dialog> is centred by the `margin: auto` in the UA stylesheet,
+     against the `inset: 0` it also gets — and this site's reset opens with
+     `* { margin: 0 }`, which is an author rule and therefore wins. The result
+     is a dialog pinned to the top-left corner with `inset: 0` still resolved,
+     so nothing about it looks like a margin problem. Restoring the one
+     declaration is the whole of the centring; the mobile sheet below overrides
+     it again on purpose.
+
+     Worth knowing for any other element that relies on a UA default: a reset
+     with a `*` selector silently removes it, and the symptom shows up nowhere
+     near the reset. */
+  margin: auto;
   /* max-width is the measure, not a round number: the bullets inside cap at
      --measure-prose and the entry heads run a little wider, so 46rem is the
      narrowest box that never makes a bullet the thing setting the width. */
