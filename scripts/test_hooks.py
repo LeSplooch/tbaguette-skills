@@ -40,6 +40,7 @@ SESSION_START = HOOKS_DIR / "session-start"
 USER_PROMPT_SUBMIT = HOOKS_DIR / "user-prompt-submit"
 RUN_HOOK_CMD = HOOKS_DIR / "run-hook.cmd"
 HOOKS_COPILOT_JSON = HOOKS_DIR / "hooks-copilot.json"
+HOOKS_VSCODE_JSON = REPO_ROOT / "com.github.copilot" / "hooks" / "hooks.json"
 
 USING_TBAGUETTE_FIXTURE = (
     "---\nname: using-tbaguette\ndescription: fixture for test_hooks.py\n---\n\n"
@@ -483,14 +484,105 @@ def check_user_prompt_submit_copilot() -> None:
           json.loads(wrapped.stdout)["modifiedPrompt"].endswith(prompt))
 
 
+def check_hooks_vscode_json_shape() -> None:
+    print("com.github.copilot/hooks/hooks.json shape")
+    data = json.loads(HOOKS_VSCODE_JSON.read_text(encoding="utf-8"))
+    check("declares version 1", data.get("version") == 1)
+
+    hooks = data.get("hooks", {})
+    # VS Code publishes PascalCase event names and, unlike the CLI, will not
+    # be told where its hook file is -- it derives the path from the manifest's
+    # format. So this file is only ever reached as VS Code, and only ever
+    # needs VS Code's spelling.
+    check("uses the PascalCase names VS Code documents",
+          set(hooks) == {"SessionStart", "UserPromptSubmit"})
+
+    for event, script in (("SessionStart", "session-start"),
+                          ("UserPromptSubmit", "user-prompt-submit")):
+        entries = hooks.get(event, [])
+        check(f"{event} declares exactly one hook", len(entries) == 1)
+        entry = entries[0] if entries else {}
+        check(f"{event} type is command", entry.get("type") == "command")
+        for shell in ("bash", "powershell"):
+            command = entry.get(shell, "")
+            check(f"{event} declares a {shell} command", bool(command))
+            check(f"{event}'s {shell} command names {script}", script in command)
+            check(f"{event}'s {shell} command passes the vscode format argument",
+                  command.rstrip().endswith("vscode"))
+            # VS Code is documented as setting CLAUDE_PLUGIN_ROOT, so it is
+            # worth falling back through on the surface where PLUGIN_ROOT is
+            # least certain.
+            check(f"{event}'s {shell} command falls back through CLAUDE_PLUGIN_ROOT",
+                  "CLAUDE_PLUGIN_ROOT" in command)
+        check(f"{event} bounds its runtime", isinstance(entry.get("timeoutSec"), int))
+
+
+def check_session_start_vscode_shape() -> None:
+    print("session-start: VS Code output envelope")
+    with tempfile.TemporaryDirectory() as tmp:
+        plugin_root = make_plugin_root(Path(tmp), "plugin")
+        payload = run_session_start(plugin_root, "vscode")
+
+        # VS Code names its events the Claude Code way but runs Copilot's hook
+        # engine, and publishes nothing about which stdout shape it reads. Both
+        # are emitted so either reader finds its key. Injection happens once per
+        # session, so the duplicated payload costs a session, not a turn.
+        check("emits both envelopes rather than betting on one",
+              sorted(payload.keys()) == ["additionalContext", "hookSpecificOutput"])
+        check("hookEventName is VS Code's PascalCase spelling",
+              payload["hookSpecificOutput"].get("hookEventName") == "SessionStart")
+        check("the two envelopes carry the same context, not two versions of it",
+              payload["additionalContext"] == payload["hookSpecificOutput"]["additionalContext"])
+
+        ctx = payload["additionalContext"]
+        check("carries using-tbaguette's SKILL.md verbatim",
+              USING_TBAGUETTE_FIXTURE.rstrip("\n") in ctx)
+        check("names the slash-command form, not a Skill tool",
+              "/TBaguette:<skill-name>" in ctx and "use the 'Skill' tool" not in ctx)
+
+
+def check_user_prompt_submit_vscode() -> None:
+    print("user-prompt-submit: VS Code mode")
+    result = subprocess.run(
+        ["bash", str(USER_PROMPT_SUBMIT), "vscode"],
+        input=json.dumps({"prompt": "anything"}),
+        capture_output=True, text=True, check=False,
+    )
+    check("exits 0", result.returncode == 0)
+    payload = json.loads(result.stdout)
+
+    # The asymmetry with session-start is deliberate and is the point of this
+    # check. There, emitting both shapes is free. Here, a reader honoring both
+    # would rewrite the user's prompt AND add the nudge -- so this branch takes
+    # only the shape that cannot touch the prompt. If the guess is wrong the
+    # nudge is lost, which is what every failure path here already costs.
+    check("emits only the non-destructive envelope",
+          list(payload.keys()) == ["hookSpecificOutput"])
+    check("never returns modifiedPrompt on this surface",
+          "modifiedPrompt" not in result.stdout)
+    hook_output = payload["hookSpecificOutput"]
+    check("hookEventName is UserPromptSubmit",
+          hook_output.get("hookEventName") == "UserPromptSubmit")
+
+    ctx = hook_output.get("additionalContext", "")
+    check("carries Copilot's nudge, not Claude Code's",
+          "/TBaguette:<skill-name>" in ctx and "Skill tool" not in ctx)
+    check("closes the 'just a question' loophole", "Questions" in ctx)
+    check("closes the 'too small' loophole", "too small" in ctx)
+    check(f"stays short enough for per-turn cost ({len(ctx)} bytes)", len(ctx) < 600)
+
+
 def main() -> None:
     check_hooks_json_shape()
     check_hooks_copilot_json_shape()
+    check_hooks_vscode_json_shape()
     check_executable_bits()
     check_user_prompt_submit()
     check_user_prompt_submit_copilot()
+    check_user_prompt_submit_vscode()
     check_session_start_basic_shape()
     check_session_start_copilot_shape()
+    check_session_start_vscode_shape()
     check_run_hook_cmd_unix_passthrough()
     check_update_check_same_sha()
     check_update_check_update_available()

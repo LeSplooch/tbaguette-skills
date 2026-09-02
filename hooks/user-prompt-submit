@@ -16,11 +16,11 @@
 # description is already in the available-skills context. All this needs to
 # do is put the check back in front of the model before it starts responding.
 #
-# Usage: user-prompt-submit [claude|copilot]
+# Usage: user-prompt-submit [claude|copilot|vscode]
 #
-# The nudge is the same text either way; the delivery is not, because the
-# two harnesses offer different doors. Claude Code's UserPromptSubmit takes
-# additionalContext, which lands beside the prompt and leaves it alone.
+# The nudge is nearly the same text in all three; the delivery is not,
+# because the harnesses offer different doors. Claude Code's UserPromptSubmit
+# takes additionalContext, which lands beside the prompt and leaves it alone.
 # Copilot CLI's userPromptSubmitted takes only modifiedPrompt -- there is no
 # additionalContext on that event -- so the only way in is to hand back the
 # user's own prompt with the nudge prepended.
@@ -33,6 +33,15 @@
 # JSON runtime, malformed input, a payload with no string prompt -- exits 0
 # with an empty object, which Copilot reads as "no modification." A missing
 # nudge costs one turn's reminder. A mangled prompt costs the turn.
+#
+# vscode is the third combination and exists because VS Code is documented
+# for neither. It names the event Claude Code's way (UserPromptSubmit) and
+# runs Copilot's engine, and nothing published says which output it reads.
+# Unlike session-start -- where emitting both shapes is free -- emitting both
+# here would mean a reader honoring both gets the nudge twice AND has the
+# prompt rewritten. So vscode takes only the non-destructive shape. If that
+# guess is wrong the nudge is lost, which is the same cost every failure
+# path here already pays, and never the user's prompt.
 
 set -euo pipefail
 
@@ -40,8 +49,9 @@ OUTPUT_FORMAT="${1:-claude}"
 
 nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see TBaguette:using-tbaguette. If one plausibly applies, invoke it -- Skill tool, \`TBaguette:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
 
-# Same nudge, minus the tool that does not exist here. Copilot CLI reaches a
-# skill by description match or by the /TBaguette:<skill-name> slash command.
+# Same nudge, minus the tool that does not exist here. Copilot -- CLI and VS
+# Code alike -- reaches a skill by description match or by the
+# /TBaguette:<skill-name> slash command.
 copilot_nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see TBaguette:using-tbaguette. If one plausibly applies, invoke it as \`/TBaguette:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
 
 escape_for_json() {
@@ -107,6 +117,10 @@ sys.stdout.write(out)
     [ -n "$out" ] || out='{}'
     printf '%s\n' "$out"
     exit 0
+fi
+
+if [ "$OUTPUT_FORMAT" = "vscode" ]; then
+    nudge="$copilot_nudge"
 fi
 
 context="<TBAGUETTE_SKILL_CHECK>\n$(escape_for_json "$nudge")\n</TBAGUETTE_SKILL_CHECK>"

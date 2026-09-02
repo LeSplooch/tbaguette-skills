@@ -24,20 +24,25 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-02 — GitHub Copilot CLI is a real install now, not a footnote
+## 2026-09-02 — GitHub Copilot support, in all three places Copilot runs
 
-- TBaguette installs into GitHub Copilot CLI, with the same standing
-  check-the-skills-first rule it sets up everywhere else — injected when a
-  session starts, and put back in front of the model on every turn after that.
-  Two steps, because Copilot wants a marketplace before it wants a plugin:
+- TBaguette installs into GitHub Copilot now, with the same standing
+  check-the-skills-first rule it sets up everywhere else — put in front of the
+  model when a session starts, and again on every turn after that. Each surface
+  takes it a different way. **Copilot CLI:**
   `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then
-  `copilot plugin install TBaguette@tbaguette-dev`. The install prompt on the
-  site knows both, so pasting it into Copilot is enough.
+  `copilot plugin install TBaguette@tbaguette-dev`. **VS Code:** run
+  **Chat: Install Plugin From Source** from the Command Palette and give it
+  `https://github.com/LeSplooch/tbaguette-skills.git`. **The coding agent:**
+  it installs per repository, by adding TBaguette to `enabledPlugins` in that
+  repo's `.github/copilot/settings.json` — `PORTING.md` has the block to paste.
+  The install prompt on the site knows all three, so pasting it into whichever
+  one you're in is enough.
 - Copilot has no Skill tool, so being told to use one was sending you looking
   for a button that isn't there. On Copilot a skill is a slash command —
   `/TBaguette:orienting-in-unfamiliar-code` — and skills also load on their own
-  when what you're asking matches one. The bootstrap now says that, instead of
-  saying Claude Code's version of it.
+  when what you're asking matches one. TBaguette now says that where it's true
+  and keeps saying Claude Code's version where that's true instead.
 - The previous claim that Copilot CLI was already supported was optimistic. It
   could find the skills; nothing ever put the rule in front of the model, which
   is the part that makes them fire. If you set Copilot up on that basis before

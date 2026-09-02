@@ -4,7 +4,7 @@ This is a condensed adaptation of the `superpowers` plugin's own
 [porting guide](https://github.com/obra/superpowers/blob/main/docs/porting-to-a-new-harness.md)
 — credit there for the methodology and the vocabulary this document reuses
 (shapes A/B/C, the capability checklist). The Atelier's own harness layer was
-built by following it. If you're adding harness #11, read the source guide
+built by following it. If you're adding harness #13, read the source guide
 in full for the parts condensed away here (live-instance verification via a
 driven TUI, distribution/release mechanics, Windows specifics, PR process);
 this file covers the invariants and points you at the Atelier's own reference
@@ -77,7 +77,7 @@ command needs nothing new here).
 
 | If the harness… | Use shape | Copy from |
 |---|---|---|
-| runs a shell command at session start and reads its stdout | A (shell-hook) | `.cursor-plugin/` + `hooks/hooks-cursor.json`, or `.github/plugin/` + `hooks/hooks-copilot.json` |
+| runs a shell command at session start and reads its stdout | A (shell-hook) | `.cursor-plugin/` + `hooks/hooks-cursor.json`, or root `plugin.json` + `hooks/hooks-copilot.json` |
 | is a JS/TS plugin host with session/message lifecycle callbacks | B (in-process) | `.opencode/` — or `.pi/` if it has no native skill tool |
 | ships an extension-declared context file it always loads | C (instructions-file) | `gemini-extension.json` + `GEMINI.md` |
 
@@ -93,7 +93,9 @@ never loaded.
 | Claude Code | `.claude-plugin/plugin.json` + `hooks/hooks.json` | shell hook → `hooks/session-start`, plus per-turn `hooks/user-prompt-submit` | native `Skill` tool; no adapter needed |
 | Codex | `.codex-plugin/plugin.json` (empty `hooks`) | native skill discovery, no session-start hook | none shipped yet — no Atelier skill has needed one so far |
 | Cursor | `.cursor-plugin/plugin.json` + `hooks/hooks-cursor.json` | shell hook → `hooks/session-start`; no per-turn hook wired up yet | none needed (Claude Code–compatible tool surface) |
-| GitHub Copilot CLI | `.github/plugin/plugin.json` + `hooks/hooks-copilot.json` (installed with `copilot plugin marketplace add LeSplooch/tbaguette-skills` then `copilot plugin install TBaguette@tbaguette-dev`, reusing `.claude-plugin/marketplace.json` — Copilot CLI reads that location too) | shell hook → `hooks/session-start copilot`, plus per-turn `hooks/user-prompt-submit copilot` | `skills/using-tbaguette/references/copilot-tools.md` |
+| GitHub Copilot CLI | root `plugin.json` + `hooks/hooks-copilot.json` (installed with `copilot plugin marketplace add LeSplooch/tbaguette-skills` then `copilot plugin install TBaguette@tbaguette-dev`, reusing `.claude-plugin/marketplace.json` — the CLI reads that location too) | shell hook → `hooks/session-start copilot`, plus per-turn `hooks/user-prompt-submit copilot` | `skills/using-tbaguette/references/copilot-tools.md` |
+| Copilot in VS Code | root `plugin.json` + `com.github.copilot/hooks/hooks.json` (installed with the **Chat: Install Plugin From Source** command and this repo's git URL) | shell hook → `hooks/session-start vscode`, plus per-turn `hooks/user-prompt-submit vscode` | same file as the CLI |
+| Copilot coding agent | root `plugin.json`, enabled per repository in that repo's `.github/copilot/settings.json` (see below) | the CLI's `hooks/hooks-copilot.json`, run in the cloud sandbox — only the `bash` field is honored there | same file as the CLI |
 | Devin | `.devin-plugin/plugin.json` | Devin's own `skills/` convention | none shipped |
 | Gemini CLI | `gemini-extension.json` + `GEMINI.md` | instructions file `@`-include of `using-tbaguette` | none shipped |
 | Kimi Code | `.kimi-plugin/plugin.json` | manifest `sessionStart.skill` loads `using-tbaguette` | inline `skillInstructions` |
@@ -104,23 +106,60 @@ never loaded.
 When in doubt, read the files, not this table — same rule the source guide
 gives, still true here.
 
-Two things about the Copilot row are built from GitHub's documentation rather
-than from a driven live instance, which is what the source guide asks for and
-what this port could not do. Both are worth re-checking the first time anyone
-runs it for real. One: `${PLUGIN_ROOT}` in a plugin-shipped hook command —
-documented as both a token the harness expands and an environment variable it
-sets, and written here as `${PLUGIN_ROOT:-.}` so that the failure mode, if
-neither turns out to be true, is Cursor's cwd-relative assumption rather than a
-path rooted at `/`. Two: whether Copilot accepts a manifest `name` with capitals
-in it. `TBaguette` is kept because the plugin name is what prefixes every skill
-(`/TBaguette:naming-things`), and because `.claude-plugin/plugin.json` — a
-manifest location Copilot documents reading — has always carried it.
+### Enabling it for the Copilot coding agent
 
-Worth knowing before copying the per-turn hook: because Copilot's route in is
+The coding agent installs declaratively, in the repository it will work on
+rather than in this one. Both fields are objects keyed by name, not arrays,
+and the marketplace has to be registered because this one is not known by
+default:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "tbaguette-dev": {
+      "source": { "source": "github", "repo": "LeSplooch/tbaguette-skills" },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": {
+    "TBaguette@tbaguette-dev": true
+  }
+}
+```
+
+That goes in the target repository's `.github/copilot/settings.json`. This repo
+deliberately does not ship one of its own: a settings file here would enable the
+plugin for anyone whose coding agent touches *this* repository, which is a
+decision for them to make in theirs.
+
+### What the three Copilot rows are, and are not, verified against
+
+All three are built from GitHub's documentation rather than from a driven live
+instance, which is what the source guide asks for and what this port could not
+do. Worth re-checking the first time anyone runs each for real:
+
+- **`${PLUGIN_ROOT}` in a plugin-shipped hook command.** Documented both as a
+  token the harness expands and as an environment variable it sets. Written
+  here with a fallback chain, so that if neither turns out to be true the
+  failure mode is Cursor's cwd-relative assumption rather than a path rooted at
+  `/`. The VS Code file falls back through `CLAUDE_PLUGIN_ROOT` first, since
+  VS Code is documented as setting that one.
+- **A manifest `name` with capitals in it.** `TBaguette` is kept because the
+  plugin name is what prefixes every skill (`/TBaguette:naming-things`), and
+  because `.claude-plugin/plugin.json` — a manifest location both surfaces
+  document reading — has always carried it.
+- **What VS Code reads off a hook's stdout.** Its own docs describe the events
+  and say nothing about the output shape. `session-start vscode` emits Claude
+  Code's envelope and Copilot's side by side so either reader finds its key;
+  `user-prompt-submit vscode` deliberately does not, for the reason below.
+
+Worth knowing before copying the per-turn hook: because the CLI's route in is
 `modifiedPrompt`, the nudge becomes part of the prompt rather than sitting
-beside it, so a Copilot user can see it in their own transcript. Claude Code's
+beside it, so a CLI user can see it in their own transcript. Claude Code's
 `additionalContext` is invisible in the same position. That is a real cost, paid
-because the alternative is no per-turn reminder at all.
+because the alternative is no per-turn reminder at all — and it is exactly why
+the VS Code branch, where the right shape is unknown, takes the shape that
+cannot rewrite a prompt instead of emitting both and hoping.
 
 ## Gotchas carried over from the source guide
 
@@ -138,12 +177,25 @@ because the alternative is no per-turn reminder at all.
   looking for a registration API that doesn't exist.
 - **The harness's manifest search order beats this repo's naming
   convention.** Every other integration here lives in `.<harness>-plugin/`,
-  and a `.copilot-plugin/` would have been the consistent choice — Copilot
-  CLI would simply never have looked in it. Its search order is fixed
-  (`.plugin/plugin.json`, `plugin.json`, `.github/plugin/plugin.json`,
-  `.claude-plugin/plugin.json`), so the manifest goes in `.github/plugin/`.
-  Read the harness's own discovery rules before picking a directory name;
-  consistency you can't be found in isn't consistency.
+  and a `.copilot-plugin/` would have been the consistent choice — no
+  Copilot surface would ever have looked in it. Worse, the two lists are
+  not the same list: the CLI searches `.plugin/plugin.json`, `plugin.json`,
+  `.github/plugin/plugin.json`, `.claude-plugin/plugin.json`, while VS Code
+  searches root `plugin.json`, `.claude-plugin/plugin.json`,
+  `.plugin/plugin.json` and does **not** read `.github/plugin/` at all. The
+  repo root is the only entry on both, which is the whole reason the
+  manifest sits there. Intersect the discovery rules of every surface you
+  mean to serve before picking a path; consistency you can't be found in
+  isn't consistency.
+- **Two surfaces of one product can resolve the same manifest differently.**
+  The CLI honors an explicit `hooks` path in the manifest. VS Code ignores it
+  entirely and derives the path from the detected plugin format — Agent
+  Plugins 1.0 means `com.github.copilot/hooks/hooks.json`, Claude format
+  means `hooks/hooks.json`, Copilot format means a root `hooks.json`. That is
+  why the `$schema` line in `plugin.json` is load-bearing rather than
+  decorative, and why there are two Copilot hook files with different event
+  casing rather than one. Neither file is reachable from the other's
+  surface.
 - **A harness that reads `.claude-plugin/plugin.json` is not thereby
   installed.** Copilot CLI reads that file, which makes "it already works"
   tempting and wrong. That manifest declares no `hooks`, so Copilot falls

@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T04:33:47+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T04:33:47Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T05:09:30+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T05:09:30Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -76,7 +76,7 @@
 
 Before you start: confirm git is available (git --version). If it isn&#x27;t, tell me and stop — there&#x27;s nothing else to try.
 
-It is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Devin, GitHub Copilot CLI, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can&#x27;t tell which one you are, say so and ask me, rather than falling through to the first route below.
+It is a single git repo, https://github.com/LeSplooch/tbaguette-skills.git, shipping an integration for each harness it supports (Claude Code, Codex, Cursor, Devin, GitHub Copilot CLI, Copilot in VS Code, Copilot coding agent, Gemini CLI, Hermes, Kimi Code, OpenCode, Pi). Work out which one you are running in, then take the matching route — you know your own install mechanism better than this prompt does. If you genuinely can&#x27;t tell which one you are, say so and ask me, rather than falling through to the first route below.
 
 Route A — you read Claude Code&#x27;s skills directory. Target: ~/.claude/skills/TBaguette (Windows: %USERPROFILE%\.claude\skills\TBaguette). Figure out which case applies:
 
@@ -86,9 +86,9 @@ Route A — you read Claude Code&#x27;s skills directory. Target: ~/.claude/skil
 3. &lt;target&gt; exists, has content, isn&#x27;t a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a &quot;naming collision&quot;, and ask me whether to move it aside and re-clone, rather than doing that yourself.
 4. Anything else already at that path — stop. Do not delete or modify it. Tell me there&#x27;s a naming collision that needs a manual look.
 
-Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install TBaguette@tbaguette-dev`. If it&#x27;s a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
+Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install TBaguette@tbaguette-dev`. In VS Code it is not a shell command at all — tell me to run **Chat: Install Plugin From Source** from the Command Palette and paste https://github.com/LeSplooch/tbaguette-skills.git when it asks; don&#x27;t clone anything yourself in place of that. If it&#x27;s a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
 
-Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is &quot;tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git&quot;, added to the &quot;plugin&quot; array in opencode.json.
+Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is &quot;tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git&quot;, added to the &quot;plugin&quot; array in opencode.json. If you are the Copilot coding agent, the file is .github/copilot/settings.json in the repository you are working on, and both fields are objects rather than arrays: &quot;extraKnownMarketplaces&quot; gets {&quot;tbaguette-dev&quot;: {&quot;source&quot;: {&quot;source&quot;: &quot;github&quot;, &quot;repo&quot;: &quot;LeSplooch/tbaguette-skills&quot;}}} and &quot;enabledPlugins&quot; gets {&quot;TBaguette@tbaguette-dev&quot;: true}. That edits a repository I share with other people, so show it to me and wait, the same as any other config.
 
 Route D — none of those. Don&#x27;t invent a path. Find the directory your harness actually reads: its own dotdir in my home directory, or an existing skills/, plugins/, or extensions/ folder — confirmed to be there, not assumed. Clone-or-pull into a TBaguette-named directory inside it, following Route A&#x27;s four cases. If nothing you find is clearly right, clone nothing: tell me what you checked and ask.
 
@@ -147,10 +147,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/using-tbaguette/" data-fresh-at="2026-09-02T04:33:47.058505+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/using-tbaguette/" data-fresh-at="2026-09-02T06:33:47+02:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">using-tbaguette</span>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-09-02T04:33:47.058505+00:00">New</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T06:33:47+02:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message.</p>
   <span class="card__foot">
@@ -290,11 +290,11 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
-    <span class="notes__entry-title">GitHub Copilot CLI is a real install now, not a footnote</span>
+    <span class="notes__entry-title">GitHub Copilot support, in all three places Copilot runs</span>
   </h3>
   <ul class="notes__bullets">
-    <li>TBaguette installs into GitHub Copilot CLI, with the same standing check-the-skills-first rule it sets up everywhere else — injected when a session starts, and put back in front of the model on every turn after that. Two steps, because Copilot wants a marketplace before it wants a plugin: <code>copilot plugin marketplace add LeSplooch/tbaguette-skills</code>, then <code>copilot plugin install TBaguette@tbaguette-dev</code>. The install prompt on the site knows both, so pasting it into Copilot is enough.</li>
-    <li>Copilot has no Skill tool, so being told to use one was sending you looking for a button that isn't there. On Copilot a skill is a slash command — <code>/TBaguette:orienting-in-unfamiliar-code</code> — and skills also load on their own when what you're asking matches one. The bootstrap now says that, instead of saying Claude Code's version of it.</li>
+    <li>TBaguette installs into GitHub Copilot now, with the same standing check-the-skills-first rule it sets up everywhere else — put in front of the model when a session starts, and again on every turn after that. Each surface takes it a different way. <strong>Copilot CLI:</strong> <code>copilot plugin marketplace add LeSplooch/tbaguette-skills</code>, then <code>copilot plugin install TBaguette@tbaguette-dev</code>. <strong>VS Code:</strong> run <strong>Chat: Install Plugin From Source</strong> from the Command Palette and give it <code>https://github.com/LeSplooch/tbaguette-skills.git</code>. <strong>The coding agent:</strong> it installs per repository, by adding TBaguette to <code>enabledPlugins</code> in that repo's <code>.github/copilot/settings.json</code> — <code>PORTING.md</code> has the block to paste. The install prompt on the site knows all three, so pasting it into whichever one you're in is enough.</li>
+    <li>Copilot has no Skill tool, so being told to use one was sending you looking for a button that isn't there. On Copilot a skill is a slash command — <code>/TBaguette:orienting-in-unfamiliar-code</code> — and skills also load on their own when what you're asking matches one. TBaguette now says that where it's true and keeps saying Claude Code's version where that's true instead.</li>
     <li>The previous claim that Copilot CLI was already supported was optimistic. It could find the skills; nothing ever put the rule in front of the model, which is the part that makes them fire. If you set Copilot up on that basis before today, it is worth installing again.</li>
   </ul>
 </li>
@@ -416,7 +416,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/using-tbaguette/" data-search-card data-search-terms="using-tbaguette use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message. judgment and meta">
   <span class="card__name-row">
     <span class="card__name">using-tbaguette</span>
-    <span class="change-badge change-badge--new" data-fresh-at="2026-09-02T04:33:47.058505+00:00">New</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T06:33:47+02:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message.</p>
   <span class="card__foot">

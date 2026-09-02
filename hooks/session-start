@@ -11,17 +11,23 @@
 #      report, log) are judgment calls and stay with Claude, following that
 #      skill's own instructions using the data injected here.
 #
-# Usage: session-start [claude|copilot]
+# Usage: session-start [claude|copilot|vscode]
 #
-# The context it builds is identical either way -- only the JSON envelope
-# around it differs, because the two harnesses spell the same event
-# differently. Claude Code wants it nested under hookSpecificOutput with the
-# event named back at it; Copilot CLI's sessionStart wants a bare
-# {"additionalContext": ...}. That is one branch at the very bottom rather
-# than a second script, so the update-check logic above it -- the part with
-# four states and a network call -- stays single-sourced. A second copy of
-# it is a second thing to keep correct, and the copy nobody runs locally is
-# the one that rots.
+# The context it builds is identical in all three -- only the JSON envelope
+# around it differs, because the harnesses spell the same event differently.
+# Claude Code wants it nested under hookSpecificOutput with the event named
+# back at it. Copilot CLI's sessionStart wants a bare
+# {"additionalContext": ...}. VS Code's Copilot documents neither: it names
+# its events the Claude Code way (PascalCase SessionStart) but runs Copilot's
+# hook engine, and its own docs say nothing at all about what stdout shape
+# injects context. So vscode emits both, and whichever reader is on the other
+# end finds the key it is looking for. The cost is the payload written twice
+# into one object; only one branch of it is ever read.
+#
+# All three are one branch at the very bottom rather than three scripts, so
+# the update-check logic above -- the part with four states and a network
+# call -- stays single-sourced. A second copy of it is a second thing to keep
+# correct, and the copy nobody runs locally is the one that rots.
 
 set -euo pipefail
 
@@ -104,7 +110,7 @@ update_check_escaped=$(escape_for_json "$update_check_block")
 # commands -- so telling it to use a Skill tool would name a tool it cannot
 # find, on the one line whose whole job is making the other 95 skills
 # reachable.
-if [ "$OUTPUT_FORMAT" = "copilot" ]; then
+if [ "$OUTPUT_FORMAT" = "copilot" ] || [ "$OUTPUT_FORMAT" = "vscode" ]; then
     invocation_sentence="**Below is the full content of your 'TBaguette:using-tbaguette' skill. Every other TBaguette skill loads automatically when a prompt matches its description, and you can invoke one deliberately as the slash command '/TBaguette:<skill-name>'; skills/using-tbaguette/references/copilot-tools.md in this plugin has the rest of the mapping:**"
 else
     invocation_sentence="**Below is the full content of your 'TBaguette:using-tbaguette' skill - for all other TBaguette skills, use the 'Skill' tool with 'TBaguette:<skill-name>':**"
@@ -113,10 +119,17 @@ invocation_escaped=$(escape_for_json "$invocation_sentence")
 
 session_context="<EXTREMELY_IMPORTANT>\nYou have TBaguette.\n\n${invocation_escaped}\n\n${using_tbaguette_escaped}\n</EXTREMELY_IMPORTANT>\n\n<TBAGUETTE_UPDATE_CHECK>\n${update_check_escaped}\n</TBAGUETTE_UPDATE_CHECK>"
 
-if [ "$OUTPUT_FORMAT" = "copilot" ]; then
-    printf '{\n  "additionalContext": "%s"\n}\n' "$session_context"
-else
-    printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
-fi
+case "$OUTPUT_FORMAT" in
+    copilot)
+        printf '{\n  "additionalContext": "%s"\n}\n' "$session_context"
+        ;;
+    vscode)
+        printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  },\n  "additionalContext": "%s"\n}\n' \
+            "$session_context" "$session_context"
+        ;;
+    *)
+        printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
+        ;;
+esac
 
 exit 0

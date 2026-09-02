@@ -17,11 +17,12 @@ JSON_MANIFESTS = [
     ".claude-plugin/plugin.json",
     ".claude-plugin/marketplace.json",
     ".agents/plugins/marketplace.json",
+    "plugin.json",
     ".codex-plugin/plugin.json",
     ".cursor-plugin/plugin.json",
     ".devin-plugin/plugin.json",
-    ".github/plugin/plugin.json",
     ".kimi-plugin/plugin.json",
+    "com.github.copilot/hooks/hooks.json",
     "gemini-extension.json",
     "hooks/hooks.json",
     "hooks/hooks-copilot.json",
@@ -44,10 +45,10 @@ VERSIONED_MANIFESTS = [
     ".codex-plugin/plugin.json",
     ".cursor-plugin/plugin.json",
     ".devin-plugin/plugin.json",
-    ".github/plugin/plugin.json",
     ".kimi-plugin/plugin.json",
     "gemini-extension.json",
     "package.json",
+    "plugin.json",
 ]
 
 
@@ -82,32 +83,55 @@ class TestHarnessManifests(unittest.TestCase):
     def test_copilot_manifest_declares_its_own_hook_file(self):
         """Copilot CLI resolves a plugin's hooks by searching for hooks.json or
         hooks/hooks.json when the manifest doesn't name one -- and this repo has
-        a hooks/hooks.json in Claude Code's incompatible schema. So the Copilot
-        manifest naming its own hook file is not tidiness, it is the thing
-        keeping Copilot off a config it cannot parse."""
-        manifest = _load_json(".github/plugin/plugin.json")
-        hooks_rel = manifest.get("hooks")
-        self.assertEqual(hooks_rel, "./hooks/hooks-copilot.json")
+        a hooks/hooks.json in Claude Code's incompatible schema. So the manifest
+        naming its own hook file is not tidiness, it is the thing keeping the
+        CLI off a config it cannot parse."""
+        manifest = _load_json("plugin.json")
+        self.assertEqual(manifest.get("hooks"), "./hooks/hooks-copilot.json")
         self.assertTrue((REPO_ROOT / "hooks/hooks-copilot.json").is_file())
         self.assertEqual(manifest.get("skills"), "./skills/")
 
-    def test_copilot_manifest_is_not_moved_to_the_conventional_name(self):
-        """Every other integration here lives in .<harness>-plugin/, so this one
-        looks like the odd one out and reads as something to tidy up. It is not.
-        Copilot CLI searches a fixed list -- .plugin/plugin.json, plugin.json,
-        .github/plugin/plugin.json, .claude-plugin/plugin.json -- and
-        .copilot-plugin/ is not on it. Renaming for consistency would leave a
-        manifest that is never read, and nothing else in this suite would
-        notice, because every other assertion about it would still pass.
+    def test_copilot_manifest_is_at_the_repo_root(self):
+        """Every other integration here lives in .<harness>-plugin/, so a root
+        plugin.json looks like the odd one out and reads as something to tidy
+        away. It is not. Copilot CLI searches a fixed list -- .plugin/,
+        plugin.json, .github/plugin/, .claude-plugin/ -- and VS Code searches a
+        different one that does NOT include .github/plugin/ at all. The repo
+        root is the only location on both lists, which is why one manifest can
+        serve both. Moving it anywhere more conventional loses a surface
+        silently, with every other assertion in this suite still passing."""
+        self.assertTrue((REPO_ROOT / "plugin.json").is_file())
+        for tidier_looking in (".copilot-plugin", ".github/plugin"):
+            self.assertFalse(
+                (REPO_ROOT / tidier_looking).exists(),
+                f"{tidier_looking}/ is not read by both Copilot surfaces -- the "
+                "manifest belongs at the repo root",
+            )
 
-        Guarding the absence rather than the presence is the point: that the
-        file exists is already covered above, and this is the failure mode that
-        would otherwise ship silently."""
-        self.assertFalse(
-            (REPO_ROOT / ".copilot-plugin").exists(),
-            ".copilot-plugin/ is not a location Copilot CLI searches -- the "
-            "Copilot manifest belongs at .github/plugin/plugin.json",
+    def test_agent_plugins_schema_is_what_routes_vscode_to_its_hooks(self):
+        """VS Code ignores a manifest's hooks field entirely and derives the
+        path from the detected plugin format: Agent Plugins 1.0 resolves to
+        com.github.copilot/hooks/hooks.json, the other formats resolve
+        elsewhere. So the $schema line is not decoration -- drop it and VS Code
+        stops finding the only hook file written for it, while the CLI (which
+        does honor the hooks field) carries on working and hides the loss."""
+        manifest = _load_json("plugin.json")
+        self.assertEqual(
+            manifest.get("$schema"),
+            "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         )
+        self.assertTrue((REPO_ROOT / "com.github.copilot/hooks/hooks.json").is_file())
+
+    def test_the_two_copilot_hook_files_do_not_swap_event_casing(self):
+        """Two hook files, two casings, and they are not interchangeable: the
+        CLI's file is reached through the manifest and uses camelCase; VS Code's
+        is reached by format-derived path and uses the PascalCase names its docs
+        publish. Swapping them leaves both files present, both valid JSON, and
+        at least one surface with no bootstrap."""
+        cli = _load_json("hooks/hooks-copilot.json")["hooks"]
+        vscode = _load_json("com.github.copilot/hooks/hooks.json")["hooks"]
+        self.assertEqual(set(cli), {"sessionStart", "userPromptSubmitted"})
+        self.assertEqual(set(vscode), {"SessionStart", "UserPromptSubmit"})
 
     def test_published_copilot_install_command_names_a_real_marketplace(self):
         """`copilot plugin install TBaguette@tbaguette-dev` is printed on the
@@ -122,13 +146,17 @@ class TestHarnessManifests(unittest.TestCase):
 
         porting = (REPO_ROOT / "PORTING.md").read_text(encoding="utf-8")
         self.assertIn(f"copilot plugin install {spec}", porting)
+        # The coding agent installs the same plugin by the same spec, but
+        # declaratively -- so a rename would have to be chased into a second
+        # published snippet that no other assertion here would catch.
+        self.assertIn(f'"{spec}": true', porting)
 
         # Copilot resolves that entry's source to the repo root and searches
         # there for a manifest -- so the source has to point at a directory
         # this repo actually gives it one in.
         source = marketplace["plugins"][0]["source"]
         self.assertEqual(source, "./")
-        self.assertTrue((REPO_ROOT / source / ".github/plugin/plugin.json").is_file())
+        self.assertTrue((REPO_ROOT / source / "plugin.json").is_file())
 
     def test_package_json_points_at_real_files(self):
         package = _load_json("package.json")

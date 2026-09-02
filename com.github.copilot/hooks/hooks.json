@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "bash": "bash \"${PLUGIN_ROOT:-${CLAUDE_PLUGIN_ROOT:-.}}/hooks/run-hook.cmd\" session-start vscode",
+        "powershell": "& \"$(if ($env:PLUGIN_ROOT) { $env:PLUGIN_ROOT } elseif ($env:CLAUDE_PLUGIN_ROOT) { $env:CLAUDE_PLUGIN_ROOT } else { '.' })/hooks/run-hook.cmd\" session-start vscode",
+        "timeoutSec": 30
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "type": "command",
+        "bash": "bash \"${PLUGIN_ROOT:-${CLAUDE_PLUGIN_ROOT:-.}}/hooks/run-hook.cmd\" user-prompt-submit vscode",
+        "powershell": "& \"$(if ($env:PLUGIN_ROOT) { $env:PLUGIN_ROOT } elseif ($env:CLAUDE_PLUGIN_ROOT) { $env:CLAUDE_PLUGIN_ROOT } else { '.' })/hooks/run-hook.cmd\" user-prompt-submit vscode",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}
