@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T13:30:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:30:36Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T14:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T14:52:33Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">automating-repetition</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T15:23:22+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T14:52:33.439673+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
   <p class="lede">Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, or when a manual step is risky, irreversible, or easy to get wrong by hand.</p>
@@ -85,6 +85,8 @@
 <h2 id="check-before-you-act">Check before you act</h2>
 <p>The safe first version reports and changes nothing. Ship that, run it alongside the manual process for two to four weeks, and compare its proposed plan against what a person actually did. Two things are earned: the logic is validated before it can do harm, and the checking version has standalone value as a drift detector even if the acting version is never written.</p>
 <p>Progress along this ladder deliberately: report only, then print a plan without applying it, then act with confirmation, then act unattended. Jumping straight to the last rung for anything destructive is the standard origin story of a cleanup job that deleted live data.</p>
+<p>Where the trigger's inputs are <strong>already recorded</strong> — logs, transcripts, ticket history, a metrics store — the two-to-four-week wait is avoidable, and skipping it is not a shortcut. Replay the record and measure how often the proposed rule would have fired. A guard, alert, lint or hook that would have gone off on a fifth of all occasions is furniture before it is ever armed, and furniture is ignored, which is the same as absent while looking like coverage. That is knowable in seconds against history, and only knowable after a month of watching without it.</p>
+<p>Replay answers a second question the alongside-run answers slowly or not at all: <strong>does the condition separate anything?</strong> A rule fires on cases meeting some test, and it is worth confirming that the cases <em>not</em> meeting it exist at all. One measured example: a proposed check keyed on a threshold, and replay showed every occasion above that threshold shared the outcome the check was looking for — so the threshold was not selecting the interesting cases, it was selecting all of them, and the discriminator distinguished nothing. Watching would eventually have shown a stream of alerts; it would not have shown <em>why</em>.</p>
 <h2 id="a-bulk-edit-runs-once-so-the-ladder-does-not-apply">A bulk edit runs once, so the ladder does not apply</h2>
 <p>The ladder assumes a tool with a future — run it beside the manual process, compare, promote it a rung. A one-shot mechanical edit has no future to earn trust in. Thousands of generated values across dozens of files get exactly one run, and the review that would normally catch a mistake is precisely the review that a diff of that size defeats: nobody reads the four-thousandth line with the attention they gave the first.</p>
 <p>So the trust has to be built into the applier instead, and it takes two checks that fail in unrelated ways.</p>

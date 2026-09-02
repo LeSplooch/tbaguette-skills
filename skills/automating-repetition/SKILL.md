@@ -57,6 +57,22 @@ The safe first version reports and changes nothing. Ship that, run it alongside 
 
 Progress along this ladder deliberately: report only, then print a plan without applying it, then act with confirmation, then act unattended. Jumping straight to the last rung for anything destructive is the standard origin story of a cleanup job that deleted live data.
 
+Where the trigger's inputs are **already recorded** — logs, transcripts, ticket history, a metrics
+store — the two-to-four-week wait is avoidable, and skipping it is not a shortcut. Replay the record
+and measure how often the proposed rule would have fired. A guard, alert, lint or hook that would
+have gone off on a fifth of all occasions is furniture before it is ever armed, and furniture is
+ignored, which is the same as absent while looking like coverage. That is knowable in seconds
+against history, and only knowable after a month of watching without it.
+
+Replay answers a second question the alongside-run answers slowly or not at all: **does the
+condition separate anything?** A rule fires on cases meeting some test, and it is worth confirming
+that the cases *not* meeting it exist at all. One measured example: a proposed check keyed on a
+threshold, and replay showed every occasion above that threshold shared the outcome the check was
+looking for — so the threshold was not selecting the interesting cases, it was selecting all of
+them, and the discriminator distinguished nothing. Watching would eventually have shown a stream of
+alerts; it would not have shown *why*.
+
+
 ## A bulk edit runs once, so the ladder does not apply
 
 The ladder assumes a tool with a future — run it beside the manual process, compare, promote it a rung. A one-shot mechanical edit has no future to earn trust in. Thousands of generated values across dozens of files get exactly one run, and the review that would normally catch a mistake is precisely the review that a diff of that size defeats: nobody reads the four-thousandth line with the attention they gave the first.

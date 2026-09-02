@@ -24,6 +24,17 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — Measure a proposed check against history before arming it
+
+- `automating-repetition` adds a step ahead of its ladder: where the trigger's inputs are already
+  recorded — logs, transcripts, ticket history, a metrics store — replay them and measure how often
+  the rule would have fired, instead of shipping the reporting version and watching for a month. A
+  check that would have gone off on a fifth of all occasions is furniture before it is armed, and
+  that is knowable in seconds.
+- It also names the question the slow route answers poorly: whether the condition separates anything
+  at all. A threshold that every interesting case clears is not selecting them, it is selecting
+  everything, and a stream of alerts never explains why.
+
 ## 2026-09-02 — Five skills learn the failure that looks exactly like success
 
 - **`formidable`: an entrance must degrade to appearing, not to absence.** Put
