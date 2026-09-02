@@ -1,6 +1,6 @@
 ---
 name: designing-apis
-description: Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint, an IPC or wire message, a plugin contract, or an exported module boundary. Covers naming and granularity, required versus optional parameters, defaults, pagination and ordering, growing an enum, opaque tokens, separating write paths by data provenance, deprecation and sunset, versioning, and judging whether a proposed change is breaking.
+description: Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint, an IPC or wire message, a plugin contract, or an exported module boundary. Also use when a design keeps per-client state on the serving instance, or when session affinity is what makes it scale. Covers naming and granularity, required versus optional parameters, statelessness and per-request identity, defaults, pagination and ordering, growing an enum, opaque tokens, separating write paths by data provenance, deprecation and sunset, versioning, and judging whether a proposed change is breaking.
 ---
 
 # Designing APIs
@@ -52,6 +52,31 @@ Optional-with-default beats nullable for two reasons: null forces every caller t
 - Ordering must be total — tiebreak on a unique key. Ordering by a non-unique column under pagination silently duplicates and skips rows; this is the most common pagination bug and it never appears in small test data.
 - Enumerate the failures at design time; they are part of the type whether or not the language says so. Minimum: a stable machine-readable code, a retryable indicator, and an identifier the caller can quote back. See modeling-errors.
 - For every mutating operation, answer "the caller timed out and does not know the outcome" before shipping. If the answer is "they cannot tell", you designed a double-charge. See designing-for-idempotency.
+
+## Stateless core, identity per request
+
+An API that remembers who you are between calls has bound every subsequent call
+to one instance. Everything downstream inherits that: a load balancer needs
+affinity, a rolling deploy drops sessions, an instance cannot be replaced under
+load, and horizontal scaling stops being a configuration change and becomes a
+migration.
+
+Carry identity on every request instead, and let any instance serve any call.
+The handshake that establishes a session is usually the thing to remove — it
+buys a per-call saving that is rarely measurable and costs a property that is
+expensive to add back later.
+
+State that genuinely must persist across calls goes somewhere that is not the
+serving instance, and the API says so explicitly: a resource the client
+addresses, or a token the client holds and returns. The test is whether two
+consecutive calls can land on different instances with no coordination. If they
+cannot, that is a scaling limit written into the interface rather than into the
+deployment, which is the more expensive of the two places to have it.
+
+The exception is genuinely long-running work, which is a poor fit for a request
+that has to stay open. Give it a resource the client can create, poll, and
+cancel — long-lived connections then become an optimisation over polling rather
+than the mechanism the design depends on.
 
 ## Versioning and the compatibility contract
 

@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.30</span>
+      <span class="wordmark-version" dir="ltr">v1.0.31</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T17:00:19+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:00:19Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T17:01:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:01:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">designing-apis</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T17:01:14.504942+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Designing systems</span>
-  <p class="lede">Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint, an IPC or wire message, a plugin contract, or an exported module boundary. Covers naming and granularity, required versus optional parameters, defaults, pagination and ordering, growing an enum, opaque tokens, separating write paths by data provenance, deprecation and sunset, versioning, and judging whether a proposed change is breaking.</p>
+  <p class="lede">Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint, an IPC or wire message, a plugin contract, or an exported module boundary. Also use when a design keeps per-client state on the serving instance, or when session affinity is what makes it scale. Covers naming and granularity, required versus optional parameters, statelessness and per-request identity, defaults, pagination and ordering, growing an enum, opaque tokens, separating write paths by data provenance, deprecation and sunset, versioning, and judging whether a proposed change is breaking.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>The interface is the only part you cannot refactor later: everything behind it is yours, everything in front belongs to callers you cannot deploy. Design the failure modes, the growth path, and the compatibility promise before the happy path.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -81,6 +81,11 @@
 <ul><li><strong>Additive-only is the cheapest promise you can keep.</strong> Additive means: a new optional field, a new operation, a new enum member <em>only if tolerance shipped first</em>, a new error code <em>only if callers were told to handle unknown codes by class</em>.</li><li><strong>Never return a bare closed enum you may need to grow.</strong> Every closed enum is a promise you will never add a member. If growth is plausible, ship an <code>unknown</code>/default arm and the client's obligation to tolerate it from day one — <a class="skill-link" href="/tbaguette-skills/skills/schema-evolution/"><code>schema-evolution</code></a> covers the deployment order for actually adding the member later without crashing the fleet that hasn't caught up.</li><li>Opaque tokens — cursors, continuation handles, resume tokens, ETags — must be opaque in fact, not just in the docs: encode and sign or version the payload, and reject a token you did not mint. If callers can parse it, they will depend on it, and their dependency becomes your contract.</li><li>Reserve removed field names and tag numbers so a future field cannot reuse them and misparse old data — <a class="skill-link" href="/tbaguette-skills/skills/schema-evolution/"><code>schema-evolution</code></a> has the full mechanics of why reuse corrupts archived data with no error.</li><li>An open <code>extra: map&lt;string,string&gt;</code> bag becomes a schema you never versioned and can never validate. Prefer a reserved namespace with an explicit no-compatibility statement, or nothing.</li></ul>
 <h2 id="collections-errors-idempotency">Collections, errors, idempotency</h2>
 <ul><li>Any operation returning a collection needs, in v1: a <code>limit</code> with a documented default and maximum, a <strong>total</strong> ordering, and an opaque cursor. Retrofitting is breaking even behind a new version, because &quot;returns all of them&quot; is what callers built on.</li><li>Ordering must be total — tiebreak on a unique key. Ordering by a non-unique column under pagination silently duplicates and skips rows; this is the most common pagination bug and it never appears in small test data.</li><li>Enumerate the failures at design time; they are part of the type whether or not the language says so. Minimum: a stable machine-readable code, a retryable indicator, and an identifier the caller can quote back. See <a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/modeling-errors/">modeling-errors</a>.</li><li>For every mutating operation, answer &quot;the caller timed out and does not know the outcome&quot; before shipping. If the answer is &quot;they cannot tell&quot;, you designed a double-charge. See <a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/designing-for-idempotency/">designing-for-idempotency</a>.</li></ul>
+<h2 id="stateless-core-identity-per-request">Stateless core, identity per request</h2>
+<p>An API that remembers who you are between calls has bound every subsequent call to one instance. Everything downstream inherits that: a load balancer needs affinity, a rolling deploy drops sessions, an instance cannot be replaced under load, and horizontal scaling stops being a configuration change and becomes a migration.</p>
+<p>Carry identity on every request instead, and let any instance serve any call. The handshake that establishes a session is usually the thing to remove — it buys a per-call saving that is rarely measurable and costs a property that is expensive to add back later.</p>
+<p>State that genuinely must persist across calls goes somewhere that is not the serving instance, and the API says so explicitly: a resource the client addresses, or a token the client holds and returns. The test is whether two consecutive calls can land on different instances with no coordination. If they cannot, that is a scaling limit written into the interface rather than into the deployment, which is the more expensive of the two places to have it.</p>
+<p>The exception is genuinely long-running work, which is a poor fit for a request that has to stay open. Give it a resource the client can create, poll, and cancel — long-lived connections then become an optimisation over polling rather than the mechanism the design depends on.</p>
 <h2 id="versioning-and-the-compatibility-contract">Versioning and the compatibility contract</h2>
 <p>The menu of versioning strategies and their real costs is the same whether you're picking one now or dealing with a contract that's already shipped — see <a class="skill-link" href="/tbaguette-skills/skills/schema-evolution/"><code>schema-evolution</code></a>'s versioning table rather than a second copy here. What belongs at design time instead: state three things explicitly before shipping v1 — which surface is covered, how long an obsolete thing keeps working (in absolute time or releases), and how a break is signaled. <strong>Deprecation without a runtime signal is not deprecation</strong> — nobody reads changelogs; things that emit warnings get fixed. &quot;Experimental&quot; is only real when it is mechanically unpleasant to use (opt-in flag, <code>unstable_</code> prefix); a documentation note does not stop anyone from depending on it.</p>
 <h2 id="common-mistakes">Common mistakes</h2>

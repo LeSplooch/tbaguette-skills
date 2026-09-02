@@ -30,6 +30,13 @@ Work down this table. Each row answers a question the next row assumes.
 | 4 | Directory shape, one level deep | Which names are real boundaries and which are dumping grounds | You can guess where a new feature would go |
 | 5 | Churn: `git log --format= --name-only --since=6.months \| sort \| uniq -c \| sort -rn \| head -40` | Where work actually happens, which is rarely where the docs point | You have the top ten files |
 
+Check the root for a file the project wrote *for people in your position* —
+whatever this ecosystem currently calls the agent instruction file. It is the
+one document whose entire purpose is answering "what should I know before
+touching this", so it is worth a read before anything you have to infer. Treat
+it as intent rather than fact, the same as any prose in the repo: it says what
+someone wanted to be true, and the imports say what is.
+
 CI config is the most honest document in any repo: it is the only description of the project that fails when it goes stale. Read it before the README. The lockfile gives the real dependency set; the manifest gives the intended one.
 
 Count entry points before reading any. One entry point is a program; twelve is a platform, and "understanding it" means something different — you orient per entry point, not per repo.

@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.30</span>
+      <span class="wordmark-version" dir="ltr">v1.0.31</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T17:00:19+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:00:19Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T17:01:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:01:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">choosing-test-scope</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T15:30:36+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T17:01:14.504942+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Testing</span>
-  <p class="lede">Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, when a check passes because the setup it runs in is too small to show the difference it was written to catch, or when arguing about the testing pyramid, coverage targets, and test ratios.</p>
+  <p class="lede">Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, when a check passes because the setup it runs in is too small to show the difference it was written to catch, when writing or auditing a list of deliberately excluded cases — skipped tests, ignored rules, allowlists — or when arguing about the testing pyramid, coverage targets, and test ratios.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Test each behavior at the highest layer that can fail for exactly one reason. Higher than that and a red test names no cause; lower than that and a green test proves nothing about the shipped system.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -106,6 +106,12 @@
 <h2 id="when-a-bug-escapes-every-layer">When a bug escapes every layer</h2>
 <p>For each defect that reached production, ask one question: <strong>what is the lowest layer that could have caught this?</strong> Add the test there, and only there.</p>
 <p>If the honest answer is &quot;only end-to-end&quot;, the behavior exists solely in the wiring, and that is a design finding rather than a testing one — extract a seam so the decision lives somewhere addressable. Answering the question with &quot;add another end-to-end scenario&quot; every time is how the end-to-end suite reaches the size at which it stops working.</p>
+<h2 id="an-exclusion-names-a-mechanism-not-a-justification">An exclusion names a mechanism, not a justification</h2>
+<p>Every suite grows a list of things deliberately left out — skipped tests, ignored lint rules, allowlisted inputs, rows marked not-applicable — and each entry carries a reason. The reason is what decides whether the list stays honest, and there are two kinds that read identically at the moment of writing.</p>
+<p>A <strong>justification</strong> says why leaving it out was reasonable. A <strong>mechanism</strong> says what makes the case unreachable. The difference only shows up later: a justification stays true after the thing it justified stops being true, so the entry survives the change that should have deleted it, and the exclusion quietly starts hiding a live defect.</p>
+<table><thead><tr><th>Kind</th><th>Example</th><th>What happens when the world changes</th></tr></thead><tbody><tr><td>Justification</td><td>&quot;not applicable here&quot;, &quot;covered elsewhere&quot;, &quot;this path is theoretical&quot;</td><td>Still reads as true. Nothing prompts a re-check</td></tr><tr><td>Mechanism</td><td>&quot;the harness constructs the other implementation, which never reads this field&quot;</td><td>Becomes visibly false the moment the harness changes</td></tr></tbody></table>
+<p>The test for an entry you are about to write: <strong>state the reason so that it would become false if the case became reachable.</strong> If no edit to the system could falsify the sentence, it is a justification and it will outlive its own truth.</p>
+<p>This is enforceable rather than merely advisable — require every entry's reason to name a concrete component, and reject the ones that only name a feeling about the case. And when one entry in a list turns out to be wrong this way, read the rest of the list rather than fixing the one: the entries were written by the same person on the same day under the same misunderstanding, and they fail in batches.</p>
 <h2 id="an-accumulator-is-checked-against-a-second-derivation">An accumulator is checked against a second derivation</h2>
 <p>Sometimes the honest answer is &quot;no layer&quot;, because the escape was never about layers. A systematic offset — a per-unit figure that omits a fee the total includes, a rate applied at the wrong precision throughout — makes every individual number wrong in the same way and every individual number plausible, and anything that accumulates carries that error into every contribution it adds up. A test checking one of those numbers passes whenever the expectation holds the same mistake, and the expectation usually does, because it came from the same reading of the same specification by the same person. This is the one-party problem from &quot;Where a double's content comes from&quot; arriving as arithmetic rather than as a fixture: one belief, written down twice, agreeing with itself.</p>
 <p>Adding more point-checks does not escape that. A hundred of them agree a hundred times, at whichever layer they run. What breaks the tie is a quantity computed by a <strong>different route</strong> and asserted against the first: a running total accumulated from individual events against the same figure derived from opening and closing balances; inventory on hand against receipts minus shipments; a queue's processed count against enqueued minus remaining. Neither route is the authority. The assertion is that they agree, and a disagreement names a defect without yet saying which side holds it.</p>

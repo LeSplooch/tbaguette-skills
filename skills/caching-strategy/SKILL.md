@@ -1,6 +1,6 @@
 ---
 name: caching-strategy
-description: Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change, when choosing a TTL or cache key, when an expiring hot key or a cold restart floods the origin, when one tenant or locale sees another's data, or when latency work tempts a cache in front of a slow query.
+description: Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change, when choosing a TTL or cache key, when an expiring hot key or a cold restart floods the origin, when one tenant or locale sees another's data, when deciding whether a TTL should be chosen by the consumer or declared by each response, or when latency work tempts a cache in front of a slow query.
 ---
 
 # Caching strategy
@@ -44,6 +44,30 @@ Write it next to the cache, in seconds, with the consequence of exceeding it.
 | Authorization, quota, balance, inventory decisions | 0 | Cache the inputs if you must; never cache the decision |
 
 Two clocks matter and they differ: how stale the data may be for anyone, and how long an actor may fail to see their own change. The second is always shorter and is the one users report.
+
+## Let the response say how fresh it is
+
+A TTL chosen by the caller is a guess about data the caller does not own. The
+side that produced the value knows things the consumer cannot: whether this
+particular result is a stable catalog or a volatile counter, whether a write
+just landed, whether it is serving a fallback it would rather you did not keep.
+One TTL applied to every response from an endpoint has to be short enough for
+its most volatile result, which means the stable ones are re-fetched constantly
+for no reason.
+
+So let each response carry its own freshness, and have the consumer honour it
+with a local ceiling rather than replace it. Two rules keep that safe:
+
+- **A per-response directive can only shorten, never extend, what the consumer
+  was willing to hold.** Otherwise one bad value pins itself in every cache
+  downstream, and the only cure is a deploy.
+- **Absence is not zero.** A response that says nothing about its freshness
+  gets the consumer's default, not "do not cache" and not "cache forever" —
+  both of those turn a silent omission into a production incident.
+
+This does not replace anything below. Invalidation, stampede control, and key
+design all behave the same; what changes is that the number is now produced by
+the side with the information rather than assumed by the side without it.
 
 ## Invalidation
 

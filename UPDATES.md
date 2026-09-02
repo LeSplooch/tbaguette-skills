@@ -24,6 +24,44 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — Four more skills, and a null result that means the opposite of what it looks like
+
+- **`diagnosing-before-fixing`: an exact null result indicts the plumbing, not
+  the parameter.** Change a knob, watch the output not move, and you have two
+  very different findings depending on how exactly it did not move. A little, or
+  within noise, means the input arrived and its effect is weak. *Byte-identical*
+  means the input almost certainly never arrived — a real value with a real
+  effect essentially never lands on the same bytes, but one that was overwritten,
+  defaulted, or dropped on the way in does exactly that. Perfect identity is the
+  stronger signal and reads as the weaker one.
+- **`choosing-test-scope`: an exclusion names a mechanism, not a
+  justification.** Every skipped test, ignored rule and allowlist entry carries a
+  reason, and there are two kinds that look identical the day you write them. "Not
+  applicable here" stays true after it stops being true, so the entry outlives the
+  change that should have deleted it and starts hiding a live defect. "The harness
+  constructs the other implementation, which never reads this" goes visibly false
+  the moment that changes. Write the reason so it *could* be falsified — and when
+  one entry turns out wrong this way, re-read the whole list, because they fail in
+  batches.
+- **`orienting-in-unfamiliar-code` now says to check for the file the project
+  wrote for you.** Most repositories you land in have a root instruction file
+  written to answer exactly the question you are opening the repo with. It is
+  worth reading before anything you would otherwise have to infer — as intent
+  rather than as fact, like any prose in a repo.
+- **`designing-apis`: stateless core, identity per request.** An interface that
+  remembers you between calls has bound every later call to one instance, and
+  everything downstream inherits it — affinity, dropped sessions on deploy,
+  instances that cannot be replaced under load. The test is whether two
+  consecutive calls can land on different instances with no coordination; if they
+  cannot, that is a scaling limit written into the interface rather than the
+  deployment, which is the more expensive place to keep it.
+- **`caching-strategy`: let the response say how fresh it is.** A TTL chosen by
+  the caller is a guess about data the caller does not own, and one TTL per
+  endpoint has to be short enough for its most volatile result. Let each response
+  carry its own freshness, with two guardrails: a per-response directive may only
+  *shorten* what the consumer would hold, and a response that says nothing gets
+  the consumer's default — never "forever", never "not at all".
+
 ## 2026-09-02 — Five skills learn the failure that looks exactly like success
 
 - **`formidable`: an entrance must degrade to appearing, not to absence.** Put

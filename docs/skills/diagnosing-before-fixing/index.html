@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.30</span>
+      <span class="wordmark-version" dir="ltr">v1.0.31</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T17:00:19+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:00:19Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T17:01:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:01:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">diagnosing-before-fixing</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T00:47:32+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T17:01:14.504942+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Debugging and performance</span>
-  <p class="lede">Use when a bug, test failure, crash, or any behavior that doesn't match what the code is supposed to do needs a fix and none has been proposed yet, especially when the obvious quick fix is tempting under time pressure or an earlier attempted fix didn't hold. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it actually originates rather than where it surfaced, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.</p>
+  <p class="lede">Use when a bug, test failure, crash, or any behavior that doesn't match what the code is supposed to do needs a fix and none has been proposed yet, especially when the obvious quick fix is tempting under time pressure or an earlier attempted fix didn't hold. Also use when a parameter appears to have no effect at all, especially when the result is byte-identical rather than merely close. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it actually originates rather than where it surfaced, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A fix aimed at where a failure was noticed and a fix aimed at where it was caused are usually different changes — only the second one stays fixed. The loop is mechanical: reproduce the failure on demand, form one hypothesis specific enough to be wrong, design the smallest test that could prove it wrong, run it, and act on what comes back. Guessing under pressure feels faster; a thrash of unverified fixes is not — the systematic pass wins on wall-clock time, not just on correctness.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -120,6 +120,12 @@ after — waits for the condition:
 <p>The loop's <strong>Act</strong> step takes the result and reads it as confirmation or refutation. That reading assumes something nobody checked: that the experiment ran. A test built to settle a hypothesis is new code, and new code has its own bugs — so a bad result has two possible authors, the world or the instrument, and they call for opposite responses. Believing the instrument retires a hypothesis that may be correct, and retires it silently, because a refuted hypothesis leaves nothing behind pointing at itself.</p>
 <p>The discriminator is available before any analysis, and the counting is the whole of it: <strong>count the ways the result is anomalous, and ask whether one wrong idea explains all of them.</strong> A wrong hypothesis is a single mistaken belief about the cause, so it usually surfaces as a single deviation — the number moved the wrong way, or failed to move. A run that simultaneously never finishes a third of its attempts, triples its latency, and contains none of the category the change was built to select for is three unrelated failures, and no one wrong idea about the cause produces three unrelated failures. That is the signature of an apparatus that is broken, and the honest verdict on it is <em>no result</em>, not <em>refuted</em>.</p>
 <p>One anomaly is evidence and several are a symptom, which inverts the usual instinct that a worse result is a stronger signal. When the count is high, stop reading the verdict and go read the new code — the hypothesis has not been tested yet, whatever the numbers say.</p>
+<h2 id="an-exact-null-result-indicts-the-plumbing-not-the-parameter">An exact null result indicts the plumbing, not the parameter</h2>
+<p>The section above handles several anomalies at once. This is its single-anomaly complement, and the discriminator is not <em>how many</em> deviations there are but <em>how exact</em> the one is.</p>
+<p>A knob is changed and the output does not move. The conclusion offers itself immediately — the knob does not matter — and it is usually right. But there are two ways for an output not to move, and they are distinguishable:</p>
+<table><thead><tr><th>What you see</th><th>What it says</th></tr></thead><tbody><tr><td>The output changed a little, or within noise</td><td>The input arrived and its effect is weak. The finding is about the parameter</td></tr><tr><td>The output is <strong>byte-identical</strong> to the baseline</td><td>The input very likely never arrived. The finding is about everything between the knob and the code that reads it</td></tr></tbody></table>
+<p>Perfect identity is the stronger signal and reads as the weaker one, because &quot;no difference at all&quot; sounds like a more decisive version of &quot;no difference&quot;. It is a different claim. A real input with a real effect almost never lands on exactly the same bytes; something that was overwritten, defaulted, normalised, cached, or dropped on the way in produces exactly that, every time.</p>
+<p>So when a null result is exact, do not retire the hypothesis. Trace the value from where you set it to where it is read, and find out whether it survived — a log at the point of use settles it in one run. The usual culprits are the harness itself, a default applied after your assignment, and a config layer that silently ignores unknown keys.</p>
 <h2 id="a-guard-that-refuses-to-run-has-already-measured-something">A guard that refuses to run has already measured something</h2>
 <p>The instrument can also refuse to take a reading, and a refusal arrives looking like an obstacle rather than like data. A preflight check, a version gate, a compatibility guard, a health probe that declines to proceed — the immediate reflex is to find the flag that suppresses it, because the goal was to run the thing and the guard is what is between here and running it.</p>
 <p>That reflex discards the most informative result available. A guard exists because somebody knew something about the target that whoever is bypassing it does not, and it fires precisely when that knowledge applies. An installer that notices it predates its host by dozens of releases and exits cleanly is not being fussy: forced past, it would have produced a confident, silent no-op against an integration point that no longer exists. The refusal was the accurate statement about fitness, and it was free.</p>

@@ -1,6 +1,6 @@
 ---
 name: choosing-test-scope
-description: Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, when a check passes because the setup it runs in is too small to show the difference it was written to catch, or when arguing about the testing pyramid, coverage targets, and test ratios.
+description: Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, when a check passes because the setup it runs in is too small to show the difference it was written to catch, when writing or auditing a list of deliberately excluded cases — skipped tests, ignored rules, allowlists — or when arguing about the testing pyramid, coverage targets, and test ratios.
 ---
 
 # Choosing test scope
@@ -122,6 +122,37 @@ revisited, and the defect ships behind a passing test that everyone believes.
 For each defect that reached production, ask one question: **what is the lowest layer that could have caught this?** Add the test there, and only there.
 
 If the honest answer is "only end-to-end", the behavior exists solely in the wiring, and that is a design finding rather than a testing one — extract a seam so the decision lives somewhere addressable. Answering the question with "add another end-to-end scenario" every time is how the end-to-end suite reaches the size at which it stops working.
+
+## An exclusion names a mechanism, not a justification
+
+Every suite grows a list of things deliberately left out — skipped tests,
+ignored lint rules, allowlisted inputs, rows marked not-applicable — and each
+entry carries a reason. The reason is what decides whether the list stays
+honest, and there are two kinds that read identically at the moment of
+writing.
+
+A **justification** says why leaving it out was reasonable. A **mechanism**
+says what makes the case unreachable. The difference only shows up later: a
+justification stays true after the thing it justified stops being true, so the
+entry survives the change that should have deleted it, and the exclusion
+quietly starts hiding a live defect.
+
+| Kind | Example | What happens when the world changes |
+|---|---|---|
+| Justification | "not applicable here", "covered elsewhere", "this path is theoretical" | Still reads as true. Nothing prompts a re-check |
+| Mechanism | "the harness constructs the other implementation, which never reads this field" | Becomes visibly false the moment the harness changes |
+
+The test for an entry you are about to write: **state the reason so that it
+would become false if the case became reachable.** If no edit to the system
+could falsify the sentence, it is a justification and it will outlive its own
+truth.
+
+This is enforceable rather than merely advisable — require every entry's reason
+to name a concrete component, and reject the ones that only name a feeling
+about the case. And when one entry in a list turns out to be wrong this way,
+read the rest of the list rather than fixing the one: the entries were written
+by the same person on the same day under the same misunderstanding, and they
+fail in batches.
 
 ## An accumulator is checked against a second derivation
 

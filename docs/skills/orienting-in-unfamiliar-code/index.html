@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.30</span>
+      <span class="wordmark-version" dir="ltr">v1.0.31</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T17:00:19+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:00:19Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T17:01:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:01:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">orienting-in-unfamiliar-code</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T17:01:14.504942+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Reading code</span>
   <p class="lede">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project, or being asked to change code that nobody present wrote. Covers where to start reading, locating entry points and real module boundaries, telling live code from dead, finding where the work actually happens, and reconciling documented architecture with the one the imports reveal.</p>
@@ -75,6 +75,7 @@
 <h2 id="the-read-order">The read order</h2>
 <p>Work down this table. Each row answers a question the next row assumes.</p>
 <table><thead><tr><th>#</th><th>Read</th><th>Answers</th><th>Done when</th></tr></thead><tbody><tr><td>1</td><td>Build and manifest files, lockfile, CI config, container/deploy definitions</td><td>What this repo produces, what it depends on, how it is built, tested, and run</td><td>You can name every artifact the repo emits</td></tr><tr><td>2</td><td>Entry points: <code>main</code>, server bootstrap, CLI dispatch, exported API surface, job and migration entries</td><td>Where control begins, and how many beginnings there are</td><td>You have counted them</td></tr><tr><td>3</td><td>Test names only — not bodies</td><td>The intended contract, stated as a requirements list someone maintained</td><td>You can list the features from test names alone</td></tr><tr><td>4</td><td>Directory shape, one level deep</td><td>Which names are real boundaries and which are dumping grounds</td><td>You can guess where a new feature would go</td></tr><tr><td>5</td><td>Churn: <code>git log --format= --name-only --since=6.months | sort | uniq -c | sort -rn | head -40</code></td><td>Where work actually happens, which is rarely where the docs point</td><td>You have the top ten files</td></tr></tbody></table>
+<p>Check the root for a file the project wrote <em>for people in your position</em> — whatever this ecosystem currently calls the agent instruction file. It is the one document whose entire purpose is answering &quot;what should I know before touching this&quot;, so it is worth a read before anything you have to infer. Treat it as intent rather than fact, the same as any prose in the repo: it says what someone wanted to be true, and the imports say what is.</p>
 <p>CI config is the most honest document in any repo: it is the only description of the project that fails when it goes stale. Read it before the README. The lockfile gives the real dependency set; the manifest gives the intended one.</p>
 <p>Count entry points before reading any. One entry point is a program; twelve is a platform, and &quot;understanding it&quot; means something different — you orient per entry point, not per repo.</p>
 <h2 id="breadth-before-depth">Breadth before depth</h2>

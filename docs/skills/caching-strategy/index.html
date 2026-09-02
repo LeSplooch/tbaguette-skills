@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.30</span>
+      <span class="wordmark-version" dir="ltr">v1.0.31</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T17:00:19+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:00:19Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T17:01:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:01:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">caching-strategy</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T17:01:14.504942+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Designing systems</span>
-  <p class="lede">Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change, when choosing a TTL or cache key, when an expiring hot key or a cold restart floods the origin, when one tenant or locale sees another's data, or when latency work tempts a cache in front of a slow query.</p>
+  <p class="lede">Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change, when choosing a TTL or cache key, when an expiring hot key or a cold restart floods the origin, when one tenant or locale sees another's data, when deciding whether a TTL should be chosen by the consumer or declared by each response, or when latency work tempts a cache in front of a slow query.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A cache is a second copy of the truth that is permitted to be wrong. You are buying latency with correctness, and the only real design work is deciding how wrong, for how long, and who is harmed when it happens. &quot;Cached&quot; without a number attached is undefined behavior with a hit-rate graph.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -80,6 +80,11 @@
 <p>Write it next to the cache, in seconds, with the consequence of exceeding it.</p>
 <table><thead><tr><th>Data</th><th>Typical budget</th><th>Note</th></tr></thead><tbody><tr><td>Immutable or content-addressed artifacts</td><td>unbounded</td><td>Version in the key; there is nothing to invalidate</td></tr><tr><td>Reference data, catalogs, currency and geo tables</td><td>hours–days</td><td>Long TTL plus an explicit purge on publish</td></tr><tr><td>Config and feature state</td><td>5–60s</td><td>Past a minute, your mitigation is slower than your incident</td></tr><tr><td>Aggregates, counts, rankings</td><td>10s–5min</td><td>Show &quot;as of&quot; and the staleness becomes a feature instead of a bug report</td></tr><tr><td>A user's own writes</td><td>0</td><td>Read-your-writes: bypass on the write path or update in place</td></tr><tr><td>Authorization, quota, balance, inventory decisions</td><td>0</td><td>Cache the inputs if you must; never cache the decision</td></tr></tbody></table>
 <p>Two clocks matter and they differ: how stale the data may be for anyone, and how long an actor may fail to see their own change. The second is always shorter and is the one users report.</p>
+<h2 id="let-the-response-say-how-fresh-it-is">Let the response say how fresh it is</h2>
+<p>A TTL chosen by the caller is a guess about data the caller does not own. The side that produced the value knows things the consumer cannot: whether this particular result is a stable catalog or a volatile counter, whether a write just landed, whether it is serving a fallback it would rather you did not keep. One TTL applied to every response from an endpoint has to be short enough for its most volatile result, which means the stable ones are re-fetched constantly for no reason.</p>
+<p>So let each response carry its own freshness, and have the consumer honour it with a local ceiling rather than replace it. Two rules keep that safe:</p>
+<ul><li><strong>A per-response directive can only shorten, never extend, what the consumer was willing to hold.</strong> Otherwise one bad value pins itself in every cache downstream, and the only cure is a deploy.</li><li><strong>Absence is not zero.</strong> A response that says nothing about its freshness gets the consumer's default, not &quot;do not cache&quot; and not &quot;cache forever&quot; — both of those turn a silent omission into a production incident.</li></ul>
+<p>This does not replace anything below. Invalidation, stampede control, and key design all behave the same; what changes is that the number is now produced by the side with the information rather than assumed by the side without it.</p>
 <h2 id="invalidation">Invalidation</h2>
 <table><thead><tr><th>Strategy</th><th>Cost</th><th>Failure mode</th></tr></thead><tbody><tr><td>TTL expiry</td><td>Trivial, no coupling to writers</td><td>Every value is silently wrong for up to one TTL; synchronized expiry causes stampedes</td></tr><tr><td>Write-through</td><td>Write latency, and writers must know about the cache</td><td>Any writer that bypasses the path — a migration, an admin tool, a second service — leaves the entry wrong forever</td></tr><tr><td>Write-behind</td><td>Fastest writes, absorbs bursts</td><td>Loss window on crash, and ordering inversions when two writes race</td></tr><tr><td>Explicit purge</td><td>Precise, budget can be near zero</td><td>You must enumerate every derived key an entity touches; the one nobody remembered is the classic stale bug, and purge is a distributed operation that fails silently</td></tr><tr><td>Versioned / immutable keys</td><td>One indirection to read the current version</td><td>Nothing to invalidate: write a new key, flip a pointer. Old entries linger until evicted, so size for it</td></tr></tbody></table>
 <p>Default to TTL plus versioned keys, and add explicit purge only where the budget is shorter than the TTL you can afford. Treat every purge as best-effort: the TTL must remain a correct-if-slow backstop, because purges get dropped.</p>

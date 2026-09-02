@@ -1,6 +1,6 @@
 ---
 name: diagnosing-before-fixing
-description: Use when a bug, test failure, crash, or any behavior that doesn't match what the code is supposed to do needs a fix and none has been proposed yet, especially when the obvious quick fix is tempting under time pressure or an earlier attempted fix didn't hold. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it actually originates rather than where it surfaced, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.
+description: Use when a bug, test failure, crash, or any behavior that doesn't match what the code is supposed to do needs a fix and none has been proposed yet, especially when the obvious quick fix is tempting under time pressure or an earlier attempted fix didn't hold. Also use when a parameter appears to have no effect at all, especially when the result is byte-identical rather than merely close. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it actually originates rather than where it surfaced, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.
 ---
 
 # Diagnosing before fixing
@@ -122,6 +122,33 @@ The loop's **Act** step takes the result and reads it as confirmation or refutat
 The discriminator is available before any analysis, and the counting is the whole of it: **count the ways the result is anomalous, and ask whether one wrong idea explains all of them.** A wrong hypothesis is a single mistaken belief about the cause, so it usually surfaces as a single deviation — the number moved the wrong way, or failed to move. A run that simultaneously never finishes a third of its attempts, triples its latency, and contains none of the category the change was built to select for is three unrelated failures, and no one wrong idea about the cause produces three unrelated failures. That is the signature of an apparatus that is broken, and the honest verdict on it is *no result*, not *refuted*.
 
 One anomaly is evidence and several are a symptom, which inverts the usual instinct that a worse result is a stronger signal. When the count is high, stop reading the verdict and go read the new code — the hypothesis has not been tested yet, whatever the numbers say.
+
+## An exact null result indicts the plumbing, not the parameter
+
+The section above handles several anomalies at once. This is its
+single-anomaly complement, and the discriminator is not *how many* deviations
+there are but *how exact* the one is.
+
+A knob is changed and the output does not move. The conclusion offers itself
+immediately — the knob does not matter — and it is usually right. But there are
+two ways for an output not to move, and they are distinguishable:
+
+| What you see | What it says |
+|---|---|
+| The output changed a little, or within noise | The input arrived and its effect is weak. The finding is about the parameter |
+| The output is **byte-identical** to the baseline | The input very likely never arrived. The finding is about everything between the knob and the code that reads it |
+
+Perfect identity is the stronger signal and reads as the weaker one, because
+"no difference at all" sounds like a more decisive version of "no difference".
+It is a different claim. A real input with a real effect almost never lands on
+exactly the same bytes; something that was overwritten, defaulted, normalised,
+cached, or dropped on the way in produces exactly that, every time.
+
+So when a null result is exact, do not retire the hypothesis. Trace the value
+from where you set it to where it is read, and find out whether it survived —
+a log at the point of use settles it in one run. The usual culprits are the
+harness itself, a default applied after your assignment, and a config layer
+that silently ignores unknown keys.
 
 ## A guard that refuses to run has already measured something
 
