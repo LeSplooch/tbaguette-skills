@@ -1897,10 +1897,6 @@ code {
      vh-sized dialog is partly under the address bar until the user scrolls. */
   max-height: min(84svh, 54rem);
   padding: 0;
-  /* The dialog is its own scroll container in one row only, so the head and
-     foot stay put while the entries move under them. */
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
   overflow: hidden;
   color: var(--text-primary);
   background: var(--surface);
@@ -1913,6 +1909,27 @@ code {
     0 0 0 1px color-mix(in oklch, var(--accent) 12%, transparent),
     0 30px 60px -24px hsl(var(--shadow-ink) / 0.75),
     0 0 80px -28px color-mix(in oklch, var(--accent-solid) 60%, transparent);
+}
+
+/* Both states declared, and `display` kept out of the base rule above.
+   A closed <dialog> is hidden by exactly one thing: `dialog:not([open]) {
+   display: none }` in the UA stylesheet. Any unconditional `display` here is
+   an author declaration, so it wins, and the dialog then renders in normal
+   flow as the last child of <body> — a second, full-height copy of every
+   entry pinned to the bottom of the page, which also makes closing it look
+   like it did not work. Both symptoms, one declaration.
+
+   The `:not([open])` rule is belt and braces: it does not depend on the UA
+   sheet still saying what it says today, and it is the second time on this
+   element that leaning on a UA default has cost a visible bug — the first
+   was `margin: auto`, deleted by the `* { margin: 0 }` reset. */
+.notes-dialog:not([open]) { display: none; }
+
+.notes-dialog[open] {
+  /* Its own scroll container in one row only, so the head and foot stay put
+     while the entries move under them. */
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
 }
 
 /* The gilded rule, the same gesture the header and .update-modal make —

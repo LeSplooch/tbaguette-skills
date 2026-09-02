@@ -783,6 +783,19 @@ def check_update_notes() -> None:
     check("the archive dialog restores the margin the reset took from it, "
           "which is the whole of its centring",
           "margin: auto;" in dialog_rule)
+    # The same class of defect, twice on the same element. A closed <dialog> is
+    # hidden by one thing, `dialog:not([open]) { display: none }` in the UA
+    # sheet, so any unconditional `display` in the base rule wins and the
+    # dialog renders in normal flow as the last child of <body> — a full copy
+    # of every entry at the bottom of the page, and a close that looks broken.
+    check("the archive dialog declares no unconditional display, which would "
+          "override the UA rule that is the only thing hiding it when closed",
+          "display:" not in dialog_rule)
+    check("...and hides itself explicitly rather than relying on that UA rule",
+          ".notes-dialog:not([open]) { display: none; }" in styles)
+    check("...with the grid it needs scoped to the open state",
+          ".notes-dialog[open] {" in styles
+          and "display: grid;" in styles.split(".notes-dialog[open] {", 1)[1].split("}", 1)[0])
 
     lone = render_index(categories, {}, update_notes=[newest])
     check("a single entry gets no archive control — opening a dialog to read "
