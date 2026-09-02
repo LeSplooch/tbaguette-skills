@@ -24,8 +24,18 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-02 — If you are not on Claude Code, this is the update that matters
+## 2026-09-02 — Every harness works now, and a skill learned why they hadn't
 
+- **`confirming-before-claiming-done` gained the section this week was a
+  worked example of.** A test suite that only compares a project against itself
+  proves the parts agree with each other, which is a different claim from the
+  one you are making when you say an integration works — and it is most
+  convincing exactly when it is most wrong. The new section gives you a
+  mechanical tell for it (read the assertions and ask which would fail if the
+  other side changed its mind), what to do when you cannot exercise the real
+  other side, and why a process exiting 0 says nothing about whether anything
+  received what it wrote. If you write code that has to satisfy someone else's
+  format, this one is worth reading on its own.
 - **Three integrations were delivering nothing, and none of them looked
   broken.** The files were there, the hooks ran, they exited cleanly — and the
   harness quietly ignored an output shape it did not recognise. All three are
