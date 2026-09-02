@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.29</span>
+      <span class="wordmark-version" dir="ltr">v1.0.30</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T13:27:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:27:32Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T13:30:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:30:36Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">configuration-management</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T13:30:36.175317+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Designing systems</span>
-  <p class="lede">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together, when something works in staging but not in production, when a missing or malformed setting surfaces as a null or a crash hours after startup, when standing up a new environment or deployment target, or when deciding whether a value belongs in code, config, a secret store, or a feature flag system.</p>
+  <p class="lede">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together, when something works in staging but not in production, when a missing or malformed setting surfaces as a null or a crash hours after startup, when standing up a new environment or deployment target, when deciding whether a value belongs in code, config, a secret store, or a feature flag system, or when a config file was placed where a project's naming convention implied rather than where the tool actually searches.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Configuration is what varies between deployments of the same build, and nothing else. A value that does not vary is code that has been moved somewhere it cannot be typed, tested, or found. A value whose disclosure is harmful is a secret and follows different rules entirely. Getting these three categories confused is the source of most deployment surprises.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -79,6 +79,12 @@
 <h2 id="fail-fast-at-startup">Fail fast at startup</h2>
 <p>Load, parse, and validate the entire configuration into one typed structure before the process accepts any work. Nothing downstream reads raw environment or files.</p>
 <ul><li><strong>Validate everything at once and report every failure</strong>, not the first. Each message names the key, what was wrong, what was expected, and which source should supply it. A startup that dies three times in a row over three different keys wastes three deploy cycles.</li><li><strong>Check more than presence:</strong> type, range and units, format, and cross-field consistency — if TLS is enabled a certificate path is required; if a worker count is set, so is a queue bound. Cross-field validation is where real misconfiguration lives, since each value is individually plausible.</li><li><strong>Exit non-zero.</strong> Do not start degraded, do not substitute a default for a value the operator explicitly set to garbage, and never let a typo silently fall back to a working default — that produces the deployment that passes health checks while pointing at the wrong database.</li><li><strong>Never read config at the call site.</strong> A lookup buried on a code path that runs only during checkout is a config error that surfaces three hours later as a null, in a stack trace that names the wrong subsystem. Startup validation converts every one of those into a boot failure.</li><li><strong>A flag is the one thing that rule does not cover, and the test is checkable rather than a matter of taste:</strong> if the value must change without a restart, it is not config, and evaluating it at the call site is the mechanism rather than a violation of it. What gets validated at startup there is the flag client's <em>wiring</em> — endpoint reachable, credentials valid, static fallback compiled in — while the <em>value</em> is read per request. Read the two rules as one and you build a flag loaded once at boot, which cannot flip during the incident it was built for; that failure passes review because each rule is correct on its own.</li><li><strong>Fail fast means fast:</strong> validation belongs before listeners bind and before the instance reports ready, so a bad rollout stops at the first replica instead of taking the fleet.</li></ul>
+<h2 id="discovery-comes-before-precedence">Discovery comes before precedence</h2>
+<p>Precedence decides which of several values wins. It only applies to files the tool actually opened, and a file the tool never looks for has no precedence at all — it has no effect whatsoever, and it fails the way an unread file always fails, which is silently and while looking completely correct in the diff.</p>
+<p>Most tools search a <strong>fixed, documented list of paths</strong>, in order. That list is the tool's, not yours. A file placed to match a project's own naming convention, or to sit next to its siblings, or because it reads better there, is invisible unless that location happens to be on the list. Consistency you cannot be found in is not consistency.</p>
+<p>Two rules follow, and the second is the one that bites:</p>
+<ul><li><strong>Read the discovery rules before choosing the path</strong>, and prefer the earliest location on the list that fits, so a lower-priority file elsewhere cannot quietly win.</li><li><strong>Where several tools, or several surfaces of one tool, are meant to read the same config, use the intersection of their lists</strong> — not the union, and not the one you checked first. Two surfaces of the same product routinely search different paths, and a location on only one of them serves only one of them while appearing to serve both.</li></ul>
+<p>The check is cheap and specific: after placing the file, get the tool to <em>tell you</em> it read it — a verbose flag, a config dump, a startup log, a deliberately invalid value that should make it complain. A tool that starts cleanly is not evidence, because a tool that found nothing also starts cleanly.</p>
 <h2 id="precedence-declared-once">Precedence, declared once</h2>
 <p>Declare the order in one place and apply it in exactly one loader:</p>
 <p><strong>built-in defaults &lt; config file &lt; environment &lt; command-line flags</strong> (later wins)</p>

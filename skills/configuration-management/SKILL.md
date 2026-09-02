@@ -1,6 +1,6 @@
 ---
 name: configuration-management
-description: Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together, when something works in staging but not in production, when a missing or malformed setting surfaces as a null or a crash hours after startup, when standing up a new environment or deployment target, or when deciding whether a value belongs in code, config, a secret store, or a feature flag system.
+description: Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together, when something works in staging but not in production, when a missing or malformed setting surfaces as a null or a crash hours after startup, when standing up a new environment or deployment target, when deciding whether a value belongs in code, config, a secret store, or a feature flag system, or when a config file was placed where a project's naming convention implied rather than where the tool actually searches.
 ---
 
 # Configuration management
@@ -41,6 +41,35 @@ Load, parse, and validate the entire configuration into one typed structure befo
 - **Never read config at the call site.** A lookup buried on a code path that runs only during checkout is a config error that surfaces three hours later as a null, in a stack trace that names the wrong subsystem. Startup validation converts every one of those into a boot failure.
 - **A flag is the one thing that rule does not cover, and the test is checkable rather than a matter of taste:** if the value must change without a restart, it is not config, and evaluating it at the call site is the mechanism rather than a violation of it. What gets validated at startup there is the flag client's *wiring* — endpoint reachable, credentials valid, static fallback compiled in — while the *value* is read per request. Read the two rules as one and you build a flag loaded once at boot, which cannot flip during the incident it was built for; that failure passes review because each rule is correct on its own.
 - **Fail fast means fast:** validation belongs before listeners bind and before the instance reports ready, so a bad rollout stops at the first replica instead of taking the fleet.
+
+## Discovery comes before precedence
+
+Precedence decides which of several values wins. It only applies to files the
+tool actually opened, and a file the tool never looks for has no precedence at
+all — it has no effect whatsoever, and it fails the way an unread file always
+fails, which is silently and while looking completely correct in the diff.
+
+Most tools search a **fixed, documented list of paths**, in order. That list is
+the tool's, not yours. A file placed to match a project's own naming
+convention, or to sit next to its siblings, or because it reads better there,
+is invisible unless that location happens to be on the list. Consistency you
+cannot be found in is not consistency.
+
+Two rules follow, and the second is the one that bites:
+
+- **Read the discovery rules before choosing the path**, and prefer the
+  earliest location on the list that fits, so a lower-priority file elsewhere
+  cannot quietly win.
+- **Where several tools, or several surfaces of one tool, are meant to read the
+  same config, use the intersection of their lists** — not the union, and not
+  the one you checked first. Two surfaces of the same product routinely search
+  different paths, and a location on only one of them serves only one of them
+  while appearing to serve both.
+
+The check is cheap and specific: after placing the file, get the tool to *tell
+you* it read it — a verbose flag, a config dump, a startup log, a deliberately
+invalid value that should make it complain. A tool that starts cleanly is not
+evidence, because a tool that found nothing also starts cleanly.
 
 ## Precedence, declared once
 

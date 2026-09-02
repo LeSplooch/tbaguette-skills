@@ -1,6 +1,6 @@
 ---
 name: choosing-test-scope
-description: Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, or when arguing about the testing pyramid, coverage targets, and test ratios.
+description: Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, when a check passes because the setup it runs in is too small to show the difference it was written to catch, or when arguing about the testing pyramid, coverage targets, and test ratios.
 ---
 
 # Choosing test scope
@@ -86,6 +86,36 @@ Two consequences worth making explicit:
 
 - The test that carries the weight feeds a real input the guard should act on through the real call path, and asserts on what the pipeline actually emitted. The unit tests stay; they stop being the evidence.
 - When auditing a safety property, deliberately check whether it is too strong as well as whether it is too weak. Both are defects. Only one of them will ever come to find you.
+
+## A setup too small to show the difference has not tested for it
+
+Layer is one half of scope. The other is whether the setup you run the check in
+can express the difference between passing and failing, and a setup that cannot
+produces a green result that means nothing — not a weak signal, no signal.
+
+It is not the same failure as testing at the wrong layer, and it survives
+getting the layer right. The check runs where it should, exercises what it
+should, reads the value it should, and the value it reads would have been the
+same either way:
+
+- A layout measured in a frame barely larger than the element, where "centred"
+  and "pinned to a corner" differ by a few pixels and both look correct.
+- A concurrency test at a parallelism the race needs more of.
+- A truncation test whose fixture fits.
+- A pagination test with one page of data.
+- A timeout test whose operation returns before the timeout could fire.
+- A cache test whose run is shorter than the TTL.
+
+The question that catches all of them, asked while the setup is being written
+rather than after it goes green: **what would the broken version have measured
+here?** If the honest answer is "about the same", the number is a property of
+the setup and not of the code, and the setup has to grow before the result is
+worth reading.
+
+Getting this wrong is expensive in a particular way: it produces confident
+evidence. A green check in an under-sized setup is indistinguishable, from the
+outside, from a green check that proves something — so it does not get
+revisited, and the defect ships behind a passing test that everyone believes.
 
 ## When a bug escapes every layer
 

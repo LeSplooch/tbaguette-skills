@@ -24,6 +24,39 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — Five skills learn the failure that looks exactly like success
+
+- **`formidable`: an entrance must degrade to appearing, not to absence.** Put
+  the visible state in the base rule and let the animation supply only the state
+  it starts from. Written the other way round it looks identical while it works,
+  and any browser that skips the transition leaves a focus-trapping,
+  scroll-locking modal with nothing drawn on it. The question it hands you: if
+  the motion never runs, what is on screen?
+- **`finding-resource-leaks`: a release that waits to be told.** The classic leak
+  is a release that got skipped; this is one that is never called, because it
+  hangs off an event you do not control. What leaks is usually global, so the
+  damage is not an unseen handle but everything else's behaviour — a page-wide
+  lock never lifted long after the thing that set it is gone. Drive the release
+  from the state that actually changed rather than from being told it changed,
+  and ask what stays changed if the event never arrives.
+- **`configuration-management`: discovery comes before precedence.** A config
+  file the tool never looks for has no precedence at all. Tools search a fixed,
+  documented list, and a file placed to match your project's naming convention
+  is invisible unless that path happens to be on it. Where several tools — or
+  several surfaces of one tool — must read the same config, the correct location
+  is the *intersection* of their lists, not the union.
+- **`choosing-test-scope`: a setup too small to show the difference has not
+  tested for it.** A concurrency test below the parallelism the race needs, a
+  truncation test whose fixture fits, a layout measured in a frame barely bigger
+  than the element. Right layer, real assertion, and a value that would have been
+  the same either way. Ask what the broken version would have measured; if the
+  answer is "about the same", the number describes your setup, not your code.
+- **`writing-the-failing-test-first`: red both times is not evidence.** Watching
+  a test fail only proves something if it passes in the other condition. A check
+  that was already broken — a stale selector, a fixture that no longer loads —
+  goes red under every mutation and is indistinguishable from one that works. The
+  pair is the evidence, never the single reading.
+
 ## 2026-09-02 — Every harness works now, and a skill learned why they hadn't
 
 - **`confirming-before-claiming-done` gained the section this week was a

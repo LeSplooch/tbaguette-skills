@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.29</span>
+      <span class="wordmark-version" dir="ltr">v1.0.30</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T13:27:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:27:32Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T13:30:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:30:36Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">formidable</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T13:30:36.175317+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">UI and design</span>
   <p class="lede">Use when designing, redesigning, critiquing, auditing, polishing, or hardening any user interface on any stack — web, native mobile, desktop, terminal or TUI, CLI output, game HUD, embedded and e-ink displays, XR and spatial, email, print and PDF, or voice and chat. Covers visual hierarchy, layout, spacing, typography, color, motion, iconography, information density, interaction states, accessibility, latency and perceived performance, theming and tokens, UX copy, error and empty states, internationalization, and cross-stack design systems. Also use when an interface feels generic, bland, cluttered, dated, or inconsistent, or when a design must be carried faithfully from one stack to another.</p>
@@ -253,7 +253,7 @@
 <h2 id="cmd-motion-per-stack-budget">Per-stack budget</h2>
 <ul><li><strong>Web:</strong> compositor-only properties in loops; measure, do not assume 60fps.</li><li><strong>Mobile:</strong> motion drains battery and thermals; transitions must mirror navigation direction.</li><li><strong>Desktop:</strong> long sessions — halve everything decorative.</li><li><strong>Terminal:</strong> 1–10fps, made of characters, redraw only what changed.</li><li><strong>Embedded/e-ink:</strong> effectively none; state changes are instant.</li><li><strong>Game/XR:</strong> the UI never competes with world motion, and uninitiated camera movement is forbidden in XR.</li></ul>
 <h2 id="cmd-motion-rules">Rules</h2>
-<ul><li><strong>Animate the property that changed,</strong> not the whole element.</li><li><strong>Never gate information behind an animation.</strong> If the number is there, show it.</li><li><strong>One authored moment per surface</strong> beats six competing effects.</li></ul></div><div class="tabs__panel" role="tabpanel" id="cmd-onboard" aria-labelledby="tab-cmd-onboard" tabindex="0" hidden><p>The states you design last are the states most users see first. Empty is not an error and not an afterthought; it is the surface's introduction.</p>
+<ul><li><strong>Animate the property that changed,</strong> not the whole element.</li><li><strong>Never gate information behind an animation.</strong> If the number is there, show it.</li><li><strong>One authored moment per surface</strong> beats six competing effects.</li><li><strong>An entrance must degrade to appearing, not to absence.</strong> Put the visible state in the base rule and let the animation supply only the <em>from</em>-state. Written the other way round — the hidden state as the resting style, the visible one applied by the animation — it looks identical while the motion runs and inverts the failure. Anything that skips the transition (an unsupported entry-animation feature, a stalled compositor, a paint the engine never scheduled) leaves the element at its resting style, which is now invisible. On a modal that means a focus-trapped, scroll-locked surface with nothing drawn on it and no visible way out. Which way round costs nothing while it works and decides everything when it does not, so the question to ask of any entrance is: <strong>if the motion never runs, what is on screen?</strong></li></ul></div><div class="tabs__panel" role="tabpanel" id="cmd-onboard" aria-labelledby="tab-cmd-onboard" tabindex="0" hidden><p>The states you design last are the states most users see first. Empty is not an error and not an afterthought; it is the surface's introduction.</p>
 <h2 id="cmd-onboard-the-empty-state-ladder">The empty-state ladder</h2>
 <p>Not all empties are the same, and the same visual for all of them is the common failure.</p>
 <table><thead><tr><th>Kind</th><th>Means</th><th>Design</th></tr></thead><tbody><tr><td><strong>First use</strong></td><td>Nothing exists yet</td><td>Explain the value in one line, show the single action that creates the first item, ideally with a sample or template</td></tr><tr><td><strong>Cleared</strong></td><td>User finished everything</td><td>Acknowledge it. This is a reward state, not a void</td></tr><tr><td><strong>No results</strong></td><td>Filter or search matched nothing</td><td>Show the query, the reason, and the way back — clear filter, broaden, correct spelling</td></tr><tr><td><strong>No access</strong></td><td>Exists but not for you</td><td>Say who can grant it and how to ask</td></tr><tr><td><strong>Error</strong></td><td>Load failed</td><td>Distinguish clearly from empty. Retry, plus what is known</td></tr><tr><td><strong>Not yet</strong></td><td>Data pending</td><td>Say when to expect it</td></tr></tbody></table>

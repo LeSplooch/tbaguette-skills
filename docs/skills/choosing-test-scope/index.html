@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.29</span>
+      <span class="wordmark-version" dir="ltr">v1.0.30</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T13:27:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:27:32Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T13:30:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:30:36Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">choosing-test-scope</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T18:37:36+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T13:30:36.175317+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Testing</span>
-  <p class="lede">Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, or when arguing about the testing pyramid, coverage targets, and test ratios.</p>
+  <p class="lede">Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, when a check passes because the setup it runs in is too small to show the difference it was written to catch, or when arguing about the testing pyramid, coverage targets, and test ratios.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Test each behavior at the highest layer that can fail for exactly one reason. Higher than that and a red test names no cause; lower than that and a green test proves nothing about the shipped system.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -97,6 +97,12 @@
 <p>The failure also tends to err <em>safe</em>, which removes the last mechanism that would have surfaced it. A stripping step that runs on an empty input strips nothing and lets nothing through either; a filter that is never consulted, in a pipeline that defaults to rejecting, rejects. Nobody is harmed, so nobody reports it, and the documentation describing the check keeps being true about the code and false about the system. <strong>A safety property that is accidentally too strong produces no symptom at all</strong> — only the too-weak direction ever complains, which is why an audit that checks one direction finds nothing and concludes the right thing is happening.</p>
 <p>Two consequences worth making explicit:</p>
 <ul><li>The test that carries the weight feeds a real input the guard should act on through the real call path, and asserts on what the pipeline actually emitted. The unit tests stay; they stop being the evidence.</li><li>When auditing a safety property, deliberately check whether it is too strong as well as whether it is too weak. Both are defects. Only one of them will ever come to find you.</li></ul>
+<h2 id="a-setup-too-small-to-show-the-difference-has-not-tested-for-it">A setup too small to show the difference has not tested for it</h2>
+<p>Layer is one half of scope. The other is whether the setup you run the check in can express the difference between passing and failing, and a setup that cannot produces a green result that means nothing — not a weak signal, no signal.</p>
+<p>It is not the same failure as testing at the wrong layer, and it survives getting the layer right. The check runs where it should, exercises what it should, reads the value it should, and the value it reads would have been the same either way:</p>
+<ul><li>A layout measured in a frame barely larger than the element, where &quot;centred&quot; and &quot;pinned to a corner&quot; differ by a few pixels and both look correct.</li><li>A concurrency test at a parallelism the race needs more of.</li><li>A truncation test whose fixture fits.</li><li>A pagination test with one page of data.</li><li>A timeout test whose operation returns before the timeout could fire.</li><li>A cache test whose run is shorter than the TTL.</li></ul>
+<p>The question that catches all of them, asked while the setup is being written rather than after it goes green: <strong>what would the broken version have measured here?</strong> If the honest answer is &quot;about the same&quot;, the number is a property of the setup and not of the code, and the setup has to grow before the result is worth reading.</p>
+<p>Getting this wrong is expensive in a particular way: it produces confident evidence. A green check in an under-sized setup is indistinguishable, from the outside, from a green check that proves something — so it does not get revisited, and the defect ships behind a passing test that everyone believes.</p>
 <h2 id="when-a-bug-escapes-every-layer">When a bug escapes every layer</h2>
 <p>For each defect that reached production, ask one question: <strong>what is the lowest layer that could have caught this?</strong> Add the test there, and only there.</p>
 <p>If the honest answer is &quot;only end-to-end&quot;, the behavior exists solely in the wiring, and that is a design finding rather than a testing one — extract a seam so the decision lives somewhere addressable. Answering the question with &quot;add another end-to-end scenario&quot; every time is how the end-to-end suite reaches the size at which it stops working.</p>

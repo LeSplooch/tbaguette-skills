@@ -82,6 +82,17 @@ Run the suite after each structural change, not once at the end — the gap betw
 
 Before calling a piece of behavior finished, mutate the code you just wrote — flip a comparison, swap a branch, delete a validation — and confirm some test goes red for each mutation you'd realistically make. A suite that stays green through a real mutation didn't prove what you thought it proved: the behavior was never actually covered, or the test was tautological from the start. `characterization-testing` runs this identical check against a pinned legacy behavior instead of a new one — same technique, different target.
 
+A mutation only tells you something if the result *changed*. Red after the
+mutation is half an observation; the claim is that the test is red **because
+of** the mutation, and that needs the green reading beside it. A check that was
+already failing — a broken selector, a fixture that no longer loads, an
+assertion against a value it can never see — goes red under every mutation you
+make and looks exactly like a check that works. The pair is the evidence, never
+the single reading, and the question that separates them is the same one a
+retry has to answer: **what differed between those two runs?** If the honest
+answer is "nothing, it was red both times", nothing was learned and the check
+itself is now the thing to go and read.
+
 That check is the actual definition of done, not "coverage went up." Ship the tests the behavior needs, in the order the loop produced them, and stop. A test added afterward to satisfy a process rather than a red step is maintenance cost with no proof behind it.
 
 ## When you get stuck

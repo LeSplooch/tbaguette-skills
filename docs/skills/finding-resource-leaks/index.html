@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.29</span>
+      <span class="wordmark-version" dir="ltr">v1.0.30</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T13:27:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:27:32Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T13:30:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:30:36Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">finding-resource-leaks</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T13:30:36.175317+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Debugging and performance</span>
-  <p class="lede">Use when memory, file descriptors, sockets, threads, connections, timers, or event subscriptions grow without bound, when a process is killed for running out of memory or hits a too-many-open-files error, when a periodic restart is what keeps a service alive, when a heap snapshot must be read, or when usage climbs under steady load. Covers growth detection, retention versus allocation, and error-path leaks.</p>
+  <p class="lede">Use when memory, file descriptors, sockets, threads, connections, timers, or event subscriptions grow without bound, when a process is killed for running out of memory or hits a too-many-open-files error, when a periodic restart is what keeps a service alive, when a heap snapshot must be read, or when usage climbs under steady load, or when a lock, a global flag, or a document-wide style is released by an event or callback that may never fire. Covers growth detection, retention versus allocation, and error-path leaks.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A leak is retention, not allocation. The allocation site is merely where the object was born; the defect is the reference that outlives its purpose — which is why reading the allocating code almost never finds it. Detect leaks by measuring growth under steady load, never by inspecting source.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -88,6 +88,11 @@
 <h2 id="error-paths-are-where-the-leaks-actually-are">Error paths are where the leaks actually are</h2>
 <p>The happy path runs millions of times and is almost never the leak. The leak lives on the path that runs 0.1% of the time: a timeout, a validation rejection, a retry, a cancellation, a partial read, a failure between two acquisitions.</p>
 <ul><li>The partial-acquisition shape: acquire A, acquire B fails, return — A leaks. Release in reverse order via a scope guard registered immediately after each acquisition, never in a block at the end of the function.</li><li>Cancellation is the most-missed path of all: the caller went away, and everything acquired on its behalf still needs releasing.</li><li>Test it directly. Fault-inject at each acquisition point and assert the resource count returns to baseline. A loop that opens, fails, and closes 10,000 times while watching the descriptor count is the cheapest leak test that exists and catches the majority of these.</li></ul>
+<h2 id="a-release-that-waits-to-be-told">A release that waits to be told</h2>
+<p>The error-path shape above is an acquire whose release is <em>skipped</em>. This is the acquire whose release is <em>never called</em>, and it hides better, because the code that releases is right there and looks correct.</p>
+<p>The tell is where the release is attached. Acquiring mutates something — a lock, a global flag, a document-level style, a registry entry, a temp directory — and the release hangs off a notification that the thing is over: a <code>close</code> event, a completion callback, a finaliser, a lifecycle hook. That works exactly as long as the notification arrives, and the notification is the part you do not control. A platform that never fires it for your case, a library that fires it only on some paths, an early return between the two, a listener attached after the event already went out — each leaves the mutation standing with nothing left that would undo it.</p>
+<p>It is worse than an ordinary leak in one specific way: the resource is usually global, so what leaks is not a handle nobody sees but the behaviour of everything else. A scroll lock never lifted is a whole page that cannot scroll, long after whatever locked it is gone, and nothing anywhere is obviously broken.</p>
+<p><strong>Prefer observing the state that actually changed over being told it changed.</strong> Where the platform exposes the state itself — an attribute, a property, an observable, a poll — drive the release from that, and the release becomes correct regardless of which notifications fire. Where it does not, release at every exit you own <em>and</em> keep the handler, because the two together fail independently. The question that finds these before they ship: <strong>if that event never arrives, what stays changed?</strong></p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;Memory keeps growing&quot; with no number</td><td>growth was never quantified per operation, so nobody can say when it matters</td></tr><tr><td>Fixed the top allocation site, nothing changed</td><td>the allocation site was innocent; the retaining reference was elsewhere</td></tr><tr><td>Chasing a leak that does not exist</td><td>measured resident memory instead of the live-set floor; the allocator was holding pages</td></tr><tr><td>Snapshot analysis stalled on strings and arrays</td><td>sorted by count or shallow size instead of retained size</td></tr><tr><td>Leak reproduces only in production</td><td>error paths are rare in tests; fault-inject instead of waiting</td></tr><tr><td>Added a periodic restart</td><td>converted an outage into a recurring one and stopped the investigation</td></tr><tr><td>Growth returns after the fix</td><td>one call site was fixed; the same shape exists at the others</td></tr><tr><td>Weak references sprayed everywhere</td><td>cycle diagnosed by guessing rather than from a root path</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>

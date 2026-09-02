@@ -47,3 +47,14 @@ The preference is not "make it faster." Replace movement with an instant change 
 - **Animate the property that changed,** not the whole element.
 - **Never gate information behind an animation.** If the number is there, show it.
 - **One authored moment per surface** beats six competing effects.
+- **An entrance must degrade to appearing, not to absence.** Put the visible
+  state in the base rule and let the animation supply only the *from*-state.
+  Written the other way round — the hidden state as the resting style, the
+  visible one applied by the animation — it looks identical while the motion
+  runs and inverts the failure. Anything that skips the transition (an
+  unsupported entry-animation feature, a stalled compositor, a paint the engine
+  never scheduled) leaves the element at its resting style, which is now
+  invisible. On a modal that means a focus-trapped, scroll-locked surface with
+  nothing drawn on it and no visible way out. Which way round costs nothing
+  while it works and decides everything when it does not, so the question to
+  ask of any entrance is: **if the motion never runs, what is on screen?**

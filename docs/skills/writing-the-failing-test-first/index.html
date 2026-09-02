@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.29</span>
+      <span class="wordmark-version" dir="ltr">v1.0.30</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T13:27:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:27:32Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T13:30:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:30:36Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">writing-the-failing-test-first</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T13:30:36.175317+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Testing</span>
   <p class="lede">Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written. Covers writing one failing test first, confirming it fails for the right reason, writing the minimal code that makes it pass, and refactoring only once the suite is green again.</p>
@@ -104,6 +104,7 @@ fails the moment anything is dropped, including all of it:
 <p>Run the suite after each structural change, not once at the end — the gap between two green states is how much code you'd have to search when one goes red. Then pick the next behavior and start red again, one test at a time; batch several behaviors into one red step and the next failure won't name a single cause.</p>
 <h2 id="mutate-it-before-you-trust-it">Mutate it before you trust it</h2>
 <p>Before calling a piece of behavior finished, mutate the code you just wrote — flip a comparison, swap a branch, delete a validation — and confirm some test goes red for each mutation you'd realistically make. A suite that stays green through a real mutation didn't prove what you thought it proved: the behavior was never actually covered, or the test was tautological from the start. <a class="skill-link" href="/tbaguette-skills/skills/characterization-testing/"><code>characterization-testing</code></a> runs this identical check against a pinned legacy behavior instead of a new one — same technique, different target.</p>
+<p>A mutation only tells you something if the result <em>changed</em>. Red after the mutation is half an observation; the claim is that the test is red <strong>because of</strong> the mutation, and that needs the green reading beside it. A check that was already failing — a broken selector, a fixture that no longer loads, an assertion against a value it can never see — goes red under every mutation you make and looks exactly like a check that works. The pair is the evidence, never the single reading, and the question that separates them is the same one a retry has to answer: <strong>what differed between those two runs?</strong> If the honest answer is &quot;nothing, it was red both times&quot;, nothing was learned and the check itself is now the thing to go and read.</p>
 <p>That check is the actual definition of done, not &quot;coverage went up.&quot; Ship the tests the behavior needs, in the order the loop produced them, and stop. A test added afterward to satisfy a process rather than a red step is maintenance cost with no proof behind it.</p>
 <h2 id="when-you-get-stuck">When you get stuck</h2>
 <table><thead><tr><th>Stuck on</th><th>What it's telling you</th></tr></thead><tbody><tr><td>Don't know how to write the test</td><td>Write the call you wish existed — the assertion first, then whatever setup makes it compile. The test is the API's first real consumer; if you can't call it the way you want yet, that's the design decision to make now, not during green.</td></tr><tr><td>Test setup is huge before you even reach an assertion</td><td>Not a loop problem — see <a class="skill-link" href="/tbaguette-skills/skills/designing-test-data/"><code>designing-test-data</code></a>.</td></tr><tr><td>Test depends on time, randomness, the filesystem, or the network</td><td>Not a loop problem either — see <a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a> for making the dependency fake-able.</td></tr></tbody></table>

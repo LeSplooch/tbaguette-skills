@@ -1,6 +1,6 @@
 ---
 name: finding-resource-leaks
-description: Use when memory, file descriptors, sockets, threads, connections, timers, or event subscriptions grow without bound, when a process is killed for running out of memory or hits a too-many-open-files error, when a periodic restart is what keeps a service alive, when a heap snapshot must be read, or when usage climbs under steady load. Covers growth detection, retention versus allocation, and error-path leaks.
+description: Use when memory, file descriptors, sockets, threads, connections, timers, or event subscriptions grow without bound, when a process is killed for running out of memory or hits a too-many-open-files error, when a periodic restart is what keeps a service alive, when a heap snapshot must be read, or when usage climbs under steady load, or when a lock, a global flag, or a document-wide style is released by an event or callback that may never fire. Covers growth detection, retention versus allocation, and error-path leaks.
 ---
 
 # Finding resource leaks
@@ -76,6 +76,36 @@ The happy path runs millions of times and is almost never the leak. The leak liv
 - The partial-acquisition shape: acquire A, acquire B fails, return — A leaks. Release in reverse order via a scope guard registered immediately after each acquisition, never in a block at the end of the function.
 - Cancellation is the most-missed path of all: the caller went away, and everything acquired on its behalf still needs releasing.
 - Test it directly. Fault-inject at each acquisition point and assert the resource count returns to baseline. A loop that opens, fails, and closes 10,000 times while watching the descriptor count is the cheapest leak test that exists and catches the majority of these.
+
+## A release that waits to be told
+
+The error-path shape above is an acquire whose release is *skipped*. This is
+the acquire whose release is *never called*, and it hides better, because the
+code that releases is right there and looks correct.
+
+The tell is where the release is attached. Acquiring mutates something — a
+lock, a global flag, a document-level style, a registry entry, a temp
+directory — and the release hangs off a notification that the thing is over: a
+`close` event, a completion callback, a finaliser, a lifecycle hook. That works
+exactly as long as the notification arrives, and the notification is the part
+you do not control. A platform that never fires it for your case, a library
+that fires it only on some paths, an early return between the two, a listener
+attached after the event already went out — each leaves the mutation standing
+with nothing left that would undo it.
+
+It is worse than an ordinary leak in one specific way: the resource is usually
+global, so what leaks is not a handle nobody sees but the behaviour of
+everything else. A scroll lock never lifted is a whole page that cannot
+scroll, long after whatever locked it is gone, and nothing anywhere is
+obviously broken.
+
+**Prefer observing the state that actually changed over being told it
+changed.** Where the platform exposes the state itself — an attribute, a
+property, an observable, a poll — drive the release from that, and the release
+becomes correct regardless of which notifications fire. Where it does not,
+release at every exit you own *and* keep the handler, because the two together
+fail independently. The question that finds these before they ship: **if that
+event never arrives, what stays changed?**
 
 ## Common mistakes
 
