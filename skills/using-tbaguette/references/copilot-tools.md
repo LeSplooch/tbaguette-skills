@@ -1,4 +1,8 @@
-# GitHub Copilot CLI Tool Mapping
+# GitHub Copilot Tool Mapping
+
+Covers all three surfaces TBaguette installs into: Copilot CLI, Copilot in
+VS Code, and the Copilot coding agent. Where they differ, it says so; where
+nothing below distinguishes them, they behave the same.
 
 Almost nothing in this library needs mapping. TBaguette's skills describe
 *actions* — read a file, run a command, dispatch a subagent — and Copilot CLI
@@ -9,9 +13,10 @@ difference, and the few things downstream of it, is what this file is for.
 
 ## Invoking a skill
 
-Two routes, and the first one is doing most of the work already:
+Two routes, and the first one is doing most of the work already. Both work the
+same on all three surfaces:
 
-1. **Automatic.** Copilot CLI loads a skill when the prompt matches its
+1. **Automatic.** Copilot loads a skill when the prompt matches its
    `description:` frontmatter. Every TBaguette skill is written so that its
    description *is* its trigger, which means the library is largely
    self-dispatching here. This is why `using-tbaguette`'s rule — check before
@@ -45,29 +50,46 @@ read when the question is *which* skill rather than *what does this one say*.
 
 ## Instructions file
 
-When a skill refers to "your instructions file," on Copilot CLI that is
-`AGENTS.md` or `.github/copilot-instructions.md` in the repository, and
-`copilot-instructions.md` under `~/.copilot/` for the global one. If
-`COPILOT_HOME` is set, the global one lives there instead.
+When a skill refers to "your instructions file," the repository-level answer is
+the same everywhere: `AGENTS.md`, or `.github/copilot-instructions.md`, or
+`.github/instructions/*.instructions.md`. The global one is where they part
+company — the CLI reads `copilot-instructions.md` under `~/.copilot/` (or under
+`COPILOT_HOME`, if that is set), VS Code has its own user-level equivalent, and
+the coding agent has neither, because it runs with no user home to read from.
+Write to the repository file when the instruction has to hold on all three.
 
 One constraint worth knowing before you write an `@`-include into any of them:
-Copilot CLI will not follow an absolute path or a `~/`-rooted one, and the
-target has to stay inside the repository (or inside the custom-instructions
-directory, for the global file). An include pointing at a plugin installed
-elsewhere on the machine does not resolve.
+an absolute path or a `~/`-rooted one is not followed, and the target has to
+stay inside the repository (or inside the custom-instructions directory, for a
+global file). An include pointing at a plugin installed elsewhere on the machine
+does not resolve.
 
 ## Subagents
 
-Copilot CLI has custom agents — `*.agent.md` files, dispatched as subagents.
-Where a skill asks for a subagent (`fanning-out-independent-work`,
+Copilot has custom agents — `*.agent.md` files, dispatched as subagents. Where a
+skill asks for a subagent (`fanning-out-independent-work`,
 `delegating-tasks-with-review-gates`), use that mechanism. Where it is
 unavailable, every one of those skills already carries its own fallback: do the
 work inline, in sequence, rather than inventing a dispatch that will not run.
 Same rule for todo tracking and web fetch — degrade, don't improvise.
 
+## One thing the coding agent changes about every other skill
+
+The CLI and VS Code have someone sitting there. The coding agent does not — it
+runs to completion and the first human to read a word of it is reading the pull
+request afterwards. That is not a detail about Copilot; it is the `unattended`
+setting of `orchestrating-work-end-to-end`'s presence dial, and it changes what
+a gate means across the whole library.
+
+So on the coding agent, read `bounding-autonomous-work` before the first action,
+not after. Every gate that was a question becomes a written self-answer carrying
+a stop condition. And the one rule no envelope relaxes still stands: an
+irreversible action gets a human. Reaching that point is the run ending
+correctly, with one step left for someone who can own it.
+
 ## What is deliberately not here
 
-There is no table of Copilot CLI's tool names in this file, because writing one
+There is no table of Copilot's tool names in this file, because writing one
 would be guessing at names that the harness already puts in front of you
 accurately, and a stale mapping is worse than none. Use the tools you actually
 have, by the names you are actually given.
