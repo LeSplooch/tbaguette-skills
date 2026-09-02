@@ -1,6 +1,6 @@
 ---
 name: using-tbaguette
-description: Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message. Establishes that TBaguette's own skills must be checked for relevance before every response, the same way this notice itself got surfaced.
+description: Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message, and not only at the top of a long one. Establishes that TBaguette's own skills must be checked for relevance before every response, and again once a response has run long enough that its opening check has gone stale, the same way this notice itself got surfaced.
 ---
 
 # Using TBaguette
@@ -14,6 +14,33 @@ If there is even a small chance one of TBaguette's skills applies to what you're
 Before responding — including a clarifying question, "let me look at the code first," or anything that feels too small to bother — check whether a TBaguette skill covers it. You don't need to open a file to see what exists: every `TBaguette:*` skill and its trigger description is already listed in your available-skills context. `CATALOG.md` in this repo has the longer versions when a one-line trigger isn't enough to judge relevance.
 
 If a skill turns out not to fit once you're in it, that's fine — drop it. But check first, every time.
+
+## A long response needs a second check, not only the first
+
+The rule above is per *response*, and it quietly assumes a response is short. Most are: in one
+measured harness the median response ran four tool calls, which a check at the top governs
+comfortably. The tail does not behave. The 90th percentile was 19 calls, the 99th was 49, and one
+response reached 194. By call 190 the check that opened the response is not a guardrail, it is
+scrollback.
+
+That is where this discipline actually fails, and it fails quietly — nothing about a long response
+announces that its opening judgment has gone stale. Fifteen consecutive substantive responses in
+that harness invoked nothing at all, while the notice fired correctly at the top of every one of
+them. The guidance was never missing; it was simply hundreds of actions old by the time each
+decision it governs got made.
+
+So the check is owed twice: before the response, and again once a response has grown past the point
+where you would still call its opening recent. If you want a trigger that does not depend on
+noticing, a response that has run a couple of dozen tool calls and invoked nothing has drifted,
+whatever it feels like from the inside.
+
+Where the harness fires an event at the *end* of a response, that is the place to wire this —
+`automating-repetition` owns the judgment about turning a habit into machinery, and a check whose
+whole failure mode is "the reminder scrolled away" is near the top of that list. Two cautions, both
+from measuring one: fire only on a response that is **both** large and skill-free, or it becomes
+furniture — the obvious threshold fired on 22% of all responses. And confirm the discriminator
+separates anything before trusting it; in that harness *every* large response had invoked nothing,
+so size alone distinguished nothing at all.
 
 ## When the work is bigger than one response
 
@@ -31,6 +58,7 @@ Thoughts that mean stop and check anyway:
 | "I already know how to do this" | Knowing the general shape of a task isn't the same as this library's specific judgment calls. |
 | "I'll check after I've looked at the code" | Several skills (`orienting-in-unfamiliar-code`, `reading-specifications`) are about *how* to look, not what to do once you have. |
 | "It's just a question, not a task" | Questions are tasks. Check for skills. |
+| "I'm deep into this response, checking now breaks the flow" | A response long enough for that thought is exactly the one its opening check no longer covers. Invoking costs one call. |
 
 ## Alongside other plugins
 
