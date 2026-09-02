@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.31</span>
+      <span class="wordmark-version" dir="ltr">v1.0.32</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T17:01:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:01:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T22:24:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T22:24:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">choosing-test-scope</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T17:01:14.504942+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T22:24:56.886301+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Testing</span>
   <p class="lede">Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, when a check passes because the setup it runs in is too small to show the difference it was written to catch, when writing or auditing a list of deliberately excluded cases — skipped tests, ignored rules, allowlists — or when arguing about the testing pyramid, coverage targets, and test ratios.</p>
@@ -112,6 +112,9 @@
 <table><thead><tr><th>Kind</th><th>Example</th><th>What happens when the world changes</th></tr></thead><tbody><tr><td>Justification</td><td>&quot;not applicable here&quot;, &quot;covered elsewhere&quot;, &quot;this path is theoretical&quot;</td><td>Still reads as true. Nothing prompts a re-check</td></tr><tr><td>Mechanism</td><td>&quot;the harness constructs the other implementation, which never reads this field&quot;</td><td>Becomes visibly false the moment the harness changes</td></tr></tbody></table>
 <p>The test for an entry you are about to write: <strong>state the reason so that it would become false if the case became reachable.</strong> If no edit to the system could falsify the sentence, it is a justification and it will outlive its own truth.</p>
 <p>This is enforceable rather than merely advisable — require every entry's reason to name a concrete component, and reject the ones that only name a feeling about the case. And when one entry in a list turns out to be wrong this way, read the rest of the list rather than fixing the one: the entries were written by the same person on the same day under the same misunderstanding, and they fail in batches.</p>
+<p>Automating that check is worth doing and audits half the entry. A guard that perturbs each excluded case and asserts nothing changes will find the entries that have gone stale, in batches, on its first run — but what it verifies is the <strong>claim</strong>, not the <strong>explanation</strong>. An entry whose reason names entirely the wrong component passes forever, so long as the case really is unreachable for some other reason.</p>
+<p>That is a worse position than it sounds, because of what the guard removes. Before it, a wrong reason and a wrong exclusion tended to fail together, and the second one was eventually noticeable. After it, the reason is the only part of the entry that can still be wrong, and nothing is looking at it — while the green run reads as coverage of both halves. The reason is also the half that gets acted on: it is what the next reader consults when deciding whether the entry still applies, and they will not re-derive it from the assertion.</p>
+<p>So the guard buys permanence for the list, not correctness for its prose. The cheap repair is to make the reason findable from the thing it talks about: require it to name its component by the identifier the codebase actually uses, so that anyone grepping for that component lands on the exclusion alongside the code. Then a sentence that is <em>true of a neighbouring component</em> — the one shape that survives both the reader and the test — gets read by the person touching the component it wrongly names.</p>
 <h2 id="an-accumulator-is-checked-against-a-second-derivation">An accumulator is checked against a second derivation</h2>
 <p>Sometimes the honest answer is &quot;no layer&quot;, because the escape was never about layers. A systematic offset — a per-unit figure that omits a fee the total includes, a rate applied at the wrong precision throughout — makes every individual number wrong in the same way and every individual number plausible, and anything that accumulates carries that error into every contribution it adds up. A test checking one of those numbers passes whenever the expectation holds the same mistake, and the expectation usually does, because it came from the same reading of the same specification by the same person. This is the one-party problem from &quot;Where a double's content comes from&quot; arriving as arithmetic rather than as a fixture: one belief, written down twice, agreeing with itself.</p>
 <p>Adding more point-checks does not escape that. A hundred of them agree a hundred times, at whichever layer they run. What breaks the tie is a quantity computed by a <strong>different route</strong> and asserted against the first: a running total accumulated from individual events against the same figure derived from opening and closing balances; inventory on hand against receipts minus shipments; a queue's processed count against enqueued minus remaining. Neither route is the authority. The assertion is that they agree, and a disagreement names a defect without yet saying which side holds it.</p>

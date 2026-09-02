@@ -1,6 +1,6 @@
 ---
 name: automating-repetition
-description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, or when a manual step is risky, irreversible, or easy to get wrong by hand.
+description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a manual step is risky, irreversible, or easy to get wrong by hand, or when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.
 ---
 
 # Automating repetition
@@ -72,6 +72,47 @@ looking for — so the threshold was not selecting the interesting cases, it was
 them, and the discriminator distinguished nothing. Watching would eventually have shown a stream of
 alerts; it would not have shown *why*.
 
+
+## Some conditions arise on the world's schedule, not on yours
+
+Everything above assumes the automation runs when you invoke it, or on a
+schedule you chose. A whole class of checks cannot work that way, and the tell is
+specific: the honest answer to *how often should this run* is **the moment it
+happens**, and every interval you can actually name is a compromise between
+noticing late and looking a thousand times for nothing.
+
+Those are watchers, not steps. A watcher runs for the lifetime of the work and
+reports when the condition occurs — a file changing, a line appearing in a log, an
+external state flipping, a long job finishing. Reaching for a poll there is not a
+cheaper version of the same thing; it converts a fact you could have been told
+into a question you now have to keep asking, and it is the reason so many of these
+end up either noisy or useless.
+
+Two costs come with it, and both are the kind that arrive quietly.
+
+- **A watcher is a process you now own, and its silence looks exactly like the
+  good case.** This is the silent-scheduled-job failure with its last symptom
+  removed: a job that stops running at least leaves a gap where its output used to
+  be, and a watcher's correct output on a quiet day is nothing at all, so a dead
+  one and a working one produce the same record. It needs a heartbeat, or some
+  periodic assertion that it is still alive, or the thing it was watching for will
+  happen unobserved and the afternoon will read as calm.
+- **Its output arrives out of order with whatever you were doing.** A message
+  that made sense at the moment it was written is being read by someone in the
+  middle of something else, possibly hours later. It has to carry enough context to
+  be actionable away from the moment that produced it — which of the things being
+  watched, what changed, and what the reader is expected to do — because the
+  surrounding state that would have disambiguated it is gone.
+
+None of which argues for a watcher whenever one is possible. A poll is the right
+answer whenever the condition changes slowly against how long you are willing to
+wait — checked twice a day, a daily thing is not worth a process — and it fails
+safe, because a poll that stops running stops producing the output you were
+reading. Reach for a watcher when latency is the requirement rather than a
+preference, and when nobody will be sitting there to ask again.
+
+The ladder still applies inside the watcher: report first, act later, and measure
+the firing rate against the record before arming anything.
 
 ## A bulk edit runs once, so the ladder does not apply
 

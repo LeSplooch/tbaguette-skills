@@ -24,6 +24,66 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-03 — Seven skills, three of them from the first outside contributions
+
+- **`orienting-in-unfamiliar-code`: a text search and an index answer different
+  questions.** Searching text tells you where a string appears. A resolver — a
+  language server, an IDE index, a tags file — tells you where something is
+  *defined* and who *uses* it, and the two diverge exactly where orienting is
+  hardest: a short name, a method shared across unrelated types, a symbol
+  re-exported under another name. Text search degrades there in a way that feels
+  like progress, because the reflex is to narrow the pattern and narrowing throws
+  away the call that mattered. The skill now says to stand a resolver up once you
+  know the language, and says the other half too: it only knows what it can
+  resolve, so a **zero-references answer is a hypothesis, not a finding** —
+  confirm it against configuration, templates and data files before deleting
+  anything.
+- **`using-tbaguette`: the check is owed twice on a long response.** Its rule was
+  always per response, and quietly assumed a response is short. Measured in one
+  harness the median ran four tool calls — but the 99th percentile ran 49 and one
+  reached 194, and fifteen substantive responses in a row invoked nothing while
+  the notice fired correctly at the top of every one. The guidance was never
+  missing; it had scrolled away. So it is owed again once a response has grown
+  past the point where its opening still counts as recent.
+- **`automating-repetition` learns two things about triggers.** First, where a
+  proposed rule's inputs are already recorded — logs, transcripts, ticket history
+  — replay them and measure how often it *would* have fired instead of watching
+  for a month. A guard that goes off on a fifth of all occasions is furniture
+  before it is armed, and replay also answers the question watching answers badly:
+  whether the condition separates anything at all. Second, some conditions arise
+  on the world's schedule rather than inside your procedure, and those need a
+  watcher rather than a step — with the two costs named, since a dead watcher's
+  silence is identical to a quiet day.
+- **`choosing-test-scope`: automating an exclusion list audits half of it.** A
+  guard that perturbs each excluded case and asserts nothing changes will find the
+  stale entries in batches. What it verifies is the *claim*, not the
+  *explanation* — an entry whose reason names the wrong component passes forever
+  if the case is unreachable for some other reason. That is worse than it sounds:
+  the reason is now the only part that can be wrong, nothing is looking at it, and
+  the reason is the half the next reader acts on.
+- **`designing-test-data`: near-misses, not just examples.** Fixtures for a rule
+  that selects — a matcher, filter, alert condition, suppression — get written by
+  whoever wants it to work, so every one comes from the side that should match.
+  Such a corpus cannot express over-firing at all. Keep a boundary pair instead:
+  one input just outside that must not match, one just inside that must, so
+  loosening and tightening both go red.
+- **`orchestrating-work-end-to-end`: what Isolate and Land mean with no
+  repository.** Two phases named git, and plenty of real work has none —
+  operations on a live system, data analysis, research, an incident on
+  infrastructure nobody version-controls. Isolate is *the change cannot reach what
+  you would be sorry to break*, and its other half travels unchanged: measure the
+  baseline first. Land is *the artifact reached a durable home the next person can
+  find*. The point is the failure it prevents — reading two phases you cannot
+  enter and concluding the whole track is for somebody else's kind of work.
+- **`tending-tbaguette` is shorter, and now covers landing.** Its contribution
+  pipeline moved into a reference file loaded when you need it, roughly halving
+  what the skill costs in every conversation it watches. What it gained: check
+  the library does not already say your lesson *before* drafting it, since a
+  written section is hard to abandon; report a check that fails for reasons that
+  are not yours with a baseline from a pristine upstream checkout, or it reads as
+  your change breaking the build; and say which files in a pull request are the
+  change and which are the regenerated site.
+
 ## 2026-09-02 — Four more skills, and a null result that means the opposite of what it looks like
 
 - **`diagnosing-before-fixing`: an exact null result indicts the plumbing, not

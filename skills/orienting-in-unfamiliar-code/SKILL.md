@@ -1,6 +1,6 @@
 ---
 name: orienting-in-unfamiliar-code
-description: Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project, or being asked to change code that nobody present wrote. Covers where to start reading, locating entry points and real module boundaries, telling live code from dead, finding where the work actually happens, and reconciling documented architecture with the one the imports reveal.
+description: Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project, or being asked to change code that nobody present wrote. Covers where to start reading, locating entry points and real module boundaries, telling live code from dead, finding where the work actually happens, and reconciling documented architecture with the one the imports reveal. Also use when a text search for a common identifier returns too much to read, when the question is who calls this or whether anything still uses it, or when deciding how far to trust a resolver's zero-references answer.
 ---
 
 # Orienting in unfamiliar code
@@ -51,6 +51,42 @@ Three passes, each cheap:
 3. **Target** — full depth on the two or three files the task touches, plus their tests.
 
 Stop at pass 2 unless the task demands more. Most tasks do not.
+
+## A text search and an index answer different questions
+
+Searching text answers *where does this string appear*. A resolver — a language
+server, an IDE index, a tags file, a compiler-backed query — answers *where is
+this defined* and *who uses this*. Those look like the same question right up to
+the point where orientation is hardest: a short or common identifier, a method
+name shared across unrelated types, a symbol re-exported under a different name.
+
+Text search degrades badly there, and it degrades in a way that feels like
+progress. A common name returns hundreds of lines, the reflex is to narrow the
+pattern, and narrowing discards true positives along with the noise — leaving a
+shorter list that reads as a result and is missing the call that mattered. Where
+the ecosystem has a resolver, stand it up as soon as pass 1 has told you what
+language this is — before the passes that do the reading, rather than after all
+of them — because it changes which questions are cheap: *who calls this* stops being
+an afternoon, and *is anything still using this* becomes answerable instead of
+guessed.
+
+It does not license depth-first reading. Breadth before depth is about attention,
+not about tooling, and an index that makes any single call one keystroke away
+makes it easier, not harder, to disappear down one. What it changes is the other
+half of that rule — the questions you wrote down and kept moving past are now
+answerable in one step when you come back to them.
+
+And keep it honest in the other direction, because this is where an index quietly
+misleads. **It only knows what it can resolve.** Reflection, names built from
+strings, config-driven wiring, dependency injection by convention, dynamic
+dispatch across a boundary, and anything crossing into another language are
+invisible to it — and those are precisely the seams that surprise you later. So a
+**zero-references result is a hypothesis, not a finding**: it means the resolver
+saw no reference, which is the claim you wanted only if the resolver could see
+everything. Confirm it with a text search over the whole repository, including
+configuration, templates, and data files, before deleting anything or concluding a
+path is dead. The index is the fast first pass; the search is the check on what
+the index cannot see.
 
 ## The build graph is the structure
 

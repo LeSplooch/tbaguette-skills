@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.31</span>
+      <span class="wordmark-version" dir="ltr">v1.0.32</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T17:01:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:01:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T22:24:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T22:24:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">designing-test-data</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T22:24:56.886301+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Testing</span>
-  <p class="lede">Use when a test's setup is longer than its assertions, when fixtures are shared across files, when it is unclear which setup value causes a test to fail, when tests pass alone but fail in suite order, or when building factories, builders, object mothers, seed data, or bulk volume data for pagination and load tests. Covers defaults, realistic versus minimal values, unicode and locale inputs.</p>
+  <p class="lede">Use when a test's setup is longer than its assertions, when fixtures are shared across files, when it is unclear which setup value causes a test to fail, when tests pass alone but fail in suite order, or when building factories, builders, object mothers, seed data, or bulk volume data for pagination and load tests. Also use when the fixtures for a rule that selects — a matcher, router, filter, alert condition, or suppression — were all written from the side that should match, or when such a rule fired on an input it should have ignored. Covers defaults, realistic versus minimal values, near-miss and negative corpora, and unicode and locale inputs.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>The setup is the other half of a test's statement. If a reader cannot tell from the setup which value makes this test different from the one above it, the test communicates nothing and will not survive its author.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -75,6 +75,11 @@
 <h2 id="the-one-obvious-difference-rule">The one-obvious-difference rule</h2>
 <p>Every value in a setup is either <strong>irrelevant</strong> — and must be a default, invisible — or <strong>relevant</strong> — and must be explicit, named, and adjacent to the assertion. Two tests that differ in intent differ in exactly one visible line.</p>
 <ul><li>Setup that names more than 3 values the test never asserts on has the wrong defaults.</li><li>Give the relevant value a name that states the reason: <code>expiredYesterday</code>, <code>maxLengthTitle</code>. A bare literal makes the reader reverse-engineer the intent.</li><li>Assert only on fields the test set or the code derived. Asserting on an incidental default couples the test to the builder.</li></ul>
+<h2 id="near-misses-not-just-examples">Near-misses, not just examples</h2>
+<p>A rule that <em>selects</em> — a matcher, a router, a filter, an alert condition, a suppression, a targeting expression — gets its fixtures written by whoever wants it to work, and they are drawn, every one of them, from the side that should match. Such a corpus can demonstrate that the rule fires. It cannot express the rule firing when it should not, so the only failure it is capable of showing is the one nobody was worried about.</p>
+<p>The gap is not hypothetical and it is not exotic. Containment matching is the common case: a short trigger sits inside a longer, unrelated word and the rule fires on the accident. Every positive fixture passes. The defect arrives with real input, which is also the first moment anyone looks at a non-matching case.</p>
+<p>So the fixtures a selecting rule is missing are the <strong>near-misses</strong> — inputs that contain the trigger, or sit one character from the boundary, and must not fire. They are harder to write than positives for a structural reason: a positive is derived from the intent you already hold, while a near-miss requires imagining the thing you were not thinking of. Do not invent them. Take them from recorded real input — a log, a transcript, a query history — where the accidents are already present and cost nothing to find. The same record that measures how often a proposed rule would fire (<a class="skill-link" href="/tbaguette-skills/skills/automating-repetition/"><code>automating-repetition</code></a>) is where its negative corpus comes from.</p>
+<p>Two are worth keeping permanently, and they work as a pair: one input that sits just outside the boundary and must not match, and one that sits just inside it and must. Either alone can be satisfied by moving the boundary. Together they pin it, so loosening the pattern and tightening it both go red — which is the point, because the fix for an over-firing rule is a tightening, and a tightening is how the true positives get lost.</p>
 <h2 id="defaults-are-a-design-decision">Defaults are a design decision</h2>
 <ul><li><strong>Defaults must be valid and boring.</strong> A default of empty string, zero, or null makes every unrelated test a secret edge-case test; the day that edge case is handled, dozens of unrelated tests go red.</li><li><strong>Defaults must never satisfy the assertion by accident.</strong> If the default status is <code>ACTIVE</code> and the test asserts <code>ACTIVE</code>, the test passes with the production logic deleted. Default to a value the code must change.</li><li><strong>Recognizably fake, but legal.</strong> Use reserved ranges: <code>example.com</code> / <code>example.org</code>, the <code>.invalid</code> and <code>.test</code> TLDs, <code>192.0.2.0/24</code> and <code>2001:db8::/32</code>, documentation-reserved phone and card numbers. This is what prevents a leaked default from reaching a real inbox or a live payment endpoint.</li><li><strong>Uniqueness comes from a monotonic counter, never a random value.</strong> Random uniqueness reproduces as a flake and produces unreadable diffs.</li></ul>
 <h2 id="builders-over-shared-fixtures">Builders over shared fixtures</h2>

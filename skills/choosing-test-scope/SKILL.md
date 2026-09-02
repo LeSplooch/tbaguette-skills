@@ -154,6 +154,29 @@ read the rest of the list rather than fixing the one: the entries were written
 by the same person on the same day under the same misunderstanding, and they
 fail in batches.
 
+Automating that check is worth doing and audits half the entry. A guard that
+perturbs each excluded case and asserts nothing changes will find the entries
+that have gone stale, in batches, on its first run — but what it verifies is the
+**claim**, not the **explanation**. An entry whose reason names entirely the
+wrong component passes forever, so long as the case really is unreachable for
+some other reason.
+
+That is a worse position than it sounds, because of what the guard removes. Before
+it, a wrong reason and a wrong exclusion tended to fail together, and the second
+one was eventually noticeable. After it, the reason is the only part of the entry
+that can still be wrong, and nothing is looking at it — while the green run reads
+as coverage of both halves. The reason is also the half that gets acted on: it is
+what the next reader consults when deciding whether the entry still applies, and
+they will not re-derive it from the assertion.
+
+So the guard buys permanence for the list, not correctness for its prose. The
+cheap repair is to make the reason findable from the thing it talks about:
+require it to name its component by the identifier the codebase actually uses, so
+that anyone grepping for that component lands on the exclusion alongside the code.
+Then a sentence that is *true of a neighbouring component* — the one shape that
+survives both the reader and the test — gets read by the person touching the
+component it wrongly names.
+
 ## An accumulator is checked against a second derivation
 
 Sometimes the honest answer is "no layer", because the escape was never about layers. A systematic offset — a per-unit figure that omits a fee the total includes, a rate applied at the wrong precision throughout — makes every individual number wrong in the same way and every individual number plausible, and anything that accumulates carries that error into every contribution it adds up. A test checking one of those numbers passes whenever the expectation holds the same mistake, and the expectation usually does, because it came from the same reading of the same specification by the same person. This is the one-party problem from "Where a double's content comes from" arriving as arithmetic rather than as a fixture: one belief, written down twice, agreeing with itself.

@@ -1,6 +1,6 @@
 ---
 name: designing-test-data
-description: Use when a test's setup is longer than its assertions, when fixtures are shared across files, when it is unclear which setup value causes a test to fail, when tests pass alone but fail in suite order, or when building factories, builders, object mothers, seed data, or bulk volume data for pagination and load tests. Covers defaults, realistic versus minimal values, unicode and locale inputs.
+description: Use when a test's setup is longer than its assertions, when fixtures are shared across files, when it is unclear which setup value causes a test to fail, when tests pass alone but fail in suite order, or when building factories, builders, object mothers, seed data, or bulk volume data for pagination and load tests. Also use when the fixtures for a rule that selects — a matcher, router, filter, alert condition, or suppression — were all written from the side that should match, or when such a rule fired on an input it should have ignored. Covers defaults, realistic versus minimal values, near-miss and negative corpora, and unicode and locale inputs.
 ---
 
 # Designing test data
@@ -26,6 +26,37 @@ Every value in a setup is either **irrelevant** — and must be a default, invis
 - Setup that names more than 3 values the test never asserts on has the wrong defaults.
 - Give the relevant value a name that states the reason: `expiredYesterday`, `maxLengthTitle`. A bare literal makes the reader reverse-engineer the intent.
 - Assert only on fields the test set or the code derived. Asserting on an incidental default couples the test to the builder.
+
+## Near-misses, not just examples
+
+A rule that *selects* — a matcher, a router, a filter, an alert condition, a
+suppression, a targeting expression — gets its fixtures written by whoever wants
+it to work, and they are drawn, every one of them, from the side that should
+match. Such a corpus can demonstrate that the rule fires. It cannot express the
+rule firing when it should not, so the only failure it is capable of showing is
+the one nobody was worried about.
+
+The gap is not hypothetical and it is not exotic. Containment matching is the
+common case: a short trigger sits inside a longer, unrelated word and the rule
+fires on the accident. Every positive fixture passes. The defect arrives with
+real input, which is also the first moment anyone looks at a non-matching case.
+
+So the fixtures a selecting rule is missing are the **near-misses** — inputs that
+contain the trigger, or sit one character from the boundary, and must not fire.
+They are harder to write than positives for a structural reason: a positive is
+derived from the intent you already hold, while a near-miss requires imagining
+the thing you were not thinking of. Do not invent them. Take them from
+recorded real input — a log, a transcript, a query history — where the accidents
+are already present and cost nothing to find. The same record that measures how
+often a proposed rule would fire (`automating-repetition`) is where its negative
+corpus comes from.
+
+Two are worth keeping permanently, and they work as a pair: one input that sits
+just outside the boundary and must not match, and one that sits just inside it
+and must. Either alone can be satisfied by moving the boundary. Together they pin
+it, so loosening the pattern and tightening it both go red — which is the point,
+because the fix for an over-firing rule is a tightening, and a tightening is how
+the true positives get lost.
 
 ## Defaults are a design decision
 

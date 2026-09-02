@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.31</span>
+      <span class="wordmark-version" dir="ltr">v1.0.32</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T17:01:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:01:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T22:24:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T22:24:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">orienting-in-unfamiliar-code</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T17:01:14.504942+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T22:24:56.886301+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Reading code</span>
-  <p class="lede">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project, or being asked to change code that nobody present wrote. Covers where to start reading, locating entry points and real module boundaries, telling live code from dead, finding where the work actually happens, and reconciling documented architecture with the one the imports reveal.</p>
+  <p class="lede">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project, or being asked to change code that nobody present wrote. Covers where to start reading, locating entry points and real module boundaries, telling live code from dead, finding where the work actually happens, and reconciling documented architecture with the one the imports reveal. Also use when a text search for a common identifier returns too much to read, when the question is who calls this or whether anything still uses it, or when deciding how far to trust a resolver's zero-references answer.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Orientation is a bounded reconnaissance with a deliverable: the name of the file you are going to change and a list of the things that will notice. It is not comprehension of the system, which no one has and which you will never reach by reading.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -83,6 +83,11 @@
 <p>Three passes, each cheap:</p>
 <ol><li><strong>Surface</strong> — the table above. Produces a map with holes.</li><li><strong>Spine</strong> — one request, job, or command followed end to end, naming each layer it crosses without reading inside them. Produces the layer list, which is what you actually need.</li><li><strong>Target</strong> — full depth on the two or three files the task touches, plus their tests.</li></ol>
 <p>Stop at pass 2 unless the task demands more. Most tasks do not.</p>
+<h2 id="a-text-search-and-an-index-answer-different-questions">A text search and an index answer different questions</h2>
+<p>Searching text answers <em>where does this string appear</em>. A resolver — a language server, an IDE index, a tags file, a compiler-backed query — answers <em>where is this defined</em> and <em>who uses this</em>. Those look like the same question right up to the point where orientation is hardest: a short or common identifier, a method name shared across unrelated types, a symbol re-exported under a different name.</p>
+<p>Text search degrades badly there, and it degrades in a way that feels like progress. A common name returns hundreds of lines, the reflex is to narrow the pattern, and narrowing discards true positives along with the noise — leaving a shorter list that reads as a result and is missing the call that mattered. Where the ecosystem has a resolver, stand it up as soon as pass 1 has told you what language this is — before the passes that do the reading, rather than after all of them — because it changes which questions are cheap: <em>who calls this</em> stops being an afternoon, and <em>is anything still using this</em> becomes answerable instead of guessed.</p>
+<p>It does not license depth-first reading. Breadth before depth is about attention, not about tooling, and an index that makes any single call one keystroke away makes it easier, not harder, to disappear down one. What it changes is the other half of that rule — the questions you wrote down and kept moving past are now answerable in one step when you come back to them.</p>
+<p>And keep it honest in the other direction, because this is where an index quietly misleads. <strong>It only knows what it can resolve.</strong> Reflection, names built from strings, config-driven wiring, dependency injection by convention, dynamic dispatch across a boundary, and anything crossing into another language are invisible to it — and those are precisely the seams that surprise you later. So a <strong>zero-references result is a hypothesis, not a finding</strong>: it means the resolver saw no reference, which is the claim you wanted only if the resolver could see everything. Confirm it with a text search over the whole repository, including configuration, templates, and data files, before deleting anything or concluding a path is dead. The index is the fast first pass; the search is the check on what the index cannot see.</p>
 <h2 id="the-build-graph-is-the-structure">The build graph is the structure</h2>
 <p>The folder tree is a filing decision; the build graph is a constraint. When they disagree, the build graph is the architecture:</p>
 <ul><li>Compilation or packaging units that cannot depend on each other are a real boundary; two folders in the same unit are not, no matter how they are named.</li><li>A folder named <code>common</code>, <code>core</code>, <code>shared</code>, <code>utils</code>, <code>lib</code>, or <code>misc</code> is named for the moment nobody could decide. Its contents are unrelated. Treat it as a namespace, never as a module.</li><li>Modules that ship separately, version separately, or deploy separately are separate systems and should be oriented separately.</li></ul>

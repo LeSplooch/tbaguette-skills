@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.31</span>
+      <span class="wordmark-version" dir="ltr">v1.0.32</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T17:01:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T17:01:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T22:24:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T22:24:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">automating-repetition</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T15:23:22+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T22:24:56.886301+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
-  <p class="lede">Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, or when a manual step is risky, irreversible, or easy to get wrong by hand.</p>
+  <p class="lede">Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a manual step is risky, irreversible, or easy to get wrong by hand, or when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Automation is a bet that a sequence will stay the same, paid up front and settled over years. The losing outcome is not a script that fails loudly; it is a script that quietly stops doing what its name promises while everyone keeps trusting it.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -85,6 +85,15 @@
 <h2 id="check-before-you-act">Check before you act</h2>
 <p>The safe first version reports and changes nothing. Ship that, run it alongside the manual process for two to four weeks, and compare its proposed plan against what a person actually did. Two things are earned: the logic is validated before it can do harm, and the checking version has standalone value as a drift detector even if the acting version is never written.</p>
 <p>Progress along this ladder deliberately: report only, then print a plan without applying it, then act with confirmation, then act unattended. Jumping straight to the last rung for anything destructive is the standard origin story of a cleanup job that deleted live data.</p>
+<p>Where the trigger's inputs are <strong>already recorded</strong> — logs, transcripts, ticket history, a metrics store — the two-to-four-week wait is avoidable, and skipping it is not a shortcut. Replay the record and measure how often the proposed rule would have fired. A guard, alert, lint or hook that would have gone off on a fifth of all occasions is furniture before it is ever armed, and furniture is ignored, which is the same as absent while looking like coverage. That is knowable in seconds against history, and only knowable after a month of watching without it.</p>
+<p>Replay answers a second question the alongside-run answers slowly or not at all: <strong>does the condition separate anything?</strong> A rule fires on cases meeting some test, and it is worth confirming that the cases <em>not</em> meeting it exist at all. One measured example: a proposed check keyed on a threshold, and replay showed every occasion above that threshold shared the outcome the check was looking for — so the threshold was not selecting the interesting cases, it was selecting all of them, and the discriminator distinguished nothing. Watching would eventually have shown a stream of alerts; it would not have shown <em>why</em>.</p>
+<h2 id="some-conditions-arise-on-the-worlds-schedule-not-on-yours">Some conditions arise on the world's schedule, not on yours</h2>
+<p>Everything above assumes the automation runs when you invoke it, or on a schedule you chose. A whole class of checks cannot work that way, and the tell is specific: the honest answer to <em>how often should this run</em> is <strong>the moment it happens</strong>, and every interval you can actually name is a compromise between noticing late and looking a thousand times for nothing.</p>
+<p>Those are watchers, not steps. A watcher runs for the lifetime of the work and reports when the condition occurs — a file changing, a line appearing in a log, an external state flipping, a long job finishing. Reaching for a poll there is not a cheaper version of the same thing; it converts a fact you could have been told into a question you now have to keep asking, and it is the reason so many of these end up either noisy or useless.</p>
+<p>Two costs come with it, and both are the kind that arrive quietly.</p>
+<ul><li><strong>A watcher is a process you now own, and its silence looks exactly like the good case.</strong> This is the silent-scheduled-job failure with its last symptom removed: a job that stops running at least leaves a gap where its output used to be, and a watcher's correct output on a quiet day is nothing at all, so a dead one and a working one produce the same record. It needs a heartbeat, or some periodic assertion that it is still alive, or the thing it was watching for will happen unobserved and the afternoon will read as calm.</li><li><strong>Its output arrives out of order with whatever you were doing.</strong> A message that made sense at the moment it was written is being read by someone in the middle of something else, possibly hours later. It has to carry enough context to be actionable away from the moment that produced it — which of the things being watched, what changed, and what the reader is expected to do — because the surrounding state that would have disambiguated it is gone.</li></ul>
+<p>None of which argues for a watcher whenever one is possible. A poll is the right answer whenever the condition changes slowly against how long you are willing to wait — checked twice a day, a daily thing is not worth a process — and it fails safe, because a poll that stops running stops producing the output you were reading. Reach for a watcher when latency is the requirement rather than a preference, and when nobody will be sitting there to ask again.</p>
+<p>The ladder still applies inside the watcher: report first, act later, and measure the firing rate against the record before arming anything.</p>
 <h2 id="a-bulk-edit-runs-once-so-the-ladder-does-not-apply">A bulk edit runs once, so the ladder does not apply</h2>
 <p>The ladder assumes a tool with a future — run it beside the manual process, compare, promote it a rung. A one-shot mechanical edit has no future to earn trust in. Thousands of generated values across dozens of files get exactly one run, and the review that would normally catch a mistake is precisely the review that a diff of that size defeats: nobody reads the four-thousandth line with the attention they gave the first.</p>
 <p>So the trust has to be built into the applier instead, and it takes two checks that fail in unrelated ways.</p>
