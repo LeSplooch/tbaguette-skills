@@ -2018,18 +2018,40 @@ code {
   background: color-mix(in oklch, var(--accent) 8%, transparent);
 }
 
-/* Drawn from two strokes, same reasoning as every other mark in this band. */
+/* Drawn from two strokes, same reasoning as every other mark in this band --
+   there is no close glyph in the sprite, and a Unicode multiplication sign
+   would be the one mark on this site not drawn to the same stroke weight.
+
+   Centred from 50%/50% and pulled back by half its own size, rather than left
+   to the static position it would get as an abspos child of a grid container.
+   That static position is a genuine corner of the grid spec -- it resolves
+   through the container's alignment properties -- and engines have disagreed
+   about it. Measured, this one does centre them; the failure mode if another
+   does not is both strokes in a corner of the button, which reads as a broken
+   control rather than as a styling nit. Explicit costs two declarations. */
 .notes-dialog__close::before,
 .notes-dialog__close::after {
   content: '';
   position: absolute;
+  top: 50%;
+  left: 50%;
   width: 0.85rem;
   height: 1.5px;
   background: currentColor;
   border-radius: 1px;
 }
-.notes-dialog__close::before { transform: rotate(45deg); }
-.notes-dialog__close::after { transform: rotate(-45deg); }
+.notes-dialog__close::before { transform: translate(-50%, -50%) rotate(45deg); }
+.notes-dialog__close::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+/* 2.25rem is a comfortable size for a pointer and under the 44px a finger
+   needs, so the circle grows where the pointer is actually coarse. Growing the
+   control rather than padding an invisible hit area past it keeps what is
+   clickable and what is visible the same shape -- a target that extends beyond
+   its own edge is the thing that makes a nearby control feel unreliable, which
+   is the complaint this is meant to remove rather than move. */
+@media (pointer: coarse) {
+  .notes-dialog__close { width: 2.75rem; height: 2.75rem; }
+}
 
 .notes-dialog__body {
   position: relative;
