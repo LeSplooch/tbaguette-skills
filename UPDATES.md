@@ -24,6 +24,18 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — The spine says what Isolate and Land mean with no repository
+
+- `orchestrating-work-end-to-end` covers work that has no git repository — operations against a live
+  system, reverse engineering, data analysis, research, an incident on infrastructure nobody version
+  controls. Isolate becomes a copy, a snapshot, a staging host, whatever makes the original
+  recoverable, and its other half is unchanged: measure the baseline first, where the baseline is
+  whatever measurement the change is meant to move. Land becomes the artifact reaching a durable
+  home the next person can find.
+- The point of the addition is the failure it prevents: reading two phases you cannot enter and
+  concluding the spine is for someone else's kind of work. A phase with no counterpart is skipped
+  and recorded in the phase log, never a reason to drop the track.
+
 ## 2026-09-02 — Five skills learn the failure that looks exactly like success
 
 - **`formidable`: an entrance must degrade to appearing, not to absence.** Put

@@ -165,6 +165,31 @@ The other tracks reuse this spine rather than replacing it:
 - **Author** runs frame the reader → gather → draft → verify → land. The phase that gets skipped is verify, every time: a document's claims are checked against the thing they describe, the same way code's are, rather than against the memory of it. `writing-durable-docs` decides what will still be true in a year, `explaining-technical-work` sets the altitude, and the specific form — `writing-adrs`, `writing-release-notes`, `writing-postmortems` — owns the shape.
 - **Change in place** opens with `deciding-reversibility` — a one-way door is a different piece of work from a two-way one — then runs its own skill from the routing reference, and rejoins at phase 6. An upgrade or a migration is reviewed like any other diff; arriving with no new code of its own is not a reason to skip the seat.
 
+### When there is no repository
+
+Phases 3 and 8 name git — a worktree to isolate in, a branch to land. Plenty of real work has
+neither: operations against a live system, reverse engineering, data analysis, research, an incident
+on infrastructure nobody version-controls. The phases still apply. Only their instruments change.
+
+**Isolate** means *the change cannot reach the thing you would be sorry to break*, and a worktree is
+one implementation of that. Off-repo it is a copy, a snapshot, a scratch database, a staging host, an
+exported archive — whatever makes the original recoverable. The other half of that gate travels
+unchanged, and is the half more often dropped: **measure the baseline before touching anything.**
+Where there is no suite, the baseline is whatever measurement the change is meant to move. Without
+one, "it is better now" has nothing to be better than.
+
+**Land** means *the artifact reached its durable home and the next person can find it* — the report
+filed where someone will look, the configuration in the place that survives a rebuild, the finding
+written into the record rather than left in a transcript that scrolls. The cleanup half is
+unchanged too: the scratch copy removed or deliberately kept, and anything unfinished named to
+whoever owns it next.
+
+The failure this exists to prevent is the plausible one. A run reads two phases it cannot enter,
+concludes the spine is for somebody else's kind of work, and abandons the track entirely — rather
+than entering those phases and skipping them with a logged reason, which is what the phase log is
+for. **A phase with no counterpart is skipped and recorded. It is never a reason to drop the
+track.**
+
 ## The floor: what survives every envelope
 
 Six things do not scale down. Not with amplitude, not with presence, not with how obviously correct the work is. An envelope that cannot afford one of these owes a cheaper mechanism for it, never a shrug — the same way a sixteen-color terminal still owes the contrast guarantee.
