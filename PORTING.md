@@ -179,7 +179,33 @@ re-audits them from scratch:
   stop working without anyone noticing, because their failure mode is exactly
   the one this audit kept finding: a bootstrap that runs and delivers nothing.
 
-Devin and Hermes were not re-audited.
+And the last two, which is the whole table:
+
+- **Devin discovers the skills and will never be told to check them.** Its
+  `.devin-plugin/plugin.json` plus `SKILL.md` directories is a real format, and
+  Devin reads skills from `.agents/skills/`, `.devin/skills/` and
+  `~/.config/devin/skills/`. But its own documentation is explicit that skills
+  "don't run automatically" — they are chosen from task context. There is no
+  session-start hook to attach a bootstrap to, and the nearest thing, Devin's
+  Knowledge, lives in the user's own repository, which rule 2 puts off limits.
+  So Devin is the one row here that fails the hard requirement outright, and
+  the honest description is skill discovery without a bootstrap. Nothing was
+  shipped for it, because there is nothing to ship.
+- **Hermes was a version, not a mechanism.** Its `pre_llm_call` bootstrap is
+  sound and its `__init__.py` already refuses to start rather than silently
+  skip when it cannot find the skills tree. What it had was
+  `plugin.yaml` sitting at 0.6.0 against a plugin at 1.0.28 — silently, for
+  exactly the reason `package.json` once drifted five minor versions, which is
+  that nothing compared them. It is now compared, by the same test, with a
+  hand-rolled reader rather than a new dependency.
+
+The rule this audit produced, worth stating on its own: **the tests proved
+consistency and never proved correctness.** Every one of these files was valid,
+every version matched, every hook exited 0, and three integrations delivered
+nothing to the model. A suite that only compares this repository against itself
+cannot see any of that. Where a fact came from a harness's documentation, the
+test that guards it now says so in its own docstring, so the next person can
+tell a checked fact from a copied assumption.
 
 ### What the three Copilot rows are, and are not, verified against
 

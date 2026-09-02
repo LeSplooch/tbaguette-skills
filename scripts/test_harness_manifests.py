@@ -53,6 +53,25 @@ VERSIONED_MANIFESTS = [
 ]
 
 
+# .hermes-plugin/plugin.yaml is the one manifest here that is not JSON, and it
+# is why this list exists separately rather than the YAML being skipped: it had
+# drifted to 0.6.0 against a plugin at 1.0.28 -- silently, for the same reason
+# package.json once drifted five minor versions, which is that nothing compared
+# them. Parsed by hand rather than with PyYAML because this repository has no
+# third-party dependencies and the file is flat `key: value` lines.
+YAML_MANIFESTS = [".hermes-plugin/plugin.yaml"]
+
+
+def _load_yaml_scalars(rel_path: str) -> dict:
+    values = {}
+    for line in (REPO_ROOT / rel_path).read_text(encoding="utf-8").splitlines():
+        if line.startswith((" ", "-", "#")) or ":" not in line:
+            continue
+        key, _, value = line.partition(":")
+        values[key.strip()] = value.strip()
+    return values
+
+
 def _load_json(rel_path: str):
     with (REPO_ROOT / rel_path).open() as f:
         return json.load(f)
@@ -75,6 +94,9 @@ class TestHarnessManifests(unittest.TestCase):
         marketplace = _load_json(".claude-plugin/marketplace.json")
         with self.subTest(manifest=".claude-plugin/marketplace.json (nested)"):
             self.assertEqual(marketplace["plugins"][0]["version"], expected_version)
+        for rel_path in YAML_MANIFESTS:
+            with self.subTest(manifest=rel_path):
+                self.assertEqual(_load_yaml_scalars(rel_path)["version"], expected_version)
 
     def test_agents_md_symlinks_to_claude_md(self):
         agents_md = REPO_ROOT / "AGENTS.md"

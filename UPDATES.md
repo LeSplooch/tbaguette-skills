@@ -53,7 +53,13 @@ Everything above the first `##` is preamble and is never rendered.
   `/TBaguette:orienting-in-unfamiliar-code` — and skills also load on their
   own when what you're asking matches one. TBaguette now says whichever of
   those is true where you are.
-- **Gemini CLI, Kimi Code, OpenCode and Pi were checked and left alone.**
+- **Devin is the one that cannot be fixed.** It finds the skills, but its own
+  documentation is clear that skills are chosen from task context rather than
+  run automatically — there is no session-start mechanism to hang the standing
+  rule on. On Devin, name the skill you want. `PORTING.md` says so plainly now
+  rather than implying otherwise.
+- **Gemini CLI, Kimi Code, OpenCode, Pi and Hermes were checked and left
+  alone.**
   Gemini turns out to be the strongest of the lot: it re-sends its context
   with every prompt, so it has never needed the per-turn reminder the others
   do. `PORTING.md` records what was verified for each, and which two are
