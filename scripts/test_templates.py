@@ -720,12 +720,29 @@ def check_update_notes() -> None:
     check("the newest entry renders outside the disclosure, where it is read "
           "without a click",
           html.index(">Newest thing<") < html.index("notes__earlier"))
-    check("older entries are folded into one native <details>",
-          '<details class="notes__earlier">' in html
-          and html.index("notes__earlier") < html.index(">Older thing<"))
-    check("the disclosure names how many entries it holds, so the control "
-          "says what opening it gets you",
-          "Show 1 earlier update<" in html)
+    # The archive ships as a real <details> and site.js promotes it to a
+    # dialog. That order is the whole accessibility story: a <button> that
+    # does nothing until script arrives would make the archive unreachable
+    # for anyone whose JS failed, where today the disclosure still opens.
+    check("the archive is a native <details>, not a script-only control",
+          '<details class="notes__earlier notes__archive" data-notes-archive' in html)
+    check("the archive holds every entry including the newest, so the dialog "
+          "reads as a whole record rather than a remainder",
+          html.index("notes__archive") < html.index(">Older thing<")
+          and html.count(">Newest thing<") == 2)
+    check("the control names how many entries it opens onto",
+          "Read all 2 updates<" in html)
+    check("the panel is one element, so the promotion moves the list and its "
+          "footnote into the dialog in a single operation",
+          html.count("data-notes-archive-panel") == 1)
+    check("the dialog's own strings come from the markup rather than being "
+          "hardcoded in site.js, where nothing here could check them",
+          'data-archive-title="Update notes"' in html
+          and 'data-archive-subtitle="The 2 most recent entries"' in html
+          and 'data-archive-close="Close update notes"' in html)
+    check("the archive is honest that it is not the whole record either",
+          "UPDATES.md</a>" in html
+          and f"{templates.GITHUB_BLOB_BASE}UPDATES.md" in html)
 
     check("a bullet keeps the inline markup content_pipeline rendered, rather "
           "than printing its tags",
@@ -742,20 +759,29 @@ def check_update_notes() -> None:
           and "notes__history" not in html and "notes__tag" not in html)
 
     lone = render_index(categories, {}, update_notes=[newest])
-    check("a single entry gets no disclosure — there is nothing folded behind it",
-          "notes__earlier" not in lone and ">Newest thing<" in lone)
+    check("a single entry gets no archive control — opening a dialog to read "
+          "the entry already on the page is a control that does nothing",
+          "notes__earlier" not in lone and "notes__archive" not in lone
+          and ">Newest thing<" in lone)
 
     two = render_index(categories, {}, update_notes=[newest, older, entry("2026-08-19", "T")])
-    check("the disclosure pluralizes its own count",
-          "Show 2 earlier updates<" in two)
+    check("the control counts what it actually opens onto",
+          "Read all 3 updates<" in two)
 
-    many = [entry(f"2026-08-{24 - i:02d}", f"E{i}") for i in range(20)]
+    # 20 is the number a reader sees, and it is only affordable because the
+    # dialog costs the same page height at 20 entries as at 2. A regression to
+    # inline disclosure would put the search field back below a changelog.
+    check("the cap is the reach-back the dialog makes affordable, not the old "
+          "inline budget", templates.UPDATE_NOTES_LIMIT == 20)
+
+    many = [entry(f"2026-08-{28 - i:02d}", f"E{i}") for i in range(25)]
     capped = render_index(categories, {}, update_notes=many)
     check("the page is not the archive — entries are capped, and the link to "
           "the full file is what covers the rest",
-          capped.count('<li class="notes__entry">') == templates.UPDATE_NOTES_LIMIT)
+          capped.count('<li class="notes__entry">')
+          == templates.UPDATE_NOTES_LIMIT + 1)
     check("the cap keeps the newest end of the list, not an arbitrary slice",
-          ">E0<" in capped and ">E19<" not in capped)
+          ">E0<" in capped and ">E24<" not in capped)
 
     untitled = render_index(categories, {}, update_notes=[entry("2026-08-24", "")])
     check("an entry with no title renders its date alone rather than an "

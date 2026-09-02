@@ -512,9 +512,11 @@ def main() -> None:
         )
         check(
             "the page shows no more entries than the cap allows, however long "
-            "the file has grown",
+            "the file has grown — the newest is rendered twice on purpose, "
+            "once on the page and once at the top of the archive dialog, so "
+            "the dialog reads as a whole record rather than a remainder",
             index_html2.count('<li class="notes__entry">')
-            == min(len(expected_notes), templates.UPDATE_NOTES_LIMIT),
+            == min(len(expected_notes), templates.UPDATE_NOTES_LIMIT) + 1,
         )
         check(
             "the notes land between the fresh rail and the search field, "

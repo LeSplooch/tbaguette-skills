@@ -24,29 +24,42 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-02 — GitHub Copilot support, in all three places Copilot runs
+## 2026-09-02 — If you are not on Claude Code, this is the update that matters
 
-- TBaguette installs into GitHub Copilot now, with the same standing
-  check-the-skills-first rule it sets up everywhere else — put in front of the
-  model when a session starts, and again on every turn after that. Each surface
-  takes it a different way. **Copilot CLI:**
-  `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then
-  `copilot plugin install TBaguette@tbaguette-dev`. **VS Code:** run
-  **Chat: Install Plugin From Source** from the Command Palette and give it
-  `https://github.com/LeSplooch/tbaguette-skills.git`. **The coding agent:**
-  it installs per repository, by adding TBaguette to `enabledPlugins` in that
-  repo's `.github/copilot/settings.json` — `PORTING.md` has the block to paste.
-  The install prompt on the site knows all three, so pasting it into whichever
-  one you're in is enough.
-- Copilot has no Skill tool, so being told to use one was sending you looking
-  for a button that isn't there. On Copilot a skill is a slash command —
-  `/TBaguette:orienting-in-unfamiliar-code` — and skills also load on their own
-  when what you're asking matches one. TBaguette now says that where it's true
-  and keeps saying Claude Code's version where that's true instead.
-- The previous claim that Copilot CLI was already supported was optimistic. It
-  could find the skills; nothing ever put the rule in front of the model, which
-  is the part that makes them fire. If you set Copilot up on that basis before
-  today, it is worth installing again.
+- **Three integrations were delivering nothing, and none of them looked
+  broken.** The files were there, the hooks ran, they exited cleanly — and the
+  harness quietly ignored an output shape it did not recognise. All three are
+  fixed below, and every other harness was re-read against its own
+  documentation to find out whether the same was true of it.
+- **Cursor was doing nothing at all.** The standing check-the-skills-first
+  rule never reached the model, because Cursor wants a different shape than
+  the one it was being handed. It works now, and Cursor also gains the
+  periodic re-assertion it never had — so a long session stops drifting away
+  from the skills the way it used to. If TBaguette has felt inert in Cursor,
+  that is why, and it is worth trying again.
+- **Codex had its bootstrap switched off.** Codex could find the skills but
+  was never told to check them. It now gets the same treatment Claude Code
+  does: the rule at session start, and again on every turn. Install it with
+  `codex plugin marketplace add LeSplooch/tbaguette-skills`.
+- **GitHub Copilot works in all three places it runs** — the CLI, VS Code, and
+  the coding agent. **CLI:** `copilot plugin marketplace add
+  LeSplooch/tbaguette-skills`, then `copilot plugin install
+  TBaguette@tbaguette-dev`. **VS Code:** run **Chat: Install Plugin From
+  Source** from the Command Palette and give it this repo's git URL. **Coding
+  agent:** add TBaguette to `enabledPlugins` in your repository's
+  `.github/copilot/settings.json` — `PORTING.md` has the block to paste.
+- **Copilot has no Skill tool**, so being told to use one was sending you
+  looking for a button that isn't there. There a skill is a slash command —
+  `/TBaguette:orienting-in-unfamiliar-code` — and skills also load on their
+  own when what you're asking matches one. TBaguette now says whichever of
+  those is true where you are.
+- **Gemini CLI, Kimi Code, OpenCode and Pi were checked and left alone.**
+  Gemini turns out to be the strongest of the lot: it re-sends its context
+  with every prompt, so it has never needed the per-turn reminder the others
+  do. `PORTING.md` records what was verified for each, and which two are
+  built on APIs their own vendors call experimental.
+- The install prompt on the site knows every one of these commands, so
+  pasting it into whichever agent you are in is still the whole procedure.
 
 ## 2026-09-02 — Contributing: pick the right file, make it reachable, and stop at the gate
 

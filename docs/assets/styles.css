@@ -1814,6 +1814,367 @@ code {
   transform: rotate(135deg);
 }
 
+/* ------------------------------------------------------------------ */
+/* 8c-bis. Update-notes archive — the dialog the <details> becomes      */
+/* ------------------------------------------------------------------ */
+
+/* Everything below only applies once site.js has promoted the disclosure.
+   With no script the <details> above is the whole feature and none of this
+   is reachable, which is the point: the archive is never a dead control. */
+
+/* A transport wrapper and nothing else: site.js moves this one element to
+   carry the list and its footnote into the dialog in a single operation.
+   display: contents means it draws no box in either place, so it cannot
+   introduce spacing that exists in the dialog and not in the <details>. */
+.notes__archive-panel { display: contents; }
+
+/* The promoted trigger. Not the summary's chevron — that glyph means
+   "unfolds below," and this no longer does. A framed control with a corner
+   mark reads as "opens onto something," which is what happens. */
+.notes__archive-trigger {
+  margin-top: var(--space-5);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.notes__archive-trigger:hover,
+.notes__archive-trigger:focus-visible {
+  color: var(--text-accent);
+  border-color: color-mix(in oklch, var(--accent) 50%, transparent);
+  background: color-mix(in oklch, var(--accent) 7%, transparent);
+}
+
+/* Two corner strokes rather than a glyph, for the same reason the summary's
+   chevron is drawn: it inherits colour and scales with the type instead of
+   depending on what the reader's font has at some codepoint. */
+.notes__archive-trigger::after {
+  content: '';
+  flex: none;
+  width: 0.55em;
+  height: 0.55em;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  border-top-right-radius: 2px;
+  transition: transform var(--duration-micro) var(--ease-out);
+}
+
+.notes__archive-trigger:hover::after,
+.notes__archive-trigger:focus-visible::after { transform: translate(1px, -1px); }
+
+/* --- the dialog itself --------------------------------------------- */
+
+.notes-dialog {
+  /* max-width is the measure, not a round number: the bullets inside cap at
+     --measure-prose and the entry heads run a little wider, so 46rem is the
+     narrowest box that never makes a bullet the thing setting the width. */
+  width: min(46rem, 100%);
+  max-width: min(46rem, 100%);
+  /* svh, not vh: on mobile browsers vh is the *largest* viewport, so a
+     vh-sized dialog is partly under the address bar until the user scrolls. */
+  max-height: min(84svh, 54rem);
+  padding: 0;
+  /* The dialog is its own scroll container in one row only, so the head and
+     foot stay put while the entries move under them. */
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid color-mix(in oklch, var(--accent) 55%, transparent);
+  border-radius: var(--radius-lg);
+  /* Same three-layer recipe as .install-frame and .update-modal: a hairline
+     gold seat, one real cast shadow from a single light direction, and a wide
+     gold ambient so the card looks lit rather than pasted on. */
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 12%, transparent),
+    0 30px 60px -24px hsl(var(--shadow-ink) / 0.75),
+    0 0 80px -28px color-mix(in oklch, var(--accent-solid) 60%, transparent);
+}
+
+/* The gilded rule, the same gesture the header and .update-modal make —
+   fading at both ends rather than running hard corner to corner. */
+.notes-dialog::before {
+  content: '';
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent,
+    color-mix(in oklch, var(--accent) 80%, transparent) 22%,
+    color-mix(in oklch, var(--accent) 80%, transparent) 78%,
+    transparent);
+}
+
+/* --accent-solid rather than --accent for the bloom, exactly as
+   .update-modal-overlay::before explains: everything painted on the scrim is
+   lit against a near-black field in *both* themes, and --accent resolves to
+   the darker gold-700 in flour, which over this scrim subtracts light instead
+   of adding it. */
+.notes-dialog::backdrop {
+  background:
+    radial-gradient(44rem 30rem at 50% 42%,
+      color-mix(in oklch, #dda25c 16%, transparent),
+      transparent 68%),
+    hsl(24 18% 5% / 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.notes-dialog__head {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-5) var(--space-6) var(--space-4);
+}
+
+/* Same fading rule the section head uses one band up, so the dialog reads as
+   the same object opened rather than a different component. */
+.notes-dialog__head::after {
+  content: '';
+  position: absolute;
+  left: var(--space-6);
+  right: var(--space-6);
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    color-mix(in oklch, var(--accent) 70%, transparent),
+    color-mix(in oklch, var(--accent) 22%, transparent) 55%,
+    transparent);
+}
+
+.notes-dialog__icon { color: var(--accent); width: 1.75em; height: 1.75em; flex: none; }
+
+.notes-dialog__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-4);
+  font-weight: 620;
+  color: var(--text-primary);
+}
+
+/* Mono and gold, matching .notes__date — the dialog's one piece of meta text
+   should look like the other meta text in the band it came from. */
+.notes-dialog__subtitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-accent);
+}
+
+.notes-dialog__close {
+  margin-inline-start: auto;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  /* The two strokes below are absolutely positioned; without a containing
+     block here they resolve against the dialog and land in its corner. */
+  position: relative;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.notes-dialog__close:hover,
+.notes-dialog__close:focus-visible {
+  color: var(--text-accent);
+  border-color: color-mix(in oklch, var(--accent) 50%, transparent);
+  background: color-mix(in oklch, var(--accent) 8%, transparent);
+}
+
+/* Drawn from two strokes, same reasoning as every other mark in this band. */
+.notes-dialog__close::before,
+.notes-dialog__close::after {
+  content: '';
+  position: absolute;
+  width: 0.85rem;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 1px;
+}
+.notes-dialog__close::before { transform: rotate(45deg); }
+.notes-dialog__close::after { transform: rotate(-45deg); }
+
+.notes-dialog__body {
+  position: relative;
+  overflow-y: auto;
+  /* Scrolling the last entry must not start scrolling the page behind it. */
+  overscroll-behavior: contain;
+  padding: var(--space-5) var(--space-6) var(--space-6);
+}
+
+/* The scroll region is focusable so it can be scrolled from the keyboard —
+   without this a keyboard-only reader can tab to the close button and to the
+   links, and never move the list. */
+.notes-dialog__body:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -4px;
+}
+
+/* --- the timeline spine -------------------------------------------- */
+
+/* What makes this read as a record rather than a long list: one hairline
+   running the length of the entries, with each date sitting on a node. It
+   also gives the scroll a sense of place, which a flat list of twenty dated
+   blocks does not have. Fades out at the bottom because the list is a window
+   onto UPDATES.md, not the end of it. */
+.notes__list--archive {
+  position: relative;
+  margin-top: 0;
+  padding-inline-start: var(--space-6);
+}
+
+.notes__list--archive::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.55em 0;
+  inset-inline-start: 3px;
+  width: 1px;
+  background: linear-gradient(to bottom,
+    color-mix(in oklch, var(--accent) 55%, transparent),
+    color-mix(in oklch, var(--accent) 18%, transparent) 65%,
+    transparent);
+}
+
+.notes__list--archive > .notes__entry { position: relative; }
+
+.notes__list--archive > .notes__entry::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc(-1 * var(--space-6));
+  top: 0.4em;
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  /* A ring in the panel's own colour, so the node reads as sitting on the
+     line rather than being threaded by it. */
+  box-shadow: 0 0 0 3px var(--surface);
+}
+
+/* The newest entry is the one already on the page behind this dialog, so it
+   gets the filled node and everything older gets a hollow one — a second
+   channel for "you have seen this one" that does not depend on colour. */
+/* Full --accent on the ring, not a 70% mix: measured, gold at 70% over the
+   flour surface lands around 2.4:1, and while nothing here is carried by the
+   node alone -- the date and the ordering already say which entry is newest --
+   a marker too faint to resolve is just noise on the spine. At full strength
+   it is 3.2:1 in flour and 7.1:1 in crust, both clear of the non-text floor. */
+.notes__list--archive > .notes__entry:not(:first-child)::before {
+  background: var(--surface);
+  border: 1.5px solid var(--accent);
+}
+
+.notes__archive-foot {
+  margin: var(--space-6) 0 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+}
+
+/* --- motion --------------------------------------------------------- */
+
+/* The resting state is visible, and @starting-style supplies the from-state
+   only at the moment the dialog enters the top layer.
+
+   Written the other way round -- `opacity: 0` in the base rule, `1` under
+   [open] -- it animates identically and fails catastrophically: any browser
+   that does not run the transition shows an open dialog at zero opacity, so
+   the page is scroll-locked behind a scrim with nothing on it and no visible
+   way out. This ordering degrades to appearing instantly instead, which is
+   the right direction to fail in. The cost is that there is no exit
+   animation, since there is no to-state to interpolate toward; an entrance
+   is worth having and an exit is not worth that risk. */
+@media (prefers-reduced-motion: no-preference) {
+  .notes-dialog {
+    transition:
+      opacity var(--duration-enter) var(--ease-out),
+      transform var(--duration-enter) var(--ease-out);
+  }
+  @starting-style {
+    .notes-dialog[open] { opacity: 0; transform: translateY(12px) scale(0.985); }
+  }
+
+  .notes-dialog::backdrop {
+    transition: opacity var(--duration-enter) var(--ease-out);
+  }
+  @starting-style {
+    .notes-dialog[open]::backdrop { opacity: 0; }
+  }
+}
+
+/* --- the page behind ------------------------------------------------ */
+
+/* showModal() blocks interaction but does not stop the page scrolling behind
+   the scrim, which reads as the dialog sliding around. */
+html.has-notes-dialog { overflow: hidden; }
+
+/* --- narrow --------------------------------------------------------- */
+
+/* Below this the panel stops being a card in the middle of a page and becomes
+   a sheet held to the bottom edge, which is where a thumb is. */
+@media (max-width: 40rem) {
+  .notes-dialog {
+    max-height: 92svh;
+    margin: auto auto 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-bottom: 0;
+  }
+  .notes-dialog__head { padding: var(--space-4) var(--space-4) var(--space-3); }
+  .notes-dialog__head::after { left: var(--space-4); right: var(--space-4); }
+  .notes-dialog__body { padding: var(--space-4); }
+  .notes__list--archive { padding-inline-start: var(--space-5); }
+  .notes__list--archive > .notes__entry::before {
+    inset-inline-start: calc(-1 * var(--space-5));
+  }
+}
+
+/* --- forced colours -------------------------------------------------- */
+
+/* Every gradient here is invisible in a forced palette: the gilded rules, the
+   spine, and the bloom all disappear. Solid borders in the system's own
+   colour are the substitute, and the nodes become CanvasText discs. */
+@media (forced-colors: active) {
+  .notes-dialog { border: 1px solid CanvasText; }
+  .notes-dialog::before { display: none; }
+  .notes-dialog__head { border-bottom: 1px solid CanvasText; }
+  .notes-dialog__head::after { display: none; }
+  .notes__list--archive::before { background: CanvasText; }
+  .notes__list--archive > .notes__entry::before {
+    background: CanvasText;
+    box-shadow: none;
+  }
+  .notes__list--archive > .notes__entry:not(:first-child)::before {
+    background: Canvas;
+    border: 1.5px solid CanvasText;
+  }
+}
+
 /* 160ms: the hero band enters on a 40ms cadence -- headline 0, install 40,
    lede 80, rail 120 -- and this is the next step, not a rounder number. Same
    `backwards` fill as .fresh: the element's resting style is already visible

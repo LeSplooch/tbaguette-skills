@@ -10,6 +10,12 @@ Install directly from this repository:
 /plugins install https://github.com/LeSplooch/tbaguette-skills
 ```
 
+Or, from a shell rather than from inside a session:
+
+```
+kimi plugin install https://github.com/LeSplooch/tbaguette-skills.git
+```
+
 Kimi Code applies plugin changes to new sessions. After installing, updating,
 enabling, disabling, or reloading a plugin, start a fresh session with `/new`.
 

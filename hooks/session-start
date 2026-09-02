@@ -11,9 +11,9 @@
 #      report, log) are judgment calls and stay with Claude, following that
 #      skill's own instructions using the data injected here.
 #
-# Usage: session-start [claude|copilot|vscode]
+# Usage: session-start [claude|copilot|vscode|cursor]
 #
-# The context it builds is identical in all three -- only the JSON envelope
+# The context it builds is identical in all four -- only the JSON envelope
 # around it differs, because the harnesses spell the same event differently.
 # Claude Code wants it nested under hookSpecificOutput with the event named
 # back at it. Copilot CLI's sessionStart wants a bare
@@ -24,7 +24,14 @@
 # end finds the key it is looking for. The cost is the payload written twice
 # into one object; only one branch of it is ever read.
 #
-# All three are one branch at the very bottom rather than three scripts, so
+# cursor is a fourth, and it is the reason to check rather than assume: its
+# sessionStart takes a flat, snake_case {"additional_context": ...}. Close
+# enough to Copilot's to look like a typo and far enough from Claude Code's to
+# be silently ignored -- which is exactly what was happening before this mode
+# existed. Cursor was being handed hookSpecificOutput and read nothing out of
+# it, so the integration had a hook that ran, exited 0, and delivered nothing.
+#
+# All four are one branch at the very bottom rather than four scripts, so
 # the update-check logic above -- the part with four states and a network
 # call -- stays single-sourced. A second copy of it is a second thing to keep
 # correct, and the copy nobody runs locally is the one that rots.
@@ -110,7 +117,8 @@ update_check_escaped=$(escape_for_json "$update_check_block")
 # commands -- so telling it to use a Skill tool would name a tool it cannot
 # find, on the one line whose whole job is making the other 95 skills
 # reachable.
-if [ "$OUTPUT_FORMAT" = "copilot" ] || [ "$OUTPUT_FORMAT" = "vscode" ]; then
+case "$OUTPUT_FORMAT" in copilot|vscode) copilot_style=1 ;; *) copilot_style=0 ;; esac
+if [ "$copilot_style" -eq 1 ]; then
     invocation_sentence="**Below is the full content of your 'TBaguette:using-tbaguette' skill. Every other TBaguette skill loads automatically when a prompt matches its description, and you can invoke one deliberately as the slash command '/TBaguette:<skill-name>'; skills/using-tbaguette/references/copilot-tools.md in this plugin has the rest of the mapping:**"
 else
     invocation_sentence="**Below is the full content of your 'TBaguette:using-tbaguette' skill - for all other TBaguette skills, use the 'Skill' tool with 'TBaguette:<skill-name>':**"
@@ -122,6 +130,9 @@ session_context="<EXTREMELY_IMPORTANT>\nYou have TBaguette.\n\n${invocation_esca
 case "$OUTPUT_FORMAT" in
     copilot)
         printf '{\n  "additionalContext": "%s"\n}\n' "$session_context"
+        ;;
+    cursor)
+        printf '{\n  "additional_context": "%s"\n}\n' "$session_context"
         ;;
     vscode)
         printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  },\n  "additionalContext": "%s"\n}\n' \

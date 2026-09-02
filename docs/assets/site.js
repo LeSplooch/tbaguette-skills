@@ -1019,6 +1019,131 @@
     });
   }
 
+  // -------------------------------------------------------------------
+  // Update-notes archive — promotes the server-rendered <details> into a
+  // real modal dialog. The disclosure is the mechanism and this is the
+  // enhancement, never the other way round: with no script, or on a browser
+  // without <dialog>, the <details> is left exactly as rendered and every
+  // entry is still reachable by opening it.
+  // -------------------------------------------------------------------
+
+  function initNotesArchive() {
+    var details = document.querySelector('[data-notes-archive]');
+    if (!details) return;
+
+    var panel = details.querySelector('[data-notes-archive-panel]');
+    var summary = details.querySelector('summary');
+    if (!panel || !summary) return;
+
+    // Feature-detect the method, not the element: an element with no
+    // showModal() would give a non-modal panel with no focus trap and no
+    // Escape, which is worse than the disclosure it replaced.
+    if (typeof window.HTMLDialogElement !== 'function' ||
+        typeof document.createElement('dialog').showModal !== 'function') return;
+
+    var dialog = document.createElement('dialog');
+    dialog.className = 'notes-dialog';
+    dialog.setAttribute('aria-labelledby', 'notes-dialog-title');
+
+    var head = document.createElement('div');
+    head.className = 'notes-dialog__head';
+
+    var iconHtml = iconMarkup('icon-wheat');
+    if (iconHtml) {
+      var iconWrap = document.createElement('span');
+      // Built from this file's own hardcoded sprite id, not from any page
+      // string — same reasoning as showUpdateModal()'s seal.
+      iconWrap.innerHTML = iconHtml;
+      var iconEl = iconWrap.firstChild;
+      iconEl.setAttribute('class', 'icon notes-dialog__icon');
+      head.appendChild(iconEl);
+    }
+
+    var title = document.createElement('h2');
+    title.className = 'notes-dialog__title';
+    title.id = 'notes-dialog-title';
+    title.textContent = details.getAttribute('data-archive-title') || 'Update notes';
+    head.appendChild(title);
+
+    var subtitleText = details.getAttribute('data-archive-subtitle');
+    if (subtitleText) {
+      var subtitle = document.createElement('p');
+      subtitle.className = 'notes-dialog__subtitle';
+      subtitle.textContent = subtitleText;
+      head.appendChild(subtitle);
+    }
+
+    var close = document.createElement('button');
+    close.className = 'notes-dialog__close';
+    close.type = 'button';
+    // The two strokes are drawn in CSS, so the button has no text of its own
+    // and owes an accessible name outright.
+    close.setAttribute('aria-label', details.getAttribute('data-archive-close') || 'Close');
+    head.appendChild(close);
+
+    var body = document.createElement('div');
+    body.className = 'notes-dialog__body';
+    // Focusable so the list can be scrolled from the keyboard. Without it a
+    // keyboard-only reader can reach the close button and the links inside
+    // and still have no way to move twenty entries of prose.
+    body.tabIndex = 0;
+    body.appendChild(panel);
+
+    dialog.appendChild(head);
+    dialog.appendChild(body);
+
+    var trigger = document.createElement('button');
+    trigger.className = 'notes__archive-trigger';
+    trigger.type = 'button';
+    trigger.textContent = summary.textContent.trim();
+
+    details.parentNode.insertBefore(trigger, details);
+    details.parentNode.removeChild(details);
+    document.body.appendChild(dialog);
+
+    // The page's scroll lock follows the dialog's own `open` attribute rather
+    // than its `close` event.
+    //
+    // The event is the obvious mechanism and it is the wrong one to depend on:
+    // it is the only thing that can undo a lock applied to <html>, and if it
+    // does not arrive the visitor is left on a page that cannot be scrolled at
+    // all, with the dialog already gone and nothing on screen explaining why.
+    // A clean-room <dialog> was observed not firing it at all in one browser
+    // during development. The attribute cannot lie about the same state, and
+    // an observer sees it change whichever way it was closed — the button,
+    // the backdrop, Escape, or a form submit.
+    var openState = new MutationObserver(function () {
+      document.documentElement.classList.toggle('has-notes-dialog', dialog.open);
+    });
+    openState.observe(dialog, { attributes: true, attributeFilter: ['open'] });
+
+    trigger.addEventListener('click', function () {
+      dialog.showModal();
+      document.documentElement.classList.add('has-notes-dialog');
+      // showModal() focuses the first focusable element, which is the close
+      // button — landing a reader on "close" rather than on what they asked
+      // to read. The scroll region is the right place to arrive.
+      body.focus();
+      body.scrollTop = 0;
+    });
+
+    close.addEventListener('click', function () { dialog.close(); });
+
+    // A click that lands on the dialog element itself is a click on the
+    // backdrop: every real child covers the padding box.
+    dialog.addEventListener('click', function (event) {
+      if (event.target === dialog) dialog.close();
+    });
+
+    // Belt and braces alongside the observer above: on any browser where the
+    // event does arrive, this releases the lock in the same frame rather than
+    // on the observer's microtask. Both are idempotent, so running both is
+    // free. Native <dialog> returns focus to the trigger on its own.
+    dialog.addEventListener('close', function () {
+      document.documentElement.classList.remove('has-notes-dialog');
+    });
+  }
+
   function initScrollRestore() {
     var saved;
     try {
@@ -1047,5 +1172,6 @@
   initUpdatedTime();
   initLanguageSwitcher();
   initScrollRestore();
+  initNotesArchive();
   initVersionCheck();
 })();

@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T05:13:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T05:13:03Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T05:44:45+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T05:44:45Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -86,7 +86,7 @@ Route A — you read Claude Code&#x27;s skills directory. Target: ~/.claude/skil
 3. &lt;target&gt; exists, has content, isn&#x27;t a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a &quot;naming collision&quot;, and ask me whether to move it aside and re-clone, rather than doing that yourself.
 4. Anything else already at that path — stop. Do not delete or modify it. Tell me there&#x27;s a naming collision that needs a manual look.
 
-Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install TBaguette@tbaguette-dev`. In VS Code it is not a shell command at all — tell me to run **Chat: Install Plugin From Source** from the Command Palette and paste https://github.com/LeSplooch/tbaguette-skills.git when it asks; don&#x27;t clone anything yourself in place of that. If it&#x27;s a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
+Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills` from inside a session or `kimi plugin install https://github.com/LeSplooch/tbaguette-skills.git` from a shell, Gemini CLI is `gemini extensions install https://github.com/LeSplooch/tbaguette-skills`, Codex is `codex plugin marketplace add LeSplooch/tbaguette-skills` and then installing TBaguette from it. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install TBaguette@tbaguette-dev`. In VS Code it is not a shell command at all — tell me to run **Chat: Install Plugin From Source** from the Command Palette and paste https://github.com/LeSplooch/tbaguette-skills.git when it asks; don&#x27;t clone anything yourself in place of that. If it&#x27;s a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
 
 Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is &quot;tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git&quot;, added to the &quot;plugin&quot; array in opencode.json. If you are the Copilot coding agent, the file is .github/copilot/settings.json in the repository you are working on, and both fields are objects rather than arrays: &quot;extraKnownMarketplaces&quot; gets {&quot;tbaguette-dev&quot;: {&quot;source&quot;: {&quot;source&quot;: &quot;github&quot;, &quot;repo&quot;: &quot;LeSplooch/tbaguette-skills&quot;}}} and &quot;enabledPlugins&quot; gets {&quot;TBaguette@tbaguette-dev&quot;: true}. That edits a repository I share with other people, so show it to me and wait, the same as any other config.
 
@@ -290,20 +290,43 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
-    <span class="notes__entry-title">GitHub Copilot support, in all three places Copilot runs</span>
+    <span class="notes__entry-title">If you are not on Claude Code, this is the update that matters</span>
   </h3>
   <ul class="notes__bullets">
-    <li>TBaguette installs into GitHub Copilot now, with the same standing check-the-skills-first rule it sets up everywhere else — put in front of the model when a session starts, and again on every turn after that. Each surface takes it a different way. <strong>Copilot CLI:</strong> <code>copilot plugin marketplace add LeSplooch/tbaguette-skills</code>, then <code>copilot plugin install TBaguette@tbaguette-dev</code>. <strong>VS Code:</strong> run <strong>Chat: Install Plugin From Source</strong> from the Command Palette and give it <code>https://github.com/LeSplooch/tbaguette-skills.git</code>. <strong>The coding agent:</strong> it installs per repository, by adding TBaguette to <code>enabledPlugins</code> in that repo's <code>.github/copilot/settings.json</code> — <code>PORTING.md</code> has the block to paste. The install prompt on the site knows all three, so pasting it into whichever one you're in is enough.</li>
-    <li>Copilot has no Skill tool, so being told to use one was sending you looking for a button that isn't there. On Copilot a skill is a slash command — <code>/TBaguette:orienting-in-unfamiliar-code</code> — and skills also load on their own when what you're asking matches one. TBaguette now says that where it's true and keeps saying Claude Code's version where that's true instead.</li>
-    <li>The previous claim that Copilot CLI was already supported was optimistic. It could find the skills; nothing ever put the rule in front of the model, which is the part that makes them fire. If you set Copilot up on that basis before today, it is worth installing again.</li>
+    <li><strong>Three integrations were delivering nothing, and none of them looked broken.</strong> The files were there, the hooks ran, they exited cleanly — and the harness quietly ignored an output shape it did not recognise. All three are fixed below, and every other harness was re-read against its own documentation to find out whether the same was true of it.</li>
+    <li><strong>Cursor was doing nothing at all.</strong> The standing check-the-skills-first rule never reached the model, because Cursor wants a different shape than the one it was being handed. It works now, and Cursor also gains the periodic re-assertion it never had — so a long session stops drifting away from the skills the way it used to. If TBaguette has felt inert in Cursor, that is why, and it is worth trying again.</li>
+    <li><strong>Codex had its bootstrap switched off.</strong> Codex could find the skills but was never told to check them. It now gets the same treatment Claude Code does: the rule at session start, and again on every turn. Install it with <code>codex plugin marketplace add LeSplooch/tbaguette-skills</code>.</li>
+    <li><strong>GitHub Copilot works in all three places it runs</strong> — the CLI, VS Code, and the coding agent. <strong>CLI:</strong> <code>copilot plugin marketplace add LeSplooch/tbaguette-skills</code>, then <code>copilot plugin install TBaguette@tbaguette-dev</code>. <strong>VS Code:</strong> run <strong>Chat: Install Plugin From Source</strong> from the Command Palette and give it this repo's git URL. <strong>Coding agent:</strong> add TBaguette to <code>enabledPlugins</code> in your repository's <code>.github/copilot/settings.json</code> — <code>PORTING.md</code> has the block to paste.</li>
+    <li><strong>Copilot has no Skill tool</strong>, so being told to use one was sending you looking for a button that isn't there. There a skill is a slash command — <code>/TBaguette:orienting-in-unfamiliar-code</code> — and skills also load on their own when what you're asking matches one. TBaguette now says whichever of those is true where you are.</li>
+    <li><strong>Gemini CLI, Kimi Code, OpenCode and Pi were checked and left alone.</strong> Gemini turns out to be the strongest of the lot: it re-sends its context with every prompt, so it has never needed the per-turn reminder the others do. <code>PORTING.md</code> records what was verified for each, and which two are built on APIs their own vendors call experimental.</li>
+    <li>The install prompt on the site knows every one of these commands, so pasting it into whichever agent you are in is still the whole procedure.</li>
   </ul>
 </li>
   </ol>
-  <details class="notes__earlier">
+  <details class="notes__earlier notes__archive" data-notes-archive
+           data-archive-title="Update notes"
+           data-archive-subtitle="The 20 most recent entries"
+           data-archive-close="Close update notes">
     <summary class="notes__earlier-summary">
-      <span class="notes__earlier-label">Show 5 earlier updates</span>
+      <span class="notes__earlier-label">Read all 20 updates</span>
     </summary>
-    <ol class="notes__list notes__list--earlier">
+    <div class="notes__archive-panel" data-notes-archive-panel>
+      <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
+    <span class="notes__entry-title">If you are not on Claude Code, this is the update that matters</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><strong>Three integrations were delivering nothing, and none of them looked broken.</strong> The files were there, the hooks ran, they exited cleanly — and the harness quietly ignored an output shape it did not recognise. All three are fixed below, and every other harness was re-read against its own documentation to find out whether the same was true of it.</li>
+    <li><strong>Cursor was doing nothing at all.</strong> The standing check-the-skills-first rule never reached the model, because Cursor wants a different shape than the one it was being handed. It works now, and Cursor also gains the periodic re-assertion it never had — so a long session stops drifting away from the skills the way it used to. If TBaguette has felt inert in Cursor, that is why, and it is worth trying again.</li>
+    <li><strong>Codex had its bootstrap switched off.</strong> Codex could find the skills but was never told to check them. It now gets the same treatment Claude Code does: the rule at session start, and again on every turn. Install it with <code>codex plugin marketplace add LeSplooch/tbaguette-skills</code>.</li>
+    <li><strong>GitHub Copilot works in all three places it runs</strong> — the CLI, VS Code, and the coding agent. <strong>CLI:</strong> <code>copilot plugin marketplace add LeSplooch/tbaguette-skills</code>, then <code>copilot plugin install TBaguette@tbaguette-dev</code>. <strong>VS Code:</strong> run <strong>Chat: Install Plugin From Source</strong> from the Command Palette and give it this repo's git URL. <strong>Coding agent:</strong> add TBaguette to <code>enabledPlugins</code> in your repository's <code>.github/copilot/settings.json</code> — <code>PORTING.md</code> has the block to paste.</li>
+    <li><strong>Copilot has no Skill tool</strong>, so being told to use one was sending you looking for a button that isn't there. There a skill is a slash command — <code>/TBaguette:orienting-in-unfamiliar-code</code> — and skills also load on their own when what you're asking matches one. TBaguette now says whichever of those is true where you are.</li>
+    <li><strong>Gemini CLI, Kimi Code, OpenCode and Pi were checked and left alone.</strong> Gemini turns out to be the strongest of the lot: it re-sends its context with every prompt, so it has never needed the per-turn reminder the others do. <code>PORTING.md</code> records what was verified for each, and which two are built on APIs their own vendors call experimental.</li>
+    <li>The install prompt on the site knows every one of these commands, so pasting it into whichever agent you are in is still the whole procedure.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
@@ -357,7 +380,160 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li>Three things do belong to the user, recognizable by what they need rather than how they feel: a secret only they hold, a decision that is theirs, and an irreversible action a run may prepare but not take. Everything else handed over is an unchecked capability claim — the same substitution this skill exists to prevent, aimed at the person instead of at the work.</li>
   </ul>
 </li>
-    </ol>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
+    <span class="notes__entry-title">A run is not finished while the things it started are still running</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/finishing-what-you-started/"><code>finishing-what-you-started</code></a> now covers the part of a run that never gets a ledger line: the backgrounded build, the watcher, the long benchmark, the dev server, the dispatched agent. None of them is a deliverable, so none of them is in the acceptance criteria, and every one of them outlives the report that says the work is done.</li>
+    <li>The close-out gains one more question, answered by looking rather than by remembering: what did this run start that is still running? Every answer gets a disposition — stopped, or deliberately left running and said so, with what it is and how to stop it. Left running on purpose is a fine outcome; left running silently is a cost the reader discovers hours later, and it reads to them like the run losing track of itself.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
+    <span class="notes__entry-title">The check that refuses to run has already told you something</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> adds the case where the instrument declines to take a reading at all: a preflight check, a version gate, a compatibility guard, a health probe that will not proceed. It arrives looking like an obstacle, and the reflex is to hunt for the flag that turns it off.</li>
+    <li>The skill now says to read the guard before overriding it — what condition does it test, and is that condition true here? A guard fires because somebody knew something about the target that whoever is bypassing it does not, and forcing past it converts a clean, free failure into a confident silent no-op. A guard that really is wrong is worth suppressing <em>and</em> worth fixing; a <code>--force</code> with no answer behind it is neither.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
+    <span class="notes__entry-title">Feeding both variants the same inputs, and knowing when that stops helping</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/performance-profiling/"><code>performance-profiling</code></a> picks up the rung above interleaved A/B runs: give both variants the same inputs in the same order and difference them per input instead of comparing averages. Whatever made input 47 slow made it slow for both arms, so the subtraction cancels it. Same generator, same seed, fed twice — and on a noisy workload it is often the difference between a result and a shrug.</li>
+    <li>It also says what to report alongside: the correlation between the two arms' per-input results. How much the pairing buys is a property of the pair, not of the technique, and quoting the reduction on its own reads as though it were the technique's. A low correlation has a usual cause worth naming — the change altered <em>which work happens</em> rather than how fast the work went, so most of each input's difficulty was never common to both and had nothing to cancel against.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
+    <span class="notes__entry-title">A threshold that measures consistency will adopt changes nobody can feel</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/performance-profiling/"><code>performance-profiling</code></a> now says what a significance test actually answers. It asks whether a difference is <em>reliable</em>, never whether it is <em>large</em> — so a variant better by one percent on every trial has a tiny difference, a tinier spread, and a ratio between them that clears any threshold effortlessly. The rule is working as designed and promoting changes that will never be observed.</li>
+    <li>Every significance threshold now gets a minimum effect size beside it, written in the units of the decision: milliseconds at p95, bytes, queries, dollars. Both clear or the change does not land.</li>
+    <li>It also carries a diagnostic that needs no statistics: run the whole procedure twice and see which decisions move. The settings that wander between two runs of identical code are exactly the ones the criterion was never really deciding.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
+    <span class="notes__entry-title">&quot;Did this help?&quot; is a question about a run that did not happen</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> gains a section on the baseline that has to be built rather than read. Any claim that a cache, an index, a retry policy, a compression step or a tuned parameter <em>helped</em> is a comparison against a run where it was switched off — and the number that is actually to hand is another reading off the treated run, close enough to the result to look like the other half of the ratio.</li>
+    <li>The discriminator is one question asked before the division: if the intervention were switched off, would this denominator change? A <code>no</code> means it is a second measurement of the treated run, not a baseline. The failure it catches runs in the costly direction — it reports no effect for something that is working, and the sensible response to no effect is removal.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
+    <span class="notes__entry-title">The determinism test that could not see the clock it depended on</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a>'s &quot;same seed, twice&quot; check now carries the flaw that makes it pass over a system that is not deterministic at all. Two runs held back to back in one process read the same clock, the same environment, the same working directory and the same machine identity, so a system genuinely depending on any of them still emits identical output and the check goes green — for as long as the two runs stay adjacent.</li>
+    <li>The skill now says to vary the ambient condition <em>between</em> the pair rather than around it, and what to do when varying it is genuinely impossible: the test still earns its place, and its name is where the narrower guarantee gets written down, so a later reader is not told <code>is_deterministic</code> about something that was only ever checked inside one process.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
+    <span class="notes__entry-title">Capability gaps: the environment you stood up answers, and is still missing services</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> checks a tool on three layers — installed, credentialed, reachable — and the third asks whether a real call returns a real answer. That is the right question for one tool and not enough for a whole environment brought up to close a gap: a virtual display, an emulator, a container, a sandboxed browser. None of those is a smaller version of the real thing. Each is the real thing minus a particular set of services, the environment will not tell you which ones, and everything that does not need what is absent behaves perfectly.</li>
+    <li>The example the skill now carries: on a bare virtual display, clicks land, navigation works and screenshots come back correct, because none of that needs a window manager — and keyboard input silently does nothing, because setting input focus does. Nothing errors, nothing is logged, and the natural reading of a keystroke with no effect is that the application ignored it.</li>
+    <li>So: enumerate the interactions the work needs — click, type, focus, drag, copy, drop a file — and prove each one against a known-correct response before anything is built on top. That order matters more than it looks, because completing such an environment is not additive. Starting a window manager to fix focus also gives every window a titlebar, which moves every screen coordinate down by its height and invalidates a click map that was working a minute earlier.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
+    <span class="notes__entry-title">Confirming done: read the payload, not the code that writes it</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> now covers the questions that are about something the system produces rather than about whether it works — what key a field ends up under, what an enum looks like once it is serialized, what is actually in the column. Reading the code that produces it is the reflex and it is the wrong place: an annotation re-cases the name, a custom encoder overrides the declaration, an inherited default comes from nowhere near the type, and a library changes its own default between releases. The declaration is a request; the bytes are the answer.</li>
+    <li>Produce one payload and read it. Serialize a single real value and print it, read one stored row, dump the header off one real request — usually one command, usually faster than the reading it replaces, and it settles the question instead of raising confidence in a guess. Reading the code is a hypothesis; producing the payload is evidence. The claims table gains a row for it, whose only real evidence is one real value put through the real encoder with the output printed.</li>
+    <li>The half that costs the most when it is missed: a grep or a throwaway script written to answer the question is untested code, and it can be wrong in the direction that costs the most — reporting the absence of what is there. <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> already covers telling a broken instrument from a refuted hypothesis, and its discriminator is that a broken apparatus usually fails in several ways at once. A pattern that is quietly too narrow fails in exactly one way: it returns nothing, cleanly, and nothing about that looks like a malfunction. Which is the argument for not building the checker in the first place.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
+    <span class="notes__entry-title">Test scope: a hundred passing tests can agree with each other and be wrong</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/choosing-test-scope/"><code>choosing-test-scope</code></a> answers &quot;a bug escaped every layer&quot; by asking which is the lowest layer that could have caught it. It now covers the case where the honest answer is &quot;no layer&quot;, because the escape was never about layers. A systematic offset — a per-unit figure that omits a fee the total includes, a rate applied at the wrong precision throughout — makes every number wrong in the same way and every number plausible, and a test checking one of them passes whenever the expectation holds the same mistake. It usually does: it came from the same reading of the same specification by the same person.</li>
+    <li>The skill already named that failure for fixtures — one party, no second party to disagree, the same misreading encoded twice and passing forever. This is the arithmetic form of it, and adding more point-checks does not escape it at any layer.</li>
+    <li>What does: a quantity computed by a <em>different route</em> and asserted against the first. A running total accumulated from individual events against the same figure derived from opening and closing balances; inventory on hand against receipts minus shipments. Neither route is the authority — the assertion is that they agree. It is normally one test per accumulator, and the one condition on the layer is that the two routes must not both run through the function that holds the error.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
+    <span class="notes__entry-title">Determinism: seeding everything and it still differs every run</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a> now covers the source of randomness that survives seeding. Its seam table gives identifiers their own row and their own injection point, and skipping that row is what this failure is made of: v4 UUIDs, session tokens and generated slugs are usually minted by a library drawing on the operating system's entropy, not on the generator you seeded. Seed every source you own and the ids keep changing anyway — so the same-seed check still comes back with a difference, and the search sets off after a second bug that does not exist.</li>
+    <li>Where that difference does the most damage is a sort. A comparator's final term decides the order of every pair the earlier terms tied on, so <code>(created_at, id)</code> with a randomly generated <code>id</code> breaks each of those ties at random. The code reads as careful, because it is a deliberate total ordering — just a different one each time.</li>
+    <li>The rule the skill lands on: tiebreak on something intrinsic to the record — a natural key, its insertion index, a hash of its content — never on an id minted alongside it. And ties are the normal case rather than the edge case: any batch that stamps its rows from a clock read once at the top gives every one of them the same value, so across that batch the tiebreak is not breaking ties, it is the sort.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
+    <span class="notes__entry-title">Confirming done: a green suite is not a program that starts</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> already named several ways a check can be fresh, first-hand and still not prove the claim. It now names one more: the check that ran in the wrong <em>context</em>. Anything placed inside a hook a framework calls — a setup or init function, a registration callback, a plugin entry point, an installer's post-install step — is compiled as ordinary code and does not execute under the conditions the rest of the program executes under. It runs where the framework decided: possibly before the async runtime is up, before there is a window to draw into, on a thread that does not own what the line touches, or before configuration has been read.</li>
+    <li>Nothing at the call site says so, which is why the usual evidence misses it. A test that calls the hook directly supplies the test's surroundings rather than the framework's, so build, typecheck and every last test can be green on something that fails on every single start.</li>
+    <li>The tell the skill hands you costs nothing to look for: if the framework ships its own version of the thing you were about to call — its own spawn, its own timer, its own way onto the main thread — that wrapper exists because the general-purpose one does not work there. The claims table gains a starting-up row, whose only real evidence is starting it the way it will actually be started and watching it get past the hook.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
+    <span class="notes__entry-title">Shell: a loop that waits for a process can be waiting on itself</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/portable-shell-scripting/"><code>portable-shell-scripting</code></a> covered killing a process by pattern. It now covers waiting on one, which is the same bug wearing the opposite symptom: <code>until ! pgrep -f 'thing'; do sleep 20; done</code> never exits, because the waiting shell's own command line contains the pattern. Nothing dies and nothing errors, so there is no failure to notice — only a loop that runs for hours, and a second copy of it the next time the shape looks obviously right.</li>
+    <li>The half worth having is what to wait on instead: the artifact the job produces, a file it touches when it finishes, or the job's own exit status via <code>wait &quot;$pid&quot;</code> — and always with a timeout, so a wait that is wrong anyway gives up in minutes. The section is now headed &quot;Killing and waiting on processes by pattern&quot; and the skill's description names wait loops, since nobody writing one was ever going to look under a heading about killing.</li>
+    <li>Also new: a precise pattern is still not a private one. Defeating self-match with the bracket trick or a tighter anchor closes one direction and leaves the other open — the process table is shared with the user's editor, window manager and browser, so a pattern naming a common binary matches a stranger's copy of it and the kill takes that one too. The PID saved at spawn is the only handle that cannot.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
+    <span class="notes__entry-title">Contributing: the description cap, and checking your words against the glossary</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> now warns about the one build gate that fires on the easy path — editing an existing skill rather than adding a new one. <code>description</code> is capped at 1024 characters by the Agent Skills format, and the suite enforces it, so past the cap a newly-noticed trigger has to displace an older one instead of joining the list. That can make a description tweak an edit to a sentence you did not come to touch.</li>
+    <li>It also adds a check nothing automated can do: grep the library for your key noun before adopting it. A captured observation arrives in whatever words were to hand, and some of them already mean something narrower here — <code>seam</code> is spoken for. That is how a second, vaguer sense of a defined term gets into the corpus, and it is one <code>grep</code> to avoid.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-01">1 Sep 2026</time>
+    <span class="notes__entry-title">Dependencies: what to do when there is no hash to check</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/auditing-dependencies/"><code>auditing-dependencies</code></a> assumed throughout that the canonical integrity signal exists. It now covers the artifact least protected by the rest of the skill — the one-off download outside any package manager, whose publisher lists no digest for that file at all.</li>
+    <li>A missing hash is not permission to skip verification. It removes the one check that would have settled the question alone and leaves several that settle it together: exact byte size against the published size, container magic and structure, an internal build timestamp consistent with the release date, the archive's own listing carrying the expected entry point, the same bytes fetched over a different network path.</li>
+    <li>The skill is explicit that this is not a signature and does not replace asking for one. It trades a single thing that would have to be broken for several independent things that would all have to be forged, and says to record which signals were used so the next reader inherits a verification with a known shape.</li>
+  </ul>
+</li>
+      </ol>
+      <p class="notes__archive-foot">
+        Older than these, the whole record lives in
+        <a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/UPDATES.md" rel="noopener">UPDATES.md</a>.
+      </p>
+    </div>
   </details>
 </section>
     <div class="search" id="skills" data-search-root>

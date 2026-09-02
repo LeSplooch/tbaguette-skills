@@ -3,7 +3,14 @@
   "hooks": {
     "sessionStart": [
       {
-        "command": "./hooks/run-hook.cmd session-start"
+        "command": "./hooks/run-hook.cmd session-start cursor",
+        "timeout": 30
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "./hooks/run-hook.cmd user-prompt-submit cursor",
+        "timeout": 10
       }
     ]
   }

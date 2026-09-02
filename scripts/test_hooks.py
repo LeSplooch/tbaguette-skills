@@ -41,6 +41,7 @@ USER_PROMPT_SUBMIT = HOOKS_DIR / "user-prompt-submit"
 RUN_HOOK_CMD = HOOKS_DIR / "run-hook.cmd"
 HOOKS_COPILOT_JSON = HOOKS_DIR / "hooks-copilot.json"
 HOOKS_VSCODE_JSON = REPO_ROOT / "com.github.copilot" / "hooks" / "hooks.json"
+HOOKS_CURSOR_JSON = HOOKS_DIR / "hooks-cursor.json"
 
 USING_TBAGUETTE_FIXTURE = (
     "---\nname: using-tbaguette\ndescription: fixture for test_hooks.py\n---\n\n"
@@ -572,17 +573,109 @@ def check_user_prompt_submit_vscode() -> None:
     check(f"stays short enough for per-turn cost ({len(ctx)} bytes)", len(ctx) < 600)
 
 
+def check_hooks_cursor_json_shape() -> None:
+    print("hooks-cursor.json shape")
+    data = json.loads(HOOKS_CURSOR_JSON.read_text(encoding="utf-8"))
+    check("declares version 1", data.get("version") == 1)
+
+    hooks = data.get("hooks", {})
+    # postToolUse, not beforeSubmitPrompt. Cursor has a per-prompt hook and its
+    # output schema is {continue, user_message} -- `continue` gates the turn and
+    # `user_message` is addressed to the human. There is no door to the model on
+    # that event at all, and only sessionStart and postToolUse accept
+    # additional_context. Wiring the per-prompt one would look right in a diff
+    # and deliver nothing.
+    check("uses the two events that actually accept additional_context",
+          set(hooks) == {"sessionStart", "postToolUse"})
+
+    for event, script, fmt in (("sessionStart", "session-start", "cursor"),
+                               ("postToolUse", "user-prompt-submit", "cursor")):
+        entries = hooks.get(event, [])
+        check(f"{event} declares exactly one hook", len(entries) == 1)
+        entry = entries[0] if entries else {}
+        command = entry.get("command", "")
+        check(f"{event} runs run-hook.cmd", "run-hook.cmd" in command)
+        check(f"{event} names {script}", script in command)
+        # Without the argument this emits Claude Code's envelope, which is
+        # exactly the bug that left Cursor with a hook that ran and delivered
+        # nothing for as long as this integration has existed.
+        check(f"{event} passes the cursor format argument",
+              command.rstrip().endswith(fmt))
+        check(f"{event} bounds its runtime", isinstance(entry.get("timeout"), int))
+
+
+def check_session_start_cursor_shape() -> None:
+    print("session-start: Cursor output envelope")
+    with tempfile.TemporaryDirectory() as tmp:
+        plugin_root = make_plugin_root(Path(tmp), "plugin")
+        payload = run_session_start(plugin_root, "cursor")
+
+        # Flat and snake_case. Close enough to Copilot's to read as a typo,
+        # far enough from Claude Code's to be dropped in silence.
+        check("top-level key is additional_context, flat and snake_case",
+              list(payload.keys()) == ["additional_context"])
+        ctx = payload["additional_context"]
+        check("carries using-tbaguette's SKILL.md verbatim",
+              USING_TBAGUETTE_FIXTURE.rstrip("\n") in ctx)
+        # Cursor's tool surface is Claude Code-compatible, so unlike Copilot it
+        # really does have a Skill tool and the default wording is correct.
+        check("keeps Claude Code's Skill-tool wording, which Cursor can follow",
+              "use the 'Skill' tool" in ctx)
+
+
+def check_user_prompt_submit_cursor() -> None:
+    print("user-prompt-submit: Cursor postToolUse throttle")
+    with tempfile.TemporaryDirectory() as tmp:
+        env = dict(os.environ, TMPDIR=tmp)
+
+        def call(conversation_id: str = "conv-1") -> dict:
+            result = subprocess.run(
+                ["bash", str(USER_PROMPT_SUBMIT), "cursor"],
+                input=json.dumps({"conversation_id": conversation_id,
+                                  "hook_event_name": "postToolUse"}),
+                capture_output=True, text=True, check=False, env=env,
+            )
+            check_quiet = result.returncode == 0
+            check(f"exits 0 (conversation={conversation_id})", check_quiet)
+            return json.loads(result.stdout)
+
+        first = call()
+        check("speaks up on the first tool call of a conversation",
+              list(first.keys()) == ["additional_context"])
+        ctx = first["additional_context"]
+        check("the nudge is delimited so it does not read as the user",
+              ctx.startswith("<TBAGUETTE_SKILL_CHECK>"))
+        check("names the Skill tool, which Cursor has", "Skill tool" in ctx)
+        check("closes the 'just a question' loophole", "Questions" in ctx)
+
+        # postToolUse fires per tool result, not per turn -- emitting on every
+        # one would put the nudge in front of every file read. The throttle is
+        # what makes riding this event affordable rather than merely possible.
+        emitted = [i for i in range(2, 21) if call() != {}]
+        check("stays quiet between re-assertions rather than firing on every "
+              "tool result", emitted == [10, 20])
+
+        # A second conversation is counted separately, or a long session would
+        # silence a short one that started beside it.
+        other = call("conv-2")
+        check("each conversation gets its own counter",
+              list(other.keys()) == ["additional_context"])
+
+
 def main() -> None:
     check_hooks_json_shape()
     check_hooks_copilot_json_shape()
     check_hooks_vscode_json_shape()
+    check_hooks_cursor_json_shape()
     check_executable_bits()
     check_user_prompt_submit()
     check_user_prompt_submit_copilot()
     check_user_prompt_submit_vscode()
+    check_user_prompt_submit_cursor()
     check_session_start_basic_shape()
     check_session_start_copilot_shape()
     check_session_start_vscode_shape()
+    check_session_start_cursor_shape()
     check_run_hook_cmd_unix_passthrough()
     check_update_check_same_sha()
     check_update_check_update_available()

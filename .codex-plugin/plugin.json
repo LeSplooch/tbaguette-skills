@@ -20,7 +20,7 @@
     "workflow"
   ],
   "skills": "./skills/",
-  "hooks": {},
+  "hooks": "./hooks/hooks-codex.json",
   "interface": {
     "displayName": "TBaguette's Atelier",
     "shortDescription": "Judgment calls, code comprehension, and change discipline for coding agents",

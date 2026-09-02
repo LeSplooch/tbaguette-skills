@@ -91,8 +91,8 @@ never loaded.
 | Harness | Entry point | Bootstrap mechanism | Tool mapping |
 |---|---|---|---|
 | Claude Code | `.claude-plugin/plugin.json` + `hooks/hooks.json` | shell hook → `hooks/session-start`, plus per-turn `hooks/user-prompt-submit` | native `Skill` tool; no adapter needed |
-| Codex | `.codex-plugin/plugin.json` (empty `hooks`) | native skill discovery, no session-start hook | none shipped yet — no Atelier skill has needed one so far |
-| Cursor | `.cursor-plugin/plugin.json` + `hooks/hooks-cursor.json` | shell hook → `hooks/session-start`; no per-turn hook wired up yet | none needed (Claude Code–compatible tool surface) |
+| Codex | `.codex-plugin/plugin.json` + `hooks/hooks-codex.json` (installed with `codex plugin marketplace add LeSplooch/tbaguette-skills`, reusing `.agents/plugins/marketplace.json`) | shell hook → `hooks/session-start`, plus per-turn `hooks/user-prompt-submit` — Codex's hook config, stdout shape and `CLAUDE_PLUGIN_ROOT` are all Claude Code's | none needed |
+| Cursor | `.cursor-plugin/plugin.json` + `hooks/hooks-cursor.json` | shell hook → `hooks/session-start cursor`, plus a throttled re-assertion on `postToolUse` → `hooks/user-prompt-submit cursor` | none needed (Claude Code–compatible tool surface) |
 | GitHub Copilot CLI | root `plugin.json` + `hooks/hooks-copilot.json` (installed with `copilot plugin marketplace add LeSplooch/tbaguette-skills` then `copilot plugin install TBaguette@tbaguette-dev`, reusing `.claude-plugin/marketplace.json` — the CLI reads that location too) | shell hook → `hooks/session-start copilot`, plus per-turn `hooks/user-prompt-submit copilot` | `skills/using-tbaguette/references/copilot-tools.md` |
 | Copilot in VS Code | root `plugin.json` + `com.github.copilot/hooks/hooks.json` (installed with the **Chat: Install Plugin From Source** command and this repo's git URL) | shell hook → `hooks/session-start vscode`, plus per-turn `hooks/user-prompt-submit vscode` | same file as the CLI |
 | Copilot coding agent | root `plugin.json`, enabled per repository in that repo's `.github/copilot/settings.json` (see below) | the CLI's `hooks/hooks-copilot.json`, run in the cloud sandbox — only the `bash` field is honored there | same file as the CLI |
@@ -131,6 +131,55 @@ That goes in the target repository's `.github/copilot/settings.json`. This repo
 deliberately does not ship one of its own: a settings file here would enable the
 plugin for anyone whose coding agent touches *this* repository, which is a
 decision for them to make in theirs.
+
+### What a docs-only audit of every row turned up
+
+Every integration in the table above was re-read against its harness's own
+documentation, with no live instance to test against. Three of them were
+delivering nothing, and none of the three looked broken from inside this
+repository — the files existed, the JSON was valid, the hooks exited 0.
+
+- **Cursor was inert.** Its `sessionStart` reads a flat, snake_case
+  `{"additional_context": ...}`. It was being handed Claude Code's
+  `hookSpecificOutput`, which it ignores. A hook ran on every session, exited
+  0, and delivered nothing — for as long as the integration had existed.
+- **Cursor cannot have a literal per-turn hook.** `beforeSubmitPrompt` returns
+  `{continue, user_message}`: `continue` gates the turn and `user_message` is
+  addressed to the human. Only `sessionStart` and `postToolUse` accept
+  `additional_context`. So the re-assertion rides `postToolUse` and throttles
+  itself per conversation, which is a different cadence rather than a worse
+  one — the decay it exists to fix happens in long agentic runs, and long
+  agentic runs are made of tool calls.
+- **Codex had its own bootstrap switched off.** The manifest shipped
+  `"hooks": {}`, empty on purpose, to stop Codex default-discovering Claude
+  Code's `hooks/hooks.json`. It worked, and it cost the entire integration.
+  Codex's hook config shape, its stdout shape and even its
+  `CLAUDE_PLUGIN_ROOT` variable are Claude Code's, so the answer was a hook
+  file of its own rather than no hooks at all. Codex now has both a
+  session-start bootstrap and a per-turn nudge.
+
+Three others were checked and left alone, which is worth recording so nobody
+re-audits them from scratch:
+
+- **Gemini CLI is the strongest of the lot.** `@./`-imports in a context file
+  are real (the Memory Import Processor, relative paths, depth limit 5), so
+  `GEMINI.md`'s one-line include resolves. Better still, Gemini concatenates
+  its context files into *every prompt* — it has per-turn re-injection for
+  free, without a hook.
+- **Kimi Code's manifest is correct.** `skills`, `sessionStart.skill` and
+  `interface` are all real fields; a second, older-looking Kimi plugin doc
+  describes a tools-only format with none of them, and it is not the one that
+  applies. `skillInstructions` is the one field that could not be confirmed
+  either way.
+- **OpenCode and Pi are the fragile pair.** Both adapters hang off APIs that
+  are explicitly experimental — OpenCode's `experimental.chat.messages.transform`
+  is not in the published plugin-hook list, and plugins registering
+  `experimental.*` hooks have been reported silently breaking across minor
+  versions. Nothing is wrong with them today. They are the two most likely to
+  stop working without anyone noticing, because their failure mode is exactly
+  the one this audit kept finding: a bootstrap that runs and delivers nothing.
+
+Devin and Hermes were not re-audited.
 
 ### What the three Copilot rows are, and are not, verified against
 
@@ -204,6 +253,14 @@ cannot rewrite a prompt instead of emitting both and hoping.
   bootstrap; it's a harness pointed at a config file it cannot read. Give
   the harness its own manifest naming its own hook file, so default
   discovery never reaches the wrong one.
+- **A hook that runs is not a hook that works.** This is the single failure
+  this repository has now shipped three times, on three harnesses, and it
+  never looks like a failure: the file exists, the JSON parses, the script
+  exits 0, and the harness silently ignores an output shape it does not
+  recognise. `additionalContext`, `additional_context`, nested under
+  `hookSpecificOutput` or flat — four harnesses, four answers. Read the
+  harness's own output schema before writing the hook, and treat "the hook
+  ran" as worth nothing on its own.
 - **Check what each hook event lets you return, not just that the event
   exists.** Copilot CLI has a per-turn hook, which looked like a free win
   over Cursor. It does not accept `additionalContext` — `userPromptSubmitted`
@@ -212,4 +269,6 @@ cannot rewrite a prompt instead of emitting both and hoping.
   could previously only fail to help into one that can actively destroy a
   turn, which is why `hooks/user-prompt-submit`'s copilot branch treats every
   parse failure as "emit `{}` and exit 0." Any port that reaches for a
-  prompt-rewriting hook owes the same fail-open.
+  prompt-rewriting hook owes the same fail-open. Cursor is the sharper case:
+  its per-prompt event has no context field at all, so the only honest options
+  were a different event or none.

@@ -34,6 +34,21 @@
 # with an empty object, which Copilot reads as "no modification." A missing
 # nudge costs one turn's reminder. A mangled prompt costs the turn.
 #
+# cursor is the odd one out, and not by choice. Cursor has a per-prompt hook,
+# beforeSubmitPrompt, and its output schema is {continue, user_message} --
+# `continue` gates the turn and `user_message` is addressed to the human. There
+# is no door to the model there at all. Only two Cursor events accept
+# additional_context: sessionStart, which is the injection that already decays,
+# and postToolUse. So on Cursor this script rides postToolUse, which fires per
+# tool result rather than per turn -- far too often to emit on every one, so it
+# throttles itself per conversation and speaks up every NUDGE_EVERY-th call.
+#
+# That is a different cadence, not a worse one. The decay this exists to fix
+# happens in long agentic runs, and long agentic runs are made of tool calls;
+# a run that never calls a tool is a run short enough for the session-start
+# injection to still be in view. Cursor's own docs are the record for all of
+# this -- see PORTING.md.
+#
 # vscode is the third combination and exists because VS Code is documented
 # for neither. It names the event Claude Code's way (UserPromptSubmit) and
 # runs Copilot's engine, and nothing published says which output it reads.
@@ -46,6 +61,11 @@
 set -euo pipefail
 
 OUTPUT_FORMAT="${1:-claude}"
+
+# How many Cursor postToolUse calls pass between re-assertions. Small enough
+# that a long run is reminded several times, large enough that it is not paying
+# for the nudge on every file read.
+NUDGE_EVERY=10
 
 nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see TBaguette:using-tbaguette. If one plausibly applies, invoke it -- Skill tool, \`TBaguette:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
 
@@ -121,6 +141,69 @@ fi
 
 if [ "$OUTPUT_FORMAT" = "vscode" ]; then
     nudge="$copilot_nudge"
+fi
+
+if [ "$OUTPUT_FORMAT" = "cursor" ]; then
+    # Nothing on stdin means no conversation to count against. Stay quiet
+    # rather than guess -- a nudge is not worth a wrong one.
+    if [ -t 0 ]; then
+        printf '{}\n'
+        exit 0
+    fi
+    payload=$(cat)
+
+    conversation_id=""
+    if command -v node >/dev/null 2>&1; then
+        conversation_id=$(printf '%s' "$payload" | node -e '
+const fs = require("fs");
+try {
+  const input = JSON.parse(fs.readFileSync(0, "utf8"));
+  const id = input.conversation_id;
+  process.stdout.write(typeof id === "string" ? id : "");
+} catch (e) {}
+' 2>/dev/null) || conversation_id=""
+    fi
+    if [ -z "$conversation_id" ] && command -v python3 >/dev/null 2>&1; then
+        conversation_id=$(printf '%s' "$payload" | python3 -c '
+import json, sys
+try:
+    data = json.loads(sys.stdin.read())
+    cid = data.get("conversation_id")
+    sys.stdout.write(cid if isinstance(cid, str) else "")
+except Exception:
+    pass
+' 2>/dev/null) || conversation_id=""
+    fi
+    # No id is survivable: every conversation then shares one counter, so the
+    # nudge still lands periodically, just not per-conversation. Silence would
+    # be the worse failure.
+    [ -n "$conversation_id" ] || conversation_id="shared"
+
+    # A conversation id from the harness is untrusted input as far as the
+    # filesystem is concerned -- everything outside this set becomes an
+    # underscore, so it can never climb out of the state directory.
+    key=$(printf '%s' "$conversation_id" | tr -c 'A-Za-z0-9_.-' '_' | cut -c1-64)
+    state_dir="${TMPDIR:-/tmp}/tbaguette-nudge"
+    mkdir -p "$state_dir" 2>/dev/null || true
+    state_file="$state_dir/$key"
+
+    count=$(cat "$state_file" 2>/dev/null || printf '0')
+    case "$count" in ''|*[!0-9]*) count=0 ;; esac
+    count=$((count + 1))
+    printf '%s' "$count" > "$state_file" 2>/dev/null || true
+
+    # First call of a conversation, then every NUDGE_EVERY-th. If the counter
+    # could not be written the count stays 1 every time, which re-asserts on
+    # every tool call -- noisy, but never silent, and that is the right way
+    # round for a reminder.
+    if [ "$count" -ne 1 ] && [ $((count % NUDGE_EVERY)) -ne 0 ]; then
+        printf '{}\n'
+        exit 0
+    fi
+
+    printf '{\n  "additional_context": "<TBAGUETTE_SKILL_CHECK>\\n%s\\n</TBAGUETTE_SKILL_CHECK>"\n}\n' \
+        "$(escape_for_json "$nudge")"
+    exit 0
 fi
 
 context="<TBAGUETTE_SKILL_CHECK>\n$(escape_for_json "$nudge")\n</TBAGUETTE_SKILL_CHECK>"

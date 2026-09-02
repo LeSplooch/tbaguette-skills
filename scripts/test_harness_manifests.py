@@ -25,6 +25,7 @@ JSON_MANIFESTS = [
     "com.github.copilot/hooks/hooks.json",
     "gemini-extension.json",
     "hooks/hooks.json",
+    "hooks/hooks-codex.json",
     "hooks/hooks-copilot.json",
     "hooks/hooks-cursor.json",
     "package.json",
@@ -157,6 +158,47 @@ class TestHarnessManifests(unittest.TestCase):
         source = marketplace["plugins"][0]["source"]
         self.assertEqual(source, "./")
         self.assertTrue((REPO_ROOT / source / "plugin.json").is_file())
+
+    def test_codex_manifest_no_longer_disables_its_own_hooks(self):
+        """This shipped as `"hooks": {}` -- deliberately empty, to stop Codex
+        default-discovering Claude Code's hooks/hooks.json. It worked, and the
+        cost was the whole bootstrap: Codex had skills on disk and nothing that
+        ever put the rule in front of the model.
+
+        Codex's hook config shape, its stdout shape, and even its
+        CLAUDE_PLUGIN_ROOT variable are all Claude Code's, so the fix was a
+        hook file of its own rather than no hooks at all. An empty object here
+        again would restore the original defect silently."""
+        hooks = _load_json(".codex-plugin/plugin.json").get("hooks")
+        self.assertEqual(hooks, "./hooks/hooks-codex.json")
+        self.assertTrue((REPO_ROOT / "hooks/hooks-codex.json").is_file())
+
+    def test_every_harness_hook_file_reaches_a_real_script(self):
+        """Five hook configs now, in four schemas, and the one thing they all
+        have to get right is naming a script that exists. A rename in hooks/
+        that missed one would leave that harness exiting non-zero on every
+        session start, which no other assertion here would notice."""
+        configs = {
+            "hooks/hooks.json": ("SessionStart", "UserPromptSubmit"),
+            "hooks/hooks-codex.json": ("SessionStart", "UserPromptSubmit"),
+            "hooks/hooks-copilot.json": ("sessionStart", "userPromptSubmitted"),
+            "com.github.copilot/hooks/hooks.json": ("SessionStart", "UserPromptSubmit"),
+            "hooks/hooks-cursor.json": ("sessionStart", "postToolUse"),
+        }
+        for rel_path, events in configs.items():
+            data = _load_json(rel_path)
+            with self.subTest(config=rel_path):
+                self.assertEqual(set(data["hooks"]), set(events))
+                commands = json.dumps(data["hooks"])
+                # Every config, whatever its schema, routes through the one
+                # cross-platform launcher.
+                self.assertIn("run-hook.cmd", commands)
+                for script in ("session-start", "user-prompt-submit"):
+                    if script in commands:
+                        self.assertTrue(
+                            (REPO_ROOT / "hooks" / script).is_file(),
+                            f"{rel_path} names hooks/{script}, which does not exist",
+                        )
 
     def test_package_json_points_at_real_files(self):
         package = _load_json("package.json")

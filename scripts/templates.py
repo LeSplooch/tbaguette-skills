@@ -819,8 +819,15 @@ GITHUB_BLOB_BASE = "https://github.com/LeSplooch/tbaguette-skills/blob/master/"
 # How many update-note entries reach the page at all. UPDATES.md is append-only
 # and grows without bound, and the landing page is not the archive -- the file
 # itself is, in the repository, where anyone who wants the whole record already
-# is. Only the newest of these is open by default -- see _render_update_notes.
-UPDATE_NOTES_LIMIT = 6
+# is.
+#
+# 20 rather than the 6 this was: the cap used to be doing two jobs at once,
+# bounding what the page *holds* and bounding what the page *takes up*, because
+# the older entries expanded inline and pushed the search field off-screen. The
+# archive dialog splits those apart -- it costs the same vertical space at 20
+# entries as at 2 -- so this number is now free to be about how far back a
+# reader might reasonably want to look, and nothing else.
+UPDATE_NOTES_LIMIT = 20
 
 UPDATE_NOTES_SOURCE_PATH = "UPDATES.md"
 
@@ -1213,7 +1220,7 @@ Route A — you read Claude Code's skills directory. Target: ~/.claude/skills/TB
 3. <target> exists, has content, isn't a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a "naming collision", and ask me whether to move it aside and re-clone, rather than doing that yourself.
 4. Anything else already at that path — stop. Do not delete or modify it. Tell me there's a naming collision that needs a manual look.
 
-Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills`, Gemini CLI takes it as an extension. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install TBaguette@tbaguette-dev`. In VS Code it is not a shell command at all — tell me to run **Chat: Install Plugin From Source** from the Command Palette and paste https://github.com/LeSplooch/tbaguette-skills.git when it asks; don't clone anything yourself in place of that. If it's a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
+Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills` from inside a session or `kimi plugin install https://github.com/LeSplooch/tbaguette-skills.git` from a shell, Gemini CLI is `gemini extensions install https://github.com/LeSplooch/tbaguette-skills`, Codex is `codex plugin marketplace add LeSplooch/tbaguette-skills` and then installing TBaguette from it. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install TBaguette@tbaguette-dev`. In VS Code it is not a shell command at all — tell me to run **Chat: Install Plugin From Source** from the Command Palette and paste https://github.com/LeSplooch/tbaguette-skills.git when it asks; don't clone anything yourself in place of that. If it's a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
 
 Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is "tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git", added to the "plugin" array in opencode.json. If you are the Copilot coding agent, the file is .github/copilot/settings.json in the repository you are working on, and both fields are objects rather than arrays: "extraKnownMarketplaces" gets {"tbaguette-dev": {"source": {"source": "github", "repo": "LeSplooch/tbaguette-skills"}}} and "enabledPlugins" gets {"TBaguette@tbaguette-dev": true}. That edits a repository I share with other people, so show it to me and wait, the same as any other config.
 
@@ -1628,31 +1635,45 @@ def _render_update_notes(entries: list[dict], base_path: str = "") -> str:
     as _render_fresh_section: a section whose only content is the news that it
     has no content is worse than the space it takes.
 
-    Only the newest entry is open. Everything older sits inside a <details>,
-    which is native — no JavaScript, no ARIA to get wrong, and it still opens
-    for a visitor whose scripts failed to load. That matters more than usual
-    here: this band sits above the search field, and an unbounded changelog
-    unfolding between the two would push the site's primary navigation
-    off-screen for the benefit of readers who mostly want the top entry."""
+    The newest entry is on the page. Everything back to UPDATE_NOTES_LIMIT is
+    in an archive that opens over the page rather than unfolding inside it.
+    That is what makes the count and the footprint independent: this band sits
+    above the search field, and the old inline <details> traded one against the
+    other — every entry added pushed the site's primary navigation further down
+    for the benefit of readers who mostly want the top entry.
+
+    It ships as a <details> and is *promoted* to a dialog by site.js, rather
+    than being a button that does nothing until script arrives. With no
+    JavaScript the disclosure still opens and every entry is still readable,
+    exactly as before; the dialog is the enhancement, not the mechanism."""
     if not entries:
         return ""
     shown = entries[:UPDATE_NOTES_LIMIT]
-    newest, earlier = shown[0], shown[1:]
+    newest = shown[0]
 
-    if earlier:
-        count = len(earlier)
-        noun = "update" if count == 1 else "updates"
-        earlier_html = f"""
-  <details class="notes__earlier">
+    if len(shown) > 1:
+        archive_url = f"{GITHUB_BLOB_BASE}{UPDATE_NOTES_SOURCE_PATH}"
+        label = f"Read all {len(shown)} updates"
+        archive_html = f"""
+  <details class="notes__earlier notes__archive" data-notes-archive
+           data-archive-title="Update notes"
+           data-archive-subtitle="The {len(shown)} most recent entries"
+           data-archive-close="Close update notes">
     <summary class="notes__earlier-summary">
-      <span class="notes__earlier-label">Show {count} earlier {noun}</span>
+      <span class="notes__earlier-label">{escape_html(label)}</span>
     </summary>
-    <ol class="notes__list notes__list--earlier">
-{_join(*(_render_update_entry(entry) for entry in earlier))}
-    </ol>
+    <div class="notes__archive-panel" data-notes-archive-panel>
+      <ol class="notes__list notes__list--earlier notes__list--archive">
+{_join(*(_render_update_entry(entry) for entry in shown))}
+      </ol>
+      <p class="notes__archive-foot">
+        Older than these, the whole record lives in
+        <a href="{escape_html(archive_url)}" rel="noopener">{escape_html(UPDATE_NOTES_SOURCE_PATH)}</a>.
+      </p>
+    </div>
   </details>"""
     else:
-        earlier_html = ""
+        archive_html = ""
 
     return f"""<section class="notes" aria-labelledby="notes-title" data-update-notes>
   <div class="notes__head">
@@ -1661,7 +1682,7 @@ def _render_update_notes(entries: list[dict], base_path: str = "") -> str:
   </div>
   <ol class="notes__list">
 {_render_update_entry(newest)}
-  </ol>{earlier_html}
+  </ol>{archive_html}
 </section>"""
 
 
