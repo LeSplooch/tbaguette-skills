@@ -24,6 +24,18 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-02 — using-tbaguette now covers the long response
+
+- `using-tbaguette` says out loud that its check is per *response*, and that a response can outlive
+  it. Measured in one harness: the median response ran 4 tool calls, but the 99th percentile ran 49
+  and one reached 194 — and fifteen substantive responses in a row invoked nothing while the notice
+  fired correctly at the top of every one. The check is now owed twice: before a response, and again
+  once one has grown long enough that its opening no longer counts as recent.
+- The skill also points at where to wire this if your harness fires an event at the end of a
+  response, with two warnings from measuring it: fire only when a response is both large and
+  skill-free, or it becomes furniture, and check that your discriminator separates anything at all
+  before trusting it.
+
 ## 2026-09-02 — Five skills learn the failure that looks exactly like success
 
 - **`formidable`: an entrance must degrade to appearing, not to absence.** Put

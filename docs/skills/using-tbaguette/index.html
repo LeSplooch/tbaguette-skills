@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>using-tbaguette — Judgment and meta — TBaguette’s Atelier</title>
-<meta name="description" content="Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message.">
+<meta name="description" content="Use at the start of every conversation, in every project…">
 <meta property="og:type" content="website">
 <meta property="og:title" content="using-tbaguette — Judgment and meta — TBaguette’s Atelier">
-<meta property="og:description" content="Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message.">
+<meta property="og:description" content="Use at the start of every conversation, in every project…">
 <link rel="canonical" href="/tbaguette-skills/skills/using-tbaguette/">
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-02T13:30:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T13:30:36Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-02T14:44:41+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-02T14:44:41Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,20 +64,25 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">using-tbaguette</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T08:00:21+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-02T07:44:01-07:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
-  <p class="lede">Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message. Establishes that TBaguette's own skills must be checked for relevance before every response, the same way this notice itself got surfaced.</p>
+  <p class="lede">Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message, and not only at the top of a long one. Establishes that TBaguette's own skills must be checked for relevance before every response, and again once a response has run long enough that its opening check has gone stale, the same way this notice itself got surfaced.</p>
 </div><div class="prose"><div class="prose-callout"><p class="prose-callout__label">Extremely important</p><div class="prose-callout__body"><p>If there is even a small chance one of TBaguette's skills applies to what you're about to do, invoke it — with the Skill tool, as <code>TBaguette:&lt;skill-name&gt;</code>. This holds for every response for the rest of this conversation, not just the one right after this notice.</p></div></div>
 <h2 id="the-rule">The rule</h2>
 <p>Before responding — including a clarifying question, &quot;let me look at the code first,&quot; or anything that feels too small to bother — check whether a TBaguette skill covers it. You don't need to open a file to see what exists: every <code>TBaguette:*</code> skill and its trigger description is already listed in your available-skills context. <code>CATALOG.md</code> in this repo has the longer versions when a one-line trigger isn't enough to judge relevance.</p>
 <p>If a skill turns out not to fit once you're in it, that's fine — drop it. But check first, every time.</p>
+<h2 id="a-long-response-needs-a-second-check-not-only-the-first">A long response needs a second check, not only the first</h2>
+<p>The rule above is per <em>response</em>, and it quietly assumes a response is short. Most are: in one measured harness the median response ran four tool calls, which a check at the top governs comfortably. The tail does not behave. The 90th percentile was 19 calls, the 99th was 49, and one response reached 194. By call 190 the check that opened the response is not a guardrail, it is scrollback.</p>
+<p>That is where this discipline actually fails, and it fails quietly — nothing about a long response announces that its opening judgment has gone stale. Fifteen consecutive substantive responses in that harness invoked nothing at all, while the notice fired correctly at the top of every one of them. The guidance was never missing; it was simply hundreds of actions old by the time each decision it governs got made.</p>
+<p>So the check is owed twice: before the response, and again once a response has grown past the point where you would still call its opening recent. If you want a trigger that does not depend on noticing, a response that has run a couple of dozen tool calls and invoked nothing has drifted, whatever it feels like from the inside.</p>
+<p>Where the harness fires an event at the <em>end</em> of a response, that is the place to wire this — <a class="skill-link" href="/tbaguette-skills/skills/automating-repetition/"><code>automating-repetition</code></a> owns the judgment about turning a habit into machinery, and a check whose whole failure mode is &quot;the reminder scrolled away&quot; is near the top of that list. Two cautions, both from measuring one: fire only on a response that is <strong>both</strong> large and skill-free, or it becomes furniture — the obvious threshold fired on 22% of all responses. And confirm the discriminator separates anything before trusting it; in that harness <em>every</em> large response had invoked nothing, so size alone distinguished nothing at all.</p>
 <h2 id="when-the-work-is-bigger-than-one-response">When the work is bigger than one response</h2>
 <p>One skill covers one stretch of work. Anything that will take several — a feature, a bug with no known cause, a migration, an audit — needs them in an order, and that order is <a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a>: which track the request is on, which phase it is in, what evidence opens the next gate, and where the run record lives so a compaction doesn't cost the run. Invoke it before the first action, not after the first three.</p>
 <p>When several skills apply at once, they go in this order: the spine first, because it says which phase this is; then that phase's owner skill; then whatever the work's own content calls for. &quot;Build me X&quot; starts at <a class="skill-link" href="/tbaguette-skills/skills/scoping-before-building/"><code>scoping-before-building</code></a>, not in an editor. &quot;Fix this bug&quot; starts at <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a>, not at a patch.</p>
 <h2 id="red-flags">Red flags</h2>
 <p>Thoughts that mean stop and check anyway:</p>
-<table><thead><tr><th>Thought</th><th>Reality</th></tr></thead><tbody><tr><td>&quot;This is too small for a skill&quot;</td><td>Small changes are exactly where the guardrails (naming, commit hygiene, test scope) get skipped first.</td></tr><tr><td>&quot;I already know how to do this&quot;</td><td>Knowing the general shape of a task isn't the same as this library's specific judgment calls.</td></tr><tr><td>&quot;I'll check after I've looked at the code&quot;</td><td>Several skills (<a class="skill-link" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/"><code>orienting-in-unfamiliar-code</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/reading-specifications/"><code>reading-specifications</code></a>) are about <em>how</em> to look, not what to do once you have.</td></tr><tr><td>&quot;It's just a question, not a task&quot;</td><td>Questions are tasks. Check for skills.</td></tr></tbody></table>
+<table><thead><tr><th>Thought</th><th>Reality</th></tr></thead><tbody><tr><td>&quot;This is too small for a skill&quot;</td><td>Small changes are exactly where the guardrails (naming, commit hygiene, test scope) get skipped first.</td></tr><tr><td>&quot;I already know how to do this&quot;</td><td>Knowing the general shape of a task isn't the same as this library's specific judgment calls.</td></tr><tr><td>&quot;I'll check after I've looked at the code&quot;</td><td>Several skills (<a class="skill-link" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/"><code>orienting-in-unfamiliar-code</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/reading-specifications/"><code>reading-specifications</code></a>) are about <em>how</em> to look, not what to do once you have.</td></tr><tr><td>&quot;It's just a question, not a task&quot;</td><td>Questions are tasks. Check for skills.</td></tr><tr><td>&quot;I'm deep into this response, checking now breaks the flow&quot;</td><td>A response long enough for that thought is exactly the one its opening check no longer covers. Invoking costs one call.</td></tr></tbody></table>
 <h2 id="alongside-other-plugins">Alongside other plugins</h2>
 <p>If another plugin also injects a &quot;check skills first&quot; notice — Superpowers' <code>using-superpowers</code>, for example — both apply at once. This one governs TBaguette's own library specifically and says nothing about anyone else's.</p>
 <h2 id="platform-adaptation">Platform adaptation</h2>
