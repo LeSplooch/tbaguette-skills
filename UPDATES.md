@@ -24,6 +24,37 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-03 — crouton was mostly advice about prose, and prose is not where the tokens go
+
+- **`crouton` has been rewritten around what a session actually spends.** It used
+  to give most of its length to registers and word choice. Measured across agent
+  sessions, reply prose is low single-digit percent of a run — the cost is what
+  gets pulled *in*, and because every turn re-sends the whole conversation, a
+  file read costs roughly three times its own size. A 1,300-line file is not a
+  13k-token read; it's a 30k-token decision.
+- **It now carries read rules you can check yourself**, not adjectives: never
+  read what you already have, locate with `grep -n` then read the range, outline
+  a long file before opening it, cap what a command can return, and don't re-run
+  a command whose output cannot have changed. None of them trade away
+  correctness — each returns the same information for less. In a sample of real
+  sessions, 95% of file reads pulled the whole file and 44% of sessions re-read
+  something already in context, so these are the normal case rather than edge
+  cases.
+- **It answers the "should I add a tool to save tokens" question, with the
+  reason.** A plugin or MCP server's schema joins the per-request floor and is
+  charged every turn whether or not it gets used, and the bounded-read tools
+  such a server usually offers — ranged read, grep, glob — are already in the
+  harness. That's now a row in the false-economies table beside the older traps.
+- **Cheaper where it's needed, free where it isn't.** On a read-heavy task, run
+  three times per version and per model: driven by Sonnet, the rewrite cost 10%
+  less than the old text, and every single run of it was cheaper than every run
+  of the old one. Driven by Opus, the two were indistinguishable — it was
+  already reading in ranges and outlining before opening, and it finished the
+  same task for a third less than Sonnet did under either text. So this is
+  guidance that pays on the models that need it and costs nothing on the ones
+  that don't. Answers were equally correct throughout. Where it did pay, it got
+  there by making *more* tool calls, not fewer — many small ranged reads instead
+  of a few whole-file ones.
 ## 2026-09-03 — The fixture nobody checks is the one describing your own system
 
 - `grounding-test-doubles` was written about things belonging to somebody else —
