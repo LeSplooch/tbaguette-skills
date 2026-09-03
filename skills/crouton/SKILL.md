@@ -120,6 +120,8 @@ Inside the conversation, drop back to prose for a warning before something destr
 
 The read rules have no such exception. Reading a range rather than a whole file changes nothing about what the artifact says, so it applies while writing a commit message exactly as it does mid-run.
 
+They do have a limit, and it is not the same shape. Every rule above returns the *same* information for less — that is what makes them free. But a habit of not opening files also stops you seeing what you were not looking for, and that cost lands on discovery work specifically: orientation, review, an audit, anything whose job is to find out what is there rather than to answer a question already asked. In one small comparison of six orientation runs, the run that turned up a latent defect nobody had asked about was the most expensive of the six. So: compress hardest when the question is known, spend the reads when the job is to find the question, and say which one you did.
+
 ## Holding the mode
 
 - It is session state, not a per-reply style. Finishing the task doesn't end it; neither does an error, a tool detour, or a change of subject. Only the user ends it, by asking — and the reply after that is ordinary prose, with no announcement of the switch back either.

@@ -91,6 +91,11 @@ Everything above the first `##` is preamble and is never rendered.
   sessions, 95% of file reads pulled the whole file and 44% of sessions re-read
   something already in context, so these are the normal case rather than edge
   cases.
+- **It also says where reading less costs you.** The read rules are free in the
+  sense that they return the same information for less — but not opening files
+  is also how you stop noticing what you weren't looking for, and that lands on
+  discovery work: orientation, review, an audit. Compress hardest when the
+  question is known; spend the reads when the job is finding the question.
 - **And it now names the first thing to check: whether your harness already
   does it.** Claude Code declines a repeated identical read of an unchanged file
   on its own. Anything you build to catch that case is overhead on every read it

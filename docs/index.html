@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-03T14:58:49+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T14:58:49Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-03T15:02:35+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T15:02:35Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -147,25 +147,25 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/atomic-commits/" data-fresh-at="2026-09-03T14:58:49.204730+00:00" draggable="false" style="--cf-offset: 0">
-  <span class="card__name-row">
-    <span class="card__name">atomic-commits</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T14:58:49.204730+00:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit…</p>
-  <span class="card__foot">
-    <span class="tag">Landing changes</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/crouton/" data-fresh-at="2026-09-03T16:51:26+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/crouton/" data-fresh-at="2026-09-03T15:02:35.956479+00:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">crouton</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T16:51:26+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T15:02:35.956479+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when asked for terse, compressed, or token-saving output — &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;keep it short&quot;, &quot;stop explaining&quot;…</p>
   <span class="card__foot">
     <span class="tag">Communicating</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/atomic-commits/" data-fresh-at="2026-09-03T16:58:49+02:00" draggable="false" style="--cf-offset: 1">
+  <span class="card__name-row">
+    <span class="card__name">atomic-commits</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T16:58:49+02:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit…</p>
+  <span class="card__foot">
+    <span class="tag">Landing changes</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -351,6 +351,7 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ul class="notes__bullets">
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/crouton/"><code>crouton</code></a> has been rewritten around what a session actually spends.</strong> It used to give most of its length to registers and word choice. Measured across agent sessions, reply prose is low single-digit percent of a run — the cost is what gets pulled <em>in</em>, and because every turn re-sends the whole conversation, a file read costs roughly three times its own size. A 1,300-line file is not a 13k-token read; it's a 30k-token decision.</li>
     <li><strong>It now carries read rules you can check yourself</strong>, not adjectives: never read what you already have, locate with <code>grep -n</code> then read the range, outline a long file before opening it, cap what a command can return, and don't re-run a command whose output cannot have changed. None of them trade away correctness — each returns the same information for less. In a sample of real sessions, 95% of file reads pulled the whole file and 44% of sessions re-read something already in context, so these are the normal case rather than edge cases.</li>
+    <li><strong>It also says where reading less costs you.</strong> The read rules are free in the sense that they return the same information for less — but not opening files is also how you stop noticing what you weren't looking for, and that lands on discovery work: orientation, review, an audit. Compress hardest when the question is known; spend the reads when the job is finding the question.</li>
     <li><strong>And it now names the first thing to check: whether your harness already does it.</strong> Claude Code declines a repeated identical read of an unchanged file on its own. Anything you build to catch that case is overhead on every read it doesn't fire on — which is worth knowing before you write it, not after.</li>
     <li><strong>It answers the &quot;should I add a tool to save tokens&quot; question, with the reason.</strong> A plugin or MCP server's schema joins the per-request floor and is charged every turn whether or not it gets used, and the bounded-read tools such a server usually offers — ranged read, grep, glob — are already in the harness. That's now a row in the false-economies table beside the older traps.</li>
     <li><strong>Cheaper where it's needed, free where it isn't.</strong> On a read-heavy task, run three times per version and per model: driven by Sonnet, the rewrite cost 10% less than the old text, and every single run of it was cheaper than every run of the old one. Driven by Opus, the two were indistinguishable — it was already reading in ranges and outlining before opening, and it finished the same task for a third less than Sonnet did under either text. So this is guidance that pays on the models that need it and costs nothing on the ones that don't. Answers were equally correct throughout. Where it did pay, it got there by making <em>more</em> tool calls, not fewer — many small ranged reads instead of a few whole-file ones.</li>
@@ -911,7 +912,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/atomic-commits/" data-search-card data-search-terms="atomic-commits use when a working tree has grown several unrelated changes, when deciding what belongs in one commit… landing changes">
   <span class="card__name-row">
     <span class="card__name">atomic-commits</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T14:58:49.204730+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T16:58:49+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit…</p>
   <span class="card__foot">
@@ -1660,7 +1661,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/crouton/" data-search-card data-search-terms="crouton use when asked for terse, compressed, or token-saving output — &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;keep it short&quot;, &quot;stop explaining&quot;… communicating">
   <span class="card__name-row">
     <span class="card__name">crouton</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T16:51:26+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T15:02:35.956479+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when asked for terse, compressed, or token-saving output — &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;keep it short&quot;, &quot;stop explaining&quot;…</p>
   <span class="card__foot">

@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-03T14:58:49+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T14:58:49Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-03T15:02:35+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T15:02:35Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">crouton</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T16:51:26+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T15:02:35.956479+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Communicating</span>
   <p class="lede">Use when asked for terse, compressed, or token-saving output — &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;keep it short&quot;, &quot;stop explaining&quot;, &quot;fewer tokens&quot;, &quot;save context&quot; — when a long session is running out of context budget, or when replies have bloated into preamble, tool narration, and closing summaries nobody reads. Covers where a run's tokens actually go and why reading is the expensive half, the read rules that follow from it, why adding a tool to save tokens usually costs more than it saves, the words that must survive at any length, registers chosen by who reads the output, where compression has to stop, holding the mode across a long session, and compressing in a language other than English.</p>
@@ -112,6 +112,7 @@
 <p><strong>Leaves the conversation</strong> means read by someone who was not here: commit messages, code and comments, docs, ADRs, issue and PR and ticket bodies, release notes, postmortems, memory files, messages to third parties, and any file written to disk. None of those readers can ask what you meant. Compress the conversation; never the artifact.</p>
 <p>Inside the conversation, drop back to prose for a warning before something destructive or irreversible, a security caveat, a confirmation being asked for, a sequence whose order fragments would blur, and the turn right after someone says they didn't follow. Resume immediately after.</p>
 <p>The read rules have no such exception. Reading a range rather than a whole file changes nothing about what the artifact says, so it applies while writing a commit message exactly as it does mid-run.</p>
+<p>They do have a limit, and it is not the same shape. Every rule above returns the <em>same</em> information for less — that is what makes them free. But a habit of not opening files also stops you seeing what you were not looking for, and that cost lands on discovery work specifically: orientation, review, an audit, anything whose job is to find out what is there rather than to answer a question already asked. In one small comparison of six orientation runs, the run that turned up a latent defect nobody had asked about was the most expensive of the six. So: compress hardest when the question is known, spend the reads when the job is to find the question, and say which one you did.</p>
 <h2 id="holding-the-mode">Holding the mode</h2>
 <ul><li>It is session state, not a per-reply style. Finishing the task doesn't end it; neither does an error, a tool detour, or a change of subject. Only the user ends it, by asking — and the reply after that is ordinary prose, with no announcement of the switch back either.</li><li>Drift is the normal failure and it is gradual: filler returns first, then preamble, then narration. The reads drift first of all and least visibly, because nothing in a re-read looks like a mistake. Re-check both where anything else would be re-checked — after a long tool sequence, after a mistake, after a context summary.</li><li><strong>Never announce it.</strong> No mode banner, no third-person tag, no explaining the register. Someone asking for less output does not want a sentence about how little output there will be. Exception: they ask what mode is on.</li><li><strong>No tool narration.</strong> Fire the call. No preface, no recap, no statement of what comes next. Text before a call earns its place only to warn, to resolve an ambiguity, or to ask something that changes the call.</li><li>One answer. Not a compressed one and then a readable one.</li></ul>
 <h2 id="compressing-in-another-language">Compressing in another language</h2>
