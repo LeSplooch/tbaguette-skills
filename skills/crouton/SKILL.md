@@ -1,6 +1,6 @@
 ---
 name: crouton
-description: Use when asked for terse, compressed, or token-saving output — "caveman mode", "be brief", "keep it short", "stop explaining", "fewer tokens", "save context" — when a long session is running out of context budget, or when replies have bloated into preamble, tool narration, and closing summaries nobody reads. Covers where a run's tokens actually go and why reading is the expensive half, the read rules that follow from it, why adding a tool to save tokens usually costs more than it saves, the words that must survive at any length, registers chosen by who reads the output, where compression has to stop, holding the mode across a long session, and compressing in a language other than English.
+description: Use when asked for terse, compressed, or token-saving output — "caveman mode", "be brief", "keep it short", "stop explaining", "fewer tokens", "save context" — when a long session is running out of context budget, or when replies have bloated into preamble, tool narration, and closing summaries nobody reads. Covers where a run's tokens actually go and why reading is the expensive half, the read rules that follow from it, why adding a tool to save tokens usually costs more than it saves, the words that must survive at any length, registers chosen by who reads the output, where compression has to stop, holding the mode across a long session, compressing in a language other than English, and how to tell whether a change actually saved anything rather than just sounding shorter.
 ---
 
 # Crouton
@@ -18,7 +18,7 @@ Two failures sit on either side of this, and the second is the expensive one. Pa
 - The user asks for brevity, terseness, "caveman mode", fewer tokens, or less context burn.
 - A long session where remaining context is the binding constraint.
 - Replies have drifted into preamble, tool narration, and closing summaries.
-- Output goes to someone watching the work live, who can ask a follow-up cheaply.
+- Output goes to someone watching the work live, who will catch a gap before it becomes a wrong decision.
 - Any run long enough to read more than a couple of files, whether or not anyone asked for brevity.
 - **Not for:** a written explanation aimed at one reader with one pending question → `explaining-technical-work`, which settles *what* to say before this settles how tightly to say it. Marking claims verified, inferred, or assumed → `calibrating-confidence`, which this never overrides. Anything written to last → `writing-durable-docs`, `writing-commit-messages`, `writing-release-notes`.
 
@@ -29,8 +29,8 @@ Every turn re-sends the whole conversation. So anything pulled into context is n
 | Spend | Roughly what it costs | Cut by |
 |---|---|---|
 | The per-request floor — system prompt, tool schemas, skill list | The largest single number, and mostly fixed. In one measured harness a run that made no tool calls at all still cost tens of thousands of tokens | You cannot compress it. You can decline to *add* to it — see the tool row under false economies |
-| Content pulled into context — files, logs, command output, diffs | **About three times its own size**, because of the re-sending. A 1,300-line file is not a 13k-token read; it is a 30k-token decision | The read rules below |
-| Tool calls themselves | Low thousands each, before whatever they return | Name what the result would change before firing; if nothing, skip it |
+| Content pulled into context — files, logs, command output, diffs | Its own size, multiplied by the turns that follow it — every one re-sends it. Measured over one harness that averaged about **three times**, so a 1,300-line file is not a 13k-token read, it is nearer a 40k-token decision. Read on the last turn it costs 1x; read early in a long run, far more | The read rules below |
+| Tool calls themselves | Low thousands each, before whatever they return | Name what the result would change before firing; if nothing, skip it — except on discovery work, where not knowing is the point. See the limit under "Where compression stops" |
 | Repeated context — re-pasting background, restating the task, re-quoting a diff | Grows with session length | Say it once, refer back |
 | Your own prose | Tens of tokens per reply. Low single-digit percent of a session | The registers below |
 
@@ -40,16 +40,16 @@ The practical consequence is blunt: a session that shaves every article while re
 
 ## The read rules
 
-Checkable, in the order they pay. Assume you are starting from the expensive default: across a sample of real agent sessions, **95% of file reads pulled the whole file** — no range, no offset — so this is not a list of edge cases to watch for. It is a list of the normal thing, priced.
+Checkable, roughly in the order they pay. Assume you are starting from the expensive default: across 307 file reads in 25 real sessions on one machine, **95% pulled the whole file** — no range, no offset. Small n, one harness, and still worth acting on, because the direction is not in doubt: this is not a list of edge cases to watch for, it is the normal thing, priced.
 
-- **Never read what you already have.** A file read at turn 3 is still in context at turn 30. In that same sample this went wrong in 44% of sessions, so it is worth an explicit check rather than trust — though some harnesses now refuse the repeat for you, which is worth knowing before you build anything to enforce it. Re-reading it does not refresh anything; it buys a second copy at full price. This includes re-reading a file you just edited to confirm the edit — the edit already reported success or failed loudly.
-- **Locate, then read the range.** `grep -n` for the symbol, then `sed -n '120,180p'`. Reaching for the whole file is a decision to pay for the other 90% of it, three times over.
+- **Never read what you already have.** A file read at turn 3 is still in context at turn 30. In that same 25-session sample, 10% of reads repeated a path already read and 44% of sessions did it at least once. Re-reading it does not refresh anything; it buys a second copy at full price. This includes re-reading a file you just edited to confirm the edit — an edit tool already reported success or failed loudly. A *shell* edit is the exception that proves it: `sed -i` with a pattern that matches nothing exits 0 and changes nothing. Confirm that one with a single `grep` for the new text, never with a re-read.
+- **Locate, then read the range — above a couple of hundred lines.** `grep -n` for the symbol, then `sed -n '120,180p'`. Below that threshold one read beats two calls: a small file costs less than the calls spent avoiding it, and the rule under false economies applies to this rule too.
 - **Outline before opening.** For anything over a couple of hundred lines, `grep -n '^\(def\|class\|func\|function\|type\) '` costs a few hundred tokens and usually answers the question, or tells you exactly which range to pull.
-- **Cap what a command can return.** `| head -50`, `--stat` before a full diff, `-q` on a test runner, `| tail` on a log. An unbounded command is an unbounded read with a different name.
-- **Do not re-run a command whose output cannot have changed.** Two identical test runs with no edit between them cost twice and prove once.
+- **Cap what a command can return, when you already know the shape of the answer.** `--stat` before a full diff, `| head` on a listing, `| tail -n 50` on a log. An unbounded command is an unbounded read with a different name. Never cap the first look at a failure: test runners print failures last, so `| head` and `-q` hide exactly what you ran it for, and the re-run costs more than the cap saved.
+- **Do not re-run a command whose output cannot have changed** — and nothing outside this run can have touched. Two identical test runs with no edit between them cost twice and prove once. A flaky suite, a clock-dependent command, or a tree another writer is in breaks the premise rather than the rule.
 - **Search rather than enumerate.** Reading ten files to find which one defines something costs ten files; one `grep -rn` costs one result set.
 
-None of this trades away correctness. Every one of them returns the same information for less, which is the only kind of compression this skill is actually about.
+Two of these are free outright: content you already have, and a command whose answer cannot have moved, both return *the same* information for less. The other four trade away information you did not ask for — a range is not the file, an outline is not the body, a capped command is not its whole output. That is the right trade when you know the question and the wrong one when you are still looking for it, which is what the limit under "Where compression stops" is about.
 
 ## What survives at any length
 
@@ -70,7 +70,7 @@ Tokenizers encode common words cheaply *because* they are common, and coinages e
 | Invented abbreviations — `cfg`, `impl`, `req`, `fn`, `auth` | A coinage is unfamiliar to the tokenizer and to the reader, so you pay in decoding and save nothing worth counting. Established acronyms (API, DB, HTTP, TLS) are fine — in this domain they are ordinary words |
 | Symbol substitution — `→`, `&`, `w/`, `b/c` | Not free, and it replaces a word that was already cheap. Nothing saved, ambiguity added |
 | Mangled grammar — "when it not", "see" for "sees" | No shorter, sometimes worse: stripping an inflection can split a word that was whole. Broken grammar is a costume, not a compression |
-| Dropped vowels, dropped spaces, `u` for `you` | Novel strings tokenize worse than the words they replace |
+| Dropped vowels, dropped spaces, `cn u rd ths` | Novel strings tokenize worse than the words they replace. Single-letter swaps for common short words are a wash rather than a loss, which is its own reason not to bother |
 | Emoji, box-drawing, decorative tables | Among the most expensive characters per unit of meaning available |
 | A compressed answer plus a normal-prose recap | Pays for both. The most common way this mode ends up costing more than not using it |
 
@@ -78,7 +78,7 @@ The rule under all seven: **if the compressed thing is not actually cheaper, use
 
 ## Registers
 
-This is the smallest row of the table. Pick by who reads it and what they do next, not by how compressed it feels like being.
+This is the smallest row of the spend table above. Pick by who reads it and what they do next, not by how compressed it feels like being.
 
 | Register | Shape | Fits |
 |---|---|---|
@@ -88,7 +88,7 @@ This is the smallest row of the table. Pick by who reads it and what they do nex
 
 Floor for all three: a reader who must ask a follow-up to disambiguate was charged more than the compression saved, and a follow-up costs a whole extra turn — which is the entire conversation re-sent. Two follow-ups on one answer means the register was a step too tight.
 
-Start at Trimmed. Move further toward it unprompted as the content gets harder or the stakes rise; move the other way only when asked.
+Start at Trimmed. Loosen toward ordinary prose unprompted as the content gets harder or the stakes rise; tighten only when asked.
 
 One finding, three registers:
 
@@ -114,7 +114,7 @@ digraph compression_gate {
 }
 ```
 
-**Leaves the conversation** means read by someone who was not here: commit messages, code and comments, docs, ADRs, issue and PR and ticket bodies, release notes, postmortems, memory files, messages to third parties, and any file written to disk. None of those readers can ask what you meant. Compress the conversation; never the artifact.
+**Leaves the conversation** means read by someone who was not here: commit messages, code and comments, docs, ADRs, issue and PR and ticket bodies, release notes, postmortems, memory files, messages to third parties, and any file that outlives the run. None of those readers can ask what you meant. Compress the conversation; never the artifact.
 
 Inside the conversation, drop back to prose for a warning before something destructive or irreversible, a security caveat, a confirmation being asked for, a sequence whose order fragments would blur, and the turn right after someone says they didn't follow. Resume immediately after.
 
@@ -124,7 +124,7 @@ They do have a limit, and it is not the same shape. Every rule above returns the
 
 ## Holding the mode
 
-- It is session state, not a per-reply style. Finishing the task doesn't end it; neither does an error, a tool detour, or a change of subject. Only the user ends it, by asking — and the reply after that is ordinary prose, with no announcement of the switch back either.
+- **Two things are being held, and only one of them is a mode.** The *register* is session state the user asked for: finishing the task doesn't end it, nor does an error, a tool detour, or a change of subject, and only the user ends it — after which the reply is ordinary prose, with no announcement of the switch back either. The *read rules* are not a mode. Nobody has to ask for them, they are on in every session, and they are not the user's to end.
 - Drift is the normal failure and it is gradual: filler returns first, then preamble, then narration. The reads drift first of all and least visibly, because nothing in a re-read looks like a mistake. Re-check both where anything else would be re-checked — after a long tool sequence, after a mistake, after a context summary.
 - **Never announce it.** No mode banner, no third-person tag, no explaining the register. Someone asking for less output does not want a sentence about how little output there will be. Exception: they ask what mode is on.
 - **No tool narration.** Fire the call. No preface, no recap, no statement of what comes next. Text before a call earns its place only to warn, to resolve an ambiguity, or to ask something that changes the call.

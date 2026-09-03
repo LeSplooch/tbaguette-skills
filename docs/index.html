@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-03T15:02:35+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T15:02:35Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-03T16:26:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T16:26:08Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -147,10 +147,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/crouton/" data-fresh-at="2026-09-03T15:02:35.956479+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/crouton/" data-fresh-at="2026-09-03T16:26:08.283459+00:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">crouton</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T15:02:35.956479+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T16:26:08.283459+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when asked for terse, compressed, or token-saving output — &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;keep it short&quot;, &quot;stop explaining&quot;…</p>
   <span class="card__foot">
@@ -346,6 +346,21 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-03">3 Sep 2026</time>
+    <span class="notes__entry-title">Six corrections to crouton, found by reading it instead of the diff</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><strong>It claimed the read rules cost nothing, and that was false.</strong> &quot;Every one of them returns the same information for less&quot; is true of two of the six — the ones about not re-reading. A range is not the file, an outline is not the body, a capped command is not its whole output. The section now says which two are free and what the other four actually trade, which also settles a contradiction with the limit added to it earlier the same day.</li>
+    <li><strong>&quot;Cap what a command can return&quot; would have hidden your test failures.</strong> Test runners print failures last, so <code>| head -50</code> and <code>-q</code> truncate exactly what you ran the command for, and the re-run costs more than the cap saved. The rule now applies only where you already know the shape of the answer, and says never to cap the first look at a failure.</li>
+    <li><strong>&quot;Locate, then read the range&quot; now has a size threshold.</strong> Below a couple of hundred lines, two tool calls cost more than the file they avoid — the rule was losing money by the skill's own arithmetic.</li>
+    <li><strong>Not re-reading a file you just edited assumed an edit tool.</strong> A shell <code>sed -i</code> whose pattern matches nothing exits 0 and changes nothing. Confirm that one with a <code>grep</code> for the new text, which the rule now says.</li>
+    <li><strong>The register direction sentence said the opposite of what it meant.</strong> &quot;Move further toward it&quot; read as <em>tighten</em> on hard content — the exact red flag listed further down the same file. It says loosen now.</li>
+    <li><strong>The numbers name their sample.</strong> 95% of reads pulling the whole file is 307 reads across 25 sessions on one machine, and it says so rather than travelling as a general fact about agents. A worked example that multiplied 13k by three and got 30k has been corrected.</li>
+    <li><strong>Read discipline is no longer described as a mode the user can end.</strong> The register is session state someone asked for; the read rules are not, are on in every session, and are nobody's to switch off. One paragraph was governing both.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-03">3 Sep 2026</time>
     <span class="notes__entry-title">crouton was mostly advice about prose, and prose is not where the tokens go</span>
   </h3>
   <ul class="notes__bullets">
@@ -533,16 +548,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a> assumed a dispatched agent gets a context built only for its slice, because for a long time there was no other kind. Harnesses now also offer a forked agent that inherits the whole session and its warm cache — genuinely cheaper, and the wrong instrument for a fan-out.</li>
     <li>The skill now says why: every discipline it teaches is enforced by the agent knowing nothing. The prompt has to be complete because nothing else is there; the write scope has to be stated because it cannot be inferred; the report has to stand alone because the reader shares no memory. A fork removes the cold start and all three forcing functions with it, and several forks of one session are several copies of one set of assumptions.</li>
     <li>A short table splits it by what the task needs to know, and the section puts the cost multiplier of running work across several agents into the judgment rather than leaving it as a background fact.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
-    <span class="notes__entry-title">Let the harness fire the checkpoint you were going to forget</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> says to checkpoint when the context is visibly filling, and that has always been the weakest line on its list: it asks the part of a run least able to judge its own state to judge its own state.</li>
-    <li>The skill now points at the alternative. Where a harness exposes the boundary as an event — a callback before compaction, at session end, when a subagent returns, when a worktree is removed — wiring the checkpoint to it turns a discipline into a mechanism. Pre-compaction in particular is the exact instant the section was asking you to notice, handed over as something that cannot forget.</li>
   </ul>
 </li>
       </ol>
@@ -1661,7 +1666,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/crouton/" data-search-card data-search-terms="crouton use when asked for terse, compressed, or token-saving output — &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;keep it short&quot;, &quot;stop explaining&quot;… communicating">
   <span class="card__name-row">
     <span class="card__name">crouton</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T15:02:35.956479+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T16:26:08.283459+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when asked for terse, compressed, or token-saving output — &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;keep it short&quot;, &quot;stop explaining&quot;…</p>
   <span class="card__foot">
@@ -1707,7 +1712,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/portable-shell-scripting/" data-search-card data-search-terms="portable-shell-scripting use when writing or reviewing a shell script, when a script works in one shell but fails in another… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">portable-shell-scripting</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-01T18:10:19+02:00">Updated</span>
+    
   </span>
   <p class="card__summary">Use when writing or reviewing a shell script, when a script works in one shell but fails in another…</p>
   <span class="card__foot">

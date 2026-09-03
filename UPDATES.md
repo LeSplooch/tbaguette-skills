@@ -75,6 +75,37 @@ Everything above the first `##` is preamble and is never rendered.
 - And their answer authorizes their code being included, never your release —
   two agents agreeing is not approval when each answers to a different person.
 
+## 2026-09-03 — Six corrections to crouton, found by reading it instead of the diff
+
+- **It claimed the read rules cost nothing, and that was false.** "Every one of
+  them returns the same information for less" is true of two of the six — the
+  ones about not re-reading. A range is not the file, an outline is not the
+  body, a capped command is not its whole output. The section now says which
+  two are free and what the other four actually trade, which also settles a
+  contradiction with the limit added to it earlier the same day.
+- **"Cap what a command can return" would have hidden your test failures.**
+  Test runners print failures last, so `| head -50` and `-q` truncate exactly
+  what you ran the command for, and the re-run costs more than the cap saved.
+  The rule now applies only where you already know the shape of the answer, and
+  says never to cap the first look at a failure.
+- **"Locate, then read the range" now has a size threshold.** Below a couple of
+  hundred lines, two tool calls cost more than the file they avoid — the rule
+  was losing money by the skill's own arithmetic.
+- **Not re-reading a file you just edited assumed an edit tool.** A shell
+  `sed -i` whose pattern matches nothing exits 0 and changes nothing. Confirm
+  that one with a `grep` for the new text, which the rule now says.
+- **The register direction sentence said the opposite of what it meant.**
+  "Move further toward it" read as *tighten* on hard content — the exact red
+  flag listed further down the same file. It says loosen now.
+- **The numbers name their sample.** 95% of reads pulling the whole file is 307
+  reads across 25 sessions on one machine, and it says so rather than travelling
+  as a general fact about agents. A worked example that multiplied 13k by three
+  and got 30k has been corrected.
+- **Read discipline is no longer described as a mode the user can end.** The
+  register is session state someone asked for; the read rules are not, are on
+  in every session, and are nobody's to switch off. One paragraph was governing
+  both.
+
 ## 2026-09-03 — crouton was mostly advice about prose, and prose is not where the tokens go
 
 - **`crouton` has been rewritten around what a session actually spends.** It used
