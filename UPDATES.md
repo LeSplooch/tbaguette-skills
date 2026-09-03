@@ -24,6 +24,22 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-03 — The fixture nobody checks is the one describing your own system
+
+- `grounding-test-doubles` was written about things belonging to somebody else —
+  a vendor API, another team's service. It now covers the case where the double
+  models *your own* configuration, which drifts for the same reason and without
+  the changelog: your production code path is edited by other people on other
+  days, and a fixture hears about none of it.
+- The damage concentrates in fixtures belonging to a benchmark or scoring run.
+  An ordinary stale fixture eventually goes red, which is self-correcting; a
+  stale one in a benchmark produces a number that gets repeated in decisions,
+  and nothing goes red because checking the fixture against reality is the one
+  claim no suite makes.
+- Includes the reading that is easy to skip: when the diff comes back, the
+  fixture is not automatically the wrong half. One describing a capability
+  production no longer has is a silent regression announcing itself late.
+
 ## 2026-09-03 — A success counter that is really an admission counter
 
 - `instrumenting-for-observability` now covers the metric that is recorded when

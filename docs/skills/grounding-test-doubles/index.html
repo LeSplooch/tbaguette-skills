@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.37</span>
+      <span class="wordmark-version" dir="ltr">v1.0.38</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-03T14:18:32+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T14:18:32Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-03T14:24:05+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T14:24:05Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">grounding-test-doubles</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T14:24:05.500015+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Testing</span>
-  <p class="lede">Use when writing a mock, stub, fake, or fixture for something you do not control — an HTTP API, a vendor SDK, a queue, a device, another team's service — when a fully green suite is followed by a failure on the first real call, when deciding between recorded and hand-written fixtures, or when a parser and its test data were written by the same person from the same document. Covers fixture provenance, capturing over composing, contract and live tests, and making an unrecognized shape fail loudly.</p>
+  <p class="lede">Use when writing a mock, stub, fake, or fixture for something you do not control — an HTTP API, a vendor SDK, a queue, a device, another team's service — when a fully green suite is followed by a failure on the first real call, when deciding between recorded and hand-written fixtures, when a parser and its test data were written by the same person from the same document, or when a benchmark's fixture describes a richer configuration than the shipping system actually produces. Covers fixture provenance, capturing over composing, contract and live tests, and making an unrecognized shape fail loudly.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A double is exactly as correct as what its author believed while writing it. Composed from a specification, a vendor's reference implementation, or a careful reading of someone else's source, it inherits every misreading in that reading — invisibly. The suite built on it then agrees with itself forever.</p>
 <p><strong>A green run against your own fixtures is positive evidence about the fixtures, not about the integration.</strong></p>
@@ -90,6 +90,13 @@
 <p>None of these are exotic, and all of them survive a suite whose fixtures were written by the same person who wrote the parser:</p>
 <table><thead><tr><th>Variation</th><th>What it looks like</th></tr></thead><tbody><tr><td>Inconsistent envelopes</td><td>Wrapped once on most routes, twice on one</td></tr><tr><td>Type drift</td><td>A number as bare JSON here, a quoted string there</td></tr><tr><td>Absence spelled several ways</td><td><code>null</code>, missing key, empty string, sentinel <code>0</code>, <code>&quot;N/A&quot;</code></td></tr><tr><td>Booleans by three spellings</td><td><code>true</code>, <code>&quot;true&quot;</code>, <code>1</code> — often across endpoints of one provider</td></tr><tr><td>Collections that collapse</td><td>An array of one arriving as a bare object</td></tr><tr><td>Pagination that changes at the edge</td><td>The last page omitting the cursor field rather than nulling it</td></tr><tr><td>Numeric precision</td><td>An integer that exceeds what the reader's number type holds</td></tr><tr><td>Errors as success</td><td>HTTP 200 with an error code in the body</td></tr></tbody></table>
 <p>Every one of these is a real provider's behavior, and every one is invisible to a fixture set that has only ever seen the happy route.</p>
+<h2 id="your-own-system-is-also-something-you-do-not-control">Your own system is also something you do not control</h2>
+<p>The discipline above gets applied to things that belong to somebody else, and lapses for fixtures modelling your own configuration — capability flags, feature toggles, the environment description a run is handed — because those feel knowable in a way a vendor's payload does not. They are not. Your production code path is edited by other people on other days for other reasons, and a fixture hears about none of it.</p>
+<p>Where this does real damage is a fixture belonging to a <strong>benchmark</strong>, a scoring run, or an evaluation suite — anything whose numbers get quoted. An ordinary stale fixture eventually produces a red test, which is self-correcting. A stale fixture in a benchmark produces a <em>number</em>, and the number gets repeated in decisions long after anyone remembers what it was measured against. Nothing goes red, because the suite's job is to check the code against the fixture, and the fixture against reality is the one claim nothing in the suite has ever verified.</p>
+<p>The asymmetry that hides it: the divergence is usually the fixture being <em>richer</em> than production, not poorer. A fixture gets written with everything populated, because populated is what its author was demonstrating, while production leaves half of it empty because the code that would fill it was never built. Both look correct in isolation, and the fixture reads as the more thorough of the two.</p>
+<ul><li><strong>Diff the fixture against what the production path actually constructs</strong>, field by field. This is <em>capture over compose</em> from the section above, turned inward, and the capture is cheap: call the real constructor and compare. Do it when the number is about to be quoted somewhere that matters — a decision, a report, a comparison against a previous run — rather than when something already looks wrong.</li><li><strong>Have the benchmark build its inputs from the same function production uses</strong>, and make the richer variant a flag. A richer configuration is legitimate to measure, and often it is what the system is being built toward — but it should be asked for by name rather than arrived at by inheritance.</li><li><strong>Say which configuration a number was measured under, wherever the number is written down.</strong> A score with no configuration beside it cannot later be told apart from one measured against the shipping system, and it will not be.</li></ul>
+<p>When the diff comes back, do not assume the fixture is the wrong half. A fixture that describes a capability production no longer has is also how a silent regression announces itself, months late and from an unexpected direction — the fixture was right when it was written and nothing failed when production stopped matching it.</p>
+<p>A number measured against a configuration the system never produces is not conservative and not optimistic. It is unrelated, and it does not announce itself as unrelated.</p>
 <h2 id="make-the-mismatch-loud">Make the mismatch loud</h2>
 <p>A boundary that yields an empty collection for a payload it failed to recognize is indistinguishable from a genuinely empty upstream, and <strong>&quot;zero rows&quot; is the easiest wrong answer in the world to accept.</strong> It looks like a quiet day. It propagates as a legitimate value. Nothing alerts.</p>
 <p>An unrecognized shape must raise. The rule generalizes past parsing: when a component cannot tell &quot;nothing to report&quot; from &quot;I did not understand the input&quot;, it should be built so those two produce different outcomes, and the second one should be the noisy one.</p>

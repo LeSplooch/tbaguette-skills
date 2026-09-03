@@ -1,6 +1,6 @@
 ---
 name: grounding-test-doubles
-description: Use when writing a mock, stub, fake, or fixture for something you do not control — an HTTP API, a vendor SDK, a queue, a device, another team's service — when a fully green suite is followed by a failure on the first real call, when deciding between recorded and hand-written fixtures, or when a parser and its test data were written by the same person from the same document. Covers fixture provenance, capturing over composing, contract and live tests, and making an unrecognized shape fail loudly.
+description: Use when writing a mock, stub, fake, or fixture for something you do not control — an HTTP API, a vendor SDK, a queue, a device, another team's service — when a fully green suite is followed by a failure on the first real call, when deciding between recorded and hand-written fixtures, when a parser and its test data were written by the same person from the same document, or when a benchmark's fixture describes a richer configuration than the shipping system actually produces. Covers fixture provenance, capturing over composing, contract and live tests, and making an unrecognized shape fail loudly.
 ---
 
 # Grounding test doubles
@@ -64,6 +64,22 @@ None of these are exotic, and all of them survive a suite whose fixtures were wr
 | Errors as success | HTTP 200 with an error code in the body |
 
 Every one of these is a real provider's behavior, and every one is invisible to a fixture set that has only ever seen the happy route.
+
+## Your own system is also something you do not control
+
+The discipline above gets applied to things that belong to somebody else, and lapses for fixtures modelling your own configuration — capability flags, feature toggles, the environment description a run is handed — because those feel knowable in a way a vendor's payload does not. They are not. Your production code path is edited by other people on other days for other reasons, and a fixture hears about none of it.
+
+Where this does real damage is a fixture belonging to a **benchmark**, a scoring run, or an evaluation suite — anything whose numbers get quoted. An ordinary stale fixture eventually produces a red test, which is self-correcting. A stale fixture in a benchmark produces a *number*, and the number gets repeated in decisions long after anyone remembers what it was measured against. Nothing goes red, because the suite's job is to check the code against the fixture, and the fixture against reality is the one claim nothing in the suite has ever verified.
+
+The asymmetry that hides it: the divergence is usually the fixture being *richer* than production, not poorer. A fixture gets written with everything populated, because populated is what its author was demonstrating, while production leaves half of it empty because the code that would fill it was never built. Both look correct in isolation, and the fixture reads as the more thorough of the two.
+
+- **Diff the fixture against what the production path actually constructs**, field by field. This is *capture over compose* from the section above, turned inward, and the capture is cheap: call the real constructor and compare. Do it when the number is about to be quoted somewhere that matters — a decision, a report, a comparison against a previous run — rather than when something already looks wrong.
+- **Have the benchmark build its inputs from the same function production uses**, and make the richer variant a flag. A richer configuration is legitimate to measure, and often it is what the system is being built toward — but it should be asked for by name rather than arrived at by inheritance.
+- **Say which configuration a number was measured under, wherever the number is written down.** A score with no configuration beside it cannot later be told apart from one measured against the shipping system, and it will not be.
+
+When the diff comes back, do not assume the fixture is the wrong half. A fixture that describes a capability production no longer has is also how a silent regression announces itself, months late and from an unexpected direction — the fixture was right when it was written and nothing failed when production stopped matching it.
+
+A number measured against a configuration the system never produces is not conservative and not optimistic. It is unrelated, and it does not announce itself as unrelated.
 
 ## Make the mismatch loud
 
