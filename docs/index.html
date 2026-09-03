@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-03T14:29:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T14:29:06Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-03T14:29:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T14:29:07Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -147,10 +147,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-09-03T14:29:06.965626+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-09-03T16:29:07+02:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">orchestrating-work-end-to-end</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T14:29:06.965626+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T16:29:07+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</p>
   <span class="card__foot">
@@ -295,6 +295,7 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ul class="notes__bullets">
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/crouton/"><code>crouton</code></a> has been rewritten around what a session actually spends.</strong> It used to give most of its length to registers and word choice. Measured across agent sessions, reply prose is low single-digit percent of a run — the cost is what gets pulled <em>in</em>, and because every turn re-sends the whole conversation, a file read costs roughly three times its own size. A 1,300-line file is not a 13k-token read; it's a 30k-token decision.</li>
     <li><strong>It now carries read rules you can check yourself</strong>, not adjectives: never read what you already have, locate with <code>grep -n</code> then read the range, outline a long file before opening it, cap what a command can return, and don't re-run a command whose output cannot have changed. None of them trade away correctness — each returns the same information for less. In a sample of real sessions, 95% of file reads pulled the whole file and 44% of sessions re-read something already in context, so these are the normal case rather than edge cases.</li>
+    <li><strong>A read you already made can now be declined, once.</strong> On Claude Code, a new hook watches for a <code>Read</code> that would hand back bytes already sitting in the conversation — same file, same range, and the file untouched on disk since. It says so instead, and points at the copy you already have. It declines that exact call once and never again, so if the content really is gone — after a compaction, say — asking a second time simply works. Everything it is unsure about, it allows: a missed nudge costs some tokens, a wrongly blocked read costs the task. Measured first, on real transcripts: this fires on about one read in twenty, where a rule against whole-file reads would have fired on 95% of them and been noise wearing a guardrail's clothes.</li>
     <li><strong>It answers the &quot;should I add a tool to save tokens&quot; question, with the reason.</strong> A plugin or MCP server's schema joins the per-request floor and is charged every turn whether or not it gets used, and the bounded-read tools such a server usually offers — ranged read, grep, glob — are already in the harness. That's now a row in the false-economies table beside the older traps.</li>
     <li><strong>Cheaper where it's needed, free where it isn't.</strong> On a read-heavy task, run three times per version and per model: driven by Sonnet, the rewrite cost 10% less than the old text, and every single run of it was cheaper than every run of the old one. Driven by Opus, the two were indistinguishable — it was already reading in ranges and outlining before opening, and it finished the same task for a third less than Sonnet did under either text. So this is guidance that pays on the models that need it and costs nothing on the ones that don't. Answers were equally correct throughout. Where it did pay, it got there by making <em>more</em> tool calls, not fewer — many small ranged reads instead of a few whole-file ones.</li>
   </ul>
@@ -317,6 +318,7 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ul class="notes__bullets">
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/crouton/"><code>crouton</code></a> has been rewritten around what a session actually spends.</strong> It used to give most of its length to registers and word choice. Measured across agent sessions, reply prose is low single-digit percent of a run — the cost is what gets pulled <em>in</em>, and because every turn re-sends the whole conversation, a file read costs roughly three times its own size. A 1,300-line file is not a 13k-token read; it's a 30k-token decision.</li>
     <li><strong>It now carries read rules you can check yourself</strong>, not adjectives: never read what you already have, locate with <code>grep -n</code> then read the range, outline a long file before opening it, cap what a command can return, and don't re-run a command whose output cannot have changed. None of them trade away correctness — each returns the same information for less. In a sample of real sessions, 95% of file reads pulled the whole file and 44% of sessions re-read something already in context, so these are the normal case rather than edge cases.</li>
+    <li><strong>A read you already made can now be declined, once.</strong> On Claude Code, a new hook watches for a <code>Read</code> that would hand back bytes already sitting in the conversation — same file, same range, and the file untouched on disk since. It says so instead, and points at the copy you already have. It declines that exact call once and never again, so if the content really is gone — after a compaction, say — asking a second time simply works. Everything it is unsure about, it allows: a missed nudge costs some tokens, a wrongly blocked read costs the task. Measured first, on real transcripts: this fires on about one read in twenty, where a rule against whole-file reads would have fired on 95% of them and been noise wearing a guardrail's clothes.</li>
     <li><strong>It answers the &quot;should I add a tool to save tokens&quot; question, with the reason.</strong> A plugin or MCP server's schema joins the per-request floor and is charged every turn whether or not it gets used, and the bounded-read tools such a server usually offers — ranged read, grep, glob — are already in the harness. That's now a row in the false-economies table beside the older traps.</li>
     <li><strong>Cheaper where it's needed, free where it isn't.</strong> On a read-heavy task, run three times per version and per model: driven by Sonnet, the rewrite cost 10% less than the old text, and every single run of it was cheaper than every run of the old one. Driven by Opus, the two were indistinguishable — it was already reading in ranges and outlining before opening, and it finished the same task for a third less than Sonnet did under either text. So this is guidance that pays on the models that need it and costs nothing on the ones that don't. Answers were equally correct throughout. Where it did pay, it got there by making <em>more</em> tool calls, not fewer — many small ranged reads instead of a few whole-file ones.</li>
   </ul>
@@ -615,7 +617,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-search-card data-search-terms="orchestrating-work-end-to-end use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">orchestrating-work-end-to-end</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T14:29:06.965626+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T16:29:07+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</p>
   <span class="card__foot">

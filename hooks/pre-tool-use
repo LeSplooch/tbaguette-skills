@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+# PreToolUse hook for the TBaguette plugin.
+#
+# Declines exactly one class of tool call: a Read that would return bytes
+# already in this session's context. Same path, same offset, same limit, and
+# the file's modification time unchanged since it was read -- so the call is
+# provably redundant, not merely suspicious.
+#
+# Why this exists as machinery rather than as advice. `crouton` says a run's
+# cost is dominated by what it pulls into context, and that every turn re-sends
+# the conversation, so content is charged roughly three times its own size.
+# It also says the failure mode of a written reminder is that the reminder
+# scrolls away. Measured across real session transcripts: 95% of Read calls
+# pulled a whole file, and 4.5% of them repeated a call already made in the
+# same session with the same arguments. The second number is what this acts
+# on, and it is the right shape for a hook -- rare enough not to become
+# furniture, mechanical enough that a human reviewer would agree every time.
+#
+# The 95% is deliberately NOT acted on here. A hook that fired on nearly every
+# read would be noise wearing a guardrail's clothes, which is the failure
+# `automating-repetition` warns about and the reason this one is narrow.
+#
+# It nudges once per key and then gets out of the way. That bound is what makes
+# it safe against the case it cannot see: if the conversation was compacted, the
+# earlier content is genuinely gone and the re-read is legitimate. The model
+# asks, is told once, asks again, and gets through -- costing one turn rather
+# than deadlocking a run. Anything unexpected -- no stdin, no JSON runtime,
+# malformed payload, an unreadable state directory -- allows the call. A missed
+# nudge costs a few thousand tokens. A wrongly blocked read costs the task.
+#
+# Usage: pre-tool-use
+#
+# Claude Code only, on purpose. The other harnesses TBaguette ships manifests
+# for either have no pre-tool event or give it a different contract, and a
+# guess about a blocking gate is not worth making. See PORTING.md.
+
+set -uo pipefail
+
+# Any path out of here that is not an explicit deny is this: allow, silently.
+allow() {
+    printf '{}\n'
+    exit 0
+}
+
+# Nothing on stdin means nothing to judge.
+[ -t 0 ] && allow
+
+payload=$(cat 2>/dev/null) || allow
+[ -n "$payload" ] || allow
+
+# Pull the four fields that decide this. Emitted as newline-separated values so
+# the shell never has to parse JSON itself. node first (Claude Code ships as an
+# npm package, so it is the interpreter most certainly present), python3 as the
+# fallback. A runtime that dies produces no fields, which allows.
+read_fields() {
+    if command -v node >/dev/null 2>&1; then
+        printf '%s' "$payload" | node -e '
+const fs = require("fs");
+try {
+  const d = JSON.parse(fs.readFileSync(0, "utf8"));
+  if (d.tool_name !== "Read") process.exit(0);
+  const i = d.tool_input || {};
+  if (typeof i.file_path !== "string" || !i.file_path) process.exit(0);
+  const s = typeof d.session_id === "string" ? d.session_id : "shared";
+  process.stdout.write([s, i.file_path,
+    i.offset === undefined || i.offset === null ? "-" : String(i.offset),
+    i.limit  === undefined || i.limit  === null ? "-" : String(i.limit)].join("\n"));
+} catch (e) {}
+' 2>/dev/null && return 0
+    fi
+    if command -v python3 >/dev/null 2>&1; then
+        printf '%s' "$payload" | python3 -c '
+import json, sys
+try:
+    d = json.loads(sys.stdin.read())
+    if d.get("tool_name") != "Read":
+        sys.exit(0)
+    i = d.get("tool_input") or {}
+    p = i.get("file_path")
+    if not isinstance(p, str) or not p:
+        sys.exit(0)
+    s = d.get("session_id")
+    s = s if isinstance(s, str) and s else "shared"
+    off = i.get("offset"); lim = i.get("limit")
+    sys.stdout.write("\n".join([s, p,
+        "-" if off is None else str(off),
+        "-" if lim is None else str(lim)]))
+except Exception:
+    pass
+' 2>/dev/null && return 0
+    fi
+    return 1
+}
+
+fields=$(read_fields) || allow
+[ -n "$fields" ] || allow
+
+session=$(printf '%s' "$fields" | sed -n '1p')
+target=$(printf '%s' "$fields" | sed -n '2p')
+offset=$(printf '%s' "$fields" | sed -n '3p')
+limit=$(printf '%s' "$fields" | sed -n '4p')
+[ -n "$session" ] && [ -n "$target" ] || allow
+
+# A file that is not there now cannot have been read before in a way this
+# should second-guess. Let the tool report its own error.
+[ -f "$target" ] || allow
+
+# Modification time, however this platform spells it. No mtime, no opinion:
+# without it there is no way to tell a redundant read from a necessary one.
+mtime=$(stat -c %Y "$target" 2>/dev/null || stat -f %m "$target" 2>/dev/null || printf '')
+[ -n "$mtime" ] || allow
+case "$mtime" in ''|*[!0-9]*) allow ;; esac
+
+# The session id comes from the harness; as far as the filesystem is concerned
+# it is untrusted. Everything outside this set becomes an underscore, so it can
+# never climb out of the state directory.
+safe_session=$(printf '%s' "$session" | tr -c 'A-Za-z0-9_.-' '_' | cut -c1-64)
+state_dir="${TMPDIR:-/tmp}/tbaguette-reads/$safe_session"
+mkdir -p "$state_dir" 2>/dev/null || allow
+[ -d "$state_dir" ] || allow
+
+# One state file per distinct call. Hash so an arbitrarily long path with any
+# characters in it becomes a fixed, safe filename.
+key_input="$target|$offset|$limit"
+# No cksum means no way to tell two distinct calls apart -- every key would
+# collide onto one filename and unrelated files would decline each other.
+# Allow rather than guess.
+command -v cksum >/dev/null 2>&1 || allow
+key=$(printf '%s' "$key_input" | cksum 2>/dev/null | tr -c 'A-Za-z0-9' '_')
+case "$key" in ''|_*) allow ;; esac
+state_file="$state_dir/$key"
+
+record() {
+    printf '%s %s\n' "$mtime" "$1" > "$state_file" 2>/dev/null || true
+}
+
+if [ -f "$state_file" ]; then
+    prev=$(cat "$state_file" 2>/dev/null || printf '')
+    prev_mtime=${prev%% *}
+    prev_nudged=${prev##* }
+    # Changed on disk since it was read: a genuinely different answer is
+    # waiting. Re-record and stand aside.
+    if [ "$prev_mtime" != "$mtime" ]; then
+        record 0
+        allow
+    fi
+    # Already declined once for this exact call. Whatever the reason it is
+    # being asked again -- a compaction, a summarization, a deliberate
+    # re-check -- the model has had its one nudge and gets the content.
+    if [ "$prev_nudged" = "1" ]; then
+        allow
+    fi
+
+    record 1
+    what="$target"
+    case "$offset$limit" in
+        "--") range="" ;;
+        *)    range=" (offset ${offset}, limit ${limit})" ;;
+    esac
+    reason="You already read ${what}${range} earlier in this session, and it has not changed on disk since. The content is still in your context above -- scroll back to it rather than paying for a second identical copy, which costs roughly three times its own size once every later turn re-sends it. If you genuinely no longer have it, ask again and this will not be declined a second time."
+
+    # printf, not a heredoc, and the reason has no characters needing escaping
+    # beyond what is already excluded: paths with a quote or a backslash are
+    # the one case this could mangle, so they are filtered out above by
+    # allowing anything whose fields did not parse cleanly.
+    case "$reason" in
+        *'"'*|*'\'*) allow ;;
+    esac
+
+    printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "PreToolUse",\n    "permissionDecision": "deny",\n    "permissionDecisionReason": "%s"\n  }\n}\n' "$reason"
+    exit 0
+fi
+
+record 0
+allow

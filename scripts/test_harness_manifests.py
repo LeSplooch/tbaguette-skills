@@ -199,9 +199,15 @@ class TestHarnessManifests(unittest.TestCase):
         """Five hook configs now, in four schemas, and the one thing they all
         have to get right is naming a script that exists. A rename in hooks/
         that missed one would leave that harness exiting non-zero on every
-        session start, which no other assertion here would notice."""
+        session start, which no other assertion here would notice.
+
+        The event tuples are exact, not a subset: adding an event to one
+        harness and forgetting the others is a real way for behavior to
+        diverge silently, so a new event has to be declared here on purpose.
+        PreToolUse is Claude Code's alone deliberately -- it is the only
+        config whose pre-tool contract TBaguette has actually verified."""
         configs = {
-            "hooks/hooks.json": ("SessionStart", "UserPromptSubmit"),
+            "hooks/hooks.json": ("SessionStart", "UserPromptSubmit", "PreToolUse"),
             "hooks/hooks-codex.json": ("SessionStart", "UserPromptSubmit"),
             "hooks/hooks-copilot.json": ("sessionStart", "userPromptSubmitted"),
             "com.github.copilot/hooks/hooks.json": ("SessionStart", "UserPromptSubmit"),
@@ -215,7 +221,7 @@ class TestHarnessManifests(unittest.TestCase):
                 # Every config, whatever its schema, routes through the one
                 # cross-platform launcher.
                 self.assertIn("run-hook.cmd", commands)
-                for script in ("session-start", "user-prompt-submit"):
+                for script in ("session-start", "user-prompt-submit", "pre-tool-use"):
                     if script in commands:
                         self.assertTrue(
                             (REPO_ROOT / "hooks" / script).is_file(),

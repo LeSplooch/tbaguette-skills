@@ -38,6 +38,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOKS_DIR = REPO_ROOT / "hooks"
 SESSION_START = HOOKS_DIR / "session-start"
 USER_PROMPT_SUBMIT = HOOKS_DIR / "user-prompt-submit"
+PRE_TOOL_USE = HOOKS_DIR / "pre-tool-use"
 RUN_HOOK_CMD = HOOKS_DIR / "run-hook.cmd"
 HOOKS_COPILOT_JSON = HOOKS_DIR / "hooks-copilot.json"
 HOOKS_VSCODE_JSON = REPO_ROOT / "com.github.copilot" / "hooks" / "hooks.json"
@@ -193,6 +194,7 @@ def check_executable_bits() -> None:
     check("session-start is executable", os.access(SESSION_START, os.X_OK))
     check("run-hook.cmd is executable", os.access(RUN_HOOK_CMD, os.X_OK))
     check("user-prompt-submit is executable", os.access(USER_PROMPT_SUBMIT, os.X_OK))
+    check("pre-tool-use is executable", os.access(PRE_TOOL_USE, os.X_OK))
 
 
 # ---------------------------------------------------------------------------
@@ -351,6 +353,133 @@ def check_user_prompt_submit() -> None:
         "wrapper output matches the script's own",
         json.loads(wrapped.stdout) == payload,
     )
+
+
+# ---------------------------------------------------------------------------
+# pre-tool-use: declining a read whose bytes are already in context
+# ---------------------------------------------------------------------------
+
+
+def run_pre_tool_use(payload: str, env_extra: dict | None = None) -> subprocess.CompletedProcess:
+    env = dict(os.environ)
+    if env_extra:
+        env.update(env_extra)
+    return subprocess.run(
+        ["bash", str(PRE_TOOL_USE)],
+        input=payload,
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+
+
+def read_payload(session: str, path: str, **kwargs) -> str:
+    tool_input = {"file_path": path}
+    tool_input.update(kwargs)
+    return json.dumps(
+        {"session_id": session, "tool_name": "Read", "tool_input": tool_input}
+    )
+
+
+def denied(result: subprocess.CompletedProcess) -> bool:
+    """True when the payload is a well-formed PreToolUse deny."""
+    if result.returncode != 0:
+        return False
+    try:
+        out = json.loads(result.stdout).get("hookSpecificOutput", {})
+    except (ValueError, AttributeError):
+        return False
+    return (
+        out.get("hookEventName") == "PreToolUse"
+        and out.get("permissionDecision") == "deny"
+    )
+
+
+def check_pre_tool_use() -> None:
+    print("pre-tool-use: declines a read already in context, once")
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        state = tmp_path / "state"
+        state.mkdir()
+        # TMPDIR is where the script keeps its per-session record, so pointing
+        # it at the fixture keeps these runs from seeing -- or leaving -- state
+        # in the real one.
+        env = {"TMPDIR": str(state)}
+
+        target = tmp_path / "module.py"
+        target.write_text("def one():\n    return 1\n")
+        other = tmp_path / "other.py"
+        other.write_text("def two():\n    return 2\n")
+
+        first = run_pre_tool_use(read_payload("s1", str(target)), env)
+        check("first read of a file is allowed", first.stdout.strip() == "{}")
+        check("allowing writes nothing to stderr", first.stderr == "")
+
+        second = run_pre_tool_use(read_payload("s1", str(target)), env)
+        check("an identical second read is declined", denied(second))
+        reason = json.loads(second.stdout)["hookSpecificOutput"]["permissionDecisionReason"]
+        check("the reason names the file", str(target) in reason)
+        # Without this sentence a model that lost the content to a compaction
+        # has no way to know asking again will work, which is the difference
+        # between one wasted turn and a stuck run.
+        check("the reason says a second ask will go through", "ask again" in reason)
+
+        third = run_pre_tool_use(read_payload("s1", str(target)), env)
+        check("a third read goes through -- it declines once, not forever", third.stdout.strip() == "{}")
+
+        # A different range is a different question, even on the same file.
+        ranged = run_pre_tool_use(read_payload("s1", str(target), offset=40, limit=20), env)
+        check("a different offset/limit on the same file is allowed", ranged.stdout.strip() == "{}")
+        ranged_again = run_pre_tool_use(read_payload("s1", str(target), offset=40, limit=20), env)
+        check("...and repeating that exact range is declined", denied(ranged_again))
+
+        # Two files must not share a key. If they did, reading one would
+        # decline the other -- the failure mode a weak hash would produce.
+        check("a different file is allowed", run_pre_tool_use(read_payload("s1", str(other)), env).stdout.strip() == "{}")
+
+        # A different session has its own memory.
+        check("the same read in another session is allowed", run_pre_tool_use(read_payload("s2", str(target)), env).stdout.strip() == "{}")
+
+        # The whole premise is "the bytes have not changed". When they have,
+        # the earlier copy is stale and re-reading is the correct move.
+        run_pre_tool_use(read_payload("s3", str(target)), env)
+        os.utime(target, (0, 0))
+        check(
+            "a file modified since the earlier read is allowed",
+            run_pre_tool_use(read_payload("s3", str(target)), env).stdout.strip() == "{}",
+        )
+
+        # Everything below is a way the script could be wrong about the world.
+        # All of them must allow: a missed nudge costs tokens, a wrong decline
+        # costs the task.
+        for label, payload in (
+            ("a non-Read tool", json.dumps({"session_id": "s4", "tool_name": "Bash", "tool_input": {"command": "ls"}})),
+            ("malformed JSON", "not json at all"),
+            ("an empty payload", ""),
+            ("a Read with no file_path", json.dumps({"session_id": "s4", "tool_name": "Read", "tool_input": {}})),
+            ("a file that does not exist", read_payload("s4", str(tmp_path / "absent.py"))),
+            ("a directory rather than a file", read_payload("s4", str(tmp_path))),
+        ):
+            r = run_pre_tool_use(payload, env)
+            check(f"{label} is allowed", r.returncode == 0 and r.stdout.strip() == "{}")
+
+        # A session id is harness-supplied and lands in a path. It must not be
+        # able to climb out of the state directory.
+        traversal = run_pre_tool_use(read_payload("../../etc/x", str(target)), env)
+        check("a traversal-shaped session id is handled without error", traversal.returncode == 0)
+        check(
+            "...and writes no state outside the hook's own directory",
+            not (state / "tbaguette-reads" / ".." / ".." / "etc").exists(),
+        )
+
+        wrapped = subprocess.run(
+            ["bash", str(RUN_HOOK_CMD), "pre-tool-use"],
+            input=read_payload("s5", str(target)),
+            capture_output=True,
+            text=True,
+            env={**os.environ, **env},
+        )
+        check("run-hook.cmd dispatches to it", wrapped.returncode == 0)
 
 
 # ---------------------------------------------------------------------------
@@ -669,6 +798,7 @@ def main() -> None:
     check_hooks_cursor_json_shape()
     check_executable_bits()
     check_user_prompt_submit()
+    check_pre_tool_use()
     check_user_prompt_submit_copilot()
     check_user_prompt_submit_vscode()
     check_user_prompt_submit_cursor()
