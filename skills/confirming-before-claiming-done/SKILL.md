@@ -100,6 +100,22 @@ The failure is dangerous precisely because it feels like rigor: a real command, 
 
 A negative claim needs a different move: **search the target surface for the artifact itself, rather than interrogating the one location you can name.** Sweep the whole target tree for the artifact's own name, which is cheap and is what finds a relocated install. Ask the running process what it actually has open and loaded, the only one of these that separates present-on-disk from actually in effect. Read which candidate the runtime's resolution order really selects, rather than the path you remember it using. A location you know about settles the question the moment the thing turns up in it and can never settle it the other way, so an absence is only ever earned by a search — and the claim should name what was searched, because that is the part a reader can check.
 
+That search can be defeated by the *surface* rather than by the location, and
+that failure survives getting the location right. A built artifact is a lossy
+encoding of the source it came from. An optimizer is free to materialize a short
+string as two immediate operands the program assembles at runtime rather than as
+contiguous bytes; a minifier renames the identifier being searched for; a
+stripped build keeps no symbol to match; a packed or compressed payload preserves
+none of it. Searching one of those for a short literal and finding nothing is not
+weak evidence of absence — it is no evidence at all, and it looks exactly like
+the code having been eliminated, which is the conclusion it will be used to
+support. This is not the unreliable-checker problem under *The
+declaration is not the payload*: the pattern is correct, the command is correct,
+and the artifact simply does not contain the thing in the form searched for. Probe with something the
+transformation has to preserve — a long literal, a message the program prints, a
+symbol or export table, a version banner — or, where the question is whether a
+code path shipped at all, make the program take it and watch.
+
 ## The call site is not the context
 
 The usual complaint about a green build is that nothing actually ran. This failure survives the fix for that, because a test that runs the code does not necessarily run it where the code will run. Anything placed inside a hook a framework calls — a setup or init function, a registration callback, a plugin entry point, an installer's post-install step — is written and compiled as ordinary code and does not execute under the conditions the rest of the program executes under. It runs at the moment and in the surroundings the framework picked: possibly before the async runtime is up, before there is a window to draw into, on a thread that does not own the thing the line touches, or before configuration the identical line would have found in the program's entry point has been read.
@@ -146,6 +162,7 @@ runs are the same discipline applied to timings, and for the same reason.
 | "Should pass now" in a commit message or handoff note | The verification step was replaced with confidence in the fix |
 | Tests declared passing based on a run from before the last edit | Evidence treated as durable when it's only valid for the code it ran against |
 | "The agent said it completed the task" reported as the task being complete | A tool's self-report repeated as independently checked fact |
+| A search of the built artifact says the feature never shipped | The artifact does not store what was searched for; the pattern was sound and the surface was not |
 | A regression test added and trusted without ever seeing it fail | Never run against the broken code, so it's unknown whether it tests anything |
 | Build green, shipped, runtime error in the first minute | Compilation was checked; behavior never was |
 | "Looks right" standing in for "ran and confirmed" | Review of your own diff mistaken for verification of its behavior |
@@ -164,5 +181,6 @@ runs are the same discipline applied to timings, and for the same reason.
 - Tired, near the end of a long task, and tempted to call it done to stop working rather than because it's verified.
 - A requirement worded with "after," "across," "survives," or "from scratch," answered by a command that only observes right now.
 - "It's enabled, so it'll come back" — enabling is the plan; coming back is the thing being claimed.
+- "It is not in the built artifact, so it never shipped" — said after grepping a release build for a short string.
 - Reluctance to induce the condition because it would be disruptive, on a system where the condition will occur anyway, unattended.
 - A before/after ratio whose two terms were both produced by the "after" run.
