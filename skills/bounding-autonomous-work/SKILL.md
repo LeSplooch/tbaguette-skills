@@ -1,6 +1,6 @@
 ---
 name: bounding-autonomous-work
-description: Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan, a subagent dispatched without a way to ask, a hook or cron or loop with no reader, or a question just asked into a silence that the run is about to answer for itself. Covers substituting each approval gate rather than skipping it, the four pre-committed stop conditions that halt a run instead of letting it drift, the actions no confidence level licenses without a human, and reporting to someone who was not there.
+description: Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan, a subagent dispatched without a way to ask, a hook or cron or loop with no reader, or a question just asked into a silence that the run is about to answer for itself. Also use when a run is about to defer something to a human because it believes it cannot verify it. Covers substituting each approval gate rather than skipping it, telling a real door from an untried one, the four pre-committed stop conditions that halt a run instead of letting it drift, the actions no confidence level licenses without a human, and reporting to someone who was not there.
 ---
 
 # Bounding autonomous work
@@ -124,6 +124,59 @@ An autonomous run that hits a door is not blocked. It has reached its correct
 end: the preparation is done, the action is written down, and a human takes
 one step instead of the whole run.
 
+### A door you have not tried is not a door
+
+Everything on that list is an **action**. The common failure is not taking one of
+them by accident; it is stopping in front of something that only resembles one. A
+run concludes that a change cannot be verified without the person who owns the
+system — the credential is not here, the service is unreachable, the real values
+cannot be obtained from this machine — and defers. That feels like exactly the
+humility this skill asks for, and it is a different thing.
+
+A door is an action whose consequences a human has to own. Being unable to
+*check* something is a claim about your own capabilities, and it stays a claim
+rather than an observation until an attempt has actually failed. The two are easy
+to confuse: the sentence has the same shape, the paragraph above has just
+finished saying that stopping is a correct ending, and deferring costs nothing at
+the moment it is written. It is not free afterwards. An unattended run exists to
+spend its own time instead of the requester's, and an unnecessary deferral
+inverts that — it hands back the one thing the run was supposed to absorb, and it
+arrives looking like diligence.
+
+So before writing one down: **name the cheapest experiment that would settle it,
+and run that experiment.** A throwaway probe program, one request against the
+real thing, a single value put through the real encoder. The tell for a deferral
+that has not earned itself is that its justification names a capability nothing
+in this session has ever tried — and a capability you have not exercised is a
+guess about yourself, held to a lower standard than any other claim in the
+report.
+
+This applies while you are still deciding whether something is a door, never
+after a stop condition has fired. A tripped condition is not a deferral awaiting
+a probe — section 2 governs it unchanged, and it is not reasoned past.
+
+An experiment that answers immediately earns one more look than one that
+struggles. A probe reading a default, a cache, or a stub returns a confident
+value in the right shape, and `reproducing-bugs` covers proving the instrument
+before trusting what it says. Withdrawing a deferral on a bad probe is worse than
+the deferral was.
+
+A probe that succeeds does not move the door it was testing. Establishing that
+you *could* rotate the credential or reach the live service is not permission to
+do either, and the confidence a working probe produces is exactly what makes
+taking the step next feel like a formality. The experiment settles what you can
+*know*. What you may *do* is unchanged by how well it went.
+
+The experiment is bound by the same list as everything else. One that would
+itself take an irreversible action, spend someone's money, or reach a person is
+not a cheap experiment — it is the door, and the deferral was right the first
+time. What this asks for is the read-only half: the probe that observes, the
+request that only fetches, the encode that throws its output away.
+
+If the experiment is genuinely out of reach, the deferral stands, and it is now
+worth reading: it can say what was attempted and how it failed, which is the
+difference between a handover and a shrug.
+
 ## Reporting to someone who was not there
 
 The report is the entire deliverable, because the conversation that would
@@ -151,15 +204,21 @@ whole reconstruction.
 | The run halted and left a broken tree | Stopping was treated as failure rather than as a designed outcome, so nobody planned the state it stops in |
 | The acceptance criteria were met and the requester was unhappy | Drift fired silently: the ledger was edited to match the build rather than the build to match the ledger |
 | The final command did the damage | The door bound was checked once at the start, when nothing was irreversible yet |
+| An open question in the report that one command would have answered | A verification was filed under the door bound because checking it resembled doing it |
 | The subagent came back confident and wrong | It was dispatched with a goal and no bounds, which is this skill's trigger, not an exception to it |
 
 ## Red flags
 
 - "I'll ask about that at the end." There is no end with a reader in it.
+- "This cannot be verified from here" — written without naming an attempt that was made and failed.
 - "Nobody's around, so I'll use my best judgment" — said instead of writing the
   judgment down.
 - "Budget's blown but I'm nearly there."
 - "This is technically irreversible but it's obviously fine."
+- "This can't be verified without them" — said without naming the experiment that
+  would have verified it.
+- "I've already proved it works, so actually doing it is a formality." The probe
+  moved; the door did not.
 - "I'll note the assumptions in the summary" — assumptions noted later are
   assumptions remembered, and half of them will not be.
 - "The task said keep going until it passes, so I kept going."
