@@ -157,6 +157,10 @@ answer the same question rung zero asks about everything else: **is there a tool
 here that does this?** Usually there is, and the honest form of the sentence was
 not "you'll need to run these" but running them.
 
+A *refusal* is different again, and it is the one case on this page where the answer is to stop. A permission prompt is a question waiting for somebody; a refusal is a decision already made — the harness declined the call, there is nothing to answer, and the tool never ran. It does not become a capability gap by being inconvenient. Retrying it verbatim, rewording it past the check, splitting it into smaller calls, or reaching for a different tool that produces the same effect are all one act: defeating a control the user installed, on your own authority, with the ingenuity this skill exists to supply. Route around a missing capability. Never around a withheld permission.
+
+What that leaves is a report rather than a workaround, and it is worth more than it sounds. Name the call that was refused, what it would have done, and what the run did instead — which is everything that did not depend on it. In an unattended run that is a blocked step rather than a failed one, and `bounding-autonomous-work` governs its shape: prepare the work completely, and leave the step for whoever can authorize it.
+
 Three cases genuinely belong to the user, and they are recognizable by what
 they need rather than by how they feel: a credential or a secret only they hold,
 a decision that is theirs to make, and an irreversible action a run may prepare
@@ -169,6 +173,7 @@ of at the work.
 
 | Symptom | Real cause |
 |---|---|
+| A control the user installed was worked around | A refusal was read as a capability gap; in the error they look alike, and they ask for opposite things |
 | An investigation proceeded blind because the subject stopped reporting | The gap was in seeing, not doing; nothing enumerated what else in the environment was already watching |
 | A confident description of a file that was never opened | The gap was never named, so substitution filled it |
 | "Nothing else is installed" after checking one remembered command | Recollection used as an inventory instead of a sweep |
@@ -195,3 +200,4 @@ of at the work.
 - Building a coordinate map or a fixture against an environment you stood up, before checking what it lacks.
 - A block of commands printed for the user to paste, from a session that has a shell.
 - "I cannot see what it is doing, so I need you" — with no list of what else already can
+- A refused tool call retried with different wording, or replaced by a different tool that does the same thing

@@ -86,6 +86,28 @@ Everything above the first `##` is preamble and is never rendered.
   to. A probe that answers suspiciously easily gets checked against
   `reproducing-bugs` before a deferral is withdrawn on it.
 
+## 2026-09-03 — A refused tool call is not a capability gap, and green is not the gate
+
+- **`routing-around-capability-gaps` now separates a refusal from a prompt.** It
+  already said a permission prompt is not a capability gap. It now says what to
+  do when the harness declines a call outright: the tool never ran, there is
+  nothing to answer, and retrying it verbatim, rewording it past the check,
+  splitting it up, or reaching for a different tool that does the same thing are
+  one act — defeating a control the user installed, using exactly the ingenuity
+  the rest of that skill supplies. Route around a missing capability, never
+  around a withheld permission. What is left is a report: the call, what it
+  would have done, and everything the run did that did not depend on it.
+- **`tending-tbaguette` says what a green suite actually proves.** The tests
+  check the filing — registries agreeing, counts matching, manifests at one
+  version, the note well-formed. Nothing in them can see whether a section is
+  true, belongs where it was put, or is reachable from the description. Green is
+  a precondition for the review gate, never a substitute for it.
+- **And it no longer stops at "pull request opened".** A contribution gets
+  reviewed, and the skill now carries the return leg: a maintainer arguing with
+  a section is neither a request to delete it nor to defend it, `verifying-review-feedback`
+  decides which a given comment is, and a change that goes quiet under review
+  costs the maintainer more than one that was never opened.
+
 ## 2026-09-03 — Three skills learn what to do when the thing you need to watch will not talk to you
 
 - **`routing-around-capability-gaps`: a gap in seeing routes differently from a

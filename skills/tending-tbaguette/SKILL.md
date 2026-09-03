@@ -1,6 +1,6 @@
 ---
 name: tending-tbaguette
-description: Use at the start of every conversation, in any project or repo, and keep watching for the rest of it — the moment a genuinely project-agnostic lesson shows up while using TBaguette, capture it. Triggers include a correction that generalizes past this one codebase, a gap or wrong assumption found in a skill while that skill was running, a recurring judgment call nothing covers yet, a TBaguette skill that looks wrong enough to want editing, an installed plugin that already carries hand-edits, or any question about how to contribute to TBaguette. Covers the bar a candidate has to clear, capturing one without derailing the current task, scrubbing it of anything project-specific, choosing which existing skill a lesson belongs in, the approval gate that runs before anything is pushed anywhere and why nobody being there does not lift it, opening the pull request from a fork, restoring an install that was edited in place, and how a merged change comes back through keeping-tbaguette-current.
+description: Use at the start of every conversation, in any project or repo, and keep watching for the rest of it — the moment a genuinely project-agnostic lesson shows up while using TBaguette, capture it. Triggers include a correction that generalizes past this one codebase, a gap or wrong assumption found in a skill while that skill was running, a recurring judgment call nothing covers yet, a TBaguette skill that looks wrong enough to want editing, an installed plugin that already carries hand-edits, or any question about how to contribute to TBaguette. Covers the bar a candidate has to clear, capturing one without derailing the current task, scrubbing it of anything project-specific, choosing which existing skill a lesson belongs in, the approval gate that no absent human lifts, opening the pull request from a fork and answering the review it gets, restoring an install that was edited in place, and how a merged change comes back through keeping-tbaguette-current.
 ---
 
 # Tending TBaguette
@@ -300,12 +300,23 @@ The shape, so this file still says what happens:
    again. One that no longer holds up gets dropped with a one-line note — that
    is the filter working, not a failure.
 3. Make the edit, then write the update note in `UPDATES.md`.
-4. Run `python3 scripts/run_tests.py`, fully green.
+4. Run `python3 scripts/run_tests.py`, fully green — and read what green
+   means here. The suite checks the *filing*: registries agreeing, counts
+   matching, manifests at one version, the update note well-formed. Nothing in
+   it can see whether a section is true, belongs where you put it, or is
+   reachable from the description. Green is a precondition for the next step,
+   never a substitute for it (`confirming-before-claiming-done`).
 5. `red-teaming-your-own-work`, then `karen-and-the-manager`.
 6. Commit — then **ask**, which is the approval gate above and the one step
    nothing past this point runs without.
 7. Push, open the pull request, record the URL in the queue file, and report it
    as *waiting on a maintainer* rather than as shipped.
+8. Answer the review when it comes back. A maintainer arguing with a section is
+   not a request to delete it and not a request to defend it — `verifying-review-feedback`
+   owns which of those a given comment is, and the same rule applies to your own
+   change as to anyone else's: fix it, refute it with a reason, or withdraw it,
+   and never silently drop one. A contribution that goes quiet under review costs
+   the maintainer more than one that was never opened.
 
 Four decisions inside step 3 have no gate behind them, and a session that never
 opens the reference can still get them wrong quietly:
