@@ -24,6 +24,21 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-03 — Ask the other author before you land their work
+
+- `landing-a-finished-branch` now covers the case where what you are landing
+  carries somebody else's commits. Its existing checks all ask whether *your*
+  change is finished; none of them reach whether theirs is, and version control
+  cannot answer it — a commit means committed, which is much weaker than ready.
+- The gap is widest where it matters most: code that compiles, passes its suite,
+  and has never once been executed on the platform it targets is indistinguishable
+  in the log from code that has run in production for a week.
+- So ask, even when you are confident of the answer. An author re-reading their
+  own work under *is this safe to release* finds things that reading it under
+  *is this correct* did not.
+- And their answer authorizes their code being included, never your release —
+  two agents agreeing is not approval when each answers to a different person.
+
 ## 2026-09-03 — crouton was mostly advice about prose, and prose is not where the tokens go
 
 - **`crouton` has been rewritten around what a session actually spends.** It used
