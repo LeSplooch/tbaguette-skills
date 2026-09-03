@@ -26,6 +26,12 @@ Everything above the first `##` is preamble and is never rendered.
 
 ## 2026-09-04 — When a check comes back clean without having looked
 
+- `crouton` sharpens what a bounded read costs you. Its read rules tell you to cap
+  what a command returns; what they did not say is that a cap does not merely omit,
+  it answers — a count taken off `head -80` is the count of eighty lines, and it
+  arrives looking exactly like the file's. Every count, every absence and every
+  "last one" read off a capped command is a claim about the cap until something
+  unbounded confirms it. Cap what you are reading; never cap what you are counting.
 - `red-teaming-your-own-work` adds the attack to run on a measurement that has
   just confirmed something you are about to act on. A held-out check answers
   whether one *point* agrees, and cannot separate a real effect from a noisy peak

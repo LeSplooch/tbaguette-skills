@@ -51,6 +51,8 @@ Checkable, roughly in the order they pay. Assume you are starting from the expen
 
 Two of these are free outright: content you already have, and a command whose answer cannot have moved, both return *the same* information for less. The other four trade away information you did not ask for — a range is not the file, an outline is not the body, a capped command is not its whole output. That is the right trade when you know the question and the wrong one when you are still looking for it, which is what the limit under "Where compression stops" is about.
 
+There is a sharper form of that cost, and it is the one that actually bites. A bounded read does not merely omit — it *answers*. Count the entries in `head -80` of a file and you have counted the entries in the first eighty lines, but the number arrives looking like the file's, with nothing on it saying otherwise, and the next action spends it as if it were. So every **count**, every **absence**, and every **last one** taken off a capped command is a claim about the cap until something unbounded confirms it. That confirmation is nearly free and it is the reason to prefer the tool that computes the answer over the one that shows you a prefix of it: `wc -l`, `grep -c`, `git diff --stat`, `--name-only | wc -l` are unbounded answers to bounded questions. Cap what you are *reading*; never cap what you are *counting*.
+
 ## What survives at any length
 
 - **Negations** — not, no, never, only, except, unless. Dropping one inverts the claim, and no length target buys that back.
