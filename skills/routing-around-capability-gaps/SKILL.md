@@ -1,6 +1,6 @@
 ---
 name: routing-around-capability-gaps
-description: Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output, a context larger than this window, a real browser, GPU or offline inference, a cheap pass over thousands of items — or when a file type will not open, a tool answers "unsupported", a modality is missing, or the next sentence is about to describe something that was never actually read. Covers surveying what else is installed on this machine, telling installed from credentialed from reachable, preferring a deterministic local tool over a second model, the data and spend consent that crossing a provider boundary needs, driving another harness non-interactively, proving the delegate actually received the prompt, and writing a capability spec that says when it expires.
+description: Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output, a context larger than this window, a real browser, GPU or offline inference, a cheap pass over thousands of items — or when a file type will not open, a tool answers "unsupported", a modality is missing, or the next sentence is about to describe something that was never actually read. Also use when a system under investigation has stopped reporting its own state and no direct channel is left to read it. Covers surveying what else is installed on this machine, telling installed from credentialed from reachable, preferring a deterministic local tool over a second model, the data and spend consent that crossing a provider boundary needs, driving another harness non-interactively, proving the delegate actually received the prompt, and writing a capability spec that says when it expires.
 ---
 
 # Routing around capability gaps
@@ -25,6 +25,16 @@ Routing exists to make that substitution unnecessary. Well over a hundred agent 
 Write one sentence, in the response, before any tool call: what is needed, and what specifically cannot do it. "This is a 40-minute WAV; I have no audio input." That sentence is what makes the rest of the turn honest, and it is the single step most often skipped, because the gap usually announces itself as a vague sense that the task is awkward rather than as a clean unsupported error.
 
 Never produce content about an input that was not actually read. Not hedged, not "presumably", not "based on the filename". If the routing fails and nothing on the machine can read it, the deliverable is "I could not read this, here is what I tried" — see `calibrating-confidence`.
+
+## A gap in seeing routes differently from a gap in doing
+
+The ladder below assumes the missing capability is an *action* — decode this, render that, reach that host. A second kind of gap is named the same way and routes nowhere on it: you cannot **observe** something. The device stopped reporting. The process is running somewhere you have no handle on. The screen holding the answer is not a screen anything here can read. Every rung is a way of doing more work, and no amount of work performs an observation you have no channel for.
+
+What replaces the ladder there is an inventory of what is already in the environment and can see the thing. A second device physically pointed at the first — a camera aimed at a display whose own control channel has stopped answering. A neighbour on the same bus, network, or filesystem that logs what the subject will not report. A downstream consumer that recorded what it received. A side effect the subject leaves somewhere it does not control: a timestamp, a lock file, an open socket, a line in somebody else's log. The question is not "what tool can read this", which often has no answer, but "what already saw it", which usually has several.
+
+Two things make it worth naming rather than leaving to ingenuity. It is asymmetrically cheap — the substitute observer normally exists already and costs one command or one photograph, against an investigation that otherwise proceeds blind. And it is the gap most often misfiled as a door under `bounding-autonomous-work`: "I cannot see the state, so I need you" is a claim about your channels, and there is usually another channel nobody enumerated.
+
+An out-of-band observer is a different instrument from the one it replaces, and it answers a different question. A photograph of a screen carries what was rendered, not what the program believes. A downstream log carries what arrived, not what was sent. Report which one you actually read, per `calibrating-confidence`, rather than passing the substitute's answer off as the original channel's.
 
 ## The ladder
 
@@ -159,6 +169,7 @@ of at the work.
 
 | Symptom | Real cause |
 |---|---|
+| An investigation proceeded blind because the subject stopped reporting | The gap was in seeing, not doing; nothing enumerated what else in the environment was already watching |
 | A confident description of a file that was never opened | The gap was never named, so substitution filled it |
 | "Nothing else is installed" after checking one remembered command | Recollection used as an inventory instead of a sweep |
 | "Why are you asking me to run this?" from a user who has the same shell you do | A step was routed to the person without checking rung zero; the gap was a permission prompt or an inconvenience, not a capability |
@@ -183,3 +194,4 @@ of at the work.
 - "It returned something, so it worked."
 - Building a coordinate map or a fixture against an environment you stood up, before checking what it lacks.
 - A block of commands printed for the user to paste, from a session that has a shell.
+- "I cannot see what it is doing, so I need you" — with no list of what else already can

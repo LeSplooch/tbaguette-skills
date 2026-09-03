@@ -178,6 +178,10 @@ fluent memories of things that never happened. Re-measure counts rather than
 restating them; `confirming-before-claiming-done` owns why a recalled number is
 not a measured one.
 
+The order above says what to trust. What it does not say is that a boundary also strips the *tier* off everything crossing it. A summary carries claims, not their provenance: the thing you verified by running a command, the thing you inferred from one file, and the thing you assumed because it was plausible all arrive on the far side in the same voice — indistinguishable, and equally fluent. `calibrating-confidence` calls that confidence laundering at a boundary between two parties. A compaction performs it on you, at a boundary you never noticed crossing, against your own earlier caution.
+
+That is what makes rows 1 and 2 a rule rather than a preference. Anything still checkable gets re-checked, because re-running the command is cheaper than working out which recollection was earned. Anything no longer checkable — a tool output that is gone, an observation about a state that has since moved — is downgraded to assumed on arrival rather than carried at whatever confidence it seems to have. And anything expensive to re-derive gets its tier written into the record while you still hold it, because the record is the one thing a compaction cannot paraphrase.
+
 ## Handing to a successor
 
 A brief, not an archive, and a brief is a set of named sections rather than a
@@ -201,6 +205,7 @@ compressing it was easier than writing it.
 | Symptom | Real cause |
 |---|---|
 | The record's last entry is always just before the gap, never inside it | Checkpointing was left to a judgment call at the boundary, where the harness offered an event that fires there on its own |
+| A guess made before the compaction is acted on after it as settled fact | The boundary carried the claim and dropped its tier; verified, inferred, and assumed arrive in the same voice |
 | A second session redoes committed work | Recollection trusted over `git log`, which is the default after a compaction |
 | The same dead end explored twice | Negative results were never written; only forward progress was |
 | A whole family of causes skipped, wrongly | A dead end recorded without its boundary, so "pinning the clock changed nothing" was read as "not a timing issue" |

@@ -10,7 +10,7 @@
       "name": "TBaguette",
       "license": "GPL-2.0-only",
       "description": "Ninety-six project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling — plus formidable, design craft for every UI stack.",
-      "version": "1.0.34",
+      "version": "1.0.35",
       "source": "./",
       "author": {
         "name": "verderosa2",

@@ -86,6 +86,32 @@ Everything above the first `##` is preamble and is never rendered.
   to. A probe that answers suspiciously easily gets checked against
   `reproducing-bugs` before a deferral is withdrawn on it.
 
+## 2026-09-03 — Three skills learn what to do when the thing you need to watch will not talk to you
+
+- **`routing-around-capability-gaps`: a gap in seeing routes differently from a
+  gap in doing.** The ladder assumes the missing capability is an action, and
+  every rung is a way of doing more work — which performs no observation you have
+  no channel for. When the subject has stopped reporting, the move is an inventory
+  of what in the environment already sees it: a second device pointed at the
+  first, a neighbour on the same bus that logs what the subject will not, a
+  downstream consumer that recorded what it received, a side effect left somewhere
+  the subject does not control. It also flags this as the gap most often misfiled
+  as needing a human — "I cannot see the state" is a claim about your channels.
+- **`automating-repetition`: a person asked to watch is an instrument with a
+  latency floor.** "Tell me when X happens" imports the round trip as a sampling
+  interval, so a transition that passes in less time than a reply is invisible by
+  construction — and what comes back is not late information but information about
+  a state that no longer exists, which reads as current. The watcher section now
+  says to put a watcher on the transition and leave the person the physical
+  action.
+- **`checkpointing-long-runs`: a compaction strips the tier off everything that
+  crosses it.** What you verified by running a command, what you inferred from one
+  file, and what you assumed because it was plausible all arrive on the far side
+  in the same voice. The skill now says what to do with each: re-check anything
+  still checkable, downgrade anything no longer checkable to assumed on arrival,
+  and write the tier into the record for anything expensive to re-derive, while
+  you still have it.
+
 ## 2026-09-03 — Two commands that report success without having checked anything
 
 - **`automating-repetition`: a replacement that matched nothing exits zero.**

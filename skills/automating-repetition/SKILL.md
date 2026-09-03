@@ -1,6 +1,6 @@
 ---
 name: automating-repetition
-description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a scripted edit, codemod, or migration reported success and changed nothing, when a manual step is risky, irreversible, or easy to get wrong by hand, or when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.
+description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a scripted edit, codemod, or migration reported success and changed nothing, when a manual step is risky, irreversible, or easy to get wrong by hand, when a person is being asked to report a state that changes faster than they can reply, or when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.
 ---
 
 # Automating repetition
@@ -104,6 +104,10 @@ Two costs come with it, and both are the kind that arrive quietly.
   watched, what changed, and what the reader is expected to do — because the
   surrounding state that would have disambiguated it is gone.
 
+One substitute for a watcher is worth naming because it is the default and almost never checked: **asking a person to tell you when it happens.** It reads as the cheap option — no process to own, no heartbeat, no stale message — and it quietly imports the round trip as a sampling interval. A human observer can only report at the rate a conversation turns, so anything changing faster than a reply is invisible to them by construction. They see the transition; by the time the message is written the state has moved on. What arrives is not late information but information about a state that no longer exists, which is worse, because it reads as current.
+
+The tell is in the shape of the request. "Tell me when X" is fine for something that holds still once it happens. For a transition that *passes* — a screen that flashes by, a window that is open for two seconds, a process that is briefly killable — the person is being asked to be an instrument with a latency floor nobody measured. Put a watcher on it, and leave the person the part only a person can do — which is the physical action, not the observation.
+
 None of which argues for a watcher whenever one is possible. A poll is the right
 answer whenever the condition changes slowly against how long you are willing to
 wait — checked twice a day, a daily thing is not worth a process — and it fails
@@ -175,5 +179,6 @@ Exercise the manual path at least annually, and whenever the tool changes owner.
 - Failure output going only to a log nobody reads on a schedule nobody watches
 - Adding a retry loop around an operation that should not be failing
 - Automation that only runs from one person's machine
+- Asking someone to tell you the moment something happens, when the something is over in less time than a reply takes
 - "The script ran fine" — said about an edit whose diff was never looked at
 - A generated report nobody has opened in three months — the automation now produces waste on a schedule
