@@ -86,6 +86,28 @@ Everything above the first `##` is preamble and is never rendered.
   to. A probe that answers suspiciously easily gets checked against
   `reproducing-bugs` before a deferral is withdrawn on it.
 
+## 2026-09-03 — Two commands that report success without having checked anything
+
+- **`automating-repetition`: a replacement that matched nothing exits zero.**
+  `sed -i`, a regex codemod, a scripted find-and-replace, an `UPDATE ... WHERE`
+  — every pattern-driven edit *succeeds* when its pattern is absent. Nothing
+  matches, nothing is written, the file comes back byte-identical, and the
+  status code says the run was fine, because it was. The skill now says that an
+  edit meant to change something has to assert that it did: count the matches
+  and fail on zero, diff before against after, or read the affected-row count
+  back — separating "ran without error" from "did the thing", two claims a
+  mechanical editor reports with the same number.
+- **`diagnosing-before-fixing`: an environmental cause is the one hypothesis
+  that ends the search.** "It's the network", "the runner is slow today", "that
+  dependency is flaky" — accepting one of those stops an investigation instead
+  of directing it, which is what makes it the cheapest thing to believe. It is
+  also the cheapest thing in the whole investigation to refute, because whatever
+  it blames has a liveness check measured in seconds. The skill now asks for
+  that probe to be named and run before the attribution gets written down, and
+  again before it gets repeated. It says explicitly that this does not
+  contradict the legitimate outcome two paragraphs later: documenting an
+  environmental limit is not the same act as establishing one.
+
 ## 2026-09-03 — Two ways a check can come back clean and mean nothing
 
 - **A verification command read through a filter can lose its verdict.**

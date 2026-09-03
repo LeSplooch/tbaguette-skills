@@ -1,6 +1,6 @@
 ---
 name: automating-repetition
-description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a manual step is risky, irreversible, or easy to get wrong by hand, or when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.
+description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a scripted edit, codemod, or migration reported success and changed nothing, when a manual step is risky, irreversible, or easy to get wrong by hand, or when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.
 ---
 
 # Automating repetition
@@ -128,6 +128,16 @@ Such a validator commonly catches nothing on the day it runs, and that is not ev
 
 The transferable move is the question, not either check: **what class of error would pass every assertion I just wrote?** Ask it while the assertions are fresh, because that is the only moment their blind spot is obvious. A tool that validates and refuses, with nothing aimed at what it cannot see, feels like a safety net and is half of one.
 
+## A replacement that matched nothing exits zero
+
+Pattern-driven edits share a blind spot, and it is not in the part that writes. `sed -i`, a regex codemod, a scripted find-and-replace, an `UPDATE ... WHERE` — each is handed a pattern and a substitution, and each *succeeds* when the pattern is absent. Nothing matched, nothing was written, the file comes back byte-identical, and the exit status is zero because no error occurred. None did. The command did exactly what it was told, to nothing.
+
+Whether that gets caught depends entirely on what is being treated as the signal. An empty diff is conspicuous to anyone who looks at it; the failure survives because exit zero already answered the question, so nobody does. And it arrives at the least suspicious moment — one edit inside a batch of twenty, or a pattern written against the file as it was remembered rather than as it is, after a rename, a reformat, or an earlier edit in the same session moved the anchor out from under it.
+
+So an edit that is *supposed* to change something has to assert that it did. Count the matches and fail on zero rather than trusting the substitution's own status; capture the target before and after and refuse to continue on an empty diff; read a database's affected-row count back and compare it against what the predicate was meant to select. All of them are cheap, and each separates two claims that every mechanical editor reports with the same number: **ran without error**, and **did the thing**.
+
+That is the asymmetry `writing-the-failing-test-first` is built on, met through a different instrument. A test never watched failing and a substitution never watched matching share one failure — nobody has confirmed the thing is pointed at anything, so the agreeable result it returns is worth nothing.
+
 ## Keep the manual path working
 
 Document the manual sequence beside the tool and mark which steps the tool performs. The automation is the fast path, never the only path, and the day it breaks is disproportionately likely to be the day it is needed — both usually fail from the same upstream change.
@@ -154,6 +164,7 @@ Exercise the manual path at least annually, and whenever the tool changes owner.
 | Maintenance costs more than the manual task | it is coupled to something that changes weekly, usually another tool's human-readable output |
 | It broke and nobody could do the task by hand | the manual path was deleted along with the tedium |
 | A day of work saved five minutes a year | the rule of three was applied to effort rather than to frequency |
+| A scripted edit reported success and left the file byte-identical | Its pattern matched nothing; a substitution that changes nothing still exits zero |
 | Every file passed the bulk applier's checks and one was still wrong | the checks asserted shape; the error was in the content, which a structural assertion cannot see by construction |
 
 ## Red flags
@@ -164,4 +175,5 @@ Exercise the manual path at least annually, and whenever the tool changes owner.
 - Failure output going only to a log nobody reads on a schedule nobody watches
 - Adding a retry loop around an operation that should not be failing
 - Automation that only runs from one person's machine
+- "The script ran fine" — said about an edit whose diff was never looked at
 - A generated report nobody has opened in three months — the automation now produces waste on a schedule

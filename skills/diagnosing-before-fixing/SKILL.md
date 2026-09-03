@@ -1,6 +1,6 @@
 ---
 name: diagnosing-before-fixing
-description: Use when a bug, test failure, crash, or any behavior that doesn't match what the code is supposed to do needs a fix and none has been proposed yet, especially when the obvious quick fix is tempting under time pressure or an earlier attempted fix didn't hold. Also use when a parameter appears to have no effect at all, especially when the result is byte-identical rather than merely close. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it actually originates rather than where it surfaced, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.
+description: Use when a bug, test failure, crash, or any behavior that doesn't match what the code is supposed to do needs a fix and none has been proposed yet, especially when the obvious quick fix is tempting under time pressure or an earlier attempted fix didn't hold. Also use when a failure has been blamed on the network, the CI runner, a flaky dependency, or this machine and that attribution has never been tested, or when a parameter appears to have no effect at all, especially when the result is byte-identical rather than merely close. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it actually originates rather than where it surfaced, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.
 ---
 
 # Diagnosing before fixing
@@ -173,6 +173,16 @@ it converts a clean failure into a confusing success. The urge to bypass is
 strongest exactly when the guard is most load-bearing, because that is when it is
 most in the way.
 
+## An environmental cause is the one hypothesis that ends the search
+
+"It's the network." "The runner is slow today." "That dependency is flaky." "It's this machine." These are hypotheses like any other, with one property no other hypothesis has: accepting one *ends* the investigation instead of directing it. Every other explanation says where to look next. This class says there is nowhere to look — which makes it the cheapest thing to believe and the most expensive thing to be wrong about.
+
+It sticks because it is *available* rather than *supported*. Something unrelated was slow in the same hour, or the failure is intermittent, or the timing simply fits — and the story is plausible enough that nothing feels unresolved, so nobody goes looking for the contradiction. Then it propagates. An attribution written into one note gets repeated in the next one, and after enough repetitions it reads as an established fact with a history behind it rather than as a guess nobody ever tested.
+
+What separates this class from every other hypothesis is that it is also the cheapest one in the whole investigation to falsify. Whatever it blames has a liveness check measured in seconds: one request against the endpoint, one `ls-remote` against the host that is supposedly unreachable, one `SELECT 1`, one look at the runner's own status page. So **name the probe that would refute the attribution, and run it before writing the attribution down** — then run it again before repeating it. A known issue nobody has re-tested is a guess with tenure.
+
+None of this contradicts the section below. An environmental cause really is a legitimate place for an investigation to end, and documenting one honestly is the right outcome when it is true. Documenting it is simply not the same act as establishing it, and the gap between the two is usually one command that takes under a second. Nor is this `bounding-autonomous-work`'s cheapest experiment wearing different clothes: that one tests a claim about your own capabilities before handing work back to a person, this one tests a claim about the world before you stop looking. The tell is the same either way — a conclusion resting on something you never contacted.
+
 ## When fixes keep failing
 
 Three failed fixes in a row is a different problem than the one being solved. If each attempt reveals the same coupling in a new place, or needs a bigger change than the last one to hold, the architecture is what's wrong — not the last three hypotheses. Say so explicitly and question the pattern before attempting a fourth; a fourth patch on a bad architecture just becomes the fifth.
@@ -193,6 +203,7 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 | Test written after the fix, to "prove it works" | A test that never watched the bug fail proves nothing about whether it would have caught it |
 | "I don't fully understand it, but this might work" | Uncertainty deployed instead of named — say what isn't understood and go investigate exactly that |
 | The same command run four times with the same error | A retry treated as an experiment when nothing differed between the runs |
+| A failure blamed on the network, the runner, or a flaky dependency | An attribution that was plausible was accepted as tested; the thing it blames was never contacted |
 | "We already ruled that out" | The factor was the same in every run, so it was observed rather than tested |
 | A hypothesis dropped on a result that was anomalous in several unrelated ways | One wrong idea does not produce several unrelated failures; the experiment broke, so it returned no verdict to act on |
 
@@ -211,3 +222,4 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 - An operation attempted again with nothing changed between the attempts, and the identical error read as bad luck rather than as determinism
 - "That's the same for every run, so it can't be that"
 - Reaching for the flag that suppresses a preflight check before answering what condition the check tests
+- "It was the network" — written in a note, then repeated in four more, with no probe run at any point
