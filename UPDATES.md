@@ -24,6 +24,15 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-03 — A negative result from a compiled artifact is not an absence
+
+- `confirming-before-claiming-done` now names the case where the search is
+  sound and the surface is not: grepping a release build for a short string and
+  finding nothing looks exactly like the code having been dead-stripped, and is
+  no evidence of anything. Optimizers store short literals as immediate operands
+  rather than contiguous bytes, minifiers rename what you are looking for, and
+  stripped builds keep no symbol to match. It says what to probe with instead.
+
 ## 2026-09-03 — Seven skills, three of them from the first outside contributions
 
 - **`orienting-in-unfamiliar-code`: a text search and an index answer different
