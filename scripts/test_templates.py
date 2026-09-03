@@ -690,6 +690,115 @@ def check_fresh_section() -> None:
           or 'style="--cf-shift: -70px"' in html)
 
 
+def _css_rule_body(css: str, selector: str) -> str | None:
+    """The brace-matched body of the first rule with exactly this selector.
+
+    Brace-matched rather than split on the first "}": these rules carry
+    comments that quote CSS, and a naive split truncates at the first brace
+    inside a comment. The first version of this check did exactly that and
+    could never pass, which is indistinguishable from a check that catches the
+    bug right up until you mutate the thing it guards."""
+    needle = selector + " {"
+    idx = css.find(needle)
+    if idx == -1:
+        return None
+    start = idx + len(needle)
+    depth, end = 1, start
+    while depth and end < len(css) - 1:
+        end += 1
+        if css[end] == "{":
+            depth += 1
+        elif css[end] == "}":
+            depth -= 1
+    return css[start:end]
+
+
+def _declared_properties(body: str) -> set:
+    """Property names declared in a rule body, comments stripped."""
+    body = re.sub(r"/\*.*?\*/", "", body, flags=re.S)
+    props = set()
+    for decl in body.split(";"):
+        if ":" in decl:
+            name = decl.split(":", 1)[0].strip()
+            if name and not name.startswith("@"):
+                props.add(name)
+    return props
+
+
+def check_dialog_ua_defaults() -> None:
+    """Every <dialog> the site creates, checked against the UA defaults it
+    silently depends on.
+
+    Three separate bugs shipped on one dialog, all the same shape: an author
+    declaration deleting a UA default that was doing load-bearing work. The
+    margin the `* { margin: 0 }` reset removed, which is the entire centring
+    mechanism. An unconditional `display` overriding
+    `dialog:not([open]) { display: none }`, which is the only thing hiding a
+    closed dialog — it rendered a second full copy of the page's changelog at
+    the bottom of the body. Neither was visible in the diff, and both had
+    symptoms that pointed nowhere near the cause.
+
+    Guards written against those two selectors by name would not have caught
+    either one on a different element, so this discovers its subjects instead:
+    it reads the class of every <dialog> site.js constructs, and a second
+    dialog added later is covered without anyone remembering to add it here.
+    The rule it enforces is not "do not override these" but "be explicit" —
+    a <dialog> may not lean on a UA default for any of them."""
+    print("dialog UA defaults")
+    root = Path(__file__).resolve().parent.parent
+    css = (root / "docs/assets/styles.css").read_text(encoding="utf-8")
+    js = (root / "docs/assets/site.js").read_text(encoding="utf-8")
+
+    # Bound to the variable that received the element, via a backreference.
+    # Without that binding the scan runs past the dialog's own assignment and
+    # latches onto whatever sets a className next — caught by mutation, where
+    # it "discovered" the dialog's header and started demanding a modal's UA
+    # defaults of a <div>. A guard aimed at the wrong subject is worse than an
+    # absent one: it fails confidently, for reasons that are not true.
+    classes = sorted({
+        m.group(2) for m in re.finditer(
+            r"(\w+)\s*=\s*document\.createElement\(\s*['\"]dialog['\"]\s*\)"
+            r"[\s\S]{0,300}?"
+            r"\1\.(?:className\s*=\s*|setAttribute\(\s*['\"]class['\"]\s*,\s*)"
+            r"['\"]([\w-]+)['\"]",
+            js,
+        )
+    })
+    check("at least one <dialog> class is discoverable in site.js — a rename "
+          "that made this find nothing would silently check nothing",
+          len(classes) >= 1)
+
+    # Only demand the margin back where something actually took it away.
+    reset_zeroes_margin = re.search(r"^\*\s*\{[^}]*margin:\s*0", css, re.M) is not None
+
+    for cls in classes:
+        body = _css_rule_body(css, f".{cls}")
+        check(f".{cls} has a base rule to check", body is not None)
+        if body is None:
+            continue
+        props = _declared_properties(body)
+
+        check(f".{cls} declares no unconditional display — it would beat "
+              f"dialog:not([open]), the only thing hiding it when closed",
+              "display" not in props)
+        closed = _css_rule_body(css, f".{cls}:not([open])")
+        check(f".{cls} hides itself explicitly when closed rather than "
+              f"depending on the UA sheet still saying so",
+              closed is not None and "none" in closed)
+
+        if reset_zeroes_margin:
+            check(f".{cls} restores the margin this stylesheet's reset removed "
+                  f"— that margin is the whole of a modal dialog's centring",
+                  "margin" in props)
+
+        # position: fixed and inset: 0 come from dialog:modal, and everything
+        # positioned against the dialog (its gilded rule, here) assumes them.
+        for prop in ("position", "inset", "top", "left", "right", "bottom"):
+            check(f".{cls} leaves {prop} to dialog:modal, which is what puts a "
+                  f"modal dialog in the viewport at all",
+                  prop not in props)
+
+
 def check_update_notes() -> None:
     """The "Update notes" band under the rail: present only when there are
     notes, newest entry open and everything older folded, capped, and sitting
@@ -758,44 +867,6 @@ def check_update_notes() -> None:
           html.count('class="notes__head"') == 1
           and "notes__history" not in html and "notes__tag" not in html)
 
-    # A CSS assertion from a template test is unusual and this one earns it.
-    # A modal <dialog> is centred by `margin: auto` in the UA stylesheet, and
-    # this site's reset opens with `* { margin: 0 }` — an author rule, so it
-    # wins, and the dialog lands in the top-left corner with `inset: 0` still
-    # resolved. Nothing about the symptom points at a margin. The restored
-    # declaration reads as redundant next to a UA default that "already does
-    # that", which is exactly why it would be removed by a tidy-up, and the
-    # regression is invisible to every other check here.
-    styles = (Path(__file__).resolve().parent.parent / "docs/assets/styles.css").read_text(encoding="utf-8")
-    # Brace-matched rather than split on the first "}": the rule's own comment
-    # quotes `* { margin: 0 }`, and a naive split truncates there and reports
-    # the declaration missing whether or not it is present — a check that
-    # cannot pass is worth no more than one that cannot fail.
-    start = styles.index(".notes-dialog {") + len(".notes-dialog {")
-    depth, end = 1, start
-    while depth:
-        end += 1
-        if styles[end] == "{":
-            depth += 1
-        elif styles[end] == "}":
-            depth -= 1
-    dialog_rule = styles[start:end]
-    check("the archive dialog restores the margin the reset took from it, "
-          "which is the whole of its centring",
-          "margin: auto;" in dialog_rule)
-    # The same class of defect, twice on the same element. A closed <dialog> is
-    # hidden by one thing, `dialog:not([open]) { display: none }` in the UA
-    # sheet, so any unconditional `display` in the base rule wins and the
-    # dialog renders in normal flow as the last child of <body> — a full copy
-    # of every entry at the bottom of the page, and a close that looks broken.
-    check("the archive dialog declares no unconditional display, which would "
-          "override the UA rule that is the only thing hiding it when closed",
-          "display:" not in dialog_rule)
-    check("...and hides itself explicitly rather than relying on that UA rule",
-          ".notes-dialog:not([open]) { display: none; }" in styles)
-    check("...with the grid it needs scoped to the open state",
-          ".notes-dialog[open] {" in styles
-          and "display: grid;" in styles.split(".notes-dialog[open] {", 1)[1].split("}", 1)[0])
 
     lone = render_index(categories, {}, update_notes=[newest])
     check("a single entry gets no archive control — opening a dialog to read "
@@ -1565,6 +1636,7 @@ def main() -> None:
     check_getting_started_is_reachable()
     check_header_and_badges()
     check_fresh_section()
+    check_dialog_ua_defaults()
     check_update_notes()
     check_i18n_content_links_and_strings()
     check_i18n_verify_install_page()
