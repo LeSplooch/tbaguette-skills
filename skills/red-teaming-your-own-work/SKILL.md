@@ -1,6 +1,6 @@
 ---
 name: red-teaming-your-own-work
-description: Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it, when nothing looks wrong and nothing has been tried to make it look wrong, before handing off work someone will act on, or after a previous delivery came back with a defect a single skeptical pass would have caught. Covers adversarial self-review, attack checklists, and bounded review passes.
+description: Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it, when nothing looks wrong and nothing has been tried to make it look wrong, before handing off work someone will act on, or after a previous delivery came back with a defect a single skeptical pass would have caught. Also use when a measurement has just confirmed a result you are about to act on. Covers adversarial self-review, attack checklists, re-testing a confirmed number for the shape rather than the point, and bounded review passes.
 ---
 
 # Red-teaming your own work
@@ -41,6 +41,37 @@ A seventh when the work is an addition: delete it mentally and ask what breaks. 
 The weak part is already flagged in your own head — you know the rough edge and the TODO, and reviewing it returns what you already knew. Defects concentrate where attention stopped early: the obviously-correct core, the part you would skip in someone else's review, the piece written fastest because it was familiar.
 
 Operational rule: name the two pieces you would not bother reviewing, and review exactly those. The confidence that makes them skippable is what left them unexamined.
+
+## A confirmed measurement is one point, not a shape
+
+The strongest part of a quantitative result is the confirmation itself, and it
+deserves the same treatment as everything else above. A held-out check answers
+whether *one point* agrees. It cannot tell a real effect from a noisy peak that a
+lucky point happened to sit near, and this survives every conventional safeguard
+because each of those addresses a different threat: pairing removes shared
+variance, a stated noise floor removes differences too small to matter, held-out
+samples remove fitting to the data you chose on. None of the three tests whether
+the *shape* reproduces.
+
+That is not a hypothetical failure. A comparison careful on all three counts can
+still produce a result at four or five standard errors that falls to
+indistinguishable once an unrelated instrument bug is fixed, an adopted change
+whose advantage quietly decays from six standard errors to under one and a half,
+and a fresh proposal at over two that does not reproduce at all on the next
+untouched sample.
+
+The attack is cheap: before acting on a confirmed result, re-run the whole sweep
+— the curve, not the chosen point — on one further sample nothing has touched,
+and ask whether the shape holds rather than whether the point confirms again. Two
+readings decide it. A peak whose *neighbours* do not also beat the incumbent is a
+spike, and a spike is noise. And if the incumbent turns out to be the best point
+on the fresh curve, the original selection was noise from the start.
+
+Do this because it discriminates, not because it is conservative. Run on two
+consecutive results it will happily give opposite answers — killing a proposal
+whose peak does not reappear, and vindicating an adopted change whose gap holds
+on fresh data. A check that only ever says no is not a check, it is a veto, and
+it earns nothing.
 
 ## Distance, obtained cheaply
 

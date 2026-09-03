@@ -24,8 +24,17 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-04 — Five checks that come back clean without having looked
+## 2026-09-04 — When a check comes back clean without having looked
 
+- `red-teaming-your-own-work` adds the attack to run on a measurement that has
+  just confirmed something you are about to act on. A held-out check answers
+  whether one *point* agrees, and cannot separate a real effect from a noisy peak
+  a lucky point sat near — pairing, a stated noise floor and held-out samples each
+  address a different threat, and none of them tests whether the shape reproduces.
+  Re-run the whole sweep on one further untouched sample: a peak whose neighbours
+  do not also beat the incumbent is a spike, and an incumbent that wins on the
+  fresh curve means the original selection was noise. Worth running because it
+  gives opposite answers on different results, not because it is cautious.
 - `using-tbaguette` told you that every skill's trigger description is already in
   front of you, and at this library's size that can be false without anything
   saying so. The listing has a character budget; when it overflows, names all
