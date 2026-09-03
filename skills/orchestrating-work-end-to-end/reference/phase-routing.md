@@ -58,6 +58,7 @@ not once the run is already in trouble.
 | `deciding-reversibility` | Blast radius is `live`, or is about to become live at one specific command |
 | `isolating-work-with-worktrees` | Crew is `shared tree`, or the run wants a radius of `sandbox` it does not currently have |
 | `fanning-out-independent-work` | Crew is `fanned` — the split has to be by file boundary and the merge is yours |
+| `crouton` | Always — the fifth dial. It sets the register the run's reads and its reports both hold, and it is read here rather than at the report, when every read has already been paid for |
 
 ## Before phase 1 — arriving cold
 
@@ -182,6 +183,7 @@ not once the run is already in trouble.
 | `automating-repetition` | The same edit is being repeated by hand across many files |
 | `checkpointing-long-runs` | The task list is longer than the context holding it, or a compaction happened mid-task |
 | `bounding-autonomous-work` | The tasks are being executed with nobody available to answer what they raise |
+| `crouton` | Always — this is the phase where reads dominate: ranges over whole files, and no re-read to confirm an edit that already reported success |
 
 ## Inside phase 5 — when implementation stalls
 
@@ -260,6 +262,7 @@ not once the run is already in trouble.
 | `observing-production-safely` | The only reproduction is live, and diagnosis must not become the incident |
 | `regression-test-from-bug` | The gate after the fix: named for the defect, failing before, passing after |
 | `writing-postmortems` | The failure reached users, or would have |
+| `crouton` | The register the hunt holds: log and trace excerpts scoped to the failing case, rather than whole files pulled in fresh per hypothesis |
 
 ## Respond track
 
@@ -278,6 +281,7 @@ mitigate first, understand second. Everything here runs against a clock.
 | `regression-test-from-bug` | What turns "we rolled back" into "this cannot happen again" |
 | `writing-postmortems` | Always — including when the cause turned out obvious in hindsight |
 | `explaining-technical-work` | Every status update during, and the summary after |
+| `crouton` | The register those status updates hold — never the warning before a mitigation that cannot be walked back, which stays full prose |
 
 ## Review track
 
@@ -298,6 +302,7 @@ and the gate is coverage of the diff rather than confidence in a conclusion.
 | `calibrating-confidence` | Findings are being reported with more certainty than the reading behind them supports |
 | `red-teaming-your-own-work` | The review came back clean and nothing was tried to make it look otherwise |
 | `explaining-technical-work` | Delivering the findings to someone who has to act on them |
+| `crouton` | Findings compressed to what decides them, with every path, symbol, and quoted error left byte-exact |
 | `offering-the-next-move` | Always — the review closes with the choice it implies |
 
 ## Author track
@@ -358,6 +363,7 @@ the memory of it.
 | `reproducible-environments` | The change only reproduces on one machine |
 | `auditing-dependencies` | The upgrade pulls transitive changes nobody asked for |
 | `resolving-merge-conflicts` | A long-lived branch has to be integrated as part of the change |
+| `crouton` | The register a long mechanical sweep holds — never the reversibility warning, which stays full prose |
 
 ## Outside the spine
 

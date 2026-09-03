@@ -1,4 +1,4 @@
-# The run envelope: four dials
+# The run envelope: five dials
 
 The track says what shape the work is. The envelope says what the run may
 assume about the world it executes in. Both get read at the same moment and
@@ -16,6 +16,7 @@ being wrong.
 - [Amplitude — how much run this is worth](#amplitude--how-much-run-this-is-worth)
 - [Blast radius — what a wrong turn costs](#blast-radius--what-a-wrong-turn-costs)
 - [Crew — who else is writing](#crew--who-else-is-writing)
+- [Register — what the run spends](#register--what-the-run-spends)
 - [Reading the four together](#reading-the-four-together)
 - [Failure modes](#failure-modes)
 
@@ -87,6 +88,27 @@ The tell for `shared tree` that gets missed most: a diff far larger than the
 work you did. A checkout that suddenly reports changes across files you never
 opened is not a broken tool, it is a second writer, and the next destructive
 git command is about to cost someone else their afternoon.
+
+## Register — what the run spends
+
+Set once, at the route, and held for the whole run. `crouton` owns it; this
+names the setting so it lands on the record with the other four instead of
+being rediscovered at every phase boundary.
+
+| Value | Read it as | What it changes |
+|---|---|---|
+| **trimmed** | Full grammar, preamble and closing recaps gone | The default. Anything read once and carefully, or quoted later |
+| **clipped** | Fragments and dropped articles, facts still joined into sentences | Someone is watching the run live and can ask a follow-up cheaply |
+| **telegraphic** | One line per fact, nothing joining them | Status during a long run; findings a reader will scan and pick from |
+
+The value names the *prose*, but the dial binds the larger half: ranges rather
+than whole files, `grep` and `sed -n` over `cat`, no re-read to confirm an edit
+that already reported success, background said once. That half is where a
+multi-phase run's tokens actually go, and it does not vary with the value.
+
+Three things never move with this dial, per `crouton`'s own gate: the run
+record, every artifact the run lands, and any warning before something
+irreversible. Compress the run, never the record, and never the warning.
 
 ## Reading the four together
 

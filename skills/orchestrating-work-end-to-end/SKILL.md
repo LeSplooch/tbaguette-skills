@@ -114,7 +114,7 @@ Two rules govern the choice, both inherited from `scoping-before-building` becau
 
 The track is only half the route. Every gate below is answered by someone, at some size, against something that can or cannot be undone, in a tree that may have another writer in it — and the spine is written for exactly one setting of those: a human replying within a turn or two, a change worth eight phases, a mistake that can be walked back, one writer. Each of those is load-bearing on a gate, none of them is stated, and a default that is usually right is a default nobody notices being wrong.
 
-Read all four dials, say them out loud alongside the track, and put them on the run record's first line. [reference/envelopes.md](reference/envelopes.md) has how to read each one, what each changes, and which combinations carry a rule that no single dial carries alone.
+Read all five dials, say them out loud alongside the track, and put them on the run record's first line. [reference/envelopes.md](reference/envelopes.md) has how to read each one, what each changes, and which combinations carry a rule that no single dial carries alone.
 
 | Dial | Values | Decides |
 |---|---|---|
@@ -122,14 +122,24 @@ Read all four dials, say them out loud alongside the track, and put them on the 
 | **Amplitude** | express · standard · campaign | How much run the work is worth |
 | **Blast radius** | sandbox · repo · live | What a wrong turn costs |
 | **Crew** | solo · fanned · shared tree | Who else is writing to this tree |
+| **Register** | trimmed · clipped · telegraphic | What the run spends reading it and saying it |
 
-Three settings route somewhere specific, before the first action rather than after:
+Four settings route somewhere specific, before the first action rather than after:
 
 - `autonomous` or `unattended` → `bounding-autonomous-work`. Every gate that was a question becomes a written self-answer carrying a stop condition, and the door bound stands in every envelope.
 - `express` → [reference/express.md](reference/express.md). Four beats rather than eight, behind entry conditions that get checked rather than hoped.
 - `campaign` → `checkpointing-long-runs`. The record stops being scaffolding and becomes the run's only memory.
+- any register → `crouton`. It binds what the run *pulls in*, not only what it writes: ranges rather than whole files, `grep` and `sed -n` over `cat`, no re-read to confirm an edit that already reported success, background said once and referred back to. Read here, because by phase 8 every read has already been paid for.
 
 Amplitude obeys the same rule as the track and for the same reason: **it only ratchets up**. Express promotes to standard the instant an entry condition turns out false; standard promotes to campaign the instant the context holding the run gets close to full. Nothing demotes on your own judgment, because the judgment that says "this got smaller" is made by the part of the run that most wants to be finished.
+
+### And set the register in the same breath
+
+The track says which phases run and the envelope says who answers their gates. Neither says what the run **spends** getting there, and the spine's unstated default is the most expensive setting available: pull the whole file, narrate the call, restate the background, close each phase with a summary of what the reader just watched happen. A Build run charges that eight times, and every track reusing the spine charges it again.
+
+Register is read *here*, beside the other four, rather than at phase 8 when the report is written and every read has already been paid for. `crouton`'s own ordering is the reason: prose is the smallest of the four spends it names, and the three above it — whole files pulled into context, tool calls fired on a guess, background re-pasted each phase — are the ones that multiply by phase count. Tightening the closing summary while re-reading the same file at every boundary changes the run's accent, not its cost.
+
+Three things here sit outside it, per that skill's own gate, and shortening any of them is a defect rather than a saving: **the run record** — ledger, phase log, rulings — and **every artifact phase 8 lands**, because both are read by someone who was not here; and **any warning before something irreversible**, which the door bound already requires in full. Compress the run, never the record, and never the warning.
 
 ### A gate whose answerer is missing is substituted, not skipped
 

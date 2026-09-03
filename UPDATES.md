@@ -24,6 +24,29 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-03 — A run now decides what it spends before it starts reading, not after
+
+- **`orchestrating-work-end-to-end` has a fifth envelope dial: register.** The
+  other four said who answers a gate, how much run the work is worth, what a
+  wrong turn costs, and who else is writing in the tree. None of them said what
+  the run *spends* getting there, so the unstated default was the most expensive
+  setting available — whole files pulled in, every call narrated, the background
+  restated, each phase closed with a summary of what you just watched happen. A
+  build charges that eight times, and every other track charges it again.
+- **`crouton` owns that dial now, and it is read at the route rather than at the
+  report.** By the last phase, every file a run was going to re-read has already
+  been read, so a register set there can only tighten the closing prose — the
+  smallest of the four spends that skill names. Set at the route it binds the
+  larger half instead: ranges rather than whole files, no re-read to confirm an
+  edit that already reported success, background said once and referred back to.
+- **Three things stay in full prose no matter what the dial says.** The run
+  record, anything the run lands, and any warning before something irreversible
+  — all three are read by someone who was not there and cannot ask what you
+  meant. Compress the run, never the record, and never the warning.
+- **Every track reaches it, not just Build.** The Diagnose, Respond, Review and
+  Change-in-place spines now name the register the same way, so a run picks up
+  the setting whichever shape of work it turned out to be.
+
 ## 2026-09-03 — Before TBaguette opens a pull request for you, it has to say what that means
 
 - **The approval gate now states what the yes does, not just what the change

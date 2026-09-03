@@ -52,6 +52,9 @@ These do not scale down. They are the same non-negotiables the spine carries,
 and their cost at this size is seconds.
 
 - **The frame line exists before the edit.** Written, not held.
+- **The register is still named.** Express is a smaller *run*, not a licence to
+  re-read a file it already has. `crouton` binds the reads here exactly as it does
+  in the full spine.
 - **Something outside your own confidence closes it.** A run command, a test, a
   build. Reading the diff again is not proof.
 - **A one-way door still gets a human.** Express does not change the door bound;
