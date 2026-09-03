@@ -40,6 +40,8 @@ Everything above the first `##` is preamble and is never rendered.
   to. A probe that answers suspiciously easily gets checked against
   `reproducing-bugs` before a deferral is withdrawn on it.
 
+
+
 ## 2026-09-03 — A negative result from a compiled artifact is not an absence
 
 - `confirming-before-claiming-done` now names the case where the search is
@@ -48,7 +50,6 @@ Everything above the first `##` is preamble and is never rendered.
   no evidence of anything. Optimizers store short literals as immediate operands
   rather than contiguous bytes, minifiers rename what you are looking for, and
   stripped builds keep no symbol to match. It says what to probe with instead.
-
 ## 2026-09-03 — Seven skills, three of them from the first outside contributions
 
 - **`orienting-in-unfamiliar-code`: a text search and an index answer different
