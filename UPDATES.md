@@ -24,6 +24,21 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-03 — A success counter that is really an admission counter
+
+- `instrumenting-for-observability` now covers the metric that is recorded when
+  work is *accepted* rather than when it finishes — a status chosen, a header
+  written, a job enqueued. For anything that completes later than that instant,
+  the counter measures admission and reports completion, so a failure after the
+  status is on the wire gets tallied as a success.
+- The reason it earns a section rather than a bullet is the direction of the
+  error: an uncounted event leaves a hole, and a hole invites someone to look,
+  while an event counted as its own opposite produces a clean number over a
+  broken period. Missing data is a question; wrong data is an answer.
+- The skill's `description:` now routes on the symptom you would actually
+  arrive with — a failure counter that has never once incremented — rather than
+  on the diagnosis you do not have yet.
+
 ## 2026-09-03 — A run now decides what it spends before it starts reading, not after
 
 - **`orchestrating-work-end-to-end` has a fifth envelope dial: register.** The

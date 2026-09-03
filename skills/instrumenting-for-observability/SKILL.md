@@ -1,6 +1,6 @@
 ---
 name: instrumenting-for-observability
-description: Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, or when choosing a log level.
+description: Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, when a failure counter has never once incremented, or when choosing a log level.
 ---
 
 # Instrumenting for observability
@@ -101,6 +101,24 @@ Two things follow, and both are instrumentation decisions rather than modelling 
 - **Carry the sample size to the point of use.** A consumer that receives a score without an *n* cannot tell a measurement from a default, and will render it identically either way — which is how a number nobody measured ends up in a UI presented as a learned value.
 
 Then let the component refuse. A floor below which it declines to run and says why is better than fitting noise, and it converts a silent wrong answer into a visible abstention. Distinguishing the two reasons for an empty input matters as well: *no data yet* is a legitimate cold start that should idle and announce itself, while *the source is broken* should alarm. A volume counter that never leaves zero past a startup window is the discriminator between them, and it only exists if someone emitted it.
+
+## Record the outcome where the outcome is known
+
+A metric gets placed where it is easy to write rather than where the thing it names becomes true, and the gap between those two points is where a whole class of failure hides. The section above is the same mistake at the other end — a counter that cannot see its input; this one cannot see its ending.
+
+Success is recorded at the point a request is *accepted* — a status chosen, a header written, a job enqueued, a handler returning — because that is where the code has a natural fork and where the value is to hand. For anything that finishes later than that moment, the counter measures admission and reports completion. Streamed and proxied responses are the clearest case: once the status line is on the wire it cannot be retracted, so a failure in the body has no way to become an error the caller can read, and the success was tallied seconds before the failure happened. A queue publish counted as delivery and a fire-and-forget spawn counted as an execution are the same shape.
+
+What makes this worth separating from an ordinary gap in coverage is the direction of the error. An event that is never counted leaves a hole, and a hole invites someone to look. An event counted as its own opposite produces a **clean** number over a broken period, and nothing about a zero prompts an investigation. Missing data is a question; wrong data is an answer.
+
+Three consequences, all of them placement decisions rather than modelling ones:
+
+- **Name the instant.** For each terminal counter, say out loud when it fires and when the work it names actually finishes. If those are two different sentences, the counter is in the wrong place.
+- **Where the work outlives its status, instrument the end of the work** — wrap the stream, the body, the async completion, and count there.
+- **Count a late failure as its own thing, not only as a failure.** The remedies differ: an error before the response is a status the caller can retry on, and one after it is invisible on both sides. Folding them together loses the distinction that would tell an operator which they have.
+
+When the ending genuinely cannot be observed from where the counter lives, that is a finding rather than a dead end, and the fix is naming: a metric called *accepted* or *admitted* claims what it can prove, where one called *served* or *completed* implies an ending nobody watched. Renaming it is cheap and it stops the number being read as something it is not.
+
+The tell that this is already happening is a success rate nobody can reconcile with what users report, sitting beside a failure count that stays at zero through incidents. A failure counter that has never once incremented is not evidence of reliability; it is evidence that nothing increments it.
 
 ## Common mistakes
 
