@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.40</span>
+      <span class="wordmark-version" dir="ltr">v1.0.41</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-03T14:51:26+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T14:51:26Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-03T14:58:49+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-03T14:58:49Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">atomic-commits</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-03T14:58:49.204730+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Landing changes</span>
-  <p class="lede">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit, when a diff mixes a rename or a reformat with a logic change, when a bisect lands on a commit too large to reason about, when a revert or a backport drags in changes nobody asked for, when the checkout is shared with another agent, a colleague, or a tool that writes to it, or when a reviewer cannot find the real change in a diff. Covers splitting by file and by hunk, mechanical versus semantic separation, staging in a tree you do not solely own, and commit granularity.</p>
+  <p class="lede">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit, when a diff mixes a rename or a reformat with a logic change, when a bisect lands on a commit too large to reason about, when a revert or a backport drags in changes nobody asked for, when the checkout is shared with another agent, a colleague, or a tool that writes to it, or when a reviewer cannot find the real change in a diff. Covers splitting by file and by hunk, mechanical versus semantic separation, staging in a tree you do not solely own, clearing a foreign edit versus sweeping it in, and commit granularity.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>One commit, one decision. A commit is atomic when it builds and passes its tests standing alone, and reverting it removes exactly one choice from the tree — not when it is merely small.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -84,6 +84,8 @@
 <p>The rules above assume every dirty file in the tree is yours. Often it is not: a second agent working the same checkout, a colleague, an editor plugin, a formatter on save, a watcher regenerating artifacts. There, a broad stage is not a shortcut but an unreviewed commit of someone else's in-progress work under your message — their change ships attributed to something it has nothing to do with, and the reasoning behind it exists nowhere in the log. The author of the sweep is rarely the one who notices.</p>
 <p>Stage by naming the files you wrote. A path-scoped stage feels like the careful version of staging everything and is not: foreign edits sit in the same directories yours do, so narrowing the sweep still sweeps. Targeting is enumerating — anything whose argument is a directory is a sweep with a smaller radius, and the commit-all shortcut is the same sweep with the review step removed as well.</p>
 <p>Re-read the status output immediately before <em>each</em> stage, not once when the task begins. Noticing an unfamiliar dirty file at branch time does not protect a commit made an hour later; &quot;pre-existing, riding along untouched&quot; is an observation about the past, not a property of the tree. The cheap audit at the other end is a <code>--stat</code> diff of the finished branch against the commit it started from: every path listed should be one you can account for, and the one you cannot is the one that got swept in.</p>
+<p>The other way to mishandle a foreign edit is to clear it out of the way first — <code>git stash -u</code>, <code>git clean -fd</code>, <code>git restore</code> over the paths in your way — to start from a tidy tree. Each of those <em>removes</em> the work rather than mis-attributing it, and leaves no commit for its author to recover it from. What makes the move tempting is not ignorance of the risk: stashing is the documented tidy step, reversible by you and recommended by procedures, so a rule that only warns against the careless option never reaches the person reaching for the careful one.</p>
+<p>It is also the quietest failure here. A stash appears in no view either party normally checks — no commit, no branch, no dirty file, nothing in a status output — so the outcome is not that they notice and object, it is that nobody notices until the author looks for work they assumed was still there. Where the tree holds changes that are not yours, ask whoever owns them: it costs one message, and an owner who is still working will move their own edit somewhere safe rather than have you handle it. Where nobody answers, leave the edit where it is and enumerate your own paths around it.</p>
 <p>If the sweep already happened and is published, do not rewrite. Land a follow-up commit that names what was pulled in and where it actually belongs. History that is wrong and annotated stays navigable; history that is silently corrected under everyone else's checkouts does not.</p>
 <h2 id="separating-pure-refactors-from-behavior-changes">Separating pure refactors from behavior changes</h2>
 <p>The mixed commit is the one nobody can review and nobody can revert. A reviewer facing 700 moved lines with 6 changed ones cannot find the 6, so they approve the shape and miss the semantics. Split so that one commit changes structure with behavior fixed, and the next changes behavior with structure fixed. Each is then checkable by a different, cheaper method: the refactor by &quot;does anything observable differ&quot;, the change by &quot;is this the right behavior&quot;.</p>

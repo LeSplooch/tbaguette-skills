@@ -24,6 +24,22 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-03 — Tidying a shared tree is worse than sweeping it
+
+- `atomic-commits` already said not to broad-stage a checkout you do not solely
+  own: a wide `git add` commits someone else's in-progress work under your
+  message. It now covers the move people actually reach for instead — clearing
+  the tree first with `git stash -u`, `git clean -fd`, or a `restore`.
+- That is worse, because it removes the work rather than mis-attributing it and
+  leaves no commit for its author to recover it from. And it is tempting for the
+  opposite of the usual reason: stashing is the documented tidy step, so a rule
+  that only warns against the careless option never reaches the person reaching
+  for the careful one.
+- It is also the quietest failure in the section. A stash shows up in no view
+  either party normally checks, so nobody notices until the author goes looking
+  for work they assumed was still there. Ask the owner instead; where nobody
+  answers, leave the edit alone and enumerate your own paths around it.
+
 ## 2026-09-03 — Checking the artifact is not enough if the artifact was already there
 
 - `confirming-before-claiming-done` already said that when a pipeline can swallow

@@ -1,6 +1,6 @@
 ---
 name: atomic-commits
-description: Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit, when a diff mixes a rename or a reformat with a logic change, when a bisect lands on a commit too large to reason about, when a revert or a backport drags in changes nobody asked for, when the checkout is shared with another agent, a colleague, or a tool that writes to it, or when a reviewer cannot find the real change in a diff. Covers splitting by file and by hunk, mechanical versus semantic separation, staging in a tree you do not solely own, and commit granularity.
+description: Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit, when a diff mixes a rename or a reformat with a logic change, when a bisect lands on a commit too large to reason about, when a revert or a backport drags in changes nobody asked for, when the checkout is shared with another agent, a colleague, or a tool that writes to it, or when a reviewer cannot find the real change in a diff. Covers splitting by file and by hunk, mechanical versus semantic separation, staging in a tree you do not solely own, clearing a foreign edit versus sweeping it in, and commit granularity.
 ---
 
 # Atomic commits
@@ -52,6 +52,10 @@ The rules above assume every dirty file in the tree is yours. Often it is not: a
 Stage by naming the files you wrote. A path-scoped stage feels like the careful version of staging everything and is not: foreign edits sit in the same directories yours do, so narrowing the sweep still sweeps. Targeting is enumerating — anything whose argument is a directory is a sweep with a smaller radius, and the commit-all shortcut is the same sweep with the review step removed as well.
 
 Re-read the status output immediately before *each* stage, not once when the task begins. Noticing an unfamiliar dirty file at branch time does not protect a commit made an hour later; "pre-existing, riding along untouched" is an observation about the past, not a property of the tree. The cheap audit at the other end is a `--stat` diff of the finished branch against the commit it started from: every path listed should be one you can account for, and the one you cannot is the one that got swept in.
+
+The other way to mishandle a foreign edit is to clear it out of the way first — `git stash -u`, `git clean -fd`, `git restore` over the paths in your way — to start from a tidy tree. Each of those *removes* the work rather than mis-attributing it, and leaves no commit for its author to recover it from. What makes the move tempting is not ignorance of the risk: stashing is the documented tidy step, reversible by you and recommended by procedures, so a rule that only warns against the careless option never reaches the person reaching for the careful one.
+
+It is also the quietest failure here. A stash appears in no view either party normally checks — no commit, no branch, no dirty file, nothing in a status output — so the outcome is not that they notice and object, it is that nobody notices until the author looks for work they assumed was still there. Where the tree holds changes that are not yours, ask whoever owns them: it costs one message, and an owner who is still working will move their own edit somewhere safe rather than have you handle it. Where nobody answers, leave the edit where it is and enumerate your own paths around it.
 
 If the sweep already happened and is published, do not rewrite. Land a follow-up commit that names what was pulled in and where it actually belongs. History that is wrong and annotated stays navigable; history that is silently corrected under everyone else's checkouts does not.
 
