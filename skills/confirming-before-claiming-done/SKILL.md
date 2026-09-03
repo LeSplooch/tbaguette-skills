@@ -1,6 +1,6 @@
 ---
 name: confirming-before-claiming-done
-description: Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed, or handed off on that claim; when a subagent's or tool's own success report is about to be repeated as fact; when the only thing behind the claim is that the code looks right and nothing has actually been run; when the claim is that something is absent — not installed, not applied, not registered — and the evidence is that the one location you knew to check is untouched; when the requirement is that something survives a restart, a cold start, or a fresh checkout and the only check to hand observes the present instead; or when a green suite only checks files you own. Covers naming the command that would prove the claim and running it fresh, treating a stale or partial run as current evidence, inducing the condition a requirement names rather than accepting a proxy, proving absence by searching the target surface, and telling internal agreement from an outside check.
+description: Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed, or handed off on that claim; when a subagent's or tool's own success report is about to be repeated as fact; when the only thing behind the claim is that the code looks right and nothing has actually been run; when the claim is that something is absent — not installed, not applied, not registered — and the evidence is that the one location you knew to check is untouched; when the requirement is that something survives a restart, a cold start, or a fresh checkout and the only check to hand observes the present instead; when a check passed against an artifact that predates the run; or when a green suite only checks files you own. Covers naming the command that would prove the claim and running it fresh, telling a stale artifact or run from this one's, inducing the condition a requirement names rather than accepting a proxy, and proving absence by searching the target surface.
 ---
 
 # Confirming before claiming done
@@ -41,7 +41,8 @@ with a success line under it. `portable-shell-scripting` has the mechanics and
 the portability caveats; the discipline here is that nothing standing between a
 check and your reading of it may be able to swallow the answer — so either keep
 the status explicitly, or verify the artifact the command was supposed to
-produce rather than the pipeline that ran it.
+produce rather than the pipeline that ran it — with the caveat the next section
+owes it, which is that the artifact was very likely already there.
 
 When the check itself is unreliable — an intermittent bug that only reproduces some fraction of the time — a single clean run doesn't carry the same weight it would for a deterministic one. That's a reason to run it enough times to get real signal, or to report status honestly as still-in-progress, not a reason to fall back to a hedged claim instead. "Should be fixed, let me know if you still see it" spends the same unearned confidence a flat "it's fixed" would; softer wording doesn't make one weak attempt add up to evidence.
 
@@ -89,6 +90,16 @@ The exit code is the most persuasive form this takes, and deserves naming on its
 Where a check ran is part of what it proves. Confirming a published thing from the seat that published it — the authoring session, the signed-in browser, the tool that did the upload — establishes that the artifact exists and that you, specifically, can reach it; the claim is that its audience can. The two contexts differ along axes invisible from inside the authoring one, authentication and caching chief among them, and the two failures they produce run in opposite directions.
 
 A default-private artifact is indistinguishable from a public one at the owner's seat, so a page that renders perfectly for its author returns nothing to anyone else — worse once the URL has already gone out as public. A stale cache is the mirror image: it serves the previous version after a genuinely successful deploy, so a correct check reads as a failure and invites a pointless re-push. One makes a broken thing look fine, the other makes a fine thing look broken, and a signed-out, cache-busted fetch from outside the publishing tool settles both.
+
+## An artifact is not this run's artifact
+
+The remedy above sends you to the artifact instead of the pipeline, and on its own it swaps one weak check for another: an artifact is usually *already there* from last time. A build directory holds the previous binary, a report holds yesterday's numbers, and neither goes missing when a step fails to run. Presence proves the step ran at some point in the artifact's history — a claim nobody was making.
+
+**The artifact is stale.** A step never ran — wrong directory, missing dependency, an error the output filter swallowed — and the previous artifact sat there answering for it. Everything downstream verifies the old thing and reports a pass, and the log it emits reads exactly like a fresh one, because it *is* a real log of a real earlier run. The check is freshness: a modification time later than the change, or an identifier the run stamped in that the previous artifact could not be carrying. There is also a tell worth knowing on its own, because it fires before you think to check anything — a verification that finished faster than the work it claims to have done.
+
+**The artifact is fresh and came from somewhere else.** This is the one a digest cannot see. A hash answers *did these bytes arrive intact* and is silent on *are these the bytes I meant*: a correct hash over an artifact built from the wrong source passes every check in the chain, because each stage compares against the one before it and none of them compares against the change you made. Integrity and identity are different questions, and only the first is being asked. The check is a **positive probe** — search the artifact for content unique to the source you expect produced it, a string or symbol or constant the change itself introduced. Finding it is a claim no hash can make.
+
+Build the probe from **long, distinctive content**, because one built from short content fails open. Short strings get folded into the surrounding code and leave no searchable trace, so a wrong build sails through a probe made of them, silently and in the costliest direction. This is the mirror of the rule that a negative result from an artifact proves nothing: there absence was uninformative, here absence is the whole signal — so the probe has to be built from content substantial enough that its absence means something.
 
 ## The run is not the return
 

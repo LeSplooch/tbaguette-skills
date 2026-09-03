@@ -1,5 +1,5 @@
 name: TBaguette
-version: 1.0.39
+version: 1.0.40
 description: Skills and workflow bootstrap for Hermes Agent, from TBaguette's Atelier
 author: verderosa2
 provides_hooks:

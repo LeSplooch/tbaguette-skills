@@ -24,6 +24,26 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-03 — Checking the artifact is not enough if the artifact was already there
+
+- `confirming-before-claiming-done` already said that when a pipeline can swallow
+  a command's exit status, you should verify the artifact rather than the
+  pipeline. That remedy was incomplete, and the new section says how: an artifact
+  is usually already there from last time, so presence proves the step ran at
+  some point in its history — a claim nobody was making.
+- Two failures, two different checks. A **stale** artifact needs freshness — a
+  modification time later than the change, or an identifier the run stamped in.
+  Its tell fires before you think to look: a verification that finished faster
+  than the work it claims to have done.
+- An artifact that is fresh but **built from the wrong source** is the one a
+  digest cannot see. A hash answers whether the bytes arrived intact and is
+  silent on whether they are the bytes you meant. That needs a positive probe —
+  search for content the change itself introduced — built from long, distinctive
+  content, because short strings get folded into surrounding code and a probe
+  made of them fails open.
+- The skill's `description:` gained a trigger for it and lost a `Covers` clause
+  that restated one the `Use when` half already made.
+
 ## 2026-09-03 — Ask the other author before you land their work
 
 - `landing-a-finished-branch` now covers the case where what you are landing
