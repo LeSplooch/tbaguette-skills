@@ -162,6 +162,7 @@ runs are the same discipline applied to timings, and for the same reason.
 | "Should pass now" in a commit message or handoff note | The verification step was replaced with confidence in the fix |
 | Tests declared passing based on a run from before the last edit | Evidence treated as durable when it's only valid for the code it ran against |
 | "The agent said it completed the task" reported as the task being complete | A tool's self-report repeated as independently checked fact |
+| A search of the built artifact says the feature never shipped | The artifact does not store what was searched for; the pattern was sound and the surface was not |
 | A regression test added and trusted without ever seeing it fail | Never run against the broken code, so it's unknown whether it tests anything |
 | Build green, shipped, runtime error in the first minute | Compilation was checked; behavior never was |
 | "Looks right" standing in for "ran and confirmed" | Review of your own diff mistaken for verification of its behavior |

@@ -24,6 +24,22 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-03 — Telling a real door from one you never tried
+
+- `bounding-autonomous-work` now separates the two. Its door bound lists actions
+  a human must own, and says that stopping at one is a correct ending — which
+  makes it easy to stop at something that merely resembles one. "This cannot be
+  verified without you" is a claim about your own capabilities, not an
+  observation, until an attempt has failed; the skill now asks for the cheapest
+  experiment that would settle it, run, before the deferral is written down. Three
+  limits keep that from becoming the opposite advice: it applies while you are
+  deciding whether something is a door and never after a stop condition has fired,
+  the experiment is bound by the same list as everything else so the read-only
+  half is what is being asked for, and a probe that succeeds never converts a door
+  into a self-answer — knowing you *could* rotate the credential is not permission
+  to. A probe that answers suspiciously easily gets checked against
+  `reproducing-bugs` before a deferral is withdrawn on it.
+
 ## 2026-09-03 — A negative result from a compiled artifact is not an absence
 
 - `confirming-before-claiming-done` now names the case where the search is
