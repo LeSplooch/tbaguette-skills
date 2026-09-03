@@ -1,6 +1,6 @@
 ---
 name: bounding-autonomous-work
-description: Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan, a subagent dispatched without a way to ask, a hook or cron or loop with no reader, or a question just asked into a silence that the run is about to answer for itself. Also use when a run is about to defer something to a human because it believes it cannot verify it. Covers substituting each approval gate rather than skipping it, telling a real door from an untried one, the four pre-committed stop conditions that halt a run instead of letting it drift, the actions no confidence level licenses without a human, and reporting to someone who was not there.
+description: Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan, a subagent dispatched without a way to ask, a hook or cron or loop with no reader, or a question just asked into a silence that the run is about to answer for itself. Also use when a run is about to defer something to a human because it believes it cannot verify it, or when a stop condition has just fired on a run that does not otherwise look like it was in trouble. Covers substituting each approval gate rather than skipping it, telling a real door from an untried one, the four pre-committed stop conditions that halt a run instead of letting it drift, the actions no confidence level licenses without a human, and reporting to someone who was not there.
 ---
 
 # Bounding autonomous work
@@ -88,7 +88,27 @@ because a stop condition that names a feeling never fires.
 | **Door** | The next action would be irreversible, external, or expensive to undo | The careful six-hour run that is reckless in its final command |
 | **Drift** | The acceptance ledger would have to be edited to accept what was built | Success redefined into reach, which is the single most comfortable failure available to an unsupervised run |
 
-Two rules make them real.
+**Draw the budget around the failure it is meant to catch.** An attempt-counting
+budget assumes each attempt is an independent try at the *same* problem, so N of
+them means the approach is converging on nothing. Plenty of tools do not fail
+that way. A compiler, a type checker, a linter, or a schema validator enumerates
+the remaining work incrementally: each failure names a *different* site, exactly,
+and the fix is one edit with no re-diagnosis between them. There the count
+measures the size of the change rather than the futility of the approach, and a
+budget of three fires a third of the way through a mechanical edit that was never
+in trouble.
+
+Two consequences, both at the time the budget is written. Run whatever command
+enumerates **all** the work before starting to count, because build tooling
+routinely surfaces sites in waves and the wave that only appears once the test
+targets compile is still the same edit. And check what honouring the budget
+would leave behind: the stop bound requires a recoverable tree, so a budget that
+can only be obeyed by halting on a half-applied change that does not compile is
+mis-drawn rather than inconvenient. The thing to fix is the budget — count
+wall-clock, distinct root causes, or attempts that produced no new information,
+rather than raw failures.
+
+Two rules make the four conditions real.
 
 **A stop condition halts and reports; it does not ask.** There is nobody to
 ask. The run stops with the work in a recoverable state, the record current,

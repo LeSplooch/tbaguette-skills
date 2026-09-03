@@ -1,6 +1,6 @@
 ---
 name: using-tbaguette
-description: Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message, and not only at the top of a long one. Establishes that TBaguette's own skills must be checked for relevance before every response, and again once a response has run long enough that its opening check has gone stale, the same way this notice itself got surfaced.
+description: Use at the start of every conversation, in every project, and keep it in mind for the rest of the conversation — not just the first message, and not only at the top of a long one. Establishes that TBaguette's own skills must be checked for relevance before every response, and again once a response has run long enough that its opening check has gone stale, the same way this notice itself got surfaced. Also use when a check for a covering skill has just come back empty, or when the skill listing looks shorter than the library it is supposed to describe.
 ---
 
 # Using TBaguette
@@ -11,9 +11,41 @@ If there is even a small chance one of TBaguette's skills applies to what you're
 
 ## The rule
 
-Before responding — including a clarifying question, "let me look at the code first," or anything that feels too small to bother — check whether a TBaguette skill covers it. You don't need to open a file to see what exists: every `TBaguette:*` skill and its trigger description is already listed in your available-skills context. `CATALOG.md` in this repo has the longer versions when a one-line trigger isn't enough to judge relevance.
+Before responding — including a clarifying question, "let me look at the code first," or anything that feels too small to bother — check whether a TBaguette skill covers it. You don't need to open a file to see what exists: every `TBaguette:*` skill and its trigger description is normally already listed in your available-skills context — with one failure mode, immediately below, that this library is big enough to hit. `CATALOG.md` in this repo has the longer versions when a one-line trigger isn't enough to judge relevance.
 
 If a skill turns out not to fit once you're in it, that's fine — drop it. But check first, every time.
+
+## The listing may be shorter than the library
+
+That rule rests on a claim which is usually true and quietly stops being true at
+about the size this library has reached: that every skill's trigger description is
+in front of you. The listing has a character budget — in Claude Code it is a fraction of the
+context window, one percent by default — and a library of a hundred skills, each
+carrying a deliberately trigger-rich description, is the shape that exceeds it.
+
+What happens then is the part worth knowing. The **names** all survive. The
+**descriptions** are what gets dropped, and they are dropped starting with the
+skills invoked least — so the trigger text vanishes from precisely the skills
+nobody has been reaching for, which are precisely the ones you were relying on the
+listing to surface. Nothing announces it. Every skill is still listed, the check
+still runs, and it returns "nothing here covers this" with complete confidence.
+The failure is invisible to the inspection that would catch it, which is the same
+shape `routing-around-capability-gaps` describes one level down for a tool whose
+schema has not been fetched.
+
+Two things follow. Entries that are bare names, or descriptions noticeably shorter
+than the paragraph-length ones this library writes, are the tell — and `CATALOG.md`
+is already the answer the rule above points at, so read it rather than concluding
+the library is silent on a question it covers.
+
+The other is that this is fixable at the source rather than worked around. On
+Claude Code, `/doctor` estimates the listing's cost and names its biggest
+contributors, `/context`'s Skills row reports its size after the budget is
+applied, and `--debug` logs a warning when it overflows. Raise the budget with the
+`skillListingBudgetFraction` setting or the `SLASH_COMMAND_TOOL_CHAR_BUDGET`
+environment variable; where the listing is shared with other libraries, set the
+entries you never route on to `"name-only"` in `skillOverrides` to free room for
+the ones you do. Run one of those once rather than assuming it all fits.
 
 ## A long response needs a second check, not only the first
 

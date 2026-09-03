@@ -200,6 +200,31 @@ watched, so catch up on it once before returning to the triggering request:
 Run this inline, in the current conversation, never in a subagent — the
 transcript *is* the input, and a fresh agent does not have it.
 
+Read that rule with its reason attached, because the reason is what bounds it.
+"Never in a subagent" follows from *this* conversation's transcript being the
+input. A run genuinely working from records it fetches rather than from a
+transcript it is inside — a scheduled pass over sessions that already ended, say
+— is no longer the case the rule describes, and it is free to delegate. What
+that run should expect to get back is the next paragraph's subject.
+
+**The sweep works backward through one conversation, and not much further.**
+Reading back over the conversation you are in is cheap and it works: the
+transcript is right there, in order, with each correction still attached to
+whatever provoked it. Do not read that as a general ability to recover capture
+after the fact. Across conversations that have already ended it does not hold,
+and the reason is worth knowing before you lean on it — a lesson has no
+consistent surface form. Corrections rarely contain the words you would think to
+search for, so a keyword sweep over finished sessions comes back nearly empty
+while those same sessions were full of material at the time.
+
+Which is what the queue file is actually for. It is not a convenience for
+batching work; it is the only durable record that a moment happened, and the
+transcript is not a backup for it. A retroactive pass over a body of *finished*
+work therefore reads the queue and the artifacts still visible — the commits, the
+diffs, the notes — rather than fishing transcripts for a shape they do not have.
+And a moment nobody captured is, in practice, gone. That is the whole argument
+for two sentences now rather than a better write-up later.
+
 Once done, it is done. Go back to watching turn by turn like a skill that
 started on turn one.
 
@@ -224,6 +249,15 @@ Ask through whatever structured question tool the harness gives you —
 `AskUserQuestion`, an elicitation call, a multiple-choice prompt, whatever
 yours calls it. Prose fallback is for the absence of such a tool, not for
 convenience.
+
+Check that absence rather than reading it off. A harness can defer its tools —
+they exist and are callable, but their schemas are missing from the list until
+something fetches them — so a question tool can be entirely available and still
+not appear where you looked. Query the harness's own index for one by name and
+then by keyword before concluding there is none; `routing-around-capability-gaps`
+covers why reading a list is not the same as looking. It matters more here than
+almost anywhere else, because this is the one gate this skill will not let an
+unattended run substitute.
 
 Ask **after** the edit exists and the suite is green, and **before** the
 first command that reaches the network. That ordering is deliberate: asking

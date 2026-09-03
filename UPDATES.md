@@ -24,6 +24,47 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-04 — Five checks that come back clean without having looked
+
+- `using-tbaguette` told you that every skill's trigger description is already in
+  front of you, and at this library's size that can be false without anything
+  saying so. The listing has a character budget; when it overflows, names all
+  survive and **descriptions** get dropped, starting with the skills you invoke
+  least — so the triggers disappear from exactly the skills you were relying on
+  the listing to surface, and a check for a covering skill comes back empty with
+  full confidence. The skill now names the tell, points at `CATALOG.md`, and says
+  what to do where the harness exposes the budget as a setting.
+- `routing-around-capability-gaps` extends "discovery is a sweep, never a
+  recollection" down one level, to the tool inventory in your own context. A
+  harness can defer its tools — callable, but with no schema loaded until
+  something fetches one — so a tool can be fully available and absent from the
+  list you just read. Query the harness's index by name and by keyword before
+  writing "nothing here can do X", and note that being right by accident leaves
+  no mark to correct the method next time.
+- `bounding-autonomous-work` now says how to draw an attempt budget so it fires
+  on the failure it was meant to catch. Counting attempts assumes each one is an
+  independent try at the same problem; compilers, type checkers, linters and
+  schema validators instead enumerate the remaining work in waves, so each
+  "failure" names a different site and the count measures the size of the change
+  rather than the futility of the approach. Run the command that enumerates all
+  the work before counting, and treat a budget that can only be obeyed by halting
+  on a half-applied change as mis-drawn.
+- `checkpointing-long-runs` adds the background process started before a session
+  boundary and never seen to end. The transcript records that it began and has no
+  way to record an end that happened outside it, so "finished", "was killed" and
+  "still running" all arrive as the same silence. Resolve it from what the
+  process was writing to — the file, its size, the mtime, the lock, the pid —
+  because the durable state is the artifact and the transcript only recorded the
+  intention to produce one.
+- `tending-tbaguette` marks where its catch-up sweep stops working. Reading back
+  through the conversation you are in is cheap and effective; recovering capture
+  across conversations that already ended is not, because a lesson has no
+  consistent surface form and a keyword sweep over finished sessions comes back
+  nearly empty. The queue file is the only durable record that a moment happened.
+  It also says to check for the harness's question tool rather than reading its
+  absence off a list, since that gate is the one an unattended run may not
+  substitute.
+
 ## 2026-09-03 — Tidying a shared tree is worse than sweeping it
 
 - `atomic-commits` already said not to broad-stage a checkout you do not solely

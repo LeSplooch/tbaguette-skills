@@ -1,6 +1,6 @@
 ---
 name: routing-around-capability-gaps
-description: Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output, a context larger than this window, a real browser, GPU or offline inference, a cheap pass over thousands of items — or when a file type will not open, a tool answers "unsupported", a modality is missing, or the next sentence is about to describe something that was never actually read. Also use when a system under investigation has stopped reporting its own state and no direct channel is left to read it. Covers surveying what else is installed on this machine, telling installed from credentialed from reachable, preferring a deterministic local tool over a second model, the data and spend consent that crossing a provider boundary needs, driving another harness non-interactively, proving the delegate actually received the prompt, and writing a capability spec that says when it expires.
+description: Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output, a context larger than this window, a real browser, GPU or offline inference, a cheap pass over thousands of items — or when a file type will not open, a tool answers "unsupported", a modality is missing, no tool in the harness's own list appears to do it, or the next sentence is about to describe something that was never actually read. Also use when a system under investigation has stopped reporting its own state and no direct channel is left to read it. Covers surveying what else is installed on this machine, telling installed from credentialed from reachable, preferring a deterministic local tool over a second model, the data and spend consent that crossing a provider boundary needs, driving another harness non-interactively, proving the delegate actually received the prompt, and writing a capability spec that says when it expires.
 ---
 
 # Routing around capability gaps
@@ -99,6 +99,18 @@ So enumerate the interactions the work actually needs — click, type, focus, dr
 There are well over a hundred agent CLIs in circulation and the set turns over monthly. Any list held in memory — including any list in this skill — is a set of hints to test, never an inventory to trust. Two failure modes come straight from treating memory as inventory: trying one remembered command, finding it absent, and concluding nothing is available; or believing a remembered flag over the `--help` output actually printed by the version installed here.
 
 Sweep the machine, then confirm each candidate's own help output. Search by shape, not only by name: agent CLIs cluster in the same handful of install locations, and a tool nobody remembers is found the same way as one everybody does.
+
+The same rule runs one level lower, against the tool inventory in your own
+context, and it is easier to miss there because the check feels like looking
+rather than like remembering. A harness may defer most of its tools: they exist
+and are callable, but their schemas are absent until something fetches them, so
+they are invisible to exactly the inspection you would run. Reading the list and
+not finding a tool is not evidence that the tool is absent — it is evidence about
+what has been materialized so far. Query whatever tool-search or capability-listing
+facility the harness provides, by name and then by keyword, before writing "nothing here can do X". That is two calls.
+What makes them worth paying is that being right by accident leaves no mark: if
+the tool genuinely was not there, an unsound method returns the correct answer,
+the outcome looks like a success, and nothing corrects the method next time.
 
 ## Consent before crossing a provider boundary
 
