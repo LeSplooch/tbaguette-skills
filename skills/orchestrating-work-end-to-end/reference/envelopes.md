@@ -104,7 +104,9 @@ being rediscovered at every phase boundary.
 The value names the *prose*, but the dial binds the larger half: ranges rather
 than whole files, `grep` and `sed -n` over `cat`, no re-read to confirm an edit
 that already reported success, background said once. That half is where a
-multi-phase run's tokens actually go, and it does not vary with the value.
+multi-phase run's tokens actually go, and it does not vary with the value —
+every turn re-sends the conversation, so content pulled in costs around three
+times its own size, against low single digits of a run for the prose.
 
 Three things never move with this dial, per `crouton`'s own gate: the run
 record, every artifact the run lands, and any warning before something

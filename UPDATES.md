@@ -112,6 +112,12 @@ Everything above the first `##` is preamble and is never rendered.
   record template now has five fields rather than four, which is what makes the
   setting survive a compaction — a dial that lives only in the prose is a dial
   the next context does not inherit.
+- **And the dial states the rules rather than only pointing at them.** Naming
+  `crouton` was leaving the actual saving one skill-invocation away, and a run
+  that reads the dial and moves on collects none of it. The register bullet now
+  carries the short version inline — what a read costs, read the range, outline
+  before opening, cap what a command hands back, never re-read what you already
+  have — so a run gets the behaviour without opening anything.
 
 ## 2026-09-03 — Before TBaguette opens a pull request for you, it has to say what that means
 
