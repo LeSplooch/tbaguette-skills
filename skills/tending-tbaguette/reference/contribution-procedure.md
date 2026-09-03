@@ -172,8 +172,25 @@ clean so it can keep updating.
 7. **Commit**, with a message that explains *why* rather than what — see
    `writing-commit-messages`, and `git log` for this repo's voice.
 
-8. **Ask.** This is the approval gate above. Nothing past this point runs
-   without a yes.
+8. **Ask, and do not go on without a yes.** This is the approval gate, and
+   it is stated in full in the skill file — but the binding part is repeated
+   here on purpose, because this document is the one you were told to work
+   from, and "the gate above" is not above anything on this page.
+
+   Nothing below this line runs until the user has said yes to *this* pull
+   request, through the harness's own structured question tool. Ask after the
+   suite is green and before the first command that touches the network.
+
+   The question carries what changed, and then short bullets saying what the
+   yes creates: a public fork under their account, a branch pushed to it, a
+   pull request open under their GitHub identity, a diff of roughly a hundred
+   files that is mostly the regenerated site, and a maintainer who now has
+   something to answer. Closing it later does not unmake any of that.
+
+   A yes given for an earlier contribution in this same session is not a yes
+   for this one, and neither is enthusiasm about contributing in general. If
+   nobody is there to answer, this is where the run ends, with the work
+   committed on a local branch and a report saying what is waiting.
 
 9. **Push and open the pull request:**
 

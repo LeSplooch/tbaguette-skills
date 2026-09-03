@@ -231,7 +231,30 @@ earlier means asking about a change nobody can see yet, and asking later
 means the answer is decoration on something already published.
 
 Put the actual content in the question — which skill, what changes, how
-many lines — not "may I proceed?". The four options that earn their place:
+many lines — not "may I proceed?".
+
+Then say what the yes *does*, because "open the pull request" names an
+intention rather than an outcome. Short bullets, inside the question itself,
+naming what will exist afterwards that does not exist now:
+
+- a public fork of the repository under their account, if they have none yet
+- a branch pushed to that fork, carrying every commit on it
+- a pull request against `LeSplooch/tbaguette-skills`, open under their GitHub
+  identity and readable by anyone
+- a diff of roughly a hundred files, nearly all of them the regenerated site
+- a maintainer who now has something to act on, which closing it later does
+  not undo
+
+Five lines, not five paragraphs — if it needs a paragraph it belongs in the
+description of the change, not in the consequences. The reason to spell them
+out is that the person answering is almost always approving the *change*: they
+read the skill, they read the diff, they decided the lesson holds. The part
+that is irreversible is none of that. It is the publication, under their name,
+of a thing strangers can read and a maintainer has to answer. Someone can
+genuinely want the change and still not want that today, and they can only
+tell you so if the question distinguishes them.
+
+The four options that earn their place:
 
 | Option | What it does |
 |---|---|
@@ -342,6 +365,7 @@ site.
 | The suite is red on a new skill and the new files all look right | The registry, the count, or the inbound cross-reference — none of which live in the new skill's own directory |
 | A one-word description tweak turned the suite red | The description was already near the 1024-character cap the format sets; past it, a new trigger has to displace an old one |
 | A pull request opened, then a correction pushed two minutes later | The approval gate was treated as the review, instead of running after one |
+| A yes, then surprise at a public pull request under their own name | The question described the change and never said what approving it would create |
 | A candidate captured mid-task, and the task never got finished | Capture is two sentences; anything longer is the contribute phase running at the wrong time |
 | The same idea proposed twice | It was never moved to `## Shipped` with its URL |
 | "Contributed to TBaguette" reported for an open pull request | Opened and merged are different states, and only one of them reaches other users |
@@ -366,3 +390,4 @@ site.
 - "Nobody will notice the install is pinned."
 - "The prose is in the file, so the change is done" — with a description that would never send anyone there.
 - "Nobody is around to approve it, so I'll substitute the gate" — every other gate, yes; this one is the stop.
+- "They already said the lesson was worth contributing" — that is a yes to the change. The fork, the branch, the pull request and their name on it are a different question, and it is the one that cannot be taken back.
