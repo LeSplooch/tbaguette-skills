@@ -46,6 +46,10 @@ Everything above the first `##` is preamble and is never rendered.
 - **Every track reaches it, not just Build.** The Diagnose, Respond, Review and
   Change-in-place spines now name the register the same way, so a run picks up
   the setting whichever shape of work it turned out to be.
+- **The run record's first line carries it too.** The envelope line in the
+  record template now has five fields rather than four, which is what makes the
+  setting survive a compaction — a dial that lives only in the prose is a dial
+  the next context does not inherit.
 
 ## 2026-09-03 — Before TBaguette opens a pull request for you, it has to say what that means
 

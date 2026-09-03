@@ -227,7 +227,7 @@ Add four things to it that the acceptance ledger alone does not carry:
 
 ```
 Track: build | diagnose | respond | investigate | review | author | change-in-place
-Envelope: presence=paired | amplitude=standard | radius=repo | crew=solo
+Envelope: presence=paired | amplitude=standard | radius=repo | crew=solo | register=trimmed
 Phase: <name> — entered <when>, gate: <what will prove it>
 
 ## Phase log            (append only; never rewrite a line)
@@ -340,7 +340,7 @@ Invoked directly, this skill takes a verb. With none, it runs as the spine: rout
 
 | Command | Does |
 |---|---|
-| `route [request]` | Name the track and the four dials, and stop there. Useful before committing to a run, and as a second opinion on one already going |
+| `route [request]` | Name the track and the five dials, and stop there. Useful before committing to a run, and as a second opinion on one already going |
 | `resume` | Read the record, the plan's boxes, and `git log`, then enter at the first gate not yet met — never at the first phase |
 | `gate` | Name the evidence that would open the phase currently blocking, and say plainly whether it exists yet |
 | `record` | Write or refresh the run record — track, envelope, phase log, rulings, stop conditions — from what is actually on disk rather than from memory |

@@ -5,7 +5,7 @@ assume about the world it executes in. Both get read at the same moment and
 neither substitutes for the other: an autonomous express run in a sandbox and
 an autonomous campaign against live data share a track and nothing else.
 
-Read all four dials before the first action, and write them on the run
+Read all five dials before the first action, and write them on the run
 record's first line. Each has a default that is right often enough to be
 dangerous — a default that is usually right is a default nobody notices
 being wrong.
@@ -17,7 +17,7 @@ being wrong.
 - [Blast radius — what a wrong turn costs](#blast-radius--what-a-wrong-turn-costs)
 - [Crew — who else is writing](#crew--who-else-is-writing)
 - [Register — what the run spends](#register--what-the-run-spends)
-- [Reading the four together](#reading-the-four-together)
+- [Reading the five together](#reading-the-five-together)
 - [Failure modes](#failure-modes)
 
 ## Presence — who answers a gate
@@ -110,7 +110,7 @@ Three things never move with this dial, per `crouton`'s own gate: the run
 record, every artifact the run lands, and any warning before something
 irreversible. Compress the run, never the record, and never the warning.
 
-## Reading the four together
+## Reading the five together
 
 Some combinations carry a rule that neither dial carries alone.
 
@@ -120,6 +120,7 @@ Some combinations carry a rule that neither dial carries alone.
 | autonomous × express | Legal and common — this is most delegated small work. The floor still applies: the change is still proven by something run, not by reading it |
 | unattended × anything | The report is the entire deliverable. Nobody will ask a follow-up question, so nothing may be left implicit |
 | campaign × shared tree | The record is contended too. One writer owns it, appends only, and every other writer adds rather than edits |
+| unattended × telegraphic | Not a combination — a contradiction. Unattended means the report *is* the deliverable and nothing may be left implicit; the tightest register is the one setting that guarantees something will be. Compress the run, not the handover |
 | express × campaign | Not a combination — a contradiction. Something has been misread; re-derive the amplitude before continuing |
 
 ## Failure modes
@@ -130,5 +131,6 @@ Some combinations carry a rule that neither dial carries alone.
 | An eight-phase run on a one-line change | Amplitude never read; `standard` taken as the default rather than as a judgment |
 | The run was careful for hours and reckless in its last command | Blast radius read once at the start instead of before the irreversible step |
 | Two agents' work landed and one of them silently lost | Crew read as `solo` because the tree looked quiet at the moment it was read |
+| Every phase re-read a file the run already had | Register never read, so only the closing prose was ever tightened and the reads — the larger spend — were not |
 | An express run that ran for a day | Promotion refused because the work was "nearly done" — which it was, four times |
 | A perfect report nobody could act on | `unattended` treated as `autonomous`: written for a reader who could ask a follow-up question, to a channel where nobody can |
