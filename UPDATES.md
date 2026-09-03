@@ -24,6 +24,29 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-03 — Before TBaguette opens a pull request for you, it has to say what that means
+
+- **The approval gate now states what the yes does, not just what the change
+  is.** `tending-tbaguette` has always required an explicit yes before pushing
+  anything or opening a pull request. What it did not require was telling you
+  what agreeing would create. So the question described a skill edit, and the
+  thing you were actually approving was a public fork under your account, a
+  branch pushed to it, a pull request open under your GitHub identity, a
+  hundred-file diff that is mostly the regenerated site, and a maintainer who
+  now has something to answer. It asks in short bullets now, before the first
+  command that touches the network.
+- **You can want the change and not want the publication.** Those are two
+  different yeses and only one of them is irreversible — closing a pull request
+  later does not unmake the fork, the branch, or the record. The question is
+  written so you can say yes to the lesson and still say "keep it queued"
+  today.
+- **The gate binds inside the contribution procedure, not only above it.** The
+  full pipeline moved to its own reference file, and the step that opens the
+  pull request pointed at "the approval gate above" — which was in a different
+  file from the one the skill tells you to work from. The binding rule is
+  restated where the command actually lives, so a session following the
+  procedure cannot walk past it.
+
 ## 2026-09-03 — Telling a real door from one you never tried
 
 - `bounding-autonomous-work` now separates the two. Its door bound lists actions
