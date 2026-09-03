@@ -75,16 +75,10 @@ Everything above the first `##` is preamble and is never rendered.
   sessions, 95% of file reads pulled the whole file and 44% of sessions re-read
   something already in context, so these are the normal case rather than edge
   cases.
-- **A read you already made can now be declined, once.** On Claude Code, a new
-  hook watches for a `Read` that would hand back bytes already sitting in the
-  conversation — same file, same range, and the file untouched on disk since.
-  It says so instead, and points at the copy you already have. It declines that
-  exact call once and never again, so if the content really is gone — after a
-  compaction, say — asking a second time simply works. Everything it is unsure
-  about, it allows: a missed nudge costs some tokens, a wrongly blocked read
-  costs the task. Measured first, on real transcripts: this fires on about one
-  read in twenty, where a rule against whole-file reads would have fired on 95%
-  of them and been noise wearing a guardrail's clothes.
+- **And it now names the first thing to check: whether your harness already
+  does it.** Claude Code declines a repeated identical read of an unchanged file
+  on its own. Anything you build to catch that case is overhead on every read it
+  doesn't fire on — which is worth knowing before you write it, not after.
 - **It answers the "should I add a tool to save tokens" question, with the
   reason.** A plugin or MCP server's schema joins the per-request floor and is
   charged every turn whether or not it gets used, and the bounded-read tools
