@@ -86,16 +86,23 @@ Everything above the first `##` is preamble and is never rendered.
   to. A probe that answers suspiciously easily gets checked against
   `reproducing-bugs` before a deferral is withdrawn on it.
 
+## 2026-09-03 — Two ways a check can come back clean and mean nothing
 
+- **A verification command read through a filter can lose its verdict.**
+  `confirming-before-claiming-done` now names the pipeline trap in the one place
+  it does the most damage: piping a noisy build or suite into `tail` or `grep`
+  to read it means the shell reports the *filter's* exit status, so the check
+  fails, `set -e` notices nothing, and a chained success line prints anyway. It
+  points at `portable-shell-scripting` for the mechanics and says what to read
+  instead.
+- **A negative result from a compiled artifact is not an absence.** The same
+  skill now covers the case where the search is sound and the surface is not:
+  grepping a release build for a short string and finding nothing looks exactly
+  like the code having been dead-stripped, and is no evidence of anything.
+  Optimizers store short literals as immediate operands rather than contiguous
+  bytes, minifiers rename what you are looking for, and stripped builds keep no
+  symbol to match. It says what to probe with instead.
 
-## 2026-09-03 — A negative result from a compiled artifact is not an absence
-
-- `confirming-before-claiming-done` now names the case where the search is
-  sound and the surface is not: grepping a release build for a short string and
-  finding nothing looks exactly like the code having been dead-stripped, and is
-  no evidence of anything. Optimizers store short literals as immediate operands
-  rather than contiguous bytes, minifiers rename what you are looking for, and
-  stripped builds keep no symbol to match. It says what to probe with instead.
 ## 2026-09-03 — Seven skills, three of them from the first outside contributions
 
 - **`orienting-in-unfamiliar-code`: a text search and an index answer different

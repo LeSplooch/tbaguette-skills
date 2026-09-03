@@ -29,6 +29,20 @@ Run it in full: not the fast subset, not just the file that changed, the whole t
 
 Only once that comparison holds does the claim get made — and it gets made with the evidence next to it, not implied. "34/34 tests pass" carries different information than "tests pass."
 
+One mechanical way to lose that output is worth naming on its own, because it
+costs nothing to hit and leaves no trace when you do. Verification commands are
+noisy — a build, a full suite, a deploy — so the natural move is to pipe one into
+a filter and read only what matters. A shell pipeline reports the exit status of
+its **last** stage, which is now the filter. The build fails, `tail` succeeds,
+`set -e` sees nothing wrong, and a `&& echo "OK"` chained onto the end prints
+`OK`. The step that made the output readable is the step that threw the verdict
+away, and what remains on screen is a plausible-looking excerpt of a failed run
+with a success line under it. `portable-shell-scripting` has the mechanics and
+the portability caveats; the discipline here is that nothing standing between a
+check and your reading of it may be able to swallow the answer — so either keep
+the status explicitly, or verify the artifact the command was supposed to
+produce rather than the pipeline that ran it.
+
 When the check itself is unreliable — an intermittent bug that only reproduces some fraction of the time — a single clean run doesn't carry the same weight it would for a deterministic one. That's a reason to run it enough times to get real signal, or to report status honestly as still-in-progress, not a reason to fall back to a hedged claim instead. "Should be fixed, let me know if you still see it" spends the same unearned confidence a flat "it's fixed" would; softer wording doesn't make one weak attempt add up to evidence.
 
 ## The claim and what actually proves it
@@ -162,6 +176,7 @@ runs are the same discipline applied to timings, and for the same reason.
 | "Should pass now" in a commit message or handoff note | The verification step was replaced with confidence in the fix |
 | Tests declared passing based on a run from before the last edit | Evidence treated as durable when it's only valid for the code it ran against |
 | "The agent said it completed the task" reported as the task being complete | A tool's self-report repeated as independently checked fact |
+| A command "passed" and the artifact it should have produced is untouched | Its verdict was read from a pipeline whose last stage was a filter, not from the command |
 | A search of the built artifact says the feature never shipped | The artifact does not store what was searched for; the pattern was sound and the surface was not |
 | A regression test added and trusted without ever seeing it fail | Never run against the broken code, so it's unknown whether it tests anything |
 | Build green, shipped, runtime error in the first minute | Compilation was checked; behavior never was |
@@ -184,3 +199,4 @@ runs are the same discipline applied to timings, and for the same reason.
 - "It is not in the built artifact, so it never shipped" — said after grepping a release build for a short string.
 - Reluctance to induce the condition because it would be disruptive, on a system where the condition will occur anyway, unattended.
 - A before/after ratio whose two terms were both produced by the "after" run.
+- A success line printed by something other than the command being verified — an `echo` after a pipeline, a summary the runner emits regardless.
