@@ -1,6 +1,6 @@
 ---
 name: confirming-before-claiming-done
-description: Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed, or handed off on that claim; when a subagent's or tool's own success report is about to be repeated as fact; when the only thing behind the claim is that the code looks right and nothing has actually been run; when the claim is that something is absent — not installed, not applied, not registered — and the evidence is that the one location you knew to check is untouched; when the requirement is that something survives a restart, a cold start, or a fresh checkout and the only check to hand observes the present instead; when a check passed against an artifact that predates the run; or when a green suite only checks files you own. Covers naming the command that would prove the claim and running it fresh, telling a stale artifact or run from this one's, inducing the condition a requirement names rather than accepting a proxy, and proving absence by searching the target surface.
+description: Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed, or handed off on that claim; when a subagent's or tool's own success report is about to be repeated as fact; when the only thing behind the claim is that the code looks right, or that a script written during the investigation showed it working; when the claim is that something is absent and the evidence is that the one location you knew to check is untouched; when the requirement is that something survives a restart, a cold start, or a fresh checkout and the only check to hand observes the present instead; when a check passed against an artifact that predates the run; or when a green suite only checks files you own. Covers naming the command that would prove the claim and running it fresh, telling a stale artifact or run from this one's, inducing the condition a requirement names rather than accepting a proxy, and proving absence by searching the target surface.
 ---
 
 # Confirming before claiming done
@@ -148,6 +148,33 @@ The usual complaint about a green build is that nothing actually ran. This failu
 Nothing at the call site carries any of that. The hook's signature looks like every other function's, so no static check can see the difference — and neither can a test that calls the hook directly, because calling it supplies the test's surroundings instead of the framework's. That is what makes this failure quiet: the suite is not wrong about what it measured, it measured a context the program will never be in. Compile, typecheck and every last test can be green on something that fails on every single start.
 
 There is a tell, and it costs nothing to look for. **If the framework exports its own version of the thing you were about to call — its own spawn, its own timer, its own way onto the main thread, its own handle to the running application — that wrapper exists because the general-purpose one does not work here.** Reaching past that wrapper is the shape of this bug, and the only check that observes the framework's context is the expensive one it was tempting to skip: start the program the way it will actually be started, and watch it get past the point the hook runs.
+
+## The harness is not the product's path
+
+A problem gets investigated with something written for the investigation — a
+script, a probe, a diagnostic command, a one-off runner that reproduces the
+complaint. It imports the product's real code, which is what makes the next step
+feel safe: the harness now shows the problem cleared, so the problem is fixed.
+What it has actually shown is that the data exists and that *some* arrangement of
+the product's own parts produces the right answer. Whether the arrangement a
+user's action goes through is that one is a separate question, and a green
+harness does not touch it.
+
+It survives every check aimed at a green build that never ran, because both
+halves are real code out of the same repository. A field missing at one caller
+gets fixed in the parser, confirmed in the harness, and stays missing in the
+product — the harness reached it through a merge helper written for the harness,
+while the path a user takes calls an entry point that merges nothing. Every test
+passes. The product, exercised the way a user exercises it, still shows the bug.
+
+So before the claim: **name the entry point the user's action reaches, and
+confirm the fix sits on that path**, not merely inside a module that path
+imports. Two tells that this check is owed, and both are cheap to notice — the
+evidence comes from a file that did not exist before the investigation started,
+and nothing in the verification ever launched the product the way a user launches
+it. Where a helper genuinely has to serve both, move it into the product and let
+the harness borrow it rather than the reverse. A helper only the harness owns is
+a standing gap between what gets tested and what ships.
 
 ## The declaration is not the payload
 

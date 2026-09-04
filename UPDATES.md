@@ -24,6 +24,63 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-05 — What a result that found nothing is allowed to claim
+
+- `red-teaming-your-own-work` now covers the outcome that gets no scrutiny at all:
+  the search that came back empty. A null does not say no improvement exists — it
+  says the search could not separate one from noise at the sample size it ran, and
+  until the smallest detectable effect is measured, "no effect" and "no effect
+  larger than X" are the same sentence. The skill says how to get that number and
+  what it does when you have it, which is not overturn one result but re-scope
+  every null the search ever produced, downward and at once. Its description now
+  fires on a sweep, benchmark, or experiment about to be reported as nothing being
+  there.
+
+- `confirming-before-claiming-done` names a way a fix gets believed on evidence
+  that was never about the product. The thing that showed the problem cleared was
+  written for the investigation — a script, a probe, a one-off runner — and it
+  imports the product's real code, which is what makes it convincing. What it
+  proves is that the data exists and that some arrangement of the parts gets the
+  right answer, not that the arrangement a user's action goes through is that one.
+  Two tells that the check is owed, and what to do about a helper only the harness
+  owns.
+
+- `calibrating-confidence` covers the field with no data source of its own that
+  gets mapped onto a named concept anyway. The trouble is not the correlation, it
+  is that the name travels and the caveat stays behind: every message and screen
+  naming the concept then makes the original claim with the stand-in's evidence
+  under it. The check is to read what the system will say when the proxy fires,
+  and the counterintuitive answer is that an admitted gap beats a borrowed name —
+  a rule that abstains says something true, and one wearing the wrong name says
+  something false.
+
+- `choosing-test-scope` follows its own advice about exclusion lists one step
+  further, because that advice turns out not to be enough. Requiring an entry's
+  reason to name a real mechanism makes it well-formed; it does not make it true,
+  and the two come apart the moment the named component changes. The fix is to
+  stop storing the reason as prose: an exclusion is a claim that perturbing
+  something cannot change the outcome, so store the perturbation and let the suite
+  apply it. A stale reason becomes a red test instead of a paragraph nobody
+  re-reads.
+
+- `bounding-autonomous-work` tightens the probe it recently started encouraging.
+  It already said the cheap experiment has to be the read-only half; it did not
+  say you can be wrong about which half a command is on. Running an unfamiliar
+  binary with a version flag reads as a question and, on a program that does not
+  parse that flag, is simply a start — the real application, against whatever real
+  state it finds. An invocation is an execution until the thing invoked is known
+  to treat it otherwise, and this is not a new reason to defer to a human: it asks
+  for a different experiment, not a line in the report.
+
+- `tending-tbaguette` says what the strongest evidence for a lesson actually is,
+  and it is not how good the lesson sounds. Agnosticism cannot be inspected for —
+  from inside one project every lesson looks general, because the features you
+  cannot see are the project's own. The same shape arriving in two unrelated
+  codebases demonstrates the property the bar is asking about. Since a contributor
+  usually has exactly one instance, the skill asks you to say which you have:
+  "twice, in unrelated stacks" and "once, and here is why I think it generalizes"
+  are both fine, and they ask a reviewer for different things.
+
 ## 2026-09-04 — When a check comes back clean without having looked
 
 - `crouton` sharpens what a bounded read costs you. Its read rules tell you to cap

@@ -1,6 +1,6 @@
 ---
 name: red-teaming-your-own-work
-description: Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it, when nothing looks wrong and nothing has been tried to make it look wrong, before handing off work someone will act on, or after a previous delivery came back with a defect a single skeptical pass would have caught. Also use when a measurement has just confirmed a result you are about to act on. Covers adversarial self-review, attack checklists, re-testing a confirmed number for the shape rather than the point, and bounded review passes.
+description: Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it, when nothing looks wrong and nothing has been tried to make it look wrong, before handing off work someone will act on, or after a previous delivery came back with a defect a single skeptical pass would have caught. Also use when a measurement has just confirmed a result you are about to act on, or when a search, sweep, benchmark, or experiment came back with nothing and that null is about to be reported as nothing being there. Covers adversarial self-review, attack checklists, re-testing a confirmed number for the shape rather than the point, bounding a null by the smallest effect the search could have seen, and bounded review passes.
 ---
 
 # Red-teaming your own work
@@ -72,6 +72,45 @@ consecutive results it will happily give opposite answers — killing a proposal
 whose peak does not reappear, and vindicating an adopted change whose gap holds
 on fresh data. A check that only ever says no is not a check, it is a veto, and
 it earns nothing.
+
+## A null result is bounded by what the search could have seen
+
+The section above attacks a result that confirmed. The opposite outcome gets no
+scrutiny at all, because a search that found nothing feels like it has nothing to
+be wrong about — and that is the error. A null does not say no improvement
+exists. It says the search could not tell an improvement from noise at the sample
+size it ran, and until somebody measures the noise, "no effect" and "no effect
+larger than X" are indistinguishable claims of which only one is true.
+
+Both get written down as the same sentence. A ledger accumulating "no improvement
+found" across eight sweeps reads as eight independent failures to find anything,
+and is one unmeasured instrument reported eight times.
+
+The measurement is cheap and it is one number: the **minimum detectable effect**
+at the sample size actually used. Where the comparison is paired, take it from
+the standard deviation of the per-sample *differences* and not from the spread of
+the raw results; the two diverge by a lot exactly when pairing is doing its job,
+and using the second is how an adequately powered search gets mistaken for a
+hopeless one. Where the noise is larger than the effect being hunted, the
+arithmetic is brutal — a search whose baseline scored 0.675 with a standard
+deviation of 0.321, and whose paired differences had a standard deviation of
+0.770, could only ever have seen improvements above about
+26% of baseline at the twenty samples every one of its sweeps had used. Detecting
+10% would have taken 131 samples; 5% would have taken 522.
+
+What that buys is not the retraction of one result. It re-scopes every null the
+search ever produced, downward and at once: each "as good as anything the search
+can find" becomes "as good as anything the search could have seen," which is a
+far weaker claim and the only one that was ever supported. Run it before the
+first sweep rather than after the eighth, because it also decides whether the
+sweep is worth running at all — a search underpowered for the smallest effect
+worth acting on returns nulls whatever is true, and every hour it spends is spent
+proving nothing.
+
+The reading that survives is the useful one, so state it that way. A null at a
+known detectable effect genuinely rules out the large effects, and ruling out a
+large effect is a real finding. It is the unbounded null — the one quietly
+claiming to have ruled out everything — that was never evidence.
 
 ## Distance, obtained cheaply
 

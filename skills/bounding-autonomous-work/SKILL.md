@@ -1,6 +1,6 @@
 ---
 name: bounding-autonomous-work
-description: Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan, a subagent dispatched without a way to ask, a hook or cron or loop with no reader, or a question just asked into a silence that the run is about to answer for itself. Also use when a run is about to defer something to a human because it believes it cannot verify it, or when a stop condition has just fired on a run that does not otherwise look like it was in trouble. Covers substituting each approval gate rather than skipping it, telling a real door from an untried one, the four pre-committed stop conditions that halt a run instead of letting it drift, the actions no confidence level licenses without a human, and reporting to someone who was not there.
+description: Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan, a subagent dispatched without a way to ask, a hook or cron or loop with no reader, or a question just asked into a silence that the run is about to answer for itself. Also use when a run is about to defer something to a human because it believes it cannot verify it, or when a stop condition has just fired on a run that does not otherwise look like it was in trouble. Covers substituting each approval gate rather than skipping it, telling a real door from an untried one, telling a genuinely read-only probe from an invocation that is an execution, the four pre-committed stop conditions that halt a run instead of letting it drift, the actions no confidence level licenses without a human, and reporting to someone who was not there.
 ---
 
 # Bounding autonomous work
@@ -192,6 +192,34 @@ itself take an irreversible action, spend someone's money, or reach a person is
 not a cheap experiment — it is the door, and the deferral was right the first
 time. What this asks for is the read-only half: the probe that observes, the
 request that only fetches, the encode that throws its output away.
+
+Which puts the weight on being right about which half a probe is on, and that is
+a judgment about somebody else's software rather than about your own intent.
+Running an unknown binary with `--version` is the standard way to get it wrong:
+the command reads as a question, and against a program that does not parse the
+flag it is simply a start — one run of the real application, against whatever
+real profile, real credentials and real state it finds on the machine, for as
+long as it takes to notice and kill it. The probe was read-only in the mind of
+whoever typed it and nowhere else.
+
+The rule that holds is that **an invocation is an execution until the thing
+invoked is known to treat it otherwise**, and a binary being probed precisely
+because you cannot see inside it does not meet that bar. Where the experiment has
+to run something unfamiliar, isolate it the way anything else gets isolated — a
+copy, a container, an account with nothing in it — or find a question the
+filesystem can answer instead. Provenance rarely needs an execution at all: a
+hash, an mtime comparison against every source file, and a file-type report
+settle it without starting anything.
+
+None of which reopens the deferral this section closed. "I cannot tell whether
+that probe is read-only" is a question about a specific command with a cheaper
+command behind it, not a door — the answer is a different experiment, run in
+isolation, rather than a line in the report saying the check needs a human.
+
+And when the probe turns out to have been an execution and nothing bad comes of
+it, the record still says that in those terms. "It turned out fine" is not "the
+bound held", and a run record logging the second where only the first is true has
+deleted the one line a reader would have audited.
 
 If the experiment is genuinely out of reach, the deferral stands, and it is now
 worth reading: it can say what was attempted and how it failed, which is the

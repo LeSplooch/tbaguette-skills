@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-04T10:17:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-04T10:17:18Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-04T22:21:43+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-04T22:21:43Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">tending-tbaguette</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-04T10:17:18.950504+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-04T22:21:43.514814+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
   <p class="lede">Use at the start of every conversation, in any project or repo, and keep watching for the rest of it — the moment a genuinely project-agnostic lesson shows up while using TBaguette, capture it. Triggers include a correction that generalizes past this one codebase, a gap or wrong assumption found in a skill while that skill was running, a recurring judgment call nothing covers yet, a TBaguette skill that looks wrong enough to want editing, an installed plugin that already carries hand-edits, or any question about how to contribute to TBaguette. Covers the bar a candidate has to clear, capturing one without derailing the current task, scrubbing it of anything project-specific, choosing which existing skill a lesson belongs in, the approval gate that no absent human lifts, opening the pull request from a fork and answering the review it gets, restoring an install that was edited in place, and how a merged change comes back through <a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/keeping-tbaguette-current/">keeping-tbaguette-current</a>.</p>
@@ -93,6 +93,8 @@
 <ul><li>A correction someone gave you that generalizes past this one codebase — &quot;don't do X because Y&quot;, where Y is not specific to this stack.</li><li>Using a TBaguette skill and finding it had a real gap, a wrong assumption, or a case it missed. This is usually higher-value than a new skill and much lower-risk to land.</li><li>A judgment call that came up, felt like it <em>should</em> have had a skill already, and didn't.</li></ul>
 <p>Not worth capturing:</p>
 <ul><li>Anything tied to a specific codebase, company, product, library, or API that doesn't generalize. That is a note for your own project, not a skill for a library that has to survive being read cold in a repo it has never seen.</li><li>A one-off bug fix with no reusable lesson in it.</li><li>A fact to remember rather than a technique or judgment call to apply.</li></ul>
+<p><strong>A shape that turns up in two unrelated projects is the strongest evidence this bar can get, and you will usually not have it.</strong> Agnosticism is not a property a candidate can be inspected for — from inside one project every lesson looks general, because the features you cannot see are exactly the ones belonging to the project. Repetition is what actually discriminates, and someone working in one codebase has one instance by construction.</p>
+<p>So neither manufacture the second instance nor let its absence stop you. Say in the pull request how many times you have really seen this. &quot;Twice, in unrelated stacks&quot; and &quot;once, and here is why I believe it generalizes&quot; are both legitimate openings, and they ask the reviewer for different things — the first offers evidence, the second offers an argument and invites it to be checked. A single instance with its generalization stated outright is an ordinary contribution. A single instance presented as a general law is the one that comes back, because the reviewer's first question is the one it skipped.</p>
 <p>Close calls get captured anyway. The contribute phase re-evaluates every candidate with fresh eyes before touching anything, so a weak candidate costs nothing to discard later. Capturing is cheap; opening a public pull request on something half-baked is not.</p>
 <h2 id="non-negotiable-scrub-before-writing-anything-down">Non-negotiable: scrub before writing anything down</h2>
 <p>This skill runs in conversations about all kinds of things, some of them private, proprietary, or under an agreement you did not read. *<em>Before capturing </em>and<em> again before contributing</em>*, strip every identifying detail: project names, company names, product names, internal URLs, hostnames, business logic, anything that is not the generalizable technique itself.</p>

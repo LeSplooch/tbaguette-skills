@@ -136,6 +136,22 @@ Not worth capturing:
 - A one-off bug fix with no reusable lesson in it.
 - A fact to remember rather than a technique or judgment call to apply.
 
+**A shape that turns up in two unrelated projects is the strongest evidence
+this bar can get, and you will usually not have it.** Agnosticism is not a
+property a candidate can be inspected for — from inside one project every lesson
+looks general, because the features you cannot see are exactly the ones
+belonging to the project. Repetition is what actually discriminates, and someone
+working in one codebase has one instance by construction.
+
+So neither manufacture the second instance nor let its absence stop you. Say in
+the pull request how many times you have really seen this. "Twice, in unrelated
+stacks" and "once, and here is why I believe it generalizes" are both legitimate
+openings, and they ask the reviewer for different things — the first offers
+evidence, the second offers an argument and invites it to be checked. A single
+instance with its generalization stated outright is an ordinary contribution. A
+single instance presented as a general law is the one that comes back, because
+the reviewer's first question is the one it skipped.
+
 Close calls get captured anyway. The contribute phase re-evaluates every
 candidate with fresh eyes before touching anything, so a weak candidate
 costs nothing to discard later. Capturing is cheap; opening a public pull

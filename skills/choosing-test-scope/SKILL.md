@@ -1,6 +1,6 @@
 ---
 name: choosing-test-scope
-description: Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, when a check passes because the setup it runs in is too small to show the difference it was written to catch, when writing or auditing a list of deliberately excluded cases — skipped tests, ignored rules, allowlists — or when arguing about the testing pyramid, coverage targets, and test ratios.
+description: Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, when a check passes because the setup it runs in is too small to show the difference it was written to catch, when writing or auditing a list of deliberately excluded cases — skipped tests, ignored rules, allowlists — or asking whether such an entry's reason is merely well-formed rather than still true, or when arguing about the testing pyramid, coverage targets, and test ratios.
 ---
 
 # Choosing test scope
@@ -153,6 +153,28 @@ about the case. And when one entry in a list turns out to be wrong this way,
 read the rest of the list rather than fixing the one: the entries were written
 by the same person on the same day under the same misunderstanding, and they
 fail in batches.
+
+That enforcement is worth having and it is not sufficient — worth knowing before
+you lean on it. Requiring the reason to name a component makes an entry
+*well-formed*; it does not make it *true*, and the two come apart the moment the
+named component changes. A list whose every reason named a real mechanism — "the
+generator derives all five of these flags from one dirty bit" — stayed green
+straight through the change that gave each flag an independent draw, because the
+check read the sentence's shape and nothing evaluated it. Five entries were false
+and the suite went on reporting a healthy list, inside the module written to
+prevent exactly this.
+
+So stop storing the reason as prose. An exclusion is a **claim that perturbing
+this thing cannot change the outcome**, which means it is executable: store the
+perturbation beside the sentence and let the suite apply it — mutate the excluded
+field, run, assert the result is unchanged. A stale reason becomes a red test
+rather than a paragraph nobody re-reads. It costs a few lines per entry and it
+pays on the first run: the same list, once its claims were executable, went red
+on six entries where the change that prompted the work had predicted five — and
+the sixth sat on the most reachable field in the whole configuration.
+
+Rewording the false entries instead is the move to refuse. It restores the
+appearance of correctness and leaves intact the thing that let them rot.
 
 Automating that check is worth doing and audits half the entry. A guard that
 perturbs each excluded case and asserts nothing changes will find the entries

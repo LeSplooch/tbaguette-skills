@@ -1,6 +1,6 @@
 ---
 name: calibrating-confidence
-description: Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session, when asked whether a claim is certain or being pushed back on, when a conclusion rests on recalled knowledge rather than something read, when every sentence has acquired a hedge, or when the accurate answer is that you do not know. Covers evidence tiers, false precision, probability language, and unearned certainty.
+description: Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session, when asked whether a claim is certain or being pushed back on, when a conclusion rests on recalled knowledge rather than something read, when every sentence has acquired a hedge, when the accurate answer is that you do not know, or when a field with no data source of its own is about to be mapped onto a named concept as a proxy. Covers evidence tiers, false precision, probability language, proxies that inherit the name of the thing they stand in for, and unearned certainty.
 ---
 
 # Calibrating confidence
@@ -35,6 +35,36 @@ Rules that make the tiers real:
 - **Verify the claim, not its neighbour.** Reading a signature does not verify what the function returns. Reading an import does not verify the symbol exists. This is the most common way a careful answer ends in a wrong leaf fact.
 - **Your own prior output is not evidence.** Confidence that rises when you reread your own summary is laundering an assumption into a fact.
 - **Load-bearing assumptions get checked first.** If the plan cannot survive being wrong about it, check before building on it. Everything else may stay marked and unchecked.
+
+## A proxy inherits the name of the thing it stands in for
+
+The tiers above mark a claim you are making, in a sentence you control. This is
+the same failure built into a system, where nothing is left to do the marking: a
+named concept has no data source, the nearest available field gets mapped onto
+it, and from that moment every message, log line and screen naming the concept is
+making the original claim with the proxy's evidence behind it.
+
+Marking does not survive the mapping on its own, because the name travels
+downstream and the caveat stays where it was written. Carrying it is possible and
+it is work — `tracking-data-provenance` is what that work looks like — and until
+somebody does it, the default is that the caveat is lost. A field counting how often an actor did the
+benign version of an act, mapped onto "has a history of the harmful version",
+flags every subject in a population where the benign act is near universal — and
+emits a sentence asserting the specific harmful history. That is not a system
+hedging badly. It is a system stating something false, in its own voice, to a
+reader with no way to know a substitution ever happened.
+
+The check runs before the mapping and costs a minute: **read what the system will
+say when the proxy fires.** If the sentence is a specific claim the proxy's
+evidence cannot support, the mapping is wrong however reasonable the correlation
+looked. Leave the value absent.
+
+That is the counterintuitive half and it is the whole point. An admitted gap is
+worse for the feature and better for the reader: a rule that abstains says
+something true about what is known, while a rule wearing a borrowed name says
+something false about the world. `tracking-data-provenance` keeps observed,
+inferred and defaulted distinguishable as data moves; this is what to do when the
+honest answer is that no tier applies, because nothing was measured at all.
 
 ## When a number, and when it is false precision
 
