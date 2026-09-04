@@ -79,6 +79,23 @@ Everything above the first `##` is preamble and is never rendered.
   It also says to check for the harness's question tool rather than reading its
   absence off a list, since that gate is the one an unattended run may not
   substitute.
+- `modeling-errors` says which default to reach for when a layer genuinely cannot
+  propagate a failure and has to put something in the slot. Substituting a default
+  is already named as a defect; what the skill did not say is why some of those
+  survive for months and others get caught the same afternoon. The ones that
+  survive substitute the value a healthy system produces — the empty collection
+  where the load failed, the zero where the read never happened, the `false` where
+  the check could not run — so the wrong answer reads as good news and nobody
+  investigates. Put in something no one could mistake for health, and carry the
+  failure beside it.
+- `tending-tbaguette` says what to do with the answer its own coverage check keeps
+  returning. Before drafting a candidate you are told to search whether some skill
+  already says it; what was missing is that on a library this size, "yes, and
+  better" is the *ordinary* result. A session that hits coverage three or four
+  times in a row starts reading its own filter as failure and goes hunting for
+  something it can land instead — which is how the bar gets lowered by someone who
+  never decided to lower it. Four candidates dropped for coverage is a pass that
+  worked.
 
 ## 2026-09-03 — Tidying a shared tree is worse than sweeping it
 

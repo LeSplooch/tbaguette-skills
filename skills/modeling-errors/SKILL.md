@@ -29,6 +29,22 @@ Classify the failure before choosing a mechanism. Almost all bad error handling 
 
 Class 4 is defined by one property only: **retrying the identical input might succeed.** If it cannot, it is class 1 or 2 no matter how infrastructural it looks. An authorization failure from a network call is not transient.
 
+**Which default gets substituted decides whether anyone finds out.** The
+substitution is a defect wherever it happens, but the ones that survive for
+months share one property: the value substituted is the value a healthy system
+produces. An empty collection where the load failed, a zero where the read was
+never made, a `false` where the check could not run — each is indistinguishable
+on sight from good news, so nobody investigates, and the reading someone would
+act on is the wrong one. The same collapse with a value nobody could mistake for
+health gets found the same afternoon. So where a layer genuinely cannot
+propagate the failure and has to put *something* in the slot, the move is to
+widen the slot until absence is representable in it — an explicit unknown or
+not-yet-loaded state alongside the real values — rather than to reach for an
+in-band sentinel, which is the same collapse with an extra decoding step. The
+idiom that hides all of this is usually the one that discards the error on the
+way past, which is why it reads as concise rather than as dangerous.
+
+
 ## Choosing the mechanism
 
 - Choose what the language makes ergonomic, not what you prefer. In an exception-based codebase, a lovingly hand-rolled result type does not remove exceptions — it just means third-party ones are now unhandled.
@@ -79,6 +95,7 @@ A good message names what was being done, what happened, and what changes the ou
 - "Catch everything here so it doesn't crash."
 - "Log it and continue."
 - "Return null on failure and let the caller figure it out."
+- A default chosen at the point of failure that is also what success looks like.
 - "That can never happen" — written next to the code that handles it happening.
 - "Add a retry" as the first response to a flake, before classifying it.
 - A catch block whose body is empty, or contains only a log statement.

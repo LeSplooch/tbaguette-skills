@@ -364,6 +364,14 @@ vocabulary the covering skill would have used, before drafting: a section
 already written is expensive to abandon and easy to keep on the grounds that it
 puts the point more sharply.
 
+Expect that search to succeed. On a library this size the ordinary outcome of
+checking a candidate is that something already covers it, sometimes better than
+the draft would have — and a session that hits coverage three or four times
+running starts reading its own filter as failure rather than as the filter
+working, and goes looking for something it *can* land. That is how the bar gets
+lowered by someone who never decided to lower it. Four candidates dropped for
+coverage is a pass that worked, and it ends with nothing opened.
+
 **Which skill owns it is decided by neighbours, not by subject.** Read the
 candidate file's section headings and ask whether yours reads as a sibling or as
 a visitor. Filing into the least-wrong skill is not parking it safely — it is
