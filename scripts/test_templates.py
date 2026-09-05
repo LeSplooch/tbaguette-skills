@@ -1558,7 +1558,10 @@ def main() -> None:
     # these strings lives — that's how a package spec goes stale on the
     # landing page while the per-harness README quietly moves on.
     for line, doc_rel in (
-        ("hermes plugins install LeSplooch/tbaguette-skills", ".hermes-plugin/__init__.py"),
+        # Hermes' own module is the documenting file: its _skills_dir() failure
+        # path prints the same command, --enable included, and that flag is
+        # load-bearing rather than cosmetic (a non-TTY install lands disabled).
+        ("hermes plugins install LeSplooch/tbaguette-skills --enable", "__init__.py"),
         ("/plugins install https://github.com/LeSplooch/tbaguette-skills", "README.kimi.md"),
         ("tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git", "README.opencode.md"),
         # Copilot's pair is the one place the prompt publishes a two-step

@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-05T15:15:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-05T15:15:36Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-05T17:05:30+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-05T17:05:30Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -79,7 +79,7 @@ Route A — you read Claude Code&#x27;s skills directory. Target: ~/.claude/skil
 3. &lt;target&gt; exists, has content, isn&#x27;t a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a &quot;naming collision&quot;, and ask me whether to move it aside and re-clone, rather than doing that yourself.
 4. Anything else already at that path — stop. Do not delete or modify it. Tell me there&#x27;s a naming collision that needs a manual look.
 
-Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills`, Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills` from inside a session or `kimi plugin install https://github.com/LeSplooch/tbaguette-skills.git` from a shell, Gemini CLI is `gemini extensions install https://github.com/LeSplooch/tbaguette-skills`, Codex is `codex plugin marketplace add LeSplooch/tbaguette-skills` and then installing TBaguette from it. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install TBaguette@tbaguette-dev`. In VS Code it is not a shell command at all — tell me to run **Chat: Install Plugin From Source** from the Command Palette and paste https://github.com/LeSplooch/tbaguette-skills.git when it asks; don&#x27;t clone anything yourself in place of that. If it&#x27;s a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
+Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills --enable`, where the flag is not optional — Hermes only prompts to enable a plugin when it has a terminal to prompt in, so run from a tool it would otherwise install disabled and load nothing. Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills` from inside a session or `kimi plugin install https://github.com/LeSplooch/tbaguette-skills.git` from a shell, Gemini CLI is `gemini extensions install https://github.com/LeSplooch/tbaguette-skills`, Codex is `codex plugin marketplace add LeSplooch/tbaguette-skills` and then installing TBaguette from it. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install TBaguette@tbaguette-dev`. In VS Code it is not a shell command at all — tell me to run **Chat: Install Plugin From Source** from the Command Palette and paste https://github.com/LeSplooch/tbaguette-skills.git when it asks; don&#x27;t clone anything yourself in place of that. If it&#x27;s a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
 
 Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is &quot;tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git&quot;, added to the &quot;plugin&quot; array in opencode.json. If you are the Copilot coding agent, the file is .github/copilot/settings.json in the repository you are working on, and both fields are objects rather than arrays: &quot;extraKnownMarketplaces&quot; gets {&quot;tbaguette-dev&quot;: {&quot;source&quot;: {&quot;source&quot;: &quot;github&quot;, &quot;repo&quot;: &quot;LeSplooch/tbaguette-skills&quot;}}} and &quot;enabledPlugins&quot; gets {&quot;TBaguette@tbaguette-dev&quot;: true}. That edits a repository I share with other people, so show it to me and wait, the same as any other config.
 
@@ -91,9 +91,9 @@ After a successful install, verify rather than assume. For a clone you placed yo
 - &lt;target&gt;/.git exists and git -C &lt;target&gt; rev-parse HEAD succeeds.
 - &lt;target&gt;/CATALOG.md exists and &lt;target&gt;/skills/ is non-empty.
 - Read &lt;target&gt;/.claude-plugin/plugin.json&#x27;s &quot;version&quot; field, if present, so you can tell me which version I&#x27;m now on.
-For a harness-managed install, verify it the way your harness reports installed plugins.
+For a harness-managed install, verify it the way your harness reports installed plugins — on Hermes that is `hermes plugins list`, and the row has to say enabled, not just present.
 
-Then tell me what happened (installed fresh, updated, or already current), which version, and the reload step for my agent specifically — restarting it, Claude Code&#x27;s /reload-plugins, Kimi Code&#x27;s /new. Skills then invoke as TBaguette:skill-name.
+Then tell me what happened (installed fresh, updated, or already current), which version, and the reload step for my agent specifically — restarting it, Claude Code&#x27;s /reload-plugins, Kimi Code&#x27;s /new, Hermes&#x27; `hermes gateway restart`. Skills then invoke as TBaguette:skill-name.
 
 Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke TBaguette:using-tbaguette here (if you have no skill tool, read skills/using-tbaguette/SKILL.md from the install instead).</code>
       <button class="install__copy" type="button" data-copy-target="install-prompt-command"
@@ -140,7 +140,18 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/clairvoyance/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/using-tbaguette/" data-fresh-at="2026-09-05T17:05:30.742016+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">using-tbaguette</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T17:05:30.742016+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use at the start of every conversation, in every project…</p>
+  <span class="card__foot">
+    <span class="tag">Judgment and meta</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/clairvoyance/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">clairvoyance</span>
     <span class="change-badge change-badge--new" data-fresh-at="2026-09-05T16:48:50+02:00">New</span>
@@ -151,7 +162,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/diagnosing-before-fixing/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/diagnosing-before-fixing/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">diagnosing-before-fixing</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:48:50+02:00">Updated</span>
@@ -162,7 +173,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/managing-scope-drift/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/managing-scope-drift/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 3">
   <span class="card__name-row">
     <span class="card__name">managing-scope-drift</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:48:50+02:00">Updated</span>
@@ -173,7 +184,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/offering-the-next-move/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 3">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/offering-the-next-move/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 4">
   <span class="card__name-row">
     <span class="card__name">offering-the-next-move</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:48:50+02:00">Updated</span>
@@ -184,7 +195,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 4">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 5">
   <span class="card__name-row">
     <span class="card__name">orchestrating-work-end-to-end</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:48:50+02:00">Updated</span>
@@ -195,7 +206,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/reviewing-code-deeply/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 5">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/reviewing-code-deeply/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 6">
   <span class="card__name-row">
     <span class="card__name">reviewing-code-deeply</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:48:50+02:00">Updated</span>
@@ -206,7 +217,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/scoping-before-building/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: 6">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/scoping-before-building/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: -5">
   <span class="card__name-row">
     <span class="card__name">scoping-before-building</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:48:50+02:00">Updated</span>
@@ -217,7 +228,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/steelmanning-alternatives/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: -5">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/steelmanning-alternatives/" data-fresh-at="2026-09-05T16:48:50+02:00" draggable="false" style="--cf-offset: -4">
   <span class="card__name-row">
     <span class="card__name">steelmanning-alternatives</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:48:50+02:00">Updated</span>
@@ -228,7 +239,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/instrumenting-for-observability/" data-fresh-at="2026-09-05T16:43:07+02:00" draggable="false" style="--cf-offset: -4">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/instrumenting-for-observability/" data-fresh-at="2026-09-05T16:43:07+02:00" draggable="false" style="--cf-offset: -3">
   <span class="card__name-row">
     <span class="card__name">instrumenting-for-observability</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:43:07+02:00">Updated</span>
@@ -239,7 +250,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/resolving-merge-conflicts/" data-fresh-at="2026-09-05T16:43:07+02:00" draggable="false" style="--cf-offset: -3">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/resolving-merge-conflicts/" data-fresh-at="2026-09-05T16:43:07+02:00" draggable="false" style="--cf-offset: -2">
   <span class="card__name-row">
     <span class="card__name">resolving-merge-conflicts</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:43:07+02:00">Updated</span>
@@ -250,7 +261,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-09-05T16:43:07+02:00" draggable="false" style="--cf-offset: -2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-09-05T16:43:07+02:00" draggable="false" style="--cf-offset: -1">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:43:07+02:00">Updated</span>
@@ -258,17 +269,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">
     <span class="tag">Environment and tooling</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/using-tbaguette/" data-fresh-at="2026-09-05T16:43:07+02:00" draggable="false" style="--cf-offset: -1">
-  <span class="card__name-row">
-    <span class="card__name">using-tbaguette</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:43:07+02:00">Updated</span>
-  </span>
-  <p class="card__summary">Use at the start of every conversation, in every project…</p>
-  <span class="card__foot">
-    <span class="tag">Judgment and meta</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -283,14 +283,13 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-05">5 Sep 2026</time>
-    <span class="notes__entry-title">A skill that questions the request instead of serving it</span>
+    <span class="notes__entry-title">Hermes Agent installs, for the first time</span>
   </h3>
   <ul class="notes__bullets">
-    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/clairvoyance/"><code>clairvoyance</code></a>. Every other skill in this library points inward at the request — reproduce it, scope it, plan it, prove it, land it — so a run that follows all of them produces an excellent implementation of whatever arrived in the first message, and has no way to notice that the first message was the wrong thing to build. This is the one that looks outward. It names the frame a request arrives inside, the five places that frame comes from — the requester's own vocabulary, the first file you opened, the codebase's existing pattern, your own previous turn, and any report you did not produce yourself — and seven directions to look, each with a tell that says which one this situation calls for, so it is a diagnostic rather than a brainstorm.</li>
-    <li>What it will not do is expand your work. Everything it finds routes somewhere before anything acts on it: back to the design gate, into the acceptance ledger, into the run record as an option offered at close, or to a discard with the reason written down. Seeing more is free; doing more is not, and <a class="skill-link" href="/tbaguette-skills/skills/managing-scope-drift/"><code>managing-scope-drift</code></a> still wins. Two harder limits come with it — a sweep is never a reason something did not ship, and a run with nobody present may notice a reframe but may not approve one for itself.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> now gives it a seat in all seven tracks, and the seat differs in each. On a build it runs between framing and design, which is the last moment a reframe costs a paragraph instead of the implementation. On a diagnosis it waits until the third fix has not held, then goes after the reproduction rather than the patch. On a review it is the pass that finds what the diff does not contain. During an incident it is explicitly barred until the harm has stopped.</li>
-    <li>Six existing skills now hand off to it at the point where each one runs out of road. <a class="skill-link" href="/tbaguette-skills/skills/steelmanning-alternatives/"><code>steelmanning-alternatives</code></a> when three generated options come back sharing one shape, which means the constraint is upstream of the generation. <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> when three correct fixes did not hold, which is one wrong model applied three times rather than three bad patches. <a class="skill-link" href="/tbaguette-skills/skills/managing-scope-drift/"><code>managing-scope-drift</code></a> gained the sentence its readers needed most: noticing is not drifting, and here is where the noticing goes.</li>
-    <li>The skill was drafted, then swept with its own method before shipping, and the record of that is in the skill rather than in a commit message: which of the seven directions found something, what each finding changed, and what was discarded and why. Six of seven yielded — including the one that caught the skill's own text saying &quot;the frame&quot; in the singular after listing four separate sources for it.</li>
+    <li>If you use Hermes Agent, TBaguette has never actually worked there. The install command the site publishes failed outright — <code>plugin.json name does not satisfy v1 constraints</code>, nothing installed — and it had been failing since the day Hermes was listed as supported. It installs now. If you tried it and hit that error, the retry is worth it; if you tried it and gave up, nothing you did was wrong.</li>
+    <li>The Hermes install command has changed shape: it is now <code>hermes plugins install LeSplooch/tbaguette-skills --enable</code>, and the flag is not decoration. Hermes only offers to enable a plugin when it has a terminal to ask in, so an agent running the install through its shell tool would otherwise leave you with a plugin that is installed, disabled, and completely silent. The plugin then takes effect on <code>hermes gateway restart</code>, not on your next session. The prompt on the site says all of this now, so pasting it is enough.</li>
+    <li>On Hermes, TBaguette now reminds itself to check for a relevant skill on every turn, rather than only at the start of a session. That is the same re-assertion Claude Code, Codex, Cursor and Copilot have had for a while, and it is the difference between a long session that reaches for a skill and one that remembers it existed an hour ago.</li>
+    <li>Also on Hermes: what you see at session start is a shorter, straighter opening than it was designed to be. Hermes puts a size limit on what a plugin may inject, and the old bootstrap sailed past it and got silently cut to its first and last few lines — while still insisting the skill was fully loaded and telling the agent not to load it again. It now fits by design, says plainly which parts it left out and why, and points at <code>skill_view</code> for the rest.</li>
   </ul>
 </li>
   </ol>
@@ -303,6 +302,18 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-05">5 Sep 2026</time>
+    <span class="notes__entry-title">Hermes Agent installs, for the first time</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li>If you use Hermes Agent, TBaguette has never actually worked there. The install command the site publishes failed outright — <code>plugin.json name does not satisfy v1 constraints</code>, nothing installed — and it had been failing since the day Hermes was listed as supported. It installs now. If you tried it and hit that error, the retry is worth it; if you tried it and gave up, nothing you did was wrong.</li>
+    <li>The Hermes install command has changed shape: it is now <code>hermes plugins install LeSplooch/tbaguette-skills --enable</code>, and the flag is not decoration. Hermes only offers to enable a plugin when it has a terminal to ask in, so an agent running the install through its shell tool would otherwise leave you with a plugin that is installed, disabled, and completely silent. The plugin then takes effect on <code>hermes gateway restart</code>, not on your next session. The prompt on the site says all of this now, so pasting it is enough.</li>
+    <li>On Hermes, TBaguette now reminds itself to check for a relevant skill on every turn, rather than only at the start of a session. That is the same re-assertion Claude Code, Codex, Cursor and Copilot have had for a while, and it is the difference between a long session that reaches for a skill and one that remembers it existed an hour ago.</li>
+    <li>Also on Hermes: what you see at session start is a shorter, straighter opening than it was designed to be. Hermes puts a size limit on what a plugin may inject, and the old bootstrap sailed past it and got silently cut to its first and last few lines — while still insisting the skill was fully loaded and telling the agent not to load it again. It now fits by design, says plainly which parts it left out and why, and points at <code>skill_view</code> for the rest.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-05">5 Sep 2026</time>
@@ -537,19 +548,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> is shorter, and now covers landing.</strong> Its contribution pipeline moved into a reference file loaded when you need it, roughly halving what the skill costs in every conversation it watches. What it gained: check the library does not already say your lesson <em>before</em> drafting it, since a written section is hard to abandon; report a check that fails for reasons that are not yours with a baseline from a pristine upstream checkout, or it reads as your change breaking the build; and say which files in a pull request are the change and which are the regenerated site.</li>
   </ul>
 </li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-02">2 Sep 2026</time>
-    <span class="notes__entry-title">Four more skills, and a null result that means the opposite of what it looks like</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a>: an exact null result indicts the plumbing, not the parameter.</strong> Change a knob, watch the output not move, and you have two very different findings depending on how exactly it did not move. A little, or within noise, means the input arrived and its effect is weak. <em>Byte-identical</em> means the input almost certainly never arrived — a real value with a real effect essentially never lands on the same bytes, but one that was overwritten, defaulted, or dropped on the way in does exactly that. Perfect identity is the stronger signal and reads as the weaker one.</li>
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/choosing-test-scope/"><code>choosing-test-scope</code></a>: an exclusion names a mechanism, not a justification.</strong> Every skipped test, ignored rule and allowlist entry carries a reason, and there are two kinds that look identical the day you write them. &quot;Not applicable here&quot; stays true after it stops being true, so the entry outlives the change that should have deleted it and starts hiding a live defect. &quot;The harness constructs the other implementation, which never reads this&quot; goes visibly false the moment that changes. Write the reason so it <em>could</em> be falsified — and when one entry turns out wrong this way, re-read the whole list, because they fail in batches.</li>
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/"><code>orienting-in-unfamiliar-code</code></a> now says to check for the file the project wrote for you.</strong> Most repositories you land in have a root instruction file written to answer exactly the question you are opening the repo with. It is worth reading before anything you would otherwise have to infer — as intent rather than as fact, like any prose in a repo.</li>
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/designing-apis/"><code>designing-apis</code></a>: stateless core, identity per request.</strong> An interface that remembers you between calls has bound every later call to one instance, and everything downstream inherits it — affinity, dropped sessions on deploy, instances that cannot be replaced under load. The test is whether two consecutive calls can land on different instances with no coordination; if they cannot, that is a scaling limit written into the interface rather than the deployment, which is the more expensive place to keep it.</li>
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/caching-strategy/"><code>caching-strategy</code></a>: let the response say how fresh it is.</strong> A TTL chosen by the caller is a guess about data the caller does not own, and one TTL per endpoint has to be short enough for its most volatile result. Let each response carry its own freshness, with two guardrails: a per-response directive may only <em>shorten</em> what the consumer would hold, and a response that says nothing gets the consumer's default — never &quot;forever&quot;, never &quot;not at all&quot;.</li>
-  </ul>
-</li>
       </ol>
       <p class="notes__archive-foot">
         Older than these, the whole record lives in
@@ -614,7 +612,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/using-tbaguette/" data-search-card data-search-terms="using-tbaguette use at the start of every conversation, in every project… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">using-tbaguette</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T16:43:07+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T17:05:30.742016+00:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in every project…</p>
   <span class="card__foot">

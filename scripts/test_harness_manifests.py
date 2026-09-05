@@ -53,13 +53,13 @@ VERSIONED_MANIFESTS = [
 ]
 
 
-# .hermes-plugin/plugin.yaml is the one manifest here that is not JSON, and it
-# is why this list exists separately rather than the YAML being skipped: it had
+# plugin.yaml (Hermes) is the one manifest here that is not JSON, and it is why
+# this list exists separately rather than the YAML being skipped: it had
 # drifted to 0.6.0 against a plugin at 1.0.28 -- silently, for the same reason
 # package.json once drifted five minor versions, which is that nothing compared
 # them. Parsed by hand rather than with PyYAML because this repository has no
 # third-party dependencies and the file is flat `key: value` lines.
-YAML_MANIFESTS = [".hermes-plugin/plugin.yaml"]
+YAML_MANIFESTS = ["plugin.yaml"]
 
 
 def _load_yaml_scalars(rel_path: str) -> dict:
@@ -130,6 +130,37 @@ class TestHarnessManifests(unittest.TestCase):
                 f"{tidier_looking}/ is not read by both Copilot surfaces -- the "
                 "manifest belongs at the repo root",
             )
+
+    def test_hermes_manifest_and_module_are_siblings_at_the_repo_root(self):
+        """Hermes reads both from the plugin directory root and nowhere else.
+        `hermes_cli/plugins_cmd.py:_native_manifest_file` checks only
+        `<plugin_dir>/plugin.yaml`; `plugins_loader.py:_load_directory_module`
+        loads `<plugin_dir>/__init__.py`, where `<plugin_dir>` is whichever
+        directory held the manifest. So they cannot be separated, and neither
+        can be nested.
+
+        This is guarded because the tidier-looking `.hermes-plugin/` layout did
+        not merely lose the bootstrap, it broke the published install command
+        outright: with no native manifest at the root, Hermes falls through to
+        the portable Agent Plugins reader for our Copilot `plugin.json`, whose
+        v1 name constraint is lowercase-only
+        (`^(?!.*(?:--|\\.\\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$`). "TBaguette"
+        fails it and `hermes plugins install` aborts. Verified against
+        hermes-agent 2026-09-05; the failure was invisible to this suite,
+        because every manifest was valid and every version matched."""
+        self.assertTrue((REPO_ROOT / "plugin.yaml").is_file())
+        self.assertTrue((REPO_ROOT / "__init__.py").is_file())
+        self.assertFalse(
+            (REPO_ROOT / ".hermes-plugin").exists(),
+            ".hermes-plugin/ is invisible to Hermes and shadows the install "
+            "behind the portable plugin.json reader -- both files belong at "
+            "the repo root",
+        )
+        # The name Hermes derives the skill namespace from. register_skill
+        # qualifies every skill as f"{manifest.name}:{skill}", so a rename here
+        # silently breaks every `TBaguette:<skill-name>` reference shipped in
+        # the bootstrap, the tool-mapping reference, and the install prompt.
+        self.assertEqual(_load_yaml_scalars("plugin.yaml")["name"], "TBaguette")
 
     def test_agent_plugins_schema_is_what_routes_vscode_to_its_hooks(self):
         """VS Code ignores a manifest's hooks field entirely and derives the

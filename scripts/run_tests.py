@@ -38,6 +38,7 @@ SUITES = [
     ("i18n", [sys.executable, "test_i18n.py"]),
     ("hooks", [sys.executable, "test_hooks.py"]),
     ("harness manifests", [sys.executable, "test_harness_manifests.py"]),
+    ("hermes bootstrap", [sys.executable, "test_hermes_bootstrap.py"]),
     ("CATALOG.md vs CATEGORIES", [sys.executable, "test_catalog.py"]),
     ("git hooks", [sys.executable, "test_githooks.py"]),
     ("skill cross-references", [sys.executable, "test_skill_references.py"]),

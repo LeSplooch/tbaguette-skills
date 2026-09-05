@@ -24,22 +24,20 @@ When a skill mentions "your instructions file," on Hermes Agent this is **`AGENT
 
 ## Invoking a skill
 
-Hermes Agent has a `skills` toolset with `skill_view` and `skills_list` tools.
-To invoke a TBaguette skill, use:
+Hermes Agent has a `skills` toolset with `skill_view` and `skills_list`.
+TBaguette's skills are registered with that loader under the `TBaguette:`
+namespace, which Hermes derives from the plugin name — so the prefix is
+required, not decoration, and the bare name is a miss:
 
 ```
-skill_view("orienting-in-unfamiliar-code")
-skill_view("karen-and-the-manager")
+skill_view("TBaguette:orienting-in-unfamiliar-code")
 ```
 
-If `skill_view` cannot find a TBaguette skill (it may not appear in the catalog
-until the plugin fully registers it), fall back to reading the SKILL.md directly:
-
-```
-read_file(path="~/.hermes/plugins/tbaguette-skills/skills/<skill-name>/SKILL.md")
-```
-
-This fallback is the same mechanism used by other harnesses without native skill loading.
+They are explicit loads rather than entries in `<available_skills>`, so
+`skills_list` is how you see what is there. If a lookup returns "not found",
+read the SKILL.md directly, using the absolute skills directory the session's
+bootstrap prints rather than a guessed path — Hermes names the install
+directory for the plugin, not for the repository.
 
 ## Subagent dispatch
 

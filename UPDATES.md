@@ -24,6 +24,33 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-05 — Hermes Agent installs, for the first time
+
+- If you use Hermes Agent, TBaguette has never actually worked there. The install
+  command the site publishes failed outright — `plugin.json name does not satisfy
+  v1 constraints`, nothing installed — and it had been failing since the day
+  Hermes was listed as supported. It installs now. If you tried it and hit that
+  error, the retry is worth it; if you tried it and gave up, nothing you did was
+  wrong.
+- The Hermes install command has changed shape: it is now
+  `hermes plugins install LeSplooch/tbaguette-skills --enable`, and the flag is
+  not decoration. Hermes only offers to enable a plugin when it has a terminal to
+  ask in, so an agent running the install through its shell tool would otherwise
+  leave you with a plugin that is installed, disabled, and completely silent. The
+  plugin then takes effect on `hermes gateway restart`, not on your next session.
+  The prompt on the site says all of this now, so pasting it is enough.
+- On Hermes, TBaguette now reminds itself to check for a relevant skill on every
+  turn, rather than only at the start of a session. That is the same re-assertion
+  Claude Code, Codex, Cursor and Copilot have had for a while, and it is the
+  difference between a long session that reaches for a skill and one that
+  remembers it existed an hour ago.
+- Also on Hermes: what you see at session start is a shorter, straighter opening
+  than it was designed to be. Hermes puts a size limit on what a plugin may
+  inject, and the old bootstrap sailed past it and got silently cut to its first
+  and last few lines — while still insisting the skill was fully loaded and
+  telling the agent not to load it again. It now fits by design, says plainly
+  which parts it left out and why, and points at `skill_view` for the rest.
+
 ## 2026-09-05 — A skill that questions the request instead of serving it
 
 - New skill: `clairvoyance`. Every other skill in this library points inward at the

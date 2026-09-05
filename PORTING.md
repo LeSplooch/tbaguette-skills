@@ -101,7 +101,7 @@ never loaded.
 | Kimi Code | `.kimi-plugin/plugin.json` | manifest `sessionStart.skill` loads `using-tbaguette` | inline `skillInstructions` |
 | OpenCode | `.opencode/plugins/tbaguette.js` (declared via root `package.json` `main`) | in-process: `config` hook registers skills dir, `experimental.chat.messages.transform` injects context | inline in `tbaguette.js` |
 | Pi | `.pi/extensions/tbaguette.ts` (declared via root `package.json`'s `pi` field) | in-process: resource discovery registers skills, a context event injects bootstrap | inline in `tbaguette.ts` |
-| Hermes Agent | `.hermes-plugin/plugin.yaml` + `.hermes-plugin/__init__.py` (installed with `hermes plugins install LeSplooch/tbaguette-skills`) | in-process: `register()` registers every skill with the native loader, a `pre_llm_call` hook injects the bootstrap on the first turn | `skills/using-tbaguette/references/hermes-tools.md` |
+| Hermes Agent | root `plugin.yaml` + root `__init__.py` — both, at the plugin directory root, and see below (installed with `hermes plugins install LeSplooch/tbaguette-skills --enable`) | in-process: `register()` registers every skill with the native loader, a `pre_llm_call` hook injects the bootstrap on the first turn and re-asserts a short nudge on every turn after | `skills/using-tbaguette/references/hermes-tools.md` |
 
 When in doubt, read the files, not this table — same rule the source guide
 gives, still true here.
@@ -191,13 +191,15 @@ And the last two, which is the whole table:
   So Devin is the one row here that fails the hard requirement outright, and
   the honest description is skill discovery without a bootstrap. Nothing was
   shipped for it, because there is nothing to ship.
-- **Hermes was a version, not a mechanism.** Its `pre_llm_call` bootstrap is
-  sound and its `__init__.py` already refuses to start rather than silently
-  skip when it cannot find the skills tree. What it had was
-  `plugin.yaml` sitting at 0.6.0 against a plugin at 1.0.28 — silently, for
-  exactly the reason `package.json` once drifted five minor versions, which is
-  that nothing compared them. It is now compared, by the same test, with a
-  hand-rolled reader rather than a new dependency.
+- **Hermes looked like a version, not a mechanism — and that reading was
+  wrong.** What this audit found was `plugin.yaml` sitting at 0.6.0 against a
+  plugin at 1.0.28, silently, for exactly the reason `package.json` once
+  drifted five minor versions, which is that nothing compared them. It is now
+  compared, by the same test, with a hand-rolled reader rather than a new
+  dependency. The audit then called the `pre_llm_call` bootstrap sound and
+  moved on. It was sound. It had also never run once, for a reason a
+  docs-only pass could not see and a live install found in a minute — see
+  below.
 
 The rule this audit produced, worth stating on its own: **the tests proved
 consistency and never proved correctness.** Every one of these files was valid,
@@ -206,6 +208,54 @@ nothing to the model. A suite that only compares this repository against itself
 cannot see any of that. Where a fact came from a harness's documentation, the
 test that guards it now says so in its own docstring, so the next person can
 tell a checked fact from a copied assumption.
+
+### Hermes, re-checked against a live instance
+
+The docs-only audit above cleared Hermes. Running the published install command
+against a real `hermes` binary did not:
+
+```
+$ hermes plugins install LeSplooch/tbaguette-skills
+Cloning https://github.com/LeSplooch/tbaguette-skills.git...
+Error: Portable plugin manifest validation failed: plugin.json name does not
+satisfy v1 constraints
+```
+
+Nothing installed, on any version, since the row was written. The cause is one
+sentence with two halves, and the second is the interesting one:
+
+1. Hermes reads a native manifest at the **plugin directory root only** —
+   `plugins_cmd.py:_native_manifest_file` checks `<plugin_dir>/plugin.yaml`
+   and nothing else. Ours was in `.hermes-plugin/`, so it was never seen.
+   `plugins_loader.py:_load_directory_module` loads `<plugin_dir>/__init__.py`
+   from whichever directory held the manifest, so the module could not stay
+   behind either.
+2. With no native manifest, Hermes falls through to the portable Agent Plugins
+   reader for the root `plugin.json` we ship for Copilot — and that reader
+   enforces a lowercase-only name. `TBaguette` fails it, so the *install
+   command itself* aborted rather than the bootstrap merely being missed. One
+   harness's manifest was breaking another harness's install, which is not a
+   failure mode either integration could see on its own.
+
+Both files now sit at the repo root, where a native `plugin.yaml` is checked
+first and shadows the portable manifest for Hermes only. Renaming the plugin to
+satisfy the portable reader was the other available fix and was rejected: it
+would break `copilot plugin install TBaguette@tbaguette-dev` and every
+`TBaguette:<skill-name>` reference, since Hermes derives the skill namespace
+from the manifest name.
+
+Two more things a live run showed that no document did. **`--enable` is not
+optional**: `cmd_install` only prompts to enable when it has a TTY, so an agent
+running the install through a shell tool gets a plugin that is installed,
+disabled, and silent. And the plugin takes effect on `hermes gateway restart`,
+not on the next session. Both are now in the published install prompt.
+
+The row is also no longer session-start-only. `pre_llm_call` fires once per
+user turn — `agent/turn_context.py` builds the turn and passes `is_first_turn`
+— rather than once per LLM call inside the agentic loop, so it carries the full
+bootstrap on the first turn and a short re-assertion on every turn after,
+matching Claude Code, Codex, Cursor and Copilot. No throttling needed, unlike
+Cursor's `postToolUse`.
 
 ### What the three Copilot rows are, and are not, verified against
 
