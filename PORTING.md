@@ -18,7 +18,7 @@ thin delivery layer:
 1. **Skills (harness-agnostic).** Everything in `skills/` is the source of
    truth, shared verbatim. Skills describe *actions* — "invoke a skill",
    "read a file", "run a shell command" — not specific tool names. A grep
-   across all 96 confirms this holds almost without exception (`using-tbaguette`
+   across all 97 confirms this holds almost without exception (`using-tbaguette`
    is the one skill that names a tool, "the Skill tool" — see
    `.kimi-plugin/plugin.json`'s `skillInstructions`, or
    `skills/using-tbaguette/references/copilot-tools.md`, for how that one

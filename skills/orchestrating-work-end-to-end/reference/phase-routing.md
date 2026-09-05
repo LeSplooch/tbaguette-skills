@@ -82,11 +82,13 @@ not once the run is already in trouble.
 | `estimating-effort` | Someone needs a range before committing, and a point estimate would be false precision |
 | `deciding-reversibility` | The work has a one-way door in it — the framing changes if a mistake cannot be walked back |
 | `steelmanning-alternatives` | The first idea arrived with the request and nothing else has been considered |
+| `clairvoyance` | On the way out of this phase, always. The ledger you just wrote is a list of the request's own mechanisms, and this is the last moment before one of them becomes the design |
 
 ## Phase 2 — Design
 
 | Skill | Reach for it when |
 |---|---|
+| `clairvoyance` | First, before an approach is proposed. It is the only skill here that questions the request rather than serving it, and a reframe costs a paragraph now, the plan at phase 4, and the implementation at phase 6 |
 | `scoping-before-building` | Always — this phase is its sectioned-design gate, ending in an explicit yes |
 | `steelmanning-alternatives` | A single approach is about to be presented as the approach |
 | `deciding-reversibility` | Choosing how much design rigor this decision actually deserves |
@@ -245,6 +247,7 @@ not once the run is already in trouble.
 | `feature-flagging` | A flag introduced during the run now needs a removal date |
 | `knowing-when-to-stop` | Naming what is deliberately left undone, rather than drifting into it |
 | `offering-the-next-move` | Always — the last beat: the run closes with the next move offered as a choice, not described |
+| `clairvoyance` | Before the record is torn down, restricted to *ahead* and *beside*. Its rulings and surrendered lines are what the closing offer is harvested from; reconstructed from memory afterwards it yields the obvious next step and nothing that was learned |
 
 ## Diagnose track
 
@@ -263,6 +266,7 @@ not once the run is already in trouble.
 | `regression-test-from-bug` | The gate after the fix: named for the defect, failing before, passing after |
 | `writing-postmortems` | The failure reached users, or would have |
 | `crouton` | The register the hunt holds: log and trace excerpts scoped to the failing case, rather than whole files pulled in fresh per hypothesis |
+| `clairvoyance` | The hypothesis list is empty, or a third fix did not hold. The assumption is in the reproduction, not in the patch |
 
 ## Respond track
 
@@ -282,6 +286,7 @@ mitigate first, understand second. Everything here runs against a clock.
 | `writing-postmortems` | Always — including when the cause turned out obvious in hindsight |
 | `explaining-technical-work` | Every status update during, and the summary after |
 | `crouton` | The register those status updates hold — never the warning before a mitigation that cannot be walked back, which stays full prose |
+| `clairvoyance` | At stabilize and in the postmortem — **never during mitigation**, where a frame question is the "let me understand this properly first" red flag exactly |
 
 ## Review track
 
@@ -304,6 +309,7 @@ and the gate is coverage of the diff rather than confidence in a conclusion.
 | `explaining-technical-work` | Delivering the findings to someone who has to act on them |
 | `crouton` | Findings compressed to what decides them, with every path, symbol, and quoted error left byte-exact |
 | `offering-the-next-move` | Always — the review closes with the choice it implies |
+| `clairvoyance` | During coverage, before judgment. The absence pass: the caller nobody updated, the state nobody handled, the migration nobody wrote |
 
 ## Author track
 
@@ -325,6 +331,7 @@ the memory of it.
 | `naming-things` | The document introduces vocabulary the codebase will inherit from it |
 | `confirming-before-claiming-done` | The verify phase: every command, path, and count in the document run and read now |
 | `offering-the-next-move` | Always — the document lands with the choice it implies |
+| `clairvoyance` | At *frame the reader*, and again before verify — who else reads this, and what it makes impossible to say later |
 
 ## Investigate track
 
@@ -343,6 +350,7 @@ the memory of it.
 | `explaining-technical-work` | Always — conclusion first, altitude set by what the reader will do next |
 | `crouton` | The answer has a length budget |
 | `offering-the-next-move` | Always — the report closes with the choice it implies, assembled rather than left to the reader |
+| `clairvoyance` | After gathering, before the conclusion. The question commissioned may not be the question that matters; answer both and mark the second as inference |
 
 ## Change-in-place track
 
@@ -364,6 +372,7 @@ the memory of it.
 | `auditing-dependencies` | The upgrade pulls transitive changes nobody asked for |
 | `resolving-merge-conflicts` | A long-lived branch has to be integrated as part of the change |
 | `crouton` | The register a long mechanical sweep holds — never the reversibility warning, which stays full prose |
+| `clairvoyance` | Before `deciding-reversibility`, not after. The cheapest migration is the one that does not happen because the thing can be deleted |
 
 ## Outside the spine
 

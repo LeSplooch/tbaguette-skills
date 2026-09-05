@@ -723,7 +723,7 @@ class BuildContentIntegrationTests(unittest.TestCase):
         # adding or removing a skill is something a human confirms on
         # purpose. It lives only in the assertion -- spelling it into the
         # test's name is what let the name go stale last time.
-        self.assertEqual(len(self.content["skills"]), 96)
+        self.assertEqual(len(self.content["skills"]), 97)
 
     def test_categories_match_the_locked_order(self):
         actual_slugs = [c["slug"] for c in self.content["categories"]]
@@ -739,7 +739,7 @@ class BuildContentIntegrationTests(unittest.TestCase):
 
     def test_category_skill_slug_counts_sum_to_the_skill_count(self):
         total = sum(len(c["skill_slugs"]) for c in self.content["categories"])
-        self.assertEqual(total, 96)
+        self.assertEqual(total, 97)
 
     def test_formidable_entry_has_stacks_commands_and_craft_floor(self):
         formidable = self.content["skills"]["formidable"]

@@ -1,6 +1,6 @@
 """Content-extraction pipeline for the TBaguette skills showcase site.
 
-Reads the 96 skill directories under ``~/.claude/skills/TBaguette/skills/``
+Reads the 97 skill directories under ``~/.claude/skills/TBaguette/skills/``
 (each a ``SKILL.md`` with YAML frontmatter and a markdown body; one skill,
 ``formidable``, additionally carries a ``reference/`` tree of stack and
 command reference files) and produces a single JSON-serializable dict that
@@ -43,6 +43,7 @@ CATEGORIES: list[dict] = [
         "skill_slugs": [
             "using-tbaguette",
             "orchestrating-work-end-to-end",
+            "clairvoyance",
             "calibrating-confidence",
             "estimating-effort",
             "deciding-reversibility",
@@ -294,7 +295,7 @@ def build_content(
 
     # One set for the whole build, so a mention only ever links to something
     # that actually exists on disk -- a slug that was renamed or removed simply
-    # stops linking, rather than shipping 96 pages of 404s.
+    # stops linking, rather than shipping 97 pages of 404s.
     known_slugs = set(discovered_slugs)
 
     skills: dict[str, dict] = {}
@@ -867,7 +868,7 @@ _INLINE_TOKEN_RE = re.compile(
 # are what keep "skills/naming-things/SKILL.md" out; the hyphen guards keep
 # "--no-renames" from being read as the slug "no-renames".
 #
-# Deliberately not a list of the 96 real slugs. This matches *slug-shaped*
+# Deliberately not a list of the 97 real slugs. This matches *slug-shaped*
 # tokens and hands each one to the resolver, which is the only thing that knows
 # what exists -- so a renamed or deleted skill stops linking the moment the
 # directory moves, rather than the day someone remembers to edit a regex here.

@@ -1,6 +1,6 @@
 # TBaguette's Atelier
 
-96 skills for [Claude Code](https://claude.com/claude-code) — judgment calls, code
+97 skills for [Claude Code](https://claude.com/claude-code) — judgment calls, code
 comprehension, change discipline, testing, debugging, systems design, defensive
 security, communication, and tooling. Every one is project-agnostic, stack-agnostic,
 and language-agnostic, so the same skill works whether you're in a Rust firmware repo

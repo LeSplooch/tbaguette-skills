@@ -24,6 +24,49 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-05 — A skill that questions the request instead of serving it
+
+- New skill: `clairvoyance`. Every other skill in this library points inward at the
+  request — reproduce it, scope it, plan it, prove it, land it — so a run that
+  follows all of them produces an excellent implementation of whatever arrived in
+  the first message, and has no way to notice that the first message was the wrong
+  thing to build. This is the one that looks outward. It names the frame a request
+  arrives inside, the five places that frame comes from — the requester's own
+  vocabulary, the first file you opened, the codebase's existing pattern, your own
+  previous turn, and any report you did not produce yourself — and seven directions
+  to look, each with a tell that says which one this situation calls for, so it is
+  a diagnostic rather than a brainstorm.
+
+- What it will not do is expand your work. Everything it finds routes somewhere
+  before anything acts on it: back to the design gate, into the acceptance ledger,
+  into the run record as an option offered at close, or to a discard with the reason
+  written down. Seeing more is free; doing more is not, and `managing-scope-drift`
+  still wins. Two harder limits come with it — a sweep is never a reason something
+  did not ship, and a run with nobody present may notice a reframe but may not
+  approve one for itself.
+
+- `orchestrating-work-end-to-end` now gives it a seat in all seven tracks, and the
+  seat differs in each. On a build it runs between framing and design, which is the
+  last moment a reframe costs a paragraph instead of the implementation. On a
+  diagnosis it waits until the third fix has not held, then goes after the
+  reproduction rather than the patch. On a review it is the pass that finds what the
+  diff does not contain. During an incident it is explicitly barred until the harm
+  has stopped.
+
+- Six existing skills now hand off to it at the point where each one runs out of
+  road. `steelmanning-alternatives` when three generated options come back sharing
+  one shape, which means the constraint is upstream of the generation.
+  `diagnosing-before-fixing` when three correct fixes did not hold, which is one
+  wrong model applied three times rather than three bad patches. `managing-scope-drift`
+  gained the sentence its readers needed most: noticing is not drifting, and here is
+  where the noticing goes.
+
+- The skill was drafted, then swept with its own method before shipping, and the
+  record of that is in the skill rather than in a commit message: which of the seven
+  directions found something, what each finding changed, and what was discarded and
+  why. Six of seven yielded — including the one that caught the skill's own text
+  saying "the frame" in the singular after listing four separate sources for it.
+
 ## 2026-09-05 — What a result that found nothing is allowed to claim
 
 - `red-teaming-your-own-work` now covers the outcome that gets no scrutiny at all:

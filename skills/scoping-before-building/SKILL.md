@@ -85,6 +85,8 @@ This step is shared by the bounded and architectural paths. Start by reading the
 
 For a request that is genuinely one project: ask one question at a time, prefer multiple-choice over open-ended where you can, and never bundle a second question into the same message as the first — a message holding two questions reliably gets one answered. This holds for a live back-and-forth with someone present to answer, where each reply can change what's worth asking next; it's the opposite of `reading-specifications`' advice to batch questions, which applies specifically to asynchronous clarification against a spec or ticket author, where round-trip latency — not conversational flow — is the cost being minimized. Aim the questions at purpose, constraints, and success criteria; work out implementation detail yourself rather than asking about it.
 
+Both paths converge on an approach, and the request arrived carrying one. A request naming a mechanism — add caching, add a retry, make it async — is already an answer to a problem that was solved silently before you were written to, and this phase will faithfully design the mechanism unless something asks. `clairvoyance` is that ask, and here is where it is nearly free: a reframe now costs a paragraph, and after approval it costs the design.
+
 ## Working the bounded path
 
 After understanding the idea, present the design directly in chat — a few sentences to a few short paragraphs covering the approach, the files it touches, and how it'll be tested — then stop. Once the user says yes, implement through the normal development workflow (`writing-the-failing-test-first` applies). No plan document exists on this path; the chat message you already got approved is the design.

@@ -70,6 +70,8 @@ The ranking rule falls out of the table: **would they have thought of this witho
 
 **Harvest before the teardown.** Landing deliberately retires the plan and the run record. Assemble the offer while they still exist; tearing down first and then trying to recall what was in them is how rows 1 through 3 quietly become row 5.
 
+Row 4 has no home in any file, which is why it decays fastest — and it is the row a `clairvoyance` sweep fills. Its discard pile is exactly the set of things that were real, were seen, and were correctly not acted on, each already carrying the one-line reason that makes it offerable. On a run that swept, harvest row 4 from there rather than from recall.
+
 ## What a real option looks like
 
 An option is an action with a size, not a topic. "Add tests" is a topic — the reader cannot tell what they would be agreeing to. "Cover the retry path — one test, the case the review flagged and nobody closed" is an action they can price.

@@ -30,6 +30,8 @@ For every candidate piece of work, ask: can the request be delivered, working, w
 
 The necessary/adjacent line is where most drift enters, always wearing the same disguise: "I had to restructure it to add this cleanly." Sharper test — if the extra work were reverted and the requested change kept, would the deliverable still pass its own acceptance? If yes, it was adjacent.
 
+**Noticing is not drifting, and this skill does not forbid it.** The three classes govern what gets *done*; nothing here says a run may not see past its own boundary, and a run that has trained itself not to look is not disciplined, only narrow. What makes the difference is where the sight goes: `clairvoyance` owns the looking, and it routes every observation to a gate, the ledger, the record, or a discard with a reason — never straight into the diff. An observation that skipped that routing arrives here as adjacent work, and this table still wins.
+
 ## When to interrupt
 
 Discovered work interrupts immediately only for: data loss or corruption, credential or secret exposure, a false premise underneath the request itself (`reading-specifications` covers spotting one before the work rather than during it), or a discovery that makes the current approach wrong. Everything else waits for the final report.

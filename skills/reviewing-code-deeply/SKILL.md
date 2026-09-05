@@ -61,6 +61,8 @@ Diffs show what is present; most serious defects are a missing case.
 
 At every network or IPC boundary in the diff, ask what happens if the call never returns. Absence of a timeout is invisible in a diff and is a level-1 finding.
 
+The table above is an enumeration from the domain rather than from the diff, and that is the only method that finds absence — you cannot review your way to a case nobody wrote, because review examines what is in front of you. When the change is large enough that the categories here do not cover its subject matter, `clairvoyance` generalizes the move: enumerate the states, actors, and lifecycle stages the *thing itself* has, then find each one in the diff. The ones with no counterpart are the finding.
+
 ## Mark every comment blocking or not
 
 Unmarked comments make the author guess, and they guess "blocking" — which is why reviews with thirty unmarked nits take a week.

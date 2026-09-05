@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.42</span>
+      <span class="wordmark-version" dir="ltr">v1.0.43</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-04T22:24:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-04T22:24:02Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-05T14:48:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-05T14:48:50Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">steelmanning-alternatives</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T14:48:50.822484+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when an approach was adopted because it was the first one that worked and no other was seriously examined, when a plan or design presents a single option or several that share one shape, when an alternative was dismissed in a single clause, when asked whether there is a better way, or when the chosen approach has started accumulating special cases. Covers first-idea lock-in, option generation, and recommending rather than surveying.</p>
@@ -78,6 +78,7 @@
 <p>The highest-value move here. Do not argue against the dismissed option; ask what would have to be true for it to be the right choice, then check whether those things are true. This converts an unfalsifiable taste judgment into a factual question that usually resolves in minutes.</p>
 <p>Dismissed: handle it in the data layer rather than in application code. What would have to be true — that volume makes round-trips dominant, and that the logic is expressible there. Both are checkable now. Compare with &quot;business logic does not belong in the data layer&quot;, which is checkable never and therefore is not a reason.</p>
 <p>Apply the same test to the option you chose. What would have to be true for it to be right, and is it?</p>
+<p>One failure this cannot reach: options generated inside a frame nobody named. Every alternative here is an alternative <em>answer</em>, so when they all come back sharing one shape, the constraint is upstream of the generation — in the request's own vocabulary, or in the first file that got opened. <a class="skill-link" href="/tbaguette-skills/skills/clairvoyance/"><code>clairvoyance</code></a> is the pass that goes and looks there, and its tell is exactly this: three options, one shape.</p>
 <h2 id="generating-a-second-option-that-is-actually-different">Generating a second option that is actually different</h2>
 <p>If option B shares A's core mechanism and differs only in parameters, it is A-prime; keep going. Generators that produce difference rather than adjacency:</p>
 <table><thead><tr><th>Generator</th><th>Prompt</th></tr></thead><tbody><tr><td>Invert the direction</td><td>Push instead of pull; the caller does it instead of the callee; compute on write instead of on read</td></tr><tr><td>Change the layer</td><td>Solve it in the data model, the build, the configuration, the operational setup, or the product definition instead of in the code</td></tr><tr><td>Do nothing</td><td>If this is simply not handled — what breaks, for whom, how often</td></tr><tr><td>Buy or build, both ways</td><td>An existing tool or platform feature, against thirty lines of your own with no new dependency</td></tr><tr><td>Relax a constraint</td><td>Which constraint, if lifted, makes the problem trivial — and who owns that constraint</td></tr><tr><td>Do it manually</td><td>At this frequency, is automation cheaper than a person doing it</td></tr><tr><td>The blunt version</td><td>No abstraction, no generality, all of it in one place. Wins on total cost more often than it gets proposed</td></tr></tbody></table>
@@ -111,6 +112,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">
       <span class="see-also__name">orchestrating-work-end-to-end</span>
       <span class="see-also__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/clairvoyance/">
+      <span class="see-also__name">clairvoyance</span>
+      <span class="see-also__summary">Use when a request has been understood and is about to be executed and nothing has yet asked whether it is the right request — before a…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/calibrating-confidence/">
       <span class="see-also__name">calibrating-confidence</span>

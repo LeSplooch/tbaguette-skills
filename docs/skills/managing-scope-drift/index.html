@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.42</span>
+      <span class="wordmark-version" dir="ltr">v1.0.43</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-04T22:24:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-04T22:24:02Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-05T14:48:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-05T14:48:50Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">managing-scope-drift</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T14:48:50.822484+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when work has grown past what was asked or the diff is larger than the request implies, when a fix seems to require touching something adjacent, when a real problem is found in passing, when tempted to also clean up, rename, refactor, or improve nearby code, or when one requested item is drifting toward being quietly omitted. Covers necessary versus adjacent versus discovered work, silent widening and narrowing, and reporting the remainder.</p>
@@ -76,6 +76,7 @@
 <p>For every candidate piece of work, ask: can the request be delivered, working, without this?</p>
 <table><thead><tr><th>Class</th><th>Test</th><th>Action</th></tr></thead><tbody><tr><td>Necessary</td><td>The request is blocked or broken without it</td><td>Do it. One line in the report. No permission needed</td></tr><tr><td>Adjacent</td><td>Improves code you happen to be touching; the request works regardless</td><td>Do not do it. Record it, report it</td></tr><tr><td>Discovered</td><td>A real defect or false premise found in passing, unrelated to the request</td><td>Report it. Fix only if it blocks the request, and never silently</td></tr></tbody></table>
 <p>The necessary/adjacent line is where most drift enters, always wearing the same disguise: &quot;I had to restructure it to add this cleanly.&quot; Sharper test — if the extra work were reverted and the requested change kept, would the deliverable still pass its own acceptance? If yes, it was adjacent.</p>
+<p><strong>Noticing is not drifting, and this skill does not forbid it.</strong> The three classes govern what gets <em>done</em>; nothing here says a run may not see past its own boundary, and a run that has trained itself not to look is not disciplined, only narrow. What makes the difference is where the sight goes: <a class="skill-link" href="/tbaguette-skills/skills/clairvoyance/"><code>clairvoyance</code></a> owns the looking, and it routes every observation to a gate, the ledger, the record, or a discard with a reason — never straight into the diff. An observation that skipped that routing arrives here as adjacent work, and this table still wins.</p>
 <h2 id="when-to-interrupt">When to interrupt</h2>
 <p>Discovered work interrupts immediately only for: data loss or corruption, credential or secret exposure, a false premise underneath the request itself (<a class="skill-link" href="/tbaguette-skills/skills/reading-specifications/"><code>reading-specifications</code></a> covers spotting one before the work rather than during it), or a discovery that makes the current approach wrong. Everything else waits for the final report.</p>
 <p>The gate matters in both directions. Interrupting for a medium-severity finding costs a context switch and teaches the user that your interruptions are skimmable, which is what makes the next high-severity one get skimmed.</p>
@@ -113,6 +114,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">
       <span class="see-also__name">orchestrating-work-end-to-end</span>
       <span class="see-also__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/clairvoyance/">
+      <span class="see-also__name">clairvoyance</span>
+      <span class="see-also__summary">Use when a request has been understood and is about to be executed and nothing has yet asked whether it is the right request — before a…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/calibrating-confidence/">
       <span class="see-also__name">calibrating-confidence</span>

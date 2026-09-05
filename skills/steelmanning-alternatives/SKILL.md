@@ -29,6 +29,8 @@ Dismissed: handle it in the data layer rather than in application code. What wou
 
 Apply the same test to the option you chose. What would have to be true for it to be right, and is it?
 
+One failure this cannot reach: options generated inside a frame nobody named. Every alternative here is an alternative *answer*, so when they all come back sharing one shape, the constraint is upstream of the generation — in the request's own vocabulary, or in the first file that got opened. `clairvoyance` is the pass that goes and looks there, and its tell is exactly this: three options, one shape.
+
 ## Generating a second option that is actually different
 
 If option B shares A's core mechanism and differs only in parameters, it is A-prime; keep going. Generators that produce difference rather than adjacency:

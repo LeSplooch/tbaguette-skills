@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.0.42</span>
+      <span class="wordmark-version" dir="ltr">v1.0.43</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-04T22:24:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-04T22:24:02Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-05T14:48:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-05T14:48:50Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">reviewing-code-deeply</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-05T14:48:50.822484+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Communicating</span>
   <p class="lede">Use when reviewing someone else's change — a pull request, patch, diff, or commit series — deciding what deserves a comment, whether to block or approve, or how to phrase a concern. Also when a review is generating dozens of comments, when a diff is too large to review carefully, or when reviews keep passing code that later breaks. Covers review priority order, reviewing tests, finding absent cases, and blocking versus non-blocking.</p>
@@ -84,6 +84,7 @@
 <p>Diffs show what is present; most serious defects are a missing case.</p>
 <table><thead><tr><th>Category</th><th>What to check</th></tr></thead><tbody><tr><td>Error paths</td><td>Every fallible call: handled, propagated, or knowingly swallowed — and is the swallow explained?</td></tr><tr><td>Partial failure</td><td>If step 3 of 5 fails, what state remains? Is it recoverable, and does a retry make it worse?</td></tr><tr><td>Concurrency</td><td>Two callers at once; the same caller twice; the operation interleaved with its own retry; check-then-act on shared state</td></tr><tr><td>Resources</td><td>Anything acquired must be released on the error path too — handles, locks, connections, transactions</td></tr><tr><td>Boundaries</td><td>Empty, single, negative, zero, overflow, unicode, timezone, clock skew</td></tr><tr><td>Compatibility</td><td>Old clients, old rows, old messages during the deploy window — is it safe while both versions run?</td></tr><tr><td>Reversibility</td><td>Can this be rolled back after it has written data?</td></tr></tbody></table>
 <p>At every network or IPC boundary in the diff, ask what happens if the call never returns. Absence of a timeout is invisible in a diff and is a level-1 finding.</p>
+<p>The table above is an enumeration from the domain rather than from the diff, and that is the only method that finds absence — you cannot review your way to a case nobody wrote, because review examines what is in front of you. When the change is large enough that the categories here do not cover its subject matter, <a class="skill-link" href="/tbaguette-skills/skills/clairvoyance/"><code>clairvoyance</code></a> generalizes the move: enumerate the states, actors, and lifecycle stages the <em>thing itself</em> has, then find each one in the diff. The ones with no counterpart are the finding.</p>
 <h2 id="mark-every-comment-blocking-or-not">Mark every comment blocking or not</h2>
 <p>Unmarked comments make the author guess, and they guess &quot;blocking&quot; — which is why reviews with thirty unmarked nits take a week.</p>
 <table><thead><tr><th>Marker</th><th>Meaning</th><th>Use for</th></tr></thead><tbody><tr><td><strong>blocking</strong></td><td>I will not approve until this changes</td><td>Levels 1–2, and genuine design damage</td></tr><tr><td><strong>non-blocking</strong></td><td>Take it or leave it; approving either way</td><td>Levels 3–4</td></tr><tr><td><strong>nit</strong></td><td>Cosmetic, strictly optional</td><td>More than ~3 means fix the tooling instead</td></tr><tr><td><strong>question</strong></td><td>I genuinely do not know</td><td>Never as a rhetorical stand-in for &quot;this is wrong&quot;</td></tr></tbody></table>

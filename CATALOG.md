@@ -1,6 +1,6 @@
 # TBaguette's Atelier
 
-96 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+97 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -26,6 +26,7 @@ Atelier skill hands off to a neighbour.
 |---|---|
 | `using-tbaguette` | Force-injected at every session start: check the Atelier's own skills before every response, for the whole conversation |
 | `orchestrating-work-end-to-end` | The spine the rest of the library hangs off: which of seven tracks a request is on, the envelope the run executes in, the phase order, the evidence that opens each gate, what a gate becomes when nobody is there to answer it, one run record that survives compaction. Multi-file: envelope dials, the express lane, full phase-to-skill routing index |
+| `clairvoyance` | The one skill that questions the request rather than serving it: the frame a request arrives inside and the five places it comes from, seven directions to look and the tells that pick one, and the routing that turns sight into a gate rather than into scope. Multi-file: the directions in full, a seat in each of the seven tracks, and the sweep run on its own creation |
 | `calibrating-confidence` | Marking verified vs inferred vs assumed; false precision; saying you don't know |
 | `estimating-effort` | Reference classes, ranges over points, the planning fallacy |
 | `deciding-reversibility` | One-way vs two-way doors; matching decision cost to decision weight |
