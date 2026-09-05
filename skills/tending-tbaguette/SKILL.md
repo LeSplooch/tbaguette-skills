@@ -241,6 +241,39 @@ diffs, the notes — rather than fishing transcripts for a shape they do not hav
 And a moment nobody captured is, in practice, gone. That is the whole argument
 for two sentences now rather than a better write-up later.
 
+**A pass over finished work is steered by the subject line's grammar, not its
+subject.** A month across a few projects is several hundred commits, and nobody
+reads several hundred commits. What discriminates is how the subject was
+*written*: one phrased as a judgment — something stopped, something that turned
+out not to be true, something decided against — was written by someone who had
+already done the generalizing, and its body usually states the lesson outright.
+One phrased as a change — a bump, a rename, a feature added — has nothing in it
+a skill could carry. So read subject lines, then read the **bodies** of the
+handful that read as judgments. The diff is the project-specific half; the body
+is the half whose author already scrubbed it.
+
+That selector is worth exactly what the repository's commit discipline is worth,
+and where subjects are written as changes it selects nothing. That is a true
+answer about that repository rather than a broken sweep — say so and stop,
+rather than falling back to reading diffs at random and calling the result a
+pass.
+
+**Cluster before opening anything, because the repeat is the whole point.** The
+bar above says a shape appearing in two unrelated projects is the strongest
+evidence it can get, and a pass that opens one body at a time can never see it:
+each lesson arrives alone, looks general for exactly the reason the bar warns
+about, and gets judged alone. Sweep the subject lines of every project in scope
+into one list first, and group them by the shape they describe rather than by
+the repository they came from. Groups of one and groups of four then separate at
+a glance, and the fours are the candidates.
+
+The saving compounds with the coverage check below. Run that against the
+*cluster*, in the vocabulary the covering skill would have used, before opening
+a single body — if the library already says it, nothing in those bodies was
+going to change that, and a cluster killed at the subject-line stage costs one
+search. In one such pass four of six candidates died there, and no commit body was
+opened for any of the four.
+
 Once done, it is done. Go back to watching turn by turn like a skill that
 started on turn one.
 
@@ -406,6 +439,23 @@ lands as comfortably a hundred files. That is correct rather than damage — the
 site is served straight out of `docs/`. Do not trim them back out, and do say in
 the pull request body which files are the change and which are the regenerated
 site.
+
+**And that is why a branch left waiting goes bad rather than merely stale.**
+Every branch carries a full regeneration, so every branch conflicts with every
+other one the moment either lands — in files where both sides look equally
+authoritative, because each is internally consistent with its own branch's
+source. Resolve those to your side and the merge is textually clean, the suite
+is green, and the published rendering of whatever landed while you waited is
+silently gone.
+
+So when a pull request sits, or a review asks for a change days later: merge
+`upstream/master` into the branch, settle the source-side conflicts properly,
+keep **both** `UPDATES.md` entries rather than choosing one, and resolve every
+file under `docs/` by **regenerating from the merged tree** — never by taking a
+side and never by hand-merging. Say in the merge commit that `docs/` was
+regenerated rather than resolved. `resolving-merge-conflicts` owns the general
+form; here it is not hypothetical, it is what the second merge on a long-lived
+branch in this repo consists of.
 
 ## Safety rails
 

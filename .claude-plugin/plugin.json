@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "TBaguette",
-  "version": "1.0.42",
+  "version": "1.0.43",
   "license": "GPL-2.0-only",
   "description": "Ninety-six project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling — plus formidable, design craft for every UI stack.",
   "author": {

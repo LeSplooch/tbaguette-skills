@@ -39,8 +39,10 @@ is already the answer the rule above points at, so read it rather than concludin
 the library is silent on a question it covers.
 
 The other is that this is fixable at the source rather than worked around. On
-Claude Code, `/doctor` estimates the listing's cost and names its biggest
-contributors, `/context`'s Skills row reports its size after the budget is
+Claude Code, `/skill-doctor` is the purpose-built one — it reports what each skill
+costs in context and how often it has actually been reached for, which is the pair
+of numbers this decision needs. `/doctor` estimates the listing's cost and names its
+biggest contributors, `/context`'s Skills row reports its size after the budget is
 applied, and `--debug` logs a warning when it overflows. Raise the budget with the
 `skillListingBudgetFraction` setting or the `SLASH_COMMAND_TOOL_CHAR_BUDGET`
 environment variable; where the listing is shared with other libraries, set the
@@ -73,6 +75,20 @@ from measuring one: fire only on a response that is **both** large and skill-fre
 furniture — the obvious threshold fired on 22% of all responses. And confirm the discriminator
 separates anything before trusting it; in that harness *every* large response had invoked nothing,
 so size alone distinguished nothing at all.
+
+**A compaction is the third moment, and the least visible of the three.** The two above are
+about a response growing long. This one is about the conversation being rewritten underneath you
+— and afterwards the context you are reasoning from was assembled by the harness, not by the run.
+What survived is a decision somebody else made: some things reload from scratch, some are
+re-injected in truncated form, some are summarized into a sentence, and which bucket any given
+thing landed in is not something you can tell from the inside. That includes the material this
+whole discipline runs on.
+
+So the first response after a compaction owes a check, whatever it was in the middle of. Not
+because the guidance is known to be gone, but because "I already checked" is now a memory of a
+context that no longer exists — the same staleness as call 190, arriving without the length that
+would have warned you. `recovering-agent-context` owns the wider recovery; the part that belongs
+here is small and unconditional: re-check, then continue.
 
 ## When the work is bigger than one response
 

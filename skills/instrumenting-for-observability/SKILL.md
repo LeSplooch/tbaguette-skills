@@ -1,6 +1,6 @@
 ---
 name: instrumenting-for-observability
-description: Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, when a failure counter has never once incremented, or when choosing a log level.
+description: Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, when a failure counter has never once incremented, when a filter, gate, or safety rule rejects everything it sees and nothing distinguishes a strict rule from an input that never arrived, or when choosing a log level.
 ---
 
 # Instrumenting for observability
@@ -102,6 +102,12 @@ Two things follow, and both are instrumentation decisions rather than modelling 
 
 Then let the component refuse. A floor below which it declines to run and says why is better than fitting noise, and it converts a silent wrong answer into a visible abstention. Distinguishing the two reasons for an empty input matters as well: *no data yet* is a legitimate cold start that should idle and announce itself, while *the source is broken* should alarm. A volume counter that never leaves zero past a startup window is the discriminator between them, and it only exists if someone emitted it.
 
+**The same emptiness turns a gate into a permanent silent refusal.** The section above is about a component that *computes*; the harder case is one that *decides*. A rule treating missing data as disqualifying is correct in isolation, and refusing on absence is often the right call — but if one of its inputs has no source in the environment it was deployed to, it does not reject some things. It rejects everything, always, for absence rather than for any measurement. Nothing errors, nothing is logged, and there is nothing to investigate, because the output is an empty stream and that is exactly what a strict rule in a quiet period looks like from outside. Unlike a cold start it cannot resolve by waiting, so it can run in that state indefinitely.
+
+The instrumentation that separates them is one field. A gate has to record **which clause rejected**, and the clauses have to fall into two buckets that are never summed: rejected because something was measured and failed, versus rejected because nothing was measured. The first is the gate working. The second is a data-supply failure wearing the gate's uniform, and it becomes visible the moment it accounts for every rejection and keeps doing so.
+
+Write the alarm on that narrowly or it will be trained away. A strict rule can legitimately refuse everything it sees for a long stretch, and an alarm on the rejection *rate* fires during exactly those stretches, gets dismissed, and gets dismissed again on the day it finally means something. Fire on the absence bucket becoming categorical — never on the rate, and never on emptiness alone.
+
 ## Record the outcome where the outcome is known
 
 A metric gets placed where it is easy to write rather than where the thing it names becomes true, and the gap between those two points is where a whole class of failure hides. The section above is the same mistake at the other end — a counter that cannot see its input; this one cannot see its ending.
@@ -135,6 +141,7 @@ The tell that this is already happening is a success rate nobody can reconcile w
 | Secret found in the log index | Redaction by denylist, or a whole object logged for convenience |
 | DEBUG is useless because enabling it needs a deploy | Log level fixed at build time rather than adjustable at runtime |
 | An adaptive component looks healthy for months and has learned nothing | Activity was instrumented; the volume of its ground-truth input never was |
+| A filter rejected every item for months and nobody noticed | Rejections were counted but not attributed, so "failed the check" and "had nothing to check" landed in the same bucket |
 | A learned score and a hardcoded default are indistinguishable downstream | Sample size did not travel with the value to its point of use |
 
 ## Red flags

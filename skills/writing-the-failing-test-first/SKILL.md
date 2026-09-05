@@ -1,6 +1,6 @@
 ---
 name: writing-the-failing-test-first
-description: Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written. Covers writing one failing test first, confirming it fails for the right reason, writing the minimal code that makes it pass, and refactoring only once the suite is green again.
+description: Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written. Also use when the change is meant to alter a cost rather than a behavior — an optimization, a cache, a batch, a cheaper backend — so every behavioral test passes both before and after it and the loop looks inapplicable. Covers writing one failing test first, confirming it fails for the right reason, writing the minimal code that makes it pass, and refactoring only once the suite is green again.
 ---
 
 # Writing the failing test first
@@ -39,6 +39,16 @@ That question also rules out change detectors: a test that only fails when someo
 Run the test and read the failure. A useful failure tells you why: feature missing is correct, a typo or a broken import is not — fix the harness and run it again until it fails for the right reason. A test that passes immediately is testing something that already works; that's not a red step, that's a test in the wrong place.
 
 Deriving the expected value by hand — not by calling the same helper the code under test calls — is what makes the failure trustworthy. How to build that value well is `designing-test-data` territory; the loop only requires that it existed before green did.
+
+## When nothing behavioral can go red
+
+Some changes are not meant to alter behavior at all. An optimization, a cache, a batched call, a switch to a cheaper backend — the whole point is that the answer stays the same and something else gets smaller. Write a test for one of those and it passes the moment it is written, against the old code and the new, and the natural conclusion is that the loop does not apply here.
+
+That conclusion is wrong, and the diagnosis is one section up: a test that passes immediately is testing something that already works. The change did have a property that moved. It just was not the answer. **Assert the property the change existed to change** — elapsed time, queries issued, calls made, allocations, bytes read — and that assertion goes red before the change exactly like any other.
+
+Skipping it is how a change ships having achieved nothing while its suite stays green. A slow lookup replaced by a fast path returned the right value and passed; an assertion on elapsed time failed immediately, because the fast path internally called a helper that still went through the rate limiter the change existed to escape. Nothing in the diff of the new path looked slow — the cost was reached one call further down, in code the change never touched. Only an assertion on the cost could tell a change that worked from one that did not.
+
+Two things make such an assertion usable rather than flaky. Give it a **wide threshold**: it exists to catch a regression to the old order of magnitude, not to police a 5% drift. And make it exercise the **state the cost is actually paid in** — for anything cached, pooled, or lazily built, that is the cold one, and a test that reuses a warm fixture measures the half of the behavior that was never in question. `performance-profiling` owns choosing the number and defending it against noise; the loop only requires that something was red first.
 
 ## An assertion over the result cannot see what the result is missing
 
@@ -115,6 +125,7 @@ That check is the actual definition of done, not "coverage went up." Ship the te
 | Refactor step quietly changes an assertion | Refactor is being used to smuggle in a second, unproven change |
 | Whole suite re-run "to be safe" instead of reading the one failure | The failure message was never actually read closely enough to say why it failed |
 | Bug fixed with no test written first | The only evidence the fix works is manual checking, which leaves nothing to catch the regression |
+| A change made for speed shipped with only correctness tests | Every behavioral assertion passed before the change too; the property that moved was a cost, and nothing asserted it |
 | A suite over a collection stays green while the collection is empty | Every assertion quantified over the result the code produced; nothing counted the input |
 | Code kept and tests backfilled because "I already know this cold" | Confidence in the solution stood in for proof a test could catch it being wrong |
 
