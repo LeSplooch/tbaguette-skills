@@ -1,6 +1,6 @@
 ---
 name: resolving-merge-conflicts
-description: Use when a merge or rebase reports conflicts, when a long-lived branch has diverged and integration looks painful, when a merge is textually clean but the build or the behavior breaks afterward, when the same conflict reappears at every commit of a rebase, when one file conflicts on every single integration, or when deciding whether to abort and re-approach rather than push through a resolution.
+description: Use when a merge or rebase reports conflicts, when a long-lived branch has diverged and integration looks painful, when a merge is textually clean but the build or the behavior breaks afterward, when the same conflict reappears at every commit of a rebase, when one file conflicts on every single integration, when a repository commits generated build output so every branch conflicts in it, or when deciding whether to abort and re-approach rather than push through a resolution.
 ---
 
 # Resolving merge conflicts
@@ -47,6 +47,12 @@ That last rule exists because **code introduced inside a merge commit is code no
 
 The systemic fix is to test the merge result, not the branch. CI that validates each branch and the target, but never their combination, misses every row above — the most common gap in an otherwise disciplined pipeline, and the reason merge queues exist.
 
+**A generated artifact committed to the repository conflicts as content and resolves as a revert.** Build output, a rendered site, a generated client, a compiled schema — anything a hook or a pipeline writes back into the tree — conflicts on every single integration, and both sides look equally authoritative because each is internally consistent with its own branch's source. Resolve it to your side and the merge is textually clean, the build is green, the tests pass, and you have just un-published everything that landed while your branch waited: the artifact you kept was generated before those changes existed.
+
+A generated file has no side to take. **Resolve it by regenerating from the merged source**, once the source-side conflicts are settled — `--ours`, `--theirs`, and a careful hand-merge are all wrong, and the hand-merge is the most dangerous of the three because it looks like diligence and produces a file no generator would ever emit. A `.gitattributes` entry cannot regenerate anything for you, so the regeneration stays a manual step or a job for the merge tooling — but marking such a file so git stops producing a plausible-looking auto-merge is worth doing on its own, because the conflict you are shown is safer than the merge you are not.
+
+This also changes what branch lifetime costs, and the branch-lifetime bullet below understates it for such a repository. Conflict *probability* scales with how long you are away; here the *damage* does too, because a stale artifact does not merely fail to include recent work — it actively removes it.
+
 ## Make conflicts rarer instead of better
 
 - **Branch lifetime dominates everything else.** Conflict probability scales with how much lands on the target while you are away. Integrate the target into the branch daily so conflicts arrive one at a time, while both intents are still fresh in someone's memory. A branch past 3–5 days should be integrated or split.
@@ -73,6 +79,7 @@ Aborting is cheap. A resolution fought through over an hour is not, and it is wh
 | Resolution took one side wholesale, everywhere | The other side's intent was never read; this is the fastest way to silently delete someone's work |
 | Merge clean, build broken | Semantic conflict — the text merged, the meaning did not |
 | Merge clean, build green, behavior wrong | An invariant changed on one side and no test asserted it |
+| A merge silently reverted work that had already shipped | A committed build artifact was resolved to one side instead of regenerated from the merged source |
 | The same conflict resolved six times in one rebase | Long branch rebased commit-by-commit without recorded reuse or a prior squash |
 | Merge commit contains code present in neither parent | Reconciliation written inside the merge, therefore unreviewed |
 | One file conflicts on every single integration | A structural problem in that file, being paid for as a merge problem |

@@ -66,6 +66,61 @@ Everything above the first `##` is preamble and is never rendered.
   directions found something, what each finding changed, and what was discarded and
   why. Six of seven yielded — including the one that caught the skill's own text
   saying "the frame" in the singular after listing four separate sources for it.
+## 2026-09-05 — Three ways a green check is measuring the wrong thing
+
+- `writing-the-failing-test-first` now covers the change that has no behavior to
+  assert. An optimization, a cache, a batch, a swap to a cheaper backend — the
+  point is that the answer stays the same, so every test you write passes before
+  the change and after it, and the loop looks inapplicable. It is not: the change
+  did move something, and it was a cost. Assert that instead — elapsed time,
+  queries, calls, allocations — and it goes red first like anything else. The skill
+  carries the case that shows why it matters, where a fast path returned the right
+  value and passed while still paying the exact cost it was written to avoid,
+  because the slow dependency sat one call further down in code the change never
+  touched. Two conditions make such an assertion usable rather than flaky, and the
+  skill names both; its description now fires on a change made for cost rather
+  than behavior.
+
+- `resolving-merge-conflicts` names a resolution that is textually clean, builds
+  green, passes its tests, and silently un-publishes work that had already shipped.
+  Any repository that commits its own build output — a rendered site, a generated
+  client, a compiled schema — conflicts in those files on every integration, and
+  both sides look equally authoritative because each agrees with its own branch's
+  source. Take your side and you have just reverted everything that landed while
+  you waited. The rule is that a generated file has no side to take: settle the
+  source, then regenerate from the merged tree. The skill also says what a
+  `.gitattributes` entry can and cannot do about it, and why a long-lived branch
+  costs more in such a repository than the usual advice implies.
+
+- `instrumenting-for-observability` extends its case on components that run
+  without input to the harder one: a rule that *decides*. A gate treating missing
+  data as disqualifying is sound in isolation, but if one of its inputs has no
+  source where it was deployed it rejects everything, forever, for absence rather
+  than for any measurement — and from outside that is indistinguishable from a
+  strict rule during a quiet spell, with nothing logged and nothing to
+  investigate. The fix is one field: attribute each rejection to the clause that
+  made it, and never sum "failed the check" with "had nothing to check." The skill
+  also says why the alarm on that has to be written narrowly, or the gate's
+  legitimate strict spells will train everyone to dismiss it.
+
+- `using-tbaguette` adds the third moment its own discipline goes stale, after
+  "before the response" and "once the response has run long." A compaction rewrites
+  the conversation underneath you, and what survived it is a decision the harness
+  made rather than one the run made — so the first response afterward owes a fresh
+  check, because "I already checked" now refers to a context that no longer exists.
+  It also points at `/skill-doctor` where it previously named only the general
+  diagnostics, since that one reports both halves of what the listing-budget
+  decision actually needs: what each skill costs and how often it gets reached for.
+
+- `tending-tbaguette` turns its own strongest rule into a procedure. It already
+  said that a lesson appearing in two unrelated projects is the best evidence the
+  bar can get; it now says how to find one, which is to sweep every project's
+  commit subject lines into a single list first and group them by shape before
+  opening anything. Reading one commit at a time can never see a repeat — each
+  lesson arrives alone and gets judged alone. It also answers what to do when a
+  contribution sits: re-merge, keep both update notes, and settle the generated
+  half by regenerating rather than by choosing a side, since a waiting branch here
+  does not merely fall behind.
 
 ## 2026-09-05 — What a result that found nothing is allowed to claim
 
