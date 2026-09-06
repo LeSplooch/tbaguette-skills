@@ -1,6 +1,6 @@
 ---
 name: performance-profiling
-description: Use when something is slow and the cause is unknown, when an optimization needs proof that it helped, when latency, throughput, tail behavior, p95 or p99 must be characterized, when reading a flame graph, sampling profile, or benchmark result, or when a micro-benchmark reports an impossible speedup. Covers baselines, targets, percentiles, and benchmark artifacts.
+description: Use when something is slow and the cause is unknown, when an optimization needs proof that it helped, when latency, throughput, tail behavior, p95 or p99 must be characterized, when reading a flame graph, sampling profile, or benchmark result, when a micro-benchmark reports an impossible speedup, or when a significance test, regression gate, or autotuning loop is about to adopt a change on consistency alone with no minimum effect size beside it. Covers baselines, targets, percentiles, benchmark artifacts, and pairing a significance threshold with an effect size written in the units of the thing being decided.
 ---
 
 # Performance profiling

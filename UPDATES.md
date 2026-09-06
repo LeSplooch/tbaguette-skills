@@ -107,6 +107,15 @@ Everything above the first `##` is preamble and is never rendered.
   one quietly inherits the session's own and that is usually the most expensive available; and
   count turns, not just per-token price, since cheap models routinely take two or three times
   as many on multi-step work and can cost more overall than a mid-tier one would have.
+- `performance-profiling` warns that reliable is not large, and had no trigger for anyone whose
+  criterion was the defect. A significance test answers whether a difference is **consistent**,
+  and consistency is not size: a variant better by one percent on every single trial has a tiny
+  difference and a tinier spread, so the ratio is enormous and clears any threshold trivially.
+  It compounds wherever the decision is automated — a regression gate, an alert threshold, a
+  rollout promoting on a p-value — because every pass accretes another change that is real and
+  pointless, and complexity is permanent while a one-percent win is not. The skill now loads
+  before that adoption, and asks for a minimum effect size in the units of the thing being
+  decided — milliseconds at p95, bytes, queries, dollars — with both required to clear.
 
 ## 2026-09-06 — When the check and the mistake share an assumption
 
