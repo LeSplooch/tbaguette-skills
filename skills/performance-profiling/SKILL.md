@@ -1,6 +1,6 @@
 ---
 name: performance-profiling
-description: Use when something is slow and the cause is unknown, when an optimization needs proof that it helped, when latency, throughput, tail behavior, p95 or p99 must be characterized, when reading a flame graph, sampling profile, or benchmark result, when a micro-benchmark reports an impossible speedup, or when a significance test, regression gate, or autotuning loop is about to adopt a change on consistency alone with no minimum effect size beside it. Covers baselines, targets, percentiles, benchmark artifacts, and pairing a significance threshold with an effect size written in the units of the thing being decided.
+description: Use when something is slow and the cause is unknown, when an optimization needs proof that it helped, when latency, throughput, tail behavior, p95 or p99 must be characterized, when reading a flame graph, sampling profile, or benchmark result, when a micro-benchmark reports an impossible speedup, or when a significance test, regression gate, or autotuning loop is about to adopt a change on consistency alone with no minimum effect size beside it. Also use when an A/B comparison is run through a router, pool, gateway, or provider layer that may serve a different backend per call, or when a benchmark result is tight and reproducible in one session and gone in the next. Covers baselines, targets, percentiles, benchmark artifacts, and pairing a significance threshold with an effect size written in the units of the thing being decided.
 ---
 
 # Performance profiling
@@ -72,6 +72,7 @@ Before optimizing anything, measure the fraction *f* of total time it occupies. 
 | Unrepresentative data | uniform keys where production is skewed; a dataset that fits in cache | match size, skew, and cardinality |
 | Timer resolution | measuring below the clock tick | loop and divide |
 | Machine noise | frequency scaling, thermal throttling, noisy neighbors, background indexing | pin frequency, isolate cores, and interleave A/B runs rather than all-A then all-B |
+| Who served it | a router, pool, gateway, or provider layer choosing a non-identical backend per call | record which one served each observation and pin it; interleaving does not fix a composition difference |
 | Single-threaded micro-benchmark for a contended path | measures the uncontended case only | benchmark at production concurrency |
 
 Interleaving A and B runs is the cheapest defense available and almost nobody does it: it converts a slow machine drift into noise instead of a fake win.
@@ -92,6 +93,36 @@ pairing is barely working, and there is usually one reason: the change altered
 met the same input very differently and most of that input's inherent difficulty
 was never common to both and had nothing to cancel against. Pairing pays well
 for a change that alters outcomes and much less for one that alters the path.
+
+
+### The thing you measured may not be one thing
+
+Interleaving defends against a variable that drifts with *time* — a machine
+warming up, a cache filling, a neighbor waking. It does nothing about a variable
+that resamples on every call. Where the code under test is reached through a
+router, a connection pool, an API gateway, a model or provider layer, or any
+load balancer over non-identical backends, the identity of what actually served
+each observation is drawn fresh each time and is nowhere in your own
+configuration. Interleave perfectly and the arms still differ — not in when they
+ran, but in what they were composed of.
+
+This is worth separating from ordinary noise because it does not behave like
+noise. Noise widens a distribution around a true value; a routing difference
+moves the value, holds it steady enough to look like a real effect, and survives
+every repetition that draws the same backend. A result can be tight, reproducible
+within its own session, and about a different system than the one you meant.
+
+The tell is that a run's variance is bimodal or clustered rather than smooth, or
+that an effect vanishes and reappears across sessions with nothing in the code
+changing. The fix is identification before control: **make each observation
+record what served it, then pin it, then confirm afterwards that both arms
+actually sat on the same one.** Pinning without confirming is the common half
+measure — a pin expressed as a preference rather than a constraint is silently
+ignored under load, which is exactly when you were measuring.
+
+A layer that hides which backend served is not a neutral convenience for
+benchmarking. If it cannot be pinned or cannot report, say so as a limit on the
+result rather than reporting the number as though it were about the code.
 
 ## Reliable is not large
 

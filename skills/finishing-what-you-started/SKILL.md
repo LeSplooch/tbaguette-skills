@@ -1,6 +1,6 @@
 ---
 name: finishing-what-you-started
-description: Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run, a multi-part request, a build spanning several sittings; when a report is about to say done while part of the request was quietly dropped, sampled, or narrowed; when a summary states counts or coverage from memory rather than from a measurement; when work on this keeps coming back not quite finished; when the acceptance criteria exist only in your head and the context holding them is getting long; or when a run is about to close while a build, server, watcher, or dispatched agent it started is still running. Covers writing the acceptance ledger to a file before work starts, watching each check fail before trusting it, surrendering a criterion visibly instead of deleting it, re-measuring every number at report time, and giving every process the run started a disposition.
+description: Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run, a multi-part request, a build spanning several sittings; when a report is about to say done while part of the request was quietly dropped, sampled, or narrowed; when a summary states counts or coverage from memory rather than from a measurement; when work on this keeps coming back not quite finished; when the acceptance criteria exist only in your head and the context holding them is getting long; or when a run is about to close while a build, server, watcher, or dispatched agent it started is still running. Also use when a process is about to be reported as deliberately left running. Covers writing the acceptance ledger to a file before work starts, watching each check fail before trusting it, surrendering a criterion visibly instead of deleting it, re-measuring every number at report time, and giving every process the run started a disposition.
 ---
 
 # Finishing what you started
@@ -116,6 +116,23 @@ the report, with what it is and how to stop it. A long-lived process left behind
 on purpose is a fine outcome. A long-lived process left behind silently is a leak
 the user pays for, and it reads to them exactly like the run losing track of
 itself.
+
+"Deliberately left running" carries a second obligation the disposition alone
+does not discharge: the thing has to actually survive. A process started from the
+run is usually a child of the run's own shell, and its output usually goes
+wherever the run's temporary files go — a session scratch directory, a path that
+exists because this conversation exists. Both of those end when the session does.
+So the disposition can be stated correctly, reported honestly, and be false
+within the hour, and nobody finds out until the user goes looking for a result
+that no longer has anywhere to have been written.
+
+Two things make it true rather than intended. **Reparent it away from the
+session**, so the process does not die with the shell that spawned it. **Write
+its output somewhere that outlives the session**, not into scratch space scoped
+to the run. Then hand the reader the durable path along with the disposition —
+where the output will be, and the command to look at it. A disposition nobody can
+act on later is the same as no disposition, and this is the one place where the
+report is easy to write and the underlying claim is easy to get wrong.
 
 Same rule as a surrendered criterion, applied to something with a PID: it is
 named, or it did not happen.

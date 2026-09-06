@@ -1,6 +1,6 @@
 ---
 name: choosing-test-scope
-description: Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, when a check passes because the setup it runs in is too small to show the difference it was written to catch, when writing or auditing a list of deliberately excluded cases — skipped tests, ignored rules, allowlists — or asking whether such an entry's reason is merely well-formed rather than still true, or when arguing about the testing pyramid, coverage targets, and test ratios.
+description: Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test, when the end-to-end suite is slow or nobody trusts it, when a bug escaped every layer of tests, when mocks are re-implementing a real dependency, when fixtures were written from a specification rather than captured from a real response, when tests break on refactors that changed no behavior, when a check passes because the setup it runs in is too small to show the difference it was written to catch, when writing or auditing a list of deliberately excluded cases — skipped tests, ignored rules, allowlists — or asking whether such an entry's reason is merely well-formed rather than still true, when a redaction, permission, validation or rate-limit step has a green unit suite and nothing proves it is wired into the path it guards, when arguing about the testing pyramid, coverage targets, and test ratios, or when a check has returned the same verdict on every record of a real population.
 ---
 
 # Choosing test scope
@@ -116,6 +116,24 @@ Getting this wrong is expensive in a particular way: it produces confident
 evidence. A green check in an under-sized setup is indistinguishable, from the
 outside, from a green check that proves something — so it does not get
 revisited, and the defect ships behind a passing test that everyone believes.
+
+The same question is owed to a guard running against real traffic, and it is
+almost never asked of one, because a rule that always passes reads as a clean
+population rather than as an inert rule. This is the second of the two ways a
+guard can be silently absent, and it is not the one further up: there the check
+was never called, here it is called on every request and cannot reach a verdict
+other than the one it always gives. An audit looking for the first finds a live
+call path and stops. A validator, a policy check, or a safety
+ruleset carried from the environment it was written for into a different one can
+land somewhere its condition cannot be constructed at all — the field it keys on
+is never populated, the shape it rejects is unreachable here, the identifier it
+matches is formatted differently. It then returns the same verdict on every
+record, forever, and is credited with protecting the thing it is structurally
+incapable of noticing. **A check whose output has never varied across a real
+population is unproven, not passing.** Sample the *distribution* of its verdicts
+rather than their value, confirm some adjacent field does vary so you know the
+input reached it at all, and treat any check ported into a new environment as
+inert until it has been seen to discriminate there.
 
 ## When a bug escapes every layer
 

@@ -1,6 +1,6 @@
 ---
 name: delegating-tasks-with-review-gates
-description: Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it, or when deciding which model each subagent role gets and an unspecified model is about to inherit the session's own. Covers dispatching a zero-context implementer subagent per task, choosing a model tier per role, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.
+description: Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it, or when deciding which model each subagent role gets and an unspecified model is about to inherit the session's own. Also use when a delegate came back without reporting a status at all, or when its output ends mid-sentence and the work so far looks finished. Covers dispatching a zero-context implementer subagent per task, choosing a model tier per role, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.
 ---
 
 # Delegating tasks with review gates
@@ -78,6 +78,27 @@ Template: [reference/implementer-prompt.md](reference/implementer-prompt.md)
 | DONE_WITH_CONCERNS | Complete, but the implementer has doubts | Read the concerns first — resolve anything about correctness or scope before review; note-only observations can wait for review |
 | NEEDS_CONTEXT | Missing information blocked progress | Supply what's missing, re-dispatch |
 | BLOCKED | Cannot complete as given | Diagnose why, then act |
+| *no status at all* | The run was ended by a ceiling — turns, output size, timeout, crash — before it could report | Treat as incomplete of unknown extent; re-dispatch for the remainder. Never as DONE |
+
+Four of those rows are statuses a delegate *chose*. The fifth is the absence of a
+choice, and it is the one that costs the most, because it is the only outcome the
+delegate cannot tell you about. Every delegation system has ceilings — a turn
+limit, an output-size limit, a wall-clock timeout, a cut stream, a crash, a
+process killed from outside — and a run that hits one ends mid-sentence. What
+arrives is the work done so far plus whatever prose happened to be in flight,
+which frequently reads like a summary of a finished task, because the delegate
+believed it was going to finish.
+
+That failure is invisible at exactly the point it should be caught. Route it as
+DONE and the task-scoped reviewer gets the diff and the brief, finds the half
+that exists to be correct, and has nothing to notice the missing half with —
+reviewers check what is in front of them against the task, and a truncated diff
+is internally consistent. So the check belongs upstream of review, and it is
+mechanical rather than interpretive: **the dispatch record is the authority on
+whether all of it came back, not the delegate's closing prose.** Compare what was
+asked for against what the diff actually contains, item by item, before anything
+else looks at it. A delegate that stopped without a status re-dispatches for the
+remainder; it does not get read charitably.
 
 A BLOCKED report is a signal to change something, not a cue to retry unchanged: more context if the gap is understanding, a stronger model if the task needs more reasoning than the current one has, a smaller task if it's simply too large, or a correction — ruled on and recorded — if the plan itself is wrong. Forcing the same model to retry a task it already called too hard wastes the round and tells you nothing new.
 

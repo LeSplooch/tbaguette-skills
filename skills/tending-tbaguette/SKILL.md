@@ -177,10 +177,14 @@ technique.
 
 Queue file: `~/.claude/tbaguette-candidates.md` — deliberately outside the
 plugin's own directory, which every update overwrites and which must stay
-clean for the reasons above. Create it with **both** headings if it does
-not exist — `## Pending` and, under it, `## Shipped`. Step 10 moves entries
-between the two, and a file with only the first is one where the first
-finished contribution has nowhere to go and invents a heading instead.
+clean for the reasons above. Create it with **all three** headings if it
+does not exist — `## Pending`, then `## Settled`, then `## Shipped`. Step 10
+moves entries from the first to the last, and a file missing a heading is one
+where an entry that reaches that state has nowhere to go and invents a heading
+instead. `## Settled` holds the other kind of result: a candidate the coverage
+check killed, or a question this skill answered "no", dated and carrying what
+would reopen it — so the next pass confirms it in one command instead of
+investigating it a second time from cold.
 
 Append under `## Pending`:
 
@@ -318,6 +322,34 @@ queue is correct: there is a user mid-task and a report about nothing is noise. 
 pass with no conversation has nothing to interrupt and its report is its only
 output, so there "the queue was empty and nothing was opened" *is* the report
 rather than narration about it. One line, and stop.
+
+## A candidate you keep re-reading has already been declined
+
+The bar above says to capture on a close call and let a later pass decide, and
+the safety rails say to leave a borderline candidate queued rather than push it
+under time pressure. Both are right, and together they build a graveyard.
+
+Deferring is free and needs no argument; deciding costs a justification and can
+be wrong. So a genuinely marginal candidate gets re-read by a careful pass,
+re-agreed to be marginal, and re-queued — reasonably, every time. The tell is
+that the entry is *complete*: the analysis is finished, the target skill is
+named, the cost is known, and the only missing piece is somebody willing to say
+yes or no. That is not a candidate waiting for information. It is one waiting
+for nerve.
+
+So state the deferral's own premise where the candidate lives, in the `Sketch:`
+line — **what would change this answer, and when.** A second sighting in another
+project, a description with room in it, a section that grows past an aside. Then:
+
+- A second deferral names what changed since the first. If nothing changed, the
+  inputs are the ones you already declined to act on.
+- There is no third. An entry deferred twice on unchanged inputs is settled at
+  the next pass — either it goes into a pull request or it moves to `## Shipped`
+  with a one-line reason. Both are cheaper than a fourth reading.
+
+This governs *your* deferrals, not your partner's. "Keep it queued" chosen at the
+approval gate is a decision someone made and it resets nothing — they own the
+scope, and re-asking about it next week is pestering rather than rigor.
 
 ## The approval gate
 
@@ -521,7 +553,9 @@ branch in this repo consists of.
   except `keeping-tbaguette-current`.
 - When genuinely unsure whether something clears the agnostic bar, leave it
   in `## Pending` for a later pass rather than pushing a borderline call
-  under time pressure.
+  under time pressure — with the premise of that deferral written into its
+  `Sketch:` line, so the next pass can tell a wait from a decline. Twice on
+  unchanged inputs and it gets settled rather than re-read.
 
 ## Common mistakes
 

@@ -1,6 +1,6 @@
 ---
 name: bounding-autonomous-work
-description: Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan, a subagent dispatched without a way to ask, a hook or cron or loop with no reader, or a question just asked into a silence that the run is about to answer for itself. Also use when a run is about to defer something to a human because it believes it cannot verify it, or when a stop condition has just fired on a run that does not otherwise look like it was in trouble. Covers substituting each approval gate rather than skipping it, telling a real door from an untried one, telling a genuinely read-only probe from an invocation that is an execution, the four pre-committed stop conditions that halt a run instead of letting it drift, the actions no confidence level licenses without a human, and reporting to someone who was not there.
+description: Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan, a subagent dispatched without a way to ask, a hook or cron or loop with no reader, or a question just asked into a silence that the run is about to answer for itself. Also use when a run is about to defer something to a human because it believes it cannot verify it, or when a stop condition has just fired on a run that does not otherwise look like it was in trouble. Also use when a verification is blocked by the system under test refusing, and clearing local state or loosening the check would unblock it. Covers substituting each approval gate rather than skipping it, telling a real door from an untried one, telling a genuinely read-only probe from an invocation that is an execution, the four pre-committed stop conditions that halt a run instead of letting it drift, the actions no confidence level licenses without a human, and reporting to someone who was not there.
 ---
 
 # Bounding autonomous work
@@ -139,10 +139,53 @@ take the step.
   what matters; either alone is survivable.
 - Anything the requester specifically said to ask about, however trivial it
   turns out to be.
+- Anything that removes, weakens, or resets a control in order to let the run
+  continue past it — see immediately below, because this one does not look like
+  the others.
 
 An autonomous run that hits a door is not blocked. It has reached its correct
 end: the preparation is done, the action is written down, and a human takes
 one step instead of the whole run.
+
+### The system refusing you may be the system working
+
+The other doors are recognisable because the action is obviously consequential.
+This one is the opposite: the action is small, local, reversible, and its whole
+appeal is that it unblocks a run that has stalled. A verification cannot proceed
+because the thing under test refuses — a sticky lockout, a rate limit, a
+permission denial, a signature check, a guard that has latched. Clearing one
+piece of local state, loosening one assertion, or passing one bypass flag makes
+the refusal go away and the run continue.
+
+**A refusal encountered while verifying is a result, not an obstacle.** The guard
+latched because something reached it; that is the behavior under test producing
+output. Removing it does not restore access to the evidence — it destroys the
+evidence and replaces it with a run that no longer measures anything. The
+autonomous run then reports success, in good faith, about a system it disabled
+part of.
+
+Three arguments turn up here and none of them are licences. *It is only a test
+environment* — the guard does not know that, which is the point of it; a control
+that can be dissolved by asserting the stakes are low is not a control. *I can
+put it back afterwards* — true, and irrelevant, because the measurement taken in
+between is the thing being spent. *The refusal is clearly a misconfiguration* —
+possibly, and that is a finding to report rather than a permission to proceed,
+since a misconfiguration indistinguishable from the feature working is exactly
+what a human needs to be told about.
+
+The section below pulls the other way and they do not conflict, because they are
+about different objects. That one is about an **action** you have assumed is
+forbidden without attempting it — try it; a refusal you have not collected is not
+evidence. This one is about a **control** that has already refused — you have
+collected the evidence, and the only route past it is to break the thing that
+produced it. Untried is not a door. Broken open is not a pass.
+
+What the run does instead is what it does at any door: prepare fully, and stop.
+Name the guard, what triggered it, what would clear it, and what remains
+unverified because it did not. Where a sanctioned route exists — a dedicated test
+surface, a fixture, an account provisioned for this — take that one; it is not a
+workaround but the supported path, and the difference is whether the system
+offered it or you took it.
 
 ### A door you have not tried is not a door
 

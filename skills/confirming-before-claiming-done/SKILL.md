@@ -1,6 +1,6 @@
 ---
 name: confirming-before-claiming-done
-description: Use when about to call a fix, a feature, or a test suite done, fixed, or passing; when a change is about to be committed, pushed, or handed off on it; when a subagent's or tool's success report is repeated as fact; when the only evidence is that the code looks right, or that an investigation script worked; when absence is claimed and the one location you knew to check is untouched; when the fix landed in a source that is mirrored or published by hand; when the requirement is survival of a restart or a fresh checkout and the check observes the present instead; when a check passed against an artifact that predates the run; when the green run happened on an emulator, container, or staging stand-in; or when a green suite only checks files you own. Covers naming the check that proves the claim and running it fresh, telling a stale run from this one's, inducing the condition and place a requirement names, enumerating published copies rather than recalling them, and proving absence on the target surface.
+description: Use when about to call a fix, a feature, or a test suite done, fixed, or passing; when a change is about to be committed, pushed, or handed off on it; when a subagent's or tool's success report is repeated as fact; when the only evidence is that the code looks right, or that an investigation script worked; when absence is claimed and the one location you knew to check is untouched; when the fix landed in a source that is mirrored or published by hand; when the requirement is survival of a restart or a fresh checkout and the check observes the present instead; when a check passed against an artifact that predates the run; when the green run happened on an emulator, container, or staging stand-in; when a green suite only checks files you own; or when a dry run, simulation, or paper mode has been green for months. Covers naming the check that proves the claim and running it fresh, telling a stale run from this one's, inducing the condition a requirement names, and proving absence on the target surface.
 ---
 
 # Confirming before claiming done
@@ -158,6 +158,17 @@ transformation has to preserve — a long literal, a message the program prints,
 symbol or export table, a version banner — or, where the question is whether a
 code path shipped at all, make the program take it and watch.
 
+The same fact runs the other way and is easier to miss, because it arrives as
+good news. If the artifact does not preserve the form you searched for, then a
+*hit* in it is not evidence of presence either — something else produced those
+bytes, and a short pattern can occur by coincidence in a large one. The
+asymmetry people apply here is backwards: a miss gets treated as suspicious and
+a hit gets treated as settled, when both are claims about a surface that does not
+preserve the thing being asked about. Before a hit counts, say what produced it —
+which section, which surrounding context, which offset — or find a second,
+longer pattern that must co-occur with it. A hit whose source cannot be named is
+the same non-result as a miss, and it will be cited as proof.
+
 ## The call site is not the context
 
 The usual complaint about a green build is that nothing actually ran. This failure survives the fix for that, because a test that runs the code does not necessarily run it where the code will run. Anything placed inside a hook a framework calls — a setup or init function, a registration callback, a plugin entry point, an installer's post-install step — is written and compiled as ordinary code and does not execute under the conditions the rest of the program executes under. It runs at the moment and in the surroundings the framework picked: possibly before the async runtime is up, before there is a window to draw into, on a thread that does not own the thing the line touches, or before configuration the identical line would have found in the program's entry point has been read.
@@ -165,6 +176,43 @@ The usual complaint about a green build is that nothing actually ran. This failu
 Nothing at the call site carries any of that. The hook's signature looks like every other function's, so no static check can see the difference — and neither can a test that calls the hook directly, because calling it supplies the test's surroundings instead of the framework's. That is what makes this failure quiet: the suite is not wrong about what it measured, it measured a context the program will never be in. Compile, typecheck and every last test can be green on something that fails on every single start.
 
 There is a tell, and it costs nothing to look for. **If the framework exports its own version of the thing you were about to call — its own spawn, its own timer, its own way onto the main thread, its own handle to the running application — that wrapper exists because the general-purpose one does not work here.** Reaching past that wrapper is the shape of this bug, and the only check that observes the framework's context is the expensive one it was tempting to skip: start the program the way it will actually be started, and watch it get past the point the hook runs.
+
+## The safe mode is not a rehearsal of the real one
+
+A dry run, a simulation, a paper mode, a `--no-op` flag: the same code path, run
+with the consequences switched off, so it can be exercised without cost. The
+implicit claim is that everything except the final effect was genuinely
+performed. That claim is almost never audited, and where it fails it fails
+silently and for months, because the safe mode's whole job is to produce a
+clean result.
+
+Two divergences account for most of it, and they are different sizes of the same
+question — *where is the branch?*
+
+- **The branch is too early.** The safe mode synthesizes its answer before the
+  work it was supposed to rehearse is constructed at all. Nothing downstream of
+  that point has ever run. A mode that "only changes what happens at the end"
+  frequently changes what happens near the beginning, because that is the
+  cheapest place to implement it.
+- **The consequences differ, so the outcomes are not comparable.** A gate that
+  fails is tolerated in safe mode and terminal in the real one; a retry is free
+  in one and rate-limited in the other; a partial result is discarded here and
+  persisted there. The run completes in both, and only one of them tells you what
+  the other will do.
+
+So the safe mode is worth designing rather than adding: **put the branch at the
+last boundary that actually effects something, and record every gate's outcome
+identically on both sides of it.** A gate that failed for all candidates should
+be as visible in a simulated run as in a live one; if the simulated run is green
+where the live one would have stopped, the mode is not conservative, it is
+uninformative.
+
+And say what it does not reach. A safe mode's coverage claim is bounded by where
+its branch sits, so the honest form is *this exercises everything up to X, and
+nothing past it has been run* — which is a sentence somebody can check, unlike
+"tested in simulation". Where a system has never once completed end to end in the
+real mode, the count of defects past that frontier is not low. It is unknown, and
+those are different claims.
 
 ## The harness is not the product's path
 

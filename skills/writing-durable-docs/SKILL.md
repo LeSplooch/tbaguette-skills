@@ -1,6 +1,6 @@
 ---
 name: writing-durable-docs
-description: Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material, architecture notes — when existing docs have gone stale or contradict the code, when deciding where a doc belongs or whether to delete one, or when a single page is trying to be a tutorial and a reference at once. Covers doc types, rationale over mechanics, colocation, executable examples, and stale-doc removal.
+description: Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material, architecture notes — when existing docs have gone stale or contradict the code, when deciding where a doc belongs or whether to delete one, when a single page is trying to be a tutorial and a reference at once, or when the same document exists in two places — a repo and a site, two repos, a wiki and a README — and nothing generates or diffs one against the other. Covers doc types, rationale over mechanics, colocation, executable examples, and stale-doc removal.
 ---
 
 # Writing Durable Docs

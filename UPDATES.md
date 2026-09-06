@@ -24,6 +24,71 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-07 — Controls you are not allowed to break to get unblocked
+
+- An autonomous run that gets refused by the thing it is testing — a lockout, a rate limit,
+  a guard that has latched — now has a rule for it. `bounding-autonomous-work` treats
+  clearing that state, loosening the assertion, or passing a bypass flag as a door: the
+  refusal is the behaviour under test producing output, and removing it does not restore
+  access to the evidence, it destroys the evidence. The three arguments that show up here
+  are named and answered — it is only a test environment, I will put it back afterwards, it
+  is obviously a misconfiguration — and none of them is a licence. The section sits beside
+  the existing one about not stopping in front of doors you never tried, and now says
+  explicitly how the two differ: untried is not a door, broken open is not a pass.
+- `delegating-tasks-with-review-gates` had four ways a subagent can finish and no way for it
+  to be stopped. A delegate that hits a turn ceiling, an output-size limit, a timeout, or a
+  crash comes back with no status and a final paragraph that reads like a summary, because
+  it expected to finish. Routed as done, the task-scoped reviewer then reads a truncated
+  diff, finds it internally consistent, and has nothing to notice the missing half with. The
+  status table gains that row, and the rule is that your own dispatch record — not the
+  delegate's closing prose — says whether all of it came back.
+- A dry run, a simulation, or a paper mode that has been green for months may never have
+  reached the thing you think it rehearses. `confirming-before-claiming-done` names the two
+  places it diverges: a branch that fires so early nothing downstream has ever run, and
+  consequences that differ enough that the two modes are not comparable — a gate that is
+  tolerated in one and terminal in the other. The prescription is to put the branch at the
+  last boundary that actually effects something, record every gate's outcome identically on
+  both sides, and state what the safe mode never reaches.
+- Benchmarks run through a router, a connection pool, a gateway, or a provider layer are
+  measuring the routing as much as the code. `performance-profiling` adds this as its own
+  trap because it does not behave like noise: it moves the value and holds it steady enough
+  to look like a real effect, and interleaving A and B does not help, since the variable
+  resamples on every call rather than drifting with time. Record what served each
+  observation, pin it, then confirm afterwards that both arms actually sat on the same one —
+  a pin expressed as a preference gets ignored under load, which is when you were measuring.
+- `choosing-test-scope` now covers the second way a guard can be silently absent. The first
+  was already there: nothing calls it. The second is that it is called on every request and
+  cannot reach any verdict but the one it always gives — a rule carried into an environment
+  where the shape it rejects is unreachable, credited ever since with protecting against
+  something it structurally cannot see. A check whose output has never varied across a real
+  population is unproven, not passing; sample the distribution of its verdicts rather than
+  their value.
+- Reporting a process as deliberately left running now carries a second obligation in
+  `finishing-what-you-started`: it has to actually survive. A job started from a run is
+  usually a child of that run's shell, writing into scratch space that exists because the
+  session exists, so the disposition can be stated honestly and be false within the hour.
+  Reparent it, write its output somewhere durable, and hand the reader that path.
+- A backlog entry you keep re-reading has already been declined. `revalidating-decisions`
+  extends its premise-decay treatment to the decision nobody made: deferring is free and
+  deciding costs a justification, so a marginal item gets re-read, re-agreed to be marginal
+  and re-queued by a careful reader every time. Write what would change the answer next to
+  the item; a second deferral cites what changed; the third reading settles it. An item
+  whose stated trigger has not fired is waiting rather than deferring and does not count.
+  The mirror-image failure gets named too — a recurring run re-deriving a question it
+  already answered "no", because a negative finding was never written where the next run
+  would look. `tending-tbaguette` picks up the same rule for its own candidate queue.
+- Finding a string inside a compiled, minified, or packed artifact is not proof it shipped.
+  `confirming-before-claiming-done` already said a miss there is no evidence of absence; it
+  now says the same about a hit, which is the direction that gets believed, because it
+  arrives as good news. Name what produced the match or find a second pattern that must
+  co-occur with it.
+- Three sections that existed but could not be routed to now have triggers.
+  `writing-durable-docs` reaches the same document living in two places with nothing
+  generating one from the other; `automating-repetition` reaches the one-shot bulk edit
+  whose diff is too large for anyone to actually review; `choosing-test-scope` reaches a
+  redaction, permission, validation or rate-limit step with a green unit suite and nothing
+  proving it is wired into the path it guards.
+
 ## 2026-09-06 — Sections nobody could have been routed to
 
 - A skill's `description:` line is the only part of it that is always loaded, which makes it
