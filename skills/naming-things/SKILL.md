@@ -1,6 +1,6 @@
 ---
 name: naming-things
-description: Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading, abbreviated, inconsistent with the rest of the codebase, or inherited from something it no longer describes; when weighing whether a rename is worth its cost; or when code needs a comment to explain what a thing holds or what a function actually does.
+description: Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading, abbreviated, inconsistent with the rest of the codebase, or inherited from something it no longer describes; when weighing whether a rename is worth its cost; when the name being renamed is also a token something resolves — a path segment, a URL, a manifest field, an invocation prefix — so a search-and-replace would break it silently; or when code needs a comment to explain what a thing holds or what a function actually does. Covers partitioning occurrences by whether a human reads them or something resolves them, and pinning the ones deliberately left alone.
 ---
 
 # Naming things

@@ -69,6 +69,16 @@ Everything above the first `##` is preamble and is never rendered.
   answered by looking rather than remembering: what did this run start that is still running?
   Each one gets a disposition — stopped, or deliberately left and *said so*, with how to stop
   it. Same rule as a surrendered criterion, applied to something with a PID.
+- `naming-things` covers the rename where one string is doing two jobs — a display word a
+  human reads and a token something resolves — and had no trigger for it. Renaming a product
+  while its old spelling stays valid for users is the ordinary case, and the two roles are not
+  separable by file: one page holds both, occasionally one sentence does. So partition by role
+  and ask it of each *occurrence*, not each file: does a human read this, or does something
+  resolve it? A search-and-replace is wrong on every occurrence of the second kind and wrong
+  **silently**, because a config key that no longer matches anything is still a valid string.
+  Then pin what you left — both spellings now sit in the same files, and whoever reads them
+  next sees an inconsistency and tidies it. This is the unusual rename whose regression test
+  guards against the change *after* it rather than against itself.
 
 ## 2026-09-06 — When the check and the mistake share an assumption
 

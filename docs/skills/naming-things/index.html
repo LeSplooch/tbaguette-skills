@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.10</span>
+      <span class="wordmark-version" dir="ltr">v1.1.11</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-06T13:58:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-06T13:58:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-06T13:59:51+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-06T13:59:51Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">naming-things</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-06T13:59:51.136045+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Reading code</span>
-  <p class="lede">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading, abbreviated, inconsistent with the rest of the codebase, or inherited from something it no longer describes; when weighing whether a rename is worth its cost; or when code needs a comment to explain what a thing holds or what a function actually does.</p>
+  <p class="lede">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading, abbreviated, inconsistent with the rest of the codebase, or inherited from something it no longer describes; when weighing whether a rename is worth its cost; when the name being renamed is also a token something resolves — a path segment, a URL, a manifest field, an invocation prefix — so a search-and-replace would break it silently; or when code needs a comment to explain what a thing holds or what a function actually does. Covers partitioning occurrences by whether a human reads them or something resolves them, and pinning the ones deliberately left alone.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Names are the cheapest documentation to write and the most expensive to change once they reach a wire format, a database column, or another team's code. A name is read hundreds of times at sites that have none of the context of its definition, and it is the only documentation that cannot go stale silently — it goes wrong loudly, in every reader's head.</p>
 <h2 id="when-to-use">When to use</h2>
