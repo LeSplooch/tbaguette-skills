@@ -24,6 +24,32 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-06 — When the check and the mistake share an assumption
+
+- `portable-shell-scripting` already warned that a *successful* `cd` outlives the command
+  that ran it, so every later relative path resolves somewhere nobody chose and a read
+  comes back as a confident false negative. It now covers the same trap on the way in and
+  on the way out. A `cd` that **fails** moves nothing and stops nothing, so
+  `cd "$dir" || cd "$fallback"` has one intended outcome and two unintended ones that look
+  identical afterwards — the fallback put you somewhere unrelated, or nothing moved at all.
+  The chain guarantees you end up somewhere; nothing in it guarantees it is the right
+  somewhere. Errexit will not save you, since both sit in an `||` chain, and a persistent
+  agent or terminal session usually has no `set -e` running in the first place. Where the
+  move is genuinely wanted, the floor is `cd "$dir" || exit 1`.
+- The half of that worth the reading is what happens next, and it is about **writes**
+  rather than reads. A wrong-root read gives a wrong answer that stays inside your own
+  conclusions; a wrong-root write *succeeds* — file created, status 0, output identical to
+  the run that did what you meant — and quietly changes a tree nobody is looking at. Then
+  the check agrees with it, because the obvious check is to read the file back by the same
+  relative path, and that resolves against the same wrong root. It confirms the write and
+  can never say where it went, and it will go on confirming however many times it is run.
+  Settling a claim about *location* takes something that does not share the assumption:
+  `pwd`, the absolute path, a listing of the parent you actually named, or the destination
+  tree's own status — checked in the tree you meant and in the neighbouring one you may
+  have hit. The skill's description also mentions the working directory for the first time,
+  so it now loads for the script that is about to write to a relative path rather than only
+  for the one with quoting trouble.
+
 ## 2026-09-06 — Two places the separation you rely on quietly stops holding
 
 - `handling-untrusted-input` teaches one move: find the destination, then use the

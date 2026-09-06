@@ -1,6 +1,6 @@
 ---
 name: portable-shell-scripting
-description: Use when writing or reviewing a shell script, when a script works in one shell but fails in another, when it breaks on filenames with spaces or newlines, when a failing command does not stop the script, or when a script kills a process by matching its command line or loops waiting for one to disappear. Covers quoting and word splitting, set -e exemptions, lost variable assignments after a pipeline, exit codes and pipeline status, cleanup traps, matching processes by pattern for kills and wait loops, POSIX sh versus bash-isms, GNU versus BSD tool differences, and when a script has outgrown shell.
+description: Use when writing or reviewing a shell script, when a script works in one shell but fails in another, when it breaks on filenames with spaces or newlines, when a failing command does not stop the script, when a `cd` fails or persists and later relative paths resolve against a directory nobody meant, or when a script kills a process by matching its command line or loops waiting for one to disappear. Covers quoting and word splitting, set -e exemptions, lost variable assignments after a pipeline, exit codes and pipeline status, the working directory as state that outlives one command, relative reads and writes that land in the wrong tree, cleanup traps, matching processes by pattern for kills and wait loops, POSIX sh versus bash-isms, GNU versus BSD tool differences, and when a script has outgrown shell.
 ---
 
 # Portable shell scripting
@@ -90,6 +90,10 @@ In order of preference:
 
 And when a path check comes back with a surprising negative, print `pwd` before believing it. That is one command against a wrong conclusion about somebody's codebase.
 
+A `cd` that *fails* re-roots nothing and stops nothing: the shell stays where it already was, and the next command runs there. So `cd "$dir" 2>/dev/null || cd "$fallback"` has one intended outcome and two unintended ones that are indistinguishable from each other afterwards — the fallback ran and put you somewhere unrelated, or neither ran and you never moved. The chain guarantees you end up *somewhere*; nothing in it guarantees that somewhere is the one you meant. Errexit is no help, because both `cd`s sit in an `||` chain, one of the documented exemptions above — and the persistent sessions this section is about mostly have no `set -e` at all, so there was never anything to catch it. Where the table's last row genuinely applies, the floor is `cd "$dir" || exit 1`; every row above it avoids the question instead of answering it.
+
+The consequence is worse for a **write** than for the read above, and worse in a different way. A wrong-root read produces a wrong answer, which is expensive and stays inside your own conclusions. A wrong-root write *succeeds* — file created, status 0, output identical to the run that did what you meant — and it changes something in a tree nobody is currently looking at. Then the verification agrees with it, because the obvious check is to read the file back **by the same relative path**, and that resolves the identical path against the identical wrong root. It confirms the write happened. It cannot say where. The check has inherited the mistake's own assumption, so it will go on agreeing however many times it is run. **A claim about location has to be settled by something that does not share the assumption** — `pwd`, the absolute path printed and read back, a listing of the parent directory you actually named, or the destination's own status, checked in the tree you meant *and* in the neighbouring one you may have hit. Nothing else will surface it: a file written into somebody else's checkout is discovered out of band, by whoever next looks there.
+
 ## Cleanup that survives signals
 
 ```sh
@@ -140,6 +144,7 @@ Choose the POSIX subset first. Where an extension is genuinely needed, probe the
 | A `pgrep -f` wait loop never finishes, and there are now several of them | the pattern matched the waiting shell itself, so each loop waits for its own exit |
 | A `pkill` aimed at the script's job took down one of the user's | the pattern named a program, not an instance; every copy on the machine matched |
 | A file "does not exist" and then plainly does | A `cd` in an earlier command re-rooted every relative path after it |
+| A file was written successfully, into the wrong tree | A `cd` failed or fell through to a fallback, and the relative write resolved against a root nobody chose |
 
 ## Red flags
 
@@ -151,3 +156,5 @@ Choose the POSIX subset first. Where an extension is genuinely needed, probe the
 - `pkill -f` or `pgrep -f` run with a pattern nobody checked against every process it could match — the caller's own, and the user's
 - A loop that waits for a process matching a string to disappear — the shell running the loop matches the string too
 - A negative result from a relative path — nothing found, no such file — trusted without checking `pwd` first
+- A `cd` whose failure is silenced or absorbed by a `||` fallback, with anything that writes after it
+- A relative-path write checked by reading back the same relative path — that confirms the write and never the place
