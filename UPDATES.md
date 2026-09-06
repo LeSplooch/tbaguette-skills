@@ -89,6 +89,15 @@ Everything above the first `##` is preamble and is never rendered.
   than slow work. It is quieter than it looks, too — a timeout that fired before any work began
   is indistinguishable downstream from work that ran and returned something neutral, so
   "no agreement" among workers that never started is not disagreement.
+- `checkpointing-long-runs` had a section saying a negative result has two halves and only one
+  ever gets written, with no trigger for anyone about to write one. "I tried X and it didn't
+  work" is half a finding, and on its own it is worse than nothing, because it reads as closing
+  a door it did not close. Pinning the clock and seeing no change reads as *time is not
+  involved*; what it establishes is that the clock **in this process** is not involved, while a
+  cache, a database `now()` and a broker each keep their own. The skill now loads for that
+  moment and gives the dead end a required four-part form — tried, ruled out, still open, and
+  what the null rests on in trials against what base rate. Deprioritized is not eliminated, and
+  the difference belongs in the file rather than in the head of whoever ran it.
 
 ## 2026-09-06 — When the check and the mistake share an assumption
 
