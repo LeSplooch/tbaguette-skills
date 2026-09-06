@@ -79,6 +79,24 @@ Everything above the first `##` is preamble and is never rendered.
   a result — confirm the specific instance through the mechanism the artifact actually uses
   before it reaches a report or a fix, and when a check flags something that looks visibly
   fine, suspect the check's coverage before the artifact.
+- `confirming-before-claiming-done` covers publishing in *The push is not the reach*:
+  check from the audience's seat, not the seat that published, because auth and caching
+  differ there. Both of its failures assume a push happened. The section now carries the
+  case where none did. Where the deliverable has a canonical source and copies kept in step
+  by hand — a document mirrored onto a site, a notice repeated in a store listing, a policy
+  filed with a registrar — **"fixed" is a claim about the source and nothing else.** The
+  edit is real, the review is real, the ticket closes, and every published copy goes on
+  serving the old text, because no act of publishing was ever part of the fix. Nothing
+  detects it: no check fails, the source reads correctly, and the record says resolved. **A
+  record saying resolved is evidence about an intent, not about a deployed state.**
+- And *which* copies is not a question memory can answer. The number you can name is the
+  number you knew about last time you looked, which makes it a floor rather than a count,
+  and the copy nobody remembers is necessarily the copy nobody updates. So enumerate from
+  the side that does the serving — what the host publishes, what the registry or store
+  lists, what a search for the document's own title returns — then fetch each one's bytes.
+  The skill's own *A look is not a search* was already this move, written for claims of
+  absence; it holds unchanged for a claim that something has been fixed, and now says so.
+  `writing-durable-docs` owns the repair: stop hand-mirroring, generate or diff in CI.
 
 ## 2026-09-06 — Two places the separation you rely on quietly stops holding
 

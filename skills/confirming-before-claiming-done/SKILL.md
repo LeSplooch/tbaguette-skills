@@ -1,6 +1,6 @@
 ---
 name: confirming-before-claiming-done
-description: Use when about to call a fix, a feature, or a test suite done, fixed, or passing; when a change is about to be committed, pushed, or handed off on that claim; when a subagent's or tool's success report is about to be repeated as fact; when the only evidence is that the code looks right, or that an investigation script worked; when absence is claimed and the one location you knew to check is untouched; when the requirement is survival of a restart, a cold start, or a fresh checkout and the check to hand observes the present instead; when a check passed against an artifact that predates the run; when the green run happened on an emulator, container, or staging stand-in rather than where the claim applies; or when a green suite only checks files you own. Covers naming the check that would prove the claim and running it fresh, telling a stale artifact or run from this one's, inducing the condition and the place a requirement names rather than accepting a proxy, and proving absence on the target surface.
+description: Use when about to call a fix, a feature, or a test suite done, fixed, or passing; when a change is about to be committed, pushed, or handed off on it; when a subagent's or tool's success report is repeated as fact; when the only evidence is that the code looks right, or that an investigation script worked; when absence is claimed and the one location you knew to check is untouched; when the fix landed in a source that is mirrored or published by hand; when the requirement is survival of a restart or a fresh checkout and the check observes the present instead; when a check passed against an artifact that predates the run; when the green run happened on an emulator, container, or staging stand-in; or when a green suite only checks files you own. Covers naming the check that proves the claim and running it fresh, telling a stale run from this one's, inducing the condition and place a requirement names, enumerating published copies rather than recalling them, and proving absence on the target surface.
 ---
 
 # Confirming before claiming done
@@ -17,6 +17,7 @@ The rule survives paraphrase. "Should be passing," "looks good," "that should do
 - About to commit, push, open a PR, or hand work off on the strength of that claim.
 - Reporting what a subagent, a CI run, or a tool said about itself, instead of what you independently checked.
 - Moving on to the next task because this one feels finished.
+- The thing corrected has a canonical source and copies published or mirrored by hand.
 - The only thing behind the claim is that the diff looks right and nothing has actually been executed.
 - Not for: judging whether a past decision was actually correct in hindsight (see `revalidating-decisions`).
 - `calibrating-confidence` is the adjacent concern: marking your own uncertainty honestly as verified, inferred, or assumed. This skill is the concrete act that earns the verified label in the first place — running the check before the claim.
@@ -55,6 +56,7 @@ When the check itself is unreliable — an intermittent bug that only reproduces
 | Build succeeds | Fresh build, exit code checked | Lint passing; no red squiggles in the editor |
 | It starts up | Started the way it will actually be started, watched past the point the framework calls the hook | It compiles and the suite is green; the same function passes when a test calls it directly |
 | It is live | A signed-out, cache-busted fetch of the published URL | It renders in your authoring session; the upload exited 0 |
+| The correction is published, not just made | Every copy enumerated from the host, and each one's bytes fetched | The source was corrected and the record says resolved |
 | It is not installed | The whole target tree searched for the artifact's own name; the running process's open files and loaded modules read | The one location you knew to check is untouched |
 | The encoded form is this | One real value put through the real encoder, and the output printed | The type's declaration read, annotations and all; a grep for the spelling |
 | A bug is fixed | Reproduced the original symptom on the new code, and it's gone | The diff looks like the right fix |
@@ -101,6 +103,10 @@ The exit code is the most persuasive form this takes, and deserves naming on its
 Where a check ran is part of what it proves. Confirming a published thing from the seat that published it — the authoring session, the signed-in browser, the tool that did the upload — establishes that the artifact exists and that you, specifically, can reach it; the claim is that its audience can. The two contexts differ along axes invisible from inside the authoring one, authentication and caching chief among them, and the two failures they produce run in opposite directions.
 
 A default-private artifact is indistinguishable from a public one at the owner's seat, so a page that renders perfectly for its author returns nothing to anyone else — worse once the URL has already gone out as public. A stale cache is the mirror image: it serves the previous version after a genuinely successful deploy, so a correct check reads as a failure and invites a pointless re-push. One makes a broken thing look fine, the other makes a fine thing look broken, and a signed-out, cache-busted fetch from outside the publishing tool settles both.
+
+Both of those assume a push happened at all. Where the deliverable has a canonical source and copies kept in step by hand — a document mirrored onto a site, a notice repeated in a store listing, a policy filed with a registrar or an authority — **"fixed" is a claim about the source and nothing else.** The edit is real, the review is real, the ticket closes, and every published copy goes on serving the old text, because no act of publishing was ever part of the fix. Nothing detects that: there is no failing check, the source reads correctly to anyone who opens it, and the record says resolved. **A record saying resolved is evidence about an intent, not about a deployed state** — so the check has to land on the bytes a consumer is actually served.
+
+Which copies, then, is a question memory cannot answer. The number you can name is the number you knew about the last time you looked, which makes it a floor and not a count — and the copy nobody remembers is, necessarily, the copy nobody updates. *A look is not a search*, below, is the move: it is written for claims of absence and holds here unchanged. Enumerate from the side that does the serving — what the host actually publishes, what the registry or the store lists, what a search for the document's own title returns — rather than from a note or a recollection, and fetch each one. `writing-durable-docs`'s *A mirror with no generation step is a fork* owns the repair: stop hand-mirroring, and generate one copy from the other or diff them in CI.
 
 ## An artifact is not this run's artifact
 
@@ -233,6 +239,7 @@ runs are the same discipline applied to timings, and for the same reason.
 | One failing test out of many waved off as unrelated | A partial pass rate treated as a pass |
 | Everything reports healthy for months, then nothing comes back after a power cut | Liveness checked repeatedly; durability never once induced |
 | "It is set to start automatically" offered as evidence that it starts automatically | Configuration read as behavior, with nothing having exercised it |
+| A correction closed weeks ago, and the published copy still serves the old text | The fix landed in the source; publishing the copies was never part of it |
 | An improvement measured at "no change" and abandoned, then found later to have worked | The denominator of the ratio was another quantity from the treated run, so switching the intervention off would not have moved it |
 
 ## Red flags
@@ -248,4 +255,5 @@ runs are the same discipline applied to timings, and for the same reason.
 - "It is not in the built artifact, so it never shipped" — said after grepping a release build for a short string.
 - Reluctance to induce the condition because it would be disruptive, on a system where the condition will occur anyway, unattended.
 - A before/after ratio whose two terms were both produced by the "after" run.
+- "Fixed" said about something with published copies, on the evidence of the source file and a remembered count of the copies.
 - A success line printed by something other than the command being verified — an `echo` after a pipeline, a summary the runner emits regardless.
