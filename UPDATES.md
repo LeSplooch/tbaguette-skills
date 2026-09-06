@@ -64,6 +64,21 @@ Everything above the first `##` is preamble and is never rendered.
   artifact through the path its real consumers use and compare, because a difference between
   the two is a fact about the stand-in. The green-result half of this argument was already
   in `confirming-before-claiming-done`; a red result inherits that limit unchanged.
+- `verifying-review-feedback` already told you a bot comments from what a diff shows it,
+  which is less than what the repository knows. A **mechanical** check is a review comment
+  too — produced by the narrowest reviewer you will ever get — and its output hides how
+  narrow, so the skill now says so. A tool reports on the one mechanism it reads, an effect
+  can usually be produced more than one way, and outside its model a tool that still emits a
+  number reports a confident failure rather than an abstention. An accessibility check
+  computing contrast from an element's text-colour property returned 1:1 for an element
+  whose own colour was transparent and whose visible rendering came entirely from a stroke
+  it never read; measured through the mechanism actually in use, near 10:1. A size budget
+  measured before compression, or a permission check reading the declared manifest instead
+  of the runtime grant, fails identically. **Precision is not scope**, and a number carries
+  no trace of which properties were consulted. So a mechanical finding is a *candidate*, not
+  a result — confirm the specific instance through the mechanism the artifact actually uses
+  before it reaches a report or a fix, and when a check flags something that looks visibly
+  fine, suspect the check's coverage before the artifact.
 
 ## 2026-09-06 — Two places the separation you rely on quietly stops holding
 

@@ -1,6 +1,6 @@
 ---
 name: verifying-review-feedback
-description: Use when code review feedback lands on your own change — from a person, a bot, or an automated reviewer — before any of it gets implemented, especially when a suggestion is unclear, stated with more confidence than evidence, or hard to reconcile with what the code actually does. Covers verifying a claim against the codebase before acting on it, choosing a fix versus a pushback versus a clarifying question, and responding to correct feedback without performative agreement.
+description: Use when code review feedback lands on your own change — from a person, a bot, or an automated reviewer — before any of it gets implemented, especially when a suggestion is unclear, stated with more confidence than evidence, hard to reconcile with what the code actually does, or reported by an automated check as a precise number on something that looks visibly correct. Covers verifying a claim against the codebase before acting on it, treating a mechanical finding as a candidate until the specific instance is confirmed through the mechanism actually in use, choosing a fix versus a pushback versus a clarifying question, and responding to correct feedback without performative agreement.
 ---
 
 # Verifying review feedback
@@ -15,6 +15,7 @@ Agreement that arrives before verification costs you nothing to produce and is w
 
 - Review comments, PR feedback, or an automated code-review report have landed on your own change.
 - A suggestion is stated with more confidence than the evidence behind it, or doesn't match what you know the code does.
+- An automated check reports a precise, numeric failure on something that looks visibly correct.
 - A batch of feedback mixes items you follow with items you don't.
 - Deciding whether to implement a comment as written, push back on it, or ask what it means.
 - Not for: producing the review in the first place (see `reviewing-code-deeply`, `handing-off-for-review`). A self-review pass that comes back clean is a different risk, owned by `karen-and-the-manager` — that skill exists because your own satisfied review is suspect; this one exists because someone else's feedback earns the same scrutiny, not automatic agreement.
@@ -55,6 +56,8 @@ Once the batch is actually understood, order the work: what's blocking (breakage
 
 A suggestion stated flatly isn't evidence it's correct — reviewers, automated ones especially, comment from what a diff shows them, which is less than what the repository knows. Before implementing, check what the comment can't see from a diff alone: does this hold for the versions and platforms the code actually ships on? Does it break a behavior something else currently depends on? Is the current shape deliberate — a test pinning it, a comment explaining it, a decision on record — or genuinely just stale? A reviewer proposing to "implement this properly" is worth a grep for actual callers first; generalizing code nothing calls is waste with a review comment's blessing, not without one.
 
+A mechanical check is a review comment too, produced by the narrowest reviewer you will ever get, and its output hides how narrow. A tool reports on the one mechanism it reads; an effect can usually be produced more than one way; and outside its model a tool that still emits a number reports a confident failure rather than an abstention. An accessibility check computing contrast from an element's text-colour property returned 1:1 for an element whose own colour was transparent and whose visible rendering came entirely from a stroke it never read — measured through the mechanism actually in use, near 10:1. A size budget measured before compression, or a permission check reading the declared manifest instead of the runtime grant, fails in exactly the same way. **Precision is not scope**, and a number carries no trace of which properties were consulted. So a mechanical finding is a *candidate*, not a result: confirm the specific instance through the mechanism the artifact actually uses before it reaches a report or a fix, and when a check flags something that looks visibly fine, suspect the check's coverage before the artifact. A tool blind to a mechanism cannot tell you it was blind to it. (`confirming-before-claiming-done`'s *The declaration is not the payload* covers the same instrument failing the other way, returning a clean nothing where something is there.)
+
 Scale the checking to how much context the source could plausibly have. A bot, or a reviewer working from the diff alone, knows less than you do sitting in the repository; someone who built the subsystem starts with a higher prior of being right, but still gets checked, not assumed. Either way, a suggestion that runs into a decision already on record — an ADR, a wontfix, a comment explaining why the code doesn't do the obvious thing — isn't yours to resolve alone in either direction; that's `revalidating-decisions`.
 
 ## Common mistakes
@@ -70,6 +73,7 @@ Scale the checking to how much context the source could plausibly have. A bot, o
 | An unclear item quietly dropped from the batch | Guessed silently, or hoped nobody would notice it wasn't addressed |
 | The same suggestion resurfaces two reviews later, still wrong | Implemented without checking it against a decision already on record |
 | A fix applied to code the comment no longer accurately describes | The comment was trusted as current instead of re-checked against the code as it stands now |
+| A precise numeric finding that the artifact visibly contradicts | The check read one mechanism; the effect is produced by another the check never reads |
 
 ## Red flags
 
@@ -80,3 +84,4 @@ Scale the checking to how much context the source could plausibly have. A bot, o
 - "I'll implement this properly" with no grep run first to check anyone calls it
 - Every item in a batch applied in one commit, tested only at the end
 - A correction to your own pushback that spends more words apologizing than stating what you checked
+- A check's numeric finding filed or fixed without once confirming that instance through the mechanism the artifact actually uses
