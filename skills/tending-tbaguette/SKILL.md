@@ -267,6 +267,18 @@ into one list first, and group them by the shape they describe rather than by
 the repository they came from. Groups of one and groups of four then separate at
 a glance, and the fours are the candidates.
 
+The bodies are a bonus; the cluster is the payload. In one pass every
+repository in scope committed subjects with nothing under them at all, and the
+pass still produced its finding: the clusters were built from subject lines,
+the coverage check that killed all but one of them ran against subject lines,
+and the body eventually opened for the survivor added nothing the cluster had
+not already said. So an absent body is not a sweep that failed to reach its
+evidence — a subject line written as a judgment *is* the scrubbed sentence,
+which is the whole reason the grammar selects. Open the bodies of whatever
+survives the coverage check, expect a good share of them to be empty or to
+merely restate the subject, and treat that as the ordinary case rather than as
+a reason to keep reading downward into the diff.
+
 The saving compounds with the coverage check below. Run that against the
 *cluster*, in the vocabulary the covering skill would have used, before opening
 a single body — if the library already says it, nothing in those bodies was
@@ -412,6 +424,22 @@ lesson joins, so it is usually not the file the subject points at. Search in the
 vocabulary the covering skill would have used, before drafting: a section
 already written is expensive to abandon and easy to keep on the grounds that it
 puts the point more sharply.
+
+**Read a near-hit for its actor, not only for its topic.** A search that lands
+on a passage covering the candidate's subject is usually the end of it — and
+occasionally it is the most valuable finding of the pass instead. A skill
+states its rule for the role it had in mind, and the situation that produced
+the candidate may have put its reader in a different one. A rule written for
+something that reads a record can be exactly wrong for something that reads
+and then writes it back. A rule written for whoever authors a check can be
+silent about whoever later reads its output. From the grep that found it, "the
+library covers this" and "the library covers this for somebody else" are the
+same result, so the question after a hit is not whether the topic is there but
+whether the *actor* is. When it is not, the change is one paragraph inside the
+passage you just found — cheaper than anything else you were considering, and
+worth more, because a rule that is right for one role and quietly wrong for
+another does more damage than a rule that is merely absent. The reader in the
+wrong role has already been answered.
 
 Expect that search to succeed. On a library this size the ordinary outcome of
 checking a candidate is that something already covers it, sometimes better than

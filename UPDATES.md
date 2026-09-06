@@ -24,6 +24,33 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-06 — What "compatible" asks of a component that also writes
+
+- `schema-evolution` told you to design readers that ignore unknown fields. That
+  is right up until the reader also saves. A settings screen, an editor, a config
+  rewriter or an admin tool loads a record, changes one part of it and stores the
+  whole thing again — and "ignore" there does not mean tolerate, it means delete
+  on the next save. The skill now separates tolerating an unknown field from
+  preserving one, says why the loss is invisible (the read, the edit, the write
+  and the validation all succeed, so nothing logs anything), and gives you the
+  question to put to any writer: does it build its payload from the record it
+  loaded, or from the fields it happens to render? The second one is a deleter.
+- `auditing-dependencies` already covered the dependency whose payload is prose —
+  an agent skill, a plugin, a tool server. Its advice ended at pin to a commit and
+  review the diff when it moves, which cannot reach the half of that class you
+  never fetch. A connected provider hands its instructions over at connect time
+  and is free to hand over different ones tomorrow, with no commit to pin and
+  nothing local that changed. The skill now says so, and adds the part that
+  catches people out: that text is not scoped to the provider that sent it, so
+  something you barely use can change how its reader handles the one you depend
+  on, leaving no trace in the log of which tools ran.
+- `tending-tbaguette` picks up the check that found both of the above. When your
+  search for prior coverage lands on a passage that seems to cover the candidate,
+  ask whether it covers the candidate's *actor* — a rule written for something
+  that reads can be exactly wrong for something that reads and then writes back,
+  and from a search those two results look identical. It also stops reading an
+  empty commit body as a sweep that failed to reach its evidence.
+
 ## 2026-09-05 — Hermes Agent installs, for the first time
 
 - If you use Hermes Agent, TBaguette has never actually worked there. The install

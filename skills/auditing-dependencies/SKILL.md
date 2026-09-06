@@ -1,6 +1,6 @@
 ---
 name: auditing-dependencies
-description: Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries, when a vulnerability scanner or advisory alert fires and needs triage, when a dependency looks unmaintained, abandoned, or has changed owners, when deciding whether to install a third-party agent skill, plugin, extension bundle, or tool server whose payload is prose the agent will obey, or when weighing supply chain risk, install and postinstall scripts, typosquatting and dependency confusion, concealed instructions, vendoring, pinning, mirrors, and provenance.
+description: Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries, when a vulnerability scanner or advisory alert fires and needs triage, when a dependency looks unmaintained, abandoned, or has changed owners, when deciding whether to install a third-party agent skill, plugin, extension bundle, or tool server whose payload is prose the agent will obey, when a connected tool provider's descriptions can change after you approved them or several are connected at once, or when weighing supply chain risk, install and postinstall scripts, typosquatting and dependency confusion, concealed instructions, vendoring, pinning, mirrors, and provenance.
 ---
 
 # Auditing Dependencies
@@ -135,6 +135,28 @@ and prefer the narrow well-attributed thing over the bundle of four hundred.
 Name confusion applies here with extra force, because the names are chosen to be
 guessed at — and as with every squat, once it is installed there is no runtime
 check that will tell them apart.
+
+**Pinning does not reach a dependency that is never fetched.** Everything in
+the paragraph above assumes an artifact you retrieve and keep: a file with a
+hash, a diff to read when it moves. Part of this class does not arrive that
+way. A connected provider hands over its instructions at connect time, over
+the wire, and is free to hand over different ones tomorrow — there is no
+commit to pin, no diff to review, and nothing local that changed. Approving
+what it said once is not approving what it says next, and the usual signal
+that a dependency moved never fires.
+
+Where you cannot pin, two weaker substitutes are what remain. Record what the
+instructions said when you approved them and compare them on reconnect, so a
+change is something you see rather than something you obey — worth preferring
+a client that does this for you, since doing it by hand rarely survives
+contact with a busy week. And keep the set connected at one time no larger
+than the task needs, because the second property this class has is that the
+prose is not scoped to the provider that supplied it. Everything connected is
+read together, in one context, by one reader, so a provider you barely use can
+still change how that reader handles the one you depend on — and it does so
+without ever being called, which means it leaves no trace in the log of which
+tools ran. The narrowing rule is the one `least-privilege-design` applies to
+capabilities, and instruction sources earn it for the same reason.
 
 ## Vendoring and pinning
 

@@ -71,6 +71,23 @@ clean so it can keep updating.
    same thing more sharply — which is how the corpus acquires two statements of
    one idea, in two files, neither aware of the other.
 
+   **Read a near-hit for its actor, not only for its topic.** A search that
+   lands on a passage covering the candidate's subject is usually the end of
+   it — and occasionally it is the most valuable finding of the pass instead.
+   A skill states its rule for the role it had in mind, and the situation that
+   produced the candidate may have put its reader in a different one. A rule
+   written for something that reads a record can be exactly wrong for
+   something that reads and then writes it back. A rule written for whoever
+   authors a check can be silent about whoever later reads its output. From
+   the grep that found it, "the library covers this" and "the library covers
+   this for somebody else" are the same result, so the question after a hit is
+   not whether the topic is there but whether the *actor* is. When it is not,
+   the change is one paragraph inside the passage you just found — cheaper
+   than anything else you were considering, and worth more, because a rule
+   that is right for one role and quietly wrong for another does more damage
+   than a rule that is merely absent. The reader in the wrong role has already
+   been answered.
+
    **Decide which skill owns it before writing a word of it.** A candidate
    usually arrives naming a topic, and the topic points at the wrong file
    surprisingly often. File by the *family of judgments the lesson belongs to*,

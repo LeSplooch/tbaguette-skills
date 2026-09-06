@@ -1,6 +1,6 @@
 ---
 name: schema-evolution
-description: Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema, serialized format, stored document, API payload, or queue message. Also when a rolling deploy breaks deserialization, when old consumers cannot read new data, when a rollback fails on data the newer version wrote, when adding an enum value, or when planning a version bump.
+description: Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema, serialized format, stored document, API payload, or queue message. Also when a rolling deploy breaks deserialization, when old consumers cannot read new data, when a rollback fails on data the newer version wrote, when adding an enum value, when planning a version bump, or when a field goes missing after some component read a record and wrote the whole thing back.
 ---
 
 # Schema evolution
@@ -29,6 +29,10 @@ Once a contract is in production you no longer own both sides of it. Every chang
 A rolling deploy needs both at the same time, because both versions run concurrently for the length of the rollout, and every message or row written during that window is read by whichever version happens to pick it up. A rollback needs forward compatibility specifically: the older binary you are rolling back to must survive data the newer one already wrote. This is the case teams skip, and it is why "the deploy went fine" and "the rollback corrupted things" are the same incident.
 
 Design readers to ignore unknown fields and tolerate absent optional fields from the first release. A reader that rejects unknown fields makes every future addition a breaking change and forces a version bump for work that should have been free.
+
+**"Ignore" is the right instruction for a reader and the wrong one for anything that writes back.** A component that loads a record, changes part of it, and stores the whole thing again is a reader and a writer at once — a settings screen, an editor, a config rewriter, a normalizing proxy, an admin tool, a migration script that rewrites whole rows. Ignoring a field there does not mean tolerating it; it means deleting it on the next save. Forward compatibility asks that role to *preserve* what it does not understand — carry unknown fields through untouched and re-emit them — which is strictly stronger than tolerating them. Formats that retain unknown fields explicitly exist to supply exactly this, and a hand-rolled struct mapping never does it by accident.
+
+The failure is silent at every step, which is why it survives to production: the read succeeds, the edit succeeds, the write succeeds, the schema still validates, and the field is simply gone — removed by the one component in the system that was never taught it existed. Nothing in the round trip is an error, so nothing logs one, and the loss is usually discovered by whichever consumer needed the deleted field, at a distance from the writer that caused it. So ask of every writer: does it build its payload from the full record it loaded, or from the subset it happens to render? The second one is a deleter, however carefully its own fields are handled. A partial-update verb where the format offers one (patch rather than replace, a field mask, a merge) makes the answer structural instead of a property of the code you have to keep re-checking.
 
 ## Expand, migrate, contract
 
@@ -111,3 +115,4 @@ Where a column can be written by more than one kind of source, the provenance is
 - Repurposing an existing field because it happens to be unused
 - A schema change with no plan for data already written in the old shape
 - Treating the strictness of a validator as a substitute for reader tolerance
+- A save path that rebuilds the whole record out of the fields the caller happens to know about
