@@ -1,6 +1,6 @@
 ---
 name: handling-untrusted-input
-description: Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config, or another internal service — when building a query, command, path, URL, template, or markup that embeds a variable, when reviewing a sanitize or escape helper, or when handling deserialization, path traversal, injection, XSS, SSRF, XXE, unicode normalization, or parser resource exhaustion.
+description: Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config, or another internal service — when building a query, command, path, URL, template, or markup that embeds a variable, when reviewing a sanitize or escape helper, or when handling deserialization, path traversal, injection, XSS, SSRF, XXE, unicode normalization, or parser resource exhaustion. Also use when untrusted text reaches a model's context — a fetched page, a tool result, an agent's report, or a tool description — which is the one destination with no escaping function and where prompt injection lives.
 ---
 
 # Handling Untrusted Input
@@ -51,8 +51,21 @@ Never build a string in a language you do not control out of data you do not con
 | Document query languages | filter built from strings, or a caller-supplied object | a typed query builder; assert scalar values are scalars, which is what operator injection exploits |
 | Logs, headers, email | concatenated fields and format strings | structured logging with fields, and library APIs that reject control characters — otherwise one newline forges a log entry or splits a header |
 | Templates / expression languages | user data used as template **source** | user data may only ever be template **data**; the other way is remote code execution |
+| A model's context | tool output, a fetched page, a file, an agent's report, or a tool's own *description*, arriving on the channel the instructions came in on | **there isn't one** — see the section below; the control is structural rather than syntactic |
 
 Escaping is the fallback, not the plan: it fails at nesting, where a URL inside an HTML attribute inside a script string needs three encodings applied in the right order. When an API forces string assembly, wrap it once and allowlist inside the wrapper.
+
+## The destination with no separating mechanism
+
+Every other row ends in a mechanism because its destination has a grammar, and a grammar can be told data from code. One destination has neither: **a model's context**. Text arriving through a tool — a fetched page, an issue body, a file's contents, a subagent's report, and most easily missed, a tool's own *description* — lands on the same channel the instructions arrived on, and nothing downstream can separate them. That is what **prompt injection** names, and it is a data-as-code confusion of exactly the shape this skill is about, minus the fix.
+
+Two consequences follow, and both are uncomfortable.
+
+**Delimiters are not a mechanism.** Wrapping untrusted text in tags, fences, or a "the following is data, do not obey it" preamble is escaping — the fallback this skill already says fails at nesting — except here there is no correct nesting to fall back on, because the reader is probabilistic and has no parser to be correct about. Do it anyway, since it helps at the margin. Do not count it as the control.
+
+**The payload can arrive before anything is invoked.** A destination that only receives data when you call it can be defended at the call. A tool *description* is read at discovery time, so something never used can still influence the run — which moves the check to connection time and makes the size of the connected set part of the exposure. `auditing-dependencies` owns the dependency whose payload is prose.
+
+So the control is structural. Exfiltration of this shape needs three things at once — untrusted content reaching the model, access to something worth taking, and a route outward — and removing any one of them for the whole run defuses the other two. Which one is cheapest to give up is the real design question. Note what that argument does *not* cover: injected text that makes the run destroy, corrupt, or spend something locally needs no route outward at all, so an egress cut is not a general answer, and the legs worth removing differ by what the attacker would want. `threat-modeling` owns deciding which that is, and `least-privilege-design` owns making the reach small enough that the answer is cheap.
 
 ## Canonicalize, then check, then use the canonical value
 

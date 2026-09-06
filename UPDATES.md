@@ -24,6 +24,38 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-06 — Two places the separation you rely on quietly stops holding
+
+- `handling-untrusted-input` teaches one move: find the destination, then use the
+  mechanism that keeps data and code apart there — a prepared statement, an argument
+  vector, a contextual auto-escaper. Its table now has a row for the destination where
+  that move has nowhere to land: **a model's context**. A fetched page, an issue body, a
+  file's contents, an agent's report, and most easily missed a tool's own *description*
+  all arrive on the same channel the instructions came in on, and nothing downstream can
+  separate them. That is prompt injection, and until now the library described it three
+  times without ever using the words, so nobody looking for it could find it. The new
+  section says the two things that follow. Delimiters are escaping, and escaping is the
+  fallback this skill already says fails — here with no correct nesting to fall back on,
+  because the reader is probabilistic and has no parser to be right about; use them, do
+  not count them. And the payload can land before you invoke anything, because a tool
+  description is read at discovery time — which moves the check to connection time and
+  makes the size of your connected set part of the exposure. The control that is left is
+  structural: exfiltration needs untrusted content, something worth taking, and a route
+  outward, and you remove one of the three. With the caveat that an egress cut is not a
+  general answer, since injected text that makes a run destroy or spend something locally
+  never needed a route out.
+- `checkpointing-long-runs` says a compaction strips the *tier* off everything crossing
+  it — verified, inferred and assumed all arrive in the same fluent voice — and tells you
+  to re-check what is checkable and downgrade what is not. That rule is right for a claim
+  and wrong for an obligation. A prohibition, a stop condition, a "check with me before
+  X" loses its provenance the same way, but downgrading one to *assumed* is not caution,
+  it is the failure: a constraint held at low confidence has already stopped
+  constraining. There is no honest tier for an obligation — it is in force and gets
+  re-read from wherever it was written, or it is gone and the run is doing something
+  nobody authorized. Pre-committed stop conditions are the case that matters most, and
+  the likeliest to come back as a general sentence about being careful, which reads like
+  survival and is not.
+
 ## 2026-09-06 — A green check can be green in the wrong place
 
 - `confirming-before-claiming-done` covered evidence going stale when code moves.

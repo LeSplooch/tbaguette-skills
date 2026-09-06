@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.1</span>
+      <span class="wordmark-version" dir="ltr">v1.1.2</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-06T10:26:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-06T10:26:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-06T10:31:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-06T10:31:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">checkpointing-long-runs</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-06T10:31:56.888142+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Planning and delegation</span>
   <p class="lede">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files, a run whose conversation is getting long enough to be compacted, or work about to be handed to another agent, another session, or a person. Also use the moment a compaction has already happened and the run has to decide what it still knows, or when something started in an earlier session — a background job, a build, a spawned agent — has left no record of having finished. Covers where the durable state lives, which seams are worth a checkpoint, writing the expensive things down before they are lost, re-reading rather than recalling at every boundary, and leaving a successor a brief instead of an archaeology problem.</p>
@@ -110,6 +110,7 @@ Rests on:    how many trials, against what base rate — or &quot;not measured&q
 <p>Read the first two before acting. A fluent memory of having done something is not evidence of having done it, and this is exactly the situation that produces fluent memories of things that never happened. Re-measure counts rather than restating them; <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> owns why a recalled number is not a measured one.</p>
 <p>The order above says what to trust. What it does not say is that a boundary also strips the <em>tier</em> off everything crossing it. A summary carries claims, not their provenance: the thing you verified by running a command, the thing you inferred from one file, and the thing you assumed because it was plausible all arrive on the far side in the same voice — indistinguishable, and equally fluent. <a class="skill-link" href="/tbaguette-skills/skills/calibrating-confidence/"><code>calibrating-confidence</code></a> calls that confidence laundering at a boundary between two parties. A compaction performs it on you, at a boundary you never noticed crossing, against your own earlier caution.</p>
 <p>That is what makes rows 1 and 2 a rule rather than a preference. Anything still checkable gets re-checked, because re-running the command is cheaper than working out which recollection was earned. Anything no longer checkable — a tool output that is gone, an observation about a state that has since moved — is downgraded to assumed on arrival rather than carried at whatever confidence it seems to have. And anything expensive to re-derive gets its tier written into the record while you still hold it, because the record is the one thing a compaction cannot paraphrase.</p>
+<p>An <strong>obligation</strong> crosses that boundary too, and the rule above is wrong for it in a way worth stating on its own. A prohibition, a stop condition, a &quot;check with me before X&quot; loses its provenance exactly like a claim does — but downgrading one to <em>assumed</em> on arrival is not caution, it is the failure itself, because a constraint held at low confidence has already stopped constraining. There is no honest tier for an obligation. It is either in force, in which case it gets re-read from wherever it was written down, or it is gone and the run is now doing something nobody authorized. So obligations are written to the record <em>before</em> the work, and every boundary that re-reads the plan re-reads them as well. <a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a>'s pre-committed stop conditions are the case that matters most here and the likeliest to be quietly summarized into a general sentence about being careful — which reads like the constraint surviving, and is not.</p>
 <p>One thing crossing a boundary carries no tier at all while reading as though it does: a background process started before the boundary and never seen to end. The transcript records that it began, and it has no mechanism for recording an end that happened outside it — so &quot;finished cleanly&quot;, &quot;was killed by a teardown, a monitor timeout, or the interface&quot;, and &quot;still running&quot; all arrive identically, as silence. Absence of a completion marker is evidence of nothing. Resolve it the way rows 1 and 2 resolve everything else — from a durable thing you can go and look at — by reading what the process was writing to: the output file and its size, the mtime, the lock, the pid. The durable state is the artifact; the transcript only ever recorded the intention to produce one.</p>
 <h2 id="handing-to-a-successor">Handing to a successor</h2>
 <p>A brief, not an archive, and a brief is a set of named sections rather than a short essay — a successor scanning for one of these should find it as a heading, not as a clause inside a paragraph:</p>
