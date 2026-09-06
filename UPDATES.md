@@ -98,6 +98,15 @@ Everything above the first `##` is preamble and is never rendered.
   moment and gives the dead end a required four-part form — tried, ruled out, still open, and
   what the null rests on in trials against what base rate. Deprioritized is not eliminated, and
   the difference belongs in the file rather than in the head of whoever ran it.
+- `delegating-tasks-with-review-gates` has a table assigning a model tier to each role in the
+  loop — cheapest for an implementer transcribing a complete spec, most capable for the final
+  whole-branch review, at least one tier above whatever got stuck when a fix loop stalls — and
+  its description never mentioned models at all. Anyone asking whether a cheap model would do
+  for this subagent went unrouted. It now loads for that question, and carries the two things
+  the table exists to say: name the model explicitly on every dispatch, because an unspecified
+  one quietly inherits the session's own and that is usually the most expensive available; and
+  count turns, not just per-token price, since cheap models routinely take two or three times
+  as many on multi-step work and can cost more overall than a mid-tier one would have.
 
 ## 2026-09-06 — When the check and the mistake share an assumption
 

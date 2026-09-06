@@ -1,6 +1,6 @@
 ---
 name: delegating-tasks-with-review-gates
-description: Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, or when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it. Covers dispatching a zero-context implementer subagent per task, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.
+description: Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it, or when deciding which model each subagent role gets and an unspecified model is about to inherit the session's own. Covers dispatching a zero-context implementer subagent per task, choosing a model tier per role, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.
 ---
 
 # Delegating tasks with review gates
