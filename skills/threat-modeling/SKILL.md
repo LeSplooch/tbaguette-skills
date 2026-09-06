@@ -1,6 +1,6 @@
 ---
 name: threat-modeling
-description: Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration, or a change to authentication or authorization, when a design review needs a security section, when asked what could go wrong with a system or feature, or when reasoning about attackers, attack surface, blast radius, and which risks to fix first. Covers STRIDE, trust boundaries, data flow, attacker capability tiers, and risk ranking.
+description: Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration, or a change to authentication or authorization, when a design review needs a security section, when asked what could go wrong with a system or feature, or when reasoning about attackers, attack surface, blast radius, and which risks to fix first. Also use when a limit, quota, entitlement, or uniqueness rule is enforced at the one write path whoever wrote it had in mind, while import, sync, restore, bulk seeding, or admin tooling can reach the same state, or when such a rule is checked only at creation and nothing re-checks it afterwards. Covers STRIDE, trust boundaries, data flow, attacker capability tiers, risk ranking, and enumerating every path that can produce a guarded state.
 ---
 
 # Threat Modeling

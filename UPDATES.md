@@ -40,6 +40,15 @@ Everything above the first `##` is preamble and is never rendered.
   there, months later. The skill now loads when a scheduled, nightly, or cron job is added
   and nothing yet proves it has ever run, and it says to force one run when the job lands
   and to report *age of last success* instead of *status of last run*.
+- `threat-modeling` says a limit is a property of *state*, not of one transition, and had no
+  way to be reached by anyone holding that problem. A quota, an entitlement, a per-seat cap, a
+  uniqueness rule — each gets implemented as a check on the single interactive path whoever
+  wrote it had in mind, and every other route to the same state walks past it: import, sync,
+  restore from backup, bulk first-run seeding, admin tooling, an undo that re-adds what was
+  removed. Those paths typically run with more authority and less scrutiny than the one that
+  got the check. The skill now loads for exactly that shape, and for its second half — a gate
+  that runs only at creation cannot repair what arrived around it, so without a read-time
+  check the rule degrades into an honour system the moment a second writer appears.
 
 ## 2026-09-06 — When the check and the mistake share an assumption
 
