@@ -49,6 +49,21 @@ Everything above the first `##` is preamble and is never rendered.
   have hit. The skill's description also mentions the working directory for the first time,
   so it now loads for the script that is about to write to a relative path rather than only
   for the one with quoting trouble.
+- `diagnosing-before-fixing` warns you off the environmental cause because accepting one
+  *ends* the investigation instead of directing it. That warning has a shadow, and the same
+  section now carries it. When the thing has only ever been **seen** through something local
+  — a preview server, a viewer, a staging copy, an emulator, a scratch export — the
+  environment is not the lazy hypothesis to resist. It is the first one, because it sits
+  between you and the object and it is the half that is not the deliverable. A local server
+  that sends no charset renders every em dash of a perfectly valid document as mojibake; a
+  missing header, a base path, a compression setting, a stale cache each do the same for
+  their own class of defect, and all of them look like faults in the artifact because
+  presentation is precisely what they change. Reported as seen, that is a defect filed
+  against something that does not have it — and then fixed there, in an artifact that was
+  already correct. The remedy is the section's own, pointed the other way: obtain the same
+  artifact through the path its real consumers use and compare, because a difference between
+  the two is a fact about the stand-in. The green-result half of this argument was already
+  in `confirming-before-claiming-done`; a red result inherits that limit unchanged.
 
 ## 2026-09-06 — Two places the separation you rely on quietly stops holding
 
