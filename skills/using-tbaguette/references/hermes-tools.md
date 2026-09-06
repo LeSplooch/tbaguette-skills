@@ -20,7 +20,7 @@ Skills speak in actions ("dispatch a subagent", "create a todo", "read a file").
 
 ## Instructions file
 
-When a skill mentions "your instructions file," on Hermes Agent this is **`AGENTS.md`** in the project directory, or **`SOUL.md`** globally at `~/.hermes/SOUL.md`.
+When a skill mentions "your instructions file," on Hermes Agent this is **AGENTS.md** in the project directory, or **`SOUL.md`** globally at `~/.hermes/SOUL.md`.
 
 ## Invoking a skill
 

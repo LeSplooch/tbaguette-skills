@@ -268,6 +268,40 @@ running the install through a shell tool gets a plugin that is installed,
 disabled, and silent. And the plugin takes effect on `hermes gateway restart`,
 not on the next session. Both are now in the published install prompt.
 
+**And then a second wall, behind the first.** Getting the manifest right only
+bought the right to reach Hermes' plugin security scan, which returned a
+`dangerous` verdict — a hard block, where `--force` explicitly does not
+override and the only escape is the user disabling their own scanner. Nothing
+in the repo could see it, because nothing in the repo had ever run the install
+to completion.
+
+Most of what it flags is fair: a hundred skills about secrets, untrusted input
+and shell scripting will always trip an exfiltration pattern matcher, and this
+library cannot reach a `safe` verdict. That is fine — `high` findings only mean
+`caution`, which asks. The blocking findings were six scored `critical`, and
+every one was the same false positive. `tools/skills_guard.py:_shell_write_re`
+looks for a shell redirect into an agent config file, roughly
+`[\w"'`)\]]\s*>\s*[~\w./-]*(?:AGENTS\.md|CLAUDE\.md|…)`, and a rendered
+inline-code span puts a tag-closing `>` immediately before the filename. Every
+such span on the generated site read as a redirect into the file named
+inside it.
+
+So this repository carries one standing rule that looks like a style slip:
+**agent-config filenames are written as plain prose, never in inline code.**
+Five backticked mentions across two skills were enough to make TBaguette
+uninstallable on Hermes. `scripts/test_hermes_bootstrap.py` guards it over the
+whole tree, the way the scanner walks it, rather than over `skills/` alone —
+the usual offender is a built page under `docs/`, but an update note or a test
+comment counts identically, and one of these findings was a comment in the
+guard itself quoting the sequence it forbids. Delete that check rather than
+extending it if Hermes ever narrows the pattern.
+
+One consequence worth stating plainly, because the install prompt now depends
+on it: a `caution` verdict needs either a TTY to confirm at or `--force`. An
+agent installing through a shell tool has neither, so the prompt tells it to
+surface the report and the command rather than force past a security decision
+on the user's behalf.
+
 The row is also no longer session-start-only. `pre_llm_call` fires once per
 user turn — `agent/turn_context.py` builds the turn and passes `is_first_turn`
 — rather than once per LLM call inside the agentic loop, so it carries the full

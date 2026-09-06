@@ -27,7 +27,7 @@ The default failure is searching your own tool's store, finding a session, and s
 Enumerate every store before opening any. Then:
 
 - **Do not stop at the first hit.** Two or three assistants on one repo is ordinary now, and they will contradict each other. The contradiction is the finding, not an obstacle to it.
-- **Absence is a finding.** An `AGENTS.md` with no matching session store means the work happened on another machine, in a browser, or under someone else's account. Report that. It is a different fact from "no prior work exists", and only one of them means you can proceed as if the repo were new.
+- **Absence is a finding.** An AGENTS.md with no matching session store means the work happened on another machine, in a browser, or under someone else's account. Report that. It is a different fact from "no prior work exists", and only one of them means you can proceed as if the repo were new.
 - **A store you cannot read still counts.** Hosted agents, web chats, and a colleague's laptop are unreachable from here. That is one specific question for the human, asked once: *was any of this driven from somewhere I can't see?* If nobody is there to answer, record it as a known gap rather than blocking on it — an unanswered question and a settled one are different, and only one of them is safe to forget.
 - **The tool that left the least residue is often the one that did the most.** IDE assistants and cloud agents write far less into the repo than CLI agents do, and a clean tree is not evidence nothing happened in it.
 
@@ -35,7 +35,7 @@ Enumerate every store before opening any. Then:
 
 | # | Look at | Why it ranks here | Cost |
 |---|---|---|---|
-| 1 | Root instruction files — `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `CONVENTIONS.md`, the `.*rules` family, `.github/copilot-instructions.md` | Already-distilled conversation; each line is there *because* it kept being repeated | One read each |
+| 1 | Root instruction files — AGENTS.md, CLAUDE.md, GEMINI.md, CONVENTIONS.md, the `.*rules` family, `.github/copilot-instructions.md` | Already-distilled conversation; each line is there *because* it kept being repeated | One read each |
 | 2 | In-repo agent artifacts — tool dotdirs, saved chat exports, spec and steering folders, plan directories under `docs/` | Deliberate, scoped to this repo, already summarized by whoever wrote them | Minutes |
 | 3 | Git history for agent fingerprints — co-author trailers, generated-with footers, bot committers, bursts of same-minute commits | Tells you *which* tools ran and *when*, which is how you pick what to open in row 4 | One command |
 | 4 | Host session stores keyed by this repo's absolute path | The full record, including everything the rows above chose not to write down | Search only, never read whole |
@@ -117,7 +117,7 @@ These stores are the human's private conversations, most of them about other pro
 - Search scoped to this repo's path. Sessions matched to other directories are not yours to read, however easy the grep would be.
 - Assume secrets are in there verbatim — pasted keys, tokens, `.env` dumps, customer data. Do not echo transcript content into a commit message, PR, issue, log, or any outbound message.
 - Committed agent artifacts in a shared repo carry a colleague's half of a conversation. Use what they establish about the code; do not read their side of it back to them.
-- Say which store each finding came from. "A prior Codex session decided X" and "the repo's `AGENTS.md` says X" carry very different weight.
+- Say which store each finding came from. "A prior Codex session decided X" and "the repo's AGENTS.md says X" carry very different weight.
 
 ## Common mistakes
 
@@ -135,7 +135,7 @@ These stores are the human's private conversations, most of them about other pro
 ## Red flags
 
 - "I checked my own history, there's nothing." — you checked one store out of a dozen.
-- "There's an `AGENTS.md`, so I've got the context." — that file is the residue, not the record.
+- "There's an AGENTS.md, so I've got the context." — that file is the residue, not the record.
 - "The transcript says it was implemented." — check the tree, then say it.
 - "I'll read the whole session to be thorough."
 - "That decision looks wrong, I'll redo it." — before finding out whether it was already tried the other way.

@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-06T14:05:59+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-06T14:05:59Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-06T15:58:23+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-06T15:58:23Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">tending-tbaguette</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-06T12:26:11+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-06T15:58:23.482115+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
   <p class="lede">Use at the start of every conversation, in any project or repo, and keep watching for the rest of it — the moment a genuinely project-agnostic lesson shows up while using TBaguette, capture it. Triggers include a correction that generalizes past this one codebase, a gap or wrong assumption found in a skill while that skill was running, a recurring judgment call nothing covers yet, a TBaguette skill that looks wrong enough to want editing, an installed plugin that already carries hand-edits, or any question about how to contribute to TBaguette. Covers the bar a candidate has to clear, capturing one without derailing the current task, scrubbing it of anything project-specific, choosing which existing skill a lesson belongs in, the approval gate that no absent human lifts, opening the pull request from a fork and answering the review it gets, restoring an install that was edited in place, and how a merged change comes back through <a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/keeping-tbaguette-current/">keeping-tbaguette-current</a>.</p>
@@ -83,7 +83,7 @@
 <p><strong>The direction of travel.</strong> An edit that stays local decays. Upstream moves, your copy does not, and the improvement you were proud of becomes a merge conflict nobody remembers the reason for. The same edit, merged, comes back to you automatically — and to everyone else — the next time <a class="skill-link" href="/tbaguette-skills/skills/keeping-tbaguette-current/"><code>keeping-tbaguette-current</code></a> runs. That is the whole point: <strong>your improvements reach you through the update path, not through your working tree.</strong></p>
 <h2 id="where-a-project-specific-rule-actually-belongs">Where a project-specific rule actually belongs</h2>
 <p>Most edits someone wants to make to an installed skill are not corrections to that skill at all. They are a <em>local</em> fact — this estate is camelCase, this service already validates upstream, this team does not use feature flags — colliding with a library that is deliberately project-agnostic. The skill is not wrong; it is general, and that generality is the entire reason it works in a repo it has never seen.</p>
-<p>A local fact has a home, and the home is not inside the plugin. It goes in the project's own instructions: <code>CLAUDE.md</code> at the repo root, or a project-level skill living in the repo. Either one sits <em>above</em> a library skill rather than modifying it, and that buys four things a hand-edit cannot:</p>
+<p>A local fact has a home, and the home is not inside the plugin. It goes in the project's own instructions: CLAUDE.md at the repo root, or a project-level skill living in the repo. Either one sits <em>above</em> a library skill rather than modifying it, and that buys four things a hand-edit cannot:</p>
 <ul><li>It is version-controlled where the team can see it, rather than sitting in one person's home directory.</li><li>It reaches everyone working in that repo, rather than one machine.</li><li>It survives every update, because nothing overwrites it.</li><li>The install stays clean and keeps updating.</li></ul>
 <p><strong>Reach for this first, every time.</strong> Then ask the separate question: is the skill <em>also</em> wrong in a way that would be wrong in any repo? If yes, that part goes upstream as a pull request. If no, there was never an upstream change to make here — only a project that needed to say something about itself.</p>
 <p>Getting this backwards is the expensive mistake in both directions. A collision between one project and a general rule, sent upstream, asks a maintainer to make the library worse for everyone else. The same collision hand-edited into the install freezes the install. The project's own instructions are where it belonged from the start.</p>

@@ -18,8 +18,8 @@ The test is the reader, not the effort: a change can be the hardest thing
 shipped that week and still not belong here, and a one-line fix to a skill's
 wording can belong here absolutely.
 
-Writing an entry is part of shipping a change here — see CLAUDE.md. The shape
-is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
+Writing an entry is part of shipping a change here — see
+CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 `scripts/generate.py` refuses to build a site if that shape or that order
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
@@ -298,14 +298,39 @@ Everything above the first `##` is preamble and is never rendered.
   and from a search those two results look identical. It also stops reading an
   empty commit body as a sweep that failed to reach its evidence.
 
+## 2026-09-06 — Hermes' security scan stops blocking the install
+
+- Yesterday's note said TBaguette installs on Hermes now. That was half true, and
+  the missing half was another wall. Hermes security-scans a plugin before
+  installing it, and on this library it returned a `dangerous` verdict — which is a
+  hard block, not a warning: `--force` does not override it, and the only way past
+  was to turn your own scanner off. The install still failed, just later and for a
+  different reason than the day before.
+- It now comes back `caution`, which is a door rather than a wall: at a terminal you
+  see what was flagged and decide, and from a tool with no terminal to answer in you
+  get a block you can act on instead of a dead end. The prompt on the site says so,
+  and tells your agent to hand that decision to you rather than forcing past it.
+- Most of what the scan flags is fair and stays flagged. A hundred skills about
+  secrets, untrusted input and shell scripting read, to a pattern matcher, like the
+  things they teach you to watch for, and no version of this library will ever come
+  back clean. What changed is the six findings that were scored as *critical* — all
+  of them the same false positive, where the scanner sees a filename rendered in
+  code formatting on this site and reads the closing bracket of that HTML tag as a
+  shell redirect into the file.
+- Which is why AGENTS.md and CLAUDE.md are now written as plain prose in the handful
+  of skills that mention them, rather than in code formatting like every other
+  filename. It reads as an oversight and it is not one — it is the whole difference
+  between installable and not on that harness, and a test holds the line now so a
+  later edit cannot quietly put it back.
+
 ## 2026-09-05 — Hermes Agent installs, for the first time
 
 - If you use Hermes Agent, TBaguette has never actually worked there. The install
   command the site publishes failed outright — `plugin.json name does not satisfy
   v1 constraints`, nothing installed — and it had been failing since the day
-  Hermes was listed as supported. It installs now. If you tried it and hit that
-  error, the retry is worth it; if you tried it and gave up, nothing you did was
-  wrong.
+  Hermes was listed as supported. That error is gone — though a second wall
+  behind it, Hermes' own security scan, only came down the next day; see the
+  entry above. If you tried it and gave up, nothing you did was wrong.
 - The Hermes install command has changed shape: it is now
   `hermes plugins install LeSplooch/tbaguette-skills --enable`, and the flag is
   not decoration. Hermes only offers to enable a plugin when it has a terminal to

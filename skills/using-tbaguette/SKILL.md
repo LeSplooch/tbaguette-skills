@@ -92,7 +92,7 @@ here is small and unconditional: re-check, then continue.
 
 Where the harness publishes its own answer, read that instead of inferring one — and expect it to
 be *lopsided* rather than lossy in the even way "some things survive" suggests. Claude Code
-documents its own: the system prompt is untouched, `CLAUDE.md` and memory are re-injected from
+documents its own: the system prompt is untouched, CLAUDE.md and memory are re-injected from
 disk, and the body of each skill you actually invoked comes back truncated to its first few
 thousand tokens under a shared budget, most-recently-invoked first, so the older ones are dropped
 outright. The **listing** does not come back at all.

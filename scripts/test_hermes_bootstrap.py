@@ -76,6 +76,112 @@ class FakeContext:
         self.hooks[event] = callback
 
 
+# Vendored from hermes-agent's tools/skills_guard.py (`_shell_write_re`,
+# `_AGENT_CONFIG_FILES` and friends), read on 2026-09-05. Hermes scans a plugin
+# tree before installing it and a single `critical` finding is a `dangerous`
+# verdict, which is a hard block -- `--force` does not override it and the only
+# escape is the user turning their own scanner off.
+#
+# The pattern is meant to catch a real persistence attack: `echo evil >
+# CLAUDE.md`. It reads any tag-closing `>` as that redirect, so an inline-code
+# span wrapping one of these filenames looks like one -- this comment cannot
+# show you the sequence without tripping the check itself. That is why the
+# library writes agent-config filenames as plain prose rather than in
+# backticks. It is a genuinely odd rule and it is load-bearing: five backticked
+# filenames across two skills were enough to make TBaguette uninstallable on
+# Hermes, silently, with every other check in this repo green.
+#
+# If Hermes fixes the false positive, delete this check rather than working
+# around it further.
+_CONFIG_FILE_GROUPS = {
+    "agent-config": r"(?:AGENTS\.md|CLAUDE\.md|\.cursorrules|\.clinerules)",
+    "Hermes-config": r"\.hermes/(?:config\.yaml|SOUL\.md)",
+    "other agents' config": r"\.(?:claude/settings|codex/config)[\w.]*",
+}
+
+
+def _shell_write_re(file_alt: str) -> str:
+    return (
+        rf'(?:>>|[\w"\'`)\]]\s*>)\s*[~\w./-]*{file_alt}(?!\.?\w)'
+        rf'|\bsed\b[^\n]*\s(?:-[A-Za-z]*i[A-Za-z]*|--in-place)\b[^\n]*{file_alt}(?!\.?\w)'
+        rf'|\btee\s+(?:-a\s+)?[~\w./"\'-]*{file_alt}(?!\.?\w)'
+        rf"|\b(?:cp|mv)\s+[^\s|;&]+\s+[^\n|;&]{{0,40}}?{file_alt}(?!\.?\w)"
+    )
+
+
+MODIFY_VERB_RE = (
+    r"(?:\bwrit(?:e|es|ing)\b|\bwritten\b|\bedit(?:s|ed|ing)?\b"
+    r"|\bmodif(?:y|ies|ied|ying|ication)s?\b|\bupdat(?:e|es|ed|ing)\b"
+    r"|\bappend(?:s|ed|ing)?\b|\bprepend(?:s|ed|ing)?\b"
+    r"|\binject(?:s|ed|ing)?\b|\boverwrit(?:e|es|ing)\b|\boverwritten\b"
+    r"|\badd\s+to\b|\bchang(?:e|es|ed|ing)\b)"
+)
+
+
+def _prose_modify_re(file_alt: str) -> str:
+    """Modification intent aimed at a config file: an imperative-position verb
+    (line start or bullet) within 80 comma-free characters of the filename, or a
+    mid-line verb behind a directive marker. Descriptive prose misses, which is
+    why re-wrapping a line is usually enough to clear a false positive."""
+    return (
+        rf"^\s*(?:[-*+]\s+|\d+[.)]\s+)?{MODIFY_VERB_RE}[^\n,]{{0,80}}?{file_alt}\b"
+        rf"|(?:\byou\s+(?:must|should|need\s+to)\s+|\bplease\s+"
+        rf"|\bmake\s+sure\s+(?:to\s+|you\s+)|\bbe\s+sure\s+to\s+)"
+        rf"{MODIFY_VERB_RE}[^\n,]{{0,80}}?{file_alt}\b"
+    )
+
+
+# What Hermes' own `_walk` skips. Everything else in the tree is scanned --
+# including this file, which is why its comments have to watch their wording.
+EXCLUDED_DIRS = {
+    ".git", "__pycache__", "node_modules", ".venv", "venv",
+    ".mypy_cache", ".pytest_cache", ".ruff_cache", ".tox",
+}
+
+
+def _scannable_files():
+    for path in sorted(REPO_ROOT.rglob("*")):
+        rel = path.relative_to(REPO_ROOT)
+        if path.is_file() and not any(part in EXCLUDED_DIRS for part in rel.parts):
+            yield path, rel
+
+
+def check_scanner_criticals():
+    """Nothing in the tree may read to Hermes as a write into a config file.
+
+    Run over the whole repository rather than over `skills/`, because that is
+    what Hermes scans: the built pages under `docs/` are the usual offender, but
+    an update note, a reference file, or a test comment counts the same.
+    """
+    print("hermes install scanner (no critical findings)")
+    files = [
+        (path, rel, path.read_text(encoding="utf-8", errors="replace"))
+        for path, rel in _scannable_files()
+    ]
+    checks = [
+        (f"a shell write into {label} files", _shell_write_re(alt), 0)
+        for label, alt in _CONFIG_FILE_GROUPS.items()
+    ]
+    # Only the agent-config group scores prose intent as critical; Hermes' own
+    # config is `high` there, because setup docs routinely say "edit config.yaml".
+    checks.append(
+        ("an instruction to modify agent-config files",
+         _prose_modify_re(_CONFIG_FILE_GROUPS["agent-config"]), re.M)
+    )
+    for label, source, flags in checks:
+        pattern = re.compile(source, flags)
+        hits = [
+            f"{rel}: {m.group(0)[:40]!r}"
+            for _, rel, text in files
+            for m in pattern.finditer(text)
+        ]
+        check(
+            f"nothing in the tree reads as {label}"
+            + (f" -- found {len(hits)}: {hits[:3]}" if hits else ""),
+            not hits,
+        )
+
+
 def main():
     plugin = load_plugin_module()
     print("hermes bootstrap")
@@ -194,6 +300,8 @@ def main():
         "here is a turn with no reminder at all",
         first.get("context") and later.get("context"),
     )
+
+    check_scanner_criticals()
 
     print()
     if failures:

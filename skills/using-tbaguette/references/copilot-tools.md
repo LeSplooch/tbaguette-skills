@@ -51,7 +51,7 @@ read when the question is *which* skill rather than *what does this one say*.
 ## Instructions file
 
 When a skill refers to "your instructions file," the repository-level answer is
-the same everywhere: `AGENTS.md`, or `.github/copilot-instructions.md`, or
+the same everywhere: AGENTS.md, or `.github/copilot-instructions.md`, or
 `.github/instructions/*.instructions.md`. The global one is where they part
 company — the CLI reads `copilot-instructions.md` under `~/.copilot/` (or under
 `COPILOT_HOME`, if that is set), VS Code has its own user-level equivalent, and

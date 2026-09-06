@@ -88,7 +88,7 @@ not wrong; it is general, and that generality is the entire reason it works
 in a repo it has never seen.
 
 A local fact has a home, and the home is not inside the plugin. It goes in
-the project's own instructions: `CLAUDE.md` at the repo root, or a
+the project's own instructions: CLAUDE.md at the repo root, or a
 project-level skill living in the repo. Either one sits *above* a library
 skill rather than modifying it, and that buys four things a hand-edit cannot:
 
