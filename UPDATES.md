@@ -79,6 +79,16 @@ Everything above the first `##` is preamble and is never rendered.
   Then pin what you left — both spellings now sit in the same files, and whoever reads them
   next sees an inconsistency and tidies it. This is the unusual rename whose regression test
   guards against the change *after* it rather than against itself.
+- `rate-limiting-and-backpressure` says a per-item deadline is only meaningful if the item's
+  clock starts when the item does, and nothing in its description mentioned a deadline at all.
+  Most timeout primitives fix theirs at construction, so building every wrapper up front — the
+  natural shape of a fan-out — starts every clock at once, including for items queued behind
+  their own siblings. Items several waves deep then spend their whole budget waiting for a slot
+  and time out having done no work. The diagnostic now routes: every item times out while the
+  same item on its own finishes comfortably, which is queue time inside the deadline rather
+  than slow work. It is quieter than it looks, too — a timeout that fired before any work began
+  is indistinguishable downstream from work that ran and returned something neutral, so
+  "no agreement" among workers that never started is not disagreement.
 
 ## 2026-09-06 — When the check and the mistake share an assumption
 

@@ -1,6 +1,6 @@
 ---
 name: rate-limiting-and-backpressure
-description: Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses, when a queue keeps growing or drains hours late, when retries amplify a partial failure into a full outage, when a connection or thread pool is exhausted, when latency climbs instead of requests failing, or when choosing between shedding load, queueing it, and slowing the producer down.
+description: Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses, when a queue keeps growing or drains hours late, when retries amplify a partial failure into a full outage, when a connection or thread pool is exhausted, when latency climbs instead of requests failing, when every item in a fan-out times out while the same item on its own finishes comfortably, or when choosing between shedding load, queueing it, and slowing the producer down. Covers deadlines that start while the item is still queued, and bounding the resource rather than the batch.
 ---
 
 # Rate limiting and backpressure
