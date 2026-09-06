@@ -58,6 +58,17 @@ Everything above the first `##` is preamble and is never rendered.
   component can see is exactly the kind a boundary destroys, and it needs an owner above the
   boundary or it has no owner at all. The sharp version now reachable: **a gate that runs
   after the spend is not a gate, it is a receipt.**
+- `finishing-what-you-started` tracks deliverables, which quietly scopes *finished* to
+  artifacts — files written, tests green, a branch landed. A run also starts **things**: a
+  backgrounded build, a watcher, a dev server, a long benchmark, a subagent, a polling loop.
+  None of those has a ledger line, every one of them survives the report saying the work is
+  done, and they are cheap to forget for a structural reason — a background job's whole
+  purpose is to stop demanding attention. The person who finds it is you, hours later,
+  noticing something has been running since morning, which is not a report but a discovery.
+  The skill now loads for a run closing over one, and the close-out has one more question,
+  answered by looking rather than remembering: what did this run start that is still running?
+  Each one gets a disposition — stopped, or deliberately left and *said so*, with how to stop
+  it. Same rule as a surrendered criterion, applied to something with a PID.
 
 ## 2026-09-06 — When the check and the mistake share an assumption
 
