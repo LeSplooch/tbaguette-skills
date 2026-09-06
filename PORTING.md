@@ -97,7 +97,7 @@ never loaded.
 | Copilot in VS Code | root `plugin.json` + `com.github.copilot/hooks/hooks.json` (installed with the **Chat: Install Plugin From Source** command and this repo's git URL) | shell hook → `hooks/session-start vscode`, plus per-turn `hooks/user-prompt-submit vscode` | same file as the CLI |
 | Copilot coding agent | root `plugin.json`, enabled per repository in that repo's `.github/copilot/settings.json` (see below) | the CLI's `hooks/hooks-copilot.json`, run in the cloud sandbox — only the `bash` field is honored there | same file as the CLI |
 | Devin | `.devin-plugin/plugin.json` | Devin's own `skills/` convention | none shipped |
-| Gemini CLI | `gemini-extension.json` + `GEMINI.md` | instructions file `@`-include of `using-tbaguette` | none shipped |
+| Gemini CLI | `gemini-extension.json` + `GEMINI.md` | instructions file `@`-include of `using-tbaguette` — still current, but Gemini CLI has served Code Assist Standard/Enterprise only since 2026-06-18, and no manifest is shipped for its successor Antigravity CLI; see the audit note below | none shipped |
 | Kimi Code | `.kimi-plugin/plugin.json` | manifest `sessionStart.skill` loads `using-tbaguette` | inline `skillInstructions` |
 | OpenCode | `.opencode/plugins/tbaguette.js` (declared via root `package.json` `main`) | in-process: `config` hook registers skills dir, `experimental.chat.messages.transform` injects context | inline in `tbaguette.js` |
 | Pi | `.pi/extensions/tbaguette.ts` (declared via root `package.json`'s `pi` field) | in-process: resource discovery registers skills, a context event injects bootstrap | inline in `tbaguette.ts` |
@@ -161,11 +161,29 @@ repository — the files existed, the JSON was valid, the hooks exited 0.
 Three others were checked and left alone, which is worth recording so nobody
 re-audits them from scratch:
 
-- **Gemini CLI is the strongest of the lot.** `@./`-imports in a context file
-  are real (the Memory Import Processor, relative paths, depth limit 5), so
-  `GEMINI.md`'s one-line include resolves. Better still, Gemini concatenates
-  its context files into *every prompt* — it has per-turn re-injection for
-  free, without a hook.
+- **Gemini CLI is the strongest mechanism here, and the narrowest audience.**
+  `@./`-imports in a context file are real (the Memory Import Processor,
+  relative paths, depth limit 5), so `GEMINI.md`'s one-line include resolves,
+  and Gemini concatenates its context files into *every prompt* — per-turn
+  re-injection for free, without a hook. That is still true and it is no
+  longer the whole story. Google announced on 2026-05-19 that Gemini CLI is
+  transitioning to **Antigravity CLI** (binary `agy`), and on 2026-06-18
+  Gemini CLI stopped serving Google AI Pro, Ultra and free-tier requests;
+  Code Assist Standard and Enterprise are unaffected. The repository is not
+  archived, stays Apache-2.0, and is still updated for enterprise, so
+  `gemini-extension.json` and the `@`-import mechanism above are both current
+  documentation rather than history — but most readers on a consumer plan
+  cannot run the thing this row recommends.
+
+  The successor is a different integration, not a rename: Antigravity plugins
+  use a root `plugin.json` (`$schema: https://antigravity.google/schemas/v1/plugin.json`,
+  only `name` required) alongside `mcp_config.json`, `hooks.json`, `skills/`,
+  `agents/` and `rules/`, and workspace skills move from `.gemini/skills/` to
+  `.agents/skills/`. Google ships `agy plugin import gemini` to convert one.
+  Whether Antigravity honours the `@./` import syntax is **not stated** on any
+  of its own pages — so the shape-C argument above has not been shown to carry
+  over, and nothing here should be written as if it had. Shipping an
+  Antigravity manifest is a real piece of work and it is not done.
 - **Kimi Code's manifest is correct.** `skills`, `sessionStart.skill` and
   `interface` are all real fields; a second, older-looking Kimi plugin doc
   describes a tools-only format with none of them, and it is not the one that

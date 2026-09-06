@@ -298,6 +298,27 @@ asks. Never mid-task — do not interrupt live work to go run a git pipeline.
 If `## Pending` is empty there is nothing to do, and saying so is worse
 than saying nothing.
 
+**A pass with no conversation behind it inherits only half this skill.** The two
+jobs run on two clocks, and a run started by a timer, a scheduled job, or a
+delegation rather than by a conversation has no transcript, no correction and no
+moment — so capture has nothing to do, and the whole of its work is whatever the
+queue already holds. That creates one failure and reverses one rule.
+
+The failure does not feel like one at the time. A run whose stated purpose is
+improvement, finding the queue empty and the library in good order, will go
+looking for something to change, and it will find something, because a corpus
+this size always holds a sentence that could be put more sharply. Here that costs
+more than an unnecessary commit would: it becomes a pull request a maintainer has
+to read, weigh and turn down. **An empty queue ends a scheduled pass exactly as it
+ends a conversational one** — and it ends there whether the queue arrived empty or
+was emptied by the coverage check above.
+
+The reversal is in what gets said. Inside a conversation, silence about an empty
+queue is correct: there is a user mid-task and a report about nothing is noise. A
+pass with no conversation has nothing to interrupt and its report is its only
+output, so there "the queue was empty and nothing was opened" *is* the report
+rather than narration about it. One line, and stop.
+
 ## The approval gate
 
 <EXTREMELY-IMPORTANT>

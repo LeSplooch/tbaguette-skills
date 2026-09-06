@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.0</span>
+      <span class="wordmark-version" dir="ltr">v1.1.1</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-06T02:58:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-06T02:58:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-06T10:24:26+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-06T10:24:26Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">tending-tbaguette</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-06T02:58:14.941196+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-06T10:24:26.971468+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
   <p class="lede">Use at the start of every conversation, in any project or repo, and keep watching for the rest of it — the moment a genuinely project-agnostic lesson shows up while using TBaguette, capture it. Triggers include a correction that generalizes past this one codebase, a gap or wrong assumption found in a skill while that skill was running, a recurring judgment call nothing covers yet, a TBaguette skill that looks wrong enough to want editing, an installed plugin that already carries hand-edits, or any question about how to contribute to TBaguette. Covers the bar a candidate has to clear, capturing one without derailing the current task, scrubbing it of anything project-specific, choosing which existing skill a lesson belongs in, the approval gate that no absent human lifts, opening the pull request from a fork and answering the review it gets, restoring an install that was edited in place, and how a merged change comes back through <a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/keeping-tbaguette-current/">keeping-tbaguette-current</a>.</p>
@@ -124,6 +124,9 @@
 <h2 id="when-to-contribute">When to contribute</h2>
 <p>At the start of a conversation if <code>## Pending</code> has anything in it; after finishing the actual task, if there is a natural lull; or whenever the user asks. Never mid-task — do not interrupt live work to go run a git pipeline.</p>
 <p>If <code>## Pending</code> is empty there is nothing to do, and saying so is worse than saying nothing.</p>
+<p><strong>A pass with no conversation behind it inherits only half this skill.</strong> The two jobs run on two clocks, and a run started by a timer, a scheduled job, or a delegation rather than by a conversation has no transcript, no correction and no moment — so capture has nothing to do, and the whole of its work is whatever the queue already holds. That creates one failure and reverses one rule.</p>
+<p>The failure does not feel like one at the time. A run whose stated purpose is improvement, finding the queue empty and the library in good order, will go looking for something to change, and it will find something, because a corpus this size always holds a sentence that could be put more sharply. Here that costs more than an unnecessary commit would: it becomes a pull request a maintainer has to read, weigh and turn down. <strong>An empty queue ends a scheduled pass exactly as it ends a conversational one</strong> — and it ends there whether the queue arrived empty or was emptied by the coverage check above.</p>
+<p>The reversal is in what gets said. Inside a conversation, silence about an empty queue is correct: there is a user mid-task and a report about nothing is noise. A pass with no conversation has nothing to interrupt and its report is its only output, so there &quot;the queue was empty and nothing was opened&quot; <em>is</em> the report rather than narration about it. One line, and stop.</p>
 <h2 id="the-approval-gate">The approval gate</h2>
 <div class="prose-callout"><p class="prose-callout__label">Extremely important</p><div class="prose-callout__body"><p>Nothing gets pushed, forked, or opened as a pull request without an explicit yes from the user, obtained through the harness's own question tool, for this specific contribution.</p></div></div>
 <p>Ask through whatever structured question tool the harness gives you — <code>AskUserQuestion</code>, an elicitation call, a multiple-choice prompt, whatever yours calls it. Prose fallback is for the absence of such a tool, not for convenience.</p>

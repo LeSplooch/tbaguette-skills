@@ -24,6 +24,54 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-06 — A green check can be green in the wrong place
+
+- `confirming-before-claiming-done` covered evidence going stale when code moves.
+  It now also covers evidence that never applied where the claim does. The run was
+  fresh, complete and read, and it happened on an emulator rather than the device,
+  a container rather than the host, a staging tenant rather than production — and
+  that failure is quieter than staleness, because nothing about the run looks
+  weakened. A stand-in is not a smaller version of the real thing; it is the real
+  thing minus a set of services it never lists, so everything that does not need
+  what is absent passes perfectly. The library already made that argument for
+  whoever *chose* the stand-in to get unblocked. It now makes it for the far more
+  common reader who simply inherited one as the ordinary place work runs, and who
+  therefore never made a decision they could think back to. An acceptance line
+  closed on a stand-in gets marked with where it was proven rather than with done.
+- `using-tbaguette` said a compaction rewrites your context and you cannot tell
+  from the inside what survived. Half of that is now known, and the known half is
+  worse than the general warning. What comes back is the body of each skill you
+  actually invoked; what does not come back is the listing of everything you did
+  not. So the loss is not even — it is shaped exactly like whatever you were
+  already doing. A compacted run wakes up feeling oriented, holding a menu that has
+  quietly narrowed, and every relevance check it runs against that menu comes back
+  honestly empty. Re-checking your judgment does not fix a shrunken list; read
+  `CATALOG.md`, which ships with the plugin and which a compaction cannot shorten.
+- `redacting-sensitive-output` listed the places redaction gets missed and did not
+  list the most automatic one: your language's own whole-value formatter. A derived
+  `Debug`, a default `toString`, a `__repr__`, a struct-to-JSON call with no field
+  list — each renders every field, including the one added last week, so the leak
+  is created by an edit nowhere near any logging code. Nobody touched a call site;
+  the type grew a field and every existing log line that formats it started
+  emitting it. It is also the gap an allowlisting logger does not close on its own,
+  because the rendered value arrives as one already-formatted string inside an
+  allowlisted field.
+- `tending-tbaguette` now has a rule for the case where nothing is watching. Its
+  advice to stay silent about an empty queue was written for a reader mid-
+  conversation, where a report about nothing is noise. A pass started by a timer or
+  a delegation has nothing to interrupt and its report is its only output, so there
+  the empty result *is* the report. And a run whose stated purpose is improvement,
+  finding nothing wrong, will go looking until it finds something — which in this
+  skill's case becomes a pull request a maintainer has to read and turn down.
+- If you install TBaguette on Gemini CLI, `PORTING.md` was recommending it as the
+  strongest integration of the lot without saying that Gemini CLI stopped serving
+  Google AI Pro, Ultra and free-tier requests on 2026-06-18, or that Google has
+  announced its transition to Antigravity CLI. The mechanism the recommendation
+  rests on is genuinely still current and the repository is still maintained for
+  Code Assist Standard and Enterprise — but most readers on a consumer plan cannot
+  run it. The row and the audit note now say so, name what the successor's manifest
+  actually is, and state plainly that no Antigravity manifest is shipped yet.
+
 ## 2026-09-06 — What "compatible" asks of a component that also writes
 
 - `schema-evolution` told you to design readers that ignore unknown fields. That

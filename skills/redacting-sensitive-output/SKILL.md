@@ -1,6 +1,6 @@
 ---
 name: redacting-sensitive-output
-description: Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, crash dump, metric label, trace span, analytics event, support bundle, or a recorded test fixture. Covers what a redactor must not do with the match it found, allowlisting fields rather than denylisting patterns, partial reveals and re-identification, encoded and nested payloads, and testing by asserting the input is absent rather than the marker present.
+description: Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, a value rendered by its type's own default formatter, crash dump, metric label, trace span, analytics event, support bundle, or a recorded test fixture. Covers what a redactor must not do with the match it found, allowlisting fields rather than denylisting patterns, partial reveals and re-identification, encoded and nested payloads, and testing by asserting the input is absent rather than the marker present.
 ---
 
 # Redacting sensitive output
@@ -52,6 +52,7 @@ Pattern matching still earns a place as a **backstop over the allowlisted output
 Redaction is usually applied to the obvious log call and nowhere else. The gaps, in rough order of how often they leak:
 
 - **Exception messages and stack traces.** Frameworks render arguments and local variables; a constructor that received a token puts it in the trace.
+- **The language's own whole-value formatter** — a derived `Debug`, a default `toString`, a `__repr__`, a record or dataclass printer, a struct-to-JSON serializer given no field list. Each renders *every* field, including the one added last week, so the leak is introduced by an edit nowhere near any logging code: nobody changed a call site, the type grew a field, and every existing `log("config: {}", cfg)` began emitting it. It is also the one gap an allowlisting logger does not close by itself, because the fully-rendered value arrives as a single already-formatted string sitting in an allowlisted field.
 - **The URL.** Query strings are logged by every proxy, load balancer, and access log in the path, and they are outside your process. Secrets never belong in a query string.
 - **Request and response bodies** logged wholesale for debugging, especially behind a flag someone left on.
 - **Nested and encoded payloads** — base64 blobs, JSON inside a JSON string, gzipped bodies, JWT payloads. A field-level redactor never looks inside them; decode before matching, or refuse to log the field.
@@ -80,7 +81,7 @@ The marker is trivially satisfiable while the removal fails, so a test that only
 | Secrets in logs despite a redactor | Leaked via a stack trace, a URL, or an SDK's automatic capture |
 | A token inside a base64 field passed through | Field-level matching never decoded the payload |
 | Short secrets leak, long ones do not | A fixed-size prefix reveals a short value entirely |
-| A new field started leaking silently | Denylist by pattern, which fails open on anything unanticipated |
+| A new field started leaking silently | Denylist by pattern, which fails open on anything unanticipated — or a derived whole-value formatter, which consulted no list at all |
 | Redacted logs still identify individuals | Partial reveals correlate across records |
 | Marker length varies with the input | The redaction leaks the value's length |
 

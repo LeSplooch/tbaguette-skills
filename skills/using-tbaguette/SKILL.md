@@ -90,6 +90,25 @@ context that no longer exists — the same staleness as call 190, arriving witho
 would have warned you. `recovering-agent-context` owns the wider recovery; the part that belongs
 here is small and unconditional: re-check, then continue.
 
+Where the harness publishes its own answer, read that instead of inferring one — and expect it to
+be *lopsided* rather than lossy in the even way "some things survive" suggests. Claude Code
+documents its own: the system prompt is untouched, `CLAUDE.md` and memory are re-injected from
+disk, and the body of each skill you actually invoked comes back truncated to its first few
+thousand tokens under a shared budget, most-recently-invoked first, so the older ones are dropped
+outright. The **listing** does not come back at all.
+
+That asymmetry is the hazard, and it is worse than losing everything would be. Losing everything is
+legible — nothing is oriented, so you go and look. What happens instead is that the material
+describing the skills you already used survives, and the material describing every skill you did
+not use does not. A compacted run therefore wakes up feeling oriented, holding a menu that has
+quietly narrowed to whatever it was already doing, and every relevance check it runs against that
+menu comes back honestly empty. "The listing may be shorter than the library" above arrives a second
+time, and this time it is literally true.
+
+Which makes this check different in kind from the other two rather than merely later. Re-checking
+your *judgment* does not help when the thing that shrank is the *list*. Read `CATALOG.md`, which ships
+with the plugin and is a file on disk — a compaction cannot shorten it.
+
 ## When the work is bigger than one response
 
 One skill covers one stretch of work. Anything that will take several — a feature, a bug with no known cause, a migration, an audit — needs them in an order, and that order is `orchestrating-work-end-to-end`: which track the request is on, which phase it is in, what evidence opens the next gate, and where the run record lives so a compaction doesn't cost the run. Invoke it before the first action, not after the first three.

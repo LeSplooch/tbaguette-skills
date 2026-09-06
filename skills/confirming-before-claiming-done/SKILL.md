@@ -1,6 +1,6 @@
 ---
 name: confirming-before-claiming-done
-description: Use when about to say a fix, a feature, or a test suite is done, fixed, or passing; when a change is about to be committed, pushed, or handed off on that claim; when a subagent's or tool's own success report is about to be repeated as fact; when the only thing behind the claim is that the code looks right, or that a script written during the investigation showed it working; when the claim is that something is absent and the evidence is that the one location you knew to check is untouched; when the requirement is that something survives a restart, a cold start, or a fresh checkout and the only check to hand observes the present instead; when a check passed against an artifact that predates the run; or when a green suite only checks files you own. Covers naming the command that would prove the claim and running it fresh, telling a stale artifact or run from this one's, inducing the condition a requirement names rather than accepting a proxy, and proving absence by searching the target surface.
+description: Use when about to call a fix, a feature, or a test suite done, fixed, or passing; when a change is about to be committed, pushed, or handed off on that claim; when a subagent's or tool's success report is about to be repeated as fact; when the only evidence is that the code looks right, or that an investigation script worked; when absence is claimed and the one location you knew to check is untouched; when the requirement is survival of a restart, a cold start, or a fresh checkout and the check to hand observes the present instead; when a check passed against an artifact that predates the run; when the green run happened on an emulator, container, or staging stand-in rather than where the claim applies; or when a green suite only checks files you own. Covers naming the check that would prove the claim and running it fresh, telling a stale artifact or run from this one's, inducing the condition and the place a requirement names rather than accepting a proxy, and proving absence on the target surface.
 ---
 
 # Confirming before claiming done
@@ -61,6 +61,7 @@ When the check itself is unreliable — an intermittent bug that only reproduces
 | A regression test guards it | Red on the old code, green on the fix, both watched | Passes once, never run against the broken version |
 | It comes back after a restart | A real restart, then the start time within seconds of boot | It is running; the registration reported success |
 | It works from a clean checkout | A clone into an empty directory, built there | It builds in the tree you have been working in |
+| It works on the target | The check run on the target itself | A green run on an emulator, container, or staging stand-in |
 | The backup is good | A restore performed from it | The backup job exited 0 and the file is the right size |
 | A subagent finished the task | The diff it actually produced, read | Its own summary of what it did |
 | Requirements are met | Checked line by line against the spec | The tests pass, so it must be done |
@@ -70,6 +71,16 @@ When the check itself is unreliable — an intermittent bug that only reproduces
 A test run is a claim about the exact code that existed the moment it ran. Change one more line afterward — even a line that "shouldn't touch" the part under test — and the run now describes a version of the code that no longer exists. "It passed ten minutes ago" and "it passes" stop being the same sentence the instant anything lands in between.
 
 This is what makes "I fixed it" and "I confirmed the fix" different acts, not just different phrasings. Declaring something fixed the moment the edit is typed, without re-running the check against the post-edit code, fails for the identical reason a stale test run fails: the evidence on offer was gathered before the thing it's supposed to prove even existed.
+
+## Evidence does not travel to another environment
+
+Evidence expires along a second axis, and this one fails far more quietly than time does, because nothing about the run looks weakened. The command was named, run in full, and read; the output says everything passed. It simply ran somewhere that is not the place the claim is about — an emulator rather than the device, a container rather than the host, a staging tenant rather than production, your operating system rather than the one it ships on.
+
+A stand-in is not a smaller version of the real thing. It is the real thing minus a particular set of services, it does not publish the list, and everything that does not need what is absent behaves perfectly — which is why the result comes back green rather than flaky. `routing-around-capability-gaps` makes that argument for whoever *chose* the stand-in in order to get unblocked. It holds unchanged for whoever merely inherited one as the ordinary place work runs, and that reader is the likelier of the two to be caught by it, because they never made a decision they could think back to.
+
+So the environment travels with the claim, or the claim is wrong: an unqualified "it passes" is read as a claim about the real place, whatever you privately meant by it. "Passing" and "passing on the emulator" are different sentences, and the second is not a hedge — it is the measurement, stated. Where the requirement names a place, the evidence has to come from that place: the real device, when what is claimed involves a driver, a sensor, a permission model, or a display; the real operating system, when it involves a path, a signal, a file lock, or line endings; the real deployment, when it involves scale, latency, or a neighbour's load.
+
+An acceptance line closed on a stand-in is therefore marked with where it was proven rather than with `done`, and downgrading one already written as verified is the ordinary move at that moment rather than an embarrassment — `finishing-what-you-started` covers surrendering a criterion visibly instead of quietly deleting it.
 
 ## A report is not a check
 
