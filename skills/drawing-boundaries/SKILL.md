@@ -1,6 +1,6 @@
 ---
 name: drawing-boundaries
-description: Use when deciding what belongs together — module, package, crate, library, process, or service splits; extracting or merging components; wrapping a vendor SDK behind an interface you own; restructuring a folder layout. Also for circular dependencies, a shared or common module that only grows, every feature touching every module, components that must deploy in a fixed order, and whether something warrants its own process, repository, or service.
+description: Use when deciding what belongs together — module, package, crate, library, process, or service splits; extracting or merging components; wrapping a vendor SDK behind an interface you own; restructuring a folder layout. Also for circular dependencies, a shared or common module that only grows, every feature touching every module, components that must deploy in a fixed order, retries or timeouts or cache TTLs that are sensible in every layer and wrong in composition, an expensive stage that runs before a check which could have rejected the work for free, and whether something warrants its own process, repository, or service. Covers the properties no single component can see, and who owns them.
 ---
 
 # Drawing boundaries

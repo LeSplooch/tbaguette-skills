@@ -49,6 +49,15 @@ Everything above the first `##` is preamble and is never rendered.
   got the check. The skill now loads for exactly that shape, and for its second half — a gate
   that runs only at creation cannot repair what arrived around it, so without a read-time
   check the rule degrades into an honour system the moment a second writer appears.
+- `drawing-boundaries` explains why a knob stated per-module says nothing about the pipeline,
+  and nobody holding that problem could get to it. Two layers that each "retry three times"
+  make nine attempts and a thundering herd nobody designed; each stage having a sensible
+  timeout is how an inner one ends up longer than the outer one and never fires; two correct
+  caches in series make staleness their sum rather than the smaller. Every layer passes its
+  own review, forever, while the composition stays broken — because a property no single
+  component can see is exactly the kind a boundary destroys, and it needs an owner above the
+  boundary or it has no owner at all. The sharp version now reachable: **a gate that runs
+  after the spend is not a gate, it is a receipt.**
 
 ## 2026-09-06 — When the check and the mistake share an assumption
 
