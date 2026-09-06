@@ -1,6 +1,6 @@
 ---
 name: designing-ci-pipelines
-description: Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI, when a stale cache produces a wrong result, when deciding which checks block a merge, when retries are proposed to make a build green, or when a pull request from a fork needs access it must not have. Covers stage ordering, feedback budgets, cache keys, required versus advisory checks, and runner permissions.
+description: Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI, when a stale cache produces a wrong result, when deciding which checks block a merge, when retries are proposed to make a build green, when a pull request from a fork needs access it must not have, when a scheduled, nightly, or cron job is added, or when one that was supposed to be running turns out never to have run. Covers stage ordering, feedback budgets, cache keys, required versus advisory checks, runner permissions, forcing a scheduled job's first run before trusting it, and reporting age of last success rather than status of last run.
 ---
 
 # Designing CI pipelines

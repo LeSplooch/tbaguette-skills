@@ -24,6 +24,23 @@ is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-06 — Sections nobody could have been routed to
+
+- A skill's `description:` line is the only part of it that is always loaded, which makes it
+  the whole routing surface: a section the description never hints at is unreachable, and the
+  answer sits in the file while nobody who has the question ever arrives. A pass over the
+  library asked one thing of every section — if you had exactly this problem and said it out
+  loud, would this skill have surfaced? — and this entry collects the ones that now do.
+- `designing-ci-pipelines` had a whole section on the scheduled job that has never once
+  run, and no way to reach it. That job is the one thing in a pipeline with nobody waiting
+  on it, so success and total non-existence produce exactly the same nothing: merged before
+  its credentials were armed, a cron expression that parses but never matches, disabled at
+  the platform level, suspended because the repository went quiet — every one of them
+  renders as blank rather than red, and the breakage surfaces as the backup that is not
+  there, months later. The skill now loads when a scheduled, nightly, or cron job is added
+  and nothing yet proves it has ever run, and it says to force one run when the job lands
+  and to report *age of last success* instead of *status of last run*.
+
 ## 2026-09-06 — When the check and the mistake share an assumption
 
 - `portable-shell-scripting` already warned that a *successful* `cd` outlives the command
