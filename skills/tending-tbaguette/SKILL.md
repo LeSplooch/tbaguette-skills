@@ -311,7 +311,7 @@ this size always holds a sentence that could be put more sharply. Here that cost
 more than an unnecessary commit would: it becomes a pull request a maintainer has
 to read, weigh and turn down. **An empty queue ends a scheduled pass exactly as it
 ends a conversational one** — and it ends there whether the queue arrived empty or
-was emptied by the coverage check above.
+was emptied by the coverage check in the contribution procedure below.
 
 The reversal is in what gets said. Inside a conversation, silence about an empty
 queue is correct: there is a user mid-task and a report about nothing is noise. A
