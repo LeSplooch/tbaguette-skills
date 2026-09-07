@@ -1,6 +1,6 @@
 ---
 name: grounding-test-doubles
-description: Use when writing a mock, stub, fake, or fixture for something you do not control — an HTTP API, a vendor SDK, a queue, a device, another team's service — when a fully green suite is followed by a failure on the first real call, when deciding between recorded and hand-written fixtures, when a parser and its test data were written by the same person from the same document, or when a benchmark's fixture describes a richer configuration than the shipping system actually produces. Covers fixture provenance, capturing over composing, contract and live tests, and making an unrecognized shape fail loudly.
+description: Use when writing a mock, stub, fake, or fixture for something you do not control — an HTTP API, a vendor SDK, a queue, a device, another team's service — when a fully green suite is followed by a failure on the first real call, when deciding between recorded and hand-written fixtures, when a parser and its test data were written by the same person from the same document, or when a benchmark's fixture describes a richer configuration than the shipping system actually produces. Also use when a test fails on code that works when performed by hand, or when something fails with a permission or authorization error only under automation. Covers fixture provenance, capturing over composing, contract and live tests, making an unrecognized shape fail loudly, and the opposite failure where a stand-in is more restrictive than reality because it cannot reproduce the gate a real caller passes.
 ---
 
 # Grounding test doubles
@@ -89,6 +89,16 @@ An unrecognized shape must raise. The rule generalizes past parsing: when a comp
 
 This is the single highest-value line item in this skill, because it converts every failure above — misreading, drift, a shape you never captured — from silent data loss into an exception with a stack trace.
 
+## The failure that runs the other way
+
+Everything above is about a double that is **more permissive** than the thing it stands for: a fixture your parser already agrees with, a shape you never captured, an unrecognized payload accepted as empty. Green suite, ungreen reality. That direction gets the attention, because it is the one that reaches production.
+
+The mirror image is real and is filed nowhere, because it does not present as a fixture problem at all. A stand-in can be **more restrictive** than what it stands for -- able to reach the interface, unable to reproduce the *precondition* a real caller arrives carrying. The call fails under test and works in production, which reads as a bug in the code rather than as a limit of the harness. So the afternoon goes on fixing something that was never broken, and the repair is occasionally worse than the original.
+
+Capabilities gated on *who is asking* rather than on *what is asked* are where this concentrates: anything needing a genuine user gesture, a foregrounded window, a real session, an interactive terminal, a signed build, a device actually attached. A driver that synthesizes the call satisfies the interface and not the gate. The tell is narrow enough to memorise -- **the failure is a permission or authorization error under automation, and the same action performed by hand succeeds.** That pair does not mean the feature is broken. It means the harness is what got measured.
+
+Two rules follow, and the first is only this skill's own rule pointed the other way. Confirm the stand-in can reproduce the gate before believing a red, exactly as everything above says to confirm a fixture is real before believing a green. And where it cannot, say so rather than quietly switching to the real thing: performing it by hand proves the granted path only, so the *denied* path still needs its own test -- which is the one job a stand-in that cannot pass the gate is perfectly suited to.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -100,6 +110,7 @@ This is the single highest-value line item in this skill, because it converts ev
 | Live tests deleted after they blocked a release | They were wired into the default run instead of a scheduled one |
 | A recorded fixture leaked a real token into the repo | Scrubbed after committing, or not at all |
 | Nobody can say whether a fixture is current | No date or provider version recorded next to it |
+| A test fails on code that works when done by hand | The stand-in cannot reproduce a precondition the real caller carries, so the harness is what failed |
 
 ## Red flags
 
@@ -110,3 +121,4 @@ This is the single highest-value line item in this skill, because it converts ev
 - "We don't need a live test, we have full coverage."
 - A fixture file with no recorded date, version, or origin.
 - The same person writing the parser and its only test data, from one document, with no capture step.
+- "It throws a permission error under the driver, so the permission handling is broken."

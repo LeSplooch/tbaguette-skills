@@ -24,6 +24,22 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-07 — When the harness is what failed, not the code
+
+- `grounding-test-doubles` has always been about a double that is too *permissive* —
+  a fixture your parser already agrees with, a shape you never captured, green suite
+  and ungreen reality. It now also covers the mirror image, which presents as a bug
+  rather than as a fixture problem: a stand-in that is more *restrictive* than the
+  real thing, because it can reach the interface but cannot reproduce the
+  precondition a real caller arrives carrying.
+- The tell is narrow and worth knowing: the failure is a permission or authorization
+  error under automation, and the same action performed by hand succeeds. That pair
+  means the harness got measured, not the feature — and the cost of missing it is an
+  afternoon spent fixing code that was never broken.
+- Where it concentrates: anything gated on *who is asking* rather than on what is
+  asked — a genuine user gesture, a foregrounded window, a real session, an
+  interactive terminal, a signed build, a device actually attached.
+
 ## 2026-09-07 — Controls you are not allowed to break to get unblocked
 
 - An autonomous run that gets refused by the thing it is testing — a lockout, a rate limit,
