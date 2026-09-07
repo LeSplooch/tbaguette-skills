@@ -1,6 +1,6 @@
 ---
 name: diagnosing-before-fixing
-description: Use when a bug, test failure, crash, or any behavior that doesn't match what the code is supposed to do needs a fix and none has been proposed yet, especially when the obvious quick fix is tempting under time pressure or an earlier attempted fix didn't hold. Also use when a failure has been blamed on the network, the CI runner, a flaky dependency, or this machine and that attribution has never been tested, when a parameter appears to have no effect at all, especially when the result is byte-identical rather than merely close, or when a defect has only ever been seen through a preview, a local server, or another stand-in for the real delivery path. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it actually originates rather than where it surfaced, telling a fault in the artifact from one introduced by the path you viewed it through, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.
+description: Use when a bug, test failure, crash, or any behavior that doesn't match what the code should do needs a fix and none has been proposed, especially when the obvious quick fix is tempting or an earlier fix didn't hold. Also use when a failure has been blamed on the network, the CI runner, a flaky dependency, or this machine and that attribution has never been tested, when one measurement's own parts contradict each other, when a parameter appears to have no effect at all, especially when the result is byte-identical rather than merely close, or when a defect has only ever been seen through a preview, a local server, or another stand-in for the real path. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it originates rather than where it surfaced, telling a fault in the artifact from one introduced by the path you viewed it through, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.
 ---
 
 # Diagnosing before fixing
@@ -122,6 +122,40 @@ The loop's **Act** step takes the result and reads it as confirmation or refutat
 The discriminator is available before any analysis, and the counting is the whole of it: **count the ways the result is anomalous, and ask whether one wrong idea explains all of them.** A wrong hypothesis is a single mistaken belief about the cause, so it usually surfaces as a single deviation — the number moved the wrong way, or failed to move. A run that simultaneously never finishes a third of its attempts, triples its latency, and contains none of the category the change was built to select for is three unrelated failures, and no one wrong idea about the cause produces three unrelated failures. That is the signature of an apparatus that is broken, and the honest verdict on it is *no result*, not *refuted*.
 
 One anomaly is evidence and several are a symptom, which inverts the usual instinct that a worse result is a stronger signal. When the count is high, stop reading the verdict and go read the new code — the hypothesis has not been tested yet, whatever the numbers say.
+
+## A reading that contradicts itself is about the instrument
+
+The section above splits on *how many* deviations there are, and the one below
+on *how exact* the single one is. There is a third discriminator between them,
+cheaper than both and available before any analysis at all: **does the reading
+agree with itself?**
+
+A measurement usually reports more than one thing — a count and a listing, a
+verdict and the sample it was reached from, a summary line and the rows above
+it, a pass and the log it emitted. When two parts of one reading cannot both be
+true, no fact about the system under test explains it, because the system was
+never asked a question with a contradictory answer. Something in the apparatus
+produced it: a detector that ran against different input than the reporter, a
+counter incremented on a path the filter no longer reaches, a summary computed
+before the last stage wrote, a format change that made the matcher stop
+matching while the reporter carried on reporting zero. A run that reports zero
+failures while displaying one is not a surprising result about failures. It is
+a broken failure detector, and its verdict on everything else is worth nothing.
+
+The reason to check this first is that the rule above points the other way. A
+single deviation, it says, usually means a wrong hypothesis — and a
+self-contradicting reading arrives as exactly one deviation, so the ordinary
+move is to believe it and start revising the hypothesis. Internal incoherence
+overrides the count: it is not a weak signal that the apparatus might be
+broken, it is a proof that it is, and no amount of interesting content
+elsewhere in the output survives it.
+
+So before reading a result for what it says about the system, read it against
+itself, and prefer measurements that give you the material to do that — emit
+the sample beside the count, the failing case beside the verdict, the rows
+beside the total. A measurement that reports only a single number cannot be
+checked this way at all, which is a reason to want a second number rather than
+a reason to trust the one.
 
 ## An exact null result indicts the plumbing, not the parameter
 

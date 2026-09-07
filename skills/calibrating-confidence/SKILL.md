@@ -1,6 +1,6 @@
 ---
 name: calibrating-confidence
-description: Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session, when asked whether a claim is certain or being pushed back on, when a conclusion rests on recalled knowledge rather than something read, when every sentence has acquired a hedge, when the accurate answer is that you do not know, or when a field with no data source of its own is about to be mapped onto a named concept as a proxy. Covers evidence tiers, false precision, probability language, proxies that inherit the name of the thing they stand in for, and unearned certainty.
+description: Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session, when asked whether a claim is certain or being pushed back on, when a conclusion rests on recalled knowledge rather than something read, when every sentence has acquired a hedge, when the accurate answer is that you do not know, when a field with no data source of its own is about to be mapped onto a named concept as a proxy, or when a search's hit list or match count is about to be reported as the answer to the question it was run for. Covers evidence tiers, false precision, probability language, proxies that inherit the name of the thing they stand in for, reading the hits rather than the result set, and unearned certainty.
 ---
 
 # Calibrating confidence
@@ -35,6 +35,42 @@ Rules that make the tiers real:
 - **Verify the claim, not its neighbour.** Reading a signature does not verify what the function returns. Reading an import does not verify the symbol exists. This is the most common way a careful answer ends in a wrong leaf fact.
 - **Your own prior output is not evidence.** Confidence that rises when you reread your own summary is laundering an assumption into a fact.
 - **Load-bearing assumptions get checked first.** If the plan cannot survive being wrong about it, check before building on it. Everything else may stay marked and unchecked.
+
+## A search result is the input to a check, not the check
+
+A search that returns hits feels like verification, and it is: a real command
+ran, against the right target, and came back with matches. What it verifies is
+exactly one thing — that those bytes matched that pattern. Every claim built on top of that is inferred, and the inference is
+usually made without being noticed, because the hits were never opened.
+
+The shape is always the same. A question gets asked in words — *is this
+still called anywhere*, *did the old behaviour get removed everywhere*, *does
+anything write to that table* — and answered with a pattern, whose result is a
+count and a list of paths. The count then gets read as the answer. Fourteen hits
+becomes "yes, widely used"; a hit in a directory becomes "that subsystem depends
+on it"; the list of paths becomes a map of where the thing lives. None of those
+is what the command established. The hits may be comments, dead branches, a
+vendored or generated copy, a string in a fixture, the definition rather than a
+use, or a different symbol that merely shares a substring.
+The reverse runs too: a hit list too long to read gets summarized from its
+paths, and a summary of paths is a claim about contents nobody looked at.
+
+What makes this specifically a calibration failure rather than a sloppy-search
+one is the tier it gets reported at. The searcher remembers running a command
+and reads their own conclusion back as verified, when the only verified fact is
+the match. It is *verify the claim, not its neighbour*, from the tier rules above, applied to a tool whose
+output is so nearly the answer that the gap closes silently: the pattern's
+result and the question's answer differ by a reading step that leaves no trace
+when it is skipped.
+
+**Open the hits, or state the tier honestly.** For a small result set, read
+them — that is usually seconds, and it is the entire check. For a large one,
+read a sample and say it was a sample, or narrow the pattern until the result
+set is one you actually read. Where neither is affordable, the claim is still
+available and it is a different claim: *fourteen lines match this pattern; I
+have not classified them*, which is true, useful, and cannot be mistaken for
+the answer to the question that was asked. A count reported as a finding is a
+proxy wearing the name of the answer, which is what the next section is about.
 
 ## A proxy inherits the name of the thing it stands in for
 

@@ -1,6 +1,6 @@
 ---
 name: tracking-data-provenance
-description: Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted, or backfilled — when a field encodes how strongly something is believed, when an outside recommendation could trip a threshold meant for first-party evidence, when designing an import or sync path, or when a value's origin has to survive into an audit, a model, or an automated decision. Covers separating write paths by origin, provenance fields, confidence laundering, and promotion rules.
+description: Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted, or backfilled — when a field encodes how strongly something is believed, when an outside recommendation could trip a threshold meant for first-party evidence, when designing an import or sync path, when a value's origin has to survive into an audit, a model, or an automated decision, or when a version, source, or origin field is about to be given a default. Covers separating write paths by origin, provenance fields, confidence laundering, why a field defaulted to the current value can never record ignorance, two-sided compatibility checks where a version marks a change in meaning, and promotion rules.
 ---
 
 # Tracking data provenance
@@ -63,6 +63,37 @@ By step 4 the outside guess has the authority of your own evidence, and the chai
 **So the design step nobody takes is step 4's:** having separated the write paths, go read what consumes that field. An automatic promotion rule is how laundered provenance turns into authority, and it is usually in a different service, written by someone who never saw the import.
 
 Aggregation deserves specific suspicion. A count, an average, or a score computed across mixed provenance produces a number whose meaning is undefined and whose confidence is unstated — and it looks exactly like a number computed over clean data.
+
+## A provenance field defaulted to the current value cannot record ignorance
+
+Every field in this taxonomy has to be able to say *unknown*, and the one place
+that guarantee is routinely given away is the default. A version, source, or
+origin field whose default is whatever the writing code is at that moment turns
+a record that never carried the information into a record that confidently
+asserts the current value. That is the single answer no downstream check can
+falsify, because it is exactly what a correctly-populated recent record looks
+like.
+
+It is invisible while the current value is the first one. A row written without
+a version, defaulted to version 1 in a world where everything is version 1,
+reads correctly and behaves correctly. The bug ships and lies dormant. The day
+the value increments, every unversioned record silently begins claiming the new
+value — and it claims it to the guard written specifically to catch records from
+before the change. The check does not fail; it passes, on the records it exists
+to stop.
+
+The same defaulting habit breaks compatibility guards in a second way worth
+checking at the same time. A guard that asks whether a record's version is *at
+most* the current one is only half a guard when the version marks a change in
+**meaning** rather than in shape. A newer record is refused, correctly. An older
+one is waved through — and interpreting an old quantity under the new meaning is
+just as wrong as the case being guarded against, only quieter, because nothing
+about it looks like a version problem.
+
+So: give the field no default, or a default that is a distinct *unknown*
+sentinel that no valid write can produce, and make the absence loud at read
+time. Then write the compatibility check as a two-sided range, and give it a
+test with a record from each side.
 
 ## Keeping it honest over time
 

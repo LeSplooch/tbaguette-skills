@@ -1,6 +1,6 @@
 ---
 name: automating-repetition
-description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a scripted edit, codemod, or migration reported success and changed nothing, when a manual step is risky, irreversible, or easy to get wrong by hand, when a person is being asked to report a state that changes faster than they can reply, when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right, or when a one-shot bulk edit will produce a diff too large for anyone to actually review. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.
+description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a scripted edit, codemod, or migration reported success and changed nothing, when a manual step is risky, irreversible, or easy to get wrong by hand, when a person is being asked to report a state that changes faster than they can reply, when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right, when a one-shot bulk edit will produce a diff too large for anyone to actually review, or when a recurring job's rule defers work to its next run. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.
 ---
 
 # Automating repetition
@@ -117,6 +117,42 @@ preference, and when nobody will be sitting there to ask again.
 
 The ladder still applies inside the watcher: report first, act later, and measure
 the firing rate against the record before arming anything.
+
+## "Next run" is a claim about the interval, not about the work
+
+A recurring job accumulates rules that defer decisions forward: retry it next
+run, escalate if it is still failing next run, ship the queued item on the next
+pass, alert if the backlog has not drained by the next cycle. Every one of those
+reads as a rule about the work and is really a rule about the clock. It is
+correct only while the gap between runs stays long enough for the thing being
+waited on to have changed.
+
+Nothing about a schedule guarantees that gap. Intervals get tightened because
+the job looked useful; a manual trigger fires one on top of a scheduled one; a
+missed window makes two fire close together; a retry after a failure lands
+minutes rather than days later. The deferral rule does not notice. It fires on
+run number, and run *n+1* arrives holding exactly the inputs run *n* declined to
+act on — so a rule written to force a decision after a real wait instead
+manufactures one on unchanged evidence, and the second run's conclusion carries
+the authority of having been reached twice.
+
+There is no interval that fixes this, because the rule's meaning is tied to
+whichever interval it happens to run at. Tighten the schedule and deferrals
+resolve too early, on inputs that have not moved. Widen it and a rule meant to
+escalate within a day escalates within a week, long after the condition
+mattered. In both directions the rule's text is untouched and what it means has
+changed underneath it — which is why nobody reviews it.
+
+**Write the deferral against the condition, not against the count.** A rule
+that says *retry next run* should say what would make the retry worth
+attempting; one that says *decide on the next pass* should name what would have
+to be different for the answer to change, and check that rather than the
+calendar. Where a count genuinely is the right unit — a retry budget, a
+back-off — pair it with the elapsed time it assumed, and treat a run that
+arrives far inside that window as the same run rather than the next one. Written
+that way, a job that fires twice in an hour reaches the same decision a job
+firing twice in a fortnight does, which is the property the count silently
+promised and never had.
 
 ## A bulk edit runs once, so the ladder does not apply
 

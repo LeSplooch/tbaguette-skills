@@ -167,7 +167,10 @@ a hit gets treated as settled, when both are claims about a surface that does no
 preserve the thing being asked about. Before a hit counts, say what produced it —
 which section, which surrounding context, which offset — or find a second,
 longer pattern that must co-occur with it. A hit whose source cannot be named is
-the same non-result as a miss, and it will be cited as proof.
+the same non-result as a miss, and it will be cited as proof. The lossy surface
+is the sharpest case of a general one: `calibrating-confidence`'s *A search
+result is the input to a check, not the check* owns the ordinary version, where
+the surface preserves everything and the hits still go unread.
 
 ## The call site is not the context
 

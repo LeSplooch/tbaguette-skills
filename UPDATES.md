@@ -74,6 +74,53 @@ Everything above the first `##` is preamble and is never rendered.
   and re-queued by a careful reader every time. Write what would change the answer next to
   the item; a second deferral cites what changed; the third reading settles it. An item
   whose stated trigger has not fired is waiting rather than deferring and does not count.
+- Adding a confirmation step to a dangerous operation can make it less safe, and
+  `designing-for-idempotency` now says why. Where the thing carrying the operation cannot
+  pause, the standard way to ask a question partway through is to abandon the call, ask, and
+  re-send the whole original request with the answer attached — so every effect the operation
+  produced *before* the question happens again, once per asking. One logical operation becomes
+  several complete ones. The skill gives the three placements that survive it and says that
+  picking one is part of adding the gate, not a follow-up to it.
+- Anything installed between a tool and whoever acts on its output holds more power than the
+  tool does. `least-privilege-design` adds the case: a proxy, hook, sanitizer, or formatter
+  decides what was observed, while the producer's authentication, authorization and audit log
+  all describe only what the producer *sent*. These layers get installed for cosmetic reasons
+  and reviewed as formatting conveniences, and one that strips anything error-shaped can make
+  a real failure invisible to the only party able to react. Govern them at the privilege of
+  the decisions they steer, and prefer a transform that adds a field to one that overwrites
+  it, so the original survives to be compared against.
+- A version, source, or origin field that defaults to whatever the writing code is at that
+  moment can never record *unknown*. `tracking-data-provenance` names the trap and its delayed
+  fuse: while the current value is the first one, a record written without the field reads
+  correctly and behaves correctly, so the bug ships dormant — and the day the value increments,
+  every such record starts asserting the new value to the guard written specifically to catch
+  records from before the change. The same section covers the compatibility check that only
+  looks one way, which is half a guard when the version marks a change in meaning.
+- Before reading a result for what it says about the system, read it against itself.
+  `diagnosing-before-fixing` gains a third discriminator beside its existing two: a reading
+  whose own parts contradict each other — a count that disagrees with its listing, a pass that
+  disagrees with its log — is a proof the instrument is broken, not a surprising fact about the
+  system. It matters because the neighbouring rule points the other way: self-contradiction
+  arrives as a single deviation, which that rule says usually means a wrong hypothesis.
+- A search that returned hits verifies one thing — that those bytes matched that pattern.
+  `calibrating-confidence` now covers what happens next, when the count gets read as the
+  answer to a question asked in words. Fourteen hits becomes "widely used"; a list of paths
+  becomes a map of where the thing lives; and the hits may be comments, dead branches, a
+  vendored copy, a fixture, or a different symbol sharing a substring. Open them, sample them
+  and say so, or make the smaller claim that is actually true — a count reported as a finding
+  is a proxy wearing the name of the answer.
+- Rules that defer work to a job's "next run" are rules about the clock, not about the work.
+  `automating-repetition` adds the failure: nothing guarantees the gap between runs, so when a
+  schedule tightens or two runs land close together, run *n+1* arrives holding exactly the
+  inputs run *n* declined to act on — and a rule written to force a decision after a real wait
+  instead manufactures one on unchanged evidence. Write the deferral against the condition it
+  is waiting on rather than against the count.
+- `tending-tbaguette` picks up two rules from the same window. When a skill's description has
+  no room left for a new trigger, that is evidence about *fit* and not only about space: a
+  saturated description usually describes a saturated scope, so ask whether another skill is
+  the lesson's general home before deciding which existing trigger has to lose. And its own
+  deferral rule now carries the interval caveat above — two visits to the queue in one
+  afternoon are one pass, not two, and an entry they both saw is still on its first deferral.
   The mirror-image failure gets named too — a recurring run re-deriving a question it
   already answered "no", because a negative finding was never written where the next run
   would look. `tending-tbaguette` picks up the same rule for its own candidate queue.

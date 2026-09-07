@@ -1,6 +1,6 @@
 ---
 name: designing-for-idempotency
-description: Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues, consumer restarts and redelivery, replayed webhooks, double-clicked buttons, resumed jobs, or a crash partway through a write. Covers duplicate charges, duplicate emails and notifications, idempotency keys, deduplication windows, retry safety under concurrency, and claims of exactly-once delivery.
+description: Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues, consumer restarts and redelivery, replayed webhooks, double-clicked buttons, resumed jobs, a crash partway through a write, or a confirmation, approval, or clarifying question being added partway through an operation that cannot pause. Covers duplicate charges, duplicate emails and notifications, idempotency keys, deduplication windows, retry safety under concurrency, why a mid-operation gate re-runs every effect before it, and claims of exactly-once delivery.
 ---
 
 # Designing for idempotency
@@ -60,6 +60,42 @@ Fixes, in order of preference:
 - Never ack or commit the queue offset before the effect is durable. Ack-then-work loses messages; work-then-ack duplicates them, and duplicates are the failure mode you have a design for.
 - Where no provider key exists, budget an accepted duplicate rate and state it ("at most one duplicate per failed attempt") rather than claiming exactly-once.
 - **Decide what happens after the dedup window expires.** A replay past the window is a new request. For money and messaging it must fail closed — reject as expired. Every naive implementation fails open, which means the one duplicate charge you get is the one from the six-day-old retry.
+
+## A gate added mid-operation turns one call into several whole ones
+
+Adding a confirmation step to a dangerous operation feels like it can only make
+it safer. Where the system carrying the operation cannot hold an open
+conversation — and most cannot — it usually does the opposite, for a reason that
+has nothing to do with the gate itself.
+
+The standard way to ask a question partway through a stateless call is to
+abandon the call, ask, and have the caller re-send the *entire* original request
+with the answer attached. The second attempt is a fresh, complete execution. So
+every effect the operation produced before it reached the question point happens
+again: the row inserted during validation, the file written while staging, the
+upstream reservation, the notification fired on entry, the counter incremented.
+One logical operation becomes N complete attempts, and N grows with how many
+times the caller is asked. A gate placed to prevent one bad outcome has
+multiplied every effect that precedes it.
+
+Nothing in a request/response protocol prevents this, and few supply an
+operation identity by default — duplicate detection is left to whoever
+implemented the operation, which is to say usually nobody. The same shape
+appears well outside protocols: a re-posted web form, a payment step-up, a
+re-authorization round trip, a workflow resumed from a checkpoint, any queue
+with at-least-once delivery.
+
+Three answers work, and picking one is part of adding the gate rather than a
+follow-up to it. **Put the gate strictly before the first effect**, so an
+abandoned attempt did nothing worth repeating — which usually means gathering
+every decision up front instead of discovering mid-flight that you need one.
+**Give the operation an identity the executor enforces at-most-once on**, minted
+by the caller, carried across every attempt, and checked before any effect. Or
+**make the effects themselves idempotent**, in the sense the sections above
+describe, so that repeating them is genuinely free and the retry stops
+mattering. What does not work is adding the gate and deciding none of this: a
+confirmation bolted onto a non-idempotent operation is a multiplier wearing a
+safety control's name.
 
 ## Common mistakes
 

@@ -347,6 +347,23 @@ project, a description with room in it, a section that grows past an aside. Then
   the next pass — either it goes into a pull request or it moves to `## Shipped`
   with a one-line reason. Both are cheaper than a fourth reading.
 
+**But "the next pass" is a claim about the interval, not about the work.** The
+counting rule assumes visits to the queue are spaced far enough apart that the
+inputs have a chance to move between them, and nothing enforces that. Two
+sessions in an afternoon, or a scheduled sweep firing on top of a manual one,
+both count as two passes while holding exactly the same evidence — so a rule
+written to force a decision after a real wait instead manufactures one on
+unchanged inputs, and that decision carries the false authority of having been
+reached twice.
+
+Read a deferral premise by its condition, never by its count. An entry whose
+premise says *fires on a second sighting in unrelated work* has not fired
+because a second session opened the queue. Where a premise was written in
+counts and the visits have bunched up, treat them as one and leave the entry
+queued: that is the first deferral still waiting, not a third one.
+`automating-repetition`'s *"Next run" is a claim about the interval, not about
+the work* is the general form.
+
 This governs *your* deferrals, not your partner's. "Keep it queued" chosen at the
 approval gate is a decision someone made and it resets nothing — they own the
 scope, and re-asking about it next week is pestering rather than rigor.
@@ -513,6 +530,26 @@ surface, and a new section in a file whose description never mentions the
 question it answers is unreachable while every suite stays green. The 1024
 character cap is enforced by the format itself; past it, a new trigger has to
 displace an older one rather than join it.
+
+**A description with no room left is evidence about fit, not only about space.**
+Displacement frames a full description as a budgeting problem — something loses
+so the new trigger can join — and that framing takes for granted that the skill
+you picked is the right one and merely crowded. It is worth testing, because a
+description is a compressed statement of a skill's scope, and one that has been
+saturated for a while describes a skill whose scope is saturated too. A lesson
+that will not fit into the sentence often does not fit inside the skill either.
+
+When the cap bites, ask the fit question before the budget one: is there another
+skill where this lesson is the *general* case, with the one you first reached for
+holding only its sharpest instance? That reframe is common, because the skill a
+lesson occurs to you in is the one you happened to be using when it bit. Re-homing
+costs a cross-reference from the original section — one sentence, no description
+budget — and both skills end up more accurate than a displacement would leave
+them. It also matters more here than it would in your own repository: a
+displacement deletes a trigger other people are relying on to reach a section you
+may never have read, and your pull request is the only place that loss is visible.
+Name the other candidate homes and say why each is worse, in the pull request
+body, before proposing that a maintainer spend a trigger.
 
 **Expect the commit to touch most of `docs/`.** The pre-commit hook regenerates
 the site, every page carries a version and a build timestamp, so a one-file edit

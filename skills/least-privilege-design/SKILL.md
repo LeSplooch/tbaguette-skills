@@ -1,6 +1,6 @@
 ---
 name: least-privilege-design
-description: Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list, when a component needs access to something new, when one credential is shared across services or environments, when a service acts on a caller's behalf, or when reasoning about blast radius, privilege escalation, wildcards in policies, sandboxing, network egress, and separation of duties.
+description: Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list, when a component needs access to something new, when one credential is shared across services or environments, when a service acts on a caller's behalf, when a local layer — a proxy, hook, sanitizer, formatter, or interceptor — sits between a producer and whoever acts on its output, or when reasoning about blast radius, privilege escalation, wildcards in policies, sandboxing, network egress, and separation of duties. Covers governing anything that can rewrite an observation at the privilege of the decisions it steers, and annotating rather than overwriting so the original survives.
 ---
 
 # Least-Privilege Design
@@ -77,6 +77,35 @@ Apply to operations that are irreversible, move money or entitlements, change wh
 | Network | deny-by-default egress, ingress only from the one caller, metadata endpoint blocked from application containers | egress — nearly every deployment allows all outbound |
 | Data | tenant predicate enforced in storage, column-level restriction on sensitive fields, separate identities for read, write, and migration | one connection identity for reads, writes, and schema changes |
 | Build / CI | job-scoped token, no secrets in jobs that execute untrusted contributions, separate identities for build and publish | one pipeline credential that both tests and deploys |
+
+## The layer that rewrites an observation outranks the one that produced it
+
+Permission systems are built around who may *call* a thing. They rarely model
+who may change what the call appeared to return. A result that passes through
+any local transform on its way to whoever acts on it — a proxy, an interceptor,
+a formatter, a sanitizer, a log shipper, a post-processing hook — is a result
+that transform decided. The producer's authentication, authorization and audit
+log all describe what the producer sent. None of them describes what the
+consumer saw, so a correctly authorized call and a fabricated answer are
+indistinguishable on the far side.
+
+That makes the transform the higher-privilege component of the pair, which is
+the reverse of how it gets reviewed. These layers are installed for cosmetic
+reasons — truncate this, redact that, normalize the shape — and are read as
+formatting conveniences, so they attract far less scrutiny than the service
+whose output they rewrite while holding strictly more power over the decision.
+A sanitizer that strips anything error-shaped does not merely tidy the output;
+it can make a failure invisible to the only party in a position to react to it.
+
+The second half is worse and is easy to miss while arguing about the first. A
+transform that **replaces** rather than annotates destroys the evidence of what
+was actually returned. Nothing downstream can reconstruct it, the audit trail on
+the producer's side records a call that looks entirely normal, and the
+discrepancy exists only in the gap between two logs nobody joins. So: govern
+anything that can rewrite an observation at the privilege of the decisions it
+influences, not at the privilege of the cosmetic job it was installed to do —
+and prefer transforms that add a field over transforms that overwrite one, so
+the original survives to be compared against.
 
 ## Reviewing what a role can actually do
 
