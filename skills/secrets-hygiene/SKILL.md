@@ -1,6 +1,6 @@
 ---
 name: secrets-hygiene
-description: Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline, container image, or client app, or finding one in a commit, log line, screenshot, ticket, or error message. Covers leaked credential response, revocation and rotation, secret scanning, environment variable and dotenv handling, and pre-publication checks on a repository.
+description: Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline, container image, or client app, or finding one in a commit, log line, screenshot, ticket, or error message. Also use when a credential would have to pass through you on its way to a service, or when a transcript, context, or session summary may have held one. Covers leaked credential response, revocation and rotation, secret scanning, environment variable and dotenv handling, and pre-publication checks on a repository.
 ---
 
 # Secrets Hygiene
@@ -14,6 +14,7 @@ A secret's only property is that its distribution is controlled, so every surfac
 - Adding a credential to a service, pipeline, image, device, or client application.
 - A key, token, or private key appears in a diff, log, ticket, chat message, screenshot, or exception.
 - Standing up CI or a deploy path; making a repository public; onboarding or offboarding someone.
+- Someone offers to hand you a credential so that you can place it somewhere for them.
 - Any sentence containing "temporarily hardcode", "just for local dev", or "it's only a test key".
 - Not for: deciding what a credential should be *allowed to do* (`least-privilege-design`); whether a dependency can read your environment (`auditing-dependencies`).
 
@@ -32,6 +33,7 @@ A secret's only property is that its distribution is controlled, so every surfac
 | Crash reports and telemetry | Serialize whole config objects and capture the environment by default |
 | Shell history, editor swap files, notebook outputs, dotfiles | Backed up, synced between machines, and indexed by desktop search |
 | Chat and tickets | Search-indexed indefinitely, broad read access, exported during discovery |
+| A conversation, transcript, or model context | Re-sent verbatim on every later turn, fanned out to session stores and request logs, and paraphrased into summaries and notes that outlive the session. Unlike logs and CI output, there is no masking step to fail here, because there is no masking step |
 | Environment of a shared process | Readable by every child process and by anything that dumps the environment — better than a committed file, worse than a fetch on demand |
 
 ## Injection at runtime, not at build time
@@ -44,6 +46,18 @@ Precedence, worst to best: literal in source → encrypted file whose key is in 
 - Read the secret at use time. A value captured into a global at import or boot is the mechanical reason "rotation requires a restart", and therefore the reason rotation gets postponed.
 - Never pass a secret as a command-line argument — process listings are world-readable on most systems.
 - Never log the resolved configuration at startup, at any level. This is the single most common way a correctly-stored secret ends up in a log aggregator.
+
+## Never be the conduit for a value
+
+The ladder above ends at the best outcome — no long-lived secret exists at all. There is a collection path that quietly reintroduces one, and it looks like helpfulness rather than like a mistake: a human needs to give a credential to some third party, and you offer to carry it.
+
+Do not. **Anything you hold, you also record.** A value passing through you inherits every retention surface you have — the transcript, the session store, the request log, the summary written when the context is compacted — and it inherits them all at once, before any redaction step exists to catch it. Careful handling does not help, because the recording is not something the handling does; it is what the medium is.
+
+So when a secret has to reach a third party, send the *person* to the issuer and take back a reference: the fact that it was set, a key id, a fingerprint, a URL that the party visits directly. An intermediary that never possesses a value cannot leak one, and that is a stronger property than any amount of discipline about a value it does possess.
+
+This forbids being the **carrier**, not being the **configurer**. Writing a reference, a path, or a secret-store lookup into a configuration is the ordinary job, and no value crosses. And where a value reaches you anyway — pasted to be helpful, echoed by a command, printed in a stack trace — it is already on every surface in the table above, and nothing done afterwards takes it back off them. It is leaked. Go to the leak procedure below and start at revoke, rather than carrying on carefully with a value that is now burned.
+
+The same rule runs in the other direction, as two separate failures. A credential belonging to a third party is not relayed back toward whoever asked — that is `least-privilege-design`'s confused deputy, a component applying its own authority to a target somebody else chose. And a token issued to you for one service is not presented to a second on the grounds that it was accepted; that one is an audience check the verifier skipped, which the same skill covers a few lines earlier.
 
 ## Scoping, briefly
 
@@ -96,6 +110,7 @@ Keeping a secret out of output that has already received it is a separate discip
 | The leak response began with a history rewrite | Revocation postponed behind the slowest and least effective step |
 | Ignore rules treated as the control | Ignore files do not cover already-tracked files, other surfaces, or anyone's local tooling |
 | Same key in staging and production | One credential spanning environments; the weakest environment sets the security of the strongest |
+| A credential was pasted into the conversation so it could be placed | The conduit records whatever it carries; that value is now burned and needs revoking, not placing |
 
 ## Red flags
 

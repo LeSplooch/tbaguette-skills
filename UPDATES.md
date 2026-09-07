@@ -24,6 +24,62 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-08 — Nine things a run trusts without re-checking
+
+- **A credential should never travel through you.** `secrets-hygiene` gains the surface that
+  was missing from its list of places a secret must never be — a conversation, a transcript,
+  a model context — and the reason it is the worst entry on that list: it is re-sent verbatim
+  every turn, fans out into session stores and request logs, and gets paraphrased into
+  summaries that outlive the session, and unlike a log there is no masking step to fail, because there is no masking step. The rule that follows is short. When a secret has to reach a third party, send the
+  *person* to the issuer and take back a reference. Careful handling does not help, because
+  the recording is not something the handling does — it is what the medium is.
+- **Text you pass along arrives in your voice.** `handling-untrusted-input` has always named a
+  model's context as the one destination with no way to separate data from instructions. It now
+  names the second one: the attention of whoever reads your output. A quoted line from a fetched
+  page, a dependency's prose, a tool's error string, another agent's summary — none of it is
+  marked, so it acquires your authorship by default. A relayed question reads as your question,
+  and its answer authorizes something the reader never meant to authorize.
+- **A resume restores your record, not the world.** `checkpointing-long-runs` covered memory
+  fading across a boundary. The opposite failure is worse for being clean: the record crosses
+  *intact*, and a verdict or approval re-attaches to whatever now occupies the slot it named.
+  A reviewer who has since left, a token since expired, a workspace predating the patch that was
+  tested. Nothing is corrupt; the halves simply never coexisted. The fix is that a recorded
+  verdict names what it judged — a path and a hash, a commit — never the role it played.
+- **An approval that only records that it happened is a bearer token.** In
+  `delegating-tasks-with-review-gates`: when a gate is split across two exchanges, the carrier
+  travels through the very party the gate constrains. Reduced to a flag, it clears the
+  next one of those of any shape — a plan approved in one turn, executed in another after
+  the plan moved. What an approval has to carry is a digest of what was approved: the
+  actual paths, parameters, or diff, compared field by field at the point of action
+  against what you are about to do, rather than against what the session now believes.
+- **A guard applied everywhere but once.** `reviewing-code-deeply` now treats that shape as
+  worth a blocking comment. The exemption is granted on a belief that one member is reliable —
+  local, ours, the fast path — and it is exactly where the failure will not be caught, because
+  nobody is watching a path that was exempted for being unremarkable. The comment to leave is
+  not "why is this one different" but what the exemption saves, in units, and what it costs if
+  the belief is wrong.
+- **A suite green feature by feature, broken the moment two features meet.**
+  `writing-the-failing-test-first` names why the loop produces this on its own: the red step is
+  per-behaviour, so *n* red steps make *n* isolated paths, and refactor is the only step that
+  ever builds what they should have shared. Two consequences that surprise people — more
+  attempts make it worse rather than better, and adding more visible checks is not a reliable
+  correction, because the new ones get optimized against too.
+- **"This is impossible" gets likelier the longer you have been going.** `knowing-when-to-stop`
+  adds the reading that has nothing to do with the problem: a long accumulated context makes a
+  run give up well before it has exhausted what it could try. The tell is a stop that describes
+  exhaustion rather than naming an observable — so *blocked* is the one verdict not to accept
+  from inside the context that produced it.
+- **A capability you keep available is charged on every decision, not on use.** `crouton` priced
+  a tool in tokens. The larger bill is that the set of options is re-read before every choice you
+  make, and selection degrades as it grows — which raises the bar from "must save more than it
+  costs" to "must be worth making every unrelated decision slightly worse." What that argues for
+  is a per-task loadout instead of a permanent one.
+- **A declined command is reported, not worked around.** `tending-tbaguette` now says what to do
+  when a permission layer refuses a git step rather than git failing: the account is right, the
+  network is fine, the command simply never ran. Every declined step leaves an obvious way to get
+  the same result by hand, and taking it lands the change while leaving the pull request open and
+  its author uncredited.
+
 ## 2026-09-07 — Controls you are not allowed to break to get unblocked
 
 - An autonomous run that gets refused by the thing it is testing — a lockout, a rate limit,

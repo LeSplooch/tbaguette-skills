@@ -1,6 +1,6 @@
 ---
 name: knowing-when-to-stop
-description: Use when work looks done and the next action would be another polish, refactor, or check; when a self-review loop has run several times and the findings keep shrinking; when the first green result tempts an immediate finish; when the same class of fix has failed several times running; or when remaining work is about to be left in place without being named. Covers diminishing returns, gold-plating, bounded passes, and explicit handoff.
+description: Use when work looks done and the next action would be another polish, refactor, or check; when a self-review loop has run several times and the findings keep shrinking; when the first green result tempts an immediate finish; when the same class of fix has failed several times running; or when remaining work is about to be left in place without being named. Also use when a run that has been going a long time is about to record something as blocked, unsupported, or impossible. Covers diminishing returns, gold-plating, bounded passes, and explicit handoff.
 ---
 
 # Knowing when to stop
@@ -73,6 +73,14 @@ The test is not whether it improves the code. It is whether the person who asked
 
 Blocked is also a stop, and it takes the same discipline. Three failed attempts of the same shape mean the model of the problem is wrong, not that the fourth variation will land — stop fixing, restate the problem, and either change the diagnosis or hand it back. Iterating on the fix instead of on the diagnosis is the most expensive available way to be stuck.
 
+### A verdict of impossible is partly a fact about the run
+
+The rule above is about the *shape* of what you tried. There is a second reading, about *where in the run you are*, and from the inside it does not feel like a bias at all.
+
+A conclusion that something cannot be done gets likelier as a session gets longer, for reasons that have nothing to do with the problem. A long accumulated context makes a run give up — or answer uncertainly — well before it has exhausted what it could try, and the effect tracks context length rather than difficulty. The same question asked early and asked late gets different answers from the same reasoning. The tell is that the stop describes a **state of exhaustion** — nothing else to try, this is not supported, this appears impossible — instead of naming an observable.
+
+That makes *blocked* the one verdict you should not accept from inside the context that produced it. Before writing it down, re-derive it from the written record rather than from recall, exactly as `checkpointing-long-runs` requires of a claim — or hand the question to a fresh context and let something with no memory of the attempts decide. A legitimate stop survives both, because it names a thing anyone can go and look at: a permission that is refused, a dependency that does not exist, a pre-committed condition that fired.
+
 ## The explicit handoff
 
 Whatever is not done gets stated with four things: what it is, where it is, why it stopped, and what it would take. Unfinished work that is named is a status; unfinished work that is quiet is a defect the reader inherits without knowing.
@@ -92,6 +100,7 @@ Naming it is where this skill's obligation ends and `offering-the-next-move` beg
 | Flexibility added with no second caller | A requirement anticipated instead of waited for |
 | The unfinished part is absent from the report | Stopping conflated with finishing |
 | Five attempts at one defect, all the same shape | Iterating on the fix instead of on the diagnosis |
+| A long session ends in "this cannot be done" that a fresh one solves in minutes | The verdict was reached inside the context that produced it, and describes exhaustion rather than an observable |
 
 ## Red flags
 

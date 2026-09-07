@@ -1,6 +1,6 @@
 ---
 name: delegating-tasks-with-review-gates
-description: Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it, or when deciding which model each subagent role gets and an unspecified model is about to inherit the session's own. Also use when a delegate came back without reporting a status at all, or when its output ends mid-sentence and the work so far looks finished. Covers dispatching a zero-context implementer subagent per task, choosing a model tier per role, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.
+description: Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it, or when deciding which model each subagent role gets and an unspecified model is about to inherit the session's own. Also use when a delegate came back without reporting a status at all, or when its output ends mid-sentence and the work so far looks finished. Also use when an approval obtained in one exchange is carried into another. Covers dispatching a zero-context implementer subagent per task, choosing a model tier per role, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.
 ---
 
 # Delegating tasks with review gates
@@ -119,6 +119,16 @@ The reviewer may flag a requirement it cannot verify from the diff alone — som
 
 Template: [reference/reviewer-prompt.md](reference/reviewer-prompt.md), full-review mode.
 
+## An approval that does not name what it approved is a bearer token
+
+A gate split across two exchanges — approve here, act there — has to carry the approval between them, and the carrier travels through the very party the gate exists to constrain. That part is unavoidable. What is avoidable is a carrier recording only *that* approval happened.
+
+The actor here is you, holding a person's yes — not a delegate holding a clearance, which is `bounding-autonomous-work`'s territory and not this skill's. It bites at the places *Decide, don't stall* already stops to ask: an irreversible or destructive operation, a push to a shared branch, a merge, a publish. An approval reduced to a flag is a bearer credential for the next one of those, of any shape. A plan approved in one turn is executed in another after the plan moved; a resumed run presents an approval obtained before the parameters it now holds. Nothing has to be adversarial for this to bite — the ordinary case is a run that sincerely believes it is still doing the approved thing.
+
+So the load-bearing content of an approval is **a digest of what was approved** — the actual parameters, paths, or diff, never a description of them — scoped by something that can go stale on its own. The base commit the dispatch record already names does that job: when it moves, the approval is spent. At the point of action, re-read the digest and compare it field by field against what you are about to do, rather than acting on what the session currently believes those fields are. A mismatch stops the operation.
+
+`checkpointing-long-runs` names the version that crosses a context boundary: a verdict recorded against a role rather than against content re-binds on restore to whatever now occupies that role. Same defect, different transport.
+
 ## When review finds problems: the fix loop
 
 Two kinds of finding leave the loop before it starts:
@@ -167,6 +177,7 @@ Once the final review is clean, this skill's job is done. How the branch actuall
 | The implementer's self-review stands in for the task review | Self-review and independent review catch different things; one was skipped, not just deferred |
 | An implementer spawns its own reviewer and the controller treats that as covered | A duplicate review seat, not a second opinion — the real review still has to run |
 | A defect traced back to an earlier, already-closed task | Treated as the current task's finding instead of raised against the task that actually owns it |
+| An approval given early authorizes a wider action much later | The approval recorded that a yes happened, not what it was a yes to |
 
 ## Red flags
 

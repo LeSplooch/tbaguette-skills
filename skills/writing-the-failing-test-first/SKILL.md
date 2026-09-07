@@ -1,6 +1,6 @@
 ---
 name: writing-the-failing-test-first
-description: Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written. Also use when the change is meant to alter a cost rather than a behavior — an optimization, a cache, a batch, a cheaper backend — so every behavioral test passes both before and after it and the loop looks inapplicable. Covers writing one failing test first, confirming it fails for the right reason, writing the minimal code that makes it pass, and refactoring only once the suite is green again.
+description: Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written. Also use when the change is meant to alter a cost rather than a behavior — an optimization, a cache, a batch, a cheaper backend — so every behavioral test passes both before and after it and the loop looks inapplicable. Also use when a suite is green feature by feature and the features have never been exercised together, or when a fix-rerun loop has run long enough to be finding hacks rather than structure. Covers writing one failing test first, confirming it fails for the right reason, writing the minimal code that makes it pass, and refactoring only once the suite is green again.
 ---
 
 # Writing the failing test first
@@ -88,6 +88,19 @@ The same discipline covers the test-only code the loop tends to leave behind. A 
 
 Run the suite after each structural change, not once at the end — the gap between two green states is how much code you'd have to search when one goes red. Then pick the next behavior and start red again, one test at a time; batch several behaviors into one red step and the next failure won't name a single cause.
 
+## Iteration optimizes the checks it can see
+
+The red step is per-behavior by construction, so *n* red steps produce *n* passing paths, and nothing in red or green ever asks whether those paths belong to one system. Refactor as scoped above cannot answer it either — a case that *spans* two features is new behavior, not a structure change, so by this file's own rule it needs a red step of its own. Nobody writes that red step, because no single feature was ever missing anything. That is the direct cause of a suite green feature by feature and broken the moment two features have to agree.
+
+The failure has a recognizable shape: **feature isolation**. Each capability implemented as its own handler, passing its own test, sharing no state with the others. Every test green, the design a pile, and nothing at all resolving a case that spans two of them. It appears in hand-written code too, so it is not an artifact of generation.
+
+Two consequences, neither obvious:
+
+- **More attempts make it worse rather than better.** A long run of fix-rerun-still-red converges on whatever satisfies the visible checks, and the later attempts are the ones likeliest to find a hack instead of a structure. A lengthening loop is evidence you are optimizing the signal, not evidence of progress. `knowing-when-to-stop` gives the count at which repeated same-shape attempts stop being progress; the diagnosis here is narrower — the loop is converging on the suite rather than on the problem.
+- **Enlarging the visible suite mid-build is not a reliable correction.** A check added while the code is still being iterated against it is just another thing to satisfy, and gets satisfied. What works is a composition test, which differs in exactly one way that matters: it is written *after* both features are finished, so neither was ever built against it. Before opening a third feature on top of two that have never met, write one test that exercises those two together. If it fails you have found the gap this section is about; if it passes, that is the cheapest evidence available that the two paths really do belong to one system — the check, not a red step in the wrong place.
+
+The divergence grows with the size of the work, which is the opposite of where attention usually goes. Not because a small suite is trustworthy — the rest of this file exists to deny that — but because a small change has fewer places where two features have to agree, which is the one thing this failure needs. A large one, built the same way, can be entirely green and not a working system.
+
 ## Mutate it before you trust it
 
 Before calling a piece of behavior finished, mutate the code you just wrote — flip a comparison, swap a branch, delete a validation — and confirm some test goes red for each mutation you'd realistically make. A suite that stays green through a real mutation didn't prove what you thought it proved: the behavior was never actually covered, or the test was tautological from the start. `characterization-testing` runs this identical check against a pinned legacy behavior instead of a new one — same technique, different target.
@@ -128,6 +141,7 @@ That check is the actual definition of done, not "coverage went up." Ship the te
 | A change made for speed shipped with only correctness tests | Every behavioral assertion passed before the change too; the property that moved was a cost, and nothing asserted it |
 | A suite over a collection stays green while the collection is empty | Every assertion quantified over the result the code produced; nothing counted the input |
 | Code kept and tests backfilled because "I already know this cold" | Confidence in the solution stood in for proof a test could catch it being wrong |
+| Every feature green, nothing that spans two of them works | Each red step produced its own path, and the case spanning two never got a red step of its own |
 
 ## Red flags
 

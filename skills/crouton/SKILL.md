@@ -1,6 +1,6 @@
 ---
 name: crouton
-description: Use when asked for terse, compressed, or token-saving output — "caveman mode", "be brief", "keep it short", "stop explaining", "fewer tokens", "save context" — when a long session is running out of context budget, or when replies have bloated into preamble, tool narration, and closing summaries nobody reads. Covers where a run's tokens actually go and why reading is the expensive half, the read rules that follow from it, why adding a tool to save tokens usually costs more than it saves, the words that must survive at any length, registers chosen by who reads the output, where compression has to stop, holding the mode across a long session, compressing in a language other than English, and how to tell whether a change actually saved anything rather than just sounding shorter.
+description: Use when asked for terse, compressed, or token-saving output — "caveman mode", "be brief", "keep it short", "stop explaining", "fewer tokens", "save context" — when a long session is running out of context budget, or when replies have bloated into preamble, tool narration, and closing summaries nobody reads. Also use when deciding whether a tool, plugin, hook, or server is worth keeping permanently available. Covers where a run's tokens actually go and why reading is the expensive half, the read rules that follow from it, why adding a tool to save tokens usually costs more than it saves, the words that must survive at any length, registers chosen by who reads the output, where compression has to stop, holding the mode across a long session, compressing in a language other than English, and how to tell whether a change actually saved anything rather than just sounding shorter.
 ---
 
 # Crouton
@@ -77,6 +77,16 @@ Tokenizers encode common words cheaply *because* they are common, and coinages e
 | A compressed answer plus a normal-prose recap | Pays for both. The most common way this mode ends up costing more than not using it |
 
 The rule under all seven: **if the compressed thing is not actually cheaper, use the plain one.** And never add a word to sound terse — inserting a pronoun or a copula to fake broken grammar is growth wearing compression's clothes.
+
+## Availability is charged on every decision, not on use
+
+The tool row above prices a capability in tokens: its schema joins the per-request floor and is re-sent whether or not it fires. That is the smaller half of the bill.
+
+The larger half is that **the set of options you carry is re-read before every choice you make.** Every option is charged against choices it has nothing to do with, so selection degrades as the set grows — and it degrades in a shape worse than picking the second-best tool, toward referencing capabilities instead of answering the question. Where that begins is not something this skill has measured, and the figures quoted for it come from other people's harnesses. What is not in doubt is the direction, and that a larger context window does not fix it, because the problem was never that the descriptions did not fit.
+
+That changes the decision rule rather than merely sharpening it. The token argument says a capability must save more than it costs. The accuracy argument says it must be worth making **every unrelated decision slightly worse** — a much higher bar, and one a rarely-used tool essentially never clears. So the shape to want is a per-task loadout rather than a permanent one: carry what this task needs, put the rest behind a lookup, and treat anything not needed on a typical run as deferred by default.
+
+`handling-untrusted-input` reaches the same conclusion about set size from the other direction: what is connected is part of the exposure, and the check belongs at connection time. That is the same consideration rather than the same prescription — but two independent arguments for one economy are worth noticing before anything is added permanently.
 
 ## Registers
 
@@ -164,6 +174,7 @@ They do have a limit, and it is not the same shape. Every rule above returns the
 | "Dropped the old rows" — and there was no backup | The warning compressed with everything else |
 | A measured 4% improvement reported as a win | Smaller than the run-to-run noise; nothing was shown |
 | Terse in English, verbose in the user's own language | Register applied to the reply, not to every line |
+| Answers reference the available tools instead of answering the question | The option set is re-read before every choice; it is large enough to be crowding them out |
 
 ## Red flags
 

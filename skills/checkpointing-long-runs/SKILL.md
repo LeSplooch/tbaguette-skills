@@ -1,6 +1,6 @@
 ---
 name: checkpointing-long-runs
-description: Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files, a run whose conversation is getting long enough to be compacted, or work about to be handed to another agent, another session, or a person. Also use the moment a compaction has already happened and the run has to decide what it still knows, or when something started in an earlier session — a background job, a build, a spawned agent — has left no record of having finished, or when a dead end is about to be written down as an attempt that did not work with nothing saying what it actually ruled out. Covers where the durable state lives, which seams are worth a checkpoint, writing the expensive things down before they are lost, re-reading rather than recalling at every boundary, bounding a negative by what it left standing, and leaving a successor a brief instead of an archaeology problem.
+description: Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files, a run whose conversation is getting long enough to be compacted, or work about to be handed to another agent, another session, or a person. Also use the moment a compaction has already happened and the run has to decide what it still knows, or when something started in an earlier session — a background job, a build, a spawned agent — has left no record of having finished, or when a dead end is about to be written down as an attempt that did not work with nothing saying what it actually ruled out. Also use when a verdict or approval recorded before a boundary is relied on after it. Covers where the durable state lives, which seams are worth a checkpoint, writing the expensive things down before they are lost, re-reading rather than recalling at every boundary, bounding a negative by what it left standing, and leaving a successor a brief instead of an archaeology problem.
 ---
 
 # Checkpointing long runs
@@ -186,6 +186,20 @@ An **obligation** crosses that boundary too, and the rule above is wrong for it 
 
 One thing crossing a boundary carries no tier at all while reading as though it does: a background process started before the boundary and never seen to end. The transcript records that it began, and it has no mechanism for recording an end that happened outside it — so "finished cleanly", "was killed by a teardown, a monitor timeout, or the interface", and "still running" all arrive identically, as silence. Absence of a completion marker is evidence of nothing. Resolve it the way rows 1 and 2 resolve everything else — from a durable thing you can go and look at — by reading what the process was writing to: the output file and its size, the mtime, the lock, the pid. The durable state is the artifact; the transcript only ever recorded the intention to produce one.
 
+## A resume restores your record, not the world
+
+The paragraph above found one thing the record cannot hold: a process whose ending happened outside the transcript. That is one instance of a general shape — the record and the world are two different things, saved by two different mechanisms — and the shape has a second failure running the other way, worse than the first for being clean. Here the record crosses **intact**. A verdict, an approval, a "this one was validated" survives in perfect condition and re-attaches itself to whatever now occupies the slot it named.
+
+The mechanism is that a checkpoint captures your record and nothing else. The thing it was a record *about* went on moving. So a restored state can hold two halves that are no longer jointly true — a reviewer who approved and has since left, a token verified and since expired, a resource permitted and since deleted — and in the worst case two that were never true at the same instant, a conversation half saying the suite passed against a workspace half predating the patch that was tested. Each half is exactly what was saved. Nothing saved the relation between them.
+
+Three rules, and the first does most of the work:
+
+- **A recorded verdict names what it judged, never the role it played.** "The artifact is clean", "the branch is approved", "the fixture was validated" all re-bind on restore to whatever is currently called that. Anchor it the way the Anchor field above already requires, with one addition: the anchor has to stop being true when the object changes, so a bad re-bind fails loudly instead of succeeding quietly against the wrong thing.
+- **Anything the record asserts about the outside world gets re-observed, not trusted.** The world was not in the checkpoint. Row 1 of the trust order says this for the repository; it holds for every external fact — who still has access, what still exists, what has not expired.
+- **A check that passed on replay is evidence about the replay** — still the best evidence available and still better than recall, so this does not soften the re-check rule above. It is a caution about one case: where the original run's value came from catching something intermittent, a replay does not inherit that, and the same command typed twice is not the same event. Re-obtain the judgement there rather than carrying the old one forward.
+
+The asymmetry is what makes this hard to notice: a boundary makes claims *less* reliable and verdicts *more* dangerous. A claim at least arrives as a claim, still open to being re-checked. A verdict arrives as a question already closed, and invites no check at all.
+
 ## Handing to a successor
 
 A brief, not an archive, and a brief is a set of named sections rather than a
@@ -219,6 +233,7 @@ compressing it was easier than writing it.
 | The handoff brief is accurate and useless | Written for someone who was there — pronouns, shorthand, unstated referents |
 | The record was written up at the end and reads beautifully | It was written by the surviving memory, which is the one thing it was meant to guard against |
 | A counted claim in the final report is wrong | The count was recalled from an earlier checkpoint rather than re-measured |
+| A restored run acts on an approval whose subject has since changed | The verdict named a role rather than an object, so it re-bound on restore |
 
 ## Red flags
 

@@ -1,6 +1,6 @@
 ---
 name: tending-tbaguette
-description: Use at the start of every conversation, in any project or repo, and keep watching for the rest of it — the moment a genuinely project-agnostic lesson shows up while using TBaguette, capture it. Triggers include a correction that generalizes past this one codebase, a gap or wrong assumption found in a skill while that skill was running, a recurring judgment call nothing covers yet, a TBaguette skill that looks wrong enough to want editing, an installed plugin that already carries hand-edits, or any question about how to contribute to TBaguette. Covers the bar a candidate has to clear, capturing one without derailing the current task, scrubbing it of anything project-specific, choosing which existing skill a lesson belongs in, the approval gate that no absent human lifts, opening the pull request from a fork and answering the review it gets, restoring an install that was edited in place, and how a merged change comes back through keeping-tbaguette-current.
+description: Use at the start of every conversation, in any project or repo, and keep watching for the rest of it — the moment a genuinely project-agnostic lesson shows up while using TBaguette, capture it. Triggers include a correction that generalizes past this one codebase, a gap or wrong assumption found in a skill while that skill was running, a recurring judgment call nothing covers yet, a TBaguette skill that looks wrong enough to want editing, an installed plugin that already carries hand-edits, or any question about how to contribute to TBaguette. Covers the bar a candidate has to clear, capturing one without derailing the current task, scrubbing it of anything project-specific, choosing which existing skill a lesson belongs in, the approval gate that no absent human lifts, opening the pull request from a fork and answering the review it gets, restoring an install that was edited in place, a command the harness declines rather than git, and how a merged change comes back through keeping-tbaguette-current.
 ---
 
 # Tending TBaguette
@@ -179,7 +179,7 @@ Queue file: `~/.claude/tbaguette-candidates.md` — deliberately outside the
 plugin's own directory, which every update overwrites and which must stay
 clean for the reasons above. Create it with **all three** headings if it
 does not exist — `## Pending`, then `## Settled`, then `## Shipped`. Step 10
-moves entries from the first to the last, and a file missing a heading is one
+moves entries out of `## Pending` into one of the other two, and a file missing a heading is one
 where an entry that reaches that state has nowhere to go and invents a heading
 instead. `## Settled` holds the other kind of result: a candidate the coverage
 check killed, or a question this skill answered "no", dated and carrying what
@@ -344,8 +344,8 @@ project, a description with room in it, a section that grows past an aside. Then
 - A second deferral names what changed since the first. If nothing changed, the
   inputs are the ones you already declined to act on.
 - There is no third. An entry deferred twice on unchanged inputs is settled at
-  the next pass — either it goes into a pull request or it moves to `## Shipped`
-  with a one-line reason. Both are cheaper than a fourth reading.
+  the next pass — either it goes into a pull request or it moves to `## Settled`,
+  dated, with a one-line reason and what would reopen it. Both are cheaper than a fourth reading.
 
 **But "the next pass" is a claim about the interval, not about the work.** The
 counting rule assumes visits to the queue are spaced far enough apart that the
@@ -368,7 +368,26 @@ This governs *your* deferrals, not your partner's. "Keep it queued" chosen at th
 approval gate is a decision someone made and it resets nothing — they own the
 scope, and re-asking about it next week is pestering rather than rigor.
 
-## The approval gate
+## A reopen condition that fires is the entry doing its job
+
+The rule above covers a candidate you keep re-reading. A `## Settled` entry has the
+opposite life: it was answered, and the only question left is when to look again. When
+its reopen condition trips, supersede it with a new dated entry and leave the old one
+standing underneath. Deleting it discards the only positive evidence you will ever have
+that the condition *can* fire — and a condition that has never fired has two readings
+that look identical from a cold start, a genuinely closed question and a condition too
+narrow to trip. Both present as an entry that has been quiet for a month.
+
+There is a third failure the count does not catch, so do not read firing as proof of a
+good condition either: one that fires on noise also fires, and re-opens a settled
+question every pass for nothing. What separates the two is whether the condition names
+something checkable. For a `## Settled` entry, prefer a condition phrased as a command
+whose output changes — `gh pr list --state open`, a count, a hash — over one phrased as a
+circumstance somebody would have to notice. That preference belongs to settled entries
+specifically; the deferral premises above govern `## Pending`, and those are legitimately
+circumstances, because what they wait on is a second sighting rather than a number.
+
+
 
 <EXTREMELY-IMPORTANT>
 Nothing gets pushed, forked, or opened as a pull request without an
@@ -426,7 +445,7 @@ The four options that earn their place:
 | Open the pull request | Push the branch and open the PR |
 | Show me the diff first | Print the full diff, then ask again |
 | Keep it queued | Leave the candidate in `## Pending`, push nothing |
-| Drop it | Move it to `## Shipped` with a one-line reason |
+| Drop it | Move it to `## Settled`, dated, with the one-line reason and what would reopen it |
 
 Three things that are **not** approval, each of which has been mistaken for
 it: enthusiasm earlier in the conversation about contributing to TBaguette;
@@ -574,6 +593,32 @@ side and never by hand-merging. Say in the merge commit that `docs/` was
 regenerated rather than resolved. `resolving-merge-conflicts` owns the general
 form; here it is not hypothetical, it is what the second merge on a long-lived
 branch in this repo consists of.
+
+## A declined command is reported, not routed around
+
+This skill's pipeline is a sequence of git and platform writes — fork, branch, commit,
+push, open the pull request — and a permission layer can decline any one of them on its
+own, without the underlying command ever running. It does not look like the failure it
+most resembles, and telling the two apart is the only hard part: **a refusal is announced
+before the command runs and produces no output from the command at all, while an auth
+failure comes back *through* it, carrying a remote's status line.** No output from the
+command means there is nothing to re-authenticate, so do not go rotating credentials or
+switching accounts over it.
+
+What follows is the part that costs. A declined step usually leaves a plausible-looking
+way to get the same result by other means — ask someone else to run it, carry the text
+across by hand, work the change in somewhere it was not reviewed. For this skill's
+reader, who does not own the repository and cannot land anything alone, the damage is not
+a change that ships unreviewed. It is a second copy of the work circulating outside the
+pull request that was supposed to carry it: the maintainer meets the same lesson twice
+through two channels, and the copy that is not in the branch is the freeze problem above
+arriving by another door — it exists somewhere that no update will ever reach.
+
+So report it: name the step that was declined, say what is staged behind it, and stop.
+The candidate has not shipped and stays in `## Pending`. Describing anything as
+contributed, merged, or deployed at that point is false, and
+`routing-around-capability-gaps` owns why quietly finding another route is the worse of
+the two available failures.
 
 ## Safety rails
 

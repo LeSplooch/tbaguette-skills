@@ -1,6 +1,6 @@
 ---
 name: reviewing-code-deeply
-description: Use when reviewing someone else's change — a pull request, patch, diff, or commit series — deciding what deserves a comment, whether to block or approve, or how to phrase a concern. Also when a review is generating dozens of comments, when a diff is too large to review carefully, or when reviews keep passing code that later breaks. Covers review priority order, reviewing tests, finding absent cases, and blocking versus non-blocking.
+description: Use when reviewing someone else's change — a pull request, patch, diff, or commit series — deciding what deserves a comment, whether to block or approve, or how to phrase a concern. Also when a review is generating dozens of comments, when a diff is too large to review carefully, or when reviews keep passing code that later breaks. Also use when a diff applies a guard to every case but one. Covers review priority order, reviewing tests, finding absent cases, and blocking versus non-blocking.
 ---
 
 # Reviewing Code Deeply
@@ -63,6 +63,16 @@ At every network or IPC boundary in the diff, ask what happens if the call never
 
 The table above is an enumeration from the domain rather than from the diff, and that is the only method that finds absence — you cannot review your way to a case nobody wrote, because review examines what is in front of you. When the change is large enough that the categories here do not cover its subject matter, `clairvoyance` generalizes the move: enumerate the states, actors, and lifecycle stages the *thing itself* has, then find each one in the diff. The ones with no counterpart are the finding.
 
+## An exemption is a belief, and it is where the guard was needed
+
+A guard applied across a class of things with one member exempted is among the highest-value shapes to notice in a diff, because the exemption is almost never argued for. It is granted on a reliability *belief* about that member: this one is local, this one is ours, this one is the fast path, this one has never failed.
+
+The belief may even be true today. What makes the shape worth a blocking comment is the asymmetry. Applying the guard uniformly usually costs nothing measurable. The exemption is precisely where the failure it guards against will not be caught — and by construction nobody is watching that path, since the reason it was exempted is that nobody expected to have to.
+
+So when a diff adds a timeout, a retry, a size cap, a validation, a lock, or a null check to every case but one, do not leave "why is this one different" — that is the rhetorical question this file's marker rules already ban. State the exposure as a defect report and attach the question to it: *blocking* — "this path has no timeout, so a hung call holds the connection until the process restarts; what does the exemption buy?"
+
+An exemption that saves nothing measurable has nothing to weigh against the failure it exposes. Either the guard is redundant here for a reason the change should state — the type already proves it, the call cannot block — or the exemption should go. A change that states neither number has not made the case for it at all.
+
 ## Mark every comment blocking or not
 
 Unmarked comments make the author guess, and they guess "blocking" — which is why reviews with thirty unmarked nits take a week.
@@ -104,6 +114,7 @@ Give the *why* on every blocking comment. "Use a set" is a preference. "This is 
 | Every review becomes an architecture argument | The design was never reviewed before implementation |
 | The reviewer rewrites the change in comments | Reviewing against their own solution rather than the stated intent |
 | The same style debate recurs on every change | No formatter in CI; a human is doing a tool's job |
+| A guard on every case but one, approved without comment | The exemption was read as a fact about that case rather than as an unargued belief |
 
 ## Red flags
 
