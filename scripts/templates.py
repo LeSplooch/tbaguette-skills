@@ -1606,7 +1606,11 @@ def _render_update_entry(entry: dict) -> str:
     than one long undifferentiated list. The <time> is inside the heading
     because the date is half of what names the entry — several entries share a
     title shape ("Three skills sharpened"), none share a date."""
-    title = escape_html(entry.get("title", ""))
+    # "title_html" is pre-rendered by content_pipeline.render_note_title, which
+    # escapes as it goes and links any skill the title names. Absent -- an entry
+    # built by hand, as the tests do -- the plain title is escaped here instead,
+    # so the untrusted path stays escaped by default rather than by remembering.
+    title = entry.get("title_html") or escape_html(entry.get("title", ""))
     title_html = f'\n    <span class="notes__entry-title">{title}</span>' if title else ""
     # Already inline HTML from content_pipeline.render_inline_markdown, which
     # escapes every plain run it passes through — escaping again here would

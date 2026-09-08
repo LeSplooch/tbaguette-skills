@@ -903,6 +903,27 @@ def check_update_notes() -> None:
     check("an entry title is escaped — it is plain text from a hand-edited file",
           "&lt;script&gt;" in hostile and "<script>x</script>" not in hostile)
 
+    linked = render_index(categories, {}, update_notes=[{
+        "date": "2026-08-24",
+        "title": "Formidable aims past the brief",
+        "title_html": '<a class="skill-link skill-link--bare" href="/skills/formidable/">'
+                      "Formidable</a> aims past the brief",
+        "notes": ["ok"]}])
+    check("a title carrying pre-rendered HTML is trusted, so a skill named in a "
+          "title links like one named in a bullet",
+          '<a class="skill-link skill-link--bare" href="/skills/formidable/">Formidable</a>'
+          in linked)
+    check("...and the bare variant is used, so the title keeps its own face "
+          "instead of a monospace chip appearing mid-heading",
+          "notes__entry-title" in linked and "<code>Formidable</code>" not in linked)
+
+    still_escaped = render_index(categories, {}, update_notes=[{
+        "date": "2026-08-24", "title": "<script>x</script>",
+        "title_html": "", "notes": ["ok"]}])
+    check("an empty pre-rendered title falls back to escaping rather than "
+          "rendering the raw one",
+          "&lt;script&gt;" in still_escaped and "<script>x</script>" not in still_escaped)
+
     check("_format_update_date: single-digit days lose the leading zero",
           templates._format_update_date("2026-08-04") == "4 Aug 2026")
     check("_format_update_date: every month maps to its own abbreviation",

@@ -1411,6 +1411,49 @@ class UpdateNotesParsingTests(unittest.TestCase):
             "and &lt;not-a-tag&gt;.",
         )
 
+    def test_a_title_links_the_skills_it_names(self):
+        """A title names a skill the way prose does -- capitalised, and often
+        with no hyphen -- so neither the backtick form nor the bare-slug form
+        used in bullets fires on it. The link is the bare variant: a monospace
+        chip in the middle of a heading swaps the title's face mid-sentence."""
+        resolve = content_pipeline.make_skill_mention_resolver(
+            {"formidable", "crouton"}, lambda slug: f"/skills/{slug}/"
+        )
+        entries = content_pipeline.parse_update_notes(
+            "## 2026-08-24 — Formidable aims past the brief\n- A bullet.\n",
+            resolve_skill_link=resolve,
+        )
+        self.assertEqual(
+            entries[0]["title_html"],
+            '<a class="skill-link skill-link--bare" href="/skills/formidable/">'
+            "Formidable</a> aims past the brief",
+        )
+        # The plain title survives beside it; the index template escapes that
+        # one itself for entries that arrive without the rendered field.
+        self.assertEqual(entries[0]["title"], "Formidable aims past the brief")
+
+    def test_a_title_links_each_skill_once_and_escapes_the_rest(self):
+        resolve = content_pipeline.make_skill_mention_resolver(
+            {"crouton"}, lambda slug: f"/skills/{slug}/"
+        )
+        entries = content_pipeline.parse_update_notes(
+            "## 2026-08-24 — crouton, crouton & <b>\n- A bullet.\n",
+            resolve_skill_link=resolve,
+        )
+        title = entries[0]["title_html"]
+        self.assertEqual(title.count("skill-link--bare"), 1)
+        self.assertIn("&amp; &lt;b&gt;", title)
+
+    def test_a_title_naming_no_skill_is_escaped_plain_text(self):
+        resolve = content_pipeline.make_skill_mention_resolver(
+            {"formidable"}, lambda slug: f"/skills/{slug}/"
+        )
+        for kwargs in ({"resolve_skill_link": resolve}, {}):
+            entries = content_pipeline.parse_update_notes(
+                "## 2026-08-24 — A green <check>\n- A bullet.\n", **kwargs
+            )
+            self.assertEqual(entries[0]["title_html"], "A green &lt;check&gt;")
+
     def test_empty_input_yields_no_entries(self):
         self.assertEqual(content_pipeline.parse_update_notes(""), [])
         self.assertEqual(content_pipeline.parse_update_notes("# Only a preamble.\n"), [])

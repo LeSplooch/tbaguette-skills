@@ -874,6 +874,60 @@ _INLINE_TOKEN_RE = re.compile(
 # directory moves, rather than the day someone remembers to edit a regex here.
 _BARE_SLUG_RE = re.compile(r"(?<![\w/-])([a-z0-9]+(?:-[a-z0-9]+)+)(?![\w/-])")
 
+# A word in an update-note title that might name a skill. Deliberately looser
+# than _BARE_SLUG_RE in two ways: it accepts a single word with no hyphen, and
+# it accepts capitals. Titles are prose, so they name a skill the way prose
+# does -- "Formidable aims past the brief" -- and neither the backtick form nor
+# the hyphen-requiring bare form ever fires on that.
+_TITLE_WORD_RE = re.compile(r"(?<![\w/-])[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(?![\w/-])")
+
+
+def render_note_title(
+    title: str, resolve_skill_link: Callable[[str], str | None] | None = None
+) -> str:
+    """Escape an update-note title, linking the words that name a real skill.
+
+    Matching is against the resolver's own answer rather than against a shape,
+    so a word links only when a skill by that name actually exists -- there is
+    no such thing as a dangling link out of here. The residual risk runs the
+    other way and is accepted knowingly: the corpus has single-word skill names
+    chosen for being evocative words, so a title using one as an ordinary
+    adjective would link it. Rewording the title is the fix; the alternative is
+    never linking the case this exists for.
+
+    Only the first mention of each skill is linked. A title is one line, and
+    the second link to the same page is noise rather than navigation.
+
+    The link is the bare form, with no ``code`` chip. The chip's job is to say
+    "this is an identifier", which a heading's surrounding prose already says,
+    and dropping a monospace face into the middle of a title costs more than it
+    explains. The underline carries the affordance instead -- see the
+    ``skill-link--bare`` block in the stylesheet, which exists for exactly the
+    case where there is no chip to hang a ring on.
+    """
+    if resolve_skill_link is None:
+        return escape_html(title)
+
+    pieces: list[str] = []
+    cursor = 0
+    linked: set[str] = set()
+    for match in _TITLE_WORD_RE.finditer(title):
+        slug = match.group(0).lower()
+        if slug in linked:
+            continue
+        href = resolve_skill_link(slug)
+        if href is None:
+            continue
+        linked.add(slug)
+        pieces.append(escape_html(title[cursor : match.start()]))
+        pieces.append(
+            f'<a class="skill-link skill-link--bare" href="{escape_html(href)}">'
+            f"{escape_html(match.group(0))}</a>"
+        )
+        cursor = match.end()
+    pieces.append(escape_html(title[cursor:]))
+    return "".join(pieces)
+
 
 def make_skill_mention_resolver(
     known_slugs: set[str],
@@ -1461,6 +1515,11 @@ def parse_update_notes(
         )
 
     for entry in entries:
+        # Kept alongside the plain "title" rather than replacing it: the index
+        # template escapes "title" itself, because it also renders entries built
+        # by hand, and only trusts pre-rendered HTML when the field saying so is
+        # present.
+        entry["title_html"] = render_note_title(entry["title"], resolve_skill_link)
         entry["notes"] = [
             render_inline_markdown(note, resolve_relative_link, resolve_skill_link)
             for note in entry["notes"]
