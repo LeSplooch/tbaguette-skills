@@ -1,6 +1,6 @@
 ---
 name: drawing-boundaries
-description: Use when deciding what belongs together — module, package, crate, library, process, or service splits; extracting or merging components; wrapping a vendor SDK behind an interface you own; restructuring a folder layout. Also for circular dependencies, a shared or common module that only grows, every feature touching every module, components that must deploy in a fixed order, retries or timeouts or cache TTLs that are sensible in every layer and wrong in composition, an expensive stage that runs before a check which could have rejected the work for free, and whether something warrants its own process, repository, or service. Covers the properties no single component can see, and who owns them.
+description: Use when deciding what belongs together — module, package, crate, library, process, or service splits; extracting or merging components; wrapping a vendor SDK behind an interface you own; restructuring a folder layout. Also for circular dependencies, a shared or common module that only grows, every feature touching every module, components that must deploy in a fixed order, retries or timeouts or cache TTLs that are sensible in every layer and wrong in composition, an expensive stage that runs before a check which could have rejected the work for free, a chain of filters, screens, or detectors whose output stream is empty and nobody can say whether that is correct, and whether something warrants its own process, repository, or service. Covers the properties no single component can see, and who owns them.
 ---
 
 # Drawing boundaries
@@ -62,6 +62,13 @@ The same inversion hides in every knob stated per-module rather than per-path:
 | Timeouts | Each stage has a sensible one | An inner timeout longer than the outer one, so the inner never fires |
 | Rate limits | Each client is limited | The aggregate across clients exceeds what the dependency can take |
 | Caching | Each layer caches correctly | Two TTLs in series, and staleness is their sum, not the smaller |
+| Accept/reject rules | Each predicate is defensible and independently tested | Nobody has measured what the chain admits; several correct restrictions compose to admit nothing |
+
+That last row is found latest of the five, because its failure is a silence rather than an incident. Every rule in a chain of decisions — a screen, a filter, a detector, a vote tally, a stop condition — is written by whoever wanted it to fire, so its test cases come from the side its author cared about, and it passes honestly. What no one owns is the **acceptance rate of the composition**. Several individually correct restrictions can compose to admit nothing at all, and there is no defect to find in any of them.
+
+It survives because an over-strict chain and a genuinely quiet period produce the same empty output stream. `instrumenting-for-observability` owns the case where a gate rejects everything because one of its inputs has no source, and its remedy — record which clause rejected, never summing *measured and failed* with *nothing measured* — is the right instrument there. This is the harder sibling: every input present, every clause measuring, and the chain still admits nothing. No per-clause accounting reveals that, because each clause is doing exactly what it says.
+
+Two instruments do, and neither is a unit test on a rule. Push a population whose correct verdict you already know independently through the **whole assembled chain**, from outside, and count what comes out against what should have. And pair every assertion that something fires with a control that must *not* fire — on its own, a passing positive test is equally consistent with a detector that fires on everything. Two tells are worth recognising on sight. A threshold that happens to equal a constant of the thing producing its input — the sampling interval, the buffer size, the retry count, the display precision — is a coincidence rather than a decision, and the first test written against it freezes the coincidence into an invariant. And a condition that has only ever fired on inputs later judged healthy is evidence that it is measuring something other than what it was named for; that is settled by auditing what each historical firing actually was, never by counting the firings.
 
 ## When not to split
 
@@ -90,6 +97,8 @@ Before merging two things that look alike, establish that the resemblance is a s
 | An interface with exactly one implementation, forever | Extracted before a second use case existed |
 | The expensive stage runs, then a static flag discards its result | Gate ordering treated as a per-module property; the free gate sits below the costly one |
 | Every module's timeouts and retries are sensible; the system's are not | Knobs set per-module for a property that only exists per-path |
+| An output stream has been empty for weeks and nobody can say whether that is correct | Nothing measures the chain's acceptance rate, and a strict chain looks exactly like a quiet period |
+| Every predicate in a chain has a passing test and the chain admits nothing | Each rule was tested from the side its author wanted; the composition has no owner |
 
 ## Red flags
 
@@ -101,4 +110,6 @@ Before merging two things that look alike, establish that the resemblance is a s
 - Any architecture diagram whose top-level boxes are all technical layers.
 - Extracting an interface to make something testable when the real problem is that it does too much.
 - A cost-ordering or retry rule written down for one stage, with nothing owning it across the stages.
+- A filter, screen, or detector whose positive test has no companion that must not fire.
+- "It hasn't flagged anything, so there's been nothing to flag."
 - The cheapest possible rejection — a config flag, an entitlement — consulted after the most expensive stage has already run.

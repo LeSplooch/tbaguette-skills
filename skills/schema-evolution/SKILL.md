@@ -1,6 +1,6 @@
 ---
 name: schema-evolution
-description: Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema, serialized format, stored document, API payload, or queue message. Also when a rolling deploy breaks deserialization, when old consumers cannot read new data, when a rollback fails on data the newer version wrote, when adding an enum value, when planning a version bump, or when a field goes missing after some component read a record and wrote the whole thing back.
+description: Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema, serialized format, stored document, API payload, or queue message. Also when a rolling deploy breaks deserialization, when old consumers cannot read new data, when a rollback fails on data the newer version wrote, when adding an enum value, when planning a version bump, or when a field goes missing after some component read a record and wrote the whole thing back. Also use when writing or reviewing the check that decides which stored versions a reader may accept.
 ---
 
 # Schema evolution
@@ -87,6 +87,16 @@ A rename is add, dual-write, backfill, switch reads, stop writing, remove — th
 
 Every live version is a permanent code path, a test matrix multiplier, and a support obligation. Two versions is a strategy; four is an unfunded liability. Pick a sunset date before shipping v2 and put usage metrics per version behind an alert, because you will not be allowed to delete a version you cannot prove is unused.
 
+### A version guard has to know which kind of change moved the number
+
+This section is a repair, not a technique. The rule above says a meaning change gets a new field name rather than a redefinition in place — and version counters that move on meaning changes exist anyway, in every format old enough to have been evolved by somebody who did not read that rule. This is how to read one you have inherited.
+
+A payload version is one integer standing in for two unrelated kinds of change, and a reader that compares it with an inequality has silently picked one of them. `version <= CURRENT` is the guard almost everybody writes, and it encodes *old data is readable, new data is not* — true for a number that has only ever moved additively, and exactly wrong for a number that moved because a field's meaning changed. Re-rendering an old row with current code applies the new meaning to the old quantity: seconds read as milliseconds, gross read as net, "empty means all" read as "empty means none". That is the silent-corruption row of the additive table above, arriving through the one check that was written to prevent it.
+
+So the readable set follows from the reason the version moved, and only one of the two answers is an inequality. Where the version increments on additive changes, old rows are readable and `<=` is right. Where it increments because a meaning changed, the readable set is **exact equality**, and everything outside it is a migration rather than a read. A constant whose own documented rule is "bump this when a field's meaning changes" therefore cannot be compared with `<=` at all — and a single counter serving both purposes cannot be checked correctly by any comparison, which is the argument for either two counters or for giving the meaning change a new field name, per the rule above, instead of a version bump.
+
+**Then check what fills the field when it is absent**, because the guard is worth no more than the value it reads. A version field with no explicit per-field default, in a format that fills missing fields from a whole-record default, reports *the version of the build doing the reading*. Every unversioned legacy row then claims to be current and sails through the check written to catch it. This is the reader-side default of the section above at its worst: invisible while the constant is still 1, and it converts the guard into a rubber stamp on the day the constant becomes 2 — the first day it was ever needed. The version is the field where the section above's rule is least optional: keep the absence, so a row that never declared a version stays distinguishable from one that declared the current one.
+
 ## Reserve what you remove
 
 When a field, column, tag number, or enum ordinal is removed, mark the identifier reserved in the schema and never reuse it. Reuse is a silent data-corruption bug: archived rows, replayed messages, and old backups still carry the old identifier, and a new field wearing the same identifier decodes that data into the wrong meaning with no error. This applies to positional tag numbers, column names in stores that resolve by name, enum ordinals in formats that serialize the integer, and API field names any client may still send. Keep the reservation in the schema file, next to the live fields, where the next person will see it.
@@ -105,6 +115,8 @@ Where a column can be written by more than one kind of source, the provenance is
 | An enum value causes a crash in a downstream service | Readers had no unknown branch when the value was added |
 | Off-by-1000 or off-by-hours arithmetic | Units or timezone semantics changed under an unchanged field name |
 | The change cannot be applied to the existing store at all | The field was added as required with no default, over records that predate it |
+| A version guard passes and the value it admitted is corrupt anyway | The guard was an inequality over a counter that moves when meanings change, so it waved old rows through |
+| A version check has never rejected anything | The version field is reader-defaulted, so every unversioned row reports the current build's number |
 
 ## Red flags
 
@@ -115,4 +127,6 @@ Where a column can be written by more than one kind of source, the provenance is
 - Repurposing an existing field because it happens to be unused
 - A schema change with no plan for data already written in the old shape
 - Treating the strictness of a validator as a substitute for reader tolerance
+- A `<=` against a version constant whose documented rule is that it moves when a field's meaning changes
+- A version field that inherits a whole-record default instead of being absent when it was never written
 - A save path that rebuilds the whole record out of the fields the caller happens to know about

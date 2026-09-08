@@ -184,6 +184,10 @@ a log at the point of use settles it in one run. The usual culprits are the
 harness itself, a default applied after your assignment, and a config layer
 that silently ignores unknown keys.
 
+That list is missing the culprit that survives longest, because it is the only one that keeps producing an exact null *after* you have correctly diagnosed and fixed one cause. Nothing says a staged path holds one blocker. Where two or three sit in series — a value dropped on the way in, and a downstream stage that would have discarded it anyway — fixing the first changes nothing observable, and the byte-identical result you get back is indistinguishable from the result you would have got if your hypothesis had been wrong. So a correct fix reads as a refutation, and the usual response is to retire a hypothesis that had just been confirmed. `drawing-boundaries` owns the design-time half of this, where several individually correct rules compose to admit nothing and no one owns the composition; here you are downstream of that system rather than designing it.
+
+The move is to stop prescribing one fix at a time. Enumerate every stage between the input and the observed output *before* changing anything, and say for each whether it is known to pass the value, known to drop it, or unexamined — then fix all the unexamined ones together and take one reading. Otherwise each attempt buys a single bit of information at the cost of a full cycle, and the bit it buys is ambiguous.
+
 ## A guard that refuses to run has already measured something
 
 The instrument can also refuse to take a reading, and a refusal arrives looking

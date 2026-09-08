@@ -1,6 +1,6 @@
 ---
 name: red-teaming-your-own-work
-description: Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it, when nothing looks wrong and nothing has been tried to make it look wrong, before handing off work someone will act on, or after a previous delivery came back with a defect a single skeptical pass would have caught. Also use when a measurement has just confirmed a result you are about to act on, or when a search, sweep, benchmark, or experiment came back with nothing and that null is about to be reported as nothing being there. Covers adversarial self-review, attack checklists, re-testing a confirmed number for the shape rather than the point, bounding a null by the smallest effect the search could have seen, and bounded review passes.
+description: Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it, when nothing looks wrong and nothing has been tried to make it look wrong, before handing off work someone will act on, or after a previous delivery came back with a defect a single skeptical pass would have caught. Also use when a measurement has just confirmed a result you are about to act on, or when a search, sweep, benchmark, or experiment came back with nothing and that null is about to be reported as nothing being there. Also use when a draft cites another document, skill, specification, or API from memory rather than from a reopened copy. Covers adversarial self-review, attack checklists, re-testing a confirmed number for the shape rather than the point, reopening every cross-reference before shipping the claim it makes, bounding a null by the smallest effect the search could have seen, and bounded review passes.
 ---
 
 # Red-teaming your own work
@@ -23,7 +23,7 @@ Rereading work confirms it; attacking it finds defects. Spend one bounded pass b
 
 ## The attack list
 
-Run all six. Each costs a minute or two and lands somewhere predictable.
+Run all seven. Each costs a minute or two and lands somewhere predictable.
 
 | Attack | The question | Where it usually lands |
 |---|---|---|
@@ -33,14 +33,23 @@ Run all six. Each costs a minute or two and lands somewhere predictable.
 | Silent failure | Where can this fail with nothing raised, logged, or returned? | Swallowed errors, defaults substituting for missing data, retries that give up quietly |
 | Wrong altitude | Too specific — one case hardcoded; or too general — extension points with one caller | Abstraction and configuration added on speculation |
 | Adjacent breakage | Who else calls this, parses this shape, relies on this ordering or this timing? | Callers you never opened, and anything depending on the old behaviour |
+| Unverified reference | Which statements here are about a document I did not reopen? | Cross-references, cited requirements, "as X already says", recalled API or spec behaviour |
 
-A seventh when the work is an addition: delete it mentally and ask what breaks. If nothing does, it is unjustified rather than wrong.
+An eighth when the work is an addition: delete it mentally and ask what breaks. If nothing does, it is unjustified rather than wrong.
 
 ## Attack the strongest part
 
 The weak part is already flagged in your own head — you know the rough edge and the TODO, and reviewing it returns what you already knew. Defects concentrate where attention stopped early: the obviously-correct core, the part you would skip in someone else's review, the piece written fastest because it was familiar.
 
 Operational rule: name the two pieces you would not bother reviewing, and review exactly those. The confidence that makes them skippable is what left them unexamined.
+
+## A reference to another document is a claim, and it reads as a verified one
+
+Three attacks in the table above already look outside the artifact — an external call's behaviour, the original request, the callers you never opened. A cross-reference is the fourth, and the one that disguises itself as already checked: it asserts something about a document that is not in front of the reader, and its form does the opposite of flagging that. A backticked name, a section title, a file path, a spec clause — each looks like a *link*, an invitation to go and check — while it is functioning as an *assertion* the reader will act on without going anywhere. Readers do not open them, and that is not laziness. Not having to open it is what a citation is for.
+
+The failure survives review because of its shape. A reference recalled rather than reopened is usually *directionally* right — the cited thing really is about this topic — and wrong in exactly the part that was load-bearing: it inverts the cited example, attributes a test the source does not apply, or names the source's mechanism a little off. And the correction is the more dangerous half. Rewriting a vague citation into a precise one — naming the rule the other document supposedly applies — *feels* like the rigorous version and reads that way to a reviewer, while having introduced a second false claim about a file that still nobody has opened. Naming a mechanism is routinely mistaken, by its author and by its reader, for having checked it.
+
+The check is mechanical and costs about a minute. Before shipping, pull every reference to something outside the draft — grep your own text for the backticked names, paths, and section titles — and open each target. Not to confirm the topic; to confirm the sentence you wrote about it. Whatever you cannot reopen gets softened to what you actually know or deleted outright: "as noted elsewhere" is honest, and a wrong attribution is not.
 
 ## A confirmed measurement is one point, not a shape
 
@@ -149,6 +158,8 @@ A pass that comes back clean, on work about to ship, is not evidence there is no
 | "Edge cases are handled" with no enumeration | Handled the cases you thought of, which is exactly the set that produced the defect |
 | The part reviewed is the part you already doubted | Attacked the known weak point; the strong point stayed undefended |
 | A large change reviews clean in one sitting | Reviewed the artifact you remember writing, not the one that exists |
+| A citation is wrong in a way that survived two reviews | Nobody opened the cited file, because a reference reads as something already checked |
+| A vague reference was sharpened into a precise one that is false | Naming the mechanism felt like verifying it, and the reviewer read it the same way |
 
 ## Red flags
 
@@ -157,3 +168,5 @@ A pass that comes back clean, on work about to ship, is not evidence there is no
 - "Testing will catch it" about something you could provoke with one command
 - Ending the pass pleased rather than surprised
 - Reviewing what you just wrote, in the order you wrote it, immediately after writing it
+- A cited document nobody in the review opened, including you
+- "It definitely says that" about a file you have not had open during this piece of work

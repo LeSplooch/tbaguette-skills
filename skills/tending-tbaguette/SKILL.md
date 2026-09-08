@@ -514,6 +514,20 @@ vocabulary the covering skill would have used, before drafting: a section
 already written is expensive to abandon and easy to keep on the grounds that it
 puts the point more sharply.
 
+**A candidate that already names where the rule lives is reporting a memory, not a
+search.** The most convincing entries in a queue are the ones whose capture did some
+homework — *this already exists over here, so the real question is whether it is a
+duplicate or a routing gap.* That framing is worth having, and it was written from
+inside the situation by someone with two or three files open, so it names exactly
+those two or three. Treat it as a lead rather than as the check having happened.
+
+Which sends you somewhere the paragraph above says is usually the wrong place, and
+that is deliberate. Filing goes by family, so the covering skill is usually not the
+one the subject points at — and the exception is worth ten seconds anyway: open the
+skill the candidate proposes to edit, read that file's own section headings, and
+confirm the rule is not already in it under a heading that names it. It will usually
+miss, and when it hits it ends the question outright and saves the wider search.
+
 **Read a near-hit for its actor, not only for its topic.** A search that lands
 on a passage covering the candidate's subject is usually the end of it — and
 occasionally it is the most valuable finding of the pass instead. A skill
@@ -637,6 +651,16 @@ sent it if `gh pr create` had worked?** Nobody pastes a diff into an issue while
 pull request is available. The yes is not spent, and it does not expire — it is still
 waiting for a session where the command runs, and a second copy in an issue is the
 one thing that can make it unusable.
+
+**Write this pipeline as one call per step, so a refusal names its own subject.** The
+discriminator above still works on a bundled call — a declined `git add && git commit
+&& git push` produces no command output either way. What it cannot tell you is *which*
+of the three was the subject, and that is what the report needs. So keep them apart:
+the commit apart from the push, the push apart from `gh pr create`. Never take a
+bundled refusal apart afterwards to find out which piece it was;
+`routing-around-capability-gaps` owns why, and the short version is that each piece is
+another attempt at a step that may never have been permitted. A bundled call that was
+declined is reported as declined, whole.
 
 ## Safety rails
 

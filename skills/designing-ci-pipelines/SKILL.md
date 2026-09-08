@@ -1,6 +1,6 @@
 ---
 name: designing-ci-pipelines
-description: Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI, when a stale cache produces a wrong result, when deciding which checks block a merge, when retries are proposed to make a build green, when a pull request from a fork needs access it must not have, when a scheduled, nightly, or cron job is added, or when one that was supposed to be running turns out never to have run. Covers stage ordering, feedback budgets, cache keys, required versus advisory checks, runner permissions, forcing a scheduled job's first run before trusting it, and reporting age of last success rather than status of last run.
+description: Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI, when a stale cache produces a wrong result, when deciding which checks block a merge, when retries are proposed to make a build green, when a pull request from a fork needs access it must not have, when a scheduled, nightly, or cron job is added, when a slow-cycle job keeps failing on one missing secret, credential, or tool after another, or when one that was supposed to be running turns out never to have run. Covers stage ordering, enumerating a job's prerequisites in one preflight step rather than one failure per cycle, feedback budgets, cache keys, required versus advisory checks, runner permissions, forcing a scheduled job's first run before trusting it, and reporting age of last success rather than status of last run.
 ---
 
 # Designing CI pipelines
@@ -87,6 +87,17 @@ Two things follow:
 - **Force one run when the job lands, rather than waiting for its schedule.** A job's first successful run is the only evidence it can run at all; until then it is untested code that happens to have a cron expression. Treat the change as unfinished until that run is green, the same way `confirming-before-claiming-done` treats any requirement about a condition that has not occurred yet.
 - **Report age of last success, not status of last run.** These differ exactly when it matters. A job that succeeded once in March and has been suspended since is green on the second measure and four months stale on the first, and only one of those two numbers would have told anyone. Whatever surfaces job health needs to separate *passing*, *failing*, and *never executed* rather than folding the third into either of the first two.
 
+## Discovering prerequisites one failure at a time costs a full cycle each
+
+A job that has run once is past the section above and straight into the failure that replaces it: it runs, and it fails on the first thing it is missing. You supply that one; the next run fails on the second. Where you can trigger the job by hand, that loop costs minutes and the section above's advice — force a run — is also the answer here, six times over. This section is about the jobs where you cannot. A real release, a job whose inputs only exist at the hour it fires, one that consumes the previous night's output, a provider with no manual dispatch, an environment whose credentials are only injected on the schedule: for those, every missing prerequisite costs a full period, and a list of six that would fit on one screen takes six periods to read, one line at a time.
+
+What hides the shape is that the message names the reporter rather than the requirement. A job missing six credentials fails in seconds inside whichever early step happens to touch the first one, and the error belongs to that step: a checkout complaining about a token, a client refusing to construct, a registry returning 401. Nothing in it is false and nothing in it is a list. Read as a diagnosis it says *you are missing this*, when the true statement is *you are missing this and an unknown number of others* — and the gap between those two readings is every remaining cycle.
+
+So give any job with an expensive cycle a first step that enumerates every prerequisite it will need — each secret, credential, tool, network destination, and mounted path — checks all of them, and reports every failure at once instead of exiting on the first. Two things make that worth more than it looks:
+
+- **An expired credential fails identically to one that was never set.** Both surface as an authorization error from whatever tried to use it, at whatever hour the job fires, with nobody reading. Only a preflight that separates *absent*, *present and rejected*, and *present and accepted* distinguishes them, and that is the difference between a fix and an investigation.
+- **Test the preflight against every state it claims to distinguish**, including the ones you expect never to see. A check that has only ever printed *ok* is indistinguishable from a check incapable of printing anything else — `writing-the-failing-test-first`'s rule, and it applies to the instrument you just built exactly as much as to the code it guards.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -101,6 +112,8 @@ Two things follow:
 | A secret leaked through a pull request | a fork's PR ran with the same permissions as a branch PR |
 | The same failure gets debugged twice | logs omitted the command and the resolved versions |
 | A scheduled job's dashboard is green and the thing it maintains is months stale | Last-run status reported where age of last success was the question |
+| A nightly job has failed for weeks, each time on a different missing secret | No preflight, so each run discovers exactly one prerequisite and the cycle is a night |
+| A credential that worked last month now fails and nobody can tell if it was revoked | Absent and rejected produce the same error from the step that used it |
 
 ## Red flags
 
@@ -113,3 +126,5 @@ Two things follow:
 - "The build is red, but it's unrelated" said more than once in a week — trust is already gone, and a real failure will be rerun rather than read
 - A scheduled job merged and never once run by hand — its first real execution will be unattended, at whatever hour it fires
 - Job health shown as pass/fail, with no way to see a job that has never executed
+- A job on a slow cycle whose required secrets and tools are written down nowhere the job itself checks
+- A preflight or health check that has printed the same word on every run it has ever had

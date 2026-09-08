@@ -1,6 +1,6 @@
 ---
 name: modeling-errors
-description: Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, undiagnosable production incidents, duplicated log noise, and callers parsing error strings.
+description: Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, undiagnosable production incidents, duplicated log noise, and callers parsing error strings. Also use from the other side, when your own code must detect a state in a system you do not own and the only anchor on offer is a printed status word, a window title, or a generated class name.
 ---
 
 # Modeling errors
@@ -64,6 +64,12 @@ Five things, every time:
 
 A good message names what was being done, what happened, and what changes the outcome: `connect to config store at <addr>: connection refused (retryable, retry after 2s)`. Never "an error occurred"; never a message that only makes sense to the person who wrote the raise site.
 
+### When you are the downstream and no stable code was published
+
+Rule 1 above is written for whoever publishes the contract. Sooner or later you are on the other end of one that was never written: your code has to detect a state in a system you do not own, and that system offers no machine interface. The most obvious anchor is then the surface it renders for people — a status word in a command's printed output, a window's title, a class name in someone else's generated markup — and matching on it is wrong in a way your own machine is structurally unable to show you. Printed status words are localized, so on every install not in your language your check reads a perfectly healthy target as stopped. A title substring matches your own window as readily as the one you meant, which is merely embarrassing until the same pattern is chained to something destructive. Generated class names are hashed per build and change on a release nobody told you about.
+
+So choose the anchor by asking which layer treats the value as *identity or state* rather than as presentation. An exit status carries no language. A process id, an owning window handle, a socket that answers, an attribute set beneath the layer doing the hashing — each is something the target system uses to keep track of itself, and it moves when the target's behaviour moves rather than when its rendering does. Two riders. Very often the rendered string answers a worse question than the one you actually hold: *is this reachable* is answerable directly, while *does the supervisor's bookkeeping currently spell a particular word* is a proxy for it that a translation can break. And where only a fragile anchor exists, a fallback ladder needs each rung proven with the rungs beneath it disabled — otherwise a sturdy fallback silently rescues the flimsy rung above it, the test passes for the wrong reason, and the flimsy rung is the one that ships to a machine where the fallback is unavailable.
+
 ## Wrap, swallow, rethrow, boundary
 
 | Action | Correct when | How it goes wrong |
@@ -89,6 +95,8 @@ A good message names what was being done, what happened, and what changes the ou
 | Wrap chain reads "failed to process: failed to handle: failed to run" | Wrapping with verbs instead of nouns |
 | One bad message kills the whole consumer | Error boundary at process granularity instead of per-message |
 | Load spike during a partial outage | Retries nested at multiple layers, multiplying attempts |
+| A detector works for the author and reports the wrong state on every other machine | It matched a rendered string — a localized status word, a title, a generated class name — instead of something the target uses as identity |
+| A fallback ladder's first rung has never been seen to succeed on its own | Every rung was tested with the ones below it live, so the sturdy fallback silently rescued the fragile probe |
 
 ## Red flags
 
@@ -97,6 +105,8 @@ A good message names what was being done, what happened, and what changes the ou
 - "Return null on failure and let the caller figure it out."
 - A default chosen at the point of failure that is also what success looks like.
 - "That can never happen" — written next to the code that handles it happening.
+- A state check that matches a word a human was meant to read.
+- An unanchored substring match that would also match your own program.
 - "Add a retry" as the first response to a flake, before classifying it.
 - A catch block whose body is empty, or contains only a log statement.
 - An error type with one variant and a string.

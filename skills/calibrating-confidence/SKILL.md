@@ -1,6 +1,6 @@
 ---
 name: calibrating-confidence
-description: Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session, when asked whether a claim is certain or being pushed back on, when a conclusion rests on recalled knowledge rather than something read, when every sentence has acquired a hedge, when the accurate answer is that you do not know, when a field with no data source of its own is about to be mapped onto a named concept as a proxy, or when a search's hit list or match count is about to be reported as the answer to the question it was run for. Covers evidence tiers, false precision, probability language, proxies that inherit the name of the thing they stand in for, reading the hits rather than the result set, and unearned certainty.
+description: Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session, when asked whether a claim is certain or being pushed back on, when a conclusion rests on recalled knowledge rather than something read, when every sentence has acquired a hedge, when the accurate answer is that you do not know, when a field with no data source of its own is about to be mapped onto a named concept as a proxy, when a search's hit list or match count is about to be reported as the answer to the question it was run for, or when a tool result that may have been truncated on its way to you is about to be treated as the whole of what the tool produced. Covers evidence tiers, telling a capped tool result from a complete one, false precision, probability language, proxies that inherit the name of the thing they stand in for, reading the hits rather than the result set, and unearned certainty.
 ---
 
 # Calibrating confidence
@@ -72,6 +72,16 @@ have not classified them*, which is true, useful, and cannot be mistaken for
 the answer to the question that was asked. A count reported as a finding is a
 proxy wearing the name of the answer, which is what the next section is about.
 
+## The received output may not be the produced output
+
+The Verified row says *observed in this session's tool output*, and that phrasing quietly assumes the output arrived whole. It often does not. Harnesses cap tool results at thresholds they do not announce and continue as though nothing happened, and several layers — framework, transport, display, whatever summarises history — can clip independently of each other.
+
+What makes this different from every other kind of missing data is who is reading. A strict consumer crashes on a half-finished record; a reader does not. It reasons over the visible portion and produces a conclusion that looks complete, and the evidence that would have revealed the gap was discarded before it ever reached you. So the failure is worst for a **negative** claim, because truncation takes the tail: *I searched and there are no other callers* is precisely the sentence a clipped result reliably produces, and precisely the one nobody re-runs.
+
+Read the shape of a result before promoting it to Verified. Output stopping on a round number — exactly so many lines, exactly one page of rows, exactly a configured limit — is a cap rather than a coincidence. So is a result ending mid-record or on an unbalanced bracket, and so is one carrying a cursor, a `has_more`, or a next-page token that nobody followed. Re-run it narrowed, or ask for the next page, and see whether the content changes; if it does, the first result was a fragment and every claim resting on it is Assumed.
+
+This is the involuntary sibling of *A search result is the input to a check, not the check* below. That section is about a narrowing **you** chose, and its whole remedy is to disclose it. Here nobody chose and nobody was told, so there is nothing to disclose until you go looking for the cap.
+
 ## A proxy inherits the name of the thing it stands in for
 
 The tiers above mark a claim you are making, in a sentence you control. This is
@@ -101,6 +111,10 @@ something true about what is known, while a rule wearing a borrowed name says
 something false about the world. `tracking-data-provenance` keeps observed,
 inferred and defaulted distinguishable as data moves; this is what to do when the
 honest answer is that no tier applies, because nothing was measured at all.
+
+**You do this to yourself too, and it is triggered by something entirely mundane.** Everything above is a substitution built into a system at design time, where a field with no source acquires a name. The same substitution happens live, inside a single piece of work, and the thing that sets it off is not a hard problem — it is a small, boring obstruction. A file that is not there, a page that returns 404, a dependency that will not install, a permission denied. The correct response is to report what was actually attempted. The response that comes naturally is to find the nearest thing that *does* work — a mirror of the missing document, a similar file one directory over, an adjacent version of the package — answer about that instead, and then write up the finding under the original's name. Nothing about that feels like fabrication at any step. Each individual move was resourceful, and the substitution is disclosed nowhere, because it never presented itself as a decision.
+
+The tell is a report whose subject is not the subject you were asked about, and it is only visible by comparison. So when an obstacle has been routed around, name the thing you actually examined in the sentence that states the finding — the path you actually opened, the version you actually ran, the endpoint that actually answered. If that name differs from the one in the request, the difference is the finding, and it goes above the result rather than into a footnote under it.
 
 ## When a number, and when it is false precision
 
@@ -138,6 +152,8 @@ Pushback is not evidence. When asked "are you sure?", re-derive the claim, then 
 | A claim restated more confidently on its second telling | Own output recycled as a source |
 | "The function returns X" after reading only the signature | Verified something adjacent to the claim and reported the claim |
 | A cause stated for a failure that was never reproduced | Explanation quality mistaken for diagnostic evidence |
+| "There are no other occurrences", from a result that stopped on a round number | The result was capped in transit; truncation takes the tail, which is where a counterexample would be |
+| A report about a near-neighbour of the thing that was asked about | A small obstruction was routed around and the substitute inherited the original's name |
 
 ## Red flags
 
@@ -146,3 +162,5 @@ Pushback is not evidence. When asked "are you sure?", re-derive the claim, then 
 - Adding a percentage to make an unchecked claim sound rigorous
 - Answering a version-specific question without establishing the version
 - Speaking at the same volume whether the source was a file or a recollection
+- A tool result ending exactly on a limit, mid-record, or carrying a cursor nobody followed
+- A finding whose subject is not the thing that was asked about, with the swap named nowhere above it

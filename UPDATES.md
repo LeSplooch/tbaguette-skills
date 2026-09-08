@@ -24,6 +24,75 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-09 — Ten checks that were passing because nothing could make them fail
+
+- **A version check on stored data now gets told which way to point.** `schema-evolution`
+  covers the guard almost everyone writes — accept anything at or below the current version
+  — and why it is exactly backwards when the version moves because a field's *meaning*
+  changed rather than because a field was added. Re-reading an old row with new code then
+  applies the new meaning to the old number, through the one check written to stop that. It
+  also covers the trap underneath: a version field that inherits a whole-record default
+  reports the version of whatever is reading it, so every legacy row claims to be current
+  and the guard has never once rejected anything.
+- **A cache key is a promise to everyone else who computes it.** `caching-strategy` now
+  covers keys derived from something local to one process — an identity hash, an address,
+  an iteration order. They work everywhere you test them and differ on every other machine,
+  which is fine for a private speedup and a correctness bug when two machines are supposed
+  to agree. It also covers the hit rate that will not move no matter how the cache is tuned,
+  because a router upstream is scattering identical requests across backends and the
+  locality was destroyed before the cache ever saw them.
+- **A nightly job that fails on a different missing secret every night.** `designing-ci-pipelines`
+  covers the cost of discovering prerequisites one failure at a time when the cycle is a
+  night or a week, and why the error never tells you there are five more behind it — it comes
+  from whichever step touched the first one. The fix is a preflight that checks everything
+  and reports every failure at once, including the difference between a credential that was
+  never set and one that expired, which otherwise look identical at 3am.
+- **Cited another document? You have not checked it.** `red-teaming-your-own-work` gains a
+  seventh attack and a section on the one claim that reads as verified because of its shape.
+  A reference looks like a link, so nobody opens it — including the person who wrote it. The
+  sharper half is that *correcting* a vague citation into a precise one feels more rigorous
+  while adding a second false claim about a file still nobody has read.
+- **Filters that each work and together let nothing through.** `drawing-boundaries` covers
+  chains of accept/reject rules — screens, detectors, vote tallies, stop conditions — where
+  every rule is individually right and nothing has ever measured what the assembled chain
+  admits. An over-strict chain and a genuinely quiet period produce the same empty output.
+- **Matching on a word a human was meant to read.** `modeling-errors` already told whoever
+  publishes an interface to emit a stable code rather than prose. It now covers the other
+  end, where no such code exists and the only anchor on offer is a printed status word, a
+  window title, or a generated class name — each wrong in a way your own machine cannot show
+  you, since status words are localized and class names are hashed per build.
+- **A tool result may be shorter than what the tool produced.** `calibrating-confidence`
+  treats output observed in this session as the top tier of evidence, and that assumed it
+  arrived whole. Harnesses cap results at limits they do not announce. This bites hardest on
+  a negative claim, because truncation removes the tail: "I searched and found nothing else"
+  is exactly the sentence a clipped result reliably produces.
+- **A missing file gets quietly replaced by a similar one.** `calibrating-confidence` covers
+  what a small, boring obstruction sets off: a 404, a file that is not there, a package that
+  will not install. The natural move is to find the nearest thing that does work, answer about
+  *that*, and report it under the original's name — with no step along the way that feels like
+  fabrication. Name what you actually opened in the sentence that states the finding.
+- **An allowlist of commands does not restrict what those commands mean.** `least-privilege-design`
+  covers the approved, legitimate operation that runs someone else's payload because an
+  unlisted operation changed an environment variable, a search path, or an alias a minute
+  earlier. The audit log ends up being a list of things everybody agreed to, and the
+  poisoning step looks harmless to any classifier because its whole effect is on what happens
+  next.
+- **An approval gate has a throughput.** `delegating-tasks-with-review-gates` covers what a
+  gate actually spends — the attention of whoever answers it — and the part that inverts
+  intuition: the better the delegate performs, the less each approval gets read, so the rare
+  wrong one arrives at the moment of least scrutiny. With the checkable rule that if you
+  cannot say what a *no* would change, it is a notification wearing a gate's interface.
+- **A correct fix that changes nothing looks exactly like a wrong one.** `diagnosing-before-fixing`
+  already covered a byte-identical result meaning the input never arrived. It now covers what
+  happens when a path holds two blockers: you find and fix the first, the output is still
+  identical, and the hypothesis you just confirmed gets retired. Enumerate every stage before
+  changing any of them.
+- **A refused command should name what it refused.** `routing-around-capability-gaps` and
+  `tending-tbaguette` both cover the call that bundles several steps into one line and gets
+  declined as a unit, naming none of them — so nobody can report which step is blocked.
+  Finding out by re-running the pieces is not diagnosis. One call per step, so a refusal
+  identifies its own subject.
+
 ## 2026-09-08 — Formidable aims past the brief by default
 
 - **Ask for design work without saying which kind, and you now get the better version of the

@@ -1,6 +1,6 @@
 ---
 name: caching-strategy
-description: Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change, when choosing a TTL or cache key, when an expiring hot key or a cold restart floods the origin, when one tenant or locale sees another's data, when deciding whether a TTL should be chosen by the consumer or declared by each response, or when latency work tempts a cache in front of a slow query.
+description: Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change, when choosing a TTL or cache key, when an expiring hot key or a cold restart floods the origin, when one tenant or locale sees another's data, when deciding whether a TTL should be chosen by the consumer or declared by each response, or when latency work tempts a cache in front of a slow query. Also use when a cached or memoized value has to come out the same on two machines, when a key is derived from an object's identity rather than its content, or when a hit rate stays low and the requests are routed or load-balanced before they reach the cache.
 ---
 
 # Caching strategy
@@ -110,6 +110,16 @@ Everything the answer depends on belongs in the key: entity id, tenant, locale, 
 - Watch cardinality from both directions: keys that are near-unique per request never earn a hit and only consume memory; keys too coarse serve one asker's answer to another.
 - Cache the smallest reusable unit. A whole rendered response inherits the shortest staleness budget of any field inside it, and usually that field is a permission or a balance.
 
+## Who else computes this key, and how did the request get here
+
+Key design above settles what the key must contain. Two questions it does not touch are decided entirely outside the cache, and both fail without ever looking like a cache problem.
+
+**The first is who else computes the key.** A key derived from a property of one object in one process — an identity hash, a memory address, a pointer, an iteration order, a per-run salt — is perfectly stable everywhere you are likely to test it, and different on every other machine. That is harmless while the cache is a private speedup. It becomes a correctness bug the moment two processes are under a contract to *agree*: replicas rendering the same view, a deterministic simulation, a shared or content-addressed store, two clients that must produce identical bytes. Derive the key from the content that determines the answer, never from the object that happens to be holding it.
+
+Accept what that trades, and note that the argument is not the usual one about collision rates. Both key schemes collide: a content hash on two inputs that hash alike, an identity key on a reused address or a recycled handle after the original was freed. What differs is *who* collides. A content hash's collisions are shared — every process computing it collides on the same pair and draws the same wrong thing — while an identity key's collisions are private to one process, on top of already disagreeing on every value it gets right. **Under an agreement contract a consistently wrong answer is detectable and recoverable, and an inconsistently right one is neither.** Where the contract is agreement rather than accuracy, choose the failure mode that stays symmetric.
+
+**The second is how the request arrived.** A cache sitting behind a chooser — a load balancer, a scheduler, a router picking a backend by cost, latency, or throughput — only ever hits when consecutive equivalent requests land on the same choice. A chooser optimizing its own dimension scatters them by design, and the locality the cache depends on is destroyed by a component that does not know the cache exists. This one is expensive to find because of where it presents: hit rate is the number that moves, so it reads as a cache-tuning problem, and every lever available inside the cache — bigger, longer, warmer — is the wrong one. Before tuning a disappointing hit rate, ask whether anything between the caller and the cache is free to send an identical request somewhere else. Affinity is the fix, and it belongs to the router rather than to the cache.
+
 ## When it is not a cache
 
 If a stale read is a correctness bug rather than a freshness trade, do not build a cache. The tell is someone proposing a TTL of zero, or saying "we will just invalidate it everywhere reliably." Reliable cross-process invalidation is distributed consensus wearing a disguise. Build a replica with a stated consistency guarantee, publish the replication lag as a number — an emitted signal, on `instrumenting-for-observability`'s terms, not a figure someone can look up during an incident — and route the reads that cannot tolerate that lag to the authoritative copy.
@@ -127,6 +137,8 @@ If a stale read is a correctness bug rather than a freshness trade, do not build
 | "Not found" persists after creation | Negative entry never invalidated on write |
 | Outage continues after the dependency recovers | An error response was cached |
 | Memory grows without bound | Per-request-unique keys, or no eviction policy and no size ceiling |
+| Two machines render the same input differently | The key was derived from a process-local identity, so no two processes agree on it |
+| Hit rate stays low no matter how the cache is tuned | A router or scheduler upstream scatters equivalent requests; the locality was destroyed before the cache saw them |
 
 ## Red flags
 
@@ -136,3 +148,5 @@ If a stale read is a correctness bug rather than a freshness trade, do not build
 - A correctness argument that depends on the cache being available
 - A cache added before the miss path was profiled, or a key assembled inline in a second place
 - "It is only cached for five minutes," said about permissions, quota, or a balance
+- A key built from something process-local, in a cache two processes are expected to agree on
+- A hit-rate investigation that has never looked upstream of the cache at what chose the backend

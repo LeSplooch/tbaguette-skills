@@ -1,6 +1,6 @@
 ---
 name: delegating-tasks-with-review-gates
-description: Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it, or when deciding which model each subagent role gets and an unspecified model is about to inherit the session's own. Also use when a delegate came back without reporting a status at all, or when its output ends mid-sentence and the work so far looks finished. Also use when an approval obtained in one exchange is carried into another. Covers dispatching a zero-context implementer subagent per task, choosing a model tier per role, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.
+description: Use when executing a multi-task implementation plan task by task in the current session, when each task should go to a fresh subagent carrying none of the session's accumulated history, when a task's implementation needs checking against both its requirements and its craftsmanship before the next task builds on it, or when deciding which model each subagent role gets and an unspecified model is about to inherit the session's own. Also use when a delegate came back without reporting a status at all, or when its output ends mid-sentence and the work so far looks finished. Also use when an approval obtained in one exchange is carried into another, or when approvals are being asked for faster than anyone could read them. Covers dispatching a zero-context implementer subagent per task, choosing a model tier per role, the two-stage review — spec compliance and code quality — that gates each one, working a bounded fix loop when review finds problems, and a final whole-branch review once every task is done.
 ---
 
 # Delegating tasks with review gates
@@ -128,6 +128,24 @@ The actor here is you, holding a person's yes — not a delegate holding a clear
 So the load-bearing content of an approval is **a digest of what was approved** — the actual parameters, paths, or diff, never a description of them — scoped by something that can go stale on its own. The base commit the dispatch record already names does that job: when it moves, the approval is spent. At the point of action, re-read the digest and compare it field by field against what you are about to do, rather than acting on what the session currently believes those fields are. A mismatch stops the operation.
 
 `checkpointing-long-runs` names the version that crosses a context boundary: a verdict recorded against a role rather than against content re-binds on restore to whatever now occupies that role. Same defect, different transport.
+
+## A gate has a throughput, past which a yes carries no information
+
+Most gates above are answered by a dispatched reviewer, and what those cost is tokens and turns — the model-choice section already prices them. A few are answered by a *person*: the list in *Decide, don't stall*, plus every approval this skill asks you to carry. Those are a different resource, and the one that is never budgeted. An oversight gate answered by a human is a channel with a finite capacity, and a design raising one wherever a stop *might* help is not being careful — it is overdrawing the account the gates that matter are also drawn against.
+
+Three effects compound, and the middle one is the counter-intuitive half:
+
+- Past some rate, an approver stops evaluating and starts pattern-matching. The reading is not skipped deliberately — the answer simply arrives before the reading does, and it is almost always yes, because it almost always should be.
+- **The better the delegate performs, the less scrutiny each approval receives.** A long run of correct proposals is exactly what trains the reflex, so the rare wrong one arrives at the moment of least attention. Reliability does not make oversight cheaper; it makes it weaker, and it does so silently.
+- The costs are asymmetric in the wrong direction. Approving costs a keystroke, and rejecting costs a conversation, a delay, and being the person who slowed it down. That gradient does not need anyone to be careless to bend the outcomes.
+
+The failure is invisible from inside, because a saturated gate and a healthy one produce the same artifact — a run of approvals. Nothing distinguishes an approver who read forty diffs from one who acknowledged forty, and neither the log nor the delegate can tell them apart.
+
+So spend the budget deliberately:
+
+- **Stratify by blast radius, not by felt uncertainty.** Uncertainty is the delegate's own estimate and it is the thing under test. What is irreversible, outward-facing, or expensive is a property of the action, and it is the honest axis to gate on.
+- **Ask once per coherent change, not once per fragment.** Eleven prompts about one decision get acknowledged eleven times; the decision gets read once. *Dispatch the implementer* already applies this to the same small edit repeated across files — one dispatch, reviewed as a single diff — and the reason there is the reason here. Note the boundary: the per-task gate above is deliberately one review per task, and it is exempt because a machine answers it. Fragmenting is only free where nobody is paying attention for it.
+- **The checkable rule: if you cannot say what a *no* would change, it is not a gate.** It is a notification wearing a gate's interface, and it is spending the same attention. Turn it into a line in the report.
 
 ## When review finds problems: the fix loop
 
