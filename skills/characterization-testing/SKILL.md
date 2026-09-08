@@ -1,6 +1,6 @@
 ---
 name: characterization-testing
-description: Use when changing, refactoring, extracting, porting, or deleting code that has no tests, when the current behavior is unknown or undocumented, when a rewrite must match a legacy component output for output, or when reaching for golden files, approval tests, snapshots, or output diffs. Covers pinning existing behavior, recording known bugs, and retiring the pins.
+description: Use when changing, refactoring, extracting, porting, or deleting code that has no tests, when the current behavior is unknown or undocumented, when a rewrite must match a legacy component output for output, or when reaching for golden files, approval tests, snapshots, or output diffs. Covers pinning existing behavior, recording known bugs, and retiring the pins. Also use after a change relocates where an effect is produced, when a pinned test is still green and may have quietly stopped observing anything.
 ---
 
 # Characterization testing
@@ -34,6 +34,18 @@ The pin must survive the refactor, and that is entirely decided before any outpu
 2. **Record the output by running the code and accepting what comes out.** This is the one place where a test passing on its first run is correct.
 3. **Verify the pin has teeth before trusting it.** Mutate the source — flip a comparison, change a constant, drop a field — and confirm the recorded output changes. Pins that assert on empty output, swallow exceptions, or capture a value nobody computes pass happily forever, and this check is the only thing that catches them.
 4. **Refactor.** Any diff in the pinned output is either a bug you introduced or a bug you fixed. Both require a decision. There is no third category, and "probably fine" is not a decision.
+
+## A pin can survive a refactor and stop watching
+
+Step 3 verifies the pin has teeth, once, against the code as it stood. That verification has a shelf life, and what expires it is never an edit to the test. The test is untouched. The test is green.
+
+What expires it is a change that relocates *where* an effect is produced. An assertion that a house's windows are dark at midday was also catching the porch lantern, because the lantern painted its glow straight into the frame the assertion read. A later change queued that glow so it lands after the night wash — correct, better, and invisible at the old observation point. The assertion went on passing, and would have gone on passing with the porch light burning all afternoon.
+
+The property did not move. The place to assert it did.
+
+This is the inverse of the failure the observation-point section guards against, and it is the worse of the two, because the other one announces itself. A pin that named an internal breaks the day the internal moves, and you go and fix it. A pin that watched a *stage* keeps passing when the effect moves to a later stage, and nothing anywhere reports that it is now asserting over a frame the effect never reaches.
+
+So step 3 is not a one-time gate. **Any change that moves where an effect is computed, composed, or committed re-opens the teeth check for every pin that observed it at the old point** — and re-running the suite is zero evidence, because passing is the symptom. Mutate the source again and confirm the pin still notices. One that no longer notices does not need deleting; it needs re-pointing at the stage the effect now lands in.
 
 ## Keeping goldens from churning
 
@@ -82,9 +94,11 @@ Current behavior includes current bugs, and the pin must capture them or the ref
 | Rewrite matches the legacy system including its defects | Correct outcome for the cutover, wrong outcome to keep — pins were never retired |
 | The pins are still there two years later | No retirement step; scaffolding was mistaken for a test suite |
 | Cases all behave identically | Unstratified sample — every input came from the same slice of production |
+| A pin is green and the behavior it names is visibly broken | The effect moved to a later stage; the pin still observes the stage it was written against, and green is the symptom |
 
 ## Red flags
 
+- "The suite is still green after the move, so the pins survived it." — surviving and still watching are different properties, and only one of them shows up as green.
 - "Just accept the new snapshot, it's probably the refactor."
 - "I'll pin it after I start refactoring."
 - "The golden is huge but the diff is usually small."

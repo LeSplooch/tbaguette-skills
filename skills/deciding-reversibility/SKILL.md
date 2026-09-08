@@ -1,6 +1,6 @@
 ---
 name: deciding-reversibility
-description: Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude.
+description: Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it.
 ---
 
 # Deciding reversibility
@@ -64,6 +64,12 @@ Usually higher leverage than deciding well — change the decision's class so it
 
 The wrapper generally costs less than the analysis it removes. When it does not, that is the signal the decision genuinely deserves the analysis.
 
+**And the undo has to live outside the blast radius of the thing it undoes.** Every item above assumes the mechanism that reopens the door still exists once you have gone through it, and that assumption is the one nobody states. Backups stored in the volume they protect, under the credential that can delete that volume, are not a rollback plan — they are part of the same object, and one action removes the door and the way back through it together. The shape recurs far from storage: a kill switch served by the service it kills — `feature-flagging` owns that one, and requires an evaluation path that does not depend on anything failing during the incident the switch was built for — a rollback that needs the pipeline the bad deploy just broke, a revert to an artifact the registry garbage-collected last week, a runbook stored only in the wiki that runs on the cluster being drained.
+
+The check is one question at design time, and it is cheap enough to ask about every reversible-looking action: **name the thing that would perform the undo, then ask whether the action you are contemplating can reach it.** Different volume, different credential, different account, different lifecycle — any one of those separations is usually enough, and none of them is the default.
+
+This is a different question from whether the undo *works*, and passing one says nothing about the other: `confirming-before-claiming-done` requires a restore actually performed from the backup, and a backup can be verified restorable and still sit inside the blast radius of the thing it protects. Separation is about identity as much as location — if one credential opens both the store and its backup, both are in the radius regardless of where the bytes sit.
+
 ## Decide at the right altitude
 
 The two errors are symmetric. Imposing a project-wide convention to settle one file turns a local choice into a global one and manufactures a default nobody validated. Re-deciding the same thing at twenty call sites produces twenty answers and no convention.
@@ -89,9 +95,11 @@ Record every fast decision in one line: the choice, the runner-up, and the obser
 | Waiting on information that is not coming | No named evidence that would change the answer |
 | A once-reversible choice is now load-bearing | Weeks of work compounded on it while it was still provisional |
 | Both options built to avoid choosing | Two implementations to maintain, and the decision still pending |
+| The rollback plan was gone at the moment it was needed | The undo lived inside the blast radius — same volume, same credential, or same lifecycle as the thing it was meant to undo |
 
 ## Red flags
 
+- "It's reversible, we have backups." — said without naming where they live and what can reach them.
 - "Let us make sure we get this right the first time" about something internal and wrapped
 - A decision thread whose last two rounds introduced no new information
 - Reaching for a migration, a deletion, or an external send at the same speed as an internal rename

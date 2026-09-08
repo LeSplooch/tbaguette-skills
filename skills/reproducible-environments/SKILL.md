@@ -1,6 +1,6 @@
 ---
 name: reproducible-environments
-description: Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt, when onboarding needs undocumented setup steps, when a build breaks though no commit changed, when two builds of the same commit produce different artifacts, or when choosing between a version manager, a container, and a hermetic build. Covers pinning, lockfiles, toolchain declaration, isolation, and determinism.
+description: Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt, when onboarding needs undocumented setup steps, when a build breaks though no commit changed, when two builds of the same commit produce different artifacts, or when choosing between a version manager, a container, and a hermetic build. Covers pinning, lockfiles, toolchain declaration, isolation, and determinism. Also use when a verification step launches the real built artifact, or when a check that was supposed to touch nothing may have run against a real profile, store, or credential.
 ---
 
 # Reproducible environments
@@ -64,6 +64,15 @@ Rules: commit it; make CI install in frozen mode so drift fails the build rather
 
 Choose by the failure you actually have, not by prestige. A container referenced by a mutable tag, or one that runs a package-manager update during the build, has bought you a slower build and no pinning at all — the pin is the digest and the frozen package set, never the tag.
 
+## A check that launches the real artifact inherits the real environment
+
+Isolation gets applied to the build and to the test suite, then quietly skipped for the one command that runs the actual artifact — because that command *is* the verification, and wrapping it feels like weakening the thing being proved. It is the opposite: an application resolves its data directory, profile, credentials and state through environment variables with a home-directory fallback, so a check that sets no environment opens the operator's real store on every run it has ever had. `bounding-autonomous-work` covers why an invocation is an execution and what to isolate it in; this is what to check **afterwards**, because the obvious check is wrong twice over.
+
+Point every variable the artifact reads at a scratch directory, unset the fallbacks, and then assert two things rather than one — each catches exactly what the other cannot:
+
+- **A negative check, aimed at the right files.** "The real store was not modified" gets written as an mtime comparison on the main database file, and a short run leaves that file byte-identical while putting half a megabyte into its write-ahead journal. Compare mtime *and* size, across the primary file *and* its sidecars. The obvious check passes while the application writes freely.
+- **A positive check that the run got far enough to matter.** A launch that died in its first second, never reached its storage layer and exited satisfies every "nothing was touched" assertion by touching nothing. Assert that a store *was* created under the scratch directory. Without it, your strongest evidence is indistinguishable from the binary failing to start.
+
 ## Verify rather than assume
 
 - Build twice and compare artifact hashes. Vary deliberately between the two: different directory, user, hostname, timezone, locale, and a clock at least a day apart. An unvaried rebuild proves almost nothing.
@@ -85,9 +94,12 @@ Choose by the failure you actually have, not by prestige. A container referenced
 | Lockfile committed, versions still drift | the install command is allowed to update it and CI never runs frozen |
 | Fails only overnight or on one continent | unpinned timezone or locale |
 | Onboarding takes days | setup lives in prose that has never been executed |
+| The verification step's own runs show up in the production audit trail | The check launched the real artifact with no environment set, so it resolved the operator's real profile through the home-directory fallback |
 
 ## Red flags
 
+- "It only runs for a few seconds, it cannot have written anything." — a write-ahead journal fills in the first second, and the main file's mtime never moves.
+- "Nothing was modified, so the isolation worked." — also true of a binary that failed to start.
 - "Just install the latest version" as a setup instruction
 - "We'll pin it later" — the pin costs minutes now and an archaeology session later
 - Any build input named `latest`, `stable`, `main`, or an unversioned download URL

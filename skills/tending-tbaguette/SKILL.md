@@ -620,6 +620,24 @@ contributed, merged, or deployed at that point is false, and
 `routing-around-capability-gaps` owns why quietly finding another route is the worse of
 the two available failures.
 
+**Being told to contribute it is not authorization to contribute it by another
+channel.** The approval gate above ends with a person saying yes, and that yes is
+still in hand when the push to the fork, or `gh pr create`, comes back declined. It
+reads as authorization for the *outcome*: they wanted the maintainers to have this,
+and pasting the section into an issue, a discussion, or an email does get it to
+them — creating the second copy described above, now under an approval nobody asked
+for it.
+
+What they said yes to was a *step*: a branch on your fork, and a pull request opened
+from it under their name. What you are now holding it up as is an *outcome*, and the
+two only come apart at the moment the step is refused — which is when nobody is
+looking for the difference. The question that separates them is about the step you
+are about to substitute, not about the goal it serves: **is this how you would have
+sent it if `gh pr create` had worked?** Nobody pastes a diff into an issue while the
+pull request is available. The yes is not spent, and it does not expire — it is still
+waiting for a session where the command runs, and a second copy in an issue is the
+one thing that can make it unusable.
+
 ## Safety rails
 
 - **Never push to `LeSplooch/tbaguette-skills` directly.** Contributions go
@@ -638,6 +656,14 @@ the two available failures.
   under time pressure — with the premise of that deferral written into its
   `Sketch:` line, so the next pass can tell a wait from a decline. Twice on
   unchanged inputs and it gets settled rather than re-read.
+- Settling one needs somewhere to put it. Give the queue file a `## Settled`
+  section between `## Pending` and `## Shipped`, and move the entry there with
+  its date and the one thing that would reopen it — a second sighting in another
+  project, a maintainer saying the covering skill does not in fact cover it. A
+  negative finding recorded only in your own head, or only in the conversation
+  that produced it, is a question that looks unanswered from every later pass:
+  one already answered "no" and one nobody has looked at are identical from a
+  cold start, and only one of them is worth the investigation again.
 
 ## Common mistakes
 

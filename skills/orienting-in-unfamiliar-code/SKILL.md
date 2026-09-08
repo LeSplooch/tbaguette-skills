@@ -1,6 +1,6 @@
 ---
 name: orienting-in-unfamiliar-code
-description: Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project, or being asked to change code that nobody present wrote. Covers where to start reading, locating entry points and real module boundaries, telling live code from dead, finding where the work actually happens, and reconciling documented architecture with the one the imports reveal. Also use when a text search for a common identifier returns too much to read, when the question is who calls this or whether anything still uses it, or when deciding how far to trust a resolver's zero-references answer.
+description: Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project, or being asked to change code that nobody present wrote. Covers where to start reading, locating entry points and real module boundaries, telling live code from dead, finding where the work actually happens, and reconciling documented architecture with the one the imports reveal. Also use when a text search for a common identifier returns too much to read, when the question is who calls this or whether anything still uses it, or when deciding how far to trust a resolver's zero-references answer. Also use before contributing a change to a project you do not own, when nothing has yet checked whether the idea has already been proposed and declined.
 ---
 
 # Orienting in unfamiliar code
@@ -106,6 +106,21 @@ Docs, ADRs, and diagrams describe the architecture at the moment someone last ca
 
 Each divergence you find is worth more than the rest of the orientation. Write them down; they are the constraints your change will hit.
 
+## The decisions that are not in the code
+
+The *code* records a project's state. It does not record its direction, and it never records what the project has already refused. Reading it perfectly tells you what is there and nothing about what was proposed, argued over, and turned down — which is where a surprising share of otherwise-correct changes die. `code-archaeology` owns the half of that record which does live in the repository, in the review discussion attached to what was merged and reverted; this is the other half, which lives in what was never merged at all.
+
+What makes this worth a separate pass rather than a glance is that a change rejected for one of these reasons is *technically correct*. Nobody will point at a line and say what is wrong with it, because nothing is: it duplicated one already open, it had been superseded, it targeted something the project settled a year ago, it arrived through the wrong workflow. Every one of those is invisible from the code and visible in a few minutes of looking somewhere else, and a correct change that was already declined is still a declined change — with the cost landing on somebody else's unpaid review time.
+
+So before changing code nobody present wrote, spend a bounded pass on the record of what has already been settled — inside the time box below rather than on top of it, because this is orientation and it is subject to the same limit:
+
+- **Closed pull requests touching the same files.** The closed ones carry the reasoning; the merged ones only carry the outcome. Search by path, not by title.
+- **The issue tracker searched for your *idea*, not your *symptom*.** Searching the error message finds people with your problem. Searching the change you intend to make finds the thread where it was considered and rejected, which is the one you need.
+- **`CONTRIBUTING`, governance docs, and the architecture notes** for what the project declines by policy — a dependency it will not take, a platform it does not support, a pattern it has standardized against.
+- **Whether someone is already doing it.** An open branch or a stale draft is a person, and the right move is to talk to them rather than to race them.
+
+This does not conflict with treating a recorded decision as re-openable. `revalidating-decisions` is about a decision that blocks you and may have expired; this is about finding out the decision exists at all. Discovering it after the work is finished converts a five-minute conversation into a rewrite, and discovering it during review converts it into somebody else's rejection.
+
 ## Time-boxing
 
 Spend 20–40 minutes, or 10% of the estimated task, whichever is smaller. Orientation ends when you can state: the file to change, the interface it sits behind, the tests that cover it, and one risk. Not when you feel comfortable — comfort arrives long after competence and costs hours.
@@ -122,6 +137,7 @@ Write the map down in the working notes or the PR description. An unrecorded ori
 | Read the framework's source to understand the app | Depth escape; the app's use of the framework is the fact you needed |
 | Same questions re-derived every session | Orientation was never written down |
 | Estimate off by 4x after a "quick look" | Stopped at the folder tree, never counted entry points or layers |
+| A technically correct change rejected by a project you do not own | It duplicated an open one, was superseded, or targeted something the project had already decided against — none of which is visible from the code |
 
 ## Red flags
 
@@ -132,3 +148,4 @@ Thoughts that mean you have stopped orienting and started avoiding the task:
 - "I'll read the tests properly once I understand the code" — the tests are how you understand the code.
 - "The architecture doc says…" without having checked an import.
 - "One more file and it will click."
+- "I read the whole codebase, I know what this project wants." — the codebase records what it accepted, never what it refused.

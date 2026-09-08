@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-08 — Nine things a run trusts without re-checking
+## 2026-09-08 — Things that were not protecting what you thought they were
 
 - **A credential should never travel through you.** `secrets-hygiene` gains the surface that
   was missing from its list of places a secret must never be — a conversation, a transcript,
@@ -79,6 +79,71 @@ Everything above the first `##` is preamble and is never rendered.
   network is fine, the command simply never ran. Every declined step leaves an obvious way to get
   the same result by hand, and taking it lands the change while leaving the pull request open and
   its author uncredited.
+- **A backup that lives inside the thing it protects is not a backup.**
+  `deciding-reversibility` had a list of ways to turn a one-way door into a two-way one,
+  and every item on it quietly assumed the mechanism that reopens the door still exists
+  after you have gone through. It now says the part that was missing: name the thing that
+  would perform the undo, then ask whether the action you are contemplating can reach it.
+  Backups in the volume they protect, under the credential that deletes it; a kill switch
+  served by the service it kills; a rollback needing the pipeline the bad deploy broke. A
+  green restore drill does not test this, and a separate volume behind one credential is
+  not separate.
+- **An egress allowlist does not cover the resolver.** `least-privilege-design` treated
+  restricting egress as one line. It now covers the channels an allowlist of hosts does
+  not name — resolution first, which carries data out in subdomain labels and instructions
+  back in the answers without connecting to anything on the list, and which stays open
+  because a container that cannot resolve names looks broken. Time sync and crash
+  reporting are the same shape, as is any allowlisted host a third party can read back.
+  The rule underneath: a containment guarantee is tested by attempting to leave, not by
+  reading the sentence that claims it.
+- **The default that looked neutral to you lands at one end of somebody else's scale.**
+  `instrumenting-for-observability` already warned that a prior gets chosen to look
+  neutral. It now names the consumer's side of that: a count defaulted to zero renders as
+  the most negative reading available, a cost counter reading the wrong stream reports
+  *free*, and a capability flag defaulted to `false` to be safe deletes a branch rather
+  than narrowing one. An extreme value is not the same as an implausible one, which is what
+  makes it hard to see: *0 mentions* sits at the end of the scale and reads as an ordinary
+  quiet week. Given two defaults, take the one that produces an answer somebody will query
+  over the one that produces an answer somebody will act on.
+- **The verification that launches your app runs it against your real profile.**
+  `reproducible-environments` now covers the command that isolation gets skipped for,
+  because wrapping it feels like weakening the proof. A real binary launched with no
+  environment set is a real session — real store, real key, rows in a real audit trail. It also says what to check afterwards, since the obvious check is wrong twice
+  over: compare size as well as mtime, and across the write-ahead journal as well as the
+  database, and assert the run actually created something in the scratch directory,
+  because a binary that failed to start passes every "nothing was touched" test.
+- **A pinned test can survive a refactor and quietly stop watching.**
+  `characterization-testing` verified a pin has teeth once, against the code as it stood.
+  It now says what expires that: any change relocating *where* an effect is produced. The
+  pin is untouched, green, and asserting over a stage the effect no longer reaches — and
+  re-running the suite is zero evidence, because passing is the symptom. Green is the
+  worse failure here; a pin that named an internal at least breaks loudly.
+- **The scanner finding everyone has learned to dismiss is usually your own fixture.**
+  `secrets-hygiene` gains the credibility-budget rule: one reliably dismissible finding
+  spends the whole thing, and the likeliest source is test data written to look real
+  precisely because the code under test parses credentials. Assemble the fixture at
+  runtime from parts that match nothing, rather than adding an ignore rule — which is a
+  control being switched off — or a malformed fixture, which stops testing the shape. The
+  same law covers detectors you write: tolerance for false positives is set by how often
+  a human has to look at one.
+- **The project already turned your change down, and the code does not say so.**
+  `orienting-in-unfamiliar-code` now covers what a repository never records — its
+  direction, and everything it has refused. A change turned down for one of those reasons
+  is *technically correct* — already open, superseded, against a decision the project
+  settled a year ago, arrived through the wrong workflow — so nothing in review points at a
+  line and says what is wrong with it. The bounded pass that avoids it sits inside the
+  orientation time box rather than on top of it: closed pull requests searched by path, the
+  tracker searched for your idea rather than your symptom, the governance docs, and whether
+  somebody is already doing it.
+- **Being told to get it to them is not permission to get it to them another way.**
+  `tending-tbaguette` already said a declined command is reported rather than routed
+  around. It now covers the version that is hard to obey: by the time a step is refused
+  you are usually holding a yes for the *outcome*, and that yes makes the substitute read
+  as compliance rather than circumvention. One question separates them, and it is about
+  the route rather than the goal — would this have been the obvious way to do it if the
+  declined command had never existed? A route that only became attractive at the moment
+  of the refusal is the refusal being worked around. The approval is still good, unspent,
+  waiting for a session where the command runs.
 
 ## 2026-09-07 — Controls you are not allowed to break to get unblocked
 

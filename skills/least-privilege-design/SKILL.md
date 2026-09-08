@@ -1,6 +1,6 @@
 ---
 name: least-privilege-design
-description: Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list, when a component needs access to something new, when one credential is shared across services or environments, when a service acts on a caller's behalf, when a local layer — a proxy, hook, sanitizer, formatter, or interceptor — sits between a producer and whoever acts on its output, or when reasoning about blast radius, privilege escalation, wildcards in policies, sandboxing, network egress, and separation of duties. Covers governing anything that can rewrite an observation at the privilege of the decisions it steers, and annotating rather than overwriting so the original survives.
+description: Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list, when a component needs access to something new, when one credential is shared across services or environments, when a service acts on a caller's behalf, when a local layer — a proxy, hook, sanitizer, formatter, or interceptor — sits between a producer and whoever acts on its output, or when reasoning about blast radius, privilege escalation, wildcards in policies, sandboxing, network egress, and separation of duties. Covers governing anything that can rewrite an observation at the privilege of the decisions it steers, and annotating rather than overwriting so the original survives. Also use when a sandbox, container, or network policy is described as isolated or egress-restricted and nothing has tried to leave it.
 ---
 
 # Least-Privilege Design
@@ -43,6 +43,12 @@ For each component, answer in writing: *if an attacker runs arbitrary code as th
 4. **Restrict egress.** A compromised component that cannot open arbitrary outbound connections cannot exfiltrate directly or pull a second stage. Almost never configured; among the highest-value controls available.
 5. **Enforce the tenant predicate at the storage layer**, so a missing filter is a failed query rather than a cross-tenant read.
 
+### Egress is a list of permitted relays, not permitted destinations
+
+Control 4 above gets written as an allowlist of hosts, and the channels that survive it are the ones nobody thinks of as connections. Name resolution is the standard one: arbitrary data leaves in subdomain labels and arbitrary instructions come back in the answers, without a single connection to anything the allowlist has heard of — and the resolver is left open because a container that cannot resolve names looks broken. Time sync, crash and telemetry reporting are the same shape. So is every allowlisted host that will store content a third party can read back: a package registry, a paste service, an issue tracker, a CDN that accepts uploads. An allowlist restricts *who you talk to*. It does not restrict *what can be relayed by the parties you are allowed to talk to*.
+
+The second half matters more than the enumeration, because the list will always be incomplete: **a containment guarantee is tested by attempting to leave, never by reading the sentence that claims it.** Try a resolution, a time sync, and an upload to each allowlisted host, from inside the thing that is supposed to be contained. Documentation describing isolation is a statement of intent written by someone who was not measuring, and the gap between that sentence and the implementation is ordinary rather than exceptional — a sandbox advertised as having no external access can permit arbitrary DNS for its whole life, with the eventual fix including a correction to the documentation.
+
 ## Capabilities over ambient authority
 
 Ambient authority means the callee's power comes from *who it is*, so any code path that reaches it inherits everything. That single mechanism produces confused-deputy bugs, request forgery, and metadata-service compromise alike: the request arrived, therefore the authority applied.
@@ -75,6 +81,7 @@ Apply to operations that are irreversible, move money or entitlements, change wh
 |---|---|---|
 | Process and filesystem | dedicated non-root user, no privilege elevation, dropped capabilities, syscall filter, read-only root with one writable path, only the credentials this process uses mounted | running as root because the base image did; mounting the whole config directory or a host control socket |
 | Network | deny-by-default egress, ingress only from the one caller, metadata endpoint blocked from application containers | egress — nearly every deployment allows all outbound |
+| Network — relays | resolver restricted to an internal server with logging, no direct outbound DNS; time sync and crash reporting pinned to internal endpoints; allowlisted hosts assessed for whether a third party can read back what is written to them | the resolver, always — an egress allowlist is written in hostnames and enforced on connections, and resolution is neither |
 | Data | tenant predicate enforced in storage, column-level restriction on sensitive fields, separate identities for read, write, and migration | one connection identity for reads, writes, and schema changes |
 | Build / CI | job-scoped token, no secrets in jobs that execute untrusted contributions, separate identities for build and publish | one pipeline credential that both tests and deploys |
 
@@ -131,9 +138,11 @@ When the demand for a justification arrives from outside — a questionnaire, an
 | The two-person rule was bypassed | Approval enforced by process, not verified by the executing system |
 | Temporary elevation became permanent | Grant with no expiry, and no review comparing grants against use |
 | A compromised container exfiltrated data over an ordinary connection | Egress unrestricted, which is the default everywhere |
+| A component with no outbound access still exfiltrated | Egress was enforced on connections and written in hostnames; resolution is neither, and it was left open because a container that cannot resolve looks broken |
 
 ## Red flags
 
+- "The docs say the sandbox has no external access." — a sentence written by somebody who was not measuring; try a resolution.
 - "Give it admin for now, we'll narrow it later" — *later* has no trigger.
 - "Declare it now so it's ready when we build the feature" — the feature is hypothetical; the review cost is not.
 - "It's behind the firewall" / "only our own code calls it."

@@ -1,6 +1,6 @@
 ---
 name: secrets-hygiene
-description: Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline, container image, or client app, or finding one in a commit, log line, screenshot, ticket, or error message. Also use when a credential would have to pass through you on its way to a service, or when a transcript, context, or session summary may have held one. Covers leaked credential response, revocation and rotation, secret scanning, environment variable and dotenv handling, and pre-publication checks on a repository.
+description: Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline, container image, or client app, or finding one in a commit, log line, screenshot, ticket, or error message. Also use when a credential would have to pass through you on its way to a service, or when a transcript, context, or session summary may have held one. Covers leaked credential response, revocation and rotation, secret scanning, environment variable and dotenv handling, and pre-publication checks on a repository. Also use when a scanner's finding turns out to be your own fixture, or when a detector you wrote keeps flagging something legitimate.
 ---
 
 # Secrets Hygiene
@@ -83,6 +83,16 @@ What makes it routine is dual-credential acceptance: the verifier accepts old an
 
 Scanners find high entropy and known prefixes and miss custom formats. **Give your own issued tokens a distinctive, greppable prefix.** It is a one-time design decision and the highest-leverage item on this page — it makes your secrets detectable by every scanner, yours and everyone else's. For logs, redact by field name in a structured logger with an explicit allowlist; regex redaction of free text catches only the shape you anticipated.
 
+## Your own test data is the likeliest false positive
+
+A scanner has a credibility budget and it is small. One finding a reader can reliably dismiss teaches them to dismiss the next one, and a secret scanner that gets skimmed has failed completely — there is no partial credit here, because the entire value sits in the one morning it fires for real.
+
+The likeliest source of that dismissible finding is not a careless commit. It is **your own test data**, written by someone who needed a realistic-looking value precisely because the code under test parses, redacts, or refuses credentials. A string shaped convincingly enough to exercise the parser is shaped convincingly enough to trip the scanner, and now the repository's own suite is manufacturing the finding everyone learns to wave through.
+
+Keep the matching literal out of the tree rather than keeping the scanner quiet about it. Assemble the fixture at runtime from parts that individually match nothing — a prefix constant joined to a body generated in the test — so no file contains a string to find, and the test still exercises the real shape. That beats both alternatives it replaces: an ignore rule turns detection off for a path permanently and is a control in its own right, and a deliberately malformed fixture stops testing the thing it was written for.
+
+`designing-ci-pipelines` owns the general form — every advisory check eventually becomes ignored, and one overridden more than about one time in ten is either wrong or should be required. A scanner is the case where that law costs the most, because the finding it is ignored on is the only one that ever mattered.
+
 ## When a secret leaks, the order is the whole procedure
 
 1. **Revoke.** Invalidate it at the provider. This is the only step that stops the bleeding. If revoking breaks production, break production — a live leaked credential is the worse outage.
@@ -111,9 +121,11 @@ Keeping a secret out of output that has already received it is a separate discip
 | Ignore rules treated as the control | Ignore files do not cover already-tracked files, other surfaces, or anyone's local tooling |
 | Same key in staging and production | One credential spanning environments; the weakest environment sets the security of the strongest |
 | A credential was pasted into the conversation so it could be placed | The conduit records whatever it carries; that value is now burned and needs revoking, not placing |
+| The team skims the scanner's output | It has a standing false positive, and the usual source is a fixture shaped like a real credential because the code under test parses credentials |
 
 ## Red flags
 
+- "That hit is just our test fixture." — said aloud once, then silently forever, including on the day it is not.
 - "It's just a dev key" / "it's a test account".
 - "It's in a private repository."
 - "We'll rotate if we see abuse" — without per-credential telemetry, you will not see it.

@@ -1,6 +1,6 @@
 ---
 name: instrumenting-for-observability
-description: Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, when a failure counter has never once incremented, when a filter, gate, or safety rule rejects everything it sees and nothing distinguishes a strict rule from an input that never arrived, or when choosing a log level.
+description: Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, when a failure counter has never once incremented, when a filter, gate, or safety rule rejects everything it sees and nothing distinguishes a strict rule from an input that never arrived, or when choosing a log level. Also use when choosing the fallback for a value another component will read as if it were a measurement.
 ---
 
 # Instrumenting for observability
@@ -108,9 +108,23 @@ The instrumentation that separates them is one field. A gate has to record **whi
 
 Write the alarm on that narrowly or it will be trained away. A strict rule can legitimately refuse everything it sees for a long stretch, and an alarm on the rejection *rate* fires during exactly those stretches, gets dismissed, and gets dismissed again on the day it finally means something. Fire on the absence bucket becoming categorical — never on the rate, and never on emptiness alone.
 
+## A default is neutral in your type, and extreme on someone else's scale
+
+`Measure what a component consumed` says priors get chosen to look neutral, and that is the producer's view of them. `false`, `0`, an empty list and a null are all unremarkable *as values* — they are what a type hands you when you ask for nothing in particular. The consumer does not receive a type. It receives a position on a scale it owns, and a value that was neutral where it was written routinely lands at one end of that scale, stated with exactly the confidence of a real measurement.
+
+Three shapes, one mistake:
+
+- A count defaulted to zero, rendered downstream as "0 mentions, 0 replies". That is not a neutral reading, it is the most negative reading available on that scale, manufactured out of an absent measurement.
+- A cost or token counter that reads the wrong stream and reports zero. Zero does not read as *not measured*; it reads as *free*, which is the most expensive wrong answer available for a number whose only job is to warn.
+- A capability flag defaulted to `false` to be safe, where `false` downstream does not narrow the options — it deletes one. The conservative-looking default is the one that silently removes a whole branch, and the loud default is `true`.
+
+So the question at the point you write the fallback is not whether the value looks neutral in the type. It is **where this value lands on the scale of whoever reads it, and which direction fails loudly there.** An extreme value is not the same as an implausible one, and that is what makes this hard to see: *0 mentions* sits at the end of the scale and reads as an ordinary quiet week. So given two defaults, take the one that produces an answer somebody will query over the one that produces an answer somebody will act on.
+
+The durable fix is upstream of the choice — make absence representable so nobody has to pick a direction, which `tracing-data-flow` owns. This section is for when the type is already fixed and somebody has to pick anyway.
+
 ## Record the outcome where the outcome is known
 
-A metric gets placed where it is easy to write rather than where the thing it names becomes true, and the gap between those two points is where a whole class of failure hides. The section above is the same mistake at the other end — a counter that cannot see its input; this one cannot see its ending.
+A metric gets placed where it is easy to write rather than where the thing it names becomes true, and the gap between those two points is where a whole class of failure hides. `Measure what a component consumed` is the same mistake at the other end — a counter that cannot see its input; this one cannot see its ending.
 
 Success is recorded at the point a request is *accepted* — a status chosen, a header written, a job enqueued, a handler returning — because that is where the code has a natural fork and where the value is to hand. For anything that finishes later than that moment, the counter measures admission and reports completion. Streamed and proxied responses are the clearest case: once the status line is on the wire it cannot be retracted, so a failure in the body has no way to become an error the caller can read, and the success was tallied seconds before the failure happened. A queue publish counted as delivery and a fire-and-forget spawn counted as an execution are the same shape.
 
@@ -143,9 +157,11 @@ The tell that this is already happening is a success rate nobody can reconcile w
 | An adaptive component looks healthy for months and has learned nothing | Activity was instrumented; the volume of its ground-truth input never was |
 | A filter rejected every item for months and nobody noticed | Rejections were counted but not attributed, so "failed the check" and "had nothing to check" landed in the same bucket |
 | A learned score and a hardcoded default are indistinguishable downstream | Sample size did not travel with the value to its point of use |
+| A dashboard shows a plausible, mildly disappointing number that nobody can reproduce | A fallback that was neutral in its type landed at one end of the consumer's scale and got read as a measurement |
 
 ## Red flags
 
+- "Zero is the safe default." — for a cost, a quota, or a warning counter, zero reads as *free*.
 - "We will add logging if it happens again"
 - A new failure branch that increments nothing and emits nothing
 - An alert whose runbook is "look at the graphs"
