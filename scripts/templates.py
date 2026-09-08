@@ -601,7 +601,9 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
         "The flagship, and the one with the most visible before-and-after. Design "
         "craft for every stack there is \u2014 web, terminal, native, game HUD, print, "
         "voice \u2014 so it applies to the interface you actually have rather than the "
-        "one a web tutorial assumed you had."
+        "one a web tutorial assumed you had. Ask it for nothing in particular and it "
+        "goes looking for the best shipped work in your domain first, then builds past "
+        "what you asked for."
     ),
     starter_diagnosing_before_fixing_html=(
         "Turns <em>fix this</em> into a reproduction before a patch. The fastest "

@@ -745,7 +745,7 @@ class BuildContentIntegrationTests(unittest.TestCase):
         formidable = self.content["skills"]["formidable"]
         self.assertTrue(formidable["is_formidable"])
         self.assertEqual(len(formidable["formidable_stacks"]), 12)
-        self.assertEqual(len(formidable["formidable_commands"]), 11)
+        self.assertEqual(len(formidable["formidable_commands"]), 12)
         self.assertIn("formidable_craft_floor_html", formidable)
 
         stack_ids = [s["id"] for s in formidable["formidable_stacks"]]

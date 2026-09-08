@@ -16,7 +16,7 @@ Atelier skill hands off to a neighbour.
 
 | Skill | For |
 |---|---|
-| `formidable` | Design and craft on **any** UI stack — web, native mobile, desktop, terminal/TUI, CLI output, game HUD, embedded and e-ink, XR, email, print/PDF, voice and chat, dense data. Multi-file: 12 stack playbooks + 12 command references |
+| `formidable` | Takes a UI, an idea for one, or nothing at all past what was asked, with the best shipped work in the same domain as the bar. Design and craft on **any** UI stack — web, native mobile, desktop, terminal/TUI, CLI output, game HUD, embedded and e-ink, XR, email, print/PDF, voice and chat, dense data. Multi-file: 12 stack playbooks, 12 command references, and the craft floor |
 | `impeccable` † | Frontend/web design, the original this adapts |
 | `design-system` † | Establishing a coherent visual language in a codebase |
 

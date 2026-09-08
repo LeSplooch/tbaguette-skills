@@ -24,6 +24,29 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-08 — Formidable aims past the brief by default
+
+- **Ask for design work without saying which kind, and you now get the better version of the
+  surface rather than the one you described.** `formidable` used to treat a bare request as
+  ordinary design work and build to the level of the brief. It now runs a new `elevate` command
+  instead: enhancement is the posture you get by default, not one you have to know to ask for.
+  Name a job yourself — one fix, one screen, a build you want kept plain — and that job is still
+  the whole brief, done to the same standard and no wider. Every existing verb behaves exactly
+  as before when you call it. Upgraded with Fable 5.1.
+- **It goes and looks at how the best products in your category solved this, before it designs
+  anything.** The bar it works to is no longer the state of your project. It finds three to five
+  of the best shipped products matching your domain, mode and stack, reads the real thing rather
+  than a gallery thumbnail, and takes one specific move from each — a hierarchy decision, a type
+  pairing, one motion moment. Moves your medium cannot express get discarded rather than
+  approximated, and the report tells you which product each borrowing came from, so you can veto
+  one. With no network it says it is working from memory instead of quietly pretending otherwise.
+- **You no longer need a UI for it to work on.** It takes a built interface, a description of one
+  you have only imagined, or nothing at all — in which case it works out what your project is
+  for and proposes a surface, clearly labelled as a proposal, or tells you plainly that a parser
+  or a daemon does not want one. When you have left the standard open, what comes back is
+  expected to include something on that surface you would not have thought to specify. Anything
+  that would spill onto a different surface gets offered to you instead of built.
+
 ## 2026-09-08 — Things that were not protecting what you thought they were
 
 - **A credential should never travel through you.** `secrets-hygiene` gains the surface that

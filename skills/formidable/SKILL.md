@@ -1,16 +1,19 @@
 ---
 name: formidable
-description: Use when designing, redesigning, critiquing, auditing, polishing, or hardening any user interface on any stack — web, native mobile, desktop, terminal or TUI, CLI output, game HUD, embedded and e-ink displays, XR and spatial, email, print and PDF, or voice and chat. Covers visual hierarchy, layout, spacing, typography, color, motion, iconography, information density, interaction states, accessibility, latency and perceived performance, theming and tokens, UX copy, error and empty states, internationalization, and cross-stack design systems. Also use when an interface feels generic, bland, cluttered, dated, or inconsistent, or when a design must be carried faithfully from one stack to another.
+description: Use when a UI, an idea for a UI, or a project with no interface yet should be taken past what was asked and made outstanding. Also use when designing, redesigning, critiquing, auditing, polishing, or hardening any user interface on any stack — web, native mobile, desktop, terminal or TUI, CLI output, game HUD, embedded and e-ink displays, XR and spatial, email, print and PDF, or voice and chat. Covers visual hierarchy, layout, spacing, typography, color, motion, iconography, information density, interaction states, accessibility, latency and perceived performance, theming and tokens, UX copy, error and empty states, internationalization, and cross-stack design systems. Also use when an interface feels generic, bland, cluttered, dated, or inconsistent, when someone wants to know what the best products in this domain do here or wants the design to draw on them, or when a design must be carried faithfully from one stack to another.
 user-invocable: true
-argument-hint: "[shape|audit|critique|polish|harden|densify|calm|animate|typeset|colorize|port|tokens|onboard] [target]"
+argument-hint: "[elevate|shape|audit|critique|polish|harden|densify|calm|animate|typeset|colorize|port|tokens|onboard] [target]"
 ---
 
 # Formidable
 
 Design that earns to be called out-of-distribution craft — on **any** surface a human looks at, not just a browser window. Whereas your default UI work is safe, web-shaped, and measured, here you work as a design director who has shipped on all of them: someone who knows that a terminal has a type scale, that a HUD has a reading order, that a CLI's error message is interface, and that none of these are excuses for mediocrity.
 
+Where a request leaves the standard to you, the deliverable is not the surface that was described. It is the one the person would have described if they had already seen it. Where a request names its own job instead, that job is the deliverable, done to the same standard and no wider.
+
 Core principles:
 
+- **Enhancement leads where the brief is open.** When the ask names a surface and leaves the standard to you, the job is the best surface this project can carry, measured against the best shipped work in the same domain rather than against its own past. That is [reference/elevate.md](reference/elevate.md). When the ask names its own job, that is the brief, and going past it is drift rather than ambition.
 - **Go all out.** The deliverable is complete — every state, every breakpoint or terminal width, every theme. Not a sketch with TODOs.
 - **The constraint envelope is the medium, not the excuse.** 16 colors, 80 columns, 200ms of budget, no shadows, no motion — these are the material. A great design is one that could only exist in that envelope.
 - **Verify in bounded passes.** Build fully, inspect once in a batched round covering every size and theme together, fix everything it shows in one batch, confirm with at most one more round, stop. Open-ended self-QA burns budget doing worse what a real review does better — `knowing-when-to-stop` covers this bounded-pass discipline generally; this is its application to a design surface specifically.
@@ -22,7 +25,8 @@ Before any design decision, establish the stack and its constraint envelope. Nev
 1. **Detect.** Look for the rendering authority: view/template/component files, a UI framework in the manifest, terminal escape or widget calls, a shader or canvas, a mail template, a prompt template. When two stacks are present, ask which surface this task is about.
 2. **Load the stack file.** Exactly one from the table below. It supplies the envelope — what the medium can express and what it cannot — and the idioms a native user of that stack expects.
 3. **Find the incumbent visual truth.** Tokens, theme file, stylesheet, palette constant, widget defaults, existing screens. Inspect at least one before editing. A project with no design file is not automatically greenfield.
-4. **Then design.** Load [reference/craft-floor.md](reference/craft-floor.md) immediately before you edit UI — never for planning-only work.
+4. **Find the bar,** when the brief is open. A request that leaves the standard to you gets a bounded look at the best shipped work in this domain, mode, and stack before anything is designed — [reference/elevate.md](reference/elevate.md) owns the method and its bounds. Every named command carries its own brief and skips this step, and so does a one-line fix; the three Enhance verbs are the one exception, and may pull an exemplar or two where the direction is genuinely open.
+5. **Then design.** Load [reference/craft-floor.md](reference/craft-floor.md) immediately before you edit UI — never for planning-only work.
 
 | Stack | Load |
 |---|---|
@@ -55,8 +59,14 @@ Attend is the mode most often missed. If the person will not be sitting still an
 
 ## Commands
 
+Invoked directly, this skill takes a verb. With none it runs `elevate`.
+
 | Command | Category | Does |
 |---|---|---|
+| `elevate [target]` | Enhance | **The default, on an open brief.** Take a UI, an idea of one, or nothing at all past what was asked. [reference/elevate.md](reference/elevate.md) |
+| `animate [target]` | Enhance | Purposeful motion inside the stack's real budget. [reference/motion.md](reference/motion.md) |
+| `typeset [target]` | Enhance | Type scale, measure, rhythm, and voice. [reference/type.md](reference/type.md) |
+| `colorize [target]` | Enhance | Palette with meaning, in the stack's color space. [reference/color.md](reference/color.md) |
 | `shape [feature]` | Build | Decide UX and structure before code. [reference/shape.md](reference/shape.md) |
 | `tokens` | Build | Establish or extract a cross-stack token system. [reference/tokens.md](reference/tokens.md) |
 | `onboard [target]` | Build | First-run, empty, zero-data, and permission states. [reference/onboard.md](reference/onboard.md) |
@@ -66,16 +76,16 @@ Attend is the mode most often missed. If the person will not be sitting still an
 | `harden [target]` | Refine | Errors, edge cases, i18n, long strings, failure modes. [reference/harden.md](reference/harden.md) |
 | `densify [target]` | Refine | Raise information density without raising effort. [reference/stacks/data-dense.md](reference/stacks/data-dense.md) |
 | `calm [target]` | Refine | Reduce noise, motion, color, and alarm fatigue. [reference/calm.md](reference/calm.md) |
-| `animate [target]` | Enhance | Purposeful motion inside the stack's real budget. [reference/motion.md](reference/motion.md) |
-| `typeset [target]` | Enhance | Type scale, measure, rhythm, and voice. [reference/type.md](reference/type.md) |
-| `colorize [target]` | Enhance | Palette with meaning, in the stack's color space. [reference/color.md](reference/color.md) |
 | `port [target]` | Adapt | Carry a design to another stack faithfully. [reference/porting.md](reference/porting.md) |
 
 Routing:
 
-- **Explicit or clearly implied command:** load its reference plus the stack file, then follow it.
-- **No command, general design request:** treat as ordinary design work — envelope, incumbent truth, craft floor, build.
-- **Two commands fit:** ask once, then commit.
+Read these in order and take the first that fits.
+
+- **A command is named or clearly implied:** load its reference plus the stack file, then follow it.
+- **The ask names its own job** — one fix, one screen, a build someone wants kept plain, a scope they have already drawn: that job is the brief. Do it at full craft and stop. Anything worth more than the job gets offered afterwards, never folded into it.
+- **The ask leaves the standard to you:** run `elevate`. Stack file, incumbent truth, the bar, then build past the ask.
+- **Two commands fit:** ask once, then commit. `elevate` does not get to absorb a request that wanted `shape`, `tokens`, or `calm` — `calm` especially, whose output is elevate's inverse.
 - **Ambiguous stack:** ask which surface. Never guess between web and native.
 
 ## Non-negotiables across every stack
@@ -90,6 +100,7 @@ These survive the envelope. A stack that cannot satisfy one owes an explicit sub
 - **Perceived latency is design.** Under ~100ms feels instant; acknowledge by ~1s; explain and offer escape past ~10s. Meeting the budget beats animating the wait.
 - **Motion respects the user's reduced-motion preference** wherever the platform exposes one, and never carries information that exists nowhere else.
 - **Text can grow.** Translations run 30–40% longer than English, users raise font sizes, and data is longer than your placeholder. Layouts that only fit the sample string are broken.
+- **Ambition never spends a non-negotiable.** An elevated surface still measures its contrast, still designs every state, still honors reduced motion. Every rule above survives every level of ambition.
 
 ## Refuse
 
@@ -105,5 +116,8 @@ Category defaults, not bans — a committed brief can earn any of them, but reac
 - Progress bars for unknowable durations, spinners for sub-300ms waits, and toasts for anything the user must act on.
 - Rainbow status palettes where severity has no order. Severity is ordered; the palette must be too.
 - Modals for tasks needing neither interruption nor protected focus.
+- A reference reproduced rather than learned from. Carrying its typefaces, icon set, illustration, or photography across with it is the second ban on this list: those are licensed work, and a page being public licenses nothing.
+- An enhancement that fights the incumbent visual truth instead of extending it, unless replacing that truth is the actual brief.
+- A surface made more impressive and less usable. Also a ban — that is a regression wearing a screenshot.
 
 With every check green, spend the surface on the committed direction. When torn between refined and committed, commit.

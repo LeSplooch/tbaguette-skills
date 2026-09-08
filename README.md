@@ -81,6 +81,8 @@ prompt is written to discover the rest instead of asserting them.
 
 - **`formidable`** — design craft for every UI stack: web, native mobile, desktop,
   terminal, CLI output, game HUD, embedded/e-ink, XR, email, print, voice, dense data.
+  Takes the surface past what was asked, measured against the best shipped work in
+  the same domain rather than against the project's current state.
 - **Judgment and meta** — calibrating confidence, red-teaming your own work, knowing
   when to stop, and `karen-and-the-manager`, a persona-forced pass that refuses to be
   satisfied until it's found everything.

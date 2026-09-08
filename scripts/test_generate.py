@@ -413,8 +413,8 @@ def main() -> None:
             'id="cmd-craft-floor"' in formidable_html and '#cmd-craft-floor"' in formidable_html,
         )
         check(
-            "formidable's page has all 23 tab panels (12 stacks + 11 commands)",
-            formidable_html.count('role="tabpanel"') == 23,
+            "formidable's page has all 24 tab panels (12 stacks + 12 commands)",
+            formidable_html.count('role="tabpanel"') == 24,
         )
         check(
             "formidable's page carries a well-formed last-updated <time> element "
