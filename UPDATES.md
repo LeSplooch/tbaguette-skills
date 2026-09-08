@@ -32,7 +32,7 @@ Everything above the first `##` is preamble and is never rendered.
   instead: enhancement is the posture you get by default, not one you have to know to ask for.
   Name a job yourself — one fix, one screen, a build you want kept plain — and that job is still
   the whole brief, done to the same standard and no wider. Every existing verb behaves exactly
-  as before when you call it. Upgraded with Fable 5.1.
+  as before when you call it.
 - **It goes and looks at how the best products in your category solved this, before it designs
   anything.** The bar it works to is no longer the state of your project. It finds three to five
   of the best shipped products matching your domain, mode and stack, reads the real thing rather
@@ -46,6 +46,7 @@ Everything above the first `##` is preamble and is never rendered.
   or a daemon does not want one. When you have left the standard open, what comes back is
   expected to include something on that surface you would not have thought to specify. Anything
   that would spill onto a different surface gets offered to you instead of built.
+- **Upgraded with Fable 5.1.**
 
 ## 2026-09-08 — Things that were not protecting what you thought they were
 
