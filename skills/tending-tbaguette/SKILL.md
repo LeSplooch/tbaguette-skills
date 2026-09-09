@@ -265,10 +265,11 @@ pass.
 **Count the population before the selector runs, and report both numbers.** The population and
 the selector get chosen separately — *which projects are in scope* is answered from recent
 activity, *what to read in each* by the subject-line rule above — and a member of the population
-the selector simply cannot read is dropped without a word. A loop reading commit subjects across
-a list of recent working directories prints nothing for any of them that is not a version-controlled
-repository, which is not an error, not an empty result, and not distinguishable in the output from
-a project that had a quiet week. In one such pass seven of sixteen went that way, and the sweep
+the selector simply cannot read is dropped without a word. A loop reading commit subjects across a list of
+recent working directories prints nothing to stdout for any of them that is not a version-controlled
+repository — the tool does complain, to stderr and through an exit code, so a loop that discards
+either leaves a result indistinguishable from a project that had a quiet week, and a loop that guards
+on the directory's existence never asks at all. In one such pass seven of sixteen went that way, and the sweep
 would have been reported as covering all sixteen. The remedy is arithmetic rather than judgment:
 say how many were in scope, how many the selector could actually read, and name the difference.
 It is also the only way the gap becomes a finding — those seven were not unproductive, they were
@@ -319,7 +320,7 @@ than saying nothing.
 jobs run on two clocks, and a run started by a timer, a scheduled job, or a
 delegation rather than by a conversation has no transcript, no correction and no
 moment — so capture has nothing to do, and the whole of its work is whatever the
-queue already holds. That creates one failure and reverses one rule.
+queue already holds. That creates two failures and reverses one rule.
 
 The failure does not feel like one at the time. A run whose stated purpose is
 improvement, finding the queue empty and the library in good order, will go
@@ -578,9 +579,10 @@ in time. A rule about composing a report *after* the work assumes a writer who c
 before anyone sees it and a reader who can reply; the same reader watching a surface *while*
 the work runs has neither, and may act on what they are told before the work finishes. Same
 topic, same role, different moment, and the consequences that follow are ones the covering
-passage has no way to state. So ask a hit both questions — is my actor in here, and is my
-moment? — because from the grep they look identical, and a near-hit on either axis is the
-same cheap, high-value paragraph inside the passage you already found.
+passage has no way to state. So ask a hit both questions — is my actor in here, and is my moment? — because
+from the grep they look identical. The two axes do blur where a different moment brings a different
+emitter with it; what tells them apart is whether the *reader* is in the same position, and a reader
+who can still act on what they are told is not.
 
 Expect that search to succeed. On a library this size the ordinary outcome of
 checking a candidate is that something already covers it, sometimes better than

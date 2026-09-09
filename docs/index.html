@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-09T10:19:38+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-09T10:19:38Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-09T10:26:29+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-09T10:26:29Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -140,21 +140,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/checkpointing-long-runs/" data-fresh-at="2026-09-09T10:19:38.825822+00:00" draggable="false" style="--cf-offset: 0">
-  <span class="card__name-row">
-    <span class="card__name">checkpointing-long-runs</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T10:19:38.825822+00:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files…</p>
-  <span class="card__foot">
-    <span class="tag">Planning and delegation</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/explaining-technical-work/" data-fresh-at="2026-09-09T12:17:24+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/explaining-technical-work/" data-fresh-at="2026-09-09T10:26:29.782150+00:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">explaining-technical-work</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T12:17:24+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T10:26:29.782150+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation…</p>
   <span class="card__foot">
@@ -162,14 +151,25 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-09-09T12:17:24+02:00" draggable="false" style="--cf-offset: 2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-09-09T10:26:29.782150+00:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T12:17:24+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T10:26:29.782150+00:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">
     <span class="tag">Environment and tooling</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/checkpointing-long-runs/" data-fresh-at="2026-09-09T12:19:38+02:00" draggable="false" style="--cf-offset: 2">
+  <span class="card__name-row">
+    <span class="card__name">checkpointing-long-runs</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T12:19:38+02:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files…</p>
+  <span class="card__foot">
+    <span class="tag">Planning and delegation</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -286,10 +286,11 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="notes__entry-title">What reaches the reader, and what quietly does not</span>
   </h3>
   <ul class="notes__bullets">
-    <li><strong>A progress bar is technical writing, and nothing in the library said so.</strong> <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a> has always assumed a document: composed once, revisable before anyone sees it, read by someone who can reply. It now also covers the surfaces that are none of those — a progress pane, an activity log, a status line, a streamed update. Three things change there. What reaches the reader is whatever was nearest to hand at the moment of emission, which is the system's own internals, so the translation has to happen at the emission site because nothing downstream can do it. A true statement delivered after the reader has already committed is a different and worse message than the same statement delivered before. And a long silence makes a claim of its own: from outside, a correct quiet run and a hang are the same observation.</li>
-    <li><strong>Being told to improve something is not evidence that it needs improving.</strong> <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> already warned that a pass arriving with nothing queued will go looking for something to change and will find it, because a corpus this size always holds a sentence that could be put more sharply. It now covers the stronger version — a run holding an instruction that names the target. That reads as settling in advance the question every filter in the skill exists to ask, and declining then feels like declining the task rather than like exercising the filter. It is not: an instruction to improve something is an instruction to look, and looking can honestly come back empty.</li>
+    <li><strong>What someone watches while the work runs is technical writing too.</strong> <a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a> has always owned those surfaces as <em>interface</em> — which display a wait earns, what goes to stderr, how honest a progress bar has to be. Nothing owned what the line actually <strong>says</strong>. <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a> now does, because every test it already applies to a report applies to a status line, and three things change when the reader is watching rather than reading. What is nearest to hand at the moment of emission is the system's own vocabulary, and there is no later place for the translation to happen. The same true sentence is a different and worse message after the reader has committed than before it — a warning that fires on save, when it could have fired on the keystroke, is not late, it is misplaced. And going quiet asserts that nothing is happening, to a reader who has no way to check.</li>
     <li><strong>A rule you stated out loud is not stored anywhere.</strong> <a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> ranks what a checkpoint should hold by what it costs to lose, and there is now a row above the old first one: the constraints somebody stated in conversation. &quot;Don't push.&quot; &quot;Ask me before deploying.&quot; Those are not kept as rules — whatever enforces them re-reads them out of the run's own context on every check, so a compaction, a summarised handoff, a fresh session resuming from a transcript, or a subagent that never received the message can delete the bound while everything goes on reporting normally. And because a bound is exactly the thing your own judgment is not allowed to lift, one that has silently vanished and one you have decided was satisfied look identical from the inside. Copy them into the record verbatim, and into a durable form where the system offers one.</li>
-    <li><strong>Two more ways a check for existing coverage comes back wrong.</strong> Same skill. A search that lands on a passage covering your subject can match on the topic <em>and</em> on the reader's role and still miss, because the passage was written for a different moment — composing a report after the work, rather than watching a surface during it. And when a sweep reads across several projects at once, whatever selects what to read inside each one will silently drop any project it cannot read at all, so the number of projects in scope and the number actually read are two different figures and both belong in what gets reported.</li>
+    <li><strong>A check for existing coverage can match the topic and the reader and still miss.</strong> <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> gains the second axis: a passage can be about your subject, written for your reader, and still not answer you, because it was written for a different <em>moment</em> — composing a report after the work rather than watching a surface during it. The tell is that from a search the two are the same result.</li>
+    <li><strong>A sweep across several projects now says how many it could actually read.</strong> Same skill. Whatever decides what to read inside each project will silently drop any project it cannot open at all, and that result is indistinguishable from a quiet week — so the number in scope and the number actually read are two figures, and both belong in what gets reported.</li>
+    <li><strong>Being told to improve something is not evidence that it needs improving.</strong> <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> already warned that a pass arriving with nothing queued will go looking for something to change and will find it, because a corpus this size always holds a sentence that could be put more sharply. It now covers the stronger version — a run holding an instruction that names the target. That reads as settling in advance the question every filter in the skill exists to ask, and declining then feels like declining the task rather than like exercising the filter. It is not: an instruction to improve something is an instruction to look, and looking can honestly come back empty.</li>
   </ul>
 </li>
   </ol>
@@ -308,10 +309,11 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="notes__entry-title">What reaches the reader, and what quietly does not</span>
   </h3>
   <ul class="notes__bullets">
-    <li><strong>A progress bar is technical writing, and nothing in the library said so.</strong> <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a> has always assumed a document: composed once, revisable before anyone sees it, read by someone who can reply. It now also covers the surfaces that are none of those — a progress pane, an activity log, a status line, a streamed update. Three things change there. What reaches the reader is whatever was nearest to hand at the moment of emission, which is the system's own internals, so the translation has to happen at the emission site because nothing downstream can do it. A true statement delivered after the reader has already committed is a different and worse message than the same statement delivered before. And a long silence makes a claim of its own: from outside, a correct quiet run and a hang are the same observation.</li>
-    <li><strong>Being told to improve something is not evidence that it needs improving.</strong> <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> already warned that a pass arriving with nothing queued will go looking for something to change and will find it, because a corpus this size always holds a sentence that could be put more sharply. It now covers the stronger version — a run holding an instruction that names the target. That reads as settling in advance the question every filter in the skill exists to ask, and declining then feels like declining the task rather than like exercising the filter. It is not: an instruction to improve something is an instruction to look, and looking can honestly come back empty.</li>
+    <li><strong>What someone watches while the work runs is technical writing too.</strong> <a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a> has always owned those surfaces as <em>interface</em> — which display a wait earns, what goes to stderr, how honest a progress bar has to be. Nothing owned what the line actually <strong>says</strong>. <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a> now does, because every test it already applies to a report applies to a status line, and three things change when the reader is watching rather than reading. What is nearest to hand at the moment of emission is the system's own vocabulary, and there is no later place for the translation to happen. The same true sentence is a different and worse message after the reader has committed than before it — a warning that fires on save, when it could have fired on the keystroke, is not late, it is misplaced. And going quiet asserts that nothing is happening, to a reader who has no way to check.</li>
     <li><strong>A rule you stated out loud is not stored anywhere.</strong> <a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> ranks what a checkpoint should hold by what it costs to lose, and there is now a row above the old first one: the constraints somebody stated in conversation. &quot;Don't push.&quot; &quot;Ask me before deploying.&quot; Those are not kept as rules — whatever enforces them re-reads them out of the run's own context on every check, so a compaction, a summarised handoff, a fresh session resuming from a transcript, or a subagent that never received the message can delete the bound while everything goes on reporting normally. And because a bound is exactly the thing your own judgment is not allowed to lift, one that has silently vanished and one you have decided was satisfied look identical from the inside. Copy them into the record verbatim, and into a durable form where the system offers one.</li>
-    <li><strong>Two more ways a check for existing coverage comes back wrong.</strong> Same skill. A search that lands on a passage covering your subject can match on the topic <em>and</em> on the reader's role and still miss, because the passage was written for a different moment — composing a report after the work, rather than watching a surface during it. And when a sweep reads across several projects at once, whatever selects what to read inside each one will silently drop any project it cannot read at all, so the number of projects in scope and the number actually read are two different figures and both belong in what gets reported.</li>
+    <li><strong>A check for existing coverage can match the topic and the reader and still miss.</strong> <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> gains the second axis: a passage can be about your subject, written for your reader, and still not answer you, because it was written for a different <em>moment</em> — composing a report after the work rather than watching a surface during it. The tell is that from a search the two are the same result.</li>
+    <li><strong>A sweep across several projects now says how many it could actually read.</strong> Same skill. Whatever decides what to read inside each project will silently drop any project it cannot open at all, and that result is indistinguishable from a quiet week — so the number in scope and the number actually read are two figures, and both belong in what gets reported.</li>
+    <li><strong>Being told to improve something is not evidence that it needs improving.</strong> <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> already warned that a pass arriving with nothing queued will go looking for something to change and will find it, because a corpus this size always holds a sentence that could be put more sharply. It now covers the stronger version — a run holding an instruction that names the target. That reads as settling in advance the question every filter in the skill exists to ask, and declining then feels like declining the task rather than like exercising the filter. It is not: an instruction to improve something is an instruction to look, and looking can honestly come back empty.</li>
   </ul>
 </li>
 <li class="notes__entry">
@@ -856,7 +858,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/checkpointing-long-runs/" data-search-card data-search-terms="checkpointing-long-runs use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files… planning and delegation">
   <span class="card__name-row">
     <span class="card__name">checkpointing-long-runs</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T10:19:38.825822+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T12:19:38+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files…</p>
   <span class="card__foot">
@@ -1350,7 +1352,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/designing-for-idempotency/" data-search-card data-search-terms="designing-for-idempotency use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues… designing systems">
   <span class="card__name-row">
     <span class="card__name">designing-for-idempotency</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-07T12:25:07+02:00">Updated</span>
+    
   </span>
   <p class="card__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</p>
   <span class="card__foot">
@@ -1460,7 +1462,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/tracking-data-provenance/" data-search-card data-search-terms="tracking-data-provenance use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted… designing systems">
   <span class="card__name-row">
     <span class="card__name">tracking-data-provenance</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-07T12:25:07+02:00">Updated</span>
+    
   </span>
   <p class="card__summary">Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted…</p>
   <span class="card__foot">
@@ -1585,7 +1587,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/confirming-before-claiming-done/" data-search-card data-search-terms="confirming-before-claiming-done use when about to call a fix, a feature, or a test suite done, fixed, or passing; when a change is about to be committed, pushed… finishing and proving">
   <span class="card__name-row">
     <span class="card__name">confirming-before-claiming-done</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-07T12:25:07+02:00">Updated</span>
+    
   </span>
   <p class="card__summary">Use when about to call a fix, a feature, or a test suite done, fixed, or passing; when a change is about to be committed, pushed…</p>
   <span class="card__foot">
@@ -1708,7 +1710,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/explaining-technical-work/" data-search-card data-search-terms="explaining-technical-work use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation… communicating">
   <span class="card__name-row">
     <span class="card__name">explaining-technical-work</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T12:17:24+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T10:26:29.782150+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation…</p>
   <span class="card__foot">
@@ -1820,7 +1822,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/tending-tbaguette/" data-search-card data-search-terms="tending-tbaguette use at the start of every conversation, in any project or repo… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T12:17:24+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-09T10:26:29.782150+00:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">
@@ -1831,7 +1833,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/automating-repetition/" data-search-card data-search-terms="automating-repetition use when a manual sequence has been repeated often enough to consider scripting it… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">automating-repetition</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-07T12:25:07+02:00">Updated</span>
+    
   </span>
   <p class="card__summary">Use when a manual sequence has been repeated often enough to consider scripting it…</p>
   <span class="card__foot">

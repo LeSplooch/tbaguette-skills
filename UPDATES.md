@@ -26,24 +26,17 @@ Everything above the first `##` is preamble and is never rendered.
 
 ## 2026-09-09 — What reaches the reader, and what quietly does not
 
-- **A progress bar is technical writing, and nothing in the library said so.**
-  `explaining-technical-work` has always assumed a document: composed once, revisable
-  before anyone sees it, read by someone who can reply. It now also covers the surfaces
-  that are none of those — a progress pane, an activity log, a status line, a streamed
-  update. Three things change there. What reaches the reader is whatever was nearest to
-  hand at the moment of emission, which is the system's own internals, so the translation
-  has to happen at the emission site because nothing downstream can do it. A true statement
-  delivered after the reader has already committed is a different and worse message than
-  the same statement delivered before. And a long silence makes a claim of its own: from
-  outside, a correct quiet run and a hang are the same observation.
-- **Being told to improve something is not evidence that it needs improving.**
-  `tending-tbaguette` already warned that a pass arriving with nothing queued will go
-  looking for something to change and will find it, because a corpus this size always
-  holds a sentence that could be put more sharply. It now covers the stronger version —
-  a run holding an instruction that names the target. That reads as settling in advance
-  the question every filter in the skill exists to ask, and declining then feels like
-  declining the task rather than like exercising the filter. It is not: an instruction to
-  improve something is an instruction to look, and looking can honestly come back empty.
+- **What someone watches while the work runs is technical writing too.**
+  `formidable` has always owned those surfaces as *interface* — which display a wait
+  earns, what goes to stderr, how honest a progress bar has to be. Nothing owned what the
+  line actually **says**. `explaining-technical-work` now does, because every test it
+  already applies to a report applies to a status line, and three things change when the
+  reader is watching rather than reading. What is nearest to hand at the moment of
+  emission is the system's own vocabulary, and there is no later place for the
+  translation to happen. The same true sentence is a different and worse message after
+  the reader has committed than before it — a warning that fires on save, when it could
+  have fired on the keystroke, is not late, it is misplaced. And going quiet asserts that
+  nothing is happening, to a reader who has no way to check.
 - **A rule you stated out loud is not stored anywhere.** `checkpointing-long-runs`
   ranks what a checkpoint should hold by what it costs to lose, and there is now a row
   above the old first one: the constraints somebody stated in conversation. "Don't push."
@@ -54,15 +47,24 @@ Everything above the first `##` is preamble and is never rendered.
   exactly the thing your own judgment is not allowed to lift, one that has silently vanished
   and one you have decided was satisfied look identical from the inside. Copy them into the
   record verbatim, and into a durable form where the system offers one.
-
-- **Two more ways a check for existing coverage comes back wrong.** Same skill. A search
-  that lands on a passage covering your subject can match on the topic *and* on the
-  reader's role and still miss, because the passage was written for a different moment —
-  composing a report after the work, rather than watching a surface during it. And when a
-  sweep reads across several projects at once, whatever selects what to read inside each
-  one will silently drop any project it cannot read at all, so the number of projects in
-  scope and the number actually read are two different figures and both belong in what
-  gets reported.
+- **A check for existing coverage can match the topic and the reader and still miss.**
+  `tending-tbaguette` gains the second axis: a passage can be about your subject, written
+  for your reader, and still not answer you, because it was written for a different
+  *moment* — composing a report after the work rather than watching a surface during it.
+  The tell is that from a search the two are the same result.
+- **A sweep across several projects now says how many it could actually read.**
+  Same skill. Whatever decides what to read inside each project will silently drop any
+  project it cannot open at all, and that result is indistinguishable from a quiet week —
+  so the number in scope and the number actually read are two figures, and both belong in
+  what gets reported.
+- **Being told to improve something is not evidence that it needs improving.**
+  `tending-tbaguette` already warned that a pass arriving with nothing queued will go
+  looking for something to change and will find it, because a corpus this size always
+  holds a sentence that could be put more sharply. It now covers the stronger version —
+  a run holding an instruction that names the target. That reads as settling in advance
+  the question every filter in the skill exists to ask, and declining then feels like
+  declining the task rather than like exercising the filter. It is not: an instruction to
+  improve something is an instruction to look, and looking can honestly come back empty.
 
 ## 2026-09-09 — Ten checks that were passing because nothing could make them fail
 
