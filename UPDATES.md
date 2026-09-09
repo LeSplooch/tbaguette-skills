@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-09 — Writing for someone who is watching, not reading
+## 2026-09-09 — What reaches the reader, and what quietly does not
 
 - **A progress bar is technical writing, and nothing in the library said so.**
   `explaining-technical-work` has always assumed a document: composed once, revisable
@@ -44,6 +44,17 @@ Everything above the first `##` is preamble and is never rendered.
   the question every filter in the skill exists to ask, and declining then feels like
   declining the task rather than like exercising the filter. It is not: an instruction to
   improve something is an instruction to look, and looking can honestly come back empty.
+- **A rule you stated out loud is not stored anywhere.** `checkpointing-long-runs`
+  ranks what a checkpoint should hold by what it costs to lose, and there is now a row
+  above the old first one: the constraints somebody stated in conversation. "Don't push."
+  "Ask me before deploying." Those are not kept as rules — whatever enforces them re-reads
+  them out of the run's own context on every check, so a compaction, a summarised handoff,
+  a fresh session resuming from a transcript, or a subagent that never received the message
+  can delete the bound while everything goes on reporting normally. And because a bound is
+  exactly the thing your own judgment is not allowed to lift, one that has silently vanished
+  and one you have decided was satisfied look identical from the inside. Copy them into the
+  record verbatim, and into a durable form where the system offers one.
+
 - **Two more ways a check for existing coverage comes back wrong.** Same skill. A search
   that lands on a passage covering your subject can match on the topic *and* on the
   reader's role and still miss, because the passage was written for a different moment —

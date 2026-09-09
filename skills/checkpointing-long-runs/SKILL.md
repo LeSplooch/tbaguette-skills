@@ -107,6 +107,7 @@ half is the part that feels like progress.
 
 | Write | Cost of losing it | Usually written? |
 |---|---|---|
+| **Constraints someone stated in conversation** — "don't push", "ask me before deploying", "stay out of that directory" | Highest, and uniquely invisible. Losing it does not cost an hour; it means the run does the forbidden thing, with nothing anywhere reporting that the bound is gone | Almost never — it feels like it was already said |
 | **Negative results** — what was tried and did not work, and why | Highest. The next actor pays the same hour to learn the same thing, and has no way to know they are repeating it | Almost never |
 | **Rulings** — decisions that could have gone the other way, with the losing option | High. Resurfaces as a re-argued question with nobody remembering the reasons | Rarely |
 | **Assumptions** — what was settled without an answer | High. Silently becomes a fact, and the fact outlives the run | Rarely |
@@ -115,6 +116,20 @@ half is the part that feels like progress.
 
 The ordering is the point. If a checkpoint has room for one line, it is a
 negative result, not a status update.
+
+The first row earns a paragraph of its own, because most runs assume its failure
+cannot happen. A constraint stated in prose is not *stored* anywhere. Whatever
+enforces it re-reads it out of the run's own context on every check — so anything
+that shortens that context can delete the bound while every part of the machinery
+goes on reporting normally: a compaction, a summarised handoff, a fresh session
+resuming from a transcript, a subagent that never received the message it was
+stated in. And because a bound is precisely the thing your own judgment is not
+allowed to lift, a bound that has silently vanished and a bound you have decided
+was satisfied are indistinguishable from the inside. Copy every stated constraint
+into the record verbatim at the first checkpoint, and where the system offers a
+durable form — a configuration rule, a deny entry, a file the enforcer reads
+rather than infers — put it there too. A sentence is how a bound gets
+communicated. It is not how a bound gets kept.
 
 ## Where the state lives
 
