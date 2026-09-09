@@ -1,6 +1,6 @@
 ---
 name: explaining-technical-work
-description: Use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation, a handoff, an escalation, a design walkthrough, or a recommendation. Also when the reader is not in the code, unsure how much detail to include, or when a draft has become a narrative of what was tried. Covers leading with the conclusion, altitude, naming uncertainty, and length.
+description: Use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation, a handoff, an escalation, a design walkthrough, or a recommendation. Also when the reader is not in the code, unsure how much detail to include, or when a draft has become a narrative of what was tried. Also use when the writing is a surface a reader watches while the work is still running — a progress pane, an activity log, a status line, a streaming update — or when a long operation has gone silent, or when what reaches the reader is the system's own internals because that is what was nearest to hand. Covers leading with the conclusion, altitude, naming uncertainty, length, and writing for a reader who cannot reply and may act before you finish.
 ---
 
 # Explaining Technical Work
@@ -16,6 +16,7 @@ An explanation is written for one named reader with one pending question. Everyt
 - Recommending a course of action to someone who will decide
 - A draft has grown a chronology of what was tried
 - Readers keep replying with questions the document already answered
+- A long-running operation has to say what it is doing while it does it, or has gone quiet
 - **Not for:** documentation that must outlive this exchange → `writing-durable-docs`. Version-to-version changes → `writing-release-notes`. Incident analysis → `writing-postmortems`.
 - **Not for:** the set of choices that goes underneath the report → `offering-the-next-move`. They are two deliverables in one message, and the length budget above applies to this one only — the explanation does not get shorter to make room for the options.
 
@@ -45,6 +46,16 @@ Wrong altitude is the most common failure here and it is invisible to the writer
 - Apply *so what, for this reader?* to every sentence about your work. No answer means cut it or translate it.
 - Delete the process narrative. What you tried, in what order, and which dead ends you hit is rarely what was asked. Two exceptions, both narrow: when the reader would otherwise repeat the dead end, or when the process **is** the evidence (a bisect, a measurement) — and then it is one line, not a story.
 - Use the reader's vocabulary, not the system's. Internal service and class names are a private language; translate into what the reader owns — "checkout", "the nightly export". Introduce an internal name only when they will need it to search.
+
+## A live surface is written from one seat and read from another
+
+Everything above assumes a document: composed once, revisable before anyone sees it, read by someone who can reply. A progress pane, an activity log, a status line, a streamed step message is none of those. The reader who needed implication rather than activity in a report needs it more here — with no way to ask, and often while still able to act on what they are being told.
+
+- **Translate at the emission site, because nothing downstream can.** A report is written where the meaning lives; a line is emitted where only the internals do — the stage name, the function, the model's own commentary on its uncertainty. Whatever is nearest to hand at that moment is what ships, so the internals ship. One generator streamed a reasoning trace at twenty-six fragments a second, which read as noise to everyone not debugging the prompt, while the name of the thing being built was computed and never sent — so for forty seconds the headline showed the reader their own request back. Both fixes were one field carrying what the work *produced* instead of what it *considered*.
+- **Emit on the reader's clock, not the work's.** The same true sentence is a different and worse message after the reader has committed. A validator that had been registered and uncalled since its pane was built reported a bad value on save; the operator typed through several more fields first and then had to work out which row. Information that exists before the point of no return and arrives after it is not late, it is a different defect.
+- **Silence carries a claim, and it is usually false.** A tool that printed one line and then nothing for twenty minutes, while it decided the fate of ninety-four positions, was working correctly throughout. From outside, a correct silent run and a hang are the same observation. Anything quiet for longer than a reader will wait owes a heartbeat with progress against a total — and where the estimate is a range, the range, plus what widens it.
+
+`instrumenting-for-observability` owns the signals a machine consumes; this is the half a person watches. A surface serving both ends up serving neither, and the one that gets sacrificed is always the person's.
 
 ## Name uncertainty rather than smoothing it
 

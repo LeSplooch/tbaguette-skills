@@ -262,6 +262,19 @@ answer about that repository rather than a broken sweep — say so and stop,
 rather than falling back to reading diffs at random and calling the result a
 pass.
 
+**Count the population before the selector runs, and report both numbers.** The population and
+the selector get chosen separately — *which projects are in scope* is answered from recent
+activity, *what to read in each* by the subject-line rule above — and a member of the population
+the selector simply cannot read is dropped without a word. A loop reading commit subjects across
+a list of recent working directories prints nothing for any of them that is not a version-controlled
+repository, which is not an error, not an empty result, and not distinguishable in the output from
+a project that had a quiet week. In one such pass seven of sixteen went that way, and the sweep
+would have been reported as covering all sixteen. The remedy is arithmetic rather than judgment:
+say how many were in scope, how many the selector could actually read, and name the difference.
+It is also the only way the gap becomes a finding — those seven were not unproductive, they were
+projects whose work leaves no commit trail, and *that* is worth knowing before designing a sweep
+that assumes one.
+
 **Cluster before opening anything, because the repeat is the whole point.** The
 bar above says a shape appearing in two unrelated projects is the strongest
 evidence it can get, and a pass that opens one body at a time can never see it:
@@ -316,6 +329,21 @@ more than an unnecessary commit would: it becomes a pull request a maintainer ha
 to read, weigh and turn down. **An empty queue ends a scheduled pass exactly as it
 ends a conversational one** — and it ends there whether the queue arrived empty or
 was emptied by the coverage check in the contribution procedure below.
+
+**And the strongest form of that pressure is an instruction rather than an urge.** The
+paragraph above describes a run that goes looking on its own initiative. A run can also arrive
+holding a task that names the target: *improve skill X*, *contribute something to the library*.
+That reads as settling in advance the question the bar and the coverage check exist to ask, and
+it is harder to resist than the self-generated version, because declining now feels like
+declining the task rather than exercising the filter.
+
+It is not. **An instruction to improve something is an instruction to look, and looking can
+honestly come back empty.** What an instruction never supplies is evidence that a particular
+sentence is wrong — that still has to come from outside it: a queued candidate, a correction
+someone made, a shape seen twice in unrelated work. A pull request whose whole provenance is
+having been asked for one costs a maintainer the same read as any other and teaches them to
+weigh yours less. Answer in the instruction's own terms instead: what was examined, what
+survived, and what turned out to be covered already.
 
 The reversal is in what gets said. Inside a conversation, silence about an empty
 queue is correct: there is a user mid-task and a report about nothing is noise. A
@@ -543,6 +571,16 @@ passage you just found — cheaper than anything else you were considering, and
 worth more, because a rule that is right for one role and quietly wrong for
 another does more damage than a rule that is merely absent. The reader in the
 wrong role has already been answered.
+
+**And the second axis is the moment, not only the role.** The test above can pass — same
+reader, same job — and the passage still miss, because it was written for a different point
+in time. A rule about composing a report *after* the work assumes a writer who can revise
+before anyone sees it and a reader who can reply; the same reader watching a surface *while*
+the work runs has neither, and may act on what they are told before the work finishes. Same
+topic, same role, different moment, and the consequences that follow are ones the covering
+passage has no way to state. So ask a hit both questions — is my actor in here, and is my
+moment? — because from the grep they look identical, and a near-hit on either axis is the
+same cheap, high-value paragraph inside the passage you already found.
 
 Expect that search to succeed. On a library this size the ordinary outcome of
 checking a candidate is that something already covers it, sometimes better than
