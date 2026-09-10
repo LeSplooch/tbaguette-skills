@@ -72,6 +72,23 @@ Everything above the first `##` is preamble and is never rendered.
   caller changes where the secret is stored and not whether the caller holds it,
   and the list of destinations is the entire restriction.
 
+- **`confirming-before-claiming-done` now treats an unpredicted number as no
+  check at all.** A gate that reports a figure — tests collected, files changed,
+  rows migrated, warnings emitted — reads as a check and on its own is not one:
+  whatever it printed you were going to accept, because no value had been
+  committed to in advance as the one that would look wrong. Saying the number
+  first costs one sentence and turns the reading into a comparison, which is what
+  makes a mismatch visible at all — and what a mismatch usually means is that the
+  inputs are not the ones you think you have, a concurrent session writing into
+  the same checkout being the everyday case. None of that turns a run red. Two
+  limits come with it. A match is worth what its arithmetic is worth, since two
+  changes that cancel produce one just as readily; and a prediction taken from a
+  record rather than a measurement is only as fresh as that record, so everything
+  that legitimately landed since shows up as an unexplained delta and sends the
+  pass investigating its own stale bookkeeping. Where a figure genuinely cannot
+  be predicted, the rule inverts rather than softening — that number is an
+  observation, not something a claim can stand on.
+
 ## 2026-09-09 — What reaches the reader, and what quietly does not
 
 - **What someone watches while the work runs is technical writing too.**

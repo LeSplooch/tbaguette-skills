@@ -300,6 +300,44 @@ replay the same inputs through the previous version, or derive analytically what
 the untreated result would have been. `performance-profiling`'s interleaved A/B
 runs are the same discipline applied to timings, and for the same reason.
 
+## A number you did not predict is not a check
+
+A gate that reports a figure — tests collected, files changed, rows migrated,
+warnings emitted — gets read as a check, and on its own it is not one.
+Whatever it printed, you were going to accept, because you had not committed
+beforehand to any value that would have looked wrong. The number does the work
+of evidence while carrying none.
+
+Saying the number first is the whole of the fix, and it costs one sentence
+before the gate runs: *this change adds six checks, so the total should land
+six above the last measurement.* The reading becomes a comparison rather than
+an observation, and a mismatch is a finding you had no other route to. What a
+mismatch usually means is that the inputs are not the ones you think you have
+— a concurrent session writing into the same checkout, a generated file
+rebuilt underneath you, a dependency update that brought fixtures of its own.
+None of it turns the run red. The summary line is green, and nothing in any
+output you were already reading mentions it. Ask for both halves of what moved
+separately: `git status` for whatever is sitting uncommitted in the tree, and
+a log since the commit this pass started from for whatever landed already
+committed.
+
+Two limits, because the move is easy to perform and get nothing from. A match
+is worth exactly what the arithmetic behind it is worth — two changes that
+cancel produce one as readily as an undisturbed tree does. And a prediction
+taken from a *record* rather than from a measurement, the total the last pass
+wrote down or the figure quoted in a previous report, is only as fresh as that
+record: everything that legitimately landed since then surfaces as an
+unexplained delta, that reads as something being wrong *now*, and the pass
+goes off investigating its own stale bookkeeping. Predict from the current
+state plus the arithmetic of this change, never from the last number anybody
+recorded. § *Evidence goes stale the instant code moves* is the same decay one
+step earlier, about the run rather than about the note describing it.
+
+Where a figure genuinely cannot be predicted — a duration, a byte count,
+anything carrying real variance — the rule does not soften, it inverts. That
+number is not a check either, and it belongs in the report as an observation
+rather than standing behind a claim.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -318,6 +356,7 @@ runs are the same discipline applied to timings, and for the same reason.
 | "It is set to start automatically" offered as evidence that it starts automatically | Configuration read as behavior, with nothing having exercised it |
 | A correction closed weeks ago, and the published copy still serves the old text | The fix landed in the source; publishing the copies was never part of it |
 | An improvement measured at "no change" and abandoned, then found later to have worked | The denominator of the ratio was another quantity from the treated run, so switching the intervention off would not have moved it |
+| Another session's work shipped inside your green run and nobody noticed | The suite's total was read rather than predicted, so no value it could have printed would have looked wrong |
 
 ## Red flags
 
