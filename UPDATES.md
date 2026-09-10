@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-10 — The output you kept is the output you can quote
+## 2026-09-10 — The output you kept, and the file that came back larger
 
 - **`confirming-before-claiming-done` now covers what a `tail` takes away.** It
   already warned that piping a check through a filter can swallow the verdict,
@@ -41,6 +41,20 @@ Everything above the first `##` is preamble and is never rendered.
   still say to cap a command when you already know the shape of the answer, and
   now carry the exception — a run you will quote from goes to a file, which is
   the cheaper option as well as the safer one.
+
+- **`automating-repetition` now carries the mirror of its matched-nothing rule.** It
+  already said that a substitution whose pattern is absent exits zero and leaves the
+  file byte-identical. The new section is the costlier direction — a pattern that
+  matches the *wrong* place — and what reliably produces one is a document that
+  describes its own format, markdown quoting one of its own headings inside a code span
+  being the everyday case. A first-match search finds the mention, so anchor a
+  structural delimiter to the structure (`^## Changelog$`) rather than to the bare
+  string. The sharper half is what a wrong coordinate then feeds: `text[:start] + text[end:]`
+  is a deletion while the bounds are ordered, and once they are reversed it emits the
+  region between them twice without raising — in Python, JavaScript and Go alike, since
+  each half is a legal slice on its own. So the failure ships a longer, well-formed,
+  entirely plausible file with nothing removed at all. Assert the bounds are ordered
+  before slicing, and check that the size moved in the direction the edit intended.
 
 ## 2026-09-09 — What reaches the reader, and what quietly does not
 

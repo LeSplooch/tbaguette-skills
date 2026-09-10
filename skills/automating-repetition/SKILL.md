@@ -1,6 +1,6 @@
 ---
 name: automating-repetition
-description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating at all, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a scripted edit, codemod, or migration reported success and changed nothing, when a manual step is risky, irreversible, or easy to get wrong by hand, when a person is being asked to report a state that changes faster than they can reply, when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right, when a one-shot bulk edit will produce a diff too large for anyone to actually review, or when a recurring job's rule defers work to its next run. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.
+description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a scripted edit, codemod, or migration reported success and changed nothing or the wrong region, when a manual step is risky, irreversible, or easy to get wrong by hand, when a person is being asked to report a state that changes faster than they can reply, when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right, when a one-shot bulk edit will produce a diff too large for anyone to review, or when a recurring job's rule defers work to its next run. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.
 ---
 
 # Automating repetition
@@ -178,6 +178,25 @@ So an edit that is *supposed* to change something has to assert that it did. Cou
 
 That is the asymmetry `writing-the-failing-test-first` is built on, met through a different instrument. A test never watched failing and a substitution never watched matching share one failure — nobody has confirmed the thing is pointed at anything, so the agreeable result it returns is worth nothing.
 
+## A pattern that matched the wrong thing exits zero too
+
+A pattern that matches nothing at least leaves the file alone. The costlier half of the same blind spot is a pattern that matches somewhere you did not mean, handing the edit coordinates that are structurally valid and semantically wrong.
+
+The reliable source of a wrong coordinate is **a document that describes its own format.** Markdown quoting one of its own headings inside a code span, a config whose comments name its own keys, a log line whose payload contains the character the log is split on, a fixture holding the separator it is parsed with, a script containing the string it greps for. Each holds a *mention* of the structural marker as well as the marker itself, the mention is usually the earlier of the two, and a first-match search finds mentions.
+
+So anchor a structural delimiter to the structure rather than to the bare string — `^## Changelog$` under multiline matching, `\n## Changelog\n`, or the parser that already knows what a heading is. A bare substring is the only form that cannot tell a heading from a sentence about one. In a file of that kind, assume the mention exists rather than checking whether it does today: one added next week breaks an edit that was correct when it was written.
+
+A wrong coordinate is still only a wrong number. What turns it into a wrong file is that the operation it feeds never checks that its bounds are ordered. `text[:start] + text[end:]` is a deletion while `start < end`; reverse the two and it emits the region between them **twice**, raising nothing as it does — in Python, in JavaScript, and in Go, each half is independently a legal slice, so the language never sees the pair. The script runs to completion and exits zero. `sed` does not complain either: `sed '8,3d'`, meant to cut lines 3 through 8, deletes line 8 alone. The degenerate case returns data rather than an error.
+
+That is what carries it past review. A deletion that goes wrong deletes something, and a missing section is the kind of damage a glance finds. A deletion that ran backwards produces a longer, well-formed, entirely plausible file with nothing removed and a region of it duplicated, and nothing in the command's own output says so.
+
+Two checks close it, and neither of them is reading the diff:
+
+- **Assert that computed bounds are ordered before slicing**, and that each was found rather than defaulted. A bound that came out of a search is a computed value sitting where a constant appears to be, and nothing downstream will reject it for being the wrong one.
+- **Where the edit has an intended direction, compare the size before and after against it.** A removal that made the file bigger is the whole diagnosis in one number, and it fires on every version of this failure regardless of which delimiter went wrong.
+
+`calibrating-confidence`'s *A search result is the input to a check, not the check* owns the case where such a result is read as an answer. This is the case where it is used as a coordinate, and the two differ in what being wrong costs: a wrong answer leaves a wrong belief, and a wrong coordinate leaves a wrong file.
+
 ## Keep the manual path working
 
 Document the manual sequence beside the tool and mark which steps the tool performs. The automation is the fast path, never the only path, and the day it breaks is disproportionately likely to be the day it is needed — both usually fail from the same upstream change.
@@ -205,6 +224,8 @@ Exercise the manual path at least annually, and whenever the tool changes owner.
 | It broke and nobody could do the task by hand | the manual path was deleted along with the tedium |
 | A day of work saved five minutes a year | the rule of three was applied to effort rather than to frequency |
 | A scripted edit reported success and left the file byte-identical | Its pattern matched nothing; a substitution that changes nothing still exits zero |
+| A scripted removal ran clean and left the file larger | Its bounds were reversed; `t[:a] + t[b:]` duplicates instead of raising when `b < a` |
+| An edit landed on the wrong part of the file | The delimiter was found by bare substring, in a file that mentions its own format |
 | Every file passed the bulk applier's checks and one was still wrong | the checks asserted shape; the error was in the content, which a structural assertion cannot see by construction |
 
 ## Red flags
@@ -217,4 +238,5 @@ Exercise the manual path at least annually, and whenever the tool changes owner.
 - Automation that only runs from one person's machine
 - Asking someone to tell you the moment something happens, when the something is over in less time than a reply takes
 - "The script ran fine" — said about an edit whose diff was never looked at
+- Locating a structural delimiter by bare substring, in a file that quotes its own format
 - A generated report nobody has opened in three months — the automation now produces waste on a schedule
