@@ -124,6 +124,16 @@ influences, not at the privilege of the cosmetic job it was installed to do —
 and prefer transforms that add a field over transforms that overwrite one, so
 the original survives to be compared against.
 
+## A rule the parser could not read is a rule that is not there
+
+A policy has to be read from somewhere, and something does the reading. What that reader does with a line it cannot understand is usually not a decision anybody made: the common behaviour is to skip the line and continue, because refusing to start over a single bad entry is an unattractive property in a component everything else waits on, and tolerating syntax from a later version wants the same leniency.
+
+The cost of that skip is not uniform. It splits on the polarity of the rule dropped. Skip a malformed **allow** and something stops working — a request that should have succeeded is refused, somebody notices within the hour, and the report arrives naming the thing. Skip a malformed **deny** and nothing happens at all, which is exactly what a deny rule looks like when it is working. The restriction is gone, the system is more permissive than the file on disk describes, and the file goes on describing it. One typo, loud in one half of a policy and silent in the other.
+
+That is one more argument for the default-deny section above, arriving from an unexpected direction. Wherever the grant is a broad allow with explicit denies carving exceptions out of it — a permissive firewall with specific blocks, a wide role with a restriction attached, an ignore file with negations — every carve-out is a rule whose disappearance is invisible. Start from zero instead and the fragile direction becomes the one that fails loudly.
+
+Two consequences. **A policy loader should refuse to start on a rule it cannot parse**, and where it genuinely must tolerate unknown syntax, that tolerance belongs on the permissive rules and not on the restrictive ones. And which behaviour you actually have takes about a minute to establish: put a deliberately malformed rule into a copy of the policy and see whether the loader objects or comes up clean. An empty denial log will not tell you, because a rule that never loaded and a rule that was never violated leave the identical record — which is why step 4 below has to end in an attempt rather than in a reading.
+
 ## Reviewing what a role can actually do
 
 Intent is not a control. Review the effective permissions, not the name or the description.
@@ -147,6 +157,7 @@ When the demand for a justification arrives from outside — a questionnaire, an
 | An internal service was reached through a user-supplied URL | The deputy used its own network position; no check on the resolved target |
 | A token was accepted by the wrong service | Signature verified, audience not |
 | The two-person rule was bypassed | Approval enforced by process, not verified by the executing system |
+| A restriction everyone can point to in the policy file was never in force | The loader skipped a rule it could not parse; a deny that never loaded and one that was never triggered log the same nothing |
 | Temporary elevation became permanent | Grant with no expiry, and no review comparing grants against use |
 | A compromised container exfiltrated data over an ordinary connection | Egress unrestricted, which is the default everywhere |
 | A component with no outbound access still exfiltrated | Egress was enforced on connections and written in hostnames; resolution is neither, and it was left open because a container that cannot resolve looks broken |

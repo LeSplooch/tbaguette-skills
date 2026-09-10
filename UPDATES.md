@@ -89,6 +89,24 @@ Everything above the first `##` is preamble and is never rendered.
   be predicted, the rule inverts rather than softening — that number is an
   observation, not something a claim can stand on.
 
+- **`least-privilege-design` now covers the rule that never loaded.** A policy
+  has to be read by something, and what that reader does with a line it cannot
+  parse is usually nobody's decision — the common behaviour is to skip it and
+  carry on. The new section is why that skip is not neutral: its cost splits on
+  the polarity of the rule dropped. A malformed allow that gets skipped breaks
+  something, and somebody reports it within the hour. A malformed deny that gets
+  skipped does nothing at all, which is exactly what a working deny rule looks
+  like — so the restriction is gone, the system is more permissive than the file
+  on disk describes, and the file goes on describing it. That turns out to be a
+  fresh argument for default-deny, since a broad allow with denies carving
+  exceptions out of it is precisely the shape where every carve-out can vanish
+  unseen. A loader should refuse to start on a rule it cannot parse, and where it
+  must tolerate unknown syntax that tolerance belongs on the permissive rules
+  only. Which behaviour you have takes a minute to establish: feed a deliberately
+  malformed rule to a copy of the policy and see whether the loader objects or
+  comes up clean. An empty denial log cannot tell you, because a rule that never
+  loaded and one that was never violated leave the same record.
+
 ## 2026-09-09 — What reaches the reader, and what quietly does not
 
 - **What someone watches while the work runs is technical writing too.**
