@@ -45,6 +45,31 @@ the status explicitly, or verify the artifact the command was supposed to
 produce rather than the pipeline that ran it — with the caveat the next section
 owes it, which is that the artifact was very likely already there.
 
+Keeping the status explicitly repairs the verdict and does nothing for the
+evidence, which is the second half of the same loss. `head` and `tail` choose
+what to discard **by position**, and which end holds what you need depends on
+the claim you will end up making — which is not chosen yet. A failure prints
+last, so `head` throws it away. The lines that support a *success* print early
+— the gate that passed, the input the run resolved, the version it selected,
+the branch it took — so `tail` throws those away instead, and keeps the
+progress spam a long build spends its final minutes on. Either way the
+survivors read as complete. Nothing in an excerpt marks it as an excerpt.
+
+The cost lands at report time, far enough from the decision that it is rarely
+traced back to it: you reach for the line that supports the sentence you are
+writing, it scrolled off, and the exit code is all that is left to argue from.
+**"It exited 0" and "I watched it succeed" are different claims, and only the
+second one requires having kept the output.** So capture first and filter
+second. `cmd > run.log 2>&1` puts none of the run in context, and a `grep`
+against that file afterwards answers whichever question turns out to matter —
+the version it resolved, the check that gated the step, the one warning that
+was not boilerplate — as many times as you need to ask, whereas a capped pipe
+answers a single question you had to choose before knowing which one it would
+be. The same holds anywhere a long output reaches you through a bounded window:
+a scrollback buffer, a job page that renders only a run's last N lines.
+**Never truncate by position a record you will later have to quote from —
+filter it by pattern instead.**
+
 When the check itself is unreliable — an intermittent bug that only reproduces some fraction of the time — a single clean run doesn't carry the same weight it would for a deterministic one. That's a reason to run it enough times to get real signal, or to report status honestly as still-in-progress, not a reason to fall back to a hedged claim instead. "Should be fixed, let me know if you still see it" spends the same unearned confidence a flat "it's fixed" would; softer wording doesn't make one weak attempt add up to evidence.
 
 ## The claim and what actually proves it
@@ -283,6 +308,7 @@ runs are the same discipline applied to timings, and for the same reason.
 | Tests declared passing based on a run from before the last edit | Evidence treated as durable when it's only valid for the code it ran against |
 | "The agent said it completed the task" reported as the task being complete | A tool's self-report repeated as independently checked fact |
 | A command "passed" and the artifact it should have produced is untouched | Its verdict was read from a pipeline whose last stage was a filter, not from the command |
+| At report time the only thing left behind a claim is the exit code | The run's output was capped by position, so the lines it would have been argued from were the discarded ones |
 | A search of the built artifact says the feature never shipped | The artifact does not store what was searched for; the pattern was sound and the surface was not |
 | A regression test added and trusted without ever seeing it fail | Never run against the broken code, so it's unknown whether it tests anything |
 | Build green, shipped, runtime error in the first minute | Compilation was checked; behavior never was |
@@ -308,3 +334,4 @@ runs are the same discipline applied to timings, and for the same reason.
 - A before/after ratio whose two terms were both produced by the "after" run.
 - "Fixed" said about something with published copies, on the evidence of the source file and a remembered count of the copies.
 - A success line printed by something other than the command being verified — an `echo` after a pipeline, a summary the runner emits regardless.
+- A long check launched through `| tail -n NN`, with a report that will have to quote from its output.

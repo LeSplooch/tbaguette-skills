@@ -24,6 +24,24 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-10 — The output you kept is the output you can quote
+
+- **`confirming-before-claiming-done` now covers what a `tail` takes away.** It
+  already warned that piping a check through a filter can swallow the verdict,
+  since a pipeline reports the status of its last stage. The new passage is the
+  other half of that loss: `head` and `tail` pick what to discard by position,
+  and position is the one axis that has nothing to do with which lines a report
+  will want. A success is argued from lines that print early — the gate that
+  passed, the version the run resolved, the branch it took — so a `tail` keeps a
+  long build's closing spam and drops every one of them, and the shortfall shows
+  up only much later, when the claim is being written and there is nothing left
+  to cite but the exit code. Capture with `> run.log 2>&1`, which puts none of the
+  run in context, and filter the file by pattern instead.
+- **`crouton` no longer recommends the move that causes it.** Its read rules
+  still say to cap a command when you already know the shape of the answer, and
+  now carry the exception — a run you will quote from goes to a file, which is
+  the cheaper option as well as the safer one.
+
 ## 2026-09-09 — What reaches the reader, and what quietly does not
 
 - **What someone watches while the work runs is technical writing too.**
