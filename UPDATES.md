@@ -56,6 +56,22 @@ Everything above the first `##` is preamble and is never rendered.
   entirely plausible file with nothing removed at all. Assert the bounds are ordered
   before slicing, and check that the size moved in the direction the edit intended.
 
+- **`secrets-hygiene` now covers the case where you are the one who needs the
+  credential.** It already refused to let you carry somebody else's secret onward
+  to a third party, on the grounds that anything you hold you also record. The new
+  section is the inward mirror, and it arrives dressed as caution rather than as
+  helpfulness: something you are about to run needs a request authenticated, and
+  the options look like putting the credential where that thing can read it or
+  refusing to run it at all. Refusing reads as the responsible choice, and it is
+  the cheaper mistake rather than a different kind of one. A third arrangement
+  hands the consumer a reference and exchanges it for the real value at the
+  boundary, for destinations named in advance — the request authenticates, and
+  nothing the consumer can record ever held the credential. Most of the new text
+  is about telling that apart from its counterfeit, because the shape is easy to
+  reproduce without the property: a resolver that hands the value back to its
+  caller changes where the secret is stored and not whether the caller holds it,
+  and the list of destinations is the entire restriction.
+
 ## 2026-09-09 — What reaches the reader, and what quietly does not
 
 - **What someone watches while the work runs is technical writing too.**

@@ -1,6 +1,6 @@
 ---
 name: secrets-hygiene
-description: Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline, container image, or client app, or finding one in a commit, log line, screenshot, ticket, or error message. Also use when a credential would have to pass through you on its way to a service, or when a transcript, context, or session summary may have held one. Covers leaked credential response, revocation and rotation, secret scanning, environment variable and dotenv handling, and pre-publication checks on a repository. Also use when a scanner's finding turns out to be your own fixture, or when a detector you wrote keeps flagging something legitimate.
+description: Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline, container image, or client app, or finding one in a commit, log line, screenshot, ticket, or error message. Also use when a credential would have to pass through you on its way to a service, when something you are about to run needs a request authenticated and the choice looks like handing it the credential or not running it, or when a transcript, context, or session summary may have held one. Covers leaked credential response, revocation and rotation, secret scanning, environment variable and dotenv handling, and pre-publication checks on a repository. Also use when a scanner's finding turns out to be your own fixture, or when a detector you wrote keeps flagging something legitimate.
 ---
 
 # Secrets Hygiene
@@ -15,6 +15,7 @@ A secret's only property is that its distribution is controlled, so every surfac
 - A key, token, or private key appears in a diff, log, ticket, chat message, screenshot, or exception.
 - Standing up CI or a deploy path; making a repository public; onboarding or offboarding someone.
 - Someone offers to hand you a credential so that you can place it somewhere for them.
+- Something you are about to run needs a request authenticated, and the choice looks like handing it the credential or not running it.
 - Any sentence containing "temporarily hardcode", "just for local dev", or "it's only a test key".
 - Not for: deciding what a credential should be *allowed to do* (`least-privilege-design`); whether a dependency can read your environment (`auditing-dependencies`).
 
@@ -58,6 +59,16 @@ So when a secret has to reach a third party, send the *person* to the issuer and
 This forbids being the **carrier**, not being the **configurer**. Writing a reference, a path, or a secret-store lookup into a configuration is the ordinary job, and no value crosses. And where a value reaches you anyway — pasted to be helpful, echoed by a command, printed in a stack trace — it is already on every surface in the table above, and nothing done afterwards takes it back off them. It is leaked. Go to the leak procedure below and start at revoke, rather than carrying on carefully with a value that is now burned.
 
 The same rule runs in the other direction, as two separate failures. A credential belonging to a third party is not relayed back toward whoever asked — that is `least-privilege-design`'s confused deputy, a component applying its own authority to a target somebody else chose. And a token issued to you for one service is not presented to a second on the grounds that it was accepted; that one is an audience check the verifier skipped, which the same skill covers a few lines earlier.
+
+## Between handing it over and refusing, there is a substitution
+
+The section above is about a value travelling outward through you to a third party. The same trap has an inward form that arrives dressed as caution rather than as helpfulness, which is why it catches careful people: something you are about to run — a build step, a script, a subprocess, a tool invoked on your behalf — needs a request authenticated, and the options appear to be putting the credential where that thing can read it, or refusing to run it. The second looks like the responsible choice. It is the cheaper mistake rather than a different kind of one: it costs the task and buys a property a third arrangement would have bought outright.
+
+In that arrangement the consumer is handed a **reference** — a placeholder, a handle, a name — and something between it and the service exchanges that reference for the real value at the moment of the request, for destinations named in advance. The request authenticates, and nothing the consumer can record ever held the credential: not its arguments, not its environment, not its logs, not the exception it throws, not the transcript of whatever ran it. The familiar instances predate the vocabulary — an agent that signs a challenge and never releases the key it signed with, a forwarding proxy that attaches the authorization on the way out.
+
+This is the property the section above named, reached from the other side: an intermediary that never possesses a value cannot leak one, and here the intermediary is you. The shape is easy to reproduce without the property, so check two things before crediting an arrangement with either. **The exchange has to happen somewhere the consumer cannot reach.** A resolver that hands the value back to its caller is the ordinary counterfeit — a credential helper prints the password for the tool to read, which changes where the secret is stored and not whether the tool holds it, and from that moment it is on every surface that process has. One question settles it: if the consumer were told to dump everything it holds, would the credential be in the dump?
+
+**And the list of destinations is the whole of the restriction.** Something that will attach the credential to whatever host it is asked about has widened the set of destinations that can spend it rather than protecting anything, and it has done so while looking exactly like the arrangement that works. That list is an allowlist and fails in all the ways one does; `least-privilege-design` covers what it is worth and what it costs to keep honest.
 
 ## Scoping, briefly
 
