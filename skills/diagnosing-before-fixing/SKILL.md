@@ -1,6 +1,6 @@
 ---
 name: diagnosing-before-fixing
-description: Use when a bug, test failure, crash, or any behavior that doesn't match what the code should do needs a fix and none has been proposed, especially when the obvious quick fix is tempting or an earlier fix didn't hold. Also use when a failure has been blamed on the network, the CI runner, a flaky dependency, or this machine and that attribution has never been tested, when one measurement's own parts contradict each other, when a parameter appears to have no effect at all, especially when the result is byte-identical rather than merely close, or when a defect has only ever been seen through a preview, a local server, or another stand-in for the real path. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it originates rather than where it surfaced, telling a fault in the artifact from one introduced by the path you viewed it through, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.
+description: Use when a bug, test failure, crash, or any behavior that doesn't match what the code should do needs a fix and none has been proposed, especially when the obvious quick fix is tempting or an earlier fix didn't hold. Also use when a failure has been blamed on the network, the CI runner, a flaky dependency, or this machine and that attribution has never been tested, when one measurement's own parts contradict each other, when a parameter appears to have no effect at all, especially when the result is byte-identical rather than merely close, when a behavior is called absent because the log line that would mark it never appeared, or when a defect has only ever been seen through a preview, a local server, or another stand-in for the real path. Covers the reproduce-hypothesize-test loop, tracing a symptom back to where it originates rather than where it surfaced, escalating from repeated failed fixes to questioning the architecture, and validating a fix at every layer the bad data passes through.
 ---
 
 # Diagnosing before fixing
@@ -211,6 +211,42 @@ it converts a clean failure into a confusing success. The urge to bypass is
 strongest exactly when the guard is most load-bearing, because that is when it is
 most in the way.
 
+## An absent log line is evidence only if the emitter was armed
+
+Every section above reads a measurement you took. This one reads the one you
+did not get. You go looking for the signature of a behaviour in a log across
+the window it should have run in, find nothing, and conclude the behaviour did
+not happen — which is a conclusion about the code drawn from a fact about the
+logger.
+
+What makes it slip past is that nothing here is broken. The emitter is
+correct, the line it writes is accurate, and the behaviour it describes really
+did occur. The line simply sits behind a condition this particular run never
+met. A memoised or cached path emits while it is building the answer and is
+silent every time it serves one, so the log is loudest when the system is
+coldest and quietest under exactly the steady-state traffic you are usually
+investigating. A level-gated line needs a verbosity nobody enabled here. A
+sampled line fires on one request in a hundred. A once-per-process line fired
+before you started reading.
+
+Note which way that cuts. A broken instrument tends to announce itself; this
+one produces a clean, quiet, entirely plausible negative, and the confidence
+that follows is proportional to how carefully you searched — a thorough sweep
+of a window the emitter was never armed in feels like strong evidence and is
+none.
+
+The tell is the same shape as the un-varied factor's, and just as cheap:
+**name the run in which that line would have been written.** If you cannot,
+you have measured the logger, not the system.
+
+Two moves settle it, and both are cheaper than the fix the negative was about
+to justify. Read the emitter in the source before reading its absence — the
+condition guarding it is right there, and one look says whether this run could
+ever have tripped it. Then, if it could not, arm it: clear the cache, restart
+the process, use a key nothing has warmed, raise the level, force the cold
+path. A log line you have watched appear once tells you what its silence is
+worth for the rest of the session.
+
 ## An environmental cause is the one hypothesis that ends the search
 
 "It's the network." "The runner is slow today." "That dependency is flaky." "It's this machine." These are hypotheses like any other, with one property no other hypothesis has: accepting one *ends* the investigation instead of directing it. Every other explanation says where to look next. This class says there is nowhere to look — which makes it the cheapest thing to believe and the most expensive thing to be wrong about.
@@ -248,6 +284,7 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 | A failure blamed on the network, the runner, or a flaky dependency | An attribution that was plausible was accepted as tested; the thing it blames was never contacted |
 | The artifact is provably valid and the rendering is still wrong | It was only ever seen through a preview, viewer, or local server, and that is what introduced the defect |
 | "We already ruled that out" | The factor was the same in every run, so it was observed rather than tested |
+| A behaviour declared absent because its log line never appeared | The emitter is behind a cache, a level, or a sample the run never tripped; the silence measured the logger |
 | A hypothesis dropped on a result that was anomalous in several unrelated ways | One wrong idea does not produce several unrelated failures; the experiment broke, so it returned no verdict to act on |
 
 ## Red flags
@@ -264,6 +301,7 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 - "I'll skip it with a tracked TODO" — said with real intent, about a TODO that dies the moment the release ships and priorities move on
 - An operation attempted again with nothing changed between the attempts, and the identical error read as bad luck rather than as determinism
 - "That's the same for every run, so it can't be that"
+- "I grepped the whole window and it never logged, so it never ran"
 - Reaching for the flag that suppresses a preflight check before answering what condition the check tests
 - "It was the network" — written in a note, then repeated in four more, with no probe run at any point
 - A defect about to be written up that has only ever been observed through a preview, a local server, or another stand-in for the real delivery path
