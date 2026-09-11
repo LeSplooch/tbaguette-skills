@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-11T00:27:26+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-11T00:27:26Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-11T01:04:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-11T01:04:36Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -140,10 +140,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-for-idempotency/" data-fresh-at="2026-09-11T00:27:26.566302+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-for-idempotency/" data-fresh-at="2026-09-11T02:27:26+02:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">designing-for-idempotency</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T00:27:26.566302+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T02:27:26+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</p>
   <span class="card__foot">
@@ -151,10 +151,10 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/reproducible-environments/" data-fresh-at="2026-09-11T00:27:26.566302+00:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/reproducible-environments/" data-fresh-at="2026-09-11T02:27:26+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">reproducible-environments</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T00:27:26.566302+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T02:27:26+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt…</p>
   <span class="card__foot">
@@ -162,10 +162,10 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-09-11T00:27:26.566302+00:00" draggable="false" style="--cf-offset: 2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-09-11T02:27:26+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T00:27:26.566302+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T02:27:26+02:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">
@@ -283,9 +283,10 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-11">11 Sep 2026</time>
-    <span class="notes__entry-title">Things that were still running, and things that had quietly stopped</span>
+    <span class="notes__entry-title">A log line that never fired, from an outside contribution — plus things still running, and things that had quietly stopped</span>
   </h3>
   <ul class="notes__bullets">
+    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> now covers the measurement you did not get.</strong> Its existing sections all read a result that came back — several anomalies at once, an exact null, a reading that contradicts itself, a guard that refused. The new passage reads an absence: you sweep a log for the signature of a behaviour, find nothing across the whole window, and conclude the behaviour never ran. Nothing is broken in that story, which is why it holds up. The emitter is correct and the behaviour did occur — the line just sits behind a condition the run never met. A memoised path logs while it builds an answer and is silent every time it serves one, so the log is loudest when the system is coldest and quietest under exactly the steady-state traffic you are usually investigating; a level-gated line needs a verbosity nobody turned on, a sampled one fires on a hundredth of the traffic, a once-per-process one fired before you started reading. The confidence is proportional to how carefully you searched, and a thorough sweep of a window the emitter was never armed in is worth nothing. The tell is the un-varied factor's, one section up: name the run in which that line would have been written. Then read the emitter's guard before reading its silence, and arm it — clear the cache, use a cold key, raise the level — so you have watched the line appear at least once.</li>
     <li><strong>A pipe can truncate the command, not just its output.</strong> <a class="skill-link" href="/tbaguette-skills/skills/portable-shell-scripting/"><code>portable-shell-scripting</code></a> now covers what happens when the reader on the right of a pipe exits first: the writer on the left is killed. For a command that only prints, that is the point of it. For one that changes things — a package operation, an extract, an in-place rewrite, a version-control step that stages many paths and then writes one reference — it stops the work wherever it had got to. How loudly depends on settings made elsewhere in the script, which is the part worth knowing: a bare pipeline reports only its last stage, so the status is the reader's zero and nothing says the writer died, while <code>pipefail</code> reports 141 and a per-stage status array names which stage it was. So it is detectable exactly where the file's own <code>set -eu</code> advice has been followed, and silent in a one-off command, inside a substitution, or in any <code>sh</code> script without it. Worse, a tool killed before its own bookkeeping does not recognise its own wreckage, so the recovery command reports nothing to recover.</li>
     <li><strong>A delegate that reports success is the wrong thing to make more rigorous.</strong> <a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a> already covered a run cut off mid-sentence. It now explains the one that finished, checked itself, and reported done about work it did not do — and why the two-stage review it prescribes is written as a fresh reviewer against the diff rather than as a stronger instruction to self-review. What moves the false-done rate is whether anything other than the delegate can observe the end state, by much more than the gap between a careful delegate and a sloppy one. So when the gate is inconvenient, the substitution to refuse is &quot;have the implementer check more carefully&quot;, and the one to reach for is any other observer of the same result. It also adds a forensic tell for the review itself: judging a claim by how it is written is close to guessing, because confidence is a property of prose — a false completion is characteristically a record of looking, with nothing in it that could have caused the effect being claimed.</li>
     <li><strong>Telling the author what to fix is not the same act as deciding the change is right.</strong> <a class="skill-link" href="/tbaguette-skills/skills/reviewing-code-deeply/"><code>reviewing-code-deeply</code></a> gains the failure that no measure of review participation can see. When the author will revise on request — and overwhelmingly when the author is something that rewrites on command — the cheap move is to say what the next version should contain, and it crowds out the expensive one of forming a verdict on this one. Comments keep arriving at a normal rate from an engaged reviewer, and the change is never actually judged. A steering comment is an instruction about the next revision; a review comment is a verdict on this one, and only the second can end in no.</li>
@@ -313,9 +314,10 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-11">11 Sep 2026</time>
-    <span class="notes__entry-title">Things that were still running, and things that had quietly stopped</span>
+    <span class="notes__entry-title">A log line that never fired, from an outside contribution — plus things still running, and things that had quietly stopped</span>
   </h3>
   <ul class="notes__bullets">
+    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> now covers the measurement you did not get.</strong> Its existing sections all read a result that came back — several anomalies at once, an exact null, a reading that contradicts itself, a guard that refused. The new passage reads an absence: you sweep a log for the signature of a behaviour, find nothing across the whole window, and conclude the behaviour never ran. Nothing is broken in that story, which is why it holds up. The emitter is correct and the behaviour did occur — the line just sits behind a condition the run never met. A memoised path logs while it builds an answer and is silent every time it serves one, so the log is loudest when the system is coldest and quietest under exactly the steady-state traffic you are usually investigating; a level-gated line needs a verbosity nobody turned on, a sampled one fires on a hundredth of the traffic, a once-per-process one fired before you started reading. The confidence is proportional to how carefully you searched, and a thorough sweep of a window the emitter was never armed in is worth nothing. The tell is the un-varied factor's, one section up: name the run in which that line would have been written. Then read the emitter's guard before reading its silence, and arm it — clear the cache, use a cold key, raise the level — so you have watched the line appear at least once.</li>
     <li><strong>A pipe can truncate the command, not just its output.</strong> <a class="skill-link" href="/tbaguette-skills/skills/portable-shell-scripting/"><code>portable-shell-scripting</code></a> now covers what happens when the reader on the right of a pipe exits first: the writer on the left is killed. For a command that only prints, that is the point of it. For one that changes things — a package operation, an extract, an in-place rewrite, a version-control step that stages many paths and then writes one reference — it stops the work wherever it had got to. How loudly depends on settings made elsewhere in the script, which is the part worth knowing: a bare pipeline reports only its last stage, so the status is the reader's zero and nothing says the writer died, while <code>pipefail</code> reports 141 and a per-stage status array names which stage it was. So it is detectable exactly where the file's own <code>set -eu</code> advice has been followed, and silent in a one-off command, inside a substitution, or in any <code>sh</code> script without it. Worse, a tool killed before its own bookkeeping does not recognise its own wreckage, so the recovery command reports nothing to recover.</li>
     <li><strong>A delegate that reports success is the wrong thing to make more rigorous.</strong> <a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a> already covered a run cut off mid-sentence. It now explains the one that finished, checked itself, and reported done about work it did not do — and why the two-stage review it prescribes is written as a fresh reviewer against the diff rather than as a stronger instruction to self-review. What moves the false-done rate is whether anything other than the delegate can observe the end state, by much more than the gap between a careful delegate and a sloppy one. So when the gate is inconvenient, the substitution to refuse is &quot;have the implementer check more carefully&quot;, and the one to reach for is any other observer of the same result. It also adds a forensic tell for the review itself: judging a claim by how it is written is close to guessing, because confidence is a property of prose — a false completion is characteristically a record of looking, with nothing in it that could have caused the effect being claimed.</li>
     <li><strong>Telling the author what to fix is not the same act as deciding the change is right.</strong> <a class="skill-link" href="/tbaguette-skills/skills/reviewing-code-deeply/"><code>reviewing-code-deeply</code></a> gains the failure that no measure of review participation can see. When the author will revise on request — and overwhelmingly when the author is something that rewrites on command — the cheap move is to say what the next version should contain, and it crowds out the expensive one of forming a verdict on this one. Comments keep arriving at a normal rate from an engaged reviewer, and the change is never actually judged. A steering comment is an instruction about the next revision; a review comment is a verdict on this one, and only the second can end in no.</li>
@@ -328,15 +330,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><strong>Republishing an artifact under a version it already carries splits your users in two.</strong> <a class="skill-link" href="/tbaguette-skills/skills/reproducible-environments/"><code>reproducible-environments</code></a> covered pinning by digest as something you do because someone else's registry is mutable. It now also covers the day you are the one making it mutable: a toolchain patch lands, the source has not changed, the rebuilt bytes differ, and re-uploading them under the existing version looks like no change at all. Where an update channel compares versions rather than digests, everyone already holding the old bytes never fetches and everyone arriving later does, so two populations run different code under one name and nothing anywhere records it. With the corollary to publish a versioned name alongside a moving one like <code>latest</code>, which is what makes the population countable afterwards.</li>
     <li><strong>An installer that is safe to re-run can be the thing undoing your settings.</strong> <a class="skill-link" href="/tbaguette-skills/skills/designing-for-idempotency/"><code>designing-for-idempotency</code></a> has always said to prefer an absolute write over a relative one. That is right for retries seconds apart and wrong for a setup step that runs again on next month's upgrade, after somebody deliberately changed the value — which is how a setting comes to turn itself back on after every update while the code review keeps finding a correctly written idempotent operation. New guidance on telling a default from an assertion when both look identical at the call site, and on the one question that says which you are holding. Its description now routes install and provisioning work here.</li>
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a>'s cross-project sweep no longer trusts its own coverage count.</strong> Counting the projects in scope and the projects actually read only catches a gap if the two numbers come from differently shaped queries; derive both from the same traversal and they agree by construction and certify the gap instead of finding it. Also: the projects a limited traversal silently drops are systematically the busiest ones, and the difference is worth reporting as a list of names rather than as a number.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-10">10 Sep 2026</time>
-    <span class="notes__entry-title">The log line that never fired, and the run it was never armed in</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> now covers the measurement you did not get.</strong> Its existing sections all read a result that came back — several anomalies at once, an exact null, a reading that contradicts itself, a guard that refused. The new passage reads an absence: you sweep a log for the signature of a behaviour, find nothing across the whole window, and conclude the behaviour never ran. Nothing is broken in that story, which is why it holds up. The emitter is correct and the behaviour did occur — the line just sits behind a condition the run never met. A memoised path logs while it builds an answer and is silent every time it serves one, so the log is loudest when the system is coldest and quietest under exactly the steady-state traffic you are usually investigating; a level-gated line needs a verbosity nobody turned on, a sampled one fires on a hundredth of the traffic, a once-per-process one fired before you started reading. The confidence is proportional to how carefully you searched, and a thorough sweep of a window the emitter was never armed in is worth nothing. The tell is the un-varied factor's, one section up: name the run in which that line would have been written. Then read the emitter's guard before reading its silence, and arm it — clear the cache, use a cold key, raise the level — so you have watched the line appear at least once.</li>
   </ul>
 </li>
 <li class="notes__entry">
@@ -603,6 +596,17 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> marks where its catch-up sweep stops working. Reading back through the conversation you are in is cheap and effective; recovering capture across conversations that already ended is not, because a lesson has no consistent surface form and a keyword sweep over finished sessions comes back nearly empty. The queue file is the only durable record that a moment happened. It also says to check for the harness's question tool rather than reading its absence off a list, since that gate is the one an unattended run may not substitute.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a> says which default to reach for when a layer genuinely cannot propagate a failure and has to put something in the slot. Substituting a default is already named as a defect; what the skill did not say is why some of those survive for months and others get caught the same afternoon. The ones that survive substitute the value a healthy system produces — the empty collection where the load failed, the zero where the read never happened, the <code>false</code> where the check could not run — so the wrong answer reads as good news and nobody investigates. Put in something no one could mistake for health, and carry the failure beside it.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> says what to do with the answer its own coverage check keeps returning. Before drafting a candidate you are told to search whether some skill already says it; what was missing is that on a library this size, &quot;yes, and better&quot; is the <em>ordinary</em> result. A session that hits coverage three or four times in a row starts reading its own filter as failure and goes hunting for something it can land instead — which is how the bar gets lowered by someone who never decided to lower it. Four candidates dropped for coverage is a pass that worked.</li>
+  </ul>
+</li>
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-03">3 Sep 2026</time>
+    <span class="notes__entry-title">Tidying a shared tree is worse than sweeping it</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/atomic-commits/"><code>atomic-commits</code></a> already said not to broad-stage a checkout you do not solely own: a wide <code>git add</code> commits someone else's in-progress work under your message. It now covers the move people actually reach for instead — clearing the tree first with <code>git stash -u</code>, <code>git clean -fd</code>, or a <code>restore</code>.</li>
+    <li>That is worse, because it removes the work rather than mis-attributing it and leaves no commit for its author to recover it from. And it is tempting for the opposite of the usual reason: stashing is the documented tidy step, so a rule that only warns against the careless option never reaches the person reaching for the careful one.</li>
+    <li>It is also the quietest failure in the section. A stash shows up in no view either party normally checks, so nobody notices until the author goes looking for work they assumed was still there. Ask the owner instead; where nobody answers, leave the edit alone and enumerate your own paths around it.</li>
   </ul>
 </li>
       </ol>
@@ -1363,7 +1367,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/designing-for-idempotency/" data-search-card data-search-terms="designing-for-idempotency use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues… designing systems">
   <span class="card__name-row">
     <span class="card__name">designing-for-idempotency</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T00:27:26.566302+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T02:27:26+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</p>
   <span class="card__foot">
@@ -1789,7 +1793,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/reproducible-environments/" data-search-card data-search-terms="reproducible-environments use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">reproducible-environments</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T00:27:26.566302+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T02:27:26+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt…</p>
   <span class="card__foot">
@@ -1833,7 +1837,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/tending-tbaguette/" data-search-card data-search-terms="tending-tbaguette use at the start of every conversation, in any project or repo… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T00:27:26.566302+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T02:27:26+02:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">
