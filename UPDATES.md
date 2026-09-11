@@ -53,6 +53,21 @@ Everything above the first `##` is preamble and is never rendered.
   to check where *not possible* invites nobody. `revalidating-decisions` still owns
   what a reader does with such a claim once it exists.
 
+- **`red-teaming-your-own-work` now audits the artifact you ship, not just the
+  one you built.** A build is written for the audience it has in development — the
+  author, a few testers, machines the author controls — and plenty of behaviour
+  that is right for that audience is a defect for the next one: a trial timer that
+  bricks the binary a stranger paid for, a counter hidden in system-looking
+  filenames that antivirus flags, a dev endpoint, a phone-home, verbose logging.
+  A normal review misses them because publication does not feel like a change to
+  the thing under review — shipping is "packaging". The new section asks a
+  different question of the finished artifact: what does it do on a stranger's
+  machine — what it writes and where, when it stops working, what it sends and to
+  whom. The tell is a mechanism whose message is addressed to the developer
+  (*recompile*, *dev build*) surfacing to someone who cannot act on it; the remedy
+  is to gate the dev-only behaviour behind an off-by-default flag, so the
+  shippable build is the default and the dev behaviour is the opt-in.
+
 ## 2026-09-11 — A log line that never fired, from an outside contribution — plus things still running, and things that had quietly stopped
 
 - **`diagnosing-before-fixing` now covers the measurement you did not get.**

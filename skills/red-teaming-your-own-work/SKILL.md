@@ -1,6 +1,6 @@
 ---
 name: red-teaming-your-own-work
-description: Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it, when nothing looks wrong and nothing has been tried to make it look wrong, before handing off work someone will act on, or after a previous delivery came back with a defect a single skeptical pass would have caught. Also use when a measurement has just confirmed a result you are about to act on, or when a search, sweep, benchmark, or experiment came back with nothing and that null is about to be reported as nothing being there. Also use when a draft cites another document, skill, specification, or API from memory rather than from a reopened copy. Covers adversarial self-review, attack checklists, re-testing a confirmed number for the shape rather than the point, reopening every cross-reference before shipping the claim it makes, bounding a null by the smallest effect the search could have seen, and bounded review passes.
+description: Use when a change, plan, design, recommendation, or answer is finished and has been examined only by whoever produced it, when nothing looks wrong and nothing has been tried to make it look wrong, before handing off work someone will act on, or after a previous delivery came back with a defect a single skeptical pass would have caught. Also use when a measurement has just confirmed a result you are about to act on, when a search or benchmark came back with nothing and that null is about to be reported as nothing being there, when a draft cites a document, spec, or API from memory rather than a reopened copy, or when an artifact built for the author and a few testers is about to be published to end users. Covers adversarial self-review, attack checklists, re-testing a confirmed number for its shape, reopening every cross-reference, auditing what a shipped artifact does on a stranger’s machine, bounding a null by the smallest effect the search could have seen, and bounded review passes.
 ---
 
 # Red-teaming your own work
@@ -42,6 +42,37 @@ An eighth when the work is an addition: delete it mentally and ask what breaks. 
 The weak part is already flagged in your own head — you know the rough edge and the TODO, and reviewing it returns what you already knew. Defects concentrate where attention stopped early: the obviously-correct core, the part you would skip in someone else's review, the piece written fastest because it was familiar.
 
 Operational rule: name the two pieces you would not bother reviewing, and review exactly those. The confidence that makes them skippable is what left them unexamined.
+
+## The artifact you ship has a different audience than the one you built
+
+A build is written for the audience it has while it is being built: the author, a
+handful of testers, machines the author controls, a few days of use. Plenty of
+behaviour is correct for that audience and hostile for the next one. A timer that
+disables the binary after three days keeps a test build from lingering; the same
+timer bricks the product a paying stranger installed. A counter that hides its
+state in system-looking filenames so a reinstall cannot reset it is a reasonable
+trial-enforcement hack and an antivirus flag the moment it reaches a machine the
+author does not own. Verbose logging, a hardcoded dev endpoint, a test backdoor, a
+phone-home that was fine on the author's network — each is a decision that was
+right for the development audience and never re-examined when the audience changed.
+
+The reason a normal review misses all of these is that publication does not feel
+like a change to the thing under review. The code is the code; shipping is
+"packaging". So the audit that catches them is not a code review — it is a
+different question asked of the finished artifact: **what does this do on a
+stranger's machine?** Not "does it work" but what it writes and where, when it
+stops working, what it sends and to whom, what it leaves behind that a reinstall
+will not clear. Every answer that assumes a machine the author controls is a
+defect the moment the artifact leaves.
+
+The tell that you are standing on one is a mechanism whose user-facing message is
+addressed to the developer — *recompile to continue*, *dev build*, *trial
+expired* — surfacing to someone who cannot act on it. The remedy is the same in
+every case and it is an ordering, not a deletion: gate the development-audience
+behaviour behind an off-by-default build flag, so the shippable build is the
+default and the dev-only behaviour is the thing you opt into, never the reverse.
+A kill switch that ships enabled because disabling it was one more step is the
+failure this catches.
 
 ## A reference to another document is a claim, and it reads as a verified one
 
@@ -160,6 +191,7 @@ A pass that comes back clean, on work about to ship, is not evidence there is no
 | A large change reviews clean in one sitting | Reviewed the artifact you remember writing, not the one that exists |
 | A citation is wrong in a way that survived two reviews | Nobody opened the cited file, because a reference reads as something already checked |
 | A vague reference was sharpened into a precise one that is false | Naming the mechanism felt like verifying it, and the reviewer read it the same way |
+| A shipped build bricks itself, phones home, or trips antivirus on a user machine | A development-audience behaviour was never re-examined when publication changed the audience |
 
 ## Red flags
 
@@ -170,3 +202,4 @@ A pass that comes back clean, on work about to ship, is not evidence there is no
 - Reviewing what you just wrote, in the order you wrote it, immediately after writing it
 - A cited document nobody in the review opened, including you
 - "It definitely says that" about a file you have not had open during this piece of work
+- "Shipping is just packaging" — treating publication as a step that changes nothing about the artifact under review
