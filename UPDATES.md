@@ -162,6 +162,25 @@ Everything above the first `##` is preamble and is never rendered.
   that is the day a reader's clock measures. A note left under an earlier date sits below
   the entry already at the top, which on the site means inside the archive fold, published
   and seen by nobody. The first bullet of this entry spent its first day exactly there.
+- **`reproducible-environments` covers the script that was executable and still got lost.**
+  Its rule that setup must be code rather than prose has a converse: a script that
+  reproduces an expensive step is not source while it lives in a scratch or temp directory,
+  because that directory is designed to be emptied and will be. The prose write-up survives
+  the reboot; the recipe it describes does not, and the next rebuild fails on a file you
+  wrote yourself. The test for where a script belongs is whether you would mind deriving it
+  again, and a scratch script that has worked once moves into the repository on the spot.
+- **`secrets-hygiene` names one more place a secret travels: the platform's own backup.** A
+  key or identity a program generates on the device and never ships anywhere is still copied
+  out by the platform's backup and sync, which defaults to the whole data directory and
+  restores it onto a reinstall or a new device — so a signing key round-trips through
+  someone else's servers and a fresh install comes up already paired to a peer that has
+  forgotten it. Exclude by name anything that identifies *this install* rather than *this
+  user*; the tell of a restore is state present before the code that writes it has run.
+- **`tending-tbaguette`'s sweep now separates repositories that are not yours from ones that
+  were quiet.** Searching deep enough to stop dropping nested projects also reaches vendored
+  upstream trees and reference mirrors, which inflate every count and — the day one syncs —
+  flood the cluster step with one project's subjects written by many hands. Classify by
+  authorship rather than by location, matching on the email rather than the name.
 
 ## 2026-09-10 — The output you kept, and the file that came back larger
 

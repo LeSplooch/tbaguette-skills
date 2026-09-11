@@ -1,6 +1,6 @@
 ---
 name: secrets-hygiene
-description: Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline, container image, or client app, or finding one in a commit, log line, screenshot, ticket, or error message. Also use when a credential would have to pass through you on its way to a service, when something you are about to run needs a request authenticated and the choice looks like handing it the credential or not running it, or when a transcript, context, or session summary may have held one. Covers leaked credential response, revocation and rotation, secret scanning, environment variable and dotenv handling, and pre-publication checks on a repository. Also use when a scanner's finding turns out to be your own fixture, or when a detector you wrote keeps flagging something legitimate.
+description: Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline, container image, or client app, letting a program generate one on the device it runs on, or finding one in a commit, log line, screenshot, ticket, or error message. Also use when a credential would have to pass through you on its way to a service, when something you are about to run needs a request authenticated and the choice looks like handing it the credential or not running it, or when a transcript, context, or session summary may have held one. Covers leaked credential response, revocation and rotation, secret scanning, environment variable and dotenv handling, and pre-publication checks on a repository. Also use when a scanner's finding turns out to be your own fixture, or when a detector you wrote keeps flagging something legitimate.
 ---
 
 # Secrets Hygiene
@@ -36,6 +36,7 @@ A secret's only property is that its distribution is controlled, so every surfac
 | Chat and tickets | Search-indexed indefinitely, broad read access, exported during discovery |
 | A conversation, transcript, or model context | Re-sent verbatim on every later turn, fanned out to session stores and request logs, and paraphrased into summaries and notes that outlive the session. Unlike logs and CI output, there is no masking step to fail here, because there is no masking step |
 | Environment of a shared process | Readable by every child process and by anything that dumps the environment — better than a committed file, worse than a fetch on demand |
+| An application's own private storage, on a platform that backs it up | A key or identity the program generated on the device and never shipped anywhere is still copied out by the platform's backup and sync, which defaults to the whole data directory and restores it onto a reinstall or a new device. A signing key round-trips through someone else's servers, and a "fresh" install comes up already paired to a peer that has since forgotten it. Exclude, by name, anything that identifies *this install* rather than *this user*; the tell of a restore is state present before the code that writes it has run, timestamped at the epoch |
 
 ## Injection at runtime, not at build time
 
@@ -131,6 +132,7 @@ Keeping a secret out of output that has already received it is a separate discip
 | The leak response began with a history rewrite | Revocation postponed behind the slowest and least effective step |
 | Ignore rules treated as the control | Ignore files do not cover already-tracked files, other surfaces, or anyone's local tooling |
 | Same key in staging and production | One credential spanning environments; the weakest environment sets the security of the strongest |
+| A reinstall came up already paired, or a peer refuses a "new" device | The platform's backup restored the install's identity and key from a previous install; nothing excluded them, so a per-install secret became per-user data |
 | A credential was pasted into the conversation so it could be placed | The conduit records whatever it carries; that value is now burned and needs revoking, not placing |
 | The team skims the scanner's output | It has a standing false positive, and the usual source is a fixture shaped like a real credential because the code under test parses credentials |
 

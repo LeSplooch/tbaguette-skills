@@ -1,6 +1,6 @@
 ---
 name: reproducible-environments
-description: Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt, when onboarding needs undocumented setup steps, when a build breaks though no commit changed, when two builds of the same commit produce different artifacts, or when choosing between a version manager, a container, and a hermetic build. Covers pinning, lockfiles, toolchain declaration, isolation, and determinism. Also use when a verification step launches the real built artifact, or when a check that was supposed to touch nothing may have run against a real profile, store, or credential.
+description: Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt, when onboarding needs undocumented setup steps, when a build breaks though no commit changed, when two builds of the same commit produce different artifacts, when a script or recipe that reproduces an expensive step lives only in a scratch or temp directory, or when choosing between a version manager, a container, and a hermetic build. Covers pinning, lockfiles, toolchain declaration, isolation, and determinism. Also use when a verification step launches the real built artifact, or when a check that was supposed to touch nothing may have run against a real profile, store, or credential.
 ---
 
 # Reproducible environments
@@ -44,6 +44,8 @@ A version a human can get wrong without anything failing is a suggestion, not a 
 The rung that matters is the one where a mismatch becomes an error. Assert the expected toolchain version at the start of the build and fail with the exact command to fix it — a silent 2% of contributors on the wrong compiler produces bug reports nobody can reproduce.
 
 The environment definition and its documentation must be the same artifact. Prose setup steps that are not also executable have a half-life of weeks: the code moves, the page does not, and nothing fails when they disagree.
+
+The converse fails the same way, and it is the one that catches people who already know the rule. A script that reproduces an expensive step — a staging tree that took four crashes to get right, a packaging sequence nobody wants to rediscover — is executable and still not source while it lives in a scratch or temp directory, because that directory is designed to be emptied and a reboot or a session end will empty it. The prose write-up in the repository survives; the thing it describes does not, and the next rebuild fails on a missing file that you wrote yourself. That failure is the scratch directory doing its job rather than a bug. The test for where a script belongs is not whether it is temporary but whether you would mind deriving it again: the moment a scratch script has reproduced a hard-won step once, it moves into the repository beside whatever tooling the project already keeps, and the docs point at it, whether or not anyone asked for a tool.
 
 ## Lockfiles: the promise and its limits
 
@@ -111,6 +113,7 @@ Point every variable the artifact reads at a scratch directory, unset the fallba
 | Lockfile committed, versions still drift | the install command is allowed to update it and CI never runs frozen |
 | Fails only overnight or on one continent | unpinned timezone or locale |
 | Onboarding takes days | setup lives in prose that has never been executed |
+| A rebuild fails on a missing file you wrote | the script that reproduced the step lived in a scratch directory, and the scratch directory did its job |
 | The verification step's own runs show up in the production audit trail | The check launched the real artifact with no environment set, so it resolved the operator's real profile through the home-directory fallback |
 
 ## Red flags

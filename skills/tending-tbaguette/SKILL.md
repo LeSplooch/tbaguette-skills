@@ -300,6 +300,26 @@ instrument under suspicion comes back looking exactly like a coverage number, an
 catches that. A list of names does, at a glance: one of those three was the bare word `NOT`, which
 is not a path to anything.
 
+**Widening the enumeration until it drops nothing pulls in repositories that are not your
+work, and they are a third class rather than quiet members.** The fix for the depth-limit
+bias above is to search deeper, and one level deeper than the nested product is the vendored
+upstream: a platform source tree that is itself a few dozen repositories, a mirror kept for
+reference, a third-party checkout that happens to sit under the code root. One pass that
+searched to depth four found forty-six repositories where the previous pass had found
+twenty-one, and twenty-four of the new ones were components of one upstream operating-system
+tree with no commit by the identity doing the work in any of them inside the window. Two
+things go wrong if they are filed as members that simply had a quiet week. Every count derived
+from the population — the silent members especially — is wrong by that block, so the coverage
+arithmetic certifies a gap that is really an absence. And the day a mirror syncs inside the
+window, the subject-line sweep fills with hundreds of judgment-shaped subjects written by many
+hands about one project — which the cluster step, built to reward the same shape across
+*unrelated* repositories, reads as the strongest possible signal. Classify by authorship, not
+by location: a repository with no commit by the working identity in the window is *foreign*,
+reported by name in its own count, and its subjects never enter the cluster.
+`git log --since=<window> --author=<email>` is the whole test, and it runs in the same loop
+that already reads the subjects — match on the email rather than the name, because the name
+one identity commits under can differ from checkout to checkout while the email does not.
+
 **Cluster before opening anything, because the repeat is the whole point.** The
 bar above says a shape appearing in two unrelated projects is the strongest
 evidence it can get, and a pass that opens one body at a time can never see it:
