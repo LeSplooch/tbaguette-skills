@@ -129,7 +129,10 @@ was satisfied are indistinguishable from the inside. Copy every stated constrain
 into the record verbatim at the first checkpoint, and where the system offers a
 durable form — a configuration rule, a deny entry, a file the enforcer reads
 rather than infers — put it there too. A sentence is how a bound gets
-communicated. It is not how a bound gets kept.
+communicated. It is not how a bound gets kept. And where the bound has to live in
+prose after all, put it at the top of the file that carries it — every mechanism
+that shortens context does so from the end, which `writing-durable-docs` treats as
+an ordering rule rather than a style one.
 
 ## Where the state lives
 

@@ -24,6 +24,23 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-12 — The rule at the bottom of the file, and the "not supported" nobody checked
+
+- **`writing-durable-docs` now treats where a rule sits in a document as a
+  reliability property, not a style one.** A document a harness carries across a
+  compaction or a handoff is shortened on the way, and every mechanism you did
+  not choose shortens it from the end — a compaction keeps the opening of each
+  file it re-attaches, a summarised handoff keeps the opening and paraphrases the
+  rest, a capped listing keeps whatever came first. So a hard constraint written
+  after the explanation that motivates it is in force for the first hour of a
+  long run and silently absent after the first compaction, while the overview
+  survives. The new section says to put first what must hold last — constraints,
+  stop conditions, the things a later reader may not decide for itself — and to
+  put the reasoning after the rule rather than before it, since the reasoning is
+  what a person needs and the rule is what a machine needs, and only one of the
+  two has to survive the cut. `checkpointing-long-runs` now points there from its
+  constraint paragraph: a bound that has to live in prose lives at the top.
+
 ## 2026-09-11 — A log line that never fired, from an outside contribution — plus things still running, and things that had quietly stopped
 
 - **`diagnosing-before-fixing` now covers the measurement you did not get.**

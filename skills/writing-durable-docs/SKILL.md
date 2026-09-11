@@ -1,6 +1,6 @@
 ---
 name: writing-durable-docs
-description: Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material, architecture notes — when existing docs have gone stale or contradict the code, when deciding where a doc belongs or whether to delete one, when a single page is trying to be a tutorial and a reference at once, or when the same document exists in two places — a repo and a site, two repos, a wiki and a README — and nothing generates or diffs one against the other. Covers doc types, rationale over mechanics, colocation, executable examples, and stale-doc removal.
+description: Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material, architecture notes — when existing docs have gone stale or contradict the code, when deciding where a doc belongs or whether to delete one, when a single page is trying to be a tutorial and a reference at once, or when the same document exists in two places — a repo and a site, two repos, a wiki and a README — and nothing generates or diffs one against the other. Also use when writing a document a harness will carry across a compaction or handoff — a skill body, an agent instruction file, a plan a resumed session picks up — where anything past the opening may not survive the crossing. Covers doc types, rationale over mechanics, colocation, executable examples, stale-doc removal, and ordering rules so that what must hold longest comes first.
 ---
 
 # Writing Durable Docs
@@ -62,6 +62,14 @@ They break differently, too, and that is what makes them slip. A positive claim 
 
 The defense is to invert the check rather than execute the doc. Assert the absence the sentence claims, as a test that fails when the forbidden thing appears: grep the built artifact for network calls, fail the build on a non-empty dependency list, assert the written-paths set. That drops an uncheckable prose promise to the bottom rung, where drift breaks a build. Where no such test is possible, the claim needs an owner and a review date like any unowned doc — and it needs to be written down somewhere the person adding the forbidden thing will actually pass, which is next to the code, not in the docs directory.
 
+## Position is a reliability property
+
+A document a person reads has one order, the one they read it in, and the only cost of putting a rule near the end is that fewer people get there. A document a harness reads on your behalf — a skill body, an agent instruction file, a system prompt fragment, a plan a resumed session re-reads — has a second reader, and that reader does not get to the end. Every mechanism that carries context across a boundary shortens the document, and the ones you did not choose shorten it **from the end**: a compaction keeps the opening of each file it re-attaches, a summarised handoff keeps the opening and paraphrases the rest, a capped listing keeps the entries that came first, a truncated tool result keeps its head. None of those mechanisms is told which sentence was load-bearing. They keep whatever came first.
+
+So order stops being a readability choice and becomes a statement about which rules survive the run that needs them most. A constraint written at the bottom of an instruction file is in force for the first hour and silently absent after the first compaction, while the file's opening — usually its overview and the motivation for what follows — is the part that does. The failure is invisible from the inside, because the document still exists and still answers; it is just answering from a shorter version of itself than the one you wrote.
+
+Write for that reader by putting first what must hold last: the hard constraints, the stop conditions, the things a later reader is not allowed to decide for themselves. Explanation, examples, and the reasoning behind a rule go after the rule, not before it — the reasoning is what a person needs to agree with the rule and the rule is what a machine needs to obey it, and only one of the two has to survive truncation. Then read the document's opening on its own — you cannot know where the cut will fall, so assume it keeps less than half — and ask whether an executor holding only that would still be bound by everything you meant to bind it with. If a rule you would not want dropped is below that line, moving it is the fix; padding the top with the reasoning that motivated it is not, because the padding is what pushes the rule out.
+
 ## A mirror with no generation step is a fork
 
 The same document in two locations is two documents. They drift from the system independently, and from each other, and nothing enforces the mirror because nothing knows it is one. Generate one copy from the other, or diff them in CI; those are the only two states that stay true. When you suspect drift and want it located cheaply, count occurrences of the load-bearing term in each copy — a large asymmetry points straight at the paragraph that moved in one and not the other.
@@ -96,6 +104,7 @@ The same document in two locations is two documents. They drift from the system 
 | Team writes docs, then answers the same questions in chat anyway | Doc answers the question the author had, not the one readers arrive with |
 | A published doc denies a feature the software shipped weeks ago | A negative claim, which no example or generated reference can ever check |
 | Two copies of one document disagree | Mirrored by hand, so there is no generation step and no diff to fail |
+| An instruction file was obeyed for an hour and ignored for the rest of the run | The rule sat at the end of a document that gets truncated from the end each time context is carried forward |
 
 ## Red flags
 
@@ -108,3 +117,4 @@ The same document in two locations is two documents. They drift from the system 
 - Documenting a workaround instead of deleting the reason for it
 - A document promising the absence of something, with no test that fails when it appears
 - The same guide living at two paths, neither generated from the other
+- A hard constraint below the explanation that motivates it, in a file a harness will re-read after compaction
