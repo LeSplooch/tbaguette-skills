@@ -157,6 +157,11 @@ Everything above the first `##` is preamble and is never rendered.
   they agree by construction and certify the gap instead of finding it. Also: the projects a
   limited traversal silently drops are systematically the busiest ones, and the difference
   is worth reporting as a list of names rather than as a number.
+- **`tending-tbaguette` tells contributors what happens to the date on their note.** Date
+  the `UPDATES.md` entry the day you write it, and expect it to move to the day it lands —
+  that is the day a reader's clock measures. A note left under an earlier date sits below
+  the entry already at the top, which on the site means inside the archive fold, published
+  and seen by nobody. The first bullet of this entry spent its first day exactly there.
 
 ## 2026-09-10 — The output you kept, and the file that came back larger
 

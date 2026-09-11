@@ -536,7 +536,13 @@ The shape, so this file still says what happens:
 2. Re-evaluate the candidate against the bar with fresh eyes, scrub applied
    again. One that no longer holds up gets dropped with a one-line note — that
    is the filter working, not a failure.
-3. Make the edit, then write the update note in `UPDATES.md`.
+3. Make the edit, then write the update note in `UPDATES.md`. Date it the day
+   you write it — the only date you can know — and expect the maintainer to
+   move it to the day it lands. The date a reader's clock measures is the merge
+   day, and a note left under an earlier date sits below the entry already at
+   the top, which on the site means inside the archive fold: published, and
+   seen by nobody. A cleanly merging note is the one this happens to, because
+   nothing forces anyone to look at where it landed.
 4. Run `python3 scripts/run_tests.py`, fully green — and read what green
    means here. The suite checks the *filing*: registries agreeing, counts
    matching, manifests at one version, the update note well-formed. Nothing in
