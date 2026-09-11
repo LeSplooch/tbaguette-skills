@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.24</span>
+      <span class="wordmark-version" dir="ltr">v1.1.25</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-11T22:15:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-11T22:15:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-11T22:17:30+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-11T22:17:30Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -140,25 +140,25 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/checkpointing-long-runs/" data-fresh-at="2026-09-11T22:15:14.491153+00:00" draggable="false" style="--cf-offset: 0">
-  <span class="card__name-row">
-    <span class="card__name">checkpointing-long-runs</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T22:15:14.491153+00:00">Updated</span>
-  </span>
-  <p class="card__summary">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files…</p>
-  <span class="card__foot">
-    <span class="tag">Planning and delegation</span>
-    <span class="card__arrow" aria-hidden="true">→</span>
-  </span>
-</a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/writing-durable-docs/" data-fresh-at="2026-09-11T22:15:14.491153+00:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/writing-durable-docs/" data-fresh-at="2026-09-11T22:17:30.148052+00:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">writing-durable-docs</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T22:15:14.491153+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T22:17:30.148052+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material…</p>
   <span class="card__foot">
     <span class="tag">Communicating</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/checkpointing-long-runs/" data-fresh-at="2026-09-12T00:15:14+02:00" draggable="false" style="--cf-offset: 1">
+  <span class="card__name-row">
+    <span class="card__name">checkpointing-long-runs</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-12T00:15:14+02:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files…</p>
+  <span class="card__foot">
+    <span class="tag">Planning and delegation</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -287,6 +287,7 @@ Flag one more thing, because it applies to this very conversation: this session 
   </h3>
   <ul class="notes__bullets">
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/writing-durable-docs/"><code>writing-durable-docs</code></a> now treats where a rule sits in a document as a reliability property, not a style one.</strong> A document a harness carries across a compaction or a handoff is shortened on the way, and every mechanism you did not choose shortens it from the end — a compaction keeps the opening of each file it re-attaches, a summarised handoff keeps the opening and paraphrases the rest, a capped listing keeps whatever came first. So a hard constraint written after the explanation that motivates it is in force for the first hour of a long run and silently absent after the first compaction, while the overview survives. The new section says to put first what must hold last — constraints, stop conditions, the things a later reader may not decide for itself — and to put the reasoning after the rule rather than before it, since the reasoning is what a person needs and the rule is what a machine needs, and only one of the two has to survive the cut. <a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> now points there from its constraint paragraph: a bound that has to live in prose lives at the top.</li>
+    <li><strong>The same skill now names the negative claim that closes a door.</strong> Its section on claims no build can check covered promises about your own software — <em>sends nothing, stores nothing</em> — which go false when someone adds the thing. A new passage covers the other kind: <em>the platform has no such field, the API cannot page</em>, written to explain a design and read by every later reader as a reason not to try. No inverted test can catch it, because the absence is in a system you do not own, and it is often wrong on the day it is written. The rule: a negative claim about a dependency carries the spec section, the version, or the command that was run — or says <code>not checked</code>, which invites the next reader to check where <em>not possible</em> invites nobody. <a class="skill-link" href="/tbaguette-skills/skills/revalidating-decisions/"><code>revalidating-decisions</code></a> still owns what a reader does with such a claim once it exists.</li>
   </ul>
 </li>
   </ol>
@@ -306,6 +307,7 @@ Flag one more thing, because it applies to this very conversation: this session 
   </h3>
   <ul class="notes__bullets">
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/writing-durable-docs/"><code>writing-durable-docs</code></a> now treats where a rule sits in a document as a reliability property, not a style one.</strong> A document a harness carries across a compaction or a handoff is shortened on the way, and every mechanism you did not choose shortens it from the end — a compaction keeps the opening of each file it re-attaches, a summarised handoff keeps the opening and paraphrases the rest, a capped listing keeps whatever came first. So a hard constraint written after the explanation that motivates it is in force for the first hour of a long run and silently absent after the first compaction, while the overview survives. The new section says to put first what must hold last — constraints, stop conditions, the things a later reader may not decide for itself — and to put the reasoning after the rule rather than before it, since the reasoning is what a person needs and the rule is what a machine needs, and only one of the two has to survive the cut. <a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> now points there from its constraint paragraph: a bound that has to live in prose lives at the top.</li>
+    <li><strong>The same skill now names the negative claim that closes a door.</strong> Its section on claims no build can check covered promises about your own software — <em>sends nothing, stores nothing</em> — which go false when someone adds the thing. A new passage covers the other kind: <em>the platform has no such field, the API cannot page</em>, written to explain a design and read by every later reader as a reason not to try. No inverted test can catch it, because the absence is in a system you do not own, and it is often wrong on the day it is written. The rule: a negative claim about a dependency carries the spec section, the version, or the command that was run — or says <code>not checked</code>, which invites the next reader to check where <em>not possible</em> invites nobody. <a class="skill-link" href="/tbaguette-skills/skills/revalidating-decisions/"><code>revalidating-decisions</code></a> still owns what a reader does with such a claim once it exists.</li>
   </ul>
 </li>
 <li class="notes__entry">
@@ -863,7 +865,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/checkpointing-long-runs/" data-search-card data-search-terms="checkpointing-long-runs use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files… planning and delegation">
   <span class="card__name-row">
     <span class="card__name">checkpointing-long-runs</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T22:15:14.491153+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-12T00:15:14+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files…</p>
   <span class="card__foot">
@@ -1660,7 +1662,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/writing-durable-docs/" data-search-card data-search-terms="writing-durable-docs use when writing or restructuring documentation — readmes, guides, api references, onboarding material… communicating">
   <span class="card__name-row">
     <span class="card__name">writing-durable-docs</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T22:15:14.491153+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T22:17:30.148052+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material…</p>
   <span class="card__foot">

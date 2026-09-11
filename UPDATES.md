@@ -41,6 +41,18 @@ Everything above the first `##` is preamble and is never rendered.
   two has to survive the cut. `checkpointing-long-runs` now points there from its
   constraint paragraph: a bound that has to live in prose lives at the top.
 
+- **The same skill now names the negative claim that closes a door.** Its
+  section on claims no build can check covered promises about your own software
+  — *sends nothing, stores nothing* — which go false when someone adds the thing.
+  A new passage covers the other kind: *the platform has no such field, the API
+  cannot page*, written to explain a design and read by every later reader as a
+  reason not to try. No inverted test can catch it, because the absence is in a
+  system you do not own, and it is often wrong on the day it is written. The rule:
+  a negative claim about a dependency carries the spec section, the version, or
+  the command that was run — or says `not checked`, which invites the next reader
+  to check where *not possible* invites nobody. `revalidating-decisions` still owns
+  what a reader does with such a claim once it exists.
+
 ## 2026-09-11 — A log line that never fired, from an outside contribution — plus things still running, and things that had quietly stopped
 
 - **`diagnosing-before-fixing` now covers the measurement you did not get.**

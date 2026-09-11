@@ -1,6 +1,6 @@
 ---
 name: writing-durable-docs
-description: Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material, architecture notes — when existing docs have gone stale or contradict the code, when deciding where a doc belongs or whether to delete one, when a single page is trying to be a tutorial and a reference at once, or when the same document exists in two places — a repo and a site, two repos, a wiki and a README — and nothing generates or diffs one against the other. Also use when writing a document a harness will carry across a compaction or handoff — a skill body, an agent instruction file, a plan a resumed session picks up — where anything past the opening may not survive the crossing. Covers doc types, rationale over mechanics, colocation, executable examples, stale-doc removal, and ordering rules so that what must hold longest comes first.
+description: Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material, architecture notes — when existing docs have gone stale or contradict the code, when deciding where a doc belongs or whether to delete one, when a doc is about to state that a platform or dependency cannot do something, when a single page is trying to be a tutorial and a reference at once, or when the same document exists in two places — a repo and a site, two repos, a wiki and a README — and nothing generates or diffs one against the other. Also use when writing a document a harness will carry across a compaction or handoff — a skill body, an agent instruction file, a plan a resumed session picks up — where anything past the opening may not survive the crossing. Covers doc types, rationale over mechanics, colocation, executable examples, stale-doc removal, and ordering rules so that what must hold longest comes first.
 ---
 
 # Writing Durable Docs
@@ -62,6 +62,10 @@ They break differently, too, and that is what makes them slip. A positive claim 
 
 The defense is to invert the check rather than execute the doc. Assert the absence the sentence claims, as a test that fails when the forbidden thing appears: grep the built artifact for network calls, fail the build on a non-empty dependency list, assert the written-paths set. That drops an uncheckable prose promise to the bottom rung, where drift breaks a build. Where no such test is possible, the claim needs an owner and a review date like any unowned doc — and it needs to be written down somewhere the person adding the forbidden thing will actually pass, which is next to the code, not in the docs directory.
 
+There is a second kind of negative claim, and it is worse, because it is about a system you do not own. *The platform exposes no change-region metadata. The API has no way to page. The driver cannot report that field.* A sentence like that is written to explain a design, and it reads as a description of the world; what it usually records is that the author did not find the capability, which is a fact about one afternoon's search. An inverted test cannot save it — there is nothing in your own artifact to assert the absence of — and it decays in the opposite direction from a promise: a promise about your software goes false when someone adds the thing, while a claim about someone else's is often false on the day it is written, and when it was true it goes false with no diff in your repository at all, because the dependency gained what the sentence denies. Nobody re-checks, because the sentence is the reason the work was never started. The cost is not a misled user but a door closed to every later reader who would have tried.
+
+So a negative claim about a dependency carries its evidence or admits it has none: the specification section, the API version, the command that was run and what it printed — or the words *not checked*. That phrasing is honest, and it invites the next reader to check; *not possible* invites nobody. `revalidating-decisions` owns what a reader does with such a claim once it is recorded; the writer's half is to make it a claim with a date and a source, or to make it visibly a guess.
+
 ## Position is a reliability property
 
 A document a person reads has one order, the one they read it in, and the only cost of putting a rule near the end is that fewer people get there. A document a harness reads on your behalf — a skill body, an agent instruction file, a system prompt fragment, a plan a resumed session re-reads — has a second reader, and that reader does not get to the end. Every mechanism that carries context across a boundary shortens the document, and the ones you did not choose shorten it **from the end**: a compaction keeps the opening of each file it re-attaches, a summarised handoff keeps the opening and paraphrases the rest, a capped listing keeps the entries that came first, a truncated tool result keeps its head. None of those mechanisms is told which sentence was load-bearing. They keep whatever came first.
@@ -104,6 +108,7 @@ The same document in two locations is two documents. They drift from the system 
 | Team writes docs, then answers the same questions in chat anyway | Doc answers the question the author had, not the one readers arrive with |
 | A published doc denies a feature the software shipped weeks ago | A negative claim, which no example or generated reference can ever check |
 | Two copies of one document disagree | Mirrored by hand, so there is no generation step and no diff to fail |
+| A capability the design doc says the platform lacks turns out to exist, and the implementation was never attempted | A negative claim about a dependency written from memory, with no source, read by every later reader as a reason not to try |
 | An instruction file was obeyed for an hour and ignored for the rest of the run | The rule sat at the end of a document that gets truncated from the end each time context is carried forward |
 
 ## Red flags
@@ -116,5 +121,6 @@ The same document in two locations is two documents. They drift from the system 
 - Keeping a stale page "for reference"
 - Documenting a workaround instead of deleting the reason for it
 - A document promising the absence of something, with no test that fails when it appears
+- "The platform does not support X" with no version, spec section, or command beside it
 - The same guide living at two paths, neither generated from the other
 - A hard constraint below the explanation that motivates it, in a file a harness will re-read after compaction
