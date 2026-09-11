@@ -116,6 +116,27 @@ Everything above the first `##` is preamble and is never rendered.
   push had worked. Record what actually happened, because the repository's state never
   will.
 
+## 2026-09-10 — The log line that never fired, and the run it was never armed in
+
+- **`diagnosing-before-fixing` now covers the measurement you did not get.**
+  Its existing sections all read a result that came back — several anomalies at
+  once, an exact null, a reading that contradicts itself, a guard that refused.
+  The new passage reads an absence: you sweep a log for the signature of a
+  behaviour, find nothing across the whole window, and conclude the behaviour
+  never ran. Nothing is broken in that story, which is why it holds up. The
+  emitter is correct and the behaviour did occur — the line just sits behind a
+  condition the run never met. A memoised path logs while it builds an answer
+  and is silent every time it serves one, so the log is loudest when the system
+  is coldest and quietest under exactly the steady-state traffic you are usually
+  investigating; a level-gated line needs a verbosity nobody turned on, a
+  sampled one fires on a hundredth of the traffic, a once-per-process one fired
+  before you started reading. The confidence is proportional to how carefully
+  you searched, and a thorough sweep of a window the emitter was never armed in
+  is worth nothing. The tell is the un-varied factor's, one section up: name the
+  run in which that line would have been written. Then read the emitter's
+  guard before reading its silence, and arm it — clear the cache, use a cold
+  key, raise the level — so you have watched the line appear at least once.
+
 ## 2026-09-10 — The output you kept, and the file that came back larger
 
 - **`confirming-before-claiming-done` now covers what a `tail` takes away.** It
