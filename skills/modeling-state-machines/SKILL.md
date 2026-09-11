@@ -1,6 +1,6 @@
 ---
 name: modeling-state-machines
-description: Use when something has a lifecycle — order, job, connection, upload, session, subscription, device, workflow step — or when several booleans and flags describe one thing. Also for status fields, impossible flag combinations, records stuck in a status forever, unexplained state changes, a crash partway through a transition, timeouts and cancellation, and adding or renaming a state that is already persisted.
+description: Use when something has a lifecycle — order, job, connection, upload, session, subscription, device, workflow step — or when several booleans and flags describe one thing. Also for status fields, impossible flag combinations, records stuck in a status forever, unexplained state changes, a crash partway through a transition, timeouts and cancellation, and adding or renaming a state that is already persisted. Also use when a protective or latching state — a tripped breaker, a lockout, a pairing or a binding — has no exit reachable by the party it is holding.
 ---
 
 # Modeling state machines
@@ -38,6 +38,7 @@ Three booleans encode eight combinations; if only five are real, you shipped thr
 - Every cell needs a decided answer for a *duplicate* event: the second `cancel` on a cancelled order is usually a successful no-op, occasionally a rejection, never undefined. At-least-once delivery guarantees you will get duplicates.
 - **Timeouts and cancellation are events producing states, never ambient conditions.** `Expired` is a state. "Created over 30 minutes ago and still pending" computed at read time is not: two readers can disagree, and nothing fires the side effects of expiring. If a timeout matters, something must actively drive the transition — a scheduled sweep, a timer, or a lazy check that *writes*.
 - Every non-terminal state needs an exit: a timeout, a retry limit, or a manual override. **A state with no automatic exit is where entities pile up forever**; audit for it explicitly, because the symptom appears months later as a support queue.
+- **Name the actor who clears each exit, and what they press.** "A manual override" satisfies the line above while being, for the party actually stuck, no exit at all — an operator with database access is not a route a user has. This bites hardest on protective states, because entering one is the designed behaviour and leaving it is the afterthought: a breaker that trips with no reset control, a pairing or binding nothing in the product can clear, a lockout whose only cure is a support ticket. Where the answer is "somebody edits the store", the guard has turned a bounded protection into an unbounded one.
 - Side effects belong to transitions, not states. "On entering `Shipped`, send the email" attached to the state re-sends on every reload and every replay.
 
 ## Where the state lives, and crashes
@@ -54,6 +55,7 @@ Three booleans encode eight combinations; if only five are real, you shipped thr
 - Test a duplicate of every event in every state.
 - Property test: from any reachable state, any random event sequence yields only named states and never violates an invariant.
 - Assert reachability both ways: every state is reachable from the initial state, and every non-terminal state can reach a terminal one. An unreachable state is dead code or a missing transition; an unescapable one is a leak.
+- **Assert each exit is reachable by the actor who is stuck in it**, not merely present in the table. Reachability is a property of the transition table; usability is a property of the interface, and the assertion above passes on a machine whose only way out needs privileges the trapped party does not have.
 
 ## Common mistakes
 
@@ -69,9 +71,11 @@ Three booleans encode eight combinations; if only five are real, you shipped thr
 | Two workers both advanced the same entity | Write not conditioned on the expected current state |
 | UI shows a state the backend does not have | State duplicated instead of projected |
 | Expiry never triggers its side effects | Timeout modeled as a read-time computation |
+| A user is stuck in a state the transition table says is escapable | The exit exists, and the only actor who can take it is not the one being held |
 
 ## Red flags
 
+- "There is a manual override" — offered without naming who can reach it.
 - "Just add a boolean for it."
 - "The status is whatever the last event set it to."
 - "We compute expired at read time."

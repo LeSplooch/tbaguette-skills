@@ -1,6 +1,6 @@
 ---
 name: revalidating-decisions
-description: Use when a recorded decision — an ADR, design doc, wontfix, runbook line, or a comment saying "we can't do X because Y" — appears to rule out the work in front of you, when a constraint is quoted as settled without a date, when a workaround has outlived the thing it worked around, when deciding whether an old choice is still the right one, when an item has sat in a backlog across several passes and each pass re-reads it and re-queues it, or when a recurring or scheduled run keeps re-deriving a question it has already answered. Covers separating a decision's principle from its premise, judging which premises decay, re-verifying cheaply, revalidating a deferral before repeating it, and overturning a colleague's call without treating it as an error.
+description: Use when a recorded decision — an ADR, design doc, wontfix, runbook line, or a comment saying "we can't do X because Y" — appears to rule out the work in front of you, when a constraint is quoted as settled without a date, when a workaround has outlived the thing it worked around, when deciding whether an old choice is still the right one, when an item has sat in a backlog across several passes and each pass re-reads it and re-queues it, or when a recurring or scheduled run keeps re-deriving a question it has already answered. Also use when a step that has always worked is about to be relied on again, when an outcome arrived but the step that was supposed to produce it was refused. Covers separating a decision's principle from its premise, judging which premises decay, re-verifying cheaply, revalidating a deferral before repeating it, and overturning a colleague's call without treating it as an error.
 ---
 
 # Revalidating decisions
@@ -53,6 +53,28 @@ Sorted by how fast, and by how invisible the decay is from inside the repository
 **Everything above the last row expires with no commit touching your repository.** That is the whole problem: your history is a complete record of your own changes and says nothing about the world your decision depended on. No amount of `git log` will surface it.
 
 The corollary is a useful filter — a premise about your own code is usually still true, or provably false in one search. A premise about someone else's is the one to check.
+
+## Only the premises that hurt get a review date
+
+Every row above decays. Only some of them are ever re-read, and which ones is decided by something other than importance: **a premise that blocks you gets recorded with a way to reopen it, and a premise that permits you gets recorded nowhere at all.**
+
+The asymmetry is entirely in the bookkeeping, and it comes from when each one costs something. "This cannot be done — the platform does not support it" is written down at the moment it hurts, usually with the workaround it forced and sometimes with the one check that would overturn it, so a later pass pays one search and occasionally gets a large refund. "This works" costs nothing when it is true, so it goes in no record, acquires no date, and is inherited by every later reader as a property of the world rather than as an observation somebody made once. It is then discovered to have expired at the moment it is finally needed — which, for anything sitting at the end of a sequence, is after everything before it has already been spent.
+
+So give the enabling premises the same treatment as the blocking ones: **write down what worked, dated, beside what did not.** It costs a line. The next pass then opens with a lookup instead of an assumption, and can spend its one cheap re-check on whichever premise has the oldest date rather than on whichever one it happens to remember.
+
+**And a result you can observe is not a capability you have.** The two are indistinguishable afterwards: the branch is merged, the file is deployed, the record exists — while the step that was supposed to produce it was refused, and something else produced it instead. Someone ran it by hand, a different process did it, a colleague landed the same change from another direction. A later reader takes the outcome as proof the route is open and writes down a measurement nobody took. The discriminator is narrow and worth applying literally: **credit a capability only if you watched it work.** Where the result arrived by another route, record *that*, in those words, because nothing in the end state will ever say so.
+
+## A rule that agrees with you has stopped being a premise
+
+A decision can also stop mattering without ever becoming wrong. A rule, convention, or piece of standing guidance that tells an actor to do what it would have done anyway is obeyed perfectly, forever, and changes nothing — and from outside, full compliance and complete irrelevance produce the identical observation.
+
+`choosing-test-scope` owns this for a check running against real traffic, with the instrument: sample the *distribution* of its verdicts rather than their value, and treat a check whose output has never varied as unproven rather than as passing. Two things carry past that.
+
+The first is direction. The world moves *toward* a rule — a language gains the check a convention was invented to enforce, a tool starts doing by default what a policy used to demand, a team absorbs an old correction into habit. So this is a premise decaying like any other in the table above, except that the decay makes the rule look *better*: nothing signals the day it happens, and an overall compliance figure rises as it does, because the rules that no longer matter are the easiest ones to satisfy.
+
+The second is that standing guidance has no verdicts to sample. Where the thing in force is a sentence rather than a branch, the instrument that remains is **withholding it** — run the case with the rule removed and see whether the outcome changes. That is worth doing for the rules it would be expensive to be wrong about, and it is not an argument for deleting whatever fails: cheap insurance against a regression is a legitimate reason to keep something inert. It is an argument for knowing which kind you hold, because a body of rules nobody has tested this way reports a health it has not earned.
+
+None of which contradicts the advice below to skip revalidation when a record merely agrees with what you were going to do anyway. That is about a record you are *consulting* and are free to walk past. This is about a rule already *in force*, which you are not walking past — you are obeying it, and the question is whether the obedience is doing anything.
 
 ## Re-verify before you comply
 

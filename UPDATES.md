@@ -24,6 +24,98 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-11 — Things that were still running, and things that had quietly stopped
+
+- **A pipe can truncate the command, not just its output.** `portable-shell-scripting`
+  now covers what happens when the reader on the right of a pipe exits first: the writer
+  on the left is killed. For a command that only prints, that is the point of it. For one
+  that changes things — a package operation, an extract, an in-place rewrite, a
+  version-control step that stages many paths and then writes one reference — it stops the
+  work wherever it had got to. How loudly depends on settings made elsewhere in the
+  script, which is the part worth knowing: a bare pipeline reports only its last stage, so
+  the status is the reader's zero and nothing says the writer died, while `pipefail`
+  reports 141 and a per-stage status array names which stage it was. So it is detectable
+  exactly where the file's own `set -eu` advice has been followed, and silent in a one-off
+  command, inside a substitution, or in any `sh` script without it. Worse, a tool killed
+  before its own bookkeeping does not recognise its own wreckage, so the recovery command
+  reports nothing to recover.
+- **A delegate that reports success is the wrong thing to make more rigorous.**
+  `delegating-tasks-with-review-gates` already covered a run cut off mid-sentence. It now
+  explains the one that finished, checked itself, and reported done about work it did not
+  do — and why the two-stage review it prescribes is written as a fresh reviewer against
+  the diff rather than as a stronger instruction to self-review. What moves the false-done
+  rate is whether anything other than the delegate can observe the end state, by much more
+  than the gap between a careful delegate and a sloppy one. So when the gate is
+  inconvenient, the substitution to refuse is "have the implementer check more carefully",
+  and the one to reach for is any other observer of the same result. It also adds a
+  forensic tell for the review itself: judging a claim by how it is written is close to
+  guessing, because confidence is a property of prose — a false completion is
+  characteristically a record of looking, with nothing in it that could have caused the
+  effect being claimed.
+- **Telling the author what to fix is not the same act as deciding the change is
+  right.** `reviewing-code-deeply` gains the failure that no measure of review
+  participation can see. When the author will revise on request — and overwhelmingly when
+  the author is something that rewrites on command — the cheap move is to say what the next
+  version should contain, and it crowds out the expensive one of forming a verdict on this
+  one. Comments keep arriving at a normal rate from an engaged reviewer, and the change is
+  never actually judged. A steering comment is an instruction about the next revision; a
+  review comment is a verdict on this one, and only the second can end in no.
+- **Sandboxing a thing bounds what it can run, not what it can write.**
+  `threat-modeling` now asks the boundary question twice. The usual audit enumerates what a
+  confined component can invoke and confirms that attempts to step outside fail — and it
+  comes back clean on a system with an exit in it, because the exit is not an invocation.
+  Anything the confined thing may write that something outside will later read, run, or
+  treat as configuration is a way out at the outer thing's privilege, deferred until that
+  outer thing next reads. Nothing is happening at the moment of the write, and the
+  escalation is eventually performed by a component behaving exactly as designed.
+- **Only the premises that hurt ever get a review date.** `revalidating-decisions` gains
+  the half of its own subject that goes unrecorded. A constraint that blocks you is written
+  down when it bites, often with the one check that would overturn it. A premise that
+  *permits* you costs nothing while it holds, so it is written down nowhere, acquires no
+  date, and is inherited by every later reader as a fact about the world — then found to
+  have lapsed at the moment it is finally needed, which for anything at the end of a
+  sequence is after everything before it has been spent. The skill also separates two
+  things that look identical afterwards: a result you can observe is not a capability you
+  have, because the step may have been refused and something else may have produced the
+  outcome. Credit a capability only if you watched it work.
+- **A rule you are obeying can have stopped doing anything.** Same skill, and it is a
+  premise decaying like the others, except that this decay makes the rule look better.
+  Guidance telling an actor to do what it would have done anyway is obeyed perfectly and
+  changes nothing, and from outside, full compliance and complete irrelevance are the same
+  observation. The drift has a direction — the world moves toward the rule — so rules
+  convert from load-bearing to decorative one at a time while the overall compliance figure
+  rises. `choosing-test-scope` already owned this for a check running against real traffic,
+  with the instrument: sample the distribution of its verdicts. The new section carries the
+  two things that do not fit there — the direction of the drift, and what to do when the
+  thing in force is a sentence with no verdicts to sample, which is to withhold it and see
+  whether the outcome changes.
+- **Where reuse is decided by a prefix, a volatile element costs everything behind it.**
+  `caching-strategy` treated a cached value as atomic — it matches or it does not. It now
+  covers the family where the match is a leading run rather than a whole key, and the
+  arrangement of material inside one entry becomes a cost decision nobody made. A timestamp
+  or a request id at the front of a large stable body is charged not for its own few bytes
+  but for everything stable behind it. The diagnostic is not how much changes between
+  calls, which is usually almost nothing; it is how early the first difference occurs.
+  Which is why extending retention does not help: it treats a placement problem as a
+  lifetime problem.
+- **"There is a manual override" is not an exit until you say who can reach it.**
+  `modeling-state-machines` already required every non-terminal state to have an exit, and
+  a manual override satisfied that line while being, for the person actually stuck, no exit
+  at all — an operator with database access is not a route a user has. The skill now asks
+  for the actor and the control by name, and it asks hardest about protective states, where
+  entering is the designed behaviour and leaving is the afterthought: a breaker that trips
+  with no reset control, a pairing nothing in the product can clear, a lockout whose only
+  cure is a support ticket.
+- **`tending-tbaguette` separates the step from the outcome.** A contributor's pipeline
+  ends in a push and a pull request, so a permission that has lapsed since last time is met
+  at the last step, after the reading, the drafting, the approval gate and the commit have
+  all been spent — and one dry run at the start moves that discovery to the front. The
+  trap specific to contributing is that the work can land without you: a maintainer applies
+  the lesson after reading it in an issue, or another contributor sends the same
+  observation, and afterwards the repository looks exactly as it would have if your own
+  push had worked. Record what actually happened, because the repository's state never
+  will.
+
 ## 2026-09-10 — The output you kept, and the file that came back larger
 
 - **`confirming-before-claiming-done` now covers what a `tail` takes away.** It

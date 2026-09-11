@@ -1,6 +1,6 @@
 ---
 name: portable-shell-scripting
-description: Use when writing or reviewing a shell script, when a script works in one shell but fails in another, when it breaks on filenames with spaces or newlines, when a failing command does not stop the script, when a `cd` fails or persists and later relative paths resolve against a directory nobody meant, or when a script kills a process by matching its command line or loops waiting for one to disappear. Covers quoting and word splitting, set -e exemptions, lost variable assignments after a pipeline, exit codes and pipeline status, the working directory as state that outlives one command, relative reads and writes that land in the wrong tree, cleanup traps, matching processes by pattern for kills and wait loops, POSIX sh versus bash-isms, GNU versus BSD tool differences, and when a script has outgrown shell.
+description: Use when writing or reviewing a shell script, when a script works in one shell but fails in another, when it breaks on filenames with spaces or newlines, when a failing command does not stop the script, when a `cd` fails or persists and later relative paths resolve against a directory nobody meant, or when a script kills a process by matching its command line or loops waiting for one to disappear. Also use when a long-running command that changes state is about to be piped into `head`, `tail`, a pager, or any reader that stops early. Covers quoting and word splitting, set -e exemptions, lost variable assignments after a pipeline, exit codes and pipeline status, the working directory as state that outlives one command, relative reads and writes that land in the wrong tree, cleanup traps, matching processes by pattern for kills and wait loops, POSIX sh versus bash-isms, GNU versus BSD tool differences, and when a script has outgrown shell.
 ---
 
 # Portable shell scripting
@@ -51,6 +51,16 @@ Commit in the shebang and hold to it: `#!/usr/bin/env bash` with bash features, 
 - `((i++))` returns 1 when the result is zero, so `set -e` kills the script on an ordinary counter increment.
 
 Run with `set -eu`, plus `pipefail` where the shebang permits it, and still check explicitly anywhere you want a diagnostic: `cmd || { printf '%s\n' "what failed, what to do" >&2; exit 1; }`. A script whose entire error handling is line 2 has none.
+
+## A pipeline's reader can kill its writer
+
+`cmd | head -20` reads as a way to shorten *output*. It is also a way to shorten `cmd`. When `head` has taken its twenty lines it exits, the pipe's read end closes, and the next write from `cmd` raises `SIGPIPE` — which by default terminates it. The same happens with `sed 3q`, a pager the reader quits, a `grep -q` that has found its match, and any consumer that stops early by design.
+
+For a command that only prints, that is the intended behaviour and costs nothing. The damage is that **the shell draws no distinction between a command that prints and a command that acts**, so the identical idiom applied to something that mutates state truncates the *work*, wherever it had got to. A tool that mutates in stages and writes its bookkeeping at the end can be killed in between, leaving a result its own cleanup and resume paths do not recognise — the recovery command reports nothing to recover while the wreckage sits in plain sight, reading as ordinary mess. The class is wide: a package manager mid-transaction, an archiver mid-extract, a formatter rewriting in place, a version-control operation that stages many paths and then writes one reference.
+
+How visible this is depends entirely on settings made elsewhere in the script, which is why it is worth knowing rather than guessing. A bare pipeline reports only its **last** stage, so the status is the reader's `0` and nothing anywhere says the writer died. With `pipefail` the pipeline reports `141` — `128 + SIGPIPE` — and in shells that have `PIPESTATUS` / `pipestatus` the per-stage array names which stage it was. So the failure is detectable exactly where the `set -eu` section above has already been followed, and silent everywhere else: in a one-off command typed at a prompt, inside `$(…)`, in a `sh` script with no `pipefail` available, or under any caller that reads only the final status.
+
+Two rules, and neither depends on remembering the arithmetic. **Never pipe a state-changing command into a reader that stops early** — `confirming-before-claiming-done` and `crouton` both already say to redirect a long run to a file and search the file, and that advice keeps the writer alive as a side effect, which is the more important half here. And when a mutating command's output looks truncated, check the pipeline's per-stage status rather than `$?`, then ask the tool what state it thinks it is in — and be ready for the answer that it thinks nothing happened.
 
 ## Hostile filenames and safe iteration
 
@@ -145,9 +155,11 @@ Choose the POSIX subset first. Where an extension is genuinely needed, probe the
 | A `pkill` aimed at the script's job took down one of the user's | the pattern named a program, not an instance; every copy on the machine matched |
 | A file "does not exist" and then plainly does | A `cd` in an earlier command re-rooted every relative path after it |
 | A file was written successfully, into the wrong tree | A `cd` failed or fell through to a fallback, and the relative write resolved against a root nobody chose |
+| A tool reports nothing to recover from damage that is plainly there | It was killed by `SIGPIPE` before writing its own bookkeeping, because its output was piped into a reader that stopped early |
 
 ## Red flags
 
+- A command that changes state, piped into `head`, `tail`, a pager, or `grep -q`.
 - "It works on my machine" about anything carrying a `#!/bin/sh` shebang
 - Reaching for `ls | while read`, `for f in $(find …)`, or `eval` on a constructed string
 - A second level of quoting inside `ssh`, `sudo sh -c`, or a generated command line

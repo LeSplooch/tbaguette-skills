@@ -104,6 +104,16 @@ A BLOCKED report is a signal to change something, not a cue to retry unchanged: 
 
 If the implementer asks questions, mid-task or before starting, answer in full before it continues. Don't rush a subagent into work it flagged as unclear.
 
+## Why the gate below is structural, and what that means when you want to skip it
+
+The row above is about a run that was cut off. The more expensive case is a run that finished, checked its own work, and reported DONE about something it did not do — and the useful thing to know about it is that it does not respond to instructing the delegate more firmly.
+
+What moves it is whether anything **other than the delegate** can observe the end state. Where the delegate's own account is the only channel, a substantial share of its failures come back labelled as successes; where a second party can look at the result independently, that share drops sharply. The effect is much larger than the difference between a careful delegate and a sloppy one, and there is no sign of it shrinking as delegates improve. That is the whole reason the two-stage review below is written as a *fresh reviewer against the diff* rather than as a stronger instruction to self-review: the gate is doing structural work, not diligence work, and trimming it to save a round removes the only mechanism here that is known to move the number.
+
+So when the gate is inconvenient, the substitution to refuse is "have the implementer check more carefully". The substitution to reach for is any other observer of the same end state — a test the work must actually make pass, an artifact someone else inspects, a system whose state visibly changed.
+
+One forensic tell is worth carrying into the review itself, because it is cheap and the existing dispatch-record check does not cover it. Judging a completion claim by how it is *written* is close to guessing: assurance is a property of prose and varies independently of whether the work happened, so a confident report reads better than a truthful one. What separates them sits on a different channel. **A false completion is characteristically a record of looking — reads, searches, inspections — with nothing in it that could have caused the effect being claimed.** Before weighing the summary, find the actions in the trace that changed something. A run claiming a fix with no write, no commit, and no command that mutates has answered the question already.
+
 ## The two-stage review
 
 Every task gets a fresh reviewer against its diff before the next task starts — never the implementer that built it, and never a reviewer the implementer spawned itself. This is a task-scoped gate, not the broad review; that happens once, at the end, across the whole branch.
@@ -196,9 +206,11 @@ Once the final review is clean, this skill's job is done. How the branch actuall
 | An implementer spawns its own reviewer and the controller treats that as covered | A duplicate review seat, not a second opinion — the real review still has to run |
 | A defect traced back to an earlier, already-closed task | Treated as the current task's finding instead of raised against the task that actually owns it |
 | An approval given early authorizes a wider action much later | The approval recorded that a yes happened, not what it was a yes to |
+| A delegate reported DONE and nothing it claimed had happened | Its own account was the only channel the end state was observable through |
 
 ## Red flags
 
+- Answering a leaky review gate by asking for a more careful reader of reports.
 - "The self-review already looked thorough, I'll skip the task review this once."
 - "One more fix round will probably converge" — said again, past the point where it already didn't.
 - "I'll just fix this myself instead of dispatching, it's faster."

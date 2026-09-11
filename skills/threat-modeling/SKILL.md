@@ -1,6 +1,6 @@
 ---
 name: threat-modeling
-description: Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration, or a change to authentication or authorization, when a design review needs a security section, when asked what could go wrong with a system or feature, or when reasoning about attackers, attack surface, blast radius, and which risks to fix first. Also use when a limit, quota, entitlement, or uniqueness rule is enforced at the one write path whoever wrote it had in mind, while import, sync, restore, bulk seeding, or admin tooling can reach the same state, or when such a rule is checked only at creation and nothing re-checks it afterwards. Covers STRIDE, trust boundaries, data flow, attacker capability tiers, risk ranking, and enumerating every path that can produce a guarded state.
+description: Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration, or a change to authentication or authorization, when a design review needs a security section, when asked what could go wrong with a system or feature, or when reasoning about attackers, attack surface, blast radius, and which risks to fix first. Also use when a limit, quota, entitlement, or uniqueness rule is enforced at the one write path whoever wrote it had in mind, while import, sync, restore, bulk seeding, or admin tooling can reach the same state, or when such a rule is checked only at creation and nothing re-checks it afterwards. Also use when a component is sandboxed, jailed, or otherwise confined, and the audit of what it can reach came back clean. Covers STRIDE, trust boundaries, data flow, attacker capability tiers, risk ranking, and enumerating every path that can produce a guarded state.
 ---
 
 # Threat Modeling
@@ -92,6 +92,16 @@ Then ask the second half, which is what turns a temporary breach into a permanen
 
 This generalizes past security limits to any invariant worth stating: if it is only ever established, and never verified, it is a hope with a constructor.
 
+## Confining what something may run does not confine what it may write
+
+A containment boundary is drawn around **execution**: this process may call these things, reach these hosts, touch these paths. The audit that follows matches the boundary — enumerate what it can invoke, attempt to step outside, confirm the attempts fail. That audit comes back clean on a system with an exit in it, because the exit is not an invocation.
+
+The boundary says nothing about **authorship**. Anything the confined thing may write, that something *outside* the boundary will later read, run, or treat as configuration, is a way out at the outer thing's privilege — deferred until the next time that outer thing reads. The confined process never steps over the line; it leaves something on its own side of the line for a trusted reader to pick up. Familiar carriers: a task, hook, or launch definition a surrounding tool discovers on its own; an interpreter, plugin, or shim on a path something else resolves through; a lockfile or dependency manifest a later build obeys; a socket or state file a privileged local service consumes; a rule file that widens the very allowlist doing the confining.
+
+Two things make this hard to find with the usual pass. It is **time-shifted**, so nothing is happening at the moment of the write and there is no request to inspect — the trace at the interesting instant shows a file being created inside a permitted directory. And the escalation is performed by a component that is behaving correctly: it loaded its configuration, as designed, from where it has always loaded it.
+
+So run the boundary list twice. Once for reachability, which is the pass everyone runs. Then once for authorship: **for every location the confined thing can write, name who else reads it and with what privilege.** Wherever that answer names something outside, the boundary is drawn in the wrong place — either that reader belongs inside it, or what you have is not a boundary. `least-privilege-design` carries the same-moment version of this, where the gap is between an approved name and what that name resolves to at the instant it runs; this is the delayed version, where the gap is a file sitting between the two. The strong version of the question is worth asking out loud, because it makes the failure obvious in one sentence — *does this thing get to write the future inputs of anything that is not contained?* Where it does, containment was never the property you had.
+
 ## Assumptions are the tripwires
 
 List them at the top of the model. Each one, if false, invalidates everything below it, and each has a cheap check that almost nobody runs.
@@ -117,9 +127,11 @@ Re-run the model when any assumption changes. That change list is the trigger fo
 | "The gateway will block that" | Control placed at a layer any direct caller bypasses |
 | The paid tier stops existing for users who arrived by one particular route | A limit enforced at one write path; the bulk or seeding path never consulted it |
 | A violated invariant that never repairs itself | Checked at creation only, so nothing re-examines the state once it exists |
+| A sandboxed component escaped without ever calling anything it was not allowed to call | The boundary was drawn around execution; it wrote a file something outside the boundary later loaded |
 
 ## Red flags
 
+- A containment claim supported by a list of what the thing can call, with no list of what it can write.
 - "That's an edge case, no real user would do that" — the attacker is not a user.
 - "It's internal-only," asserted without a check that it is.
 - "We authenticate the caller, so we're covered" — authentication answers *who*, not *what on whose behalf*.

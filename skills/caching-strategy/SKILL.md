@@ -1,6 +1,6 @@
 ---
 name: caching-strategy
-description: Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change, when choosing a TTL or cache key, when an expiring hot key or a cold restart floods the origin, when one tenant or locale sees another's data, when deciding whether a TTL should be chosen by the consumer or declared by each response, or when latency work tempts a cache in front of a slow query. Also use when a cached or memoized value has to come out the same on two machines, when a key is derived from an object's identity rather than its content, or when a hit rate stays low and the requests are routed or load-balanced before they reach the cache.
+description: Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change, when choosing a TTL or cache key, when an expiring hot key or a cold restart floods the origin, when one tenant or locale sees another's data, when deciding whether a TTL should be chosen by the consumer or declared by each response, or when latency work tempts a cache in front of a slow query. Also use when a cached or memoized value has to come out the same on two machines, when a key is derived from an object's identity rather than its content, or when a hit rate stays low and the requests are routed or load-balanced before they reach the cache. Also use when reuse is decided by how long a leading run of the material matches rather than by a whole key, or when a cache whose inputs barely change is missing far more often than that should allow.
 ---
 
 # Caching strategy
@@ -110,6 +110,18 @@ Everything the answer depends on belongs in the key: entity id, tenant, locale, 
 - Watch cardinality from both directions: keys that are near-unique per request never earn a hit and only consume memory; keys too coarse serve one asker's answer to another.
 - Cache the smallest reusable unit. A whole rendered response inherits the shortest staleness budget of any field inside it, and usually that field is a permission or a balance.
 
+## Where reuse is decided by a prefix, order the material by volatility
+
+Everything above treats a cached value as atomic: it matches or it does not. A second family of caches does not work that way. Where reuse is decided by **how long a leading run of the material is identical** — a prefix match rather than an equality check on a whole key — the arrangement of the material inside a single entry becomes a cost decision, and it is one nobody makes on purpose.
+
+The rule that falls out is counter-intuitive enough to be worth stating flatly: **a volatile element is not charged for its own size. It is charged for everything stable that sits behind it.** A timestamp, a working directory, a branch name, a request id — a few dozen bytes, each of them different on every call — placed at the front of a large stable body means the match ends immediately and the entire body is recomputed or re-sent every time. Move those same bytes to the end and the body is reused. The payload did not change size; what it costs did, and by far more than its own bytes could account for.
+
+The diagnostic follows from it and is not the obvious one. When reuse underperforms, the instinct is to ask how *much* of the material changes between calls, and the answer is usually "almost none", which makes the poor hit rate look inexplicable. The question that resolves it is **how early does the first difference occur** — because everything after that point is lost regardless of how stable it is.
+
+Which is also why the two intuitive remedies buy nothing while looking like progress. Extending how long entries are retained treats a placement problem as a lifetime problem: the entry was not evicted, it was never matched past its third line. And splitting the material so that a stable head and a stable tail sandwich the volatile part still leaves the tail behind the first difference, so it buys nothing while costing a restructure.
+
+So when a preamble, prompt, header block, or any shared leading material is assembled from several sources, **sort those sources by how often each one changes, most stable first**, and put anything per-invocation at the very end. Where a boundary can be declared explicitly, declare it after the stable material rather than wherever the code happens to be assembling things.
+
 ## Who else computes this key, and how did the request get here
 
 Key design above settles what the key must contain. Two questions it does not touch are decided entirely outside the cache, and both fail without ever looking like a cache problem.
@@ -139,9 +151,11 @@ If a stale read is a correctness bug rather than a freshness trade, do not build
 | Memory grows without bound | Per-request-unique keys, or no eviction policy and no size ceiling |
 | Two machines render the same input differently | The key was derived from a process-local identity, so no two processes agree on it |
 | Hit rate stays low no matter how the cache is tuned | A router or scheduler upstream scatters equivalent requests; the locality was destroyed before the cache saw them |
+| Inputs barely change between calls and the hit rate is still poor | Reuse is decided by a leading match, and a volatile element sits in front of the stable material |
 
 ## Red flags
 
+- Tuning how long entries are retained, on a cache that is missing rather than evicting.
 - "We will just invalidate it everywhere when it changes"
 - Nobody in the room can state the staleness budget in seconds
 - The TTL was chosen because it seemed reasonable and has never been revisited against an incident

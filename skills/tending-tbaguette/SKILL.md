@@ -702,6 +702,28 @@ bundled refusal apart afterwards to find out which piece it was;
 another attempt at a step that may never have been permitted. A bundled call that was
 declined is reported as declined, whole.
 
+## A step that worked is a measurement, not a property
+
+The section above treats a refusal as the surprising event and permission as the resting
+state. Both move. `revalidating-decisions` owns the general form — why the premises that
+*block* you get recorded with a way to reopen them while the ones that *permit* you get
+recorded nowhere, and why an outcome you can observe is not a capability you have. Read it
+there; what follows is only what is specific to this pipeline.
+
+The fork push, `gh pr create`, and every git write between them were permitted on the pass
+that last used them, and that is a fact about that pass. Because they sit at the *end* of
+this pipeline, an unrecorded permission that has lapsed is discovered after the reading, the
+drafting, the approval gate and the commit have all been spent — the most expensive place to
+meet a refusal. One `--dry-run` at the start costs nothing and moves that discovery to the
+front.
+
+The trap specific to a contributor is that the work can land without you. A maintainer
+applies the lesson themselves after reading it in an issue; another contributor sends the
+same observation. The branch is merged and the section is in the file, and from a cold start
+that is indistinguishable from your own pipeline having worked. Record what actually
+happened — *the change landed, my push was declined* — because the repository's state will
+never say so, and the next pass will otherwise credit itself with a step it never ran.
+
 ## Safety rails
 
 - **Never push to `LeSplooch/tbaguette-skills` directly.** Contributions go
@@ -713,6 +735,11 @@ declined is reported as declined, whole.
 - Always `fetch upstream` and branch from `upstream/master` immediately
   before editing — the repo moves.
 - The queue file is personal state. It never gets committed to TBaguette.
+- A refused step is reported to your reader and its candidate stays in `## Pending`.
+  Write the steps that **ran** into the pass's own note as well, dated — a permission is
+  a measurement with a date on it exactly as a refusal is, and only one of the two is
+  ever written down. Credit a step only if you watched its command run; a change that
+  reached the repository by some other route says nothing about whether yours can.
 - The install directory is a read-only dependency. Nothing writes to it
   except `keeping-tbaguette-current`.
 - When genuinely unsure whether something clears the agnostic bar, leave it

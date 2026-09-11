@@ -1,6 +1,6 @@
 ---
 name: reviewing-code-deeply
-description: Use when reviewing someone else's change — a pull request, patch, diff, or commit series — deciding what deserves a comment, whether to block or approve, or how to phrase a concern. Also when a review is generating dozens of comments, when a diff is too large to review carefully, or when reviews keep passing code that later breaks. Also use when a diff applies a guard to every case but one. Covers review priority order, reviewing tests, finding absent cases, and blocking versus non-blocking.
+description: Use when reviewing someone else's change — a pull request, patch, diff, or commit series — deciding what deserves a comment, whether to block or approve, or how to phrase a concern. Also when a review is generating dozens of comments, when a diff is too large to review carefully, or when reviews keep passing code that later breaks. Also use when a diff applies a guard to every case but one. Also use when the author is something that will revise on command, when a review round has produced instructions but no verdict, or when several rounds have gone by without the change being judged. Covers review priority order, reviewing tests, finding absent cases, and blocking versus non-blocking.
 ---
 
 # Reviewing Code Deeply
@@ -102,6 +102,16 @@ Give the *why* on every blocking comment. "Use a set" is a preference. "This is 
 - Review reliably misses: races and interleavings, behavior under real load, resource growth over time, integration behavior, and most type-level mistakes. When those are the risk, the useful comment names the test, type, assertion, or canary that would catch it — because your reading will not.
 - "Approve with comments" only when none of them block. Approving while leaving a blocking comment teaches the author that the markers mean nothing.
 
+## Telling the author what to change is not deciding whether it is right
+
+The familiar way review fails is that it does not happen: too much change, too little time, an approval stamped on a diff nobody opened. That failure is visible, everyone knows the shape of it, and any measure of participation catches it.
+
+There is a second failure that every such measure reports as healthy, and it arrives specifically when the author can be *instructed* — a colleague who will revise on request, and far more strongly a generator that will rewrite on command. The cheap move then is to say what the next revision should contain. The expensive move is to decide whether this one is correct. Both produce comments, at a normal rate, from an engaged reviewer, on time; and the first quietly crowds out the second, because it is faster, it feels productive, and it never requires forming a verdict. Nothing in a count of comments, a response time, or a review-coverage figure separates the two, so the displacement is invisible to every measure usually pointed at review.
+
+The distinction is worth holding precisely, because the two are easy to confuse while writing them. **A steering comment is an instruction about the next version. A review comment is a verdict on this one.** "Extract this into a helper and add a test for the empty case" is the first. "This drops the last element when the input is empty, and nothing here would catch it" is the second. Only the second can end in *no*. A reviewer producing only the first has kept every other function of review and quietly given up the one that blocks, which is the function the rest of this file's priority order exists to serve.
+
+Three checks, all cheap. Before sending, look at how many of your comments could be satisfied without anyone deciding the change was right; if that is most of them, you have been directing rather than reviewing. Notice when the loop has run several rounds and no round has contained a verdict — each round felt like progress, and the change has never once been judged. And when the author is something that revises instantly, deliberately state the verdict first and the instructions after, because the cost asymmetry that produces this failure is at its most extreme exactly there.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -115,9 +125,11 @@ Give the *why* on every blocking comment. "Use a set" is a preference. "This is 
 | The reviewer rewrites the change in comments | Reviewing against their own solution rather than the stated intent |
 | The same style debate recurs on every change | No formatter in CI; a human is doing a tool's job |
 | A guard on every case but one, approved without comment | The exemption was read as a fact about that case rather than as an unargued belief |
+| Several review rounds, none of which ever said yes or no | Steering the next revision displaced judging this one; both produce comments at the same rate |
 
 ## Red flags
 
+- A review whose comments could all be satisfied without anyone deciding the change was right.
 - Reading the diff before reading what it is meant to do
 - Commenting on a name before you have traced one error path
 - "LGTM" on a diff you scrolled rather than read
