@@ -276,6 +276,30 @@ It is also the only way the gap becomes a finding — those seven were not unpro
 projects whose work leaves no commit trail, and *that* is worth knowing before designing a sweep
 that assumes one.
 
+**And two numbers only check each other if they come from different instruments.** The rule
+above is arithmetic, which is exactly what makes it feel safe, and there is one natural way to
+write it that makes it vacuous: derive the population from the same traversal that feeds the
+selector. Both numbers then agree by construction, the difference is zero, and the report
+certifies the gap instead of finding it. In one pass the population was counted by testing each
+candidate directory for a `.git` child, while the selector enumerated `.git` directories by
+pattern to a fixed depth — two spellings of one question, except that the second reached only
+top-level repositories. Twenty against sixteen, and that four-way difference was the finding.
+
+**Expect the members it drops to be the valuable ones, because the bias is structural rather
+than random.** Whatever an enumeration cannot reach, it usually cannot reach for a reason, and
+that reason tends to correlate with activity. A depth limit drops precisely the nested
+repositories — a component inside a larger product, a submodule, a directory that grew into a
+project of its own — which is where multi-part work lives. In that pass the single most active
+repository in the sweep — as many commits as the next three combined — was one of the four the
+selector could not see.
+
+**Then print the names of the difference rather than its size.** The repaired loop in that same
+pass reported three unreadable projects; there was one, whose path contained a space, which the
+shell had split into three words each naming nothing. A coverage number computed by the
+instrument under suspicion comes back looking exactly like a coverage number, and no arithmetic
+catches that. A list of names does, at a glance: one of those three was the bare word `NOT`, which
+is not a path to anything.
+
 **Cluster before opening anything, because the repeat is the whole point.** The
 bar above says a shape appearing in two unrelated projects is the strongest
 evidence it can get, and a pass that opens one body at a time can never see it:

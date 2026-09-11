@@ -115,6 +115,30 @@ Everything above the first `##` is preamble and is never rendered.
   observation, and afterwards the repository looks exactly as it would have if your own
   push had worked. Record what actually happened, because the repository's state never
   will.
+- **Republishing an artifact under a version it already carries splits your users in two.**
+  `reproducible-environments` covered pinning by digest as something you do because someone
+  else's registry is mutable. It now also covers the day you are the one making it mutable:
+  a toolchain patch lands, the source has not changed, the rebuilt bytes differ, and
+  re-uploading them under the existing version looks like no change at all. Where an update
+  channel compares versions rather than digests, everyone already holding the old bytes
+  never fetches and everyone arriving later does, so two populations run different code
+  under one name and nothing anywhere records it. With the corollary to publish a versioned
+  name alongside a moving one like `latest`, which is what makes the population countable
+  afterwards.
+- **An installer that is safe to re-run can be the thing undoing your settings.**
+  `designing-for-idempotency` has always said to prefer an absolute write over a relative
+  one. That is right for retries seconds apart and wrong for a setup step that runs again on
+  next month's upgrade, after somebody deliberately changed the value — which is how a
+  setting comes to turn itself back on after every update while the code review keeps
+  finding a correctly written idempotent operation. New guidance on telling a default from
+  an assertion when both look identical at the call site, and on the one question that says
+  which you are holding. Its description now routes install and provisioning work here.
+- **`tending-tbaguette`'s cross-project sweep no longer trusts its own coverage count.**
+  Counting the projects in scope and the projects actually read only catches a gap if the
+  two numbers come from differently shaped queries; derive both from the same traversal and
+  they agree by construction and certify the gap instead of finding it. Also: the projects a
+  limited traversal silently drops are systematically the busiest ones, and the difference
+  is worth reporting as a list of names rather than as a number.
 
 ## 2026-09-10 — The log line that never fired, and the run it was never armed in
 

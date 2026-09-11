@@ -53,6 +53,23 @@ It does not guarantee identical bytes. Post-install hooks run arbitrary code, na
 
 Rules: commit it; make CI install in frozen mode so drift fails the build rather than silently updating; review the lockfile diff rather than rubber-stamping it; lock applications, publish ranges for libraries.
 
+## A rebuild under the same version is the mutable registry, seen from the other side
+
+The lockfile and isolation advice above is written for whoever *consumes* a published artifact: pin by digest, freeze the lock, never trust a moving tag. All of it assumes the mutability is somebody else's doing. It is worth reading once from the other chair, because a registry becomes mutable at the moment somebody republishes — and that somebody is sometimes you.
+
+The occasion is ordinary and does not present as a decision. A toolchain patch lands, the source has not changed, the artifact gets rebuilt, and the bytes come out different. Re-uploading them under the version already printed on them is the obvious move, precisely because nothing anyone would call a change has happened. But the diff being empty is a fact about the source, and the thing being published is the artifact. "No source changed" is an argument about one and a claim about the other.
+
+What it costs is a population split that nothing records. Where an update channel decides staleness by comparing versions rather than digests — which is most of them, because the version is cheap and the digest needs fetching — every consumer already holding the old bytes sees a version equal to the one on offer and never fetches. Every consumer arriving after the upload gets the new bytes. Two groups now run different code under one name, indefinitely, and no log line on either side says so. A defect that reproduces for one and not the other is unattributable by construction: the version is the only handle either party has, and it matches.
+
+So the rule is **a rebuild is a new version whenever the artifact is addressed by version rather than by digest.** The bump costs a number. Not bumping it costs the ability to ever say which bytes a given consumer is running.
+
+Two corollaries, both cheap:
+
+- **Publish a versioned name even where the name consumers actually use is a moving one.** A moving name cannot be referred back to, so an install taken from it three weeks ago has no identity and nothing can reconstruct what it received. Publishing the immutable name alongside it costs one upload, changes nothing for consumers who want the convenience, and is the entire difference between a population you can count afterwards and one you cannot.
+- **Where the channel can compare digests, let it.** Version comparison is a proxy for *are these the same bytes*, adopted because it is cheap. This section is what happens on the days the proxy and the question disagree — and the proxy wins silently, which is the property that makes it worth replacing rather than watching. `designing-ci-pipelines` and `auditing-dependencies` carry the consumer half of the same rule.
+
+If it has already happened, the remedy is not to correct the record but to end the ambiguity: publish the rebuilt artifact under a new version, so that every consumer converges on bytes something can name. The existing split does not heal — it is simply capped, and the population that took the reused version stays unidentifiable for as long as it runs.
+
 ## Isolation layers, weakest to strongest
 
 | Layer | Pins | Leaves open | Buy it when |

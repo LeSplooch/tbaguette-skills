@@ -1,6 +1,6 @@
 ---
 name: designing-for-idempotency
-description: Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues, consumer restarts and redelivery, replayed webhooks, double-clicked buttons, resumed jobs, a crash partway through a write, or a confirmation, approval, or clarifying question being added partway through an operation that cannot pause. Covers duplicate charges, duplicate emails and notifications, idempotency keys, deduplication windows, retry safety under concurrency, why a mid-operation gate re-runs every effect before it, and claims of exactly-once delivery.
+description: Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues, consumer restarts and redelivery, replayed webhooks, double-clicked buttons, resumed jobs, a crash partway through a write, or a confirmation, approval, or clarifying question being added partway through an operation that cannot pause. Also use when a setup, install, provisioning, or bootstrap step written to be safe to re-run may run again long afterwards, with someone having deliberately changed what it sets in between — a setting that keeps turning itself back on after every upgrade. Covers duplicate charges, duplicate emails and notifications, idempotency keys, deduplication windows, retry safety under concurrency, why a mid-operation gate re-runs every effect before it, telling a default from an assertion when both compile to the same write, and claims of exactly-once delivery.
 ---
 
 # Designing for idempotency
@@ -26,6 +26,20 @@ Assume every operation arrives twice. Retries, restarts, redeliveries, and impat
 | Not makeable idempotent | A physical actuator pulse, a provider with no dedup support | Push the problem to the boundary: wrap in a keyed local operation and order the writes so a crash is diagnosable |
 
 **The commonest accidental non-idempotency is a relative operation where an absolute one was available.** Prefer `set brightness = 40` over `increment by 5`; `set state = cancelled` over `toggle`; `set members = [...]` over `append`. Deltas are only worth it when the absolute value is genuinely unknown to the caller, and then they need a key.
+
+## Convergence is the defect when somebody else writes between runs
+
+The rule above prefers the absolute form because the two invocations it has in mind are seconds apart and come from the same caller: a retry, a redelivery, a double-click. Nothing happens in the gap. Under that assumption converging on the declared value is exactly right, and the relative form is the bug.
+
+Setup steps break the assumption without looking like they do. An installer, a provisioning run, a first-launch routine, a bootstrap script — each is written to be safe to re-run, each is therefore written in the absolute form on this skill's own advice, and each then re-runs *weeks* later on an upgrade. In that gap a person changed the setting on purpose. `ensure autostart = on` is perfectly idempotent and it silently reverses their decision, every upgrade, forever. The user's report is that the setting "keeps turning itself back on", and the code review finds a correctly-written idempotent operation.
+
+The distinction the absolute form cannot express is between **a default and an assertion**. A default says *if nobody has an opinion, use this*; an assertion says *this value is to hold regardless of who thinks otherwise*. Both compile to the same `set x = v`, and which one you meant is invisible at the call site — so it has to be carried in state rather than in the write:
+
+- **Record that the default was applied, separately from the value.** The second run reads the marker, not the setting. Absent marker means first run, so apply; present marker means somebody owns this now, so leave it. This is an idempotency key in the sense of the section below, keyed on the provisioning act rather than on a request id.
+- **Where the setting itself can hold it, make "unset" a real state.** Three values — on, off, never-chosen — let the setup step converge on the only one it has any business converging on.
+- **Reserve the genuine assertion for things that are actually policy**, and say so where it is written, because the failure mode is the reverse: a security control that a user can turn off permanently because someone mistook an assertion for a default.
+
+The general test, worth applying before reaching for the absolute form at all: **ask whether any writer other than this operation is expected to touch the value between invocations.** Where the answer is no — a retry of one request, a replayed message — the absolute form is right and this section does not apply. Where the answer is yes, idempotence stops being a safety property and becomes the mechanism by which one party's decision silently overwrites another's.
 
 ## Idempotency keys
 

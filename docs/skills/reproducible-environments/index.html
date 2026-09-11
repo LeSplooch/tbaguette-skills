@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.20</span>
+      <span class="wordmark-version" dir="ltr">v1.1.21</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-11T00:13:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-11T00:13:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-11T00:27:26+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-11T00:27:26Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">reproducible-environments</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T00:27:26.566302+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
   <p class="lede">Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt, when onboarding needs undocumented setup steps, when a build breaks though no commit changed, when two builds of the same commit produce different artifacts, or when choosing between a version manager, a container, and a hermetic build. Covers pinning, lockfiles, toolchain declaration, isolation, and determinism. Also use when a verification step launches the real built artifact, or when a check that was supposed to touch nothing may have run against a real profile, store, or credential.</p>
@@ -84,6 +84,14 @@
 <p>A lockfile guarantees the same resolution of the dependency graph from the same manifest, gives you a reviewable diff of transitive change, and pins content hashes if the format supports them.</p>
 <p>It does not guarantee identical bytes. Post-install hooks run arbitrary code, native components compile against local headers, and platform-conditional dependencies resolve differently per OS and architecture. It also guarantees nothing if the registry is mutable and hash verification is off, or if CI installs in a mode permitted to rewrite the lock.</p>
 <p>Rules: commit it; make CI install in frozen mode so drift fails the build rather than silently updating; review the lockfile diff rather than rubber-stamping it; lock applications, publish ranges for libraries.</p>
+<h2 id="a-rebuild-under-the-same-version-is-the-mutable-registry-seen-from-the-other-side">A rebuild under the same version is the mutable registry, seen from the other side</h2>
+<p>The lockfile and isolation advice above is written for whoever <em>consumes</em> a published artifact: pin by digest, freeze the lock, never trust a moving tag. All of it assumes the mutability is somebody else's doing. It is worth reading once from the other chair, because a registry becomes mutable at the moment somebody republishes — and that somebody is sometimes you.</p>
+<p>The occasion is ordinary and does not present as a decision. A toolchain patch lands, the source has not changed, the artifact gets rebuilt, and the bytes come out different. Re-uploading them under the version already printed on them is the obvious move, precisely because nothing anyone would call a change has happened. But the diff being empty is a fact about the source, and the thing being published is the artifact. &quot;No source changed&quot; is an argument about one and a claim about the other.</p>
+<p>What it costs is a population split that nothing records. Where an update channel decides staleness by comparing versions rather than digests — which is most of them, because the version is cheap and the digest needs fetching — every consumer already holding the old bytes sees a version equal to the one on offer and never fetches. Every consumer arriving after the upload gets the new bytes. Two groups now run different code under one name, indefinitely, and no log line on either side says so. A defect that reproduces for one and not the other is unattributable by construction: the version is the only handle either party has, and it matches.</p>
+<p>So the rule is <strong>a rebuild is a new version whenever the artifact is addressed by version rather than by digest.</strong> The bump costs a number. Not bumping it costs the ability to ever say which bytes a given consumer is running.</p>
+<p>Two corollaries, both cheap:</p>
+<ul><li><strong>Publish a versioned name even where the name consumers actually use is a moving one.</strong> A moving name cannot be referred back to, so an install taken from it three weeks ago has no identity and nothing can reconstruct what it received. Publishing the immutable name alongside it costs one upload, changes nothing for consumers who want the convenience, and is the entire difference between a population you can count afterwards and one you cannot.</li><li><strong>Where the channel can compare digests, let it.</strong> Version comparison is a proxy for <em>are these the same bytes</em>, adopted because it is cheap. This section is what happens on the days the proxy and the question disagree — and the proxy wins silently, which is the property that makes it worth replacing rather than watching. <a class="skill-link" href="/tbaguette-skills/skills/designing-ci-pipelines/"><code>designing-ci-pipelines</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/auditing-dependencies/"><code>auditing-dependencies</code></a> carry the consumer half of the same rule.</li></ul>
+<p>If it has already happened, the remedy is not to correct the record but to end the ambiguity: publish the rebuilt artifact under a new version, so that every consumer converges on bytes something can name. The existing split does not heal — it is simply capped, and the population that took the reused version stays unidentifiable for as long as it runs.</p>
 <h2 id="isolation-layers-weakest-to-strongest">Isolation layers, weakest to strongest</h2>
 <table><thead><tr><th>Layer</th><th>Pins</th><th>Leaves open</th><th>Buy it when</th></tr></thead><tbody><tr><td>Documented steps</td><td>nothing</td><td>everything</td><td>never; it is the baseline being replaced</td></tr><tr><td>Version manager</td><td>language runtime and its direct tools</td><td>system libraries, OS, other toolchains, env</td><td>laptops drift on runtime version</td></tr><tr><td>Container pinned by digest</td><td>OS, system packages, every installed tool</td><td>build-time network, clock, host env and mounts passed in</td><td>&quot;missing library on the new machine&quot;</td></tr><tr><td>Hermetic sandboxed build</td><td>every declared input; undeclared ones become errors</td><td>non-determinism inside the tools themselves</td><td>two builds of one commit differ, and that matters</td></tr></tbody></table>
 <p>Choose by the failure you actually have, not by prestige. A container referenced by a mutable tag, or one that runs a package-manager update during the build, has bought you a slower build and no pinning at all — the pin is the digest and the frozen package set, never the tag.</p>
