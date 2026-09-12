@@ -82,6 +82,20 @@ Everything above the first `##` is preamble and is never rendered.
   never in — and a displayed time is rendered from a full instant, never from a
   bare wall-clock string that a parser rejects and the surface then shows raw.
 
+- **`bounding-autonomous-work` now covers the gate a detached run never
+  installed.** Its decision bound already said what to do with a question the run
+  would have asked and nobody is there to answer. A job left running overnight
+  also walks into prompts it never put there — a consent dialog, a permission
+  prompt, a second factor, an expired session asking for a password — and alone,
+  each of those is a wait with no end: the job sits behind it until someone comes
+  back, draining whatever it was keeping awake, with nothing failed, nothing
+  logged, and a result that reads `0 of N`. No stop condition fires, because a
+  process that is not executing checks nothing. The new section says to
+  enumerate the human-only steps before detaching and, for each, either run it
+  attended first — detach after the last such gate, not before the first — or
+  bound the wait with a timeout that turns it into a reportable failure. The tell
+  when reading the log: entries that stop after the first minute.
+
 ## 2026-09-11 — A log line that never fired, from an outside contribution — plus things still running, and things that had quietly stopped
 
 - **`diagnosing-before-fixing` now covers the measurement you did not get.**

@@ -1,6 +1,6 @@
 ---
 name: bounding-autonomous-work
-description: Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan, a subagent dispatched without a way to ask, a hook or cron or loop with no reader, or a question just asked into a silence that the run is about to answer for itself. Also use when a run is about to defer something to a human because it believes it cannot verify it, or when a stop condition has just fired on a run that does not otherwise look like it was in trouble. Also use when a verification is blocked by the system under test refusing, and clearing local state or loosening the check would unblock it. Covers substituting each approval gate rather than skipping it, telling a real door from an untried one, telling a genuinely read-only probe from an invocation that is an execution, the four pre-committed stop conditions that halt a run instead of letting it drift, the actions no confidence level licenses without a human, and reporting to someone who was not there.
+description: Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan, a subagent dispatched without a way to ask, a hook or cron or loop with no reader, or a question just asked into a silence that the run is about to answer for itself. Also use when a run is about to defer something to a human because it believes it cannot verify it, or when a stop condition has just fired on a run that does not otherwise look like it was in trouble. Also use when a verification is blocked by the system under test refusing, and clearing local state or loosening the check would unblock it. Covers substituting each approval gate rather than skipping it, the human-only prompt a detached job waits behind forever, telling a real door from an untried one, telling a read-only probe from an execution, the four pre-committed stop conditions, the actions no confidence level licenses without a human, and reporting to someone who was not there.
 ---
 
 # Bounding autonomous work
@@ -33,6 +33,7 @@ party present.
 - A subagent is about to be dispatched with a task it cannot ask questions
   about.
 - A hook, a cron, a loop, or a CI step will run this with no reader.
+- A job is about to be detached, backgrounded, or left running overnight.
 - A question was just asked, nothing answered it, and the run is about to
   continue anyway. That moment is the trigger, not a reason to skip this.
 - Not for: how much deliberation one decision deserves — `deciding-reversibility`.
@@ -74,6 +75,31 @@ legitimate decision reads *"set the retry cap to 5 — the spec was silent, 3 an
 10 were both defensible, one line to change."* An illegitimate one reads *"the
 retry cap is 5."* The second sentence has laundered a choice into a fact, and
 the reader now has no idea a decision was ever made.
+
+### A gate the run did not install still needs an answerer
+
+The table above covers the gates a run knows about — the questions it would have
+asked. A detached run also walks into gates it never put there: an operating
+system's consent dialog, a permission prompt, a second factor, a session that
+expired and wants a password, a "press any key". With someone present each of these is a two-second
+interruption. Alone, it is a wait with no end, and it lands at exactly the moment
+nobody is watching: the run starts cleanly, its first step raises the prompt, and
+the job sits behind it until someone comes back — draining whatever it was
+keeping awake in the meantime, a battery, a session, a quota — with nothing
+failed, nothing logged, and a result that reads as "0 of N". None of the stop
+conditions below fires, because a process that is not executing checks nothing,
+and a wall-clock budget is only a number until something reads the clock.
+
+So before detaching anything, enumerate the steps on its path that only a person
+can answer. For each one, either run it attended first — detach *after* the last
+human-only gate, not before the first — or bound the wait with a timeout that
+turns it into a failure the report can carry. A job that cannot be started while
+its human is present is a job that needs the timeout, not one that can be
+detached anyway.
+
+The tell, whenever the log is read: entries that stop after the first minute. A detached job that is running writes; one that is waiting does
+not, and the two are indistinguishable from "still going" until you look for the
+line that never came.
 
 ## 2. The stop bound: four conditions, pre-committed
 
@@ -297,6 +323,7 @@ whole reconstruction.
 | The final command did the damage | The door bound was checked once at the start, when nothing was irreversible yet |
 | An open question in the report that one command would have answered | A verification was filed under the door bound because checking it resembled doing it |
 | The subagent came back confident and wrong | It was dispatched with a goal and no bounds, which is this skill's trigger, not an exception to it |
+| An overnight job reports 0 of N with nothing in its log after the first minute | It was waiting behind a prompt only a person could answer, and nothing bounded the wait |
 
 ## Red flags
 
@@ -313,3 +340,4 @@ whole reconstruction.
 - "I'll note the assumptions in the summary" — assumptions noted later are
   assumptions remembered, and half of them will not be.
 - "The task said keep going until it passes, so I kept going."
+- "It's still running" — said of a detached job whose log stopped an hour ago.
