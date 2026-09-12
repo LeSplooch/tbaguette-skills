@@ -108,9 +108,10 @@ Everything above the first `##` is preamble and is never rendered.
   boundary the way validity is: instructions from outside keep their origin
   attached for as long as they are held, are checked against what that source was
   expected to send before they are acted on, and are never merged into the run's
-  own instructions where the label would be lost. Two harnesses shipped exactly
-  this rule this week after crafted role headers inside untrusted comments were
-  summarised as authoritative.
+  own instructions where the label would be lost. One harness shipped exactly
+  this rule this week, after crafted role headers inside untrusted comments were
+  summarised as authoritative; a draft protocol extension for serving skills
+  remotely asks the same of every host that loads one.
 
 ## 2026-09-11 — A log line that never fired, from an outside contribution — plus things still running, and things that had quietly stopped
 
