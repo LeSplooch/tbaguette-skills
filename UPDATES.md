@@ -68,6 +68,20 @@ Everything above the first `##` is preamble and is never rendered.
   is to gate the dev-only behaviour behind an off-by-default flag, so the
   shippable build is the default and the dev behaviour is the opt-in.
 
+- **`formidable`'s craft floor now lists `stale` among the states a surface has
+  to design for, and says which clock it ages by.** A live readout has two — the
+  connection's idea of being open, and the age of the newest datum — and only the
+  second is honest: a green dot and a fresh-looking latency figure outlive a dead
+  source for as long as the idle timeout, because the transport is built to be
+  tolerant and the person is not. Freshness is derived from the last real update,
+  shown as an age once it passes the cadence the source promises, and verified by
+  killing the source and watching the indicator turn. A second check covers the
+  value that is *derived*: a readout built from more than one field is computed
+  from fields sampled together or it says which input is behind, since a ratio
+  whose halves are written on different cadences displays a state the system was
+  never in — and a displayed time is rendered from a full instant, never from a
+  bare wall-clock string that a parser rejects and the surface then shows raw.
+
 ## 2026-09-11 — A log line that never fired, from an outside contribution — plus things still running, and things that had quietly stopped
 
 - **`diagnosing-before-fixing` now covers the measurement you did not get.**
