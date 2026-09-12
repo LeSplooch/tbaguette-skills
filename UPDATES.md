@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-12 — The rule at the bottom of the file, and the "not supported" nobody checked
+## 2026-09-12 — The rule at the bottom of the file, the prompt nobody answered, and who actually said it
 
 - **`writing-durable-docs` now treats where a rule sits in a document as a
   reliability property, not a style one.** A document a harness carries across a
@@ -95,6 +95,22 @@ Everything above the first `##` is preamble and is never rendered.
   attended first — detach after the last such gate, not before the first — or
   bound the wait with a timeout that turns it into a reportable failure. The tell
   when reading the log: entries that stop after the first minute.
+
+- **`handling-untrusted-input` now says where authorship is read from: the
+  channel, never the content.** Its section on the destinations with no
+  separating mechanism covered delimiters and the payload that arrives at
+  discovery time; it did not say what to do with a role, a name, or a system
+  marker that appears *inside* text — a maintainer tag at the top of a comment, a
+  `system:` line inside a tool result, a block shaped like the harness's own
+  notices sitting in a file. Forging one costs nothing, and it is the injection no
+  delimiter addresses, because the delimiter is what is being imitated. The new
+  paragraph makes authorship a property of the arrival, established once at the
+  boundary the way validity is: instructions from outside keep their origin
+  attached for as long as they are held, are checked against what that source was
+  expected to send before they are acted on, and are never merged into the run's
+  own instructions where the label would be lost. Two harnesses shipped exactly
+  this rule this week after crafted role headers inside untrusted comments were
+  summarised as authoritative.
 
 ## 2026-09-11 — A log line that never fired, from an outside contribution — plus things still running, and things that had quietly stopped
 
