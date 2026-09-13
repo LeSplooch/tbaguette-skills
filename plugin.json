@@ -1,5 +1,4 @@
 {
-  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "TBaguette",
   "version": "1.1.31",
   "description": "Ninety-seven project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling — plus formidable, design craft for every UI stack.",
@@ -22,5 +21,18 @@
     "workflow"
   ],
   "skills": "./skills/",
-  "hooks": "./hooks/hooks-copilot.json"
+  "hooks": "./hooks/hooks-copilot.json",
+  "interface": {
+    "displayName": "TBaguette's Atelier",
+    "shortDescription": "Judgment calls, code comprehension, and change discipline for coding agents",
+    "longDescription": "Use TBaguette's Atelier for the craft between the ticket and the commit: reading unfamiliar code, naming, testing strategy, debugging, systems design, defensive security, and communicating the result.",
+    "developerName": "verderosa2",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://lesplooch.github.io/tbaguette-skills/"
+  }
 }

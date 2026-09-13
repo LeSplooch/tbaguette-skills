@@ -162,18 +162,17 @@ class TestHarnessManifests(unittest.TestCase):
         # the bootstrap, the tool-mapping reference, and the install prompt.
         self.assertEqual(_load_yaml_scalars("plugin.yaml")["name"], "TBaguette")
 
-    def test_agent_plugins_schema_is_what_routes_vscode_to_its_hooks(self):
-        """VS Code ignores a manifest's hooks field entirely and derives the
-        path from the detected plugin format: Agent Plugins 1.0 resolves to
-        com.github.copilot/hooks/hooks.json, the other formats resolve
-        elsewhere. So the $schema line is not decoration -- drop it and VS Code
-        stops finding the only hook file written for it, while the CLI (which
-        does honor the hooks field) carries on working and hides the loss."""
+    def test_shared_root_manifest_is_compatible_with_codex_and_vscode(self):
+        """The root manifest is shared by Copilot CLI, VS Code, and Codex.
+
+        Codex's plugin installer rejects the Agent Plugins `$schema` field in
+        a shared root manifest. Keep the root manifest, interface metadata,
+        and VS Code hook file present, but do not reintroduce the schema field
+        that makes Codex report ``missing or invalid plugin.json``.
+        """
         manifest = _load_json("plugin.json")
-        self.assertEqual(
-            manifest.get("$schema"),
-            "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-        )
+        self.assertNotIn("$schema", manifest)
+        self.assertEqual(manifest["interface"]["category"], "Developer Tools")
         self.assertTrue((REPO_ROOT / "com.github.copilot/hooks/hooks.json").is_file())
 
     def test_the_two_copilot_hook_files_do_not_swap_event_casing(self):
