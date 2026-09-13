@@ -24,6 +24,19 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-13 — Codex can install the shared plugin manifest
+
+- The Codex marketplace installer now accepts TBaguette's shared root
+  manifest. Copilot CLI and VS Code keep their root manifest and dedicated
+  hook files, while Codex continues to use `.codex-plugin/plugin.json` and
+  `hooks/hooks-codex.json` for its Codex-specific integration.
+- If you tried the marketplace install before, refresh the marketplace and
+  install `TBaguette` again; run `codex plugin marketplace upgrade
+  tbaguette-dev` first if the marketplace is already configured. The previous
+  `missing or invalid plugin.json` failure came from a schema field Codex
+  rejects in the shared root manifest. Restart Codex or start a new
+  conversation after installation.
+
 ## 2026-09-13 — A default that looks correct alone can still be impossible in combination
 
 - **`configuration-management` now covers a default configuration that is

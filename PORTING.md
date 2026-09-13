@@ -382,11 +382,12 @@ cannot rewrite a prompt instead of emitting both and hoping.
   The CLI honors an explicit `hooks` path in the manifest. VS Code ignores it
   entirely and derives the path from the detected plugin format — Agent
   Plugins 1.0 means `com.github.copilot/hooks/hooks.json`, Claude format
-  means `hooks/hooks.json`, Copilot format means a root `hooks.json`. That is
-  why the `$schema` line in `plugin.json` is load-bearing rather than
-  decorative, and why there are two Copilot hook files with different event
-  casing rather than one. Neither file is reachable from the other's
-  surface.
+  means `hooks/hooks.json`, Copilot format means a root `hooks.json`. There
+  are two Copilot hook files with different event casing rather than one, and
+  the shared root manifest keeps its interface metadata without an Agent
+  Plugins `$schema`: the current Codex CLI marketplace validator rejects that
+  field and reports `missing or invalid plugin.json`. Neither hook file is
+  reachable from the other's surface.
 - **A harness that reads `.claude-plugin/plugin.json` is not thereby
   installed.** Copilot CLI reads that file, which makes "it already works"
   tempting and wrong. That manifest declares no `hooks`, so Copilot falls

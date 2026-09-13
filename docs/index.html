@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-13T00:57:42+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-13T00:57:42Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-13T03:50:43+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-13T03:50:43Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -140,10 +140,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/configuration-management/" data-fresh-at="2026-09-13T00:57:42.879537+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/configuration-management/" data-fresh-at="2026-09-13T02:57:42+02:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">configuration-management</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-13T00:57:42.879537+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-13T02:57:42+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together…</p>
   <span class="card__foot">
@@ -261,10 +261,11 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-13">13 Sep 2026</time>
-    <span class="notes__entry-title">A default that looks correct alone can still be impossible in combination</span>
+    <span class="notes__entry-title">Codex can install the shared plugin manifest</span>
   </h3>
   <ul class="notes__bullets">
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/configuration-management/"><code>configuration-management</code></a> now covers a default configuration that is individually well-formed but jointly impossible for the system it actually ships on.</strong> Field-level validation confirms each setting is the right type and in range; it says nothing about whether the <em>combination</em> of shipped defaults can ever be satisfied by a real input once that combination meets the one platform, network, or tier the running instance is fixed to. That failure doesn't look like a misconfiguration — nothing crashes, every request is answered, and the system just quietly rejects everything, which reads as calm rather than as a defect. The skill now says to test the shipped defaults directly for that case, rather than trusting field validation to catch it by accident.</li>
+    <li>The Codex marketplace installer now accepts TBaguette's shared root manifest. Copilot CLI and VS Code keep their root manifest and dedicated hook files, while Codex continues to use <code>.codex-plugin/plugin.json</code> and <code>hooks/hooks-codex.json</code> for its Codex-specific integration.</li>
+    <li>If you tried the marketplace install before, refresh the marketplace and install <code>TBaguette</code> again; run <code>codex plugin marketplace upgrade tbaguette-dev</code> first if the marketplace is already configured. The previous <code>missing or invalid plugin.json</code> failure came from a schema field Codex rejects in the shared root manifest. Restart Codex or start a new conversation after installation.</li>
   </ul>
 </li>
   </ol>
@@ -277,6 +278,16 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-13">13 Sep 2026</time>
+    <span class="notes__entry-title">Codex can install the shared plugin manifest</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li>The Codex marketplace installer now accepts TBaguette's shared root manifest. Copilot CLI and VS Code keep their root manifest and dedicated hook files, while Codex continues to use <code>.codex-plugin/plugin.json</code> and <code>hooks/hooks-codex.json</code> for its Codex-specific integration.</li>
+    <li>If you tried the marketplace install before, refresh the marketplace and install <code>TBaguette</code> again; run <code>codex plugin marketplace upgrade tbaguette-dev</code> first if the marketplace is already configured. The previous <code>missing or invalid plugin.json</code> failure came from a schema field Codex rejects in the shared root manifest. Restart Codex or start a new conversation after installation.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-13">13 Sep 2026</time>
@@ -554,19 +565,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> now gives it a seat in all seven tracks, and the seat differs in each. On a build it runs between framing and design, which is the last moment a reframe costs a paragraph instead of the implementation. On a diagnosis it waits until the third fix has not held, then goes after the reproduction rather than the patch. On a review it is the pass that finds what the diff does not contain. During an incident it is explicitly barred until the harm has stopped.</li>
     <li>Six existing skills now hand off to it at the point where each one runs out of road. <a class="skill-link" href="/tbaguette-skills/skills/steelmanning-alternatives/"><code>steelmanning-alternatives</code></a> when three generated options come back sharing one shape, which means the constraint is upstream of the generation. <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> when three correct fixes did not hold, which is one wrong model applied three times rather than three bad patches. <a class="skill-link" href="/tbaguette-skills/skills/managing-scope-drift/"><code>managing-scope-drift</code></a> gained the sentence its readers needed most: noticing is not drifting, and here is where the noticing goes.</li>
     <li>The skill was drafted, then swept with its own method before shipping, and the record of that is in the skill rather than in a commit message: which of the seven directions found something, what each finding changed, and what was discarded and why. Six of seven yielded — including the one that caught the skill's own text saying &quot;the frame&quot; in the singular after listing four separate sources for it.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-05">5 Sep 2026</time>
-    <span class="notes__entry-title">Three ways a green check is measuring the wrong thing</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/writing-the-failing-test-first/"><code>writing-the-failing-test-first</code></a> now covers the change that has no behavior to assert. An optimization, a cache, a batch, a swap to a cheaper backend — the point is that the answer stays the same, so every test you write passes before the change and after it, and the loop looks inapplicable. It is not: the change did move something, and it was a cost. Assert that instead — elapsed time, queries, calls, allocations — and it goes red first like anything else. The skill carries the case that shows why it matters, where a fast path returned the right value and passed while still paying the exact cost it was written to avoid, because the slow dependency sat one call further down in code the change never touched. Two conditions make such an assertion usable rather than flaky, and the skill names both; its description now fires on a change made for cost rather than behavior.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/resolving-merge-conflicts/"><code>resolving-merge-conflicts</code></a> names a resolution that is textually clean, builds green, passes its tests, and silently un-publishes work that had already shipped. Any repository that commits its own build output — a rendered site, a generated client, a compiled schema — conflicts in those files on every integration, and both sides look equally authoritative because each agrees with its own branch's source. Take your side and you have just reverted everything that landed while you waited. The rule is that a generated file has no side to take: settle the source, then regenerate from the merged tree. The skill also says what a <code>.gitattributes</code> entry can and cannot do about it, and why a long-lived branch costs more in such a repository than the usual advice implies.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a> extends its case on components that run without input to the harder one: a rule that <em>decides</em>. A gate treating missing data as disqualifying is sound in isolation, but if one of its inputs has no source where it was deployed it rejects everything, forever, for absence rather than for any measurement — and from outside that is indistinguishable from a strict rule during a quiet spell, with nothing logged and nothing to investigate. The fix is one field: attribute each rejection to the clause that made it, and never sum &quot;failed the check&quot; with &quot;had nothing to check.&quot; The skill also says why the alarm on that has to be written narrowly, or the gate's legitimate strict spells will train everyone to dismiss it.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/using-tbaguette/"><code>using-tbaguette</code></a> adds the third moment its own discipline goes stale, after &quot;before the response&quot; and &quot;once the response has run long.&quot; A compaction rewrites the conversation underneath you, and what survived it is a decision the harness made rather than one the run made — so the first response afterward owes a fresh check, because &quot;I already checked&quot; now refers to a context that no longer exists. It also points at <code>/skill-doctor</code> where it previously named only the general diagnostics, since that one reports both halves of what the listing-budget decision actually needs: what each skill costs and how often it gets reached for.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> turns its own strongest rule into a procedure. It already said that a lesson appearing in two unrelated projects is the best evidence the bar can get; it now says how to find one, which is to sweep every project's commit subject lines into a single list first and group them by shape before opening anything. Reading one commit at a time can never see a repeat — each lesson arrives alone and gets judged alone. It also answers what to do when a contribution sits: re-merge, keep both update notes, and settle the generated half by regenerating rather than by choosing a side, since a waiting branch here does not merely fall behind.</li>
   </ul>
 </li>
       </ol>
@@ -1404,7 +1402,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/configuration-management/" data-search-card data-search-terms="configuration-management use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together… designing systems">
   <span class="card__name-row">
     <span class="card__name">configuration-management</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-13T00:57:42.879537+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-13T02:57:42+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together…</p>
   <span class="card__foot">
