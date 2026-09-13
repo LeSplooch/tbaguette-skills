@@ -157,6 +157,20 @@ repository — the files existed, the JSON was valid, the hooks exited 0.
   `CLAUDE_PLUGIN_ROOT` variable are Claude Code's, so the answer was a hook
   file of its own rather than no hooks at all. Codex now has both a
   session-start bootstrap and a per-turn nudge.
+- **Codex also truncates any skill loaded through this path at 8,000 bytes,
+  and nothing about the wiring above changes that.** `codex-rs/ext/skills/src/render.rs`'s
+  `MAX_SKILL_PROMPT_BYTES` cuts a `SKILL.md` mid-character the moment it is
+  reached through an Agent Plugin manifest — exactly the path this repo
+  ships (`.codex-plugin/plugin.json`) — with a one-line warning to the model
+  and no equivalent cap for skills discovered outside a plugin. 82 of this
+  repo's 97 skills exceed it as of this writing, several past 30 KB, so on
+  the documented Codex install most of this library's content is cut off
+  silently at whatever character the limit lands on. Restructuring the
+  largest skills to fit is a real editing campaign, not a manifest fix, and
+  is not attempted here; `scripts/run_tests.py` reports the current count on
+  every run instead, so it is never rediscovered from scratch, and the
+  skills it names as largest are the ones most worth reading directly rather
+  than through Codex until that campaign happens.
 
 Three others were checked and left alone, which is worth recording so nobody
 re-audits them from scratch:

@@ -68,6 +68,36 @@ def _extract_count(text: str) -> int | None:
     return None
 
 
+# Codex truncates any SKILL.md loaded through an Agent Plugin manifest at
+# 8,000 bytes (codex-rs/ext/skills/src/render.rs, MAX_SKILL_PROMPT_BYTES) —
+# this repo's .codex-plugin/plugin.json is exactly that path. Report-only:
+# nothing here is a defect this repo can fix by editing prose, and a hard
+# gate would turn "this skill grew" into a build failure for a limit this
+# repo does not control. It exists so the count is never rediscovered from
+# scratch by hand.
+SKILL_SIZE_CAP = 8000
+
+
+def _report_oversized_skills() -> None:
+    skills_dir = SCRIPTS_DIR.parent / "skills"
+    total = 0
+    over = []
+    for entry in sorted(skills_dir.iterdir()):
+        skill_md = entry / "SKILL.md"
+        if skill_md.is_file():
+            total += 1
+            size = skill_md.stat().st_size
+            if size > SKILL_SIZE_CAP:
+                over.append((size, entry.name))
+
+    print(f"\n{'=' * 70}\nskill size report (informational, not a gate)\n{'=' * 70}")
+    print(f"{len(over)} / {total} SKILL.md files exceed {SKILL_SIZE_CAP} bytes "
+          f"— truncated on Codex via the documented Agent Plugin install.")
+    over.sort(reverse=True)
+    for size, name in over[:5]:
+        print(f"  {size:>7,} {name}")
+
+
 def main() -> int:
     # git cannot wire its own hooks on clone, by design, so .githooks/ ships
     # inert until something points core.hooksPath at it. This is the first
@@ -90,6 +120,8 @@ def main() -> int:
 
         if result.returncode != 0:
             failures.append(label)
+
+    _report_oversized_skills()
 
     print(f"\n{'=' * 70}")
     if failures:
