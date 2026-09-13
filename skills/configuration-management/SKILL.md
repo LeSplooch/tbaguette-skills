@@ -1,6 +1,6 @@
 ---
 name: configuration-management
-description: Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together, when something works in staging but not in production, when a missing or malformed setting surfaces as a null or a crash hours after startup, when standing up a new environment or deployment target, when deciding whether a value belongs in code, config, a secret store, or a feature flag system, or when a config file was placed where a project's naming convention implied rather than where the tool actually searches.
+description: Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together, when something works in staging but not in production, when a missing or malformed setting surfaces as a null or a crash hours after startup, when standing up a new environment or deployment target, when deciding whether a value belongs in code, config, a secret store, or a feature flag system, when a config file was placed where a project's naming convention implied rather than where the tool actually searches, or when every shipped default passes validation yet the system rejects every real input once running. Covers a rule that is individually valid but jointly unsatisfiable given a fact fixed for the instance running it.
 ---
 
 # Configuration management
@@ -41,6 +41,14 @@ Load, parse, and validate the entire configuration into one typed structure befo
 - **Never read config at the call site.** A lookup buried on a code path that runs only during checkout is a config error that surfaces three hours later as a null, in a stack trace that names the wrong subsystem. Startup validation converts every one of those into a boot failure.
 - **A flag is the one thing that rule does not cover, and the test is checkable rather than a matter of taste:** if the value must change without a restart, it is not config, and evaluating it at the call site is the mechanism rather than a violation of it. What gets validated at startup there is the flag client's *wiring* — endpoint reachable, credentials valid, static fallback compiled in — while the *value* is read per request. Read the two rules as one and you build a flag loaded once at boot, which cannot flip during the incident it was built for; that failure passes review because each rule is correct on its own.
 - **Fail fast means fast:** validation belongs before listeners bind and before the instance reports ready, so a bad rollout stops at the first replica instead of taking the fleet.
+
+## A jointly unsatisfiable default fails silently, not loudly
+
+The cross-field check above catches a rule that contradicts another *config* field. It has nothing to say about a rule that contradicts a fact fixed for the one instance being validated but never itself entered as a field — which platform it runs on, which network it is pointed at, which tier it serves. A rule can be individually well-typed and individually sensible, and still be impossible for any real input to satisfy given that fact: a check meaningful only on one platform, defaulted on for every platform the software ships to, because nothing ever compared the two.
+
+That failure does not look like a misconfiguration. Fail-fast validation is built to catch a contradiction and refuse to start; this one starts, runs, and answers every request the same way — reject — because each rule is real and syntactically fine, just jointly unsatisfiable given what this instance is. A system rejecting everything is, from its own logs, indistinguishable from one quietly doing its job well: nothing crashes, and the absence reads as calm rather than as a defect. The tell is the *rate*, not any one rejection's stated reason — not a single input rejected for cause, but all of them, tracing back to the same one or two rules.
+
+So write a test, run in CI against the shipped default configuration itself, asserting it can still produce at least one accepted input given the fixed facts it will actually run under — not a runtime check, and not left for field-level validation to catch by accident. That assertion is what turns "each rule is individually correct" back into a claim about the whole system: it fails once, loudly, at the moment either side of it changes — a rule added, or the fixed facts the default is validated against changed under it — instead of being discovered later, from outside, as a system with no complaints and no traffic.
 
 ## Discovery comes before precedence
 

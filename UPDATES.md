@@ -24,6 +24,20 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-13 — A default that looks correct alone can still be impossible in combination
+
+- **`configuration-management` now covers a default configuration that is
+  individually well-formed but jointly impossible for the system it actually
+  ships on.** Field-level validation confirms each setting is the right type
+  and in range; it says nothing about whether the *combination* of shipped
+  defaults can ever be satisfied by a real input once that combination meets
+  the one platform, network, or tier the running instance is fixed to. That
+  failure doesn't look like a misconfiguration — nothing crashes, every
+  request is answered, and the system just quietly rejects everything, which
+  reads as calm rather than as a defect. The skill now says to test the
+  shipped defaults directly for that case, rather than trusting field
+  validation to catch it by accident.
+
 ## 2026-09-13 — A candidate waiting on time isn't the same as one waiting on evidence
 
 - **`tending-tbaguette` now tells apart a candidate that's out of room from one
