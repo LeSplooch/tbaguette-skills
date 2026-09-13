@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.29</span>
+      <span class="wordmark-version" dir="ltr">v1.1.30</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-12T10:22:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-12T10:22:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-13T00:46:48+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-13T00:46:48Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">tending-tbaguette</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-11T12:14:52+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-13T00:46:48.372483+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
   <p class="lede">Use at the start of every conversation, in any project or repo, and keep watching for the rest of it — the moment a genuinely project-agnostic lesson shows up while using TBaguette, capture it. Triggers include a correction that generalizes past this one codebase, a gap or wrong assumption found in a skill while that skill was running, a recurring judgment call nothing covers yet, a TBaguette skill that looks wrong enough to want editing, an installed plugin that already carries hand-edits, or any question about how to contribute to TBaguette. Covers the bar a candidate has to clear, capturing one without derailing the current task, scrubbing it of anything project-specific, choosing which existing skill a lesson belongs in, the approval gate that no absent human lifts, opening the pull request from a fork and answering the review it gets, restoring an install that was edited in place, a command the harness declines rather than git, and how a merged change comes back through <a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/keeping-tbaguette-current/">keeping-tbaguette-current</a>.</p>
@@ -142,6 +142,7 @@
 <p><strong>But &quot;the next pass&quot; is a claim about the interval, not about the work.</strong> The counting rule assumes visits to the queue are spaced far enough apart that the inputs have a chance to move between them, and nothing enforces that. Two sessions in an afternoon, or a scheduled sweep firing on top of a manual one, both count as two passes while holding exactly the same evidence — so a rule written to force a decision after a real wait instead manufactures one on unchanged inputs, and that decision carries the false authority of having been reached twice.</p>
 <p>Read a deferral premise by its condition, never by its count. An entry whose premise says <em>fires on a second sighting in unrelated work</em> has not fired because a second session opened the queue. Where a premise was written in counts and the visits have bunched up, treat them as one and leave the entry queued: that is the first deferral still waiting, not a third one. <a class="skill-link" href="/tbaguette-skills/skills/automating-repetition/"><code>automating-repetition</code></a>'s <em>&quot;Next run&quot; is a claim about the interval, not about the work</em> is the general form.</p>
 <p>This governs <em>your</em> deferrals, not your partner's. &quot;Keep it queued&quot; chosen at the approval gate is a decision someone made and it resets nothing — they own the scope, and re-asking about it next week is pestering rather than rigor.</p>
+<p><strong>An entry held back by the pass's own budget is not a deferral, and the bunching rule above does not reach it.</strong> A pass opens pull requests for a bounded number of candidates, and one that cleared every filter but arrived after that bound was spent goes back into the queue looking exactly like one that was declined — same section, same <code>Sketch:</code> line, same &quot;next pass&quot; in its premise. The two are waiting on different things. A deferral waits on <em>evidence</em> — its premise names something outside the pass, a second sighting, a section read in full — so bunched passes holding the same evidence rightly count as one. An earmark waits on <em>capacity</em>, which every pass brings with it, so it fires on the next pass that still has room in its bound, however soon that pass runs, and it is never counted as a deferral. Write the difference into the entry where the next pass will read it: <code>EARMARKED — bound spent</code> names capacity; <code>DEFERRED — fires on &lt;condition&gt;</code> names evidence.</p>
 <h2 id="a-reopen-condition-that-fires-is-the-entry-doing-its-job">A reopen condition that fires is the entry doing its job</h2>
 <p>The rule above covers a candidate you keep re-reading. A <code>## Settled</code> entry has the opposite life: it was answered, and the only question left is when to look again. When its reopen condition trips, supersede it with a new dated entry and leave the old one standing underneath. Deleting it discards the only positive evidence you will ever have that the condition <em>can</em> fire — and a condition that has never fired has two readings that look identical from a cold start, a genuinely closed question and a condition too narrow to trip. Both present as an entry that has been quiet for a month.</p>
 <p>There is a third failure the count does not catch, so do not read firing as proof of a good condition either: one that fires on noise also fires, and re-opens a settled question every pass for nothing. What separates the two is whether the condition names something checkable. For a <code>## Settled</code> entry, prefer a condition phrased as a command whose output changes — <code>gh pr list --state open</code>, a count, a hash — over one phrased as a circumstance somebody would have to notice. That preference belongs to settled entries specifically; the deferral premises above govern <code>## Pending</code>, and those are legitimately circumstances, because what they wait on is a second sighting rather than a number.</p>

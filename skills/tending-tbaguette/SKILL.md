@@ -441,6 +441,21 @@ This governs *your* deferrals, not your partner's. "Keep it queued" chosen at th
 approval gate is a decision someone made and it resets nothing — they own the
 scope, and re-asking about it next week is pestering rather than rigor.
 
+**An entry held back by the pass's own budget is not a deferral, and the
+bunching rule above does not reach it.** A pass opens pull requests for a
+bounded number of candidates, and one that cleared every filter but arrived
+after that bound was spent goes back into the queue looking exactly like one
+that was declined — same section, same `Sketch:` line, same "next pass" in
+its premise. The two are waiting on different things. A deferral waits on
+*evidence* — its premise names something outside the pass, a second sighting,
+a section read in full — so bunched passes holding the same evidence rightly
+count as one. An earmark waits on *capacity*, which every pass brings with
+it, so it fires on the next pass that still has room in its bound, however
+soon that pass runs, and it is never counted as a deferral. Write the
+difference into the entry where the next pass will read it: `EARMARKED —
+bound spent` names capacity; `DEFERRED — fires on <condition>` names
+evidence.
+
 ## A reopen condition that fires is the entry doing its job
 
 The rule above covers a candidate you keep re-reading. A `## Settled` entry has the

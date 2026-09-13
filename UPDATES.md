@@ -24,6 +24,18 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-13 — A candidate waiting on time isn't the same as one waiting on evidence
+
+- **`tending-tbaguette` now tells apart a candidate that's out of room from one
+  that's out of evidence.** Its guidance for re-reading a queued contribution
+  used to treat every re-visit the same way — as a `deferral`, settled after two
+  unchanged readings. That was wrong for a candidate that simply arrived after
+  a pass had already used up its attention for the sitting: it isn't waiting on
+  a second sighting or a fuller argument, only on the next pass having room for
+  it. The skill now marks that case `earmarked` rather than `deferred`, so it
+  gets picked back up on the next pass with capacity instead of being held for
+  a second reading it was never actually waiting on.
+
 ## 2026-09-12 — The rule at the bottom of the file, the prompt nobody answered, and who actually said it
 
 - **`writing-durable-docs` now treats where a rule sits in a document as a
