@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-14 — A scheduled run can drop the same request clause every day and never notice
+## 2026-09-14 — A scheduled run can drop a clause every day; a liveness check can pass on a dead process
 
 - **`finishing-what-you-started` now covers the recurring run.** Its surrender
   rule was written for one run: mark a criterion surrendered, never delete it.
@@ -38,6 +38,16 @@ Everything above the first `##` is preamble and is never rendered.
   a reason and a reopen condition in a record that outlives the run. New
   trigger in the `description:` for a recurring run dropping the same clause
   each pass.
+- **`portable-shell-scripting` now covers the one-shot liveness check.** Its
+  kill-and-wait section already said that `pkill -f` can kill the calling
+  shell and that a `pgrep -f` wait loop can wait for itself. The quietest
+  form was missing: a single `if pgrep -f name` asked before a restart, which
+  matches the asking shell's own command line, answers yes, skips the
+  restart, and leaves every later step running against a process that is not
+  there — with no symptom at all. Ask liveness by handle (`kill -0` on the
+  saved PID, or `pgrep -x` on the short name), and treat an inline one-liner
+  in a tool call as the same shell. New trigger for a script that asks once
+  whether a process is still running.
 
 ## 2026-09-13 — A default that looks correct alone can still be impossible in combination
 
