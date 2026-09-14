@@ -59,6 +59,14 @@ Everything above the first `##` is preamble and is never rendered.
   make every state reachable from a script so all of them land in one
   contact sheet. `confirming-before-claiming-done`'s artifact section gains
   the same case as a positive-probe rule.
+- **`tending-tbaguette` asks a contributor to state the mechanism as its own
+  claim.** A pull request's "X rejects Y because of Z" is two claims — the fix
+  worked, and Z is why — and the second gets checked against the source of
+  whatever did the refusing, because a fix that works by a fallback the
+  diagnosis never named lands a side effect after the merge. A deleted test is
+  quoted, with why it is wrong now. Also a one-line pointer from the
+  re-reading-a-candidate rule to its general form in
+  `finishing-what-you-started`.
 
 ## 2026-09-13 — A default that looks correct alone can still be impossible in combination
 

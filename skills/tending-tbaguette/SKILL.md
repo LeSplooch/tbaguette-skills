@@ -398,6 +398,10 @@ rather than narration about it. One line, and stop.
 
 ## A candidate you keep re-reading has already been declined
 
+This is one queue's instance of a general rule — a recurring run that surrenders
+the same ledger line every pass settles it rather than surrendering it twice —
+which `finishing-what-you-started` carries for any standing request.
+
 The bar above says to capture on a close call and let a later pass decide, and
 the safety rails say to leave a borderline candidate queued rather than push it
 under time pressure. Both are right, and together they build a graveyard.
@@ -596,7 +600,7 @@ The shape, so this file still says what happens:
    and never silently drop one. A contribution that goes quiet under review costs
    the maintainer more than one that was never opened.
 
-Four decisions inside step 3 have no gate behind them, and a session that never
+Five decisions inside step 3 have no gate behind them, and a session that never
 opens the reference can still get them wrong quietly:
 
 **First check the library does not already say it.** The strongest reason to
@@ -688,6 +692,20 @@ displacement deletes a trigger other people are relying on to reach a section yo
 may never have read, and your pull request is the only place that loss is visible.
 Name the other candidate homes and say why each is worse, in the pull request
 body, before proposing that a maintainer spend a trigger.
+
+**State the mechanism as its own claim, separately from the fix that works.**
+A pull request usually opens with a sentence of the form *X rejects Y because of
+Z*, and by the time it is written the fix has been smoke-tested, so the sentence
+reads as settled. The outcome is settled. The mechanism is a second claim with
+its own evidence, and the maintainer checks it against the source of whatever
+did the refusing — because a fix that works by a route the diagnosis did not
+name, a fallback or a default or a second code path, lands a side effect the
+diagnosis cannot predict, and it gets found after the merge. So name the
+mechanism from the refusing program's own source or its exact message, and say
+which of the two you have. If the change deletes a test, quote what it guards —
+its docstring or its name — in the pull request and say why that is wrong now: a test whose docstring predicts
+your change's side effect is the first thing a review reads, and deleting it
+without a sentence reads as not having read it.
 
 **Expect the commit to touch most of `docs/`.** The pre-commit hook regenerates
 the site, every page carries a version and a build timestamp, so a one-file edit
