@@ -121,7 +121,7 @@ Read all five dials, say them out loud alongside the track, and put them on the 
 | **Presence** | paired · async · autonomous · unattended | Who answers a gate |
 | **Amplitude** | express · standard · campaign | How much run the work is worth |
 | **Blast radius** | sandbox · repo · live | What a wrong turn costs |
-| **Crew** | solo · fanned · shared tree | Who else is writing to this tree |
+| **Crew** | solo · fanned · shared tree | Who else is writing to this tree or driving a shared instrument |
 | **Register** | trimmed · clipped · telegraphic | What the run spends reading it and saying it |
 
 Four settings route somewhere specific, before the first action rather than after:
@@ -334,6 +334,7 @@ The track rarely moves. The envelope moves constantly, usually without anyone no
 | The context is filling and the work is not close to done | amplitude: standard → campaign | Write the record now, while the memory writing it is still good |
 | The next command pushes, deploys, sends, or writes real data | radius: → live | Re-read reversibility before that command, not after it |
 | The diff shows files you never opened | crew: solo → shared tree | Nothing destructive, nothing stashed, nothing reset. Stage by hunk and re-read before writing |
+| A device, profile, or box the run needs has a foreground you did not start | crew: solo → shared tree | Do not take it. Use the next-best evidence and name it on the deliverable; ask for the instrument when you actually need it |
 | Users started being affected while you investigated | track: diagnose → respond | The only upward track move that is urgent rather than procedural. Declare it out loud, then `responding-to-incidents` |
 
 ## Commands

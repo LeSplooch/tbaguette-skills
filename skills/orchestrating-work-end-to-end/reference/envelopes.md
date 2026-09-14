@@ -89,6 +89,19 @@ work you did. A checkout that suddenly reports changes across files you never
 opened is not a broken tool, it is a second writer, and the next destructive
 git command is about to cost someone else their afternoon.
 
+Read `shared tree` for an instrument the run shares rather than a tree, too —
+a test device, a browser profile, a serial port, a staging box, a terminal
+session, anything with one foreground. Reachable, connected, unlocked —
+whatever the checklist's preconditions are — say the run is *permitted* to use
+it and nothing about whether it is *free*; what settles that is one read-only
+look at what is in front, and a second look to see whether it moved without
+you. A foreground the run did not start, or one that changed between the two
+looks, is another run's state, and launching on top of it breaks that run and
+captures a surface nobody was testing. Do not take it: drop to the next-best
+evidence and say so on the deliverable, and ask for the instrument when the
+run actually needs it. For a UI surface, `formidable`'s elevate reference
+names the rungs — running it, a recording, a still, a description.
+
 ## Register — what the run spends
 
 Set once, at the route, and held for the whole run. `crouton` owns it; this
@@ -133,6 +146,7 @@ Some combinations carry a rule that neither dial carries alone.
 | An eight-phase run on a one-line change | Amplitude never read; `standard` taken as the default rather than as a judgment |
 | The run was careful for hours and reckless in its last command | Blast radius read once at the start instead of before the irreversible step |
 | Two agents' work landed and one of them silently lost | Crew read as `solo` because the tree looked quiet at the moment it was read |
+| A scripted pass drove another session's app off a shared device | Crew read from permission — connected, unlocked — instead of from occupancy: what was in front, and whether it moved between two looks |
 | Every phase re-read a file the run already had | Register never read, so only the closing prose was ever tightened and the reads — the larger spend — were not |
 | An express run that ran for a day | Promotion refused because the work was "nearly done" — which it was, four times |
 | A perfect report nobody could act on | `unattended` treated as `autonomous`: written for a reader who could ask a follow-up question, to a channel where nobody can |

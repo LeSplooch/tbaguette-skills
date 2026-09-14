@@ -92,6 +92,20 @@ Everything above the first `##` is preamble and is never rendered.
   beside the animation's duration before choosing the instrument. The
   `description:` trigger added above now reads "a state or animation the
   code defines".
+- **`orchestrating-work-end-to-end`'s Crew dial now covers a shared instrument,
+  not only a shared tree.** A test device, a browser profile, a serial port, a
+  staging box, a terminal session — anything with one foreground — carries the
+  state of whoever is using it now, and "connected and unlocked" says the run
+  is permitted, not that the instrument is free. One read-only look at what is
+  in front and a second to see whether it moved without you settles it: a
+  foreground you did not start is another run's state, and launching on top
+  breaks that run and captures a surface nobody was testing. Do not take it;
+  use the next-best evidence, say so on the deliverable, and ask for the
+  instrument when you actually need it. New row in the envelope-change table
+  for the moment it happens mid-run. `formidable`'s rung rule in `elevate.md`
+  gains the case where the top rung is available and occupied at once, and its
+  audit reference's "abort the step" now says abort rather than relaunch on
+  top.
 
 ## 2026-09-13 — A default that looks correct alone can still be impossible in combination
 
