@@ -24,6 +24,16 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-15 — Slow startup now routes to the concurrency-model skill
+
+- **`choosing-concurrency-model` now covers slow startup with several
+  independent dependencies** — config, cache, connection pools, plugins. Bring
+  them up one after another and the total wait is their sum, and one that
+  hangs blocks everything queued behind it, which reads as the whole app being
+  slow rather than as one stuck dependency. The skill now names this pattern
+  and its fix: start independent dependencies concurrently, each with its own
+  timeout.
+
 ## 2026-09-14 — A dropped clause, a liveness check that lies, and a screenshot of the wrong app
 
 - **`finishing-what-you-started` now covers the recurring run.** Its surrender

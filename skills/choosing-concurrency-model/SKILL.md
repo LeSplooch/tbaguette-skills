@@ -1,6 +1,6 @@
 ---
 name: choosing-concurrency-model
-description: Use when work must happen at the same time and the approach is undecided — OS threads, async or event loops, actors and message passing, a durable job queue, data parallelism, or sharding by key. Also for thread pool exhaustion, event loop stalls, deadlock, unbounded queue growth, memory blowups under load, tail latency spikes, cancellation that does not stop work, shared mutable state versus message passing, and whether to be concurrent at all.
+description: Use when work must happen at the same time and the approach is undecided — OS threads, async or event loops, actors and message passing, a durable job queue, data parallelism, or sharding by key. Also for thread pool exhaustion, event loop stalls, deadlock, unbounded queue growth, memory blowups under load, tail latency spikes, cancellation that does not stop work, shared mutable state versus message passing, slow startup or initialization with several independent dependencies, and whether to be concurrent at all.
 ---
 
 # Choosing a concurrency model
@@ -12,6 +12,7 @@ Pick from workload shape and failure tolerance, never from language fashion. Mos
 ## When to use
 
 - Starting any component that handles more than one thing at once, or adding a background worker, scheduler, or parallel path.
+- A service or process's own startup sequence, when it has several independent dependencies to bring up (config, cache, connection pools, plugins).
 - Deciding shared mutable state versus message passing — a design decision, not an implementation detail.
 - Symptoms: latency high while CPU sits idle, p99 far above p50, pool exhaustion, memory climbing until OOM, deadlock that only appears under production load.
 - Not for: diagnosing a specific existing race or deadlock (debugging-concurrency), or setting queue bounds and shedding policy once the model is chosen (rate-limiting-and-backpressure).
@@ -48,6 +49,7 @@ Pick from workload shape and failure tolerance, never from language fashion. Mos
 - **Switching cost.** A thread context switch is ~1–10µs; a task switch on an event loop is ~100ns–1µs. That gap only matters above roughly 10k switches per second. Below that, choose for debuggability, not throughput.
 - **The debuggability tax.** Budget it up front: a correlation id propagated through every hop, and a way to dump what is currently in flight. Retrofitting either during an incident is not possible.
 - **Saturation signals.** Queue depth, wait time, and rejection count per pool. Without them, "it's slow" has no answer.
+- **Serial initialization.** N independent startup dependencies (config fetch, cache warm, connection pool, plugin load) run one after another: the total cost is their sum, not their max, and one that hangs blocks everything after it — read from outside as the whole product being slow. Start independent dependencies concurrently and give each its own timeout, so one hang costs its own budget instead of the product's entire startup time.
 
 ## When not to be concurrent
 
@@ -71,6 +73,7 @@ Pick from workload shape and failure tolerance, never from language fashion. Mos
 | Parallel version slower than sequential | Chunk work below coordination overhead |
 | Cannot tell what a request actually did | No correlation id propagated across hops |
 | Adding workers made throughput worse | Contention or a downstream limit; the bottleneck moved, not disappeared |
+| Startup is slow and no single step looks expensive | Independent dependencies initialized in sequence instead of concurrently |
 
 ## Red flags
 
