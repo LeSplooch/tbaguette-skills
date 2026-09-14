@@ -78,6 +78,20 @@ Everything above the first `##` is preamble and is never rendered.
   evidence it is absent. The audit reference's "drive it with synthetic
   input" step now points at the rule in `craft-floor.md`. New trigger for a
   state the code implements that does not show in a capture.
+- **`formidable`'s craft floor now verifies motion from frames, not from a
+  still.** A screenshot has a capture latency of its own, and any change that
+  completes inside that window is invisible to it by construction — a
+  quarter-second capture path returns the resting state of a quarter-second
+  animation every time, and every micro state on `motion.md`'s duration table
+  is shorter than that, so the motion reads as absent when it is not. Record
+  the moment instead, split the recording into frames at a rate that puts
+  several inside the shortest animation under test, and take one number per
+  frame from the region that should change; the result is a curve (starts
+  within a frame, holds as long as its cause lasts, resolves over the stated
+  duration) that can be checked against the spec. Write the capture latency
+  beside the animation's duration before choosing the instrument. The
+  `description:` trigger added above now reads "a state or animation the
+  code defines".
 
 ## 2026-09-13 — A default that looks correct alone can still be impossible in combination
 

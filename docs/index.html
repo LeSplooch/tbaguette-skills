@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.36</span>
+      <span class="wordmark-version" dir="ltr">v1.1.37</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-14T18:23:48+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-14T18:23:48Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-14T18:28:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-14T18:28:14Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -140,10 +140,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/formidable/" data-fresh-at="2026-09-14T18:23:48.587324+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/formidable/" data-fresh-at="2026-09-14T18:28:14.373232+00:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">formidable</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-14T18:23:48.587324+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-14T18:28:14.373232+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when a UI, an idea for a UI, or a project with no interface yet should be taken past what was asked and made outstanding.</p>
   <span class="card__foot">
@@ -225,6 +225,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>'s audit reference and <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> now treat a capture as a measurement of whatever owned the surface.</strong> Two unrelated projects hit it the same week: a desktop screenshot of &quot;the active window&quot; caught the wrong one, and a phone screenshot came back showing a different app because another session had deployed to the shared device between two steps. Address every capture to the thing under test (window id or class, package, tab), read and record the foreground owner at capture time, abort the step when it is not the subject, and make every state reachable from a script so all of them land in one contact sheet. <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a>'s artifact section gains the same case as a positive-probe rule.</li>
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> asks a contributor to state the mechanism as its own claim.</strong> A pull request's &quot;X rejects Y because of Z&quot; is two claims — the fix worked, and Z is why — and the second gets checked against the source of whatever did the refusing, because a fix that works by a fallback the diagnosis never named lands a side effect after the merge. A deleted test is quoted, with why it is wrong now. Also a one-line pointer from the re-reading-a-candidate rule to its general form in <a class="skill-link" href="/tbaguette-skills/skills/finishing-what-you-started/"><code>finishing-what-you-started</code></a>.</li>
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>'s craft floor now says how to verify a state that lives between two events.</strong> A pressed or active state is set by the down event and cleared by the up event, and an automation tool's default tap or click delivers both inside one frame — the flag is set and cleared before any render sees it, so a capture shows the effect of the press and none of its feedback, and the feedback reads as missing when it is not. Hold the input for the length of a real press (roughly 100 ms), and treat an instantaneous synthetic event as unable to observe a transient state rather than as evidence it is absent. The audit reference's &quot;drive it with synthetic input&quot; step now points at the rule in <code>craft-floor.md</code>. New trigger for a state the code implements that does not show in a capture.</li>
+    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>'s craft floor now verifies motion from frames, not from a still.</strong> A screenshot has a capture latency of its own, and any change that completes inside that window is invisible to it by construction — a quarter-second capture path returns the resting state of a quarter-second animation every time, and every micro state on <code>motion.md</code>'s duration table is shorter than that, so the motion reads as absent when it is not. Record the moment instead, split the recording into frames at a rate that puts several inside the shortest animation under test, and take one number per frame from the region that should change; the result is a curve (starts within a frame, holds as long as its cause lasts, resolves over the stated duration) that can be checked against the spec. Write the capture latency beside the animation's duration before choosing the instrument. The <code>description:</code> trigger added above now reads &quot;a state or animation the code defines&quot;.</li>
   </ul>
 </li>
   </ol>
@@ -248,6 +249,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>'s audit reference and <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> now treat a capture as a measurement of whatever owned the surface.</strong> Two unrelated projects hit it the same week: a desktop screenshot of &quot;the active window&quot; caught the wrong one, and a phone screenshot came back showing a different app because another session had deployed to the shared device between two steps. Address every capture to the thing under test (window id or class, package, tab), read and record the foreground owner at capture time, abort the step when it is not the subject, and make every state reachable from a script so all of them land in one contact sheet. <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a>'s artifact section gains the same case as a positive-probe rule.</li>
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> asks a contributor to state the mechanism as its own claim.</strong> A pull request's &quot;X rejects Y because of Z&quot; is two claims — the fix worked, and Z is why — and the second gets checked against the source of whatever did the refusing, because a fix that works by a fallback the diagnosis never named lands a side effect after the merge. A deleted test is quoted, with why it is wrong now. Also a one-line pointer from the re-reading-a-candidate rule to its general form in <a class="skill-link" href="/tbaguette-skills/skills/finishing-what-you-started/"><code>finishing-what-you-started</code></a>.</li>
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>'s craft floor now says how to verify a state that lives between two events.</strong> A pressed or active state is set by the down event and cleared by the up event, and an automation tool's default tap or click delivers both inside one frame — the flag is set and cleared before any render sees it, so a capture shows the effect of the press and none of its feedback, and the feedback reads as missing when it is not. Hold the input for the length of a real press (roughly 100 ms), and treat an instantaneous synthetic event as unable to observe a transient state rather than as evidence it is absent. The audit reference's &quot;drive it with synthetic input&quot; step now points at the rule in <code>craft-floor.md</code>. New trigger for a state the code implements that does not show in a capture.</li>
+    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>'s craft floor now verifies motion from frames, not from a still.</strong> A screenshot has a capture latency of its own, and any change that completes inside that window is invisible to it by construction — a quarter-second capture path returns the resting state of a quarter-second animation every time, and every micro state on <code>motion.md</code>'s duration table is shorter than that, so the motion reads as absent when it is not. Record the moment instead, split the recording into frames at a rate that puts several inside the shortest animation under test, and take one number per frame from the region that should change; the result is a curve (starts within a frame, holds as long as its cause lasts, resolves over the stated duration) that can be checked against the spec. Write the capture latency beside the animation's duration before choosing the instrument. The <code>description:</code> trigger added above now reads &quot;a state or animation the code defines&quot;.</li>
   </ul>
 </li>
 <li class="notes__entry">
@@ -569,7 +571,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/formidable/" data-search-card data-search-terms="formidable use when a ui, an idea for a ui, or a project with no interface yet should be taken past what was asked and made outstanding. ui and design">
   <span class="card__name-row">
     <span class="card__name">formidable</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-14T18:23:48.587324+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-14T18:28:14.373232+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when a UI, an idea for a UI, or a project with no interface yet should be taken past what was asked and made outstanding.</p>
   <span class="card__foot">
