@@ -67,6 +67,17 @@ Everything above the first `##` is preamble and is never rendered.
   quoted, with why it is wrong now. Also a one-line pointer from the
   re-reading-a-candidate rule to its general form in
   `finishing-what-you-started`.
+- **`formidable`'s craft floor now says how to verify a state that lives
+  between two events.** A pressed or active state is set by the down event
+  and cleared by the up event, and an automation tool's default tap or click
+  delivers both inside one frame — the flag is set and cleared before any
+  render sees it, so a capture shows the effect of the press and none of its
+  feedback, and the feedback reads as missing when it is not. Hold the input
+  for the length of a real press (roughly 100 ms), and treat an instantaneous
+  synthetic event as unable to observe a transient state rather than as
+  evidence it is absent. The audit reference's "drive it with synthetic
+  input" step now points at the rule in `craft-floor.md`. New trigger for a
+  state the code implements that does not show in a capture.
 
 ## 2026-09-13 — A default that looks correct alone can still be impossible in combination
 

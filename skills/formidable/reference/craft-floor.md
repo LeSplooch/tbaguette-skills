@@ -19,6 +19,7 @@ Checks on what rendered, not on what you intended. Run them together in one batc
 - **Copy** in the product's own language. Controls name their action; errors name problem and recovery.
 - **Coverage** — every brief requirement present and findable within seconds.
 - **Magnify before dismissing a reported artifact.** Banding, seams, halos, and half-pixel misalignment are routinely invisible at normal size in a compressed screenshot and obvious at 3–4×. A report you could not reproduce at the reporter's scale has not been reproduced.
+- **A state that lives between two events is verified with an input a hand could produce.** The pressed state — active, highlighted, whatever the stack calls the interval between the down event and the up event — is set by the first and cleared by the second, and an automation tool's default tap or click delivers both inside one frame: the flag is set and cleared before any render sees it, so the capture shows the effect of the press and none of its feedback. That is a fact about the instrument, not about the surface — a hand cannot produce the instantaneous case. Hold the input for the length of a real press, roughly 100 ms, and treat an instantaneous synthetic event as unable to observe a transient state rather than as evidence the state is absent. `diagnosing-before-fixing`'s *An absent log line is evidence only if the emitter was armed* is the same test: name the frame in which the state would have been rendered.
 
 ## The reflexes no detector catches
 
