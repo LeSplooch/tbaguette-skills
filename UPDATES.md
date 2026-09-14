@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-14 — A scheduled run can drop a clause every day; a liveness check can pass on a dead process
+## 2026-09-14 — A dropped clause, a liveness check that lies, and a screenshot of the wrong app
 
 - **`finishing-what-you-started` now covers the recurring run.** Its surrender
   rule was written for one run: mark a criterion surrendered, never delete it.
@@ -48,6 +48,17 @@ Everything above the first `##` is preamble and is never rendered.
   saved PID, or `pgrep -x` on the short name), and treat an inline one-liner
   in a tool call as the same shell. New trigger for a script that asks once
   whether a process is still running.
+- **`formidable`'s audit reference and `confirming-before-claiming-done` now
+  treat a capture as a measurement of whatever owned the surface.** Two
+  unrelated projects hit it the same week: a desktop screenshot of "the
+  active window" caught the wrong one, and a phone screenshot came back
+  showing a different app because another session had deployed to the
+  shared device between two steps. Address every capture to the thing under
+  test (window id or class, package, tab), read and record the foreground
+  owner at capture time, abort the step when it is not the subject, and
+  make every state reachable from a script so all of them land in one
+  contact sheet. `confirming-before-claiming-done`'s artifact section gains
+  the same case as a positive-probe rule.
 
 ## 2026-09-13 — A default that looks correct alone can still be impossible in combination
 
