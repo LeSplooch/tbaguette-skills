@@ -24,6 +24,21 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-14 — A scheduled run can drop the same request clause every day and never notice
+
+- **`finishing-what-you-started` now covers the recurring run.** Its surrender
+  rule was written for one run: mark a criterion surrendered, never delete it.
+  A job that fires on a schedule against a fixed request obeys that every time
+  and still loses a clause, because each run derives its ledger fresh,
+  surrenders — or never writes — the same line, and nothing compares runs. The
+  skill now says to write one ledger line per clause of the standing request
+  even for a line about to be surrendered, to read the previous run's
+  surrendered lines first, and to settle rather than re-surrender a line that
+  would be surrendered twice on unchanged grounds — addressed, or declined with
+  a reason and a reopen condition in a record that outlives the run. New
+  trigger in the `description:` for a recurring run dropping the same clause
+  each pass.
+
 ## 2026-09-13 — A default that looks correct alone can still be impossible in combination
 
 - **`configuration-management` now covers a default configuration that is

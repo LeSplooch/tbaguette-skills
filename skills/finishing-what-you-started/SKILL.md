@@ -1,6 +1,6 @@
 ---
 name: finishing-what-you-started
-description: Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run, a multi-part request, a build spanning several sittings; when a report is about to say done while part of the request was quietly dropped, sampled, or narrowed; when a summary states counts or coverage from memory rather than from a measurement; when work on this keeps coming back not quite finished; when the acceptance criteria exist only in your head and the context holding them is getting long; or when a run is about to close while a build, server, watcher, or dispatched agent it started is still running. Also use when a process is about to be reported as deliberately left running. Covers writing the acceptance ledger to a file before work starts, watching each check fail before trusting it, surrendering a criterion visibly instead of deleting it, re-measuring every number at report time, and giving every process the run started a disposition.
+description: Use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run, a multi-part request, a multi-sitting build; when a recurring run drops the same clause each pass; when a report is about to say done while part of the request was quietly dropped, sampled, or narrowed; when a summary states counts or coverage from memory rather than from a measurement; when work on this keeps coming back not quite finished; when the acceptance criteria exist only in your head and the context holding them is getting long; or when a run is about to close while a build, server, watcher, or dispatched agent it started is still running. Also use when a process is about to be reported as deliberately left running. Covers writing the acceptance ledger to a file before work starts, watching each check fail before trusting it, surrendering a criterion visibly instead of deleting it, re-measuring every number at report time, and giving every process the run started a disposition.
 ---
 
 # Finishing what you started
@@ -77,6 +77,12 @@ Surrender a line by marking it surrendered, in place, with the reason, and carry
 
 A surrendered line is a status the reader can act on. A deleted one is a defect they inherit without knowing it exists. `knowing-when-to-stop` covers what that handoff owes the reader once you are writing it up, and `offering-the-next-move` puts it back in front of them as a choice — a surrendered line is the first thing that close reaches for, because it is the one thing they asked for and did not get.
 
+## A recurring run can surrender the same line every time, and no single run can see it
+
+Everything above is written for one run. A job that fires on a schedule against a fixed request runs it defensibly every time and still loses a clause: each run derives its ledger fresh, each run surrenders — or never writes — the one clause it has no budget or no appetite for, and each surrender is defensible on that run's own evidence. Nothing compares runs. A clause of the standing request can go unanswered for weeks, neither done nor declined, while every individual report is honest. In one measured instance the same sentence had sat in a scheduled task's prompt for eleven consecutive passes before a run noticed that no earlier one had answered it in either direction. The tell is not in any one report; it is in the sequence, which nobody reads.
+
+So a run against a standing request derives its ledger from the *request*, never from the last run's report, and writes one line per clause even for a clause it will surrender in the next minute — a line that was never written cannot be seen missing. Then it reads the previous run's surrendered lines before writing its own. A line surrendered last time and about to be surrendered again on the same grounds is not surrendered a second time; it is settled this run — addressed, or declined with a reason and a reopen condition, written into a record that outlives the run, since the ledger itself does not. Two consecutive surrenders on unchanged grounds is the same clause being dropped with better paperwork. `automating-repetition` owns why "next run" is a claim about the interval rather than about the work; this is the ledger's half of the same rule.
+
 ## Numbers and coverage claims
 
 The most reproducible defect in reports of long work is a number that is confidently wrong while the substance around it is right — a total, a row count, a "reviewed N of M" that no one actually counted.
@@ -151,6 +157,7 @@ named, or it did not happen.
 | The long run's last hour produced summaries and no work | Recap mistaken for progress once the criteria stopped being visible |
 | Thirty units each reporting done, the assembled result broken | Criteria existed only at the leaves, never at the seam |
 | The user asks hours later whether tasks are still running, and they are | The close-out counted deliverables; the processes the run started had no ledger line and no disposition |
+| A standing request's clause is unanswered after weeks of honest daily reports | Each run derived its own ledger and never wrote the line or surrendered it afresh; no run read the previous run's surrenders |
 
 ## Red flags
 
@@ -163,3 +170,4 @@ named, or it did not happen.
 - Relief at how close this looks to finished, immediately before writing the report.
 - Sampling a large set, finding the sample clean, and describing the set.
 - Writing the final report without having looked at what this run left running.
+- Surrendering a line on a scheduled run without checking whether the last run surrendered it too.
