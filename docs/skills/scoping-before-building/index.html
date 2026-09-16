@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-14T22:13:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-14T22:13:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-16T13:15:38+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-16T13:15:38Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">scoping-before-building</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-16T13:15:38.869045+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when an idea, feature request, or new project needs to become an approved design before any code gets written, especially when it is unclear how much process the request actually needs. Covers classifying work as a spike, a bounded change, or an architectural one; asking clarifying questions one at a time; proposing and choosing between approaches; presenting a design for approval section by section; and writing and self-reviewing a spec before handing off to planning.</p>
@@ -130,6 +130,7 @@
 <p>Two judgment calls belong inside this step:</p>
 <p><strong>Unit boundaries.</strong> Break the design into pieces that each do one thing, talk to each other through a clear interface, and can be understood or tested without the rest of the system loaded into your head. For each one you should be able to say what it does, how something else calls it, and what it depends on, without reading its internals. If you can't change a piece's internals without breaking something that calls it, or can't tell what it does without reading how it does it, the boundary is in the wrong place. This pays off directly for you, too: a unit small enough to hold in context edits more reliably than one that isn't, and a file that's grown large is usually a unit that's grown two responsibilities.</p>
 <p><strong>Fit with what's already there.</strong> Read the existing structure before proposing new shape, and follow the patterns already in use rather than introducing a competing one. Where the existing code has a real problem the new work will make worse — a file that's outgrown itself, a boundary nothing respects — fold a targeted fix into the design, the way any developer improves the code they're already standing in. That's different from proposing cleanup nobody asked for on code the current work doesn't touch; leave that alone no matter how tempting it looks.</p>
+<p><strong>Sizing a trust circle.</strong> A safety mechanism built on independent corroboration — quorum, multi-sig, k-of-n distinct reporters, &quot;review by two people&quot; — has the population of eligible participants as a hidden design input, and &quot;most secure&quot; and &quot;does anything at all&quot; trade off through that number. Choosing k=3 for &quot;the general public&quot; is a real decision only once the design also says how many members that public actually has today; a private repository with zero other users, a beta with three testers, or a feature nobody has enabled yet can all make &quot;the public&quot; a population of one or zero, and a mechanism requiring three independent corroborators is then inert by construction — silently, until the day it starts working, which is also the day whatever it protects becomes worth attacking. State the population next to the threshold, and say what the mechanism does at population one.</p>
 <h2 id="when-a-picture-is-the-answer">When a picture is the answer</h2>
 <p>Some design questions are spatial — a layout, the shape of a state machine, two competing visual directions — and prose forces the other person to reconstruct in their head a picture you already hold clearly in yours. For those, sketch it: a small diagram, a rough box-and-arrow layout, a comparison table lined up side by side. For everything else — what a term means, which features are in scope, a tradeoff between two technical approaches — text says it directly and a sketch would just be decoration.</p>
 <p>Judge this per question, not once for the whole conversation. A question that mentions a visual surface isn't automatically a visual question: &quot;what should the settings page let someone configure&quot; is a words question — the answer is a list. &quot;Which of these two layouts reads better&quot; is a pictures question — the answer is a shape. Decide which kind you're actually holding before deciding how to present it.</p>

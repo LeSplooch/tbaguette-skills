@@ -24,6 +24,16 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-16 — Sizing the trust circle a safety mechanism depends on
+
+- **`scoping-before-building` now asks a design that relies on independent
+  corroboration — quorum, multi-sig, k-of-n distinct reporters, "review by two
+  people" — to name the population it draws from, not just the threshold.**
+  "Most secure" and "does anything at all" trade off through that number, and
+  a trust circle described as "the general public" can, today, have zero or
+  one actual members — which makes the mechanism inert by construction until
+  the population catches up, silently, with no error anywhere to notice it.
+
 ## 2026-09-15 — Slow startup now routes to the concurrency-model skill
 
 - **`choosing-concurrency-model` now covers slow startup with several
