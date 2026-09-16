@@ -145,12 +145,26 @@ commit to pin, no diff to review, and nothing local that changed. Approving
 what it said once is not approving what it says next, and the usual signal
 that a dependency moved never fires.
 
-Where you cannot pin, two weaker substitutes are what remain. Record what the
+Where you cannot pin, three weaker substitutes are what remain. Record what the
 instructions said when you approved them and compare them on reconnect, so a
 change is something you see rather than something you obey — worth preferring
 a client that does this for you, since doing it by hand rarely survives
-contact with a busy week. And keep the set connected at one time no larger
-than the task needs, because the second property this class has is that the
+contact with a busy week.
+
+Reconnect is not the only event a payload can wait for, and a diff keyed only
+on it has a blind spot: a connection that never drops still lets a provider
+hand over something different between calls, and a change timed to arrive a
+few calls into an otherwise-clean session slips past both a one-time human
+read and an early smoke test, precisely because nothing about that session
+ever reconnects for the diff to run against. Where the provider can be asked,
+re-request and re-diff its current instructions periodically within a
+long-lived session, not only when the connection reopens; where it cannot,
+treat a session that has been open a while, with many calls behind it, as its
+own reason to re-verify — the way a long-lived credential gets rotated on age
+rather than only on suspicion.
+
+Keep the set connected at one time no larger
+than the task needs, too, because the second property this class has is that the
 prose is not scoped to the provider that supplied it. Everything connected is
 read together, in one context, by one reader, so a provider you barely use can
 still change how that reader handles the one you depend on — and it does so

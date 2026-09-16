@@ -24,6 +24,17 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-16 — A connected tool provider can wait out a reconnect-only check
+
+- **`auditing-dependencies` now covers a connected server that changes its
+  instructions mid-session rather than on reconnect.** The existing advice —
+  record what a provider's instructions said and diff them on reconnect — has
+  a blind spot for a connection that never drops: a payload that stays clean
+  for the first several calls and only then rewrites itself slips past both a
+  one-time human read and an early smoke test, because nothing about that
+  session ever reconnects for the diff to run against. The skill now asks for
+  a periodic re-diff within a long-lived session, not only at reconnect.
+
 ## 2026-09-16 — Two gaps in `scoping-before-building`'s design-approval step
 
 - **A written design now has to state its own status** — which sections were
