@@ -17,6 +17,7 @@ Every specification has three layers: what it states, what it implies, and what 
 - An estimate is being given for prose nobody has decomposed.
 - Not for: an interface you are defining rather than consuming (designing-apis), or deciding where the change lands once the requirement is settled (finding-the-seam).
 - Not for: settling *what to build* in the first place, before anything is written down — that's `scoping-before-building`, a live conversation this skill's own "ask or assume" table assumes has already happened and produced the document being read here.
+- Not for: a document the run only remembers after a compaction or a handoff, or only ever grepped — `checkpointing-long-runs` owns re-opening the source before anything is measured against it; every technique below assumes the document is open and read end to end.
 
 ## Three layers
 

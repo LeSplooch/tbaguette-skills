@@ -1,6 +1,6 @@
 ---
 name: checkpointing-long-runs
-description: Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files, a run whose conversation is getting long enough to be compacted, or work about to be handed to another agent, another session, or a person. Also use the moment a compaction has already happened and the run has to decide what it still knows, or when something started in an earlier session — a background job, a build, a spawned agent — has left no record of having finished, or when a dead end is about to be written down as an attempt that did not work with nothing saying what it actually ruled out. Also use when a verdict or approval recorded before a boundary is relied on after it. Covers where the durable state lives, which seams are worth a checkpoint, writing the expensive things down before they are lost, re-reading rather than recalling at every boundary, bounding a negative by what it left standing, and leaving a successor a brief instead of an archaeology problem.
+description: Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files, a run whose conversation is getting long enough to be compacted, or work about to be handed to another agent, another session, or a person. Also use the moment a compaction has already happened and the run has to decide what it still knows, or when something started in an earlier session — a job, a build, a spawned agent — has no record of finishing, or when a dead end is about to be written down with nothing saying what it ruled out. Also use when a verdict or approval recorded before a boundary is relied on after it, or when the work is measured against a document the run only remembers or only grepped. Covers where the durable state lives, which seams are worth a checkpoint, writing the expensive things down first, re-reading rather than recalling at every boundary, bounding a negative by what it left standing, and leaving a successor a brief, not an archaeology problem.
 ---
 
 # Checkpointing long runs
@@ -195,6 +195,22 @@ not evidence of having done it, and this is exactly the situation that produces
 fluent memories of things that never happened. Re-measure counts rather than
 restating them; `confirming-before-claiming-done` owns why a recalled number is
 not a measured one.
+
+One input belongs with the repository in that order and rarely gets treated as
+if it did. **The document the remaining work is measured against — a
+specification, a design, a contract, a reference rendering — is an artefact,
+and a boundary replaces it with a summary of itself**, which reads exactly like
+the spec to whatever consumes it. It is not one. A summary cannot be diffed
+against an implementation, and a build checked against it diverges
+structurally — parts in the wrong order, labels in the wrong case, half of each
+component missing — with a confident rationalisation attached to every
+divergence. Re-open the source, end to end, before measuring anything against
+it. Then ask the same question about the run *before* the boundary: a document
+that was only ever searched — grepped for identifiers and copy — was never
+read, so "I know this spec" may have been false from the start. Grep is a
+lookup, not a read. In the run that taught this, re-reading the source took one
+command and produced a dozen concrete defects at once, every one of them
+previously explained away.
 
 The order above says what to trust. What it does not say is that a boundary also strips the *tier* off everything crossing it. A summary carries claims, not their provenance: the thing you verified by running a command, the thing you inferred from one file, and the thing you assumed because it was plausible all arrive on the far side in the same voice — indistinguishable, and equally fluent. `calibrating-confidence` calls that confidence laundering at a boundary between two parties. A compaction performs it on you, at a boundary you never noticed crossing, against your own earlier caution.
 

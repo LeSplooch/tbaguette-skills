@@ -24,6 +24,19 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-16 — A spec you remember is not a spec you have read
+
+- **`checkpointing-long-runs` names the document the work is measured
+  against as a source to re-open, not recall.** Its after-a-boundary rule
+  already puts the repository and the record ahead of recollection; it now says that a
+  specification, design, contract or reference rendering is the artefact a
+  compaction most readily replaces with a summary of itself — and a summary
+  cannot be diffed against an implementation. Re-open the source end to end
+  before measuring anything against it, and ask whether the run before the
+  boundary had ever read it at all: a document that was only grepped for
+  identifiers was never read. The description gains the trigger, and
+  `reading-specifications` points here for that case.
+
 ## 2026-09-16 — A clean zero from a host that never ran is not a measurement
 
 - **`finishing-what-you-started` names a vacuous check that wears a real
