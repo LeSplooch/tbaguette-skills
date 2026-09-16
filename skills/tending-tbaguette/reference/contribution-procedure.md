@@ -18,17 +18,39 @@ different problems with different fixes. Without it, everything below still
 works from a browser — push the branch, then open the pull request from the
 compare page GitHub offers on your fork. Only step 9 changes.
 
-Then fork and clone a working copy that is *not* the install:
+Then fork and clone a working copy that is *not* the install, and is not a
+path any other run of this same procedure would also reach for. A fixed,
+reused clone path is not merely a duplication risk shared with the queue
+file above — it is sharper, because a checkout has a *current branch*, and
+two runs in one checkout can redirect each other's commits rather than
+just repeat each other's work: one run's `git checkout -B` can move HEAD out
+from under a second run that is mid-edit, so the second run's commit lands on
+whatever branch the first run left checked out, its own branch stays empty,
+and the push reports "no commits between master and `<branch>`" — a message
+that names neither cause. Give the clone a path unique to this run rather than
+a name every run shares:
 
 ```bash
 gh repo fork LeSplooch/tbaguette-skills --clone=false
-git clone https://github.com/$(gh api user -q .login)/tbaguette-skills.git ~/.claude/tbaguette-contrib
-git -C ~/.claude/tbaguette-contrib remote add upstream https://github.com/LeSplooch/tbaguette-skills.git
+CONTRIB=~/.claude/tbaguette-contrib-$(date +%s)-$$
+git clone https://github.com/$(gh api user -q .login)/tbaguette-skills.git "$CONTRIB"
+git -C "$CONTRIB" remote add upstream https://github.com/LeSplooch/tbaguette-skills.git
 ```
 
-Everything below happens in `~/.claude/tbaguette-contrib`. The install at
+Everything below happens in `$CONTRIB`. The install at
 `~/.claude/skills/TBaguette` is never touched, never edited, and stays
-clean so it can keep updating.
+clean so it can keep updating. `$CONTRIB` is disposable once the pull request
+is open — remove it or leave it, it does not matter, because answering a
+review that comes back later (see step 8 below) is simply another run of this
+same setup: mint a fresh `$CONTRIB`, then `git fetch origin <branch-name>` and
+`git checkout <branch-name>` in it instead of `checkout -B ... upstream/master`
+— never go hunting for wherever an earlier run happened to leave its clone.
+
+The tell that this has already happened to you: a push that claims there is
+nothing to push, or a merge commit that carries the right content but only
+one parent (a second run's checkout stepping on an in-progress `git merge`
+the same way). Neither is the ordinary git failure it resembles, and neither
+is fixed by retrying the same command in the same checkout.
 
 1. **Re-evaluate the candidate** against the bar, with fresh eyes and the
    scrub applied again. If it does not hold up on a second look, move it to
@@ -38,8 +60,8 @@ clean so it can keep updating.
 2. **Start from current upstream**, not from whatever the fork last saw:
 
    ```bash
-   git -C ~/.claude/tbaguette-contrib fetch upstream
-   git -C ~/.claude/tbaguette-contrib checkout -B <branch-name> upstream/master
+   git -C "$CONTRIB" fetch upstream
+   git -C "$CONTRIB" checkout -B <branch-name> upstream/master
    ```
 
 3. **Make the edit.** Improving an existing skill means editing
@@ -212,7 +234,7 @@ clean so it can keep updating.
 9. **Push and open the pull request:**
 
    ```bash
-   git -C ~/.claude/tbaguette-contrib push -u origin <branch-name>
+   git -C "$CONTRIB" push -u origin <branch-name>
    gh pr create --repo LeSplooch/tbaguette-skills --base master \
      --head "$(gh api user -q .login):<branch-name>" \
      --title "<subject>" --body "<what changed, and the observation behind it>"

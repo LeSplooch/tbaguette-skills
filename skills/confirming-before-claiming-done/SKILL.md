@@ -271,6 +271,33 @@ it. Where a helper genuinely has to serve both, move it into the product and let
 the harness borrow it rather than the reverse. A helper only the harness owns is
 a standing gap between what gets tested and what ships.
 
+## A name in a build's output directory is not an identification
+
+A build tool's own lock was in the way, so a test suite got launched by finding
+a plausible-looking file directly: a hash-suffixed binary in the build's
+output directory, name matching the test target. It ran repeatedly before
+anyone noticed, because "the tests hung" read as a slow suite rather than as a
+wrong program — the build tool places the *product* binary in the same
+directory under the same naming shape, and the lookup that had always landed on
+the test binary before landed on the shipped application this time. The tell
+was sitting in plain view the whole run: a hung "test" whose threads carried
+GUI names.
+
+The general shape is that a build output directory is not a namespace the
+artifact's role is encoded into — it is where the tool put things, and more
+than one kind of thing can match the name you go looking for. Locating an
+executable by pattern is a guess about which executable it is, dressed as a
+lookup. Nothing about a clean match tells you it guessed right; a wrong guess
+returns a real, running, plausible-looking process, not an error.
+
+So ask the build tool which artifact is the harness rather than finding one
+yourself — most build systems that separate product and test binaries have a
+command that lists or names the test artifact directly, rather than making you
+locate it by pattern in their shared output directory. Where that is
+unavailable, treat a "test run" that opens windows, binds sockets, or polls the
+network as evidence about *which binary ran*, not about test flakiness — a
+unit test doing any of those is the same tell as a hang that never resolves.
+
 ## The declaration is not the payload
 
 Some questions are about a thing the system produces rather than about whether it works: what key this ends up under, what that enum looks like once it is serialized, what is actually in the column, what the header says. The reflex is to read the code that produces it, and for this class of question the code is the wrong place to look. An attribute or annotation renames and re-cases fields, a custom encoder overrides the declaration entirely, an inherited default supplies a policy written nowhere near the type, and a library changes its own default between releases. The declaration is a request. The bytes are the answer.

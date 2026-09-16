@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.45</span>
+      <span class="wordmark-version" dir="ltr">v1.1.46</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-16T17:33:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-16T17:33:02Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-16T22:22:25+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-16T22:22:25Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">tending-tbaguette</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-16T22:22:25.497240+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Environment and tooling</span>
   <p class="lede">Use at the start of every conversation, in any project or repo, and keep watching for the rest of it — the moment a genuinely project-agnostic lesson shows up while using TBaguette, capture it. Triggers include a correction that generalizes past this one codebase, a gap or wrong assumption found in a skill while that skill was running, a recurring judgment call nothing covers yet, a TBaguette skill that looks wrong enough to want editing, an installed plugin that already carries hand-edits, or any question about how to contribute to TBaguette. Covers the bar a candidate has to clear, capturing one without derailing the current task, scrubbing it of anything project-specific, choosing which existing skill a lesson belongs in, the approval gate that no absent human lifts, opening the pull request from a fork and answering the review it gets, restoring an install that was edited in place, a command the harness declines rather than git, and how a merged change comes back through <a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/keeping-tbaguette-current/">keeping-tbaguette-current</a>.</p>
@@ -108,6 +108,10 @@
 - Why agnostic: the one-sentence generalization
 - Sketch: rough shape of the fix or the new skill's angle</code></pre>
 <p>That is the whole capture step. Do not stop to draft the skill content now, do not go looking at the repo now — two sentences, then straight back to what the user actually asked for.</p>
+<h2 id="an-entry-being-worked-is-not-distinguishable-from-one-nobody-has-touched">An entry being worked is not distinguishable from one nobody has touched</h2>
+<p>The queue records two states — queued and resolved — and a run that starts acting on a candidate looks, to every other reader of the file, exactly like a run that has not looked at it yet. Two runs have picked the same entry out of this same file and each written a full section for it: different prose, different placement, same lesson, discovered only when both landed. The duplication is invisible until then, which is the most expensive moment to find out.</p>
+<p>Before starting the contribution procedure on an entry, re-read the file and append <code>- Claimed: &lt;ISO date&gt;</code> as its last bullet, in that same read-then-write — never in a separate write, since the gap between reading and writing is exactly where two runs collide. A claim dated today is a stop: pick a different entry, or confirm the claiming run actually finished (its pull request or commit will exist) before treating the mark as abandoned. A claim with no matching result after a day is stale and can be taken. The line moves with the entry into <code>## Shipped</code> or <code>## Settled</code>, or is simply gone once either happens — it is bookkeeping for the queue, never part of what got contributed.</p>
+<p>This does not touch the other collision the same shared-queue write can cause — a fixed, reused working path landing one run's edits on top of another's checkout. That is a different failure with a different fix, in the contribution procedure below.</p>
 <h2 id="starting-mid-conversation">Starting mid-conversation</h2>
 <p>This skill is meant to be watching from the first turn. Sometimes it is not: it gets invoked explicitly, or its trigger finally fires, partway into a conversation that already has real history. That history was never watched, so catch up on it once before returning to the triggering request:</p>
 <ol><li>Read back over the conversation from its actual start — not just the triggering message — applying the bar above exactly as if capture had been running the whole time. A long conversation can hold several capturable moments, not just the most recent one. Find all of them.</li><li>Run the capture procedure on each moment that clears the bar. Same scrub, same file, same one-entry-per-moment format.</li><li>Finding nothing is a normal outcome, not a failed scan. Same rule as an empty <code>## Pending</code>: don't narrate it, don't report that the sweep came up empty. Silence is correct.</li></ol>
@@ -206,15 +210,17 @@
 <h2 id="ref-contribution-procedure-contribution-procedure">Contribution procedure</h2>
 <p>Run once per candidate, fully, before starting the next. Never batch several candidates into one pull request — a reviewer who wants two of three changes then has to reject all three.</p>
 <p><strong>One-time setup.</strong> This path uses GitHub's <code>gh</code> CLI, which is not installed by default on any platform. Run <code>gh auth status</code> first: it fails loudly both when the tool is missing and when it is present but not logged in, which are different problems with different fixes. Without it, everything below still works from a browser — push the branch, then open the pull request from the compare page GitHub offers on your fork. Only step 9 changes.</p>
-<p>Then fork and clone a working copy that is <em>not</em> the install:</p>
+<p>Then fork and clone a working copy that is <em>not</em> the install, and is not a path any other run of this same procedure would also reach for. A fixed, reused clone path is not merely a duplication risk shared with the queue file above — it is sharper, because a checkout has a <em>current branch</em>, and two runs in one checkout can redirect each other's commits rather than just repeat each other's work: one run's <code>git checkout -B</code> can move HEAD out from under a second run that is mid-edit, so the second run's commit lands on whatever branch the first run left checked out, its own branch stays empty, and the push reports &quot;no commits between master and <code>&lt;branch&gt;</code>&quot; — a message that names neither cause. Give the clone a path unique to this run rather than a name every run shares:</p>
 <pre class="prose-code-block"><code>gh repo fork LeSplooch/tbaguette-skills --clone=false
-git clone https://github.com/$(gh api user -q .login)/tbaguette-skills.git ~/.claude/tbaguette-contrib
-git -C ~/.claude/tbaguette-contrib remote add upstream https://github.com/LeSplooch/tbaguette-skills.git</code></pre>
-<p>Everything below happens in <code>~/.claude/tbaguette-contrib</code>. The install at <code>~/.claude/skills/TBaguette</code> is never touched, never edited, and stays clean so it can keep updating.</p>
+CONTRIB=~/.claude/tbaguette-contrib-$(date +%s)-$$
+git clone https://github.com/$(gh api user -q .login)/tbaguette-skills.git &quot;$CONTRIB&quot;
+git -C &quot;$CONTRIB&quot; remote add upstream https://github.com/LeSplooch/tbaguette-skills.git</code></pre>
+<p>Everything below happens in <code>$CONTRIB</code>. The install at <code>~/.claude/skills/TBaguette</code> is never touched, never edited, and stays clean so it can keep updating. <code>$CONTRIB</code> is disposable once the pull request is open — remove it or leave it, it does not matter, because answering a review that comes back later (see step 8 below) is simply another run of this same setup: mint a fresh <code>$CONTRIB</code>, then <code>git fetch origin &lt;branch-name&gt;</code> and <code>git checkout &lt;branch-name&gt;</code> in it instead of <code>checkout -B ... upstream/master</code> — never go hunting for wherever an earlier run happened to leave its clone.</p>
+<p>The tell that this has already happened to you: a push that claims there is nothing to push, or a merge commit that carries the right content but only one parent (a second run's checkout stepping on an in-progress <code>git merge</code> the same way). Neither is the ordinary git failure it resembles, and neither is fixed by retrying the same command in the same checkout.</p>
 <ol><li><strong>Re-evaluate the candidate</strong> against the bar, with fresh eyes and the scrub applied again. If it does not hold up on a second look, move it to <code>## Shipped</code> with a one-line note on why it was dropped and stop. That is not a failure, it is the filter working.</li></ol>
 <ol><li><strong>Start from current upstream</strong>, not from whatever the fork last saw:</li></ol>
-<pre class="prose-code-block"><code>   git -C ~/.claude/tbaguette-contrib fetch upstream
-   git -C ~/.claude/tbaguette-contrib checkout -B &lt;branch-name&gt; upstream/master</code></pre>
+<pre class="prose-code-block"><code>   git -C &quot;$CONTRIB&quot; fetch upstream
+   git -C &quot;$CONTRIB&quot; checkout -B &lt;branch-name&gt; upstream/master</code></pre>
 <ol><li><strong>Make the edit.</strong> Improving an existing skill means editing <code>skills/&lt;slug&gt;/SKILL.md</code>, or a reference file under that skill's own directory. This is the common case and by far the easier review.</li></ol>
 <p>One gate fires on that easy path too, and it is the only one that does. <code>description</code> is capped at 1024 characters by the Agent Skills format itself, not by this repo, and the suite enforces it. Descriptions are the field under permanent pressure to grow, because the natural way to make a skill fire on a newly-noticed trigger is to append that trigger to the list. Past the cap, the next trigger has to <strong>displace</strong> an older one rather than join it — so a description change is sometimes an edit to a sentence you did not come here to touch. Compressing the &quot;Covers&quot; half is usually where the room is, since it tends to restate triggers the &quot;Use when&quot; half already made.</p>
 <p><strong>First check the library does not already say it.</strong> The strongest reason to drop a candidate is that some skill already covers it, and that reason is invisible from the candidate itself — a capture records what you noticed, never what the corpus already knew. The search is harder than it looks for the same reason the ownership rule below is: the skill that already states the lesson is filed by the family of judgments it belongs to, so it is usually <em>not</em> the file the candidate's subject points at. Search for the idea in the words the covering skill would have used rather than the words the capture used, and search wider than the two or three files you expect. Do this before drafting, not after. A section you have already written is expensive to abandon and very easy to keep on the grounds that it says the same thing more sharply — which is how the corpus acquires two statements of one idea, in two files, neither aware of the other.</p>
@@ -239,7 +245,7 @@ git -C ~/.claude/tbaguette-contrib remote add upstream https://github.com/LeSplo
 <p>The question carries what changed, and then short bullets saying what the yes creates: a public fork under their account, a branch pushed to it, a pull request open under their GitHub identity, a diff of roughly a hundred files that is mostly the regenerated site, and a maintainer who now has something to answer. Closing it later does not unmake any of that.</p>
 <p>A yes given for an earlier contribution in this same session is not a yes for this one, and neither is enthusiasm about contributing in general. If nobody is there to answer, this is where the run ends, with the work committed on a local branch and a report saying what is waiting.</p>
 <ol><li><strong>Push and open the pull request:</strong></li></ol>
-<pre class="prose-code-block"><code>   git -C ~/.claude/tbaguette-contrib push -u origin &lt;branch-name&gt;
+<pre class="prose-code-block"><code>   git -C &quot;$CONTRIB&quot; push -u origin &lt;branch-name&gt;
    gh pr create --repo LeSplooch/tbaguette-skills --base master \
      --head &quot;$(gh api user -q .login):&lt;branch-name&gt;&quot; \
      --title &quot;&lt;subject&gt;&quot; --body &quot;&lt;what changed, and the observation behind it&gt;&quot;</code></pre>

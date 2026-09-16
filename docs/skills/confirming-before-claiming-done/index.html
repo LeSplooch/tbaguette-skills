@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.45</span>
+      <span class="wordmark-version" dir="ltr">v1.1.46</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-16T17:33:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-16T17:33:02Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-16T22:22:25+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-16T22:22:25Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">confirming-before-claiming-done</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-16T22:22:25.497240+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Finishing and proving</span>
   <p class="lede">Use when about to call a fix, a feature, or a test suite done, fixed, or passing; when a change is about to be committed, pushed, or handed off on it; when a subagent's or tool's success report is repeated as fact; when the only evidence is that the code looks right, or that an investigation script worked; when absence is claimed and the one location you knew to check is untouched; when the fix landed in a source that is mirrored or published by hand; when the requirement is survival of a restart or a fresh checkout and the check observes the present instead; when a check passed against an artifact that predates the run; when the green run happened on an emulator, container, or staging stand-in; when a green suite only checks files you own; or when a dry run, simulation, or paper mode has been green for months. Covers naming the check that proves the claim and running it fresh, telling a stale run from this one's, inducing the condition a requirement names, and proving absence on the target surface.</p>
@@ -137,6 +137,10 @@
 <p>A problem gets investigated with something written for the investigation — a script, a probe, a diagnostic command, a one-off runner that reproduces the complaint. It imports the product's real code, which is what makes the next step feel safe: the harness now shows the problem cleared, so the problem is fixed. What it has actually shown is that the data exists and that <em>some</em> arrangement of the product's own parts produces the right answer. Whether the arrangement a user's action goes through is that one is a separate question, and a green harness does not touch it.</p>
 <p>It survives every check aimed at a green build that never ran, because both halves are real code out of the same repository. A field missing at one caller gets fixed in the parser, confirmed in the harness, and stays missing in the product — the harness reached it through a merge helper written for the harness, while the path a user takes calls an entry point that merges nothing. Every test passes. The product, exercised the way a user exercises it, still shows the bug.</p>
 <p>So before the claim: <strong>name the entry point the user's action reaches, and confirm the fix sits on that path</strong>, not merely inside a module that path imports. Two tells that this check is owed, and both are cheap to notice — the evidence comes from a file that did not exist before the investigation started, and nothing in the verification ever launched the product the way a user launches it. Where a helper genuinely has to serve both, move it into the product and let the harness borrow it rather than the reverse. A helper only the harness owns is a standing gap between what gets tested and what ships.</p>
+<h2 id="a-name-in-a-builds-output-directory-is-not-an-identification">A name in a build's output directory is not an identification</h2>
+<p>A build tool's own lock was in the way, so a test suite got launched by finding a plausible-looking file directly: a hash-suffixed binary in the build's output directory, name matching the test target. It ran repeatedly before anyone noticed, because &quot;the tests hung&quot; read as a slow suite rather than as a wrong program — the build tool places the <em>product</em> binary in the same directory under the same naming shape, and the lookup that had always landed on the test binary before landed on the shipped application this time. The tell was sitting in plain view the whole run: a hung &quot;test&quot; whose threads carried GUI names.</p>
+<p>The general shape is that a build output directory is not a namespace the artifact's role is encoded into — it is where the tool put things, and more than one kind of thing can match the name you go looking for. Locating an executable by pattern is a guess about which executable it is, dressed as a lookup. Nothing about a clean match tells you it guessed right; a wrong guess returns a real, running, plausible-looking process, not an error.</p>
+<p>So ask the build tool which artifact is the harness rather than finding one yourself — most build systems that separate product and test binaries have a command that lists or names the test artifact directly, rather than making you locate it by pattern in their shared output directory. Where that is unavailable, treat a &quot;test run&quot; that opens windows, binds sockets, or polls the network as evidence about <em>which binary ran</em>, not about test flakiness — a unit test doing any of those is the same tell as a hang that never resolves.</p>
 <h2 id="the-declaration-is-not-the-payload">The declaration is not the payload</h2>
 <p>Some questions are about a thing the system produces rather than about whether it works: what key this ends up under, what that enum looks like once it is serialized, what is actually in the column, what the header says. The reflex is to read the code that produces it, and for this class of question the code is the wrong place to look. An attribute or annotation renames and re-cases fields, a custom encoder overrides the declaration entirely, an inherited default supplies a policy written nowhere near the type, and a library changes its own default between releases. The declaration is a request. The bytes are the answer.</p>
 <p>So produce one payload and read it. Serialize a single real value and print it; read one stored row; dump the header off one real request. That is usually one command; it costs less than the reading it replaces; and it settles the question outright instead of raising confidence in a guess. <strong>Reading the code is a hypothesis; producing the payload is evidence.</strong></p>

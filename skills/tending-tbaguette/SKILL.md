@@ -200,6 +200,32 @@ That is the whole capture step. Do not stop to draft the skill content
 now, do not go looking at the repo now — two sentences, then straight back
 to what the user actually asked for.
 
+## An entry being worked is not distinguishable from one nobody has touched
+
+The queue records two states — queued and resolved — and a run that starts
+acting on a candidate looks, to every other reader of the file, exactly like a
+run that has not looked at it yet. Two runs have picked the same entry out of
+this same file and each written a full section for it: different prose,
+different placement, same lesson, discovered only when both landed. The
+duplication is invisible until then, which is the most expensive moment to
+find out.
+
+Before starting the contribution procedure on an entry, re-read the file and
+append `- Claimed: <ISO date>` as its last bullet, in that same read-then-write
+— never in a separate write, since the gap between reading and writing is
+exactly where two runs collide. A claim dated today is a stop: pick a
+different entry, or confirm the claiming run actually finished (its pull
+request or commit will exist) before treating the mark as abandoned. A claim
+with no matching result after a day is stale and can be taken. The line moves
+with the entry into `## Shipped` or `## Settled`, or is simply gone once
+either happens — it is bookkeeping for the queue, never part of what got
+contributed.
+
+This does not touch the other collision the same shared-queue write can
+cause — a fixed, reused working path landing one run's edits on top of
+another's checkout. That is a different failure with a different fix, in the
+contribution procedure below.
+
 ## Starting mid-conversation
 
 This skill is meant to be watching from the first turn. Sometimes it is

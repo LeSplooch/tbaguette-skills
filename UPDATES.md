@@ -24,6 +24,22 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-17 — A build's own output folder can hand you the wrong binary
+
+- `confirming-before-claiming-done` now covers finding a test binary by name
+  pattern in a build tool's shared output directory: the same directory often
+  holds the shipped product under a similarly-shaped name, so a lookup that
+  has always landed on the test binary before can silently launch the real
+  application instead — and a "hung test" is the tell, not a slow one.
+
+## 2026-09-17 — Contributing to TBaguette is safer when two people do it at once
+
+- `tending-tbaguette` (the skill that turns a lesson into a pull request) now
+  flags two ways contributing at the same time as someone else can go wrong:
+  picking the same queued idea without knowing someone already has, and a
+  shared local checkout redirecting one contributor's commit onto another's
+  branch. Both now have a concrete fix in the skill.
+
 ## 2026-09-16 — Read a setting before you write it
 
 - **`deciding-reversibility` adds read-before-write to its list of ways to
