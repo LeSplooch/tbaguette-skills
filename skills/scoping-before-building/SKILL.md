@@ -121,6 +121,8 @@ Judge this per question, not once for the whole conversation. A question that me
 
 Once every section has been approved, write the whole design down. Put it wherever this project already keeps design docs — look for an existing `docs/`, `specs/`, or `design/` directory and follow the naming already in use there rather than introducing a second convention alongside it. Absent any existing convention, default to `specs/YYYY-MM-DD-<topic>-design.md` at the repo root. A stated user preference overrides both. Commit the spec once it's written.
 
+State the document's own status inside itself, not just its content: which sections were approved in conversation, whether the document *as a whole* has been reviewed, and what gate — if any — still stands between it and an implementation plan. A spec that lists only what has already happened and never says what hasn't reads, to a later reader with nobody to ask, as carrying no gate at all — "approved section by section in conversation" describes the sections, not the document, and a reader who inherits only the written page has no way to tell the two apart unless it is written down.
+
 ## Spec self-review
 
 Before asking anyone to read it, read the spec yourself, adversarially, and fix what you find rather than flagging it for later:
@@ -131,6 +133,7 @@ Before asking anyone to read it, read the spec yourself, adversarially, and fix 
 | Consistency | Two sections that quietly contradict each other, or an architecture description that doesn't match what the feature sections actually describe |
 | Scope | Whether this is one implementation plan's worth of work, or secretly several specs that need separating first |
 | Ambiguity | Any requirement a reasonable reader could take two different ways — if so, pick one reading and make the spec say it explicitly |
+| Status | Whether the document itself says what has and hasn't been approved, and that a written spec is not yet an implementation plan |
 
 Calibrate what counts as an issue: something that would send an implementation plan in the wrong direction is worth fixing now. A section shorter than its neighbors, or a sentence that could be phrased more elegantly, is not — approve past those instead of manufacturing a second pass over wording. Fix what's actually wrong and move on; this loop doesn't need to repeat once the real issues are gone.
 

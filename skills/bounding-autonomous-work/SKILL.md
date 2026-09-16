@@ -65,6 +65,8 @@ An absent answerer does not delete a gate. It changes what closes it.
 | A second pair of eyes | A human, or a reviewer subagent | `red-teaming-your-own-work` then `karen-and-the-manager`, run as hard gates rather than as a courtesy, ideally by a reader with no memory of building it |
 | Permission for something costly | Ask, wait | Not substitutable. See the door bound |
 
+A handed-off design document is its own instance of this: its account of what has been approved is the frame the next reader inherits, and a document that states only what happened — never what hasn't, never that it has not been reviewed as a whole — reads as fully cleared to whoever opens it with nobody to ask. `scoping-before-building`'s spec-writing step asks the document to say its own status; treat a handoff doc silent on that as unreviewed, not as approved.
+
 A decision made alone is legitimate when four things are true of it: it is
 **written where the absent reader will find it**, it is **named as a decision**
 rather than presented as a fact, it **carries the reading that lost**, and it is

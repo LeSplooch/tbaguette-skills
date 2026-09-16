@@ -24,15 +24,24 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-16 — Sizing the trust circle a safety mechanism depends on
+## 2026-09-16 — Two gaps in `scoping-before-building`'s design-approval step
 
-- **`scoping-before-building` now asks a design that relies on independent
-  corroboration — quorum, multi-sig, k-of-n distinct reporters, "review by two
-  people" — to name the population it draws from, not just the threshold.**
-  "Most secure" and "does anything at all" trade off through that number, and
-  a trust circle described as "the general public" can, today, have zero or
-  one actual members — which makes the mechanism inert by construction until
-  the population catches up, silently, with no error anywhere to notice it.
+- **A written design now has to state its own status** — which sections were
+  approved in conversation, whether the document as a whole has been
+  reviewed, and what gate still stands before an implementation plan exists.
+  A spec that only lists what already happened reads, to a later reader with
+  nobody to ask, as fully cleared — "approved section by section in
+  conversation" describes the sections, not the document. `bounding-
+  autonomous-work` now names the same hazard from the unattended reader's
+  side: treat a handoff doc silent on its own status as unreviewed, never as
+  approved.
+- **A design that relies on independent corroboration — quorum, multi-sig,
+  k-of-n distinct reporters, "review by two people" — now has to name the
+  population it draws from, not just the threshold.** "Most secure" and
+  "does anything at all" trade off through that number, and a trust circle
+  described as "the general public" can, today, have zero or one actual
+  members — which makes the mechanism inert by construction until the
+  population catches up, silently, with no error anywhere to notice it.
 
 ## 2026-09-15 — Slow startup now routes to the concurrency-model skill
 
