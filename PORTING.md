@@ -171,6 +171,21 @@ repository — the files existed, the JSON was valid, the hooks exited 0.
   every run instead, so it is never rediscovered from scratch, and the
   skills it names as largest are the ones most worth reading directly rather
   than through Codex until that campaign happens.
+- **A second, separate Codex limit truncates the skill *listing*, not the
+  skill body, and it gets worse as this plugin grows rather than better.**
+  Codex allocates roughly 2% of the model's context window (8,000 characters
+  when the window is unknown; `skills.max_context_tokens` caps it at 10,000
+  tokens) across the entire installed catalogue's one-line `description`
+  fields at once, round-robin, one character per skill per pass, rather than
+  a fixed budget per skill — so the same 97-skill plugin reads with a
+  generous per-description allowance next to a handful of other plugins and
+  a punishing one next to many. The widely-quoted "122 characters" is not a
+  constant; it is what the shared budget happened to divide out to on a
+  112-skill catalogue at one point in time (source:
+  `github.com/eranroseman/agent-plugins/issues/49`). This is independent of
+  the 8,000-byte body cap above — that one truncates the file Codex loads on
+  invocation, this one truncates the text Codex uses to decide whether to
+  invoke a skill at all — and neither fix addresses the other.
 
 Three others were checked and left alone, which is worth recording so nobody
 re-audits them from scratch:
