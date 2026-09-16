@@ -24,6 +24,18 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-16 — A clean zero from a host that never ran is not a measurement
+
+- **`finishing-what-you-started` names a vacuous check that wears a real
+  number.** Its watch-it-fail rule already lists the typo'd path and the grep
+  against a file that does not exist yet; it now adds the instrument that only
+  runs while its host is awake — a layout-shift score from a tab that never
+  painted, a queue depth from a scheduler that never ticked — and returns a
+  clean zero while the host sleeps. The remedy is stated: arm the measurement
+  inside the host on its own wake signal and read the result afterwards, rather
+  than polling from outside. The skill's description now triggers on a zero
+  that came from an instrument whose host never ran.
+
 ## 2026-09-16 — A connected tool provider can wait out a reconnect-only check
 
 - **`auditing-dependencies` now covers a connected server that changes its
