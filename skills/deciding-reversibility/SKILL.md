@@ -1,6 +1,6 @@
 ---
 name: deciding-reversibility
-description: Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it.
+description: Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, overwrite a setting or a configuration file, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it.
 ---
 
 # Deciding reversibility
@@ -61,6 +61,9 @@ Usually higher leverage than deciding well — change the decision's class so it
 - Gate it so rollback is a configuration change rather than a deployment.
 - Keep the old path alive until the new one has carried real traffic.
 - Deprecate rather than delete; append rather than overwrite.
+- Read a setting before you write it, and keep what you read — the prior value is what makes the write undoable, and it is gone the instant the write lands.
+
+The last of those is the one that gets skipped, and it gets skipped for a reason that sounds like caution. A configuration write is a one-way door only because the value it replaces is destroyed by the write, so the prior value has to be captured in the same operation — a separate "read it first" step is the step that never runs. That holds when the new value is believed to be strictly safer, and that belief is exactly what skips it: twice in one session a "safe" value was written over one that was already more permissive, a silent downgrade of somebody's environment made while trying to help, and a third write clobbered a tracked configuration file instead of merging into it. Nothing about the new value being safe makes the old one recoverable.
 
 The wrapper generally costs less than the analysis it removes. When it does not, that is the signal the decision genuinely deserves the analysis.
 

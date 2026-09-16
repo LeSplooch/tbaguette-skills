@@ -24,6 +24,17 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-16 — Read a setting before you write it
+
+- **`deciding-reversibility` adds read-before-write to its list of ways to
+  turn a one-way door into a two-way one.** A configuration write is only
+  irreversible because the value it replaces is gone, so the skill now asks
+  for the prior value to be read and kept in the same command as the write —
+  and says plainly that believing the new value is safer is no reason to skip
+  it, since that belief is exactly what let a "safe" value silently downgrade
+  an environment that was already more permissive. The description now
+  triggers on overwriting a setting or a configuration file.
+
 ## 2026-09-16 — A spec you remember is not a spec you have read
 
 - **`checkpointing-long-runs` names the document the work is measured

@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.44</span>
+      <span class="wordmark-version" dir="ltr">v1.1.45</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-16T17:26:35+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-16T17:26:35Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-16T17:33:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-16T17:33:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,10 +64,10 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">deciding-reversibility</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-16T17:33:02.494357+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
-  <p class="lede">Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it.</p>
+  <p class="lede">Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, overwrite a setting or a configuration file, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Match the cost of deciding to the cost of being wrong. The dominant failure is not bad decisions — it is expensive deliberation spent on choices that could be undone in ten minutes, while the genuinely irreversible ones get made in passing.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -86,7 +86,8 @@
 <p>The stopping predicate is not whether you feel sure. It is: <strong>if another round of analysis would not change which option you pick, the analysis is finished.</strong> Name the evidence that would change the answer; if you cannot name any, or it is not obtainable now, decide.</p>
 <h2 id="convert-one-way-doors-into-two-way-ones">Convert one-way doors into two-way ones</h2>
 <p>Usually higher leverage than deciding well — change the decision's class so it can be made in five minutes instead of five days.</p>
-<ul><li>Put the choice behind an interface so the implementation can be swapped later.</li><li>Version the format on day one so a second version is legal without a migration.</li><li>Confirm the migration path exists before committing to a shape, rather than after.</li><li>Gate it so rollback is a configuration change rather than a deployment.</li><li>Keep the old path alive until the new one has carried real traffic.</li><li>Deprecate rather than delete; append rather than overwrite.</li></ul>
+<ul><li>Put the choice behind an interface so the implementation can be swapped later.</li><li>Version the format on day one so a second version is legal without a migration.</li><li>Confirm the migration path exists before committing to a shape, rather than after.</li><li>Gate it so rollback is a configuration change rather than a deployment.</li><li>Keep the old path alive until the new one has carried real traffic.</li><li>Deprecate rather than delete; append rather than overwrite.</li><li>Read a setting before you write it, and keep what you read — the prior value is what makes the write undoable, and it is gone the instant the write lands.</li></ul>
+<p>The last of those is the one that gets skipped, and it gets skipped for a reason that sounds like caution. A configuration write is a one-way door only because the value it replaces is destroyed by the write, so the prior value has to be captured in the same operation — a separate &quot;read it first&quot; step is the step that never runs. That holds when the new value is believed to be strictly safer, and that belief is exactly what skips it: twice in one session a &quot;safe&quot; value was written over one that was already more permissive, a silent downgrade of somebody's environment made while trying to help, and a third write clobbered a tracked configuration file instead of merging into it. Nothing about the new value being safe makes the old one recoverable.</p>
 <p>The wrapper generally costs less than the analysis it removes. When it does not, that is the signal the decision genuinely deserves the analysis.</p>
 <p><strong>And the undo has to live outside the blast radius of the thing it undoes.</strong> Every item above assumes the mechanism that reopens the door still exists once you have gone through it, and that assumption is the one nobody states. Backups stored in the volume they protect, under the credential that can delete that volume, are not a rollback plan — they are part of the same object, and one action removes the door and the way back through it together. The shape recurs far from storage: a kill switch served by the service it kills — <a class="skill-link" href="/tbaguette-skills/skills/feature-flagging/"><code>feature-flagging</code></a> owns that one, and requires an evaluation path that does not depend on anything failing during the incident the switch was built for — a rollback that needs the pipeline the bad deploy just broke, a revert to an artifact the registry garbage-collected last week, a runbook stored only in the wiki that runs on the cluster being drained.</p>
 <p>The check is one question at design time, and it is cheap enough to ask about every reversible-looking action: <strong>name the thing that would perform the undo, then ask whether the action you are contemplating can reach it.</strong> Different volume, different credential, different account, different lifecycle — any one of those separations is usually enough, and none of them is the default.</p>
