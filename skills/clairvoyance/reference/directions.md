@@ -1,12 +1,15 @@
-# The seven directions, in full
+# The eight directions, in full
 
 Each entry: what the direction looks at, the questions that open it, the tell
 that selects it, what it characteristically yields, and the specific way it
 fails. The failure line is the important one — every direction here has a
 degenerate form that feels exactly like the real thing from the inside.
 
-Read the direction the tells selected. Reading all seven is the campaign-sized
-sweep and it is rarely the right size.
+Read the direction the tells selected. Reading all eight is the campaign-sized
+sweep and it is rarely the right size. Seven of these look at the *problem*;
+the last looks at the *field* the problem sits in — the people and forces
+that will decide what happens to any answer — and it is the one a view from
+above is mostly made of.
 
 ---
 
@@ -209,3 +212,48 @@ it produced and what it cost.
 *hypothesis with a good pedigree*, and pedigree is not evidence. It gets tested
 against this problem's actual constraints like anything else, and the
 constraints that made it work there are the first thing to check for here.
+
+---
+
+## Around — the field of people and forces
+
+**Looks at:** everything that is not the problem and will still decide what
+happens to it. A request lands in a field: people who have a stake in the
+answer, incentives that pull the design one way whatever its merits, a
+deadline or a budget or a rule that was never written into the sentence, and a
+surrounding world whose motion is the reason this arrived this week. The seven
+directions above are about the thing being asked for. This one is about the
+room it was asked in.
+
+**Questions:**
+- Who else has a stake in this — who pays for it, who is measured on it, who
+  has to live with it, who could veto it, and who does not know it is coming?
+- What incentive does each of them answer to, and where does that incentive
+  point that the request does not?
+- What is fixed here that no engineering choice can move — a date, a contract,
+  a regulation, a headcount — and is the design already respecting a constraint
+  of that kind without naming it?
+- What is happening around this that made it arrive *now*? A request is a
+  response to something, and the something is rarely in the request.
+- What organization builds and runs this, and will the boundary in the design
+  match a boundary in that organization? A boundary nobody owns has no owner.
+
+**Tell:** the work sits in a system with more than one owner, or the request
+carries a date, an audience, or a budget it did not mention. Also: a design
+that is technically sound and keeps being argued with — the argument is coming
+from the field, not from the design.
+
+**Yields:** the stakeholder or force that will actually settle the design, found
+before it settles it; the incentive that explains a requirement nobody could
+justify on the merits; the deadline that makes the elegant option the wrong
+one; and the seat that was empty when the request was written, which is the
+finding `seat` exists to produce on demand.
+
+**Fails as:** speculation about people. Motive is the one thing in this list
+you cannot observe, and an "around" finding that names what someone *wants*
+rather than what they are *measured on* or *have said* is a story. Stay with
+what is observable — the metric, the deadline, the org chart, the message —
+and phrase the rest as the question it is. The second failure is politics as
+design input: the field is a constraint to design inside, never an argument
+for a worse design. `threat-modeling` owns the one class of actor that must be
+enumerated adversarially, and it stays there.

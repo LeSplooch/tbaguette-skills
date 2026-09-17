@@ -162,3 +162,179 @@ The two that mattered most, *frames disagreeing* and *the discriminating
 observation*, arrived through the two directions most likely to be skipped:
 the one that examines your own vocabulary, and the one that looks like
 decoration.
+
+---
+
+# The second sweep — the enlargement, swept with itself
+
+Twelve days after the record above, the skill was asked to grow: *apply it to
+many more cases, broaden the horizons of thinking, produce ideas that would
+not otherwise come, a "God's view" on the request and the project, adapted for
+all possible cases.* This is the record of sweeping that request with the
+method it was about to enlarge — the eight directions, the new moves, and one
+orbit pane — before a line of it was written. Same three reasons as before,
+plus a fourth: an enlargement is the moment a skill about seeing more is most
+likely to reintroduce the one commitment its first sweep rejected.
+
+**The frame the request arrived in:** four commitments. That "massively" means
+*bigger*; that the skill file is the lever; that more cases means more
+triggers; and — for the second time — that more sight is the goal. The first
+survived in part, the second in full, the third was rewritten, and the fourth
+was rejected again, which is the finding that shaped everything else.
+
+---
+
+## Restated without its own nouns
+
+*Make the agent notice, on purpose and at chosen moments, things about any
+object it is handed — not only a request — that the object's own framing hides;
+and make that noticing produce candidates it can check, without producing
+work.* In that sentence "God's view" became *many partial seats chosen on
+purpose*, "ideas" became *observations about the possibility space*, and "all
+possible cases" became *a table of objects with a default that always works*.
+Nothing in the original wording contained the word *object*, and it is the
+noun the whole enlargement turned on.
+
+## Behind — what is this request a solution to?
+
+**Found:** the outcome is not a larger file. It is sessions that produce
+reframes and ideas the person finds non-obvious, and that notice project-level
+problems rather than only request-level ones — without scope inflation. The
+first record found that the scarce thing was reachability, and it still is:
+a faculty that fires at the wrong moment, or never, is prose. So the
+enlargement spent its first effort on the routing surface — a description
+rewritten inside the cap rather than appended to, a selector in the first
+eight kilobytes because one harness truncates there, and reciprocal edges from
+the skills whose own moments now hand off here.
+
+**Routed:** to the gate. *In thirty seconds* exists because of this direction.
+
+## Under — what does the vocabulary assume?
+
+**Found:** "God's view" admits two readings. One is a seat that sees
+everything, which does not exist and which a skill claiming it would turn
+into a manifesto generator. The other is a view assembled from several partial
+seats, each chosen because it sees one thing the others cannot — which is
+buildable, boundable, and honest about which seat every sentence came from.
+The discriminating observation was cheap: does any discipline that does this
+for a living — intelligence analysis, systems engineering, safety — claim the
+first reading? None does. All of them assemble.
+
+**Also found:** "more directions" assumes more directions produce broader
+thinking. The first record's own text says why that is wrong — a direction
+without a tell is a creativity listicle, and eight of them run every time is
+furniture. So every addition here arrived with its tell or it did not arrive.
+
+**Routed:** both to the gate. The overview says what the phrase cannot mean;
+`orbit` is built from seven seats, and its bounds come before its method.
+
+## Above — what class is this an instance of?
+
+**Found:** a single-moment tool becoming a general faculty, which this library
+has done twice before — `orchestrating-work-end-to-end` as a spine, and
+`formidable` as a default verb, a command table, and depth in reference files
+selected by the situation. The enlargement copied that shape rather than
+inventing one: verbs, a selector, a catalogue, and a per-object table.
+
+**Routed:** to the gate — the structure. **Discarded, with the reason:** a
+ninth direction, *within* (the parts of the request, the one that carries the
+value). It is `under` applied to a decomposition, and `scoping-before-building`
+already owns splitting a request that is several projects wearing one
+description.
+
+## Beside — what already does most of this?
+
+**Found:** the neighbours hold instruments a broader clairvoyance would want —
+`steelmanning-alternatives`' generator table, `threat-modeling`'s actor tiers,
+`mapping-dependencies`' blast radius, `revalidating-decisions`' premise decay,
+`orienting-in-unfamiliar-code`'s decisions that are not in the code. Restating
+them here would have been the duplication the library spends a test suite
+preventing. So the lens catalogue *indexes* them: each lens names the skill
+that owns it, and the lens is the reason to open that skill, not a substitute.
+
+**Also found:** the description is shared routing budget with every other
+trigger the skill has, and it had thirty-eight characters left. A trigger
+appended past the cap displaces an older one — so the description was
+rewritten as a whole, and the verbs that need no description budget at all
+carry the rest of the new reach.
+
+**Routed:** to the gate, both.
+
+## Ahead — what does this commit its readers to?
+
+**Found:** cost. The file grew by half, and every invocation loads all of it.
+The mitigation is structural rather than a promise: the essentials sit in the
+first eight kilobytes, and everything a small sweep needs is in *In thirty
+seconds*. **Also found:** `orbit` is the most dangerous thing in the skill,
+because a whole project's surroundings are unbounded and a pass rewarded for
+yield will find something every time. The bounds — one page, three findings,
+named moments, never during an incident, never a redesign — were written
+before the panes, and they are the part of that file a reader most needs.
+
+**Routed:** to the gate. Bounds first, in [orbit.md](orbit.md).
+
+## Against — what if the answer is the opposite?
+
+**Found:** two real inversions. *Split it* — put the project-level view in a
+sibling skill and leave this one at request level. It buys a second routing
+budget and costs one method stated in two files; the person asking chose
+against it, and the ruling is recorded here so the next session does not
+re-derive it. *Do not enlarge it* — the first record's null was mostly right:
+the seven directions already covered most requests. What they did not cover
+was the object (a plan, a number, a project) and the field (the people), and
+those two are the enlargement. Everything else here is depth for those two.
+
+**Routed:** the split to the record as a ruling; the "do nothing" as the
+filter that cut the enlargement to objects and the field.
+
+## Outside — who else has solved this?
+
+**Found:** the intelligence community's structured analytic techniques — a
+catalogue of mechanical methods, each with a stated use and a stated failure,
+run one at a time when its tell fires — is the shape the lens catalogue took.
+Process safety's deviation guidewords became the seventh move, because they
+generate cases and ideas without consulting anyone's imagination. Systems
+thinking supplied the altitude ladder, the purpose-is-what-it-does pane, and
+the leverage-point bound. Pace layers supplied the time pane.
+
+**Discarded:** de Bono's six hats — the seats table does the same job with
+chairs that name real readers rather than colours; and design thinking's
+divergence-convergence diamond, which is the routing table drawn as a shape.
+
+## Around — who has a stake in this skill?
+
+**Found:** the person asking, who wants ideas; every reader of the library,
+who pays the file's cost on every invocation; two harness budgets that decide
+whether any of it is ever read — a listing budget that surfaces a fraction of
+trigger descriptions, and a body cap that truncates at eight kilobytes; and
+another session writing to the same tree that afternoon, which is why the
+change was landed through a throwaway worktree. The incentive acting on the
+skill itself is the one the first record named: a pass rewarded for finding
+things finds things. That is why the null rule is restated for `orbit` and
+`imagine` rather than assumed to carry over.
+
+**Routed:** the budgets to the gate (the selector's position, the description's
+rewrite); the shared tree to the run's envelope; the incentive to the null
+section.
+
+## One orbit pane, as a check on the method
+
+*Purpose, as revealed by behaviour.* The library says it is a set of
+project-agnostic judgment skills. What it does, measured on one harness that
+week, is surface a fraction of its own trigger descriptions and invoke a skill
+in under half of the sessions it is loaded into. The gap between charter and
+behaviour is reachability, which is the finding the first record reached by
+argument and this pane reaches by measurement. The check that would refute it
+is the same harness's listing after the descriptions are shortened, and it is
+recorded as a reopen condition rather than as work.
+
+## The tally
+
+Eight directions and one pane; seven with a finding, one — *above* — with a
+structure and a discard. Six findings routed to the gate and changed the
+shipped files; one ruling (the split) routed to the record; three discards
+with reasons. The move that mattered most was the restatement: *object* was
+not in the request and is now the axis the enlargement runs on. And the
+commitment rejected twice — that more sight is the goal — is the reason the
+largest file in this change is a catalogue of tells rather than a catalogue
+of questions.

@@ -60,6 +60,7 @@ An absent answerer does not delete a gate. It changes what closes it.
 | Gate | With someone there | Alone |
 |---|---|---|
 | Approval of a design | An explicit yes | The design written down, the approach that lost named with its reason, a reversibility bound, and a stop condition that fires if it turns out wrong |
+| A reframe from a `clairvoyance` sweep, orbit, or imagine pass | Asked as one question | Never self-approved. The observation, the reading that lost, and a stop condition go into the record; the run continues on the original frame |
 | A clarifying question | Ask, one at a time | Answer it from the code if the code answers it. Otherwise pick, and record it as a ruling naming the other reading — never as a fact |
 | "Is this what you meant?" | Ask | Re-derive each acceptance line from the request's literal words, quoted, and check the built thing against the quote rather than against your memory of it |
 | A second pair of eyes | A human, or a reviewer subagent | `red-teaming-your-own-work` then `karen-and-the-manager`, run as hard gates rather than as a courtesy, ideally by a reader with no memory of building it |

@@ -8,7 +8,9 @@ routing table.
 
 The shared rule: **a sweep goes at the last moment before the frame becomes
 expensive to change, and never at a moment when something more urgent is
-running.** Everything below is that rule applied.
+running.** Everything below is that rule applied — first for the sweep, then
+for the two larger passes, `orbit` and `imagine`, which have fewer seats and
+stricter ones.
 
 ---
 
@@ -165,6 +167,28 @@ track at reversibility. That is a track staying put, not a downgrade.
 
 ---
 
+## Where orbit and imagine sit
+
+The sweep has a seat in every track. The two larger passes do not — an orbit
+is a whole-project view and an imagine pass is deliberate divergence, and both
+are wrong at most moments of most tracks. Their seats:
+
+| Track | `orbit` | `imagine` |
+|---|---|---|
+| **Build** | Before phase 1, on inherited or unfamiliar work only, after orientation has said what the code is | At phase 2, after the sweep and before an approach is chosen — its candidates are what `steelmanning-alternatives` then works on |
+| **Diagnose** | When stuck three times at the same place and the model of the *project* may be the wrong one | When the hypothesis list empties: hypotheses are ideas, and the divergence lenses produce them in a shape the reproduction can test |
+| **Respond** | In the postmortem only | Never — a crude mitigation now beats a creative one later |
+| **Investigate** | When the commissioned question is about the project rather than a part of it | Before the conclusion, on the alternative explanations the evidence also fits |
+| **Review** | No seat | No seat — the absence pass is the lens, and a review that generates ideas has stopped judging |
+| **Author** | No seat | At *frame the reader* only: what else this document could be for, before a word of it is drafted |
+| **Change in place** | Before a migration or upgrade of the whole rather than a part | Before `deciding-reversibility`, as candidates for the different operation that `against` is looking for |
+
+Both route exactly as a sweep does. An orbit's findings and an imagine pass's
+candidates are observations; the moment one becomes work, `managing-scope-drift`
+has the table and it wins.
+
+---
+
 ## The envelope, dial by dial
 
 The track says where the seat is. The envelope says what the sweep may do
@@ -174,10 +198,10 @@ from it.
 |---|---|
 | `presence=paired` | **Ask rather than infer.** *Behind* is cheap here — one message beats a page of inference about intent, and it cannot be condescending if it is a question |
 | `presence=async` | Batch the sweep's one question with the other open ones; continue on the original frame meanwhile |
-| `presence=autonomous` / `unattended` | The sweep runs; **a reframe may not be self-approved.** Write the observation, the reading that lost, and a stop condition. Then build what was asked. See below |
-| `amplitude=express` | One direction, selected by tell. No tell fires, no sweep, and that is correct rather than skipped |
-| `amplitude=standard` | Three: the tells that fired, plus **against** |
-| `amplitude=campaign` | All seven at the design gate; **ahead** and **beside** again at close. The discard pile goes in the record |
+| `presence=autonomous` / `unattended` | The sweep runs; **a reframe may not be self-approved.** Write the observation, the reading that lost, and a stop condition. Then build what was asked. An orbit's findings and an imagine pass's candidates go to the record only. See below |
+| `amplitude=express` | One direction, selected by tell. No tell fires, no sweep, and that is correct rather than skipped. No orbit and no imagine unless asked for by name |
+| `amplitude=standard` | Three: the tells that fired, plus **against**. An imagine pass, if its seat is open, stops at three candidates |
+| `amplitude=campaign` | All eight at the design gate; **ahead** and **beside** again at close. One orbit at arrival if the work is inherited; an imagine pass stops at five. The discard pile goes in the record |
 | `radius=sandbox` / `repo` | Ordinary sizing |
 | `radius=live` | **Ahead is mandatory.** The second-order consequence is the entire reason the radius is live, and the sweep is the only phase that looks at it |
 | `crew=solo` | Ordinary sizing |

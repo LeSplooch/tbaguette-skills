@@ -70,6 +70,7 @@ not once the run is already in trouble.
 | `code-archaeology` | The current shape only makes sense as the result of decisions nobody wrote down |
 | `reading-specifications` | A ticket, RFC, or standard is the input, and it has to become testable requirements before it can be framed |
 | `routing-around-capability-gaps` | The work needs something this model or harness cannot do; find that out before promising the run, not during it |
+| `clairvoyance` (`orbit`) | The work is inherited or the project unfamiliar, and orientation has just said what the code is — one bounded page on what the project is, before the first request is framed inside it |
 
 ## Phase 1 — Frame
 
@@ -88,7 +89,7 @@ not once the run is already in trouble.
 
 | Skill | Reach for it when |
 |---|---|
-| `clairvoyance` | First, before an approach is proposed. It is the only skill here that questions the request rather than serving it, and a reframe costs a paragraph now, the plan at phase 4, and the implementation at phase 6 |
+| `clairvoyance` | First, before an approach is proposed. It is the only skill here that questions the request rather than serving it, and a reframe costs a paragraph now, the plan at phase 4, and the implementation at phase 6. Its `imagine` pass sits here too, after the sweep: at most five candidates, each with the check that would test it, for `steelmanning-alternatives` to work on |
 | `scoping-before-building` | Always — this phase is its sectioned-design gate, ending in an explicit yes |
 | `steelmanning-alternatives` | A single approach is about to be presented as the approach |
 | `deciding-reversibility` | Choosing how much design rigor this decision actually deserves |

@@ -110,6 +110,8 @@ Each divergence you find is worth more than the rest of the orientation. Write t
 
 The *code* records a project's state. It does not record its direction, and it never records what the project has already refused. Reading it perfectly tells you what is there and nothing about what was proposed, argued over, and turned down — which is where a surprising share of otherwise-correct changes die. `code-archaeology` owns the half of that record which does live in the repository, in the review discussion attached to what was merged and reverted; this is the other half, which lives in what was never merged at all.
 
+Once orientation has said what the code *is*, `clairvoyance`'s `orbit` is the pass that says what the project is — and this section is what it reads as its negative-space pane, so a bounded pass here pays twice on inherited work.
+
 What makes this worth a separate pass rather than a glance is that a change rejected for one of these reasons is *technically correct*. Nobody will point at a line and say what is wrong with it, because nothing is: it duplicated one already open, it had been superseded, it targeted something the project settled a year ago, it arrived through the wrong workflow. Every one of those is invisible from the code and visible in a few minutes of looking somewhere else, and a correct change that was already declined is still a declined change — with the cost landing on somebody else's unpaid review time.
 
 So before changing code nobody present wrote, spend a bounded pass on the record of what has already been settled — inside the time box below rather than on top of it, because this is orientation and it is subject to the same limit:

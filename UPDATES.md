@@ -24,6 +24,50 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-17 — Clairvoyance now looks at the whole, not only the request
+
+- `clairvoyance` — the skill that questions the request instead of serving
+  it — now sweeps anything that arrives with a frame: a plan, a decision, a
+  metric, a document, a codebase, the project as a whole, and the run you are
+  in, not only the message that opened the session. A table says, for each
+  of those, where its frame came from, when a look is cheap, which direction
+  to look first, and where a finding goes.
+- An eighth direction, `around`: the field of people and forces the work sits
+  in — who has a stake, what incentives and deadlines act on it, and what in
+  the surrounding world sent it now. The seven existing directions were all
+  about the problem; none was about the people, which is most of what a view
+  from above means.
+- Two new mechanical moves: change altitude (say the problem one level up and
+  one level down, and solve it at the cheapest level) and deviation
+  guidewords (apply no, more, less, reverse, early, late, other-than to each
+  parameter of the thing — the most reliable idea generator in the file).
+- Four things to invoke by hand. `orbit` — the whole project from above, in
+  one bounded page: altitudes, purpose as revealed by behaviour, the empty
+  chairs, the flows across its boundary, what changes at what pace, and the
+  negative space; at most three findings, run at named moments, never a mode.
+  `imagine` — up to five ideas produced as observations, each carrying the
+  check that would tell whether it is worth anything. `lens <name>` — one
+  instrument from a catalogue of about thirty borrowed from other disciplines
+  (`reference/lenses.md`: ideal final result, pre-mortem, pace layers, key
+  assumptions check, POSIWID, Goodhart, Wardley evolution, and the rest),
+  each with its tell, its failure mode, and the skill that owns it where one
+  does. `seat <chair>` — one look from a named seat: the operator at 3 a.m.,
+  the auditor, the integrator, the customer's customer.
+- What has not changed: sight is free and action is not. Every finding — an
+  idea included — routes to a gate, the ledger, the record, or a discard with
+  a reason before anything acts on it; a sweep is never a reason something
+  did not ship; and a run with nobody present may notice a reframe and may
+  not approve one. The null is still the normal result, for an orbit too.
+- One-line handoffs now point back at it from `revalidating-decisions`,
+  `threat-modeling`, `orienting-in-unfamiliar-code`,
+  `recovering-agent-context`, `bounding-autonomous-work`, and `writing-adrs`,
+  and `orchestrating-work-end-to-end`'s phase routing seats an orbit after
+  orientation on inherited work and an imagine pass at the design gate.
+- The change was swept with the enlarged method before shipping, and the
+  record of what that found — including the two readings of "God's view" it
+  had to choose between — sits in the skill beside the original creation
+  record.
+
 ## 2026-09-17 — A build's own output folder can hand you the wrong binary
 
 - `confirming-before-claiming-done` now covers finding a test binary by name

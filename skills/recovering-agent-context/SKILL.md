@@ -82,7 +82,7 @@ Session stores run to hundreds of megabytes of JSONL, and a single session can e
 
 ## An executed plan and an abandoned one read identically
 
-Transcripts are a record of *intent and attempt*, and nothing in the format marks which attempts landed. Every one of these appears in confident, well-formed prose:
+Transcripts are a record of *intent and attempt*, and nothing in the format marks which attempts landed. Every one of these appears in confident, well-formed prose — and a recovered plan carries its author's judgments compiled out, which is why `clairvoyance` sweeps it as a plan, before task one and never task by task:
 
 | What you read | What may actually be true |
 |---|---|

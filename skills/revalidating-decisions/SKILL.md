@@ -33,6 +33,8 @@ Split every record into the two before treating any of it as binding.
 
 A record is binding when its principle holds *and* its premises still describe the world. Most stale records have a perfectly good principle sitting on a premise that expired years ago, which is why they read as convincing right up to the moment you check.
 
+When nothing yet suspects a premise — the record is simply being relied on — the pass that *finds* one is `clairvoyance` run on the decision as its object: its `ahead` direction read backward, asking what has changed since the author wrote it that they could not have known. That pass ends at a suspected premise; everything from there is this skill's, done with the record open.
+
 Nothing in the wording distinguishes **"we decided against this"** from **"this was impossible at the time"**. The two deserve opposite responses, and the sentence is identical.
 
 ## Which premises decay

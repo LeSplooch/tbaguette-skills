@@ -57,7 +57,7 @@ Skip categories that genuinely do not apply — a read-only static asset path ha
 
 ## Attackers, in capability tiers
 
-Naming the tier turns "someone could" into "who, and would they bother". A generic "hacker" produces a generic mitigation.
+Naming the tier turns "someone could" into "who, and would they bother". A generic "hacker" produces a generic mitigation. A `clairvoyance` sweep's actor pass — the empty chairs, the field a request sits in — hands off here the moment an adversarial chair is occupied; the tiers below are the enumeration it deliberately does not attempt.
 
 | Tier | Has | Wants | Effort |
 |---|---|---|---|

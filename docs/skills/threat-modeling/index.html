@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.46</span>
+      <span class="wordmark-version" dir="ltr">v1.1.47</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-16T22:22:25+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-16T22:22:25Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-17T05:30:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-17T05:30:39Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">threat-modeling</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-17T05:30:39.303766+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Security (defensive)</span>
   <p class="lede">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration, or a change to authentication or authorization, when a design review needs a security section, when asked what could go wrong with a system or feature, or when reasoning about attackers, attack surface, blast radius, and which risks to fix first. Also use when a limit, quota, entitlement, or uniqueness rule is enforced at the one write path whoever wrote it had in mind, while import, sync, restore, bulk seeding, or admin tooling can reach the same state, or when such a rule is checked only at creation and nothing re-checks it afterwards. Also use when a component is sandboxed, jailed, or otherwise confined, and the audit of what it can reach came back clean. Covers STRIDE, trust boundaries, data flow, attacker capability tiers, risk ranking, and enumerating every path that can produce a guarded state.</p>
@@ -83,7 +83,7 @@
 <table><thead><tr><th>Prompt</th><th>Question at this boundary</th><th>Property it defends</th></tr></thead><tbody><tr><td>Spoofing</td><td>Can the far side claim an identity it does not have?</td><td>Authentication</td></tr><tr><td>Tampering</td><td>Can data or code be altered in transit or at rest?</td><td>Integrity</td></tr><tr><td>Repudiation</td><td>Can an actor deny an action we cannot prove?</td><td>Attribution</td></tr><tr><td>Information disclosure</td><td>Who else can read this, including logs and errors?</td><td>Confidentiality</td></tr><tr><td>Denial of service</td><td>What unbounded work can a caller cause?</td><td>Availability</td></tr><tr><td>Elevation of privilege</td><td>Can a caller act with authority it was not granted?</td><td>Authorization</td></tr></tbody></table>
 <p>Skip categories that genuinely do not apply — a read-only static asset path has no meaningful repudiation story — and say so out loud rather than filling the cell.</p>
 <h2 id="attackers-in-capability-tiers">Attackers, in capability tiers</h2>
-<p>Naming the tier turns &quot;someone could&quot; into &quot;who, and would they bother&quot;. A generic &quot;hacker&quot; produces a generic mitigation.</p>
+<p>Naming the tier turns &quot;someone could&quot; into &quot;who, and would they bother&quot;. A generic &quot;hacker&quot; produces a generic mitigation. A <a class="skill-link" href="/tbaguette-skills/skills/clairvoyance/"><code>clairvoyance</code></a> sweep's actor pass — the empty chairs, the field a request sits in — hands off here the moment an adversarial chair is occupied; the tiers below are the enumeration it deliberately does not attempt.</p>
 <table><thead><tr><th>Tier</th><th>Has</th><th>Wants</th><th>Effort</th></tr></thead><tbody><tr><td>0 Curious user</td><td>a valid account, dev tools, your API docs</td><td>another tenant's data, a role upgrade, free usage</td><td>minutes</td></tr><tr><td>1 Opportunist</td><td>mass scanners, credential lists, public exploits within days</td><td>any foothold, compute, a proxy</td><td>near zero, untargeted</td></tr><tr><td>2 Targeted</td><td>reads your source, registers lookalike names, phishes staff, buys your expired domain</td><td>your specific data or money</td><td>days to weeks</td></tr><tr><td>3 Insider / supply chain</td><td>a valid credential, a maintainer account, a CI token</td><td>anything, with your own authority</td><td>mitigated structurally, not detectively</td></tr></tbody></table>
 <p>Label any mitigation that only stops tier 0 — unguessable URLs, undocumented endpoints, client-side checks — as exactly that. Tier 4 (state-level) is out of scope unless you can name why you are a target; write the exclusion down instead of leaving it ambiguous.</p>
 <h2 id="ranking-impact-reachability">Ranking: impact × reachability</h2>

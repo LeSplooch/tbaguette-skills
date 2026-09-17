@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.46</span>
+      <span class="wordmark-version" dir="ltr">v1.1.47</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-16T22:22:25+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-16T22:22:25Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-17T05:30:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-17T05:30:39Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">orienting-in-unfamiliar-code</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-17T05:30:39.303766+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Reading code</span>
   <p class="lede">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project, or being asked to change code that nobody present wrote. Covers where to start reading, locating entry points and real module boundaries, telling live code from dead, finding where the work actually happens, and reconciling documented architecture with the one the imports reveal. Also use when a text search for a common identifier returns too much to read, when the question is who calls this or whether anything still uses it, or when deciding how far to trust a resolver's zero-references answer. Also use before contributing a change to a project you do not own, when nothing has yet checked whether the idea has already been proposed and declined.</p>
@@ -97,6 +97,7 @@
 <p>Each divergence you find is worth more than the rest of the orientation. Write them down; they are the constraints your change will hit.</p>
 <h2 id="the-decisions-that-are-not-in-the-code">The decisions that are not in the code</h2>
 <p>The <em>code</em> records a project's state. It does not record its direction, and it never records what the project has already refused. Reading it perfectly tells you what is there and nothing about what was proposed, argued over, and turned down — which is where a surprising share of otherwise-correct changes die. <a class="skill-link" href="/tbaguette-skills/skills/code-archaeology/"><code>code-archaeology</code></a> owns the half of that record which does live in the repository, in the review discussion attached to what was merged and reverted; this is the other half, which lives in what was never merged at all.</p>
+<p>Once orientation has said what the code <em>is</em>, <a class="skill-link" href="/tbaguette-skills/skills/clairvoyance/"><code>clairvoyance</code></a>'s <code>orbit</code> is the pass that says what the project is — and this section is what it reads as its negative-space pane, so a bounded pass here pays twice on inherited work.</p>
 <p>What makes this worth a separate pass rather than a glance is that a change rejected for one of these reasons is <em>technically correct</em>. Nobody will point at a line and say what is wrong with it, because nothing is: it duplicated one already open, it had been superseded, it targeted something the project settled a year ago, it arrived through the wrong workflow. Every one of those is invisible from the code and visible in a few minutes of looking somewhere else, and a correct change that was already declined is still a declined change — with the cost landing on somebody else's unpaid review time.</p>
 <p>So before changing code nobody present wrote, spend a bounded pass on the record of what has already been settled — inside the time box below rather than on top of it, because this is orientation and it is subject to the same limit:</p>
 <ul><li><strong>Closed pull requests touching the same files.</strong> The closed ones carry the reasoning; the merged ones only carry the outcome. Search by path, not by title.</li><li>*<em>The issue tracker searched for your </em>idea<em>, not your </em>symptom<em>.</em>* Searching the error message finds people with your problem. Searching the change you intend to make finds the thread where it was considered and rejected, which is the one you need.</li><li><strong><code>CONTRIBUTING</code>, governance docs, and the architecture notes</strong> for what the project declines by policy — a dependency it will not take, a platform it does not support, a pattern it has standardized against.</li><li><strong>Whether someone is already doing it.</strong> An open branch or a stale draft is a person, and the right move is to talk to them rather than to race them.</li></ul>

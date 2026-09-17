@@ -44,6 +44,7 @@ Volume is diagnostic. More than ~2 per week and the team is recording tasks; few
 - Every alternative gets what it was and **the specific reason it lost**. "Rejected: X — requires a coordinator we don't have staffed until Q3" survives; "Rejected: X — not a good fit" is a placeholder that tells a future reader nothing.
 - Include the option you would have taken with more time, money, or people. Future readers arrive precisely when those exist, and that entry is the trigger to revisit.
 - Include "do nothing" when it was genuinely live, with what it would have cost.
+- A reading that lost in a `clairvoyance` sweep is exactly such an alternative, and the observation that told the two readings apart is the specific reason it lost — carry both, or the next reader re-runs the sweep.
 - Where an alternative lost on a measurement, cite the number *and how it was taken*. A benchmark without a method cannot be re-run and so cannot be challenged.
 - The failure mode is recording only what was accepted. Then every future reader re-derives and re-rejects the same three options at full cost, and eventually someone adopts a rejected one because nothing said it had been tried and why it failed.
 
