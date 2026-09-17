@@ -41,6 +41,12 @@ Everything above the first `##` is preamble and is never rendered.
   push or pull-request step is a reading to re-try once rather than a fixed
   verdict, and that a clean `--dry-run` never confirms the real write is
   cleared.
+- New skill: `keeping-copies-in-sync`, for the moment a version number, a
+  constant, a policy document, or any other fact ends up recorded in more
+  than one file — why memory ("we'll update both") is the mechanism that
+  produces drift rather than a defense against it, and why generating one
+  copy from the other beats hand-maintaining both, with a comparison that
+  fails loud as the fallback where a second copy has to genuinely exist.
 
 ## 2026-09-17 — Clairvoyance now looks at the whole, not only the request
 

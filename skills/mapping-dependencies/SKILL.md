@@ -15,7 +15,7 @@ The dependency graph in the import statements is one of three graphs, and it is 
 - A cycle blocks a build, a test, an extraction, or a deletion.
 - Deciding module boundaries, or whether a proposed split is even possible.
 - An incident traced to a component that had no visible link to the change.
-- Not for: choosing where to put a change once the graph is known (finding-the-seam), or one value's path (tracing-data-flow).
+- Not for: choosing where to put a change once the graph is known (finding-the-seam), or one value's path (tracing-data-flow). Once a data edge shows a fact with more than one writer that has to stay that way, keeping the copies from drifting is `keeping-copies-in-sync`.
 
 ## Three graphs, not one
 

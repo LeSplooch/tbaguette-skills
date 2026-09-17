@@ -18,7 +18,7 @@ thin delivery layer:
 1. **Skills (harness-agnostic).** Everything in `skills/` is the source of
    truth, shared verbatim. Skills describe *actions* — "invoke a skill",
    "read a file", "run a shell command" — not specific tool names. A grep
-   across all 97 confirms this holds almost without exception (`using-tbaguette`
+   across all 98 confirms this holds almost without exception (`using-tbaguette`
    is the one skill that names a tool, "the Skill tool" — see
    `.kimi-plugin/plugin.json`'s `skillInstructions`, or
    `skills/using-tbaguette/references/copilot-tools.md`, for how that one
@@ -162,8 +162,8 @@ repository — the files existed, the JSON was valid, the hooks exited 0.
   `MAX_SKILL_PROMPT_BYTES` cuts a `SKILL.md` mid-character the moment it is
   reached through an Agent Plugin manifest — exactly the path this repo
   ships (`.codex-plugin/plugin.json`) — with a one-line warning to the model
-  and no equivalent cap for skills discovered outside a plugin. 82 of this
-  repo's 97 skills exceed it as of this writing, several past 30 KB, so on
+  and no equivalent cap for skills discovered outside a plugin. 83 of this
+  repo's 98 skills exceed it as of this writing, several past 30 KB, so on
   the documented Codex install most of this library's content is cut off
   silently at whatever character the limit lands on. Restructuring the
   largest skills to fit is a real editing campaign, not a manifest fix, and
@@ -177,7 +177,7 @@ repository — the files existed, the JSON was valid, the hooks exited 0.
   when the window is unknown; `skills.max_context_tokens` caps it at 10,000
   tokens) across the entire installed catalogue's one-line `description`
   fields at once, round-robin, one character per skill per pass, rather than
-  a fixed budget per skill — so the same 97-skill plugin reads with a
+  a fixed budget per skill — so the same 98-skill plugin reads with a
   generous per-description allowance next to a handful of other plugins and
   a punishing one next to many. The widely-quoted "122 characters" is not a
   constant; it is what the shared budget happened to divide out to on a

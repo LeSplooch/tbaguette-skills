@@ -1,6 +1,6 @@
 # TBaguette's Atelier
 
-97 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
+98 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
 `TBaguette:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -121,6 +121,7 @@ Atelier skill hands off to a neighbour.
 | `instrumenting-for-observability` | Deciding what to emit before the incident |
 | `rate-limiting-and-backpressure` | Shedding vs queueing vs slowing down; retry storms |
 | `tracking-data-provenance` | Observed vs imported vs inferred vs defaulted; confidence laundering; one write path per provenance |
+| `keeping-copies-in-sync` | A fact recorded in more than one place; generate over copy, and check over trust |
 
 ## Security (defensive)
 
