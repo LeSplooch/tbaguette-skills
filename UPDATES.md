@@ -24,6 +24,20 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-18 — Closing a permission is now held to the same standard as opening one
+
+- `least-privilege-design` now covers **revoking a capability that can be
+  granted more than one way** — a cache, a second config source, or a second
+  component that independently re-grants it — and asks for the same
+  enumeration a grant already gets before a disable path is trusted.
+- The same skill also covers **a narrow safety-bypass that silently doesn't
+  work**: an untested escape hatch is a claim, not a control, and its real
+  failure mode is teaching whoever hits it to reach for the big switch instead.
+- `bounding-autonomous-work` now names a capability-expanding request —
+  installing a plugin, tool, or server — as its own no-go for an unattended
+  run, including one routed through a delegated subagent that surfaces the
+  approval prompt to a human who can't see where it came from.
+
 ## 2026-09-17 — Clairvoyance now looks at the whole, not only the request
 
 - `clairvoyance` — the skill that questions the request instead of serving

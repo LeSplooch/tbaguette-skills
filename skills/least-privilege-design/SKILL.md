@@ -134,6 +134,12 @@ That is one more argument for the default-deny section above, arriving from an u
 
 Two consequences. **A policy loader should refuse to start on a rule it cannot parse**, and where it genuinely must tolerate unknown syntax, that tolerance belongs on the permissive rules and not on the restrictive ones. And which behaviour you actually have takes about a minute to establish: put a deliberately malformed rule into a copy of the policy and see whether the loader objects or comes up clean. An empty denial log will not tell you, because a rule that never loaded and a rule that was never violated leave the identical record — which is why step 4 below has to end in an attempt rather than in a reading.
 
+### A narrow bypass that does not work erodes the whole control
+
+A scoped, single-purpose escape hatch — an override for one specific blocked case, a break-glass command, a permissive retry after one named denial — exists so an operator does not have to disable the real control to get past a false positive. That only holds if the narrow path actually works. One found in the wild silently did not: the permissive retry after a sandbox denial stopped instead of running the command it was supposed to allow, so invoking the bypass simply did nothing. The only route that reliably worked was turning the sandbox off for the whole session.
+
+An escape hatch nobody has exercised end to end is a claim, not a control — the same gap the paragraph above closes for a deny rule — and its failure mode is worse, because a broken deny rule fails loud and gets fixed, while a broken bypass fails by teaching whoever hit it that the reliable way past *this* control is the big switch, a lesson that generalizes to the next control they meet. **Test the narrow path itself, on the case it claims to handle, on the same cadence the main control gets tested** — not only that the control blocks, but that the sanctioned way around it actually gets someone through.
+
 ## Reviewing what a role can actually do
 
 Intent is not a control. Review the effective permissions, not the name or the description.
@@ -145,11 +151,21 @@ Intent is not a control. Review the effective permissions, not the name or the d
 
 When the demand for a justification arrives from outside — a questionnaire, an audit finding, a distribution review asking why a declared capability is needed — it is a prompt to run the compare-against-use step above, before writing a word. What that comparison returns decides the answer: used as described, justify it; used more narrowly, narrow the grant and justify what is left; not used at all, remove it, and the question retires along with it. Compare against observed calls rather than against whether the symbol appears — a capability referenced only from a path that never executes reads as used to a grep and as unused to the audit log. That last state accumulates because declaring is cheap once and removing later feels risky, while the justification cost recurs every review cycle until either the feature exists or the declaration is removed.
 
+## Revoking a capability must close every path that reaches it
+
+Granting narrowly and revoking completely are the same discipline read in opposite directions, and only one of them usually gets the review above. A grant is checked against every route it opens; a disable or revoke path is written against the one route its own subsystem tracks, and stays reachable through whichever other route the toggle did not clear.
+
+The shape recurs wherever a capability can be granted through more than one mechanism: a sync cache that outlives the setting that filled it, a second configuration source layered alongside the one just edited, a second component that independently re-contributes the same connector or permission. Three unrelated systems hit this shape independently and at once: a client-side cache that kept a capability available after an org-level toggle turned it off, a managed policy field silently ignored whenever a second managed-settings source also existed, and a connector that stayed reachable through a second still-enabled plugin after its canonical owner was disabled.
+
+**Before shipping a disable or revoke path, enumerate every route by which the capability could still be reachable — the same enumeration step 1 above runs for a grant — and confirm the toggle clears all of them, not just the one it was written against.** Then verify it the way step 4 above verifies a denial: put the capability in place through every route you can find, flip the toggle meant to remove it, and check each route in turn rather than trusting the one the code intercepts.
+
 ## Common mistakes
 
 | Symptom | Real cause |
 |---|---|
 | One bug became total compromise | A shared broadly-scoped credential; the vulnerable component was never the sensitive one |
+| A disabled capability stayed reachable | The revoke path cleared the one route its own subsystem tracked; a cache, a second config source, or a second grantor left another route open |
+| An operator disabled the whole control to get past one blocked case | The narrow bypass built for that case silently didn't work, so the switch was the only route that reliably did |
 | Permissions were reviewed and are still too broad | The intended grant was reviewed, not the effective set with inheritance and assumable roles |
 | Wildcards everywhere, and a dev credential that also works in production | Permissions derived up front from a design instead of from observed denials; one identity spanning environments |
 | A "read-only" role can escalate | It can modify a policy, a pipeline, or a config that something later executes |
@@ -174,3 +190,5 @@ When the demand for a justification arrives from outside — a questionnaire, an
 - "The user is authenticated" offered as the answer to an authorization question.
 - Any credential with no expiry and no owner.
 - Break-glass used more than a few times a year, or a pipeline that can modify its own permissions.
+- "We turned it off" said about a capability with more than one source that can grant it.
+- An escape hatch nobody who built it has ever actually walked through end to end.

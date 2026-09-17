@@ -164,6 +164,12 @@ take the step.
   published artifact, a posted comment, a release.
 - Anything spending money or a quota that someone else pays for.
 - Anything touching credentials: rotating, revoking, granting, or moving one.
+- Anything that would expand what the run itself, or anything it dispatches,
+  can do next: installing a plugin, tool, or server, or requesting a new
+  capability grant. This holds even when the request surfaces its own
+  user-facing approval prompt — a subagent able to trigger its parent's
+  capability-grant dialog puts a human's yes on something they have no way
+  to see originated one level down in the delegation chain.
 - Anything the frame did not name and cannot be undone — the combination is
   what matters; either alone is survivable.
 - Anything the requester specifically said to ask about, however trivial it
@@ -327,6 +333,7 @@ whole reconstruction.
 | An open question in the report that one command would have answered | A verification was filed under the door bound because checking it resembled doing it |
 | The subagent came back confident and wrong | It was dispatched with a goal and no bounds, which is this skill's trigger, not an exception to it |
 | An overnight job reports 0 of N with nothing in its log after the first minute | It was waiting behind a prompt only a person could answer, and nothing bounded the wait |
+| A human approved an install prompt that looked routine | A subagent triggered its parent's capability-grant dialog; the approver had no way to see it originated one level down |
 
 ## Red flags
 
