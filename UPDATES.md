@@ -37,6 +37,10 @@ Everything above the first `##` is preamble and is never rendered.
   installing a plugin, tool, or server — as its own no-go for an unattended
   run, including one routed through a delegated subagent that surfaces the
   approval prompt to a human who can't see where it came from.
+- `tending-tbaguette` — the contribution-pipeline skill — now says a declined
+  push or pull-request step is a reading to re-try once rather than a fixed
+  verdict, and that a clean `--dry-run` never confirms the real write is
+  cleared.
 
 ## 2026-09-17 — Clairvoyance now looks at the whole, not only the request
 

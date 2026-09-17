@@ -826,6 +826,14 @@ drafting, the approval gate and the commit have all been spent — the most expe
 meet a refusal. One `--dry-run` at the start costs nothing and moves that discovery to the
 front.
 
+Treat a refusal met there as a reading rather than a verdict, too. Retry once after doing
+other real work, never by re-spelling the same call — a permission has flipped inside a
+single session before, in both directions, and *declined twice, minutes apart* tells the next
+reader far more than *declined*. And a dry run does not stand in for the write it rehearses:
+`--dry-run` and the real command have disagreed in the wild, so a clean dry run says the
+plumbing works, not that the write itself is cleared. Measure the write when the pipeline
+actually needs it, and expect that measurement to be one pass stale by construction.
+
 The trap specific to a contributor is that the work can land without you. A maintainer
 applies the lesson themselves after reading it in an issue; another contributor sends the
 same observation. The branch is merged and the section is in the file, and from a cold start
