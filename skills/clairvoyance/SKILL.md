@@ -200,11 +200,11 @@ The catalogue is not a checklist. Running every lens is furniture; the tell for 
 
 ## Orbit: the whole from above
 
-An `orbit` is the view of a whole project from outside it: one bounded page that says what it is at five altitudes, what it actually does against what it says it is for, who sits in its chairs and which are empty, what crosses its boundary, what is changing under it and at what pace, what it has never had, and which forces will decide what happens to any proposal made about it. It is what the request for a God's view is actually asking for, assembled from seven partial seats rather than one omniscient one. [reference/orbit.md](reference/orbit.md) has the panes, the lens each is made with, the output shape, and the moments.
+An `orbit` is the view of a whole project from outside it: one bounded pass, about five hundred words, that says what it is at five altitudes, what it actually does against what it says it is for, who sits in its chairs and which are empty, what crosses its boundary, what is changing under it and at what pace, what it has never had, and which forces will decide what happens to any proposal made about it. It is what the request for a God's view is actually asking for, assembled from seven partial seats rather than one omniscient one. [reference/orbit.md](reference/orbit.md) has the panes, the lens each is made with, the output shape, and the moments.
 
 Its bounds come before its method, because this is where the skill is most dangerous:
 
-- **One page**, seven panes of one to three sentences each. **At most three findings**, each carrying the observation that would confirm or refute it, each routed like any other.
+- **About five hundred words, counted** — seven panes of one to three sentences each. **At most three findings**, each carrying the observation that would confirm or refute it, each routed like any other. The bound is a number because a bound in a unit nobody measures does not hold: it said "one page" once, and measured runs came back at three.
 - **At named moments only** — on arrival at inherited work after orientation, before a milestone decision, when stuck three times at the same place, in a postmortem, or on request. Never a mode, never during an incident.
 - **Never a redesign.** Anything found above the level of a rule — a goal, a paradigm, "this should be a different project" — goes to the record and the closing offer. `managing-scope-drift` wins hardest here.
 - **An orbit that finds nothing is a project that is what it says it is**, and that is a result. An orbit is most valuable the second time it is run: the diff between two orbits is the project's actual direction, which no single one can show.
@@ -279,7 +279,7 @@ Invoked directly, this skill takes a verb. With none it runs `sweep`, which is t
 | Command | Does |
 |---|---|
 | `sweep [target]` | The default. Name the frame and its sources, run the directions the tells select, route every observation. Ends by naming what it found, or by saying it found nothing |
-| `orbit [project]` | The whole from above: seven panes, one page, at most three findings, at a named moment. [reference/orbit.md](reference/orbit.md) |
+| `orbit [project]` | The whole from above: seven panes, about five hundred words, at most three findings, at a named moment. [reference/orbit.md](reference/orbit.md) |
 | `imagine [target]` | Bounded divergence: three or four candidate-producing lenses, at most five ideas, each with the observation that would tell whether it is worth anything, ranked by the cost of finding out and delivered under one question |
 | `lens <name>` | One instrument from [reference/lenses.md](reference/lenses.md), by name, applied to the thing in front of you |
 | `seat <chair>` | One look from a named seat — the operator at 3 a.m., the auditor, the integrator, the customer's customer — at what that person notices first. The roster is at the end of the lenses file |
@@ -302,7 +302,7 @@ Category defaults, not bans. Each can be right in a specific run — reaching fo
 - A second sweep on the same frame with nothing changed in between.
 - A sweep, or an orbit, during an active incident, before the harm has stopped.
 - Novelty preferred because it is unexplored. The unexplored path is worth *considering*; it is not worth *choosing* on that ground.
-- An orbit as a mode, a habit, or a page longer than one.
+- An orbit as a mode, a habit, or longer than its five hundred words.
 - An idea delivered without the observation that would test it. That is a wish.
 - A lens run because it is in the catalogue rather than because its tell fired.
 - An *around* finding about what someone wants. Motive is a question, never a finding.

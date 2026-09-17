@@ -267,7 +267,7 @@ The mitigation is structural rather than a promise: the essentials sit in the
 first eight kilobytes, and everything a small sweep needs is in *In thirty
 seconds*. **Also found:** `orbit` is the most dangerous thing in the skill,
 because a whole project's surroundings are unbounded and a pass rewarded for
-yield will find something every time. The bounds — one page, three findings,
+yield will find something every time. The bounds — a word count, three findings,
 named moments, never during an incident, never a redesign — were written
 before the panes, and they are the part of that file a reader most needs.
 
@@ -338,3 +338,24 @@ not in the request and is now the axis the enlargement runs on. And the
 commitment rejected twice — that more sight is the goal — is the reason the
 largest file in this change is a catalogue of tells rather than a catalogue
 of questions.
+
+## Measured, the same day
+
+The enlargement was then tested blind against the version it replaced: four
+scenarios, two arms, two replicates each, prompts identical apart from which
+guidance was read, a rubric written before any result, and one blind judge per
+scenario. The enlarged version scored 104 to 89 and won six of eight pairs with
+one tie — and the whole margin was discipline: findings marked as inference,
+each carrying the observation that would test it, bounded, ranked by the cost
+of finding out, delivered as one decision. On the two criteria that measure
+*insight* — a reframe specific to the request, and a point a senior engineer
+would not have raised — every one of the sixteen answers scored full marks, in
+both arms. So the honest claim for this skill is not that it produces thoughts
+the model would not otherwise have had. It is that it makes those thoughts
+checkable and bounded, and hands them over as a choice. The enlargement also
+cost about a quarter more tokens per run, all of it reading.
+
+The test found one defect in the enlargement itself: `orbit`'s bound said "one
+page", and both measured runs came back at roughly three while honouring every
+numeric bound in the same file exactly. The bound is now a word count. A limit
+stated in a unit the writer never measures was, it turns out, a wish.

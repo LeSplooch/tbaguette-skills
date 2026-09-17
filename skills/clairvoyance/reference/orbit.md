@@ -17,7 +17,11 @@ An orbit is the one pass in this skill with no natural stopping point at all:
 the space around a whole project is unbounded, and every pass through it can be
 made to produce something. So the bounds come before the method.
 
-- **One page.** Seven panes, each one to three sentences. If a pane needs more,
+- **About five hundred words, counted.** Seven panes of one to three sentences
+  each, plus the findings block. This bound used to say "one page", and two
+  measured runs of it came back at three times that while honouring every
+  numeric bound in this file exactly — a limit stated in a unit the writer never
+  measures is a wish. Count the words before delivering. If a pane needs more,
   the finding is in the excess and it goes to the routing table, not into the
   pane.
 - **At most three findings**, each with the observation that would tell whether
@@ -125,7 +129,7 @@ one question, through the harness's own question tool, per
 |---|---|
 | Seven panes of description and no finding, three orbits running | Possibly nothing — that is a legitimate result. Or the panes are being written from one seat, usually the author's; check which seat each sentence came from |
 | The orbit proposes a different project | A finding above the level of a rule was routed to the gate instead of the record. Leverage points above "rule" are observations, not work |
-| The orbit took an afternoon | No bound was set before starting. One page, seven panes, three findings, at a named moment |
+| The orbit took an afternoon, or ran to three pages | No bound was set before starting, or the bound was in a unit nobody counted. Five hundred words, seven panes, three findings, at a named moment |
 | The person got a page they did not ask for | The orbit was delivered instead of routed; only the "on request" moment makes the page the deliverable |
 | Every orbit finds the same three things | They were never routed to a decision, so each pass rediscovers them. A finding declined is a ruling; record it and stop finding it |
 | The orbit ran during an incident | The prohibition in the bounds. Stop, mitigate, orbit in the postmortem |

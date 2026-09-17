@@ -67,6 +67,14 @@ Everything above the first `##` is preamble and is never rendered.
   record of what that found — including the two readings of "God's view" it
   had to choose between — sits in the skill beside the original creation
   record.
+- Measured the same day, blind, against the version it replaced: the enlarged
+  skill won six of eight paired runs with one tie, and every point of the
+  margin was discipline — findings marked as inference and carrying their
+  check, bounded, ranked, delivered as one decision — while both versions
+  scored full marks on insight itself. The record says so, so nobody
+  overclaims it. One defect the test caught is fixed: `orbit`'s bound read
+  "one page" and measured runs came back at three; it is now about five
+  hundred words, counted.
 
 ## 2026-09-17 — A build's own output folder can hand you the wrong binary
 
