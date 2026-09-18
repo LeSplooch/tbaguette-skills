@@ -24,6 +24,23 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-19 — Rates, ranked matches, and parallel sameness
+
+- `instrumenting-for-observability` now covers a computed rate (`X per second`)
+  whose denominator spans a phase its numerator wasn't actually earned in — a
+  transfer rate diluted by connection setup, a decode rate diluted by a
+  one-time load — and covers a log tailer that must detect a shrunken file as
+  a rotation rather than silently skipping to the end and losing everything
+  written in between.
+- `calibrating-confidence` now covers a ranked or scored match that returns
+  several plausible candidates: picking the top-ranked one is a tie silently
+  broken, not a resolution, and the ambiguity itself is worth reporting when
+  nothing corroborates the pick.
+- `fanning-out-independent-work` now names sameness — same model, tool set,
+  working directory, and output shape — as what actually makes parallel work
+  cheap; sibling agents that vary for no reason the task required multiply the
+  run's real cost.
+
 ## 2026-09-18 — Closing a permission is now held to the same standard as opening one
 
 - `least-privilege-design` now covers **revoking a capability that can be

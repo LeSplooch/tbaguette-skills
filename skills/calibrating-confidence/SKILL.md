@@ -1,6 +1,6 @@
 ---
 name: calibrating-confidence
-description: Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session, when asked whether a claim is certain or being pushed back on, when a conclusion rests on recalled knowledge rather than something read, when every sentence has acquired a hedge, when the accurate answer is that you do not know, when a field with no data source of its own is about to be mapped onto a named concept as a proxy, when a search's hit list or match count is about to be reported as the answer to the question it was run for, or when a tool result that may have been truncated on its way to you is about to be treated as the whole of what the tool produced. Covers evidence tiers, telling a capped tool result from a complete one, false precision, probability language, proxies that inherit the name of the thing they stand in for, reading the hits rather than the result set, and unearned certainty.
+description: Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session, when asked whether a claim is certain or being pushed back on, when a conclusion rests on recalled knowledge rather than something read, when every sentence has acquired a hedge, when the accurate answer is that you do not know, when a field with no data source of its own is about to be mapped onto a named concept as a proxy, when a search's hit list or match count is about to be reported as the answer to the question it was run for, when a ranked match returns multiple plausible candidates and the top one is about to be trusted, or when a tool result that may have been truncated on its way to you is about to be treated as the whole of what the tool produced. Covers evidence tiers, telling a capped tool result from a complete one, false precision, probability language, proxies that inherit the name of the thing they stand in for, reading the hits rather than the result set, and unearned certainty.
 ---
 
 # Calibrating confidence
@@ -71,6 +71,12 @@ available and it is a different claim: *fourteen lines match this pattern; I
 have not classified them*, which is true, useful, and cannot be mistaken for
 the answer to the question that was asked. A count reported as a finding is a
 proxy wearing the name of the answer, which is what the next section is about.
+
+## A ranked pick is a tie silently broken, not a resolution
+
+The section above is about a count or a hit list mistaken for an answer. A ranked or scored match has the same trap in a sharper form: the search returns several plausible candidates rather than one clean match, a heuristic picks the top-scored one, and the pick reads as a resolution even though nothing established that candidate was the *right* one rather than merely the *highest-scoring* one. This shows up wherever a discovery step can return more than one match above threshold — a fuzzy schema match, a "closest" config key, a heuristic element selector, a best-effort address or offset scan.
+
+Treat "more than one candidate above threshold" as its own outcome — unresolved — not a tie to break silently. Require either a unique match or a second, independent way to corroborate the top pick before anything downstream is built on it; where neither is available, report the ambiguity itself rather than the top-ranked guess.
 
 ## The received output may not be the produced output
 
@@ -154,6 +160,7 @@ Pushback is not evidence. When asked "are you sure?", re-derive the claim, then 
 | A cause stated for a failure that was never reproduced | Explanation quality mistaken for diagnostic evidence |
 | "There are no other occurrences", from a result that stopped on a round number | The result was capped in transit; truncation takes the tail, which is where a counterexample would be |
 | A report about a near-neighbour of the thing that was asked about | A small obstruction was routed around and the substitute inherited the original's name |
+| Everything built on an automated match turns out wrong, and confidently so | A ranked or scored selector picked the top candidate among several plausible ones instead of reporting the ambiguity |
 
 ## Red flags
 

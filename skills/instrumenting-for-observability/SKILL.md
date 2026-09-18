@@ -1,6 +1,6 @@
 ---
 name: instrumenting-for-observability
-description: Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, when a failure counter has never once incremented, when a filter, gate, or safety rule rejects everything it sees and nothing distinguishes a strict rule from an input that never arrived, or when choosing a log level. Also use when choosing the fallback for a value another component will read as if it were a measurement.
+description: Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, when a failure counter has never once incremented, when a filter, gate, or safety rule rejects everything it sees and nothing distinguishes a strict rule from an input that never arrived, or when choosing a log level. Also use when choosing the fallback for a value another component will read as if it were a measurement, when defining a computed rate whose plausible magnitude would not reveal a bad denominator, or when writing or debugging a tool that tails or polls a log file for new content.
 ---
 
 # Instrumenting for observability
@@ -140,6 +140,18 @@ When the ending genuinely cannot be observed from where the counter lives, that 
 
 The tell that this is already happening is a success rate nobody can reconcile with what users report, sitting beside a failure count that stays at zero through incidents. A failure counter that has never once incremented is not evidence of reliability; it is evidence that nothing increments it.
 
+## A rate's denominator must match its numerator's phase
+
+A computed rate — X per second — divides a count by a duration, and the magnitude alone cannot tell you whether that duration is the right one. Where the operation being rated has more than one phase, and only some of them produce the counted units, a duration that spans all of them dilutes the rate by time the numerator was never accruing during: a transfer rate diluted by connection setup, a decode rate diluted by a one-time load, a frames-per-second figure diluted by a splash screen. The result still looks like a real number — often a disappointing but believable one — rather than an obviously broken one, which is what makes it survive a glance.
+
+Name which phase's duration is the denominator, and confirm the numerator's units were only produced during that phase. Where the fine-grained window was not observed separately, decline to report a rate at all rather than falling back to the whole-call total — the fallback silently reintroduces the same dilution it was meant to avoid.
+
+## A log tailer must treat a shrunken file as a new file
+
+A process that polls a log file by re-opening it and seeking to the last-read byte offset assumes the file only ever grows. The moment whatever produces it can rotate — renamed away, a fresh file started at the same path — that assumption breaks silently: the file at that path is now shorter than the stale offset, the tailer reads that as "nothing new yet," and everything written between the rotation and the next poll is lost with no error anywhere.
+
+Detect rotation explicitly — the file is shorter than the last offset, or its underlying identity changed (inode, creation time, or whatever the platform exposes in their place) — and on detection, reopen and read from byte zero rather than seeking to the stale offset. A byte offset alone is never enough state to track across re-opens; real log-shipping tools carry follow-by-name logic for exactly this reason.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -158,6 +170,8 @@ The tell that this is already happening is a success rate nobody can reconcile w
 | A filter rejected every item for months and nobody noticed | Rejections were counted but not attributed, so "failed the check" and "had nothing to check" landed in the same bucket |
 | A learned score and a hardcoded default are indistinguishable downstream | Sample size did not travel with the value to its point of use |
 | A dashboard shows a plausible, mildly disappointing number that nobody can reproduce | A fallback that was neutral in its type landed at one end of the consumer's scale and got read as a measurement |
+| A per-second rate is implausibly good specifically when one near-instant phase dominates the mix | The denominator's duration spans a phase the numerator was not accruing during |
+| A log tailer goes quiet right after its source rotates, with no error | It seeks to a stale byte offset instead of detecting the file got shorter |
 
 ## Red flags
 

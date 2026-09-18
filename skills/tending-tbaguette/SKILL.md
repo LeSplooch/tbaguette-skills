@@ -177,7 +177,12 @@ technique.
 
 Queue file: `~/.claude/tbaguette-candidates.md` — deliberately outside the
 plugin's own directory, which every update overwrites and which must stay
-clean for the reasons above. Create it with **all three** headings if it
+clean for the reasons above. **Not** `~/.claude/skills/tending-tbaguette/candidates.md`
+— that near-identical path belongs to a different, personal skill some readers
+of this one also have installed, with its own separate queue and a direct-push
+ending instead of a pull request. The same lesson landing in both files, days
+apart, is the tell that a past session wrote to the wrong one from memory
+instead of re-reading this line. Create it with **all three** headings if it
 does not exist — `## Pending`, then `## Settled`, then `## Shipped`. Step 10
 moves entries out of `## Pending` into one of the other two, and a file missing a heading is one
 where an entry that reaches that state has nowhere to go and invents a heading
@@ -582,6 +587,17 @@ self-answer. So an unattended run does everything up to it — the edit, the
 suite, the adversarial pass, the commit on a local branch — and then stops with
 the work staged and a report saying exactly what is waiting for a yes. Reaching
 that point is the run finishing correctly, not failing.
+
+**Whatever gets staged for that later yes is a file, and the file is what gets
+posted — not what it was written to mean.** A pull request body or a review
+comment drafted now for a future pass to send often carries its own scaffolding
+aimed at whoever reads it before that later yes arrives: a note that it is not
+yet sent, the exact command to send it with, an instruction to delete this
+header first. A posting command does not know which lines were for that future
+reader and which were for the pull request's own audience — it sends whatever
+bytes it is handed. Read the literal content immediately before the send, once
+the yes has actually arrived, rather than trusting that the file already says
+what it is supposed to say.
 
 ## Contribution procedure
 

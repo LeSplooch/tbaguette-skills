@@ -1,6 +1,6 @@
 ---
 name: fanning-out-independent-work
-description: Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems, a batch of scoped deliverables, parallel investigations. Covers telling genuine independence from work that only looks independent, avoiding collisions when agents share files or resources, writing prompts that stand alone, and reconciling results once parallel work returns.
+description: Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems, a batch of scoped deliverables, parallel investigations. Also use when a fan-out costs noticeably more than expected, or when deciding how uniform sibling agents' models, tools, or working directories need to be. Covers telling genuine independence from work that only looks independent, avoiding collisions when agents share files or resources, writing prompts that stand alone, and reconciling results once parallel work returns.
 ---
 
 # Fanning out independent work
@@ -62,6 +62,10 @@ spend of doing it in one session, and every fresh agent pays to rebuild
 understanding this session already has. Fan out for isolation and for wall-clock
 time — never because a list has more than one item on it.
 
+## Sameness is what makes parallel work cheap
+
+Fanning out is cheap only where the siblings are identical in the ways a cache keys on — model, tool set, working directory, and output shape. Varying any of those across siblings for no reason multiplies the run's real cost, and the variation is usually incidental — one sibling's prompt drifted a little from the template, one got a slightly different tool list — rather than a choice anyone made deliberately. Before dispatching a batch, ask whether the siblings differ in any dimension that was not required by the task itself, and collapse it back to the template if not.
+
 ## Avoiding collisions
 
 Independence in the problem doesn't guarantee independence in the solution — two agents can have unrelated goals and still collide if what they write overlaps. Partition by write-set, not by topic:
@@ -100,6 +104,7 @@ An agent that quietly did more than its assignment — fixed something adjacent,
 | An agent changed far more than the task named | The prompt stated a goal but never a scope boundary |
 | Parallel dispatch took as long as doing it serially | The tasks were sequential underneath a flat list; one agent sat waiting on another's output |
 | A shared file breaks right after every agent reports success | Every agent tried to update it independently instead of once, after, sequentially |
+| A batch of "identical" sibling prompts costs noticeably more than the same work done once | Siblings varied in a dimension the cache keys on — model, tool set, working directory — for no reason the task required |
 
 ## Red flags
 
