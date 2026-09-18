@@ -33,5 +33,12 @@ Every meaning encoded in color carries something else: a glyph, a label, a shape
 ## Rules
 
 - **Measure every pair you ship.** Body ≥4.5:1, large text and meaningful non-text ≥3:1, focus rings ≥3:1 against both neighbors.
+- **Blend a contrast-measured color toward the background, not toward transparent.**
+  The idiomatic move — fading the foreground toward transparent
+  (`color-mix(text N%, transparent)`, or the platform equivalent) — is the wrong one
+  here: the rendered result now depends on whatever paints behind it instead of the
+  fixed, per-theme number a documented measurement relies on. Mix opaquely against the
+  background instead, and treat a comment recording why the color was ever a literal
+  as the spec for the conversion, not something to clear away.
 - **Do not encode with hue alone, ever.** Red/green is the specific pair to avoid.
 - **Name tokens by role,** never by hue — see [tokens.md](tokens.md).

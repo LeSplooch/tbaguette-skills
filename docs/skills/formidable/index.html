@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.52</span>
+      <span class="wordmark-version" dir="ltr">v1.1.53</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-18T21:38:21+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-18T21:38:21Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-18T21:43:57+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-18T21:43:57Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">formidable</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-18T21:43:57.571432+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">UI and design</span>
   <p class="lede">Use when a UI, an idea for a UI, or a project with no interface yet should be taken past what was asked and made outstanding. Also use when designing, redesigning, critiquing, auditing, polishing, or hardening any user interface on any stack — web, native mobile, desktop, terminal or TUI, CLI output, game HUD, embedded and e-ink displays, XR and spatial, email, print and PDF, or voice and chat. Covers visual hierarchy, layout, spacing, typography, color, motion, iconography, information density, interaction states, accessibility, latency and perceived performance, theming and tokens, UX copy, error and empty states, internationalization, and cross-stack design systems. Also use when an interface feels generic, bland, cluttered, dated, or inconsistent, when a state or animation the code defines does not show in a capture, when someone wants to know what the best products in this domain do here or wants the design to draw on them, or when a design must be carried faithfully from one stack to another.</p>
@@ -227,7 +227,7 @@
 <h2 id="cmd-color-per-stack-notes">Per-stack notes</h2>
 <ul><li><strong>Terminal:</strong> use the theme's named colors; the user's red is their red. 24-bit only for a deliberate branded surface, gated on <code>COLORTERM</code> and <code>NO_COLOR</code>.</li><li><strong>Print:</strong> convert and check in CMYK and in grayscale; light grays below ~15% vanish.</li><li><strong>Email:</strong> forced dark mode will alter your colors; check the inverted render.</li><li><strong>Embedded/e-ink:</strong> 1–4 levels; dithering and hatching are your ramp.</li><li><strong>Game/XR:</strong> color sits over unknown backgrounds; the element must own its own pixels.</li></ul>
 <h2 id="cmd-color-rules">Rules</h2>
-<ul><li><strong>Measure every pair you ship.</strong> Body ≥4.5:1, large text and meaningful non-text ≥3:1, focus rings ≥3:1 against both neighbors.</li><li><strong>Do not encode with hue alone, ever.</strong> Red/green is the specific pair to avoid.</li><li><strong>Name tokens by role,</strong> never by hue — see <a href="#cmd-tokens">tokens.md</a>.</li></ul></div><div class="tabs__panel" role="tabpanel" id="cmd-critique" aria-labelledby="tab-cmd-critique" tabindex="0" hidden><p>A critique that ends in a list of observations is not a critique. It ends in a ranked judgment and a decision.</p>
+<ul><li><strong>Measure every pair you ship.</strong> Body ≥4.5:1, large text and meaningful non-text ≥3:1, focus rings ≥3:1 against both neighbors.</li><li><strong>Blend a contrast-measured color toward the background, not toward transparent.</strong> The idiomatic move — fading the foreground toward transparent (<code>color-mix(text N%, transparent)</code>, or the platform equivalent) — is the wrong one here: the rendered result now depends on whatever paints behind it instead of the fixed, per-theme number a documented measurement relies on. Mix opaquely against the background instead, and treat a comment recording why the color was ever a literal as the spec for the conversion, not something to clear away.</li><li><strong>Do not encode with hue alone, ever.</strong> Red/green is the specific pair to avoid.</li><li><strong>Name tokens by role,</strong> never by hue — see <a href="#cmd-tokens">tokens.md</a>.</li></ul></div><div class="tabs__panel" role="tabpanel" id="cmd-critique" aria-labelledby="tab-cmd-critique" tabindex="0" hidden><p>A critique that ends in a list of observations is not a critique. It ends in a ranked judgment and a decision.</p>
 <h2 id="cmd-critique-method">Method</h2>
 <p>Look at the built result, not the source. If the surface can be rendered, render it. Review in this order — early failures make later ones irrelevant.</p>
 <ol><li><strong>Purpose.</strong> Can a first-time viewer state what this is and what to do, within five seconds? If not, nothing below matters.</li><li><strong>Hierarchy.</strong> Squint or blur the surface. What is still legible? That is your actual hierarchy. Does it match the intended rank?</li><li><strong>Structure.</strong> Is related content grouped and unrelated content separated? Count the distinct alignment edges — more than three or four is usually accidental.</li><li><strong>Density.</strong> Is the information-to-decoration ratio right for the mode? Too sparse is as much a failure as too dense.</li><li><strong>Consistency.</strong> Same idea, same appearance. Count the distinct button styles, the distinct corner radii, the distinct grays. Unintentional variety is the most common defect in real products.</li><li><strong>States.</strong> Ask for the empty, error, loading, and overflow cases. Their absence is the finding.</li><li><strong>Copy.</strong> Does every control name its action? Does every error name its recovery? Is the voice consistent?</li><li><strong>Craft details.</strong> Optical alignment, spacing rhythm, type steps, color intent, motion purpose.</li><li><strong>The scene test.</strong> Would this work for the actual person in the actual place? Sunlight, one hand, gloves, hurry, low vision, tenth hour of a shift.</li></ol>

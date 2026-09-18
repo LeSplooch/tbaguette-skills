@@ -55,6 +55,14 @@ Everything above the first `##` is preamble and is never rendered.
   debugging into the wrong layer first. The fix matches the diagnosis:
   collapse fetch-and-consume into one step with no round trips in between,
   or re-check the remaining lifetime before the step that spends it.
+- `formidable`'s color reference now flags a specific way theming a
+  hardcoded color goes wrong: fading it toward transparent to fit a runtime
+  theme is the idiomatic move and it quietly breaks any contrast ratio that
+  was measured and documented against a fixed background, because the
+  rendered result now depends on whatever paints behind it. Blend toward the
+  theme's own background color instead, and treat a comment explaining why a
+  color was hardcoded as the spec for the conversion, not something to
+  clear away.
 
 ## 2026-09-17 — Clairvoyance now looks at the whole, not only the request
 
