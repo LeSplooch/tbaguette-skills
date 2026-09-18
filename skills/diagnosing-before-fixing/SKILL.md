@@ -247,6 +247,33 @@ the process, use a key nothing has warmed, raise the level, force the cold
 path. A log line you have watched appear once tells you what its silence is
 worth for the rest of the session.
 
+## A transport-shaped failure in a credential flow indicts the clock, not the value
+
+A short-lived, rotating credential — a pairing code, a CSRF token, a presigned
+URL, a nonce — gets fetched once at the top of a multi-step flow and spent
+several round trips later: focus a field, clear it, type into it, take a
+confirmation screenshot, then submit. Each step is individually cheap and its
+own round trip, and the sum routinely outlives the credential's own window —
+which is short by design. The failure that reaches you is not "invalid
+credential." It is whatever the transport layer says about a value nothing
+downstream ever got to examine: a closed connection, a reset socket, an
+exception that never got far enough to say what request it was. That symptom
+sends the search into the network stack first, which is rarely where the fix
+belongs.
+
+The tell: a validation-shaped failure ("rejected", "invalid", "denied") means
+the credential arrived and was judged. A transport-shaped failure (connection
+closed, socket reset, a raw exception below the layer that would know what it
+was carrying) partway through a flow built on a short-lived credential means
+the clock is the first thing to check, not the credential.
+
+The fix matches the diagnosis: fetch the credential in the same call or script
+that consumes it, with zero intermediate round trips — no confirmation
+screenshot, no separate tool call — between fetch and submit. Where the flow
+cannot be collapsed that tightly, check the credential's remaining lifetime
+immediately before the step that spends it and re-fetch rather than gamble
+that the window is still open.
+
 ## An environmental cause is the one hypothesis that ends the search
 
 "It's the network." "The runner is slow today." "That dependency is flaky." "It's this machine." These are hypotheses like any other, with one property no other hypothesis has: accepting one *ends* the investigation instead of directing it. Every other explanation says where to look next. This class says there is nowhere to look — which makes it the cheapest thing to believe and the most expensive thing to be wrong about.
@@ -285,6 +312,7 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 | The artifact is provably valid and the rendering is still wrong | It was only ever seen through a preview, viewer, or local server, and that is what introduced the defect |
 | "We already ruled that out" | The factor was the same in every run, so it was observed rather than tested |
 | A behaviour declared absent because its log line never appeared | The emitter is behind a cache, a level, or a sample the run never tripped; the silence measured the logger |
+| A multi-step credential flow fails with a closed connection or reset socket, not a rejection | The credential expired mid-flow; the transport layer reported it before anything got to check the value |
 | A hypothesis dropped on a result that was anomalous in several unrelated ways | One wrong idea does not produce several unrelated failures; the experiment broke, so it returned no verdict to act on |
 
 ## Red flags
@@ -304,4 +332,5 @@ Occasionally a complete investigation turns up nothing fixable: the cause is env
 - "I grepped the whole window and it never logged, so it never ran"
 - Reaching for the flag that suppresses a preflight check before answering what condition the check tests
 - "It was the network" — written in a note, then repeated in four more, with no probe run at any point
+- A transport error partway through a credential flow gets "fixed" with a retry instead of a shorter path from fetch to submit
 - A defect about to be written up that has only ever been observed through a preview, a local server, or another stand-in for the real delivery path

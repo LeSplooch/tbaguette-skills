@@ -47,6 +47,14 @@ Everything above the first `##` is preamble and is never rendered.
   produces drift rather than a defense against it, and why generating one
   copy from the other beats hand-maintaining both, with a comparison that
   fails loud as the fallback where a second copy has to genuinely exist.
+- `diagnosing-before-fixing` now names a trap specific to short-lived
+  credentials — a pairing code, a token, a presigned URL — fetched once and
+  spent several steps later in an automated flow: the credential can expire
+  mid-flow, and the failure surfaces as a transport error (a closed
+  connection, a reset socket) rather than a rejected value, which sends
+  debugging into the wrong layer first. The fix matches the diagnosis:
+  collapse fetch-and-consume into one step with no round trips in between,
+  or re-check the remaining lifetime before the step that spends it.
 
 ## 2026-09-17 — Clairvoyance now looks at the whole, not only the request
 
