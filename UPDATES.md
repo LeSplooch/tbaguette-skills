@@ -24,6 +24,24 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-20 — Compound-command exemptions, cached trust, and a shell that goes silent
+
+- `least-privilege-design` now covers three narrower ways a permission grant
+  quietly reaches further than intended: an exemption or allowlist pattern
+  matching just one part of a compound command (`a && b`) and thereby waving
+  the whole line through; a cached trust or consent decision whose key never
+  encoded a dimension that later changed, so a directory trusted while empty
+  ends up pre-authorizing configuration added to it afterward; and a plugin or
+  extension mutating the host process's own environment variables, which is
+  reviewed as a `Fixed:` configuration tweak rather than as the capability
+  grant it actually is.
+- `portable-shell-scripting` now catches a process-kill pattern that matches
+  its own invoking shell when typed as a single inline command rather than
+  saved in a script — previously the skill's self-match guidance only reliably
+  fired for scripted kills. The tell it now names: every subsequent command in
+  that shell returns a nonstandard exit code with no output at all, because the
+  interpreter died before it could write anything.
+
 ## 2026-09-19 — Rates, ranked matches, and parallel sameness
 
 - `instrumenting-for-observability` now covers a computed rate (`X per second`)

@@ -59,11 +59,23 @@ So the search heuristic that works everywhere else is inverted here. Blast-radiu
 
 None of this is specific to agents or to shells. It is the same shape wherever a policy matches on a string that something else later resolves: a command allowlist that permits environment to be carried across it, aliases and hooks that rebind a name, package lifecycle scripts, build-tool targets, and any policy engine deciding on the requested spelling of a thing rather than on the thing it will resolve to.
 
+### An exemption matching part of a compound command must not exempt the whole of it
+
+The allowlist failure above assumes one command per decision. A policy that instead matches a *string* — an exemption glob, a pre-approved pattern, a "this is safe, skip the sandbox for it" rule — inherits a second failure the moment the string it matches against can itself contain more than one command. `a && b`, `a; b`, `a | b`, and `$(a)` are several independent operations wearing one line, and a pattern that matches anywhere in that line authorizes the *line*, not the part it matched — so `b` runs with whatever `a`'s match bought it, unreviewed. The fix is the same discipline the section above asks of enumeration: split the string into its independent units first — respecting `&&`, `||`, `;`, `|`, and subshells — evaluate each unit against the policy separately, and let a match on one unit exempt only that unit.
+
 ## Capabilities over ambient authority
 
 Ambient authority means the callee's power comes from *who it is*, so any code path that reaches it inherits everything. That single mechanism produces confused-deputy bugs, request forgery, and metadata-service compromise alike: the request arrived, therefore the authority applied.
 
 A capability travels with the reference: a pre-signed URL for one object and one method expiring in ten minutes; a file descriptor handed to a sandboxed child; a token naming one record. Possession *is* the authorization, so there is nothing to confuse. Practical rule — when a component needs to act on one resource, hand it a reference to that resource rather than access to the resource class. Every capability token needs an expiry, an audience, and an intended action, and the verifier must check all three: **a token whose signature is verified but whose audience is not is a capability for any service that accepts it**, which is how a token minted for one service gets replayed against another.
+
+### Mutating the caller's own environment is a grant, not a side effect
+
+A plugin, extension, or subprocess that can set or rewrite the parent session's environment variables holds a capability equivalent to redirecting which binary a later command runs, disabling a safety check that reads a flag, or leaking a secret into every subprocess spawned afterward — but it gets reviewed as configuration rather than as a grant, because nothing about "setting a variable" resembles a file write or a network call. It is the allowlist blind spot from the section above, one layer up: an operation that looks like it changes nothing about the environment *is* the environment. Gate a request to mutate the host process's own environment the same as a request for a new permission class — explicit consent, and outright refusal (not merely a warning) for the small set of names the current process already trusts implicitly: `PATH`, `LD_PRELOAD`/`DYLD_INSERT_LIBRARIES`, interpreter-options variables like `NODE_OPTIONS`, and anything else that chooses which binary or library resolves.
+
+### A cached grant's key must include every dimension that can change its meaning
+
+A trust or consent decision cached against an identity, a path, or a session is only as safe as the key it is cached under. The common failure is a key that names *where* or *who* the decision was about but omits a dimension of *what* that can later change under the same identity and path — a directory trusted while empty can end up silently pre-authorizing project configuration added to that same directory afterward, because the cache key was the directory, not "this directory, holding nothing yet." The fix is not caching less; it is choosing a key that changes whenever the thing the original decision actually depended on changes, and invalidating or re-deciding whenever that dimension shifts — not only when the identity itself does.
 
 ## The confused deputy
 
@@ -170,6 +182,9 @@ The shape recurs wherever a capability can be granted through more than one mech
 | Wildcards everywhere, and a dev credential that also works in production | Permissions derived up front from a design instead of from observed denials; one identity spanning environments |
 | A "read-only" role can escalate | It can modify a policy, a pipeline, or a config that something later executes |
 | Every entry in the audit log was approved and the outcome was still hostile | The allowlist matched names; an unlisted, effect-free operation had already changed what one of those names meant |
+| An exempted command's second half did something nobody approved | The exemption matched the whole compound line, not the one unit it was written for |
+| A directory or session became pre-authorized for something added to it later | A cached trust decision's key named the identity but not the dimension that changed |
+| A plugin quietly redirected which binary or library a later command used | An extension's environment-mutation request was treated as configuration, not as a capability grant |
 | An internal service was reached through a user-supplied URL | The deputy used its own network position; no check on the resolved target |
 | A token was accepted by the wrong service | Signature verified, audience not |
 | The two-person rule was bypassed | Approval enforced by process, not verified by the executing system |
@@ -192,3 +207,6 @@ The shape recurs wherever a capability can be granted through more than one mech
 - Break-glass used more than a few times a year, or a pipeline that can modify its own permissions.
 - "We turned it off" said about a capability with more than one source that can grant it.
 - An escape hatch nobody who built it has ever actually walked through end to end.
+- An exemption or allowlist pattern tested only against a whole command line, never against each unit a `&&`, `;`, `|`, or subshell splits it into.
+- "It's just setting an environment variable" said about anything a plugin or extension does to the host process.
+- A trust or consent decision cached under an identity or a path, with nothing that re-checks it when what that identity or path actually holds changes.
