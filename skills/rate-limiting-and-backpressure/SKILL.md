@@ -1,6 +1,6 @@
 ---
 name: rate-limiting-and-backpressure
-description: Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses, when a queue keeps growing or drains hours late, when retries amplify a partial failure into a full outage, when a connection or thread pool is exhausted, when latency climbs instead of requests failing, when every item in a fan-out times out while the same item on its own finishes comfortably, or when choosing between shedding load, queueing it, and slowing the producer down. Covers deadlines that start while the item is still queued, and bounding the resource rather than the batch.
+description: Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses, when a queue keeps growing or drains hours late, when retries amplify a partial failure into a full outage, when a connection or thread pool is exhausted, when latency climbs instead of requests failing, when every item in a fan-out times out while the same item on its own finishes comfortably, or when choosing between shedding load, queueing it, and slowing the producer down, or when a fixed shared capacity is split across several unrelated content types and one of them can grow enough to crowd out the rest. Covers deadlines that start while the item is still queued, bounding the resource rather than the batch, and reserving a floor per type in a shared, non-fungible budget.
 ---
 
 # Rate limiting and backpressure
@@ -51,6 +51,12 @@ Limit on the dimension that owns the cost: per API key, per tenant, per account,
 - **Per endpoint with equal weights** is wrong whenever endpoints differ in cost by more than about 10x. Charge a weight — a report costing 50 tokens and a lookup costing 1 — so the limit tracks work rather than request count.
 - Keep a **global backstop below the sum of per-tenant limits**, because that sum is not your capacity and never was. Every tenant simultaneously behaving within its limit is a normal Tuesday, not a hypothetical.
 - Scope limits to what the caller can control. A limit whose denominator includes work triggered by other users produces a caller who cannot comply no matter what they do.
+
+## A fixed shared capacity split across non-fungible types needs a floor per type
+
+Everything above divides throughput *over time* among *symmetric* consumers — callers, tenants, keys — who are substitutable for each other and differ only in identity. A different failure shows up when a fixed, one-shot capacity (a prompt-assembly budget, a config size limit, a page of shared storage) is instead split across several *non-fungible* content types with no reservation per type: whichever type is least disciplined about its own size determines how much room is left for every other type, down to zero. "Biggest wins" is not even a defensible allocation policy here, because the types are not substitutes — a large rule set consuming the whole shared budget doesn't mean rules needed the room more than the tool definitions it evicted, only that nothing stopped it from taking that room.
+
+Give each non-fungible type its own reserved slice instead of one undivided pool. An unbounded type should degrade only its own contribution — truncate on a clean boundary and report what got cut, by name — and never consume the room reserved for a type it has nothing to do with.
 
 ## Backpressure
 
@@ -109,6 +115,7 @@ A limit a client cannot see before hitting it forces every client to discover it
 | The saturation symptom returns after a per-batch bound fixed it | The bound is scoped to the batch, so several independent callers each hold a full copy of the backend's capacity |
 | Rejecting requests does not reduce load | Shedding after the connection, transaction, or thread is already claimed |
 | Clients retry into the limit in a tight loop | No retry hint, no remaining-quota signal, limit undiscoverable in advance |
+| One content type's growth silently evicted an unrelated type from a shared budget | A fixed one-shot capacity was split across non-fungible types with no reserved floor per type |
 
 ## Red flags
 
@@ -121,3 +128,4 @@ A limit a client cannot see before hitting it forces every client to discover it
 - Timeout wrappers for a whole batch constructed up front, then awaited a few at a time
 - A semaphore created per batch, per request, or per caller for a resource they all share
 - "The client should not be sending that much" instead of a limit that makes it observable
+- Several unrelated content types sharing one undivided capacity with no reserved floor for any of them

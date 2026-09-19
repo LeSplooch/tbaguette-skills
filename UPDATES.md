@@ -26,6 +26,15 @@ Everything above the first `##` is preamble and is never rendered.
 
 ## 2026-09-20 — Compound-command exemptions, cached trust, and a shell that goes silent
 
+- `modeling-errors` now covers the case where an upstream API gives no stable
+  code to distinguish "you've been throttled" from "the service is actually
+  broken" — both render the same way, and folding them into one generic
+  "degraded" verdict hides which one actually happened from anything reading
+  that verdict downstream.
+- `rate-limiting-and-backpressure` now covers a fixed shared capacity (a
+  prompt budget, a config size limit) split across several unrelated content
+  types with no reserved floor per type, where the least-disciplined type can
+  grow enough to silently crowd every other type out entirely.
 - `least-privilege-design` now covers three narrower ways a permission grant
   quietly reaches further than intended: an exemption or allowlist pattern
   matching just one part of a compound command (`a && b`) and thereby waving

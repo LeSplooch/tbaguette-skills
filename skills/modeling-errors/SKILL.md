@@ -1,6 +1,6 @@
 ---
 name: modeling-errors
-description: Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, undiagnosable production incidents, duplicated log noise, and callers parsing error strings. Also use from the other side, when your own code must detect a state in a system you do not own and the only anchor on offer is a printed status word, a window title, or a generated class name.
+description: Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, undiagnosable production incidents, duplicated log noise, and callers parsing error strings. Also use from the other side, when your own code must detect a state in a system you do not own and the only anchor on offer is a printed status word, a window title, or a generated class name, or when two different upstream failure causes render identically with no stable code to tell them apart.
 ---
 
 # Modeling errors
@@ -70,6 +70,10 @@ Rule 1 above is written for whoever publishes the contract. Sooner or later you 
 
 So choose the anchor by asking which layer treats the value as *identity or state* rather than as presentation. An exit status carries no language. A process id, an owning window handle, a socket that answers, an attribute set beneath the layer doing the hashing — each is something the target system uses to keep track of itself, and it moves when the target's behaviour moves rather than when its rendering does. Two riders. Very often the rendered string answers a worse question than the one you actually hold: *is this reachable* is answerable directly, while *does the supervisor's bookkeeping currently spell a particular word* is a proxy for it that a translation can break. And where only a fragile anchor exists, a fallback ladder needs each rung proven with the rungs beneath it disabled — otherwise a sturdy fallback silently rescues the flimsy rung above it, the test passes for the wrong reason, and the flimsy rung is the one that ships to a machine where the fallback is unavailable.
 
+### Two causes that render identically must not share one verdict
+
+The section above is about detecting *state* with no stable signal. The same gap shows up one level over, in *classifying a failure* rather than a state: an upstream API or CLI that gives no stable, structured code for either case can make "you have been throttled" and "the service is actually broken" arrive as the identical shape — an error, then silence. Both are class 4 by the definition above (retrying might succeed), but they are not the same failure, and folding them into one generic "degraded" verdict is the specific hazard, because whatever consumes that verdict downstream — a health check, a dashboard, an escalation — can no longer tell which one happened once the merge has occurred. Trust an explicit signal when the upstream provides one (a `Retry-After`-equivalent); fall back to matching the error's own text only when nothing structured exists; and once a quota condition is confirmed, treat it as its own outcome that pauses the surrounding batch or session, rather than retrying call-by-call or reporting it through the same channel a real outage reports through.
+
 ## Wrap, swallow, rethrow, boundary
 
 | Action | Correct when | How it goes wrong |
@@ -97,6 +101,7 @@ So choose the anchor by asking which layer treats the value as *identity or stat
 | Load spike during a partial outage | Retries nested at multiple layers, multiplying attempts |
 | A detector works for the author and reports the wrong state on every other machine | It matched a rendered string — a localized status word, a title, a generated class name — instead of something the target uses as identity |
 | A fallback ladder's first rung has never been seen to succeed on its own | Every rung was tested with the ones below it live, so the sturdy fallback silently rescued the fragile probe |
+| A health/quality verdict looked broken during what was actually a rate-limit window | Quota exhaustion and a genuine outage rendered identically upstream and were folded into one "degraded" signal |
 
 ## Red flags
 
@@ -107,6 +112,7 @@ So choose the anchor by asking which layer treats the value as *identity or stat
 - "That can never happen" — written next to the code that handles it happening.
 - A state check that matches a word a human was meant to read.
 - An unanchored substring match that would also match your own program.
+- Two upstream failure causes that render identically, folded into one verdict because nothing structured tells them apart.
 - "Add a retry" as the first response to a flake, before classifying it.
 - A catch block whose body is empty, or contains only a log statement.
 - An error type with one variant and a string.
