@@ -15,7 +15,19 @@
       "author": {
         "name": "verderosa2",
         "email": "verderosa2@gmail.com"
-      }
+      },
+      "homepage": "https://github.com/LeSplooch/tbaguette-skills",
+      "repository": "https://github.com/LeSplooch/tbaguette-skills",
+      "keywords": [
+        "skills",
+        "code-review",
+        "debugging",
+        "testing",
+        "systems-design",
+        "security",
+        "naming",
+        "workflow"
+      ]
     }
   ]
 }

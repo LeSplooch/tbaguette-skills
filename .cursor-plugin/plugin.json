@@ -16,7 +16,9 @@
     "debugging",
     "testing",
     "systems-design",
-    "security"
+    "security",
+    "naming",
+    "workflow"
   ],
   "skills": "./skills/",
   "hooks": "./hooks/hooks-cursor.json"

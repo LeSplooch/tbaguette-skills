@@ -262,6 +262,41 @@ class TestHarnessManifests(unittest.TestCase):
             with self.subTest(extension=ext_path):
                 self.assertTrue(resolved.is_file(), f"pi extension {ext_path!r} does not exist")
 
+    def test_repository_and_keywords_agree_across_manifests_that_declare_them(self):
+        """`repository` and `keywords` were added to .claude-plugin/plugin.json
+        and .claude-plugin/marketplace.json on 2026-09-22 to match the other
+        five manifests that already carried them -- and one of those five,
+        .cursor-plugin/plugin.json, turned out to already be missing two of
+        the eight keywords, silently, because nothing compared them either.
+        `homepage` is deliberately excluded from this check: the root
+        plugin.json (Copilot / VS Code) points at the live docs site rather
+        than the repo, and the Claude Code manifest schema's own reference
+        example draws exactly that distinction (homepage as a docs URL,
+        repository as the source URL) -- so this file's difference reads as
+        the more schema-correct choice rather than as drift, even though
+        nothing on record confirms it was chosen on purpose."""
+        manifests = [
+            ".claude-plugin/plugin.json",
+            ".claude-plugin/marketplace.json",
+            ".codex-plugin/plugin.json",
+            ".cursor-plugin/plugin.json",
+            ".devin-plugin/plugin.json",
+            ".kimi-plugin/plugin.json",
+            "plugin.json",
+        ]
+        expected_repository = "https://github.com/LeSplooch/tbaguette-skills"
+        expected_keywords = {
+            "skills", "code-review", "debugging", "testing",
+            "systems-design", "security", "naming", "workflow",
+        }
+        for rel_path in manifests:
+            data = _load_json(rel_path)
+            if rel_path == ".claude-plugin/marketplace.json":
+                data = data["plugins"][0]
+            with self.subTest(manifest=rel_path):
+                self.assertEqual(data.get("repository"), expected_repository)
+                self.assertEqual(set(data.get("keywords", [])), expected_keywords)
+
 
 if __name__ == "__main__":
     unittest.main()

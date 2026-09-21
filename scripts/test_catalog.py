@@ -100,7 +100,13 @@ class TestCatalogMatchesCategories(unittest.TestCase):
         were gated. The versioned-manifest suite validates those files\' names,
         paths and versions and deliberately never reads their descriptions.
         A first pass at this test guarded only .claude-plugin/plugin.json --
-        the count is in seven manifests and README.md."""
+        the count is in eight manifests, plus README.md.
+
+        The root plugin.json (Copilot CLI / VS Code's Agent Plugins manifest)
+        was left off that first list and drifted to "Ninety-seven" against 98
+        skills on disk, unnoticed, because every other check in this suite
+        validates that file's name, version and JSON well-formedness and none
+        of them reads its description."""
         words = {60: "Sixty", 70: "Seventy", 80: "Eighty", 90: "Ninety"}
         ones = ["", "-one", "-two", "-three", "-four", "-five",
                 "-six", "-seven", "-eight", "-nine"]
@@ -118,6 +124,7 @@ class TestCatalogMatchesCategories(unittest.TestCase):
             (".devin-plugin/plugin.json", spelled),
             (".kimi-plugin/plugin.json", spelled),
             ("gemini-extension.json", spelled),
+            ("plugin.json", spelled),
             ("README.md", digits + " skills"),
         ]:
             text = (REPO_ROOT / rel).read_text(encoding="utf-8")
