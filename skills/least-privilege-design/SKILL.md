@@ -29,6 +29,8 @@ Start from zero and add only what a failed operation proves is required. The onl
 
 Narrowing one axis and leaving three open is the common half-measure. Where the platform supports them, add two more that cost nothing and remove whole attack classes: **network origin** (which network or workload may present this identity) and **condition** (source pipeline identity, resource tag match, second factor present).
 
+A policy correct on all four axes can still fail at evaluation time: where the component that computes a permission and the component that enforces it are different machines — a controller and a remote executor — a check validated against the controller's own filesystem or network conventions can pass cleanly and mean nothing on the executor that actually applies it. Validate against the runtime that enforces the policy, not the one that authored it.
+
 ## The shared credential is the design flaw
 
 One broadly-scoped credential used by several components turns every bug in *any* of them into total compromise — and the vulnerable component never had to be an important one. The secondary damage is what makes it permanent: attribution disappears (logs show a key, not an actor), rotation becomes cross-team coordination and therefore never happens, and the grant settles at the union of everyone's needs, which only grows. **Test:** for each credential, name the single process that uses it; if the answer is a team, a service group, or "the platform", it is shared. A non-production credential that also works in production is the same flaw with a different label.

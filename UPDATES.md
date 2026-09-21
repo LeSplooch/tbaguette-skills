@@ -24,6 +24,18 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-21 — A report describing itself, and a permission checked on the wrong machine
+
+- `instrumenting-for-observability` now covers a generated report whose own
+  description of itself — which data fed it, what setting was in effect, what
+  window it covers — was written once and never recomputed, so the report goes
+  on describing an earlier configuration long after the real one changed even
+  while its actual numbers stay correct.
+- `least-privilege-design` now covers a permission check validated against the
+  wrong machine's environment: where the component that decides a permission
+  and the component that enforces it are different machines, a check that
+  passes cleanly against the first can mean nothing on the second.
+
 ## 2026-09-20 — Compound-command exemptions, cached trust, and a shell that goes silent
 
 - `modeling-errors` now covers the case where an upstream API gives no stable

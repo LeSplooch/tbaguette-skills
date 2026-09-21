@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.56</span>
+      <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-19T22:23:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-19T22:23:03Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-21T16:06:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T16:06:50Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">least-privilege-design</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-20T00:15:36+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-21T16:06:50.684232+00:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Security (defensive)</span>
   <p class="lede">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list, when a component needs access to something new, when one credential is shared across services or environments, when a service acts on a caller's behalf, when a local layer — a proxy, hook, sanitizer, formatter, or interceptor — sits between a producer and whoever acts on its output, or when reasoning about blast radius, privilege escalation, wildcards in policies, sandboxing, network egress, and separation of duties. Covers governing anything that can rewrite an observation at the privilege of the decisions it steers, and annotating rather than overwriting so the original survives. Also use when a sandbox, container, or network policy is described as isolated or egress-restricted and nothing has tried to leave it, or when an allowlist of permitted commands, operations, or tools is being written or relied on.</p>
@@ -76,6 +76,7 @@
 <p>Start from zero and add only what a failed operation proves is required. The only reliable derivation is: deny everything, run the workload, read the denials, grant exactly those. Permissions derived from a design document are a superset every time, because the ones that turned out to be unnecessary are never removed.</p>
 <table><thead><tr><th>Axis</th><th>Question</th><th>Weak</th><th>Strong</th></tr></thead><tbody><tr><td>Identity</td><td>Who is asking</td><td>one account for the fleet</td><td>one per workload, per environment</td></tr><tr><td>Resource</td><td>On what</td><td><code>*</code>, whole bucket, whole database</td><td>one prefix, one table, one row predicate, one queue</td></tr><tr><td>Action</td><td>Doing what</td><td>admin, or a &quot;full access&quot; role</td><td>the three verbs actually called; read-only wherever reads suffice</td></tr><tr><td>Time</td><td>For how long</td><td>a permanent key</td><td>a token bounded to the job, minutes to hours</td></tr></tbody></table>
 <p>Narrowing one axis and leaving three open is the common half-measure. Where the platform supports them, add two more that cost nothing and remove whole attack classes: <strong>network origin</strong> (which network or workload may present this identity) and <strong>condition</strong> (source pipeline identity, resource tag match, second factor present).</p>
+<p>A policy correct on all four axes can still fail at evaluation time: where the component that computes a permission and the component that enforces it are different machines — a controller and a remote executor — a check validated against the controller's own filesystem or network conventions can pass cleanly and mean nothing on the executor that actually applies it. Validate against the runtime that enforces the policy, not the one that authored it.</p>
 <h2 id="the-shared-credential-is-the-design-flaw">The shared credential is the design flaw</h2>
 <p>One broadly-scoped credential used by several components turns every bug in <em>any</em> of them into total compromise — and the vulnerable component never had to be an important one. The secondary damage is what makes it permanent: attribution disappears (logs show a key, not an actor), rotation becomes cross-team coordination and therefore never happens, and the grant settles at the union of everyone's needs, which only grows. <strong>Test:</strong> for each credential, name the single process that uses it; if the answer is a team, a service group, or &quot;the platform&quot;, it is shared. A non-production credential that also works in production is the same flaw with a different label.</p>
 <h2 id="blast-radius-is-the-design-metric">Blast radius is the design metric</h2>

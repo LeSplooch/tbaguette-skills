@@ -1,6 +1,6 @@
 ---
 name: instrumenting-for-observability
-description: Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, when a failure counter has never once incremented, when a filter, gate, or safety rule rejects everything it sees and nothing distinguishes a strict rule from an input that never arrived, or when choosing a log level. Also use when choosing the fallback for a value another component will read as if it were a measurement, when defining a computed rate whose plausible magnitude would not reveal a bad denominator, or when writing or debugging a tool that tails or polls a log file for new content.
+description: Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, when a failure counter has never once incremented, when a filter, gate, or safety rule rejects everything it sees and nothing distinguishes a strict rule from an input that never arrived, or when choosing a log level. Also use when choosing the fallback for a value another component will read as if it were a measurement, when defining a computed rate whose plausible magnitude would not reveal a bad denominator, when writing or debugging a tool that tails or polls a log file for new content, or when a generated report's own narration of its basis — data source, setting, window — is a string written once rather than computed fresh each run.
 ---
 
 # Instrumenting for observability
@@ -152,6 +152,12 @@ A process that polls a log file by re-opening it and seeking to the last-read by
 
 Detect rotation explicitly — the file is shorter than the last offset, or its underlying identity changed (inode, creation time, or whatever the platform exposes in their place) — and on detection, reopen and read from byte zero rather than seeking to the stale offset. A byte offset alone is never enough state to track across re-opens; real log-shipping tools carry follow-by-name logic for exactly this reason.
 
+## A report's account of its own basis must be computed live
+
+A generated report often narrates itself — a sentence naming which data source fed it, what setting was in effect, what window it covers. Write that sentence once, whether as a literal template or a hardcoded string inline in the generator, and every report the system produces afterward goes on describing itself with whatever was true at that moment, long after the real configuration changed. Nothing about this fails loudly: the report still renders, the numbers in it can still be correct, and only the prose *about* the numbers is wrong — which is exactly why it survives unnoticed. In the one case this was traced, the drift ran in the direction that understated what the report actually covered, because a limit had since been raised and nothing rewrote the sentence describing it; there is no general law that it must run that way, only that a description authored once has no way to notice the world moved.
+
+The report's account of its own basis is a value like any other value in this file, and a value computed once and never refreshed is the same failure this whole file names under different names elsewhere: derive it from the live resolved state at the moment the report runs, never from a string chosen once and left behind.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -172,6 +178,7 @@ Detect rotation explicitly — the file is shorter than the last offset, or its 
 | A dashboard shows a plausible, mildly disappointing number that nobody can reproduce | A fallback that was neutral in its type landed at one end of the consumer's scale and got read as a measurement |
 | A per-second rate is implausibly good specifically when one near-instant phase dominates the mix | The denominator's duration spans a phase the numerator was not accruing during |
 | A log tailer goes quiet right after its source rotates, with no error | It seeks to a stale byte offset instead of detecting the file got shorter |
+| A report's numbers are right but its own description of what produced them is not | The narration was hardcoded from the config at template-authoring time, never recomputed from live state |
 
 ## Red flags
 
