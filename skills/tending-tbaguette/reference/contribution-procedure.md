@@ -203,6 +203,23 @@ is fixed by retrying the same command in the same checkout.
    a page that disagrees with the skill it is showing. Do not try to trim
    those files back out of the diff.
 
+   If your environment cannot run the pre-commit hook at all — no git hooks
+   support, a sandboxed shell, whatever the reason — regenerate by hand before
+   committing. Pass the path the live site is actually served from:
+
+   ```bash
+   python3 scripts/generate.py --base-path /tbaguette-skills
+   ```
+
+   Leaving off that flag builds every asset link, stylesheet, script, and font
+   reference as if the site were served from the domain root instead of
+   `/tbaguette-skills/`. The test suite will not catch it — it checks the
+   filing, not the rendered links — so it passes clean and then breaks the
+   live site's CSS, fonts, and script the moment it merges. A maintainer's own
+   regeneration overwrites a wrong one before it ever goes live, but naming
+   the flag here means your own pull request renders correctly too, for
+   whoever reviews it before that happens.
+
 6. **Review your own work before anyone else has to.**
    `red-teaming-your-own-work` and then `karen-and-the-manager` are the
    standard adversarial close here, and they are most warranted exactly

@@ -24,6 +24,15 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-23 — A contributor's own site build could point at the wrong address
+
+- `tending-tbaguette` now tells a contributor who can't run this repo's
+  pre-commit hook exactly how to rebuild the site by hand. Skipping the one
+  flag that rebuild needs makes every stylesheet, font, and script link point
+  at the domain root instead of where the site actually lives — a mistake the
+  test suite has no way to catch, since it checks the files are well-formed,
+  not where they think they're served from.
+
 ## 2026-09-22 — One shout instead of two at session start
 
 - The text TBaguette injects into every new session used to wrap itself in

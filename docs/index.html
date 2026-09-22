@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-22T04:57:27+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:57:27Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T22:16:51+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T22:16:51Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -139,8 +139,19 @@ Flag one more thing, because it applies to this very conversation: this session 
     <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/instrumenting-for-observability/" data-fresh-at="2026-09-21T18:06:50+02:00" draggable="false" style="--cf-offset: 0">
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-09-22T22:16:51.359981+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">tending-tbaguette</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-22T22:16:51.359981+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
+  <span class="card__foot">
+    <span class="tag">Environment and tooling</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/instrumenting-for-observability/" data-fresh-at="2026-09-21T18:06:50+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">instrumenting-for-observability</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-21T18:06:50+02:00">Updated</span>
@@ -151,7 +162,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/least-privilege-design/" data-fresh-at="2026-09-21T18:06:50+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/least-privilege-design/" data-fresh-at="2026-09-21T18:06:50+02:00" draggable="false" style="--cf-offset: -1">
   <span class="card__name-row">
     <span class="card__name">least-privilege-design</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-21T18:06:50+02:00">Updated</span>
@@ -172,11 +183,11 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ol class="notes__list">
 <li class="notes__entry">
   <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-22">22 Sep 2026</time>
-    <span class="notes__entry-title">One shout instead of two at session start</span>
+    <time class="notes__date" datetime="2026-09-23">23 Sep 2026</time>
+    <span class="notes__entry-title">A contributor's own site build could point at the wrong address</span>
   </h3>
   <ul class="notes__bullets">
-    <li>The text TBaguette injects into every new session used to wrap itself in two nested &quot;EXTREMELY_IMPORTANT&quot; tags — one around the whole notice, a second one inside it around the actual rule. Only the outer one is gone now: doubled emphasis was reading as more suspicious to a fresh model than a single one does, without doing any extra work. Nothing about when or how often TBaguette checks its own skills changed — same trigger, same persistence across the whole conversation, same behavior across <code>/clear</code> and <code>/compact</code>.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> now tells a contributor who can't run this repo's pre-commit hook exactly how to rebuild the site by hand. Skipping the one flag that rebuild needs makes every stylesheet, font, and script link point at the domain root instead of where the site actually lives — a mistake the test suite has no way to catch, since it checks the files are well-formed, not where they think they're served from.</li>
   </ul>
 </li>
   </ol>
@@ -189,6 +200,15 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-23">23 Sep 2026</time>
+    <span class="notes__entry-title">A contributor's own site build could point at the wrong address</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> now tells a contributor who can't run this repo's pre-commit hook exactly how to rebuild the site by hand. Skipping the one flag that rebuild needs makes every stylesheet, font, and script link point at the domain root instead of where the site actually lives — a mistake the test suite has no way to catch, since it checks the files are well-formed, not where they think they're served from.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-22">22 Sep 2026</time>
@@ -405,20 +425,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/reproducible-environments/"><code>reproducible-environments</code></a> covers the script that was executable and still got lost.</strong> Its rule that setup must be code rather than prose has a converse: a script that reproduces an expensive step is not source while it lives in a scratch or temp directory, because that directory is designed to be emptied and will be. The prose write-up survives the reboot; the recipe it describes does not, and the next rebuild fails on a file you wrote yourself. The test for where a script belongs is whether you would mind deriving it again, and a scratch script that has worked once moves into the repository on the spot.</li>
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/secrets-hygiene/"><code>secrets-hygiene</code></a> names one more place a secret travels: the platform's own backup.</strong> A key or identity a program generates on the device and never ships anywhere is still copied out by the platform's backup and sync, which defaults to the whole data directory and restores it onto a reinstall or a new device — so a signing key round-trips through someone else's servers and a fresh install comes up already paired to a peer that has forgotten it. Exclude by name anything that identifies <em>this install</em> rather than <em>this user</em>; the tell of a restore is state present before the code that writes it has run.</li>
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a>'s sweep now separates repositories that are not yours from ones that were quiet.</strong> Searching deep enough to stop dropping nested projects also reaches vendored upstream trees and reference mirrors, which inflate every count and — the day one syncs — flood the cluster step with one project's subjects written by many hands. Classify by authorship rather than by location, matching on the email rather than the name.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-10">10 Sep 2026</time>
-    <span class="notes__entry-title">The output you kept, and the file that came back larger</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> now covers what a <code>tail</code> takes away.</strong> It already warned that piping a check through a filter can swallow the verdict, since a pipeline reports the status of its last stage. The new passage is the other half of that loss: <code>head</code> and <code>tail</code> pick what to discard by position, and position is the one axis that has nothing to do with which lines a report will want. A success is argued from lines that print early — the gate that passed, the version the run resolved, the branch it took — so a <code>tail</code> keeps a long build's closing spam and drops every one of them, and the shortfall shows up only much later, when the claim is being written and there is nothing left to cite but the exit code. Capture with <code>&gt; run.log 2&gt;&amp;1</code>, which puts none of the run in context, and filter the file by pattern instead.</li>
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/crouton/"><code>crouton</code></a> no longer recommends the move that causes it.</strong> Its read rules still say to cap a command when you already know the shape of the answer, and now carry the exception — a run you will quote from goes to a file, which is the cheaper option as well as the safer one.</li>
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/automating-repetition/"><code>automating-repetition</code></a> now carries the mirror of its matched-nothing rule.</strong> It already said that a substitution whose pattern is absent exits zero and leaves the file byte-identical. The new section is the costlier direction — a pattern that matches the <em>wrong</em> place — and what reliably produces one is a document that describes its own format, markdown quoting one of its own headings inside a code span being the everyday case. A first-match search finds the mention, so anchor a structural delimiter to the structure (<code>^## Changelog$</code>) rather than to the bare string. The sharper half is what a wrong coordinate then feeds: <code>text[:start] + text[end:]</code> is a deletion while the bounds are ordered, and once they are reversed it emits the region between them twice without raising — in Python, JavaScript and Go alike, since each half is a legal slice on its own. So the failure ships a longer, well-formed, entirely plausible file with nothing removed at all. Assert the bounds are ordered before slicing, and check that the size moved in the direction the edit intended.</li>
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/secrets-hygiene/"><code>secrets-hygiene</code></a> now covers the case where you are the one who needs the credential.</strong> It already refused to let you carry somebody else's secret onward to a third party, on the grounds that anything you hold you also record. The new section is the inward mirror, and it arrives dressed as caution rather than as helpfulness: something you are about to run needs a request authenticated, and the options look like putting the credential where that thing can read it or refusing to run it at all. Refusing reads as the responsible choice, and it is the cheaper mistake rather than a different kind of one. A third arrangement hands the consumer a reference and exchanges it for the real value at the boundary, for destinations named in advance — the request authenticates, and nothing the consumer can record ever held the credential. Most of the new text is about telling that apart from its counterfeit, because the shape is easy to reproduce without the property: a resolver that hands the value back to its caller changes where the secret is stored and not whether the caller holds it, and the list of destinations is the entire restriction.</li>
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> now treats an unpredicted number as no check at all.</strong> A gate that reports a figure — tests collected, files changed, rows migrated, warnings emitted — reads as a check and on its own is not one: whatever it printed you were going to accept, because no value had been committed to in advance as the one that would look wrong. Saying the number first costs one sentence and turns the reading into a comparison, which is what makes a mismatch visible at all — and what a mismatch usually means is that the inputs are not the ones you think you have, a concurrent session writing into the same checkout being the everyday case. None of that turns a run red. Two limits come with it. A match is worth what its arithmetic is worth, since two changes that cancel produce one just as readily; and a prediction taken from a record rather than a measurement is only as fresh as that record, so everything that legitimately landed since shows up as an unexplained delta and sends the pass investigating its own stale bookkeeping. Where a figure genuinely cannot be predicted, the rule inverts rather than softening — that number is an observation, not something a claim can stand on.</li>
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a> now covers the rule that never loaded.</strong> A policy has to be read by something, and what that reader does with a line it cannot parse is usually nobody's decision — the common behaviour is to skip it and carry on. The new section is why that skip is not neutral: its cost splits on the polarity of the rule dropped. A malformed allow that gets skipped breaks something, and somebody reports it within the hour. A malformed deny that gets skipped does nothing at all, which is exactly what a working deny rule looks like — so the restriction is gone, the system is more permissive than the file on disk describes, and the file goes on describing it. That turns out to be a fresh argument for default-deny, since a broad allow with denies carving exceptions out of it is precisely the shape where every carve-out can vanish unseen. A loader should refuse to start on a rule it cannot parse, and where it must tolerate unknown syntax that tolerance belongs on the permissive rules only. Which behaviour you have takes a minute to establish: feed a deliberately malformed rule to a copy of the policy and see whether the loader objects or comes up clean. An empty denial log cannot tell you, because a rule that never loaded and one that was never violated leave the same record.</li>
   </ul>
 </li>
       </ol>
@@ -1660,7 +1666,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/tending-tbaguette/" data-search-card data-search-terms="tending-tbaguette use at the start of every conversation, in any project or repo… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-22T22:16:51.359981+00:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">
