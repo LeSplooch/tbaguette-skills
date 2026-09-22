@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.57</span>
+      <span class="wordmark-version" dir="ltr">v1.1.58</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:57:27+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:57:27Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -172,12 +172,11 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ol class="notes__list">
 <li class="notes__entry">
   <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-21">21 Sep 2026</time>
-    <span class="notes__entry-title">A report describing itself, and a permission checked on the wrong machine</span>
+    <time class="notes__date" datetime="2026-09-22">22 Sep 2026</time>
+    <span class="notes__entry-title">One shout instead of two at session start</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a> now covers a generated report whose own description of itself — which data fed it, what setting was in effect, what window it covers — was written once and never recomputed, so the report goes on describing an earlier configuration long after the real one changed even while its actual numbers stay correct.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a> now covers a permission check validated against the wrong machine's environment: where the component that decides a permission and the component that enforces it are different machines, a check that passes cleanly against the first can mean nothing on the second.</li>
+    <li>The text TBaguette injects into every new session used to wrap itself in two nested &quot;EXTREMELY_IMPORTANT&quot; tags — one around the whole notice, a second one inside it around the actual rule. Only the outer one is gone now: doubled emphasis was reading as more suspicious to a fresh model than a single one does, without doing any extra work. Nothing about when or how often TBaguette checks its own skills changed — same trigger, same persistence across the whole conversation, same behavior across <code>/clear</code> and <code>/compact</code>.</li>
   </ul>
 </li>
   </ol>
@@ -190,6 +189,15 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-22">22 Sep 2026</time>
+    <span class="notes__entry-title">One shout instead of two at session start</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li>The text TBaguette injects into every new session used to wrap itself in two nested &quot;EXTREMELY_IMPORTANT&quot; tags — one around the whole notice, a second one inside it around the actual rule. Only the outer one is gone now: doubled emphasis was reading as more suspicious to a fresh model than a single one does, without doing any extra work. Nothing about when or how often TBaguette checks its own skills changed — same trigger, same persistence across the whole conversation, same behavior across <code>/clear</code> and <code>/compact</code>.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-21">21 Sep 2026</time>
@@ -411,19 +419,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/secrets-hygiene/"><code>secrets-hygiene</code></a> now covers the case where you are the one who needs the credential.</strong> It already refused to let you carry somebody else's secret onward to a third party, on the grounds that anything you hold you also record. The new section is the inward mirror, and it arrives dressed as caution rather than as helpfulness: something you are about to run needs a request authenticated, and the options look like putting the credential where that thing can read it or refusing to run it at all. Refusing reads as the responsible choice, and it is the cheaper mistake rather than a different kind of one. A third arrangement hands the consumer a reference and exchanges it for the real value at the boundary, for destinations named in advance — the request authenticates, and nothing the consumer can record ever held the credential. Most of the new text is about telling that apart from its counterfeit, because the shape is easy to reproduce without the property: a resolver that hands the value back to its caller changes where the secret is stored and not whether the caller holds it, and the list of destinations is the entire restriction.</li>
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> now treats an unpredicted number as no check at all.</strong> A gate that reports a figure — tests collected, files changed, rows migrated, warnings emitted — reads as a check and on its own is not one: whatever it printed you were going to accept, because no value had been committed to in advance as the one that would look wrong. Saying the number first costs one sentence and turns the reading into a comparison, which is what makes a mismatch visible at all — and what a mismatch usually means is that the inputs are not the ones you think you have, a concurrent session writing into the same checkout being the everyday case. None of that turns a run red. Two limits come with it. A match is worth what its arithmetic is worth, since two changes that cancel produce one just as readily; and a prediction taken from a record rather than a measurement is only as fresh as that record, so everything that legitimately landed since shows up as an unexplained delta and sends the pass investigating its own stale bookkeeping. Where a figure genuinely cannot be predicted, the rule inverts rather than softening — that number is an observation, not something a claim can stand on.</li>
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a> now covers the rule that never loaded.</strong> A policy has to be read by something, and what that reader does with a line it cannot parse is usually nobody's decision — the common behaviour is to skip it and carry on. The new section is why that skip is not neutral: its cost splits on the polarity of the rule dropped. A malformed allow that gets skipped breaks something, and somebody reports it within the hour. A malformed deny that gets skipped does nothing at all, which is exactly what a working deny rule looks like — so the restriction is gone, the system is more permissive than the file on disk describes, and the file goes on describing it. That turns out to be a fresh argument for default-deny, since a broad allow with denies carving exceptions out of it is precisely the shape where every carve-out can vanish unseen. A loader should refuse to start on a rule it cannot parse, and where it must tolerate unknown syntax that tolerance belongs on the permissive rules only. Which behaviour you have takes a minute to establish: feed a deliberately malformed rule to a copy of the policy and see whether the loader objects or comes up clean. An empty denial log cannot tell you, because a rule that never loaded and one that was never violated leave the same record.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-09">9 Sep 2026</time>
-    <span class="notes__entry-title">What reaches the reader, and what quietly does not</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><strong>What someone watches while the work runs is technical writing too.</strong> <a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a> has always owned those surfaces as <em>interface</em> — which display a wait earns, what goes to stderr, how honest a progress bar has to be. Nothing owned what the line actually <strong>says</strong>. <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a> now does, because every test it already applies to a report applies to a status line, and three things change when the reader is watching rather than reading. What is nearest to hand at the moment of emission is the system's own vocabulary, and there is no later place for the translation to happen. The same true sentence is a different and worse message after the reader has committed than before it — a warning that fires on save, when it could have fired on the keystroke, is not late, it is misplaced. And going quiet asserts that nothing is happening, to a reader who has no way to check.</li>
-    <li><strong>A rule you stated out loud is not stored anywhere.</strong> <a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> ranks what a checkpoint should hold by what it costs to lose, and there is now a row above the old first one: the constraints somebody stated in conversation. &quot;Don't push.&quot; &quot;Ask me before deploying.&quot; Those are not kept as rules — whatever enforces them re-reads them out of the run's own context on every check, so a compaction, a summarised handoff, a fresh session resuming from a transcript, or a subagent that never received the message can delete the bound while everything goes on reporting normally. And because a bound is exactly the thing your own judgment is not allowed to lift, one that has silently vanished and one you have decided was satisfied look identical from the inside. Copy them into the record verbatim, and into a durable form where the system offers one.</li>
-    <li><strong>A check for existing coverage can match the topic and the reader and still miss.</strong> <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> gains the second axis: a passage can be about your subject, written for your reader, and still not answer you, because it was written for a different <em>moment</em> — composing a report after the work rather than watching a surface during it. The tell is that from a search the two are the same result.</li>
-    <li><strong>A sweep across several projects now says how many it could actually read.</strong> Same skill. Whatever decides what to read inside each project will silently drop any project it cannot open at all, and that result is indistinguishable from a quiet week — so the number in scope and the number actually read are two figures, and both belong in what gets reported.</li>
-    <li><strong>Being told to improve something is not evidence that it needs improving.</strong> <a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> already warned that a pass arriving with nothing queued will go looking for something to change and will find it, because a corpus this size always holds a sentence that could be put more sharply. It now covers the stronger version — a run holding an instruction that names the target. That reads as settling in advance the question every filter in the skill exists to ask, and declining then feels like declining the task rather than like exercising the filter. It is not: an instruction to improve something is an instruction to look, and looking can honestly come back empty.</li>
   </ul>
 </li>
       </ol>

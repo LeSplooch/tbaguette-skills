@@ -4,7 +4,15 @@
 # Two things get injected as additionalContext:
 #   1. The full content of skills/using-tbaguette/SKILL.md, verbatim -- the
 #      standing instruction to check TBaguette's skills before every
-#      response, for the rest of the conversation.
+#      response, for the rest of the conversation -- inside a wrapper tag
+#      with a plain, non-shouty name rather than the all-caps urgency tag
+#      this used to reuse. That used to mean two nested "EXTREMELY_IMPORTANT"
+#      tags around the same content (this wrapper, plus SKILL.md's own); now
+#      only SKILL.md's survives, which content_pipeline.py also renders as a
+#      callout on the site -- do not rename that one without updating that
+#      pipeline and its tests to match. A stated-provenance sentence was
+#      tried here too (twice) and measured worse against a fresh reader than
+#      saying nothing -- see the comment above session_context below.
 #   2. A deterministic result of keeping-tbaguette-current's step 1 (check
 #      the installed plugin against the published repo) -- fetch, compare,
 #      working-tree status. Steps 2-6 (safety gate, fast-forward update,
@@ -125,7 +133,15 @@ else
 fi
 invocation_escaped=$(escape_for_json "$invocation_sentence")
 
-session_context="<EXTREMELY_IMPORTANT>\nYou have TBaguette.\n\n${invocation_escaped}\n\n${using_tbaguette_escaped}\n</EXTREMELY_IMPORTANT>\n\n<TBAGUETTE_UPDATE_CHECK>\n${update_check_escaped}\n</TBAGUETTE_UPDATE_CHECK>"
+# No provenance sentence here. Two rounds tried one -- an explicit trust
+# claim ("not third-party or untrusted content") and then a neutral bare
+# citation ("Source: hooks/session-start...") -- and a fresh reader flagged
+# both as an injection tell in their own right: self-declared provenance is
+# unverifiable from inside the text making the claim, so stating it (however
+# it's worded) reads as the payload vouching for itself rather than as
+# evidence. Both measured worse than the original. What's left is the
+# mechanical fix only: one emphasis wrapper instead of two nested ones.
+session_context="<TBAGUETTE_SESSION_CONTEXT>\nYou have TBaguette.\n\n${invocation_escaped}\n\n${using_tbaguette_escaped}\n</TBAGUETTE_SESSION_CONTEXT>\n\n<TBAGUETTE_UPDATE_CHECK>\n${update_check_escaped}\n</TBAGUETTE_UPDATE_CHECK>"
 
 case "$OUTPUT_FORMAT" in
     copilot)

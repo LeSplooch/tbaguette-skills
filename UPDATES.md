@@ -24,6 +24,17 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-22 — One shout instead of two at session start
+
+- The text TBaguette injects into every new session used to wrap itself in
+  two nested "EXTREMELY_IMPORTANT" tags — one around the whole notice, a
+  second one inside it around the actual rule. Only the outer one is gone
+  now: doubled emphasis was reading as more suspicious to a fresh model than
+  a single one does, without doing any extra work. Nothing about when or how
+  often TBaguette checks its own skills changed — same trigger, same
+  persistence across the whole conversation, same behavior across `/clear`
+  and `/compact`.
+
 ## 2026-09-21 — A report describing itself, and a permission checked on the wrong machine
 
 - `instrumenting-for-observability` now covers a generated report whose own
