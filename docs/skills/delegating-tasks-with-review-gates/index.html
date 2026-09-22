@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="delegating-tasks-with-review-gates — Planning and delegation — TBaguette’s Atelier">
 <meta property="og:description" content="Use when executing a multi-task implementation plan task by task in the current session…">
-<link rel="canonical" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/delegating-tasks-with-review-gates/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a>
+  <a href="/#planning-and-delegation">Planning and delegation</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">delegating-tasks-with-review-gates</span>
 </nav>
@@ -71,12 +71,12 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Execute a plan by dispatching one fresh subagent per task, gate each one with a two-stage review before the next task starts, and close with one broader review across the whole branch. A subagent that inherits your session's transcript inherits its dead ends and abandoned approaches along with it — construct exactly what each task needs instead, and nothing it doesn't, so its judgment goes into the task rather than into making sense of a conversation it never joined. The same discipline protects your own context: tracking what's done, ruling on conflicts, holding the cross-task picture no single subagent has reason to hold — that coordination work is what the controller session is for, and it stays clean only if the tasks themselves happen somewhere else.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A plan exists — typically written by <a class="skill-link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a> — and it's ready to execute task by task in the current session.</li><li>Each task should go to a subagent that starts with none of the session's accumulated history: clean judgment instead of a growing transcript to make sense of.</li><li>A task's work needs an independent check — against what it was asked to build and against how well it was built — before the next task is safe to build on top of it.</li><li>Not for: deciding what a delegate may settle on its own when it cannot ask, and what must stop the run instead — <a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a> owns the bounds a task is dispatched with; this skill owns the review gates it comes back through.</li><li>Not for: two or more tasks that are genuinely independent of each other and can run concurrently, with nothing gating one on another's result (see <a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a>).</li><li>Not for: running a plan's tasks inline in the current session's main thread, with no fresh subagent per task (see <a class="skill-link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/"><code>working-a-plan-task-by-task</code></a>).</li></ul>
+<ul><li>A plan exists — typically written by <a class="skill-link" href="/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a> — and it's ready to execute task by task in the current session.</li><li>Each task should go to a subagent that starts with none of the session's accumulated history: clean judgment instead of a growing transcript to make sense of.</li><li>A task's work needs an independent check — against what it was asked to build and against how well it was built — before the next task is safe to build on top of it.</li><li>Not for: deciding what a delegate may settle on its own when it cannot ask, and what must stop the run instead — <a class="skill-link" href="/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a> owns the bounds a task is dispatched with; this skill owns the review gates it comes back through.</li><li>Not for: two or more tasks that are genuinely independent of each other and can run concurrently, with nothing gating one on another's result (see <a class="skill-link" href="/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a>).</li><li>Not for: running a plan's tasks inline in the current session's main thread, with no fresh subagent per task (see <a class="skill-link" href="/skills/working-a-plan-task-by-task/"><code>working-a-plan-task-by-task</code></a>).</li></ul>
 <h2 id="before-task-one">Before task one</h2>
-<p>Do this work in an isolated workspace — a worktree or a feature branch, never a shared trunk directly (see <a class="skill-link" href="/tbaguette-skills/skills/isolating-work-with-worktrees/"><code>isolating-work-with-worktrees</code></a> for setting one up).</p>
+<p>Do this work in an isolated workspace — a worktree or a feature branch, never a shared trunk directly (see <a class="skill-link" href="/skills/isolating-work-with-worktrees/"><code>isolating-work-with-worktrees</code></a> for setting one up).</p>
 <p>Read the plan once. If it names a spec, read that too: the spec is the authority the plan argues from, and where the two disagree, the spec wins. A plan with no reachable spec still runs, but treat every ruling you make under it as provisional.</p>
 <p>Scan the plan once for problems before dispatching task one: tasks that contradict each other or the plan's own global constraints, and anything the plan explicitly mandates that would itself be a defect under review — a test asserting nothing, a logic block duplicated verbatim. Rule on whatever the scan turns up and write down what you decided; a scan that finds nothing is still worth stating, not just skipping in silence.</p>
-<p>Keep a running written record outside your own context, updated after every task and every fix round: which tasks are closed, which commits closed them, and every ruling made along the way. If this loop is one phase of a larger run, that record already exists and has a shape — <a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> defines it, and a second file competing with it is two accounts of progress that will disagree. Tick the plan's own <code>- [ ]</code> checkboxes as tasks close, too — a plan written by <a class="skill-link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a> carries them for exactly this, and letting them drift out of step with your record leaves two accounts of progress that disagree. Compaction erases what you remember; it does not erase that file or <code>git log</code>. Recovering from a lost context means trusting the record and the log over your own recollection — a controller that trusts its memory instead re-dispatches work that's already done, which is the single most expensive mistake this loop can make.</p>
+<p>Keep a running written record outside your own context, updated after every task and every fix round: which tasks are closed, which commits closed them, and every ruling made along the way. If this loop is one phase of a larger run, that record already exists and has a shape — <a class="skill-link" href="/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> defines it, and a second file competing with it is two accounts of progress that will disagree. Tick the plan's own <code>- [ ]</code> checkboxes as tasks close, too — a plan written by <a class="skill-link" href="/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a> carries them for exactly this, and letting them drift out of step with your record leaves two accounts of progress that disagree. Compaction erases what you remember; it does not erase that file or <code>git log</code>. Recovering from a lost context means trusting the record and the log over your own recollection — a controller that trusts its memory instead re-dispatches work that's already done, which is the single most expensive mistake this loop can make.</p>
 <h2 id="decide-dont-stall">Decide, don't stall</h2>
 <p>This loop runs to completion without pausing to check in between tasks — that's the point of keeping it in one session instead of routing every step through a person. Conflicts, ambiguities, a plan silent on some edge case: decide them against the spec (the plan is the spec's argument, not the reverse), write down what you decided and why in a line or two, and keep going. A wrong call costs rework someone can see in the record and undo; a session parked on a question it could have answered itself costs the whole session and buys nothing.</p>
 <p>A short list of things actually justify stopping to ask: an irreversible or destructive operation, anything security-sensitive, a side effect that reaches outside this workspace — a push to a shared branch, a merge, a publish — or a plan broken enough that every path forward is a guess. Outside that list, rule and continue.</p>
@@ -112,9 +112,9 @@
 <p>Template: <a href="#ref-reviewer-prompt">reference/reviewer-prompt.md</a>, full-review mode.</p>
 <h2 id="an-approval-that-does-not-name-what-it-approved-is-a-bearer-token">An approval that does not name what it approved is a bearer token</h2>
 <p>A gate split across two exchanges — approve here, act there — has to carry the approval between them, and the carrier travels through the very party the gate exists to constrain. That part is unavoidable. What is avoidable is a carrier recording only <em>that</em> approval happened.</p>
-<p>The actor here is you, holding a person's yes — not a delegate holding a clearance, which is <a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a>'s territory and not this skill's. It bites at the places <em>Decide, don't stall</em> already stops to ask: an irreversible or destructive operation, a push to a shared branch, a merge, a publish. An approval reduced to a flag is a bearer credential for the next one of those, of any shape. A plan approved in one turn is executed in another after the plan moved; a resumed run presents an approval obtained before the parameters it now holds. Nothing has to be adversarial for this to bite — the ordinary case is a run that sincerely believes it is still doing the approved thing.</p>
+<p>The actor here is you, holding a person's yes — not a delegate holding a clearance, which is <a class="skill-link" href="/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a>'s territory and not this skill's. It bites at the places <em>Decide, don't stall</em> already stops to ask: an irreversible or destructive operation, a push to a shared branch, a merge, a publish. An approval reduced to a flag is a bearer credential for the next one of those, of any shape. A plan approved in one turn is executed in another after the plan moved; a resumed run presents an approval obtained before the parameters it now holds. Nothing has to be adversarial for this to bite — the ordinary case is a run that sincerely believes it is still doing the approved thing.</p>
 <p>So the load-bearing content of an approval is <strong>a digest of what was approved</strong> — the actual parameters, paths, or diff, never a description of them — scoped by something that can go stale on its own. The base commit the dispatch record already names does that job: when it moves, the approval is spent. At the point of action, re-read the digest and compare it field by field against what you are about to do, rather than acting on what the session currently believes those fields are. A mismatch stops the operation.</p>
-<p><a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> names the version that crosses a context boundary: a verdict recorded against a role rather than against content re-binds on restore to whatever now occupies that role. Same defect, different transport.</p>
+<p><a class="skill-link" href="/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> names the version that crosses a context boundary: a verdict recorded against a role rather than against content re-binds on restore to whatever now occupies that role. Same defect, different transport.</p>
 <h2 id="a-gate-has-a-throughput-past-which-a-yes-carries-no-information">A gate has a throughput, past which a yes carries no information</h2>
 <p>Most gates above are answered by a dispatched reviewer, and what those cost is tokens and turns — the model-choice section already prices them. A few are answered by a <em>person</em>: the list in <em>Decide, don't stall</em>, plus every approval this skill asks you to carry. Those are a different resource, and the one that is never budgeted. An oversight gate answered by a human is a channel with a finite capacity, and a design raising one wherever a stop <em>might</em> help is not being careful — it is overdrawing the account the gates that matter are also drawn against.</p>
 <p>Three effects compound, and the middle one is the counter-intuitive half:</p>
@@ -134,9 +134,9 @@
 <h2 id="when-a-finding-points-backward-not-forward">When a finding points backward, not forward</h2>
 <p>Most findings are about the task just reviewed. Occasionally one isn't — Task 6's review reveals that Task 2's interface choice, already closed and built on by three tasks since, was wrong. This is worse than an ordinary load-bearing finding, because the damage isn't pending, it's already shipped: don't fold it into Task 6's fix loop as though Task 6 caused it. Stop, name which earlier task the finding actually belongs to and what's been built on top of it since, and treat it the way a load-bearing finding at the cap is treated — surfaced to your human partner, not silently absorbed into whichever task happened to be open when it was noticed. The running record you've kept since before task one is what makes this findable at all: without it, &quot;Task 2 was wrong&quot; has no way to become &quot;and Tasks 3 through 5 inherited it,&quot; because nothing recorded what those tasks actually depended on.</p>
 <h2 id="the-final-review">The final review</h2>
-<p>Once every task is done, dispatch one review across the whole branch — not per-task scope this time, and on the most capable model available regardless of what individual tasks used. Compose that dispatch the way <a class="skill-link" href="/tbaguette-skills/skills/handing-off-for-review/"><code>handing-off-for-review</code></a> describes: what was built, what it should do, the exact range, and the shape you want the findings back in. Hand it the running list of deferred minors and parked findings too, so it triages what actually blocks merge instead of rediscovering all of it from nothing.</p>
+<p>Once every task is done, dispatch one review across the whole branch — not per-task scope this time, and on the most capable model available regardless of what individual tasks used. Compose that dispatch the way <a class="skill-link" href="/skills/handing-off-for-review/"><code>handing-off-for-review</code></a> describes: what was built, what it should do, the exact range, and the shape you want the findings back in. Hand it the running list of deferred minors and parked findings too, so it triages what actually blocks merge instead of rediscovering all of it from nothing.</p>
 <p>If it finds something, fix the whole list in one dispatch — not one fixer per finding, which rebuilds context and reruns the suite for each one at a cost that can exceed every task that came before it — then run exactly one scoped re-review of that fix. Adjudicate whatever's left the same way the task loop's cap works: park it or rule on it, and record which. There's no second fix wave; anything load-bearing left after that surfaces to whoever owns the branch next.</p>
-<p>Once the final review is clean, this skill's job is done. How the branch actually lands — merge, pull request, or something else — belongs to <a class="skill-link" href="/tbaguette-skills/skills/landing-a-finished-branch/"><code>landing-a-finished-branch</code></a>, not here.</p>
+<p>Once the final review is clean, this skill's job is done. How the branch actually lands — merge, pull request, or something else — belongs to <a class="skill-link" href="/skills/landing-a-finished-branch/"><code>landing-a-finished-branch</code></a>, not here.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>A task marked complete with an open spec gap</td><td>&quot;Close enough&quot; stood in for a clean verdict — a failed spec check is not done, only fixed or parked-with-a-ruling</td></tr><tr><td>The controller edits code directly mid-review</td><td>Fixing in the controller session skips the review gate it's supposed to protect, and pollutes the context that's supposed to stay clean</td></tr><tr><td>A fix round runs six, seven, eight times on the same task</td><td>No fixed cap — rounds kept being spent hoping instead of adjudicating a structural failure</td></tr><tr><td>A fix ships with no re-review because it &quot;was small&quot;</td><td>Small fixes regress too; skipping the re-review is how they land unseen</td></tr><tr><td>The next task dispatches before this one's review is clean or parked</td><td>The task loop's gate was treated as optional under time pressure</td></tr><tr><td>A dispatch prompt balloons with several tasks' worth of pasted history</td><td>Session history got pasted in instead of handed over as an interface the brief states plainly</td></tr><tr><td>The implementer's self-review stands in for the task review</td><td>Self-review and independent review catch different things; one was skipped, not just deferred</td></tr><tr><td>An implementer spawns its own reviewer and the controller treats that as covered</td><td>A duplicate review seat, not a second opinion — the real review still has to run</td></tr><tr><td>A defect traced back to an earlier, already-closed task</td><td>Treated as the current task's finding instead of raised against the task that actually owns it</td></tr><tr><td>An approval given early authorizes a wider action much later</td><td>The approval recorded that a yes happened, not what it was a yes to</td></tr><tr><td>A delegate reported DONE and nothing it claimed had happened</td><td>Its own account was the only channel the end state was observable through</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
@@ -579,38 +579,38 @@ git diff -U10 BASE..HEAD</code></pre>
     </div>
   </div>
 </section></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/working-a-plan-task-by-task/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← working-a-plan-task-by-task</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/fanning-out-independent-work/">
+<a class="prevnext__link prevnext__link--next" href="/skills/fanning-out-independent-work/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">fanning-out-independent-work →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Planning and delegation</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/">
+<li><a class="see-also__link" href="/skills/structuring-an-implementation-plan/">
       <span class="see-also__name">structuring-an-implementation-plan</span>
       <span class="see-also__summary">Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/">
+<li><a class="see-also__link" href="/skills/working-a-plan-task-by-task/">
       <span class="see-also__name">working-a-plan-task-by-task</span>
       <span class="see-also__summary">Use when a written plan is ready to execute inline…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/fanning-out-independent-work/">
+<li><a class="see-also__link" href="/skills/fanning-out-independent-work/">
       <span class="see-also__name">fanning-out-independent-work</span>
       <span class="see-also__summary">Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/routing-around-capability-gaps/">
+<li><a class="see-also__link" href="/skills/routing-around-capability-gaps/">
       <span class="see-also__name">routing-around-capability-gaps</span>
       <span class="see-also__summary">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/bounding-autonomous-work/">
+<li><a class="see-also__link" href="/skills/bounding-autonomous-work/">
       <span class="see-also__name">bounding-autonomous-work</span>
       <span class="see-also__summary">Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/checkpointing-long-runs/">
+<li><a class="see-also__link" href="/skills/checkpointing-long-runs/">
       <span class="see-also__name">checkpointing-long-runs</span>
       <span class="see-also__summary">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files…</span>
     </a></li>
@@ -621,27 +621,27 @@ git diff -U10 BASE..HEAD</code></pre>
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

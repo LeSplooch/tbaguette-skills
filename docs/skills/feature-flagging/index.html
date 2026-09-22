@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="feature-flagging — Landing changes — TBaguette’s Atelier">
 <meta property="og:description" content="Use when hiding unfinished work behind a toggle, when planning a gradual rollout, a kill switch, or a dark launch…">
-<link rel="canonical" href="/tbaguette-skills/skills/feature-flagging/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/feature-flagging/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#landing-changes">Landing changes</a>
+  <a href="/#landing-changes">Landing changes</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">feature-flagging</span>
 </nav>
@@ -71,7 +71,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A flag decouples deploying code from releasing behavior. It is also a permanent branch in the code, in the test matrix, and in the head of whoever is on call — so every flag gets a type, an owner, and an expiry on the day it is created, or it gets rejected.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Shipping incomplete work to production without exposing it</li><li>Ramping a change by percentage or cohort, or needing to disable one without a deploy</li><li>Gating an experiment, a plan tier, a region, or a role</li><li>Cleaning up flags that outlived the feature they guarded</li><li>Not for: moving traffic between two implementations over weeks — the flag is one instrument inside <a class="skill-link" href="/tbaguette-skills/skills/incremental-migration/"><code>incremental-migration</code></a>. Not for how configuration is stored, layered, and validated — see <a class="skill-link" href="/tbaguette-skills/skills/configuration-management/"><code>configuration-management</code></a>.</li></ul>
+<ul><li>Shipping incomplete work to production without exposing it</li><li>Ramping a change by percentage or cohort, or needing to disable one without a deploy</li><li>Gating an experiment, a plan tier, a region, or a role</li><li>Cleaning up flags that outlived the feature they guarded</li><li>Not for: moving traffic between two implementations over weeks — the flag is one instrument inside <a class="skill-link" href="/skills/incremental-migration/"><code>incremental-migration</code></a>. Not for how configuration is stored, layered, and validated — see <a class="skill-link" href="/skills/configuration-management/"><code>configuration-management</code></a>.</li></ul>
 <h2 id="four-types-four-lifespans">Four types, four lifespans</h2>
 <p>Treating these as one mechanism is the root cause of most flag pain.</p>
 <table><thead><tr><th>Type</th><th>Purpose</th><th>Lifespan</th><th>Who flips it</th><th>Default</th><th>Ends when</th></tr></thead><tbody><tr><td>Release</td><td>Ship dark, ramp, decouple deploy from release</td><td>Days to weeks</td><td>The team that wrote it</td><td>Off</td><td>Removed at 100% after a stable period</td></tr><tr><td>Operational (kill switch)</td><td>Shed load, disable an expensive path, degrade deliberately</td><td>As long as the subsystem</td><td>On-call, at 3am, under stress</td><td>The state that is safe when nothing is known</td><td>Never removed; tested on a schedule</td></tr><tr><td>Experiment</td><td>Measure a hypothesis against a control</td><td>One experiment cycle</td><td>Assignment service, not a human</td><td>Control</td><td>Removed with the result, winner inlined</td></tr><tr><td>Permission / entitlement</td><td>Who is allowed this — plan, tenant, region, role</td><td>Permanent product rule</td><td>Product or sales operations</td><td>Deny</td><td>Never; it is authorization, not debt</td></tr></tbody></table>
@@ -93,50 +93,50 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Flag still present a year after launch</td><td>No expiry, no owner, and removal was never scheduled work</td></tr><tr><td>Flipping the flag off to roll back makes things worse</td><td>The off branch has not executed since the flag was added</td></tr><tr><td>Kill switch did nothing during the incident</td><td>Its evaluation depended on the failing component, or it had never been tested</td></tr><tr><td>Test matrix has become unmanageable</td><td>Interacting flags modeled as independent booleans</td></tr><tr><td>Feature &quot;does not work&quot; for exactly one environment</td><td>Misspelled key silently resolving to the default</td></tr><tr><td>Removing a flag broke production</td><td>The wrong branch was kept, or config still referenced the key</td></tr><tr><td>A deliberate deviation was reverted by accident</td><td>Its rationale lived in a comment, and no assertion failed when the flag flipped</td></tr><tr><td>Cleanup process keeps proposing deletion of a paid feature's gate</td><td>Entitlement modeled as a release flag</td></tr><tr><td>A reported bug cannot be reproduced</td><td>Flag values at the time of the error were never recorded</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;We will remove the flag right after launch&quot;</li><li>&quot;It is just a temporary flag&quot;</li><li>&quot;Default it on so we do not have to change config&quot; — the default <em>is</em> the failure mode</li><li>&quot;The flag service will be up&quot;</li><li>A flag name with a version number and no owner</li><li>Adding a flag because the change is risky, without having decided what evidence would justify turning it on</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/deleting-code/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/deleting-code/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← deleting-code</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/resolving-merge-conflicts/">
+<a class="prevnext__link prevnext__link--next" href="/skills/resolving-merge-conflicts/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">resolving-merge-conflicts →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Landing changes</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/atomic-commits/">
+<li><a class="see-also__link" href="/skills/atomic-commits/">
       <span class="see-also__name">atomic-commits</span>
       <span class="see-also__summary">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-commit-messages/">
+<li><a class="see-also__link" href="/skills/writing-commit-messages/">
       <span class="see-also__name">writing-commit-messages</span>
       <span class="see-also__summary">Use when writing or rewriting a commit message, when drafting a subject line, when a history reads as &quot;fix&quot;, &quot;wip&quot;…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/incremental-migration/">
+<li><a class="see-also__link" href="/skills/incremental-migration/">
       <span class="see-also__name">incremental-migration</span>
       <span class="see-also__summary">Use when replacing a system, library, API, storage engine, or data format that is already in use…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/refactoring-safely/">
+<li><a class="see-also__link" href="/skills/refactoring-safely/">
       <span class="see-also__name">refactoring-safely</span>
       <span class="see-also__summary">Use when restructuring existing code without changing what it does, when a change touches many call sites at once…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/judging-duplication/">
+<li><a class="see-also__link" href="/skills/judging-duplication/">
       <span class="see-also__name">judging-duplication</span>
       <span class="see-also__summary">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/deleting-code/">
+<li><a class="see-also__link" href="/skills/deleting-code/">
       <span class="see-also__name">deleting-code</span>
       <span class="see-also__summary">Use when removing code, a feature, an endpoint, a config key, a column, or a dependency that appears unused…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/resolving-merge-conflicts/">
+<li><a class="see-also__link" href="/skills/resolving-merge-conflicts/">
       <span class="see-also__name">resolving-merge-conflicts</span>
       <span class="see-also__summary">Use when a merge or rebase reports conflicts, when a long-lived branch has diverged and integration looks painful…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/isolating-work-with-worktrees/">
+<li><a class="see-also__link" href="/skills/isolating-work-with-worktrees/">
       <span class="see-also__name">isolating-work-with-worktrees</span>
       <span class="see-also__summary">Use when starting work that shouldn&#x27;t touch the current checkout, before running a multi-step plan you might need to abandon cleanly…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/landing-a-finished-branch/">
+<li><a class="see-also__link" href="/skills/landing-a-finished-branch/">
       <span class="see-also__name">landing-a-finished-branch</span>
       <span class="see-also__summary">Use when implementation is done and its tests are green and it&#x27;s time to decide how the branch lands, when choosing between a local merge…</span>
     </a></li>
@@ -147,27 +147,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="writing-durable-docs — Communicating — TBaguette’s Atelier">
 <meta property="og:description" content="Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material…">
-<link rel="canonical" href="/tbaguette-skills/skills/writing-durable-docs/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/writing-durable-docs/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#communicating">Communicating</a>
+  <a href="/#communicating">Communicating</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">writing-durable-docs</span>
 </nav>
@@ -71,7 +71,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Documentation rots because it duplicates what the code already states, and the copy always loses. Durable docs record what code cannot express — the why, the constraint, the rejected alternative — and where they must state mechanics, they are generated or executed so drift breaks a build instead of misleading a reader.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Writing a README, guide, reference page, or onboarding path</li><li>A doc contradicts the code, or a documented step fails when run</li><li>Deciding where a doc should live, or whether to delete it</li><li>A page has grown four unrelated sections and nobody reads past the first</li><li>Someone asks a question the docs &quot;answer&quot; but nobody could find</li><li><strong>Not for:</strong> why a decision was made and what lost → <a class="skill-link" href="/tbaguette-skills/skills/writing-adrs/"><code>writing-adrs</code></a>. What changed between versions → <a class="skill-link" href="/tbaguette-skills/skills/writing-release-notes/"><code>writing-release-notes</code></a>. Explaining one piece of work to one person → <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a>. Keeping a duplicated fact (a version, a constant, a mirrored non-prose artifact) from drifting once memory is no longer the plan → <a class="skill-link" href="/tbaguette-skills/skills/keeping-copies-in-sync/"><code>keeping-copies-in-sync</code></a>.</li></ul>
+<ul><li>Writing a README, guide, reference page, or onboarding path</li><li>A doc contradicts the code, or a documented step fails when run</li><li>Deciding where a doc should live, or whether to delete it</li><li>A page has grown four unrelated sections and nobody reads past the first</li><li>Someone asks a question the docs &quot;answer&quot; but nobody could find</li><li><strong>Not for:</strong> why a decision was made and what lost → <a class="skill-link" href="/skills/writing-adrs/"><code>writing-adrs</code></a>. What changed between versions → <a class="skill-link" href="/skills/writing-release-notes/"><code>writing-release-notes</code></a>. Explaining one piece of work to one person → <a class="skill-link" href="/skills/explaining-technical-work/"><code>explaining-technical-work</code></a>. Keeping a duplicated fact (a version, a constant, a mirrored non-prose artifact) from drifting once memory is no longer the plan → <a class="skill-link" href="/skills/keeping-copies-in-sync/"><code>keeping-copies-in-sync</code></a>.</li></ul>
 <h2 id="four-types-never-two-on-one-page">Four types, never two on one page</h2>
 <table><thead><tr><th>Type</th><th>Reader's state</th><th>Serves</th><th>Fails when it</th></tr></thead><tbody><tr><td>Tutorial</td><td>Has no problem yet; wants competence</td><td>A guaranteed-success path, one route only</td><td>Offers options or explains internals</td></tr><tr><td>How-to</td><td>Has a specific problem; is in a hurry</td><td>A recipe for one goal, assumes competence</td><td>Teaches concepts or starts from zero</td></tr><tr><td>Reference</td><td>Knows what they want; needs exact detail</td><td>Complete, structured, dry, no narrative</td><td>Tells a story or picks favorites</td></tr><tr><td>Explanation</td><td>Wants understanding; not at a keyboard</td><td>Context, why, trade-offs, history</td><td>Contains steps to follow</td></tr></tbody></table>
 <p>The audience question that decides everything: <strong>does this reader already have the problem?</strong> No → tutorial or explanation. Yes → how-to or reference. Get this wrong and no amount of editing helps.</p>
@@ -88,7 +88,7 @@
 <p>They break differently, too, and that is what makes them slip. A positive claim goes stale when the thing it describes changes — the same diff is at least in the neighbourhood. A negative claim goes false when something is <strong>added somewhere else entirely</strong>, in a change that never touches the document and has no reason to. Nobody wiring up a new dependency thinks to grep the README for a sentence denying that dependencies exist. So a doc asserting what the software does is part of the software's surface: treat every such claim as a call site of the behaviour, and a behaviour change is not finished while a call site still says the opposite.</p>
 <p>The defense is to invert the check rather than execute the doc. Assert the absence the sentence claims, as a test that fails when the forbidden thing appears: grep the built artifact for network calls, fail the build on a non-empty dependency list, assert the written-paths set. That drops an uncheckable prose promise to the bottom rung, where drift breaks a build. Where no such test is possible, the claim needs an owner and a review date like any unowned doc — and it needs to be written down somewhere the person adding the forbidden thing will actually pass, which is next to the code, not in the docs directory.</p>
 <p>There is a second kind of negative claim, and it is worse, because it is about a system you do not own. <em>The platform exposes no change-region metadata. The API has no way to page. The driver cannot report that field.</em> A sentence like that is written to explain a design, and it reads as a description of the world; what it usually records is that the author did not find the capability, which is a fact about one afternoon's search. An inverted test cannot save it — there is nothing in your own artifact to assert the absence of — and it decays in the opposite direction from a promise: a promise about your software goes false when someone adds the thing, while a claim about someone else's is often false on the day it is written, and when it was true it goes false with no diff in your repository at all, because the dependency gained what the sentence denies. Nobody re-checks, because the sentence is the reason the work was never started. The cost is not a misled user but a door closed to every later reader who would have tried.</p>
-<p>So a negative claim about a dependency carries its evidence or admits it has none: the specification section, the API version, the command that was run and what it printed — or the words <em>not checked</em>. That phrasing is honest, and it invites the next reader to check; <em>not possible</em> invites nobody. <a class="skill-link" href="/tbaguette-skills/skills/revalidating-decisions/"><code>revalidating-decisions</code></a> owns what a reader does with such a claim once it is recorded; the writer's half is to make it a claim with a date and a source, or to make it visibly a guess.</p>
+<p>So a negative claim about a dependency carries its evidence or admits it has none: the specification section, the API version, the command that was run and what it printed — or the words <em>not checked</em>. That phrasing is honest, and it invites the next reader to check; <em>not possible</em> invites nobody. <a class="skill-link" href="/skills/revalidating-decisions/"><code>revalidating-decisions</code></a> owns what a reader does with such a claim once it is recorded; the writer's half is to make it a claim with a date and a source, or to make it visibly a guess.</p>
 <h2 id="position-is-a-reliability-property">Position is a reliability property</h2>
 <p>A document a person reads has one order, the one they read it in, and the only cost of putting a rule near the end is that fewer people get there. A document a harness reads on your behalf — a skill body, an agent instruction file, a system prompt fragment, a plan a resumed session re-reads — has a second reader, and that reader does not get to the end. Every mechanism that carries context across a boundary shortens the document, and the ones you did not choose shorten it <strong>from the end</strong>: a compaction keeps the opening of each file it re-attaches, a summarised handoff keeps the opening and paraphrases the rest, a capped listing keeps the entries that came first, a truncated tool result keeps its head. None of those mechanisms is told which sentence was load-bearing. They keep whatever came first.</p>
 <p>So order stops being a readability choice and becomes a statement about which rules survive the run that needs them most. A constraint written at the bottom of an instruction file is in force for the first hour and silently absent after the first compaction, while the file's opening — usually its overview and the motivation for what follows — is the part that does. The failure is invisible from the inside, because the document still exists and still answers; it is just answering from a shorter version of itself than the one you wrote.</p>
@@ -103,42 +103,42 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>README is 800 lines, nobody reads past install</td><td>Four doc types merged into one page</td></tr><tr><td>Docs go stale after every release</td><td>They describe mechanics the code already states</td></tr><tr><td>New hire's setup guide fails at step 4</td><td>The guide was only ever read, never executed</td></tr><tr><td>Doc says what a function does, reader still can't tell when to call it</td><td>Written from the author's mental model, not the reader's entry point</td></tr><tr><td>Everything is documented, nothing is findable</td><td>Organized by system structure; search returns the wrong altitude</td></tr><tr><td>Reference page disagrees with the schema</td><td>Hand-maintained copy of a source of truth</td></tr><tr><td>&quot;We'll document it after the refactor&quot;</td><td>Docs treated as a separate artifact instead of part of the change</td></tr><tr><td>Team writes docs, then answers the same questions in chat anyway</td><td>Doc answers the question the author had, not the one readers arrive with</td></tr><tr><td>A published doc denies a feature the software shipped weeks ago</td><td>A negative claim, which no example or generated reference can ever check</td></tr><tr><td>Two copies of one document disagree</td><td>Mirrored by hand, so there is no generation step and no diff to fail</td></tr><tr><td>A capability the design doc says the platform lacks turns out to exist, and the implementation was never attempted</td><td>A negative claim about a dependency written from memory, with no source, read by every later reader as a reason not to try</td></tr><tr><td>An instruction file was obeyed for an hour and ignored for the rest of the run</td><td>The rule sat at the end of a document that gets truncated from the end each time context is carried forward</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;I'll write the docs at the end&quot;</li><li>Adding a fourth unrelated section to a README</li><li>Copy-pasting a code snippet into prose</li><li>Writing &quot;simply&quot;, &quot;just&quot;, or &quot;obviously&quot; — each marks a step the author no longer sees</li><li>A page that explains the architecture to a reader who wanted one command</li><li>Keeping a stale page &quot;for reference&quot;</li><li>Documenting a workaround instead of deleting the reason for it</li><li>A document promising the absence of something, with no test that fails when it appears</li><li>&quot;The platform does not support X&quot; with no version, spec section, or command beside it</li><li>The same guide living at two paths, neither generated from the other</li><li>A hard constraint below the explanation that motivates it, in a file a harness will re-read after compaction</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/writing-adrs/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/skills/writing-adrs/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">writing-adrs →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Communicating</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-adrs/">
+<li><a class="see-also__link" href="/skills/writing-adrs/">
       <span class="see-also__name">writing-adrs</span>
       <span class="see-also__summary">Use when recording a technical or architectural decision — picking between technologies, changing a system boundary…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-release-notes/">
+<li><a class="see-also__link" href="/skills/writing-release-notes/">
       <span class="see-also__name">writing-release-notes</span>
       <span class="see-also__summary">Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-postmortems/">
+<li><a class="see-also__link" href="/skills/writing-postmortems/">
       <span class="see-also__name">writing-postmortems</span>
       <span class="see-also__summary">Use when writing an incident review or postmortem after an outage, degradation, data loss, failed deploy…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/reviewing-code-deeply/">
+<li><a class="see-also__link" href="/skills/reviewing-code-deeply/">
       <span class="see-also__name">reviewing-code-deeply</span>
       <span class="see-also__summary">Use when reviewing someone else&#x27;s change — a pull request, patch, diff, or commit series — deciding what deserves a comment…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/explaining-technical-work/">
+<li><a class="see-also__link" href="/skills/explaining-technical-work/">
       <span class="see-also__name">explaining-technical-work</span>
       <span class="see-also__summary">Use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/crouton/">
+<li><a class="see-also__link" href="/skills/crouton/">
       <span class="see-also__name">crouton</span>
       <span class="see-also__summary">Use when asked for terse, compressed, or token-saving output — &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;keep it short&quot;, &quot;stop explaining&quot;…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/handing-off-for-review/">
+<li><a class="see-also__link" href="/skills/handing-off-for-review/">
       <span class="see-also__name">handing-off-for-review</span>
       <span class="see-also__summary">Use when completing a task or feature and about to hand it off before merging, when stuck and a fresh perspective would help…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/verifying-review-feedback/">
+<li><a class="see-also__link" href="/skills/verifying-review-feedback/">
       <span class="see-also__name">verifying-review-feedback</span>
       <span class="see-also__summary">Use when code review feedback lands on your own change — from a person, a bot…</span>
     </a></li>
@@ -149,27 +149,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="structuring-an-implementation-plan — Planning and delegation — TBaguette’s Atelier">
 <meta property="og:description" content="Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan…">
-<link rel="canonical" href="/tbaguette-skills/skills/structuring-an-implementation-plan/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/structuring-an-implementation-plan/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a>
+  <a href="/#planning-and-delegation">Planning and delegation</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">structuring-an-implementation-plan</span>
 </nav>
@@ -71,9 +71,9 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A plan is written for the reader with the least context anyone touching this work will ever have — less than whoever wrote the spec, less than the reviewer, less than you an hour from now. Assume that reader is skilled but has questionable taste on anything left for them to decide: every fact or choice the plan omits becomes a decision they invent instead, and an invented decision is exactly what a fresh reviewer's gate exists to catch — one task too late. The fix isn't more prose; it's smaller tasks, exact paths and signatures, and no sentence that describes what to do without showing how.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A spec or requirements document is settled and the next step is turning it into tasks an implementer can pick up cold.</li><li>The work spans more than one file, commit, or sitting — anything a single diff wouldn't cover.</li><li>About to hand the work to a fresh session, a subagent, or another engineer who wasn't part of arriving at the spec.</li><li>A previous plan's tasks kept triggering mid-implementation questions — the granularity or the detail was wrong, not the reader.</li><li>Not for: whether a plan's effort estimate is realistic (see <a class="skill-link" href="/tbaguette-skills/skills/estimating-effort/"><code>estimating-effort</code></a>).</li><li>Not for: recording why a decision was made a particular way (see <a class="skill-link" href="/tbaguette-skills/skills/writing-adrs/"><code>writing-adrs</code></a>).</li><li>Not for: executing an already-written plan task by task (see <a class="skill-link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/"><code>working-a-plan-task-by-task</code></a>).</li></ul>
+<ul><li>A spec or requirements document is settled and the next step is turning it into tasks an implementer can pick up cold.</li><li>The work spans more than one file, commit, or sitting — anything a single diff wouldn't cover.</li><li>About to hand the work to a fresh session, a subagent, or another engineer who wasn't part of arriving at the spec.</li><li>A previous plan's tasks kept triggering mid-implementation questions — the granularity or the detail was wrong, not the reader.</li><li>Not for: whether a plan's effort estimate is realistic (see <a class="skill-link" href="/skills/estimating-effort/"><code>estimating-effort</code></a>).</li><li>Not for: recording why a decision was made a particular way (see <a class="skill-link" href="/skills/writing-adrs/"><code>writing-adrs</code></a>).</li><li>Not for: executing an already-written plan task by task (see <a class="skill-link" href="/skills/working-a-plan-task-by-task/"><code>working-a-plan-task-by-task</code></a>).</li></ul>
 <h2 id="scope-then-file-structure">Scope, then file structure</h2>
-<p>A spec covering more than one independent subsystem should already have been split during <a class="skill-link" href="/tbaguette-skills/skills/scoping-before-building/"><code>scoping-before-building</code></a> — that decomposition is upstream of this skill, not a decision made here. If a spec still describes several unrelated subsystems as one plan by the time it gets here, that step got skipped: stop and propose separate plans, one per subsystem, each producing working, testable software on its own — not tasks that only look finished together.</p>
+<p>A spec covering more than one independent subsystem should already have been split during <a class="skill-link" href="/skills/scoping-before-building/"><code>scoping-before-building</code></a> — that decomposition is upstream of this skill, not a decision made here. If a spec still describes several unrelated subsystems as one plan by the time it gets here, that step got skipped: stop and propose separate plans, one per subsystem, each producing working, testable software on its own — not tasks that only look finished together.</p>
 <p>With scope settled, decide file structure — which files get created or modified, and what each one owns — before writing a single task. This is where the real decomposition happens, not a summary written after the fact:</p>
 <ul><li>Give each file one clear responsibility, with a boundary you could describe in a sentence.</li><li>Favor smaller, focused files. You reason best about code you can hold in context at once, and a fresh implementer does too — their reading comprehension is the resource being spent.</li><li>Files that change together belong together. Split by responsibility, not by technical layer.</li><li>Follow the codebase's existing patterns. If it already runs large files, don't restructure unilaterally — but if a file the plan touches has grown unwieldy, splitting it is a legitimate task, not scope creep.</li></ul>
 <p>A task that doesn't trace back to a file-structure decision is usually a sign the structure wasn't actually decided yet — it was discovered task by task instead.</p>
@@ -136,39 +136,39 @@ include this section.]
 <p>Fix what you find inline, immediately — no separate re-review pass required. A spec requirement with no task gets a new task, on the spot.</p>
 <p>Calibrate what's worth flagging: an issue that would cause an implementer to build the wrong thing, stall, or guess is real. A wording preference or a &quot;nicer&quot; phrasing isn't, and it doesn't block the plan. When a second reviewer runs this same list, the output is a status — approved, or issues found — with each issue naming its exact task and step and why it would derail implementation, and any recommendations kept separate and explicitly non-blocking: a plan doesn't fail review over advice.</p>
 <h2 id="when-execution-reveals-the-plan-was-wrong">When execution reveals the plan was wrong</h2>
-<p>A plan is a prediction, and predictions miss once real code pushes back — a signature comes out different than guessed, a file needs splitting the plan never called for. That's not a failure of this skill; it's <a class="skill-link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/"><code>working-a-plan-task-by-task</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a> correctly treating a plan/codebase contradiction as a blocker to raise rather than a wrinkle to absorb. What this skill owns is what happens to the <em>document</em> once that's resolved: note the actual outcome at the task that produced it, briefly, so a reader hitting Task 9's Interfaces block finds the signature Task 4 really shipped, not the one originally guessed at. An Interfaces block that quietly drifts from what got built costs the next task the same way an undefined reference would — the difference is only that this one used to be right and nobody updated it. Whether to also revise the original steps or just annotate the divergence is a call for whoever's executing; either way, the plan stops earning its keep as a reference the moment its predictions and the shipped code disagree and nothing on the page admits it.</p>
+<p>A plan is a prediction, and predictions miss once real code pushes back — a signature comes out different than guessed, a file needs splitting the plan never called for. That's not a failure of this skill; it's <a class="skill-link" href="/skills/working-a-plan-task-by-task/"><code>working-a-plan-task-by-task</code></a> and <a class="skill-link" href="/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a> correctly treating a plan/codebase contradiction as a blocker to raise rather than a wrinkle to absorb. What this skill owns is what happens to the <em>document</em> once that's resolved: note the actual outcome at the task that produced it, briefly, so a reader hitting Task 9's Interfaces block finds the signature Task 4 really shipped, not the one originally guessed at. An Interfaces block that quietly drifts from what got built costs the next task the same way an undefined reference would — the difference is only that this one used to be right and nobody updated it. Whether to also revise the original steps or just annotate the divergence is a call for whoever's executing; either way, the plan stops earning its keep as a reference the moment its predictions and the shipped code disagree and nothing on the page admits it.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Implementer stops mid-task to ask what a step means</td><td>A placeholder slipped past self-review, or a step described the goal without showing the content</td></tr><tr><td>Two tasks feel like they should really be one</td><td>Split at a boundary a reviewer wouldn't actually reject independently — right-sizing skipped</td></tr><tr><td>A task can't be tested until three others are also done</td><td>File structure and task boundaries were decided separately instead of together</td></tr><tr><td>Task 9 calls something Task 4 never defined under that name</td><td>Interfaces blocks written from memory instead of checked against the producing task</td></tr><tr><td>The plan reads fine but nobody can say which spec line it satisfies</td><td>Tasks written from the shape of the code, not from the spec, and never checked back against it</td></tr><tr><td>Self-review finds nothing</td><td>Run by the same eyes that just wrote the plan, in the same sitting, with no actual distance</td></tr><tr><td>A plan skips Global Constraints in the header</td><td>The spec's project-wide rules got copied once per task instead of once, and drifted</td></tr><tr><td>An Interfaces block cites a signature the codebase no longer has</td><td>The plan recorded a prediction and never got updated once execution produced something different</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;I'll figure out the exact command when I implement this&quot; — that's a placeholder with different words.</li><li>&quot;Similar to Task N&quot; anywhere in the document.</li><li>A task with no run, test, or check anyone could point to as its pass/fail signal.</li><li>File structure decisions still being made while writing Task 4 — structure should already be locked by then.</li><li>Self-review finished in the same breath as the writing, with no fresh read of the spec in between.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/working-a-plan-task-by-task/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/skills/working-a-plan-task-by-task/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">working-a-plan-task-by-task →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Planning and delegation</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/working-a-plan-task-by-task/">
+<li><a class="see-also__link" href="/skills/working-a-plan-task-by-task/">
       <span class="see-also__name">working-a-plan-task-by-task</span>
       <span class="see-also__summary">Use when a written plan is ready to execute inline…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/">
+<li><a class="see-also__link" href="/skills/delegating-tasks-with-review-gates/">
       <span class="see-also__name">delegating-tasks-with-review-gates</span>
       <span class="see-also__summary">Use when executing a multi-task implementation plan task by task in the current session…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/fanning-out-independent-work/">
+<li><a class="see-also__link" href="/skills/fanning-out-independent-work/">
       <span class="see-also__name">fanning-out-independent-work</span>
       <span class="see-also__summary">Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/routing-around-capability-gaps/">
+<li><a class="see-also__link" href="/skills/routing-around-capability-gaps/">
       <span class="see-also__name">routing-around-capability-gaps</span>
       <span class="see-also__summary">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/bounding-autonomous-work/">
+<li><a class="see-also__link" href="/skills/bounding-autonomous-work/">
       <span class="see-also__name">bounding-autonomous-work</span>
       <span class="see-also__summary">Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/checkpointing-long-runs/">
+<li><a class="see-also__link" href="/skills/checkpointing-long-runs/">
       <span class="see-also__name">checkpointing-long-runs</span>
       <span class="see-also__summary">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files…</span>
     </a></li>
@@ -179,27 +179,27 @@ include this section.]
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

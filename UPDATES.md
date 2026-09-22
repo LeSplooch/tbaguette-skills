@@ -24,6 +24,16 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-22 — Reading the log is a diagnostic too
+
+- `observing-production-safely` now says that rung 1 is only free when the data is
+  read from somewhere other than the struggling host. A whole-file read, grep, or
+  text search over a large log allocates against the memory of the box you are
+  diagnosing, and the log is largest exactly when the incident is worst — so the
+  commonest ad-hoc diagnostic of all can be the thing that finishes the host off,
+  while looking like the cheapest rung on the ladder because nothing was enabled
+  and nothing was written.
+
 ## 2026-09-21 — A report describing itself, and a permission checked on the wrong machine
 
 - `instrumenting-for-observability` now covers a generated report whose own

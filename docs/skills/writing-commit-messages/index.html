@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="writing-commit-messages — Landing changes — TBaguette’s Atelier">
 <meta property="og:description" content="Use when writing or rewriting a commit message, when drafting a subject line, when a history reads as &quot;fix&quot;, &quot;wip&quot;…">
-<link rel="canonical" href="/tbaguette-skills/skills/writing-commit-messages/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/writing-commit-messages/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#landing-changes">Landing changes</a>
+  <a href="/#landing-changes">Landing changes</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">writing-commit-messages</span>
 </nav>
@@ -71,7 +71,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>The message is written for whoever finds this commit in a blame or a bisect years from now and must decide whether it is safe to touch. The diff already states what changed; only the message can state why, and only the author still knows.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Committing anything a future reader might need to revert, backport, or understand out of context</li><li>Squashing a branch into one commit and composing the message that survives</li><li>Reverting, or fixing an earlier commit</li><li>The history under a file reads as &quot;fix&quot;, &quot;wip&quot;, &quot;update&quot;, &quot;address review comments&quot;</li><li>Not for deciding <em>what belongs in</em> the commit — see <a class="skill-link" href="/tbaguette-skills/skills/atomic-commits/"><code>atomic-commits</code></a>. Not for reconstructing intent from an existing history — see <a class="skill-link" href="/tbaguette-skills/skills/code-archaeology/"><code>code-archaeology</code></a>.</li></ul>
+<ul><li>Committing anything a future reader might need to revert, backport, or understand out of context</li><li>Squashing a branch into one commit and composing the message that survives</li><li>Reverting, or fixing an earlier commit</li><li>The history under a file reads as &quot;fix&quot;, &quot;wip&quot;, &quot;update&quot;, &quot;address review comments&quot;</li><li>Not for deciding <em>what belongs in</em> the commit — see <a class="skill-link" href="/skills/atomic-commits/"><code>atomic-commits</code></a>. Not for reconstructing intent from an existing history — see <a class="skill-link" href="/skills/code-archaeology/"><code>code-archaeology</code></a>.</li></ul>
 <h2 id="the-subject-line-is-an-index-entry">The subject line is an index entry</h2>
 <p>It appears in one-line logs, bisect output, blame, tag ranges, and release notes. It is read at least a hundred times per reading of the body.</p>
 <ul><li><strong>Under 50 characters</strong>, imperative mood, capitalized, no trailing period. Imperative because the subject completes &quot;applying this commit will ___&quot;, and because tool-generated subjects (revert, merge, cherry-pick) already use it — mixed moods make a log unscannable.</li><li><strong>State the effect, not the mechanism.</strong> &quot;Fix crash on empty cache&quot; beats &quot;Add null check in cache lookup&quot;. The mechanism is in the diff; the effect is what a bisector is scanning for.</li><li><strong>Pass the distinguishability test</strong>: put it beside the other 40 subjects in this file's history. If it could be any of them — &quot;Fix bug&quot;, &quot;Update handler&quot;, &quot;Refactor&quot; — it is an index entry that indexes nothing.</li><li>Wrap the body at 72 characters. Tools indent it, and terminals still wrap at 80.</li></ul>
@@ -90,50 +90,50 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Message restates the diff in prose</td><td>Author described the patch instead of the decision</td></tr><tr><td>&quot;Address review comments&quot;</td><td>The commit records a conversation turn, not a change</td></tr><tr><td>Body is a ticket id and nothing else</td><td>Context outsourced to a system with a shorter lifetime than the repo</td></tr><tr><td>&quot;Refactor for clarity&quot; over a 900-line diff</td><td>No stated invariant, so a reviewer must verify every line by reading</td></tr><tr><td>Message written afterward from the diff</td><td>Only <em>what</em> is still recoverable at that point; <em>why</em> has already evaporated</td></tr><tr><td>Subject truncated in every tool</td><td>Over 50 characters, with the informative half at the end</td></tr><tr><td>Reader cannot tell whether a change is safe to revert</td><td>Message documented the implementation, not the constraints</td></tr><tr><td>Every message is technically accurate and none is useful</td><td>Written to satisfy a hook, not a reader</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;The diff is self-explanatory&quot; — it explains what, never why, and why is the entire point</li><li>&quot;I will explain it in the pull request&quot; — that text lives in a vendor's database, the commit lives in the repository</li><li>&quot;It is obvious why&quot; — obvious to you, today, with the incident still open</li><li>Writing the message as the last step, from the staged diff</li><li>A body that would be identical if the approach had been completely different</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/atomic-commits/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/atomic-commits/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← atomic-commits</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/incremental-migration/">
+<a class="prevnext__link prevnext__link--next" href="/skills/incremental-migration/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">incremental-migration →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Landing changes</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/atomic-commits/">
+<li><a class="see-also__link" href="/skills/atomic-commits/">
       <span class="see-also__name">atomic-commits</span>
       <span class="see-also__summary">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/incremental-migration/">
+<li><a class="see-also__link" href="/skills/incremental-migration/">
       <span class="see-also__name">incremental-migration</span>
       <span class="see-also__summary">Use when replacing a system, library, API, storage engine, or data format that is already in use…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/refactoring-safely/">
+<li><a class="see-also__link" href="/skills/refactoring-safely/">
       <span class="see-also__name">refactoring-safely</span>
       <span class="see-also__summary">Use when restructuring existing code without changing what it does, when a change touches many call sites at once…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/judging-duplication/">
+<li><a class="see-also__link" href="/skills/judging-duplication/">
       <span class="see-also__name">judging-duplication</span>
       <span class="see-also__summary">Use when two pieces of code look nearly identical and merging them is the obvious cleanup, when a reviewer asks why a near-copy exists…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/deleting-code/">
+<li><a class="see-also__link" href="/skills/deleting-code/">
       <span class="see-also__name">deleting-code</span>
       <span class="see-also__summary">Use when removing code, a feature, an endpoint, a config key, a column, or a dependency that appears unused…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/feature-flagging/">
+<li><a class="see-also__link" href="/skills/feature-flagging/">
       <span class="see-also__name">feature-flagging</span>
       <span class="see-also__summary">Use when hiding unfinished work behind a toggle, when planning a gradual rollout, a kill switch, or a dark launch…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/resolving-merge-conflicts/">
+<li><a class="see-also__link" href="/skills/resolving-merge-conflicts/">
       <span class="see-also__name">resolving-merge-conflicts</span>
       <span class="see-also__summary">Use when a merge or rebase reports conflicts, when a long-lived branch has diverged and integration looks painful…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/isolating-work-with-worktrees/">
+<li><a class="see-also__link" href="/skills/isolating-work-with-worktrees/">
       <span class="see-also__name">isolating-work-with-worktrees</span>
       <span class="see-also__summary">Use when starting work that shouldn&#x27;t touch the current checkout, before running a multi-step plan you might need to abandon cleanly…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/landing-a-finished-branch/">
+<li><a class="see-also__link" href="/skills/landing-a-finished-branch/">
       <span class="see-also__name">landing-a-finished-branch</span>
       <span class="see-also__summary">Use when implementation is done and its tests are green and it&#x27;s time to decide how the branch lands, when choosing between a local merge…</span>
     </a></li>
@@ -144,27 +144,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

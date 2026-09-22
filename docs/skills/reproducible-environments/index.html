@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="reproducible-environments — Environment and tooling — TBaguette’s Atelier">
 <meta property="og:description" content="Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt…">
-<link rel="canonical" href="/tbaguette-skills/skills/reproducible-environments/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/reproducible-environments/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a>
+  <a href="/#environment-and-tooling">Environment and tooling</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">reproducible-environments</span>
 </nav>
@@ -72,7 +72,7 @@
 <p>Every &quot;works on my machine&quot; is an input the build consumed without declaring. Reproducibility is not a property you add at the end; it is the count of undeclared inputs reaching zero, and the only way to know that count is to rebuild and compare.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A build, test, or artifact behaves differently on another machine, in CI, or after a clean clone</li><li>The build broke and no commit changed</li><li>You cannot rebuild the artifact a released version was cut from</li><li>Onboarding a person or a new runner takes more than one command</li><li>Choosing an isolation mechanism, or deciding whether the current one is worth its cost</li></ul>
-<p>Not for: runtime configuration and secrets that legitimately differ per environment (<a class="skill-link" href="/tbaguette-skills/skills/configuration-management/"><code>configuration-management</code></a>), or moving pinned versions forward on purpose (<a class="skill-link" href="/tbaguette-skills/skills/upgrading-dependencies/"><code>upgrading-dependencies</code></a>).</p>
+<p>Not for: runtime configuration and secrets that legitimately differ per environment (<a class="skill-link" href="/skills/configuration-management/"><code>configuration-management</code></a>), or moving pinned versions forward on purpose (<a class="skill-link" href="/skills/upgrading-dependencies/"><code>upgrading-dependencies</code></a>).</p>
 <h2 id="the-taxonomy-of-undeclared-inputs">The taxonomy of undeclared inputs</h2>
 <p>Every failure of this class is one row of this table. Diagnose by elimination, in roughly this order of frequency.</p>
 <table><thead><tr><th>Undeclared input</th><th>How it shows up</th><th>Declaration that fixes it</th></tr></thead><tbody><tr><td>System package or shared library</td><td>missing binary or link error on a fresh host only</td><td>an in-repo manifest the setup reads, or a base image</td></tr><tr><td>Unpinned dependency version</td><td>broke overnight with no commit</td><td>lockfile committed, install run in frozen mode</td></tr><tr><td>Toolchain version</td><td>different output, or a syntax error on the older compiler</td><td>version file in-tree, asserted at build start</td></tr><tr><td>Ambient environment variable</td><td>works in your shell, fails in cron, CI, or a fresh login</td><td>explicit allowlist; clear the rest at the entrypoint</td></tr><tr><td>Network at build time</td><td>fails when a registry is slow, a tag moves, or a package is yanked</td><td>vendored or content-addressed inputs; no network in the build step</td></tr><tr><td>Wall clock</td><td>artifacts differ byte-for-byte between two runs</td><td>a fixed source-date epoch fed to every packaging step</td></tr><tr><td>Absolute path</td><td>debug info, panic messages, and cache keys differ per checkout</td><td>path remapping, or a fixed build directory</td></tr><tr><td>Locale and timezone</td><td>sort order, case folding, date and number parsing all shift</td><td>pin the locale and timezone in the build entrypoint</td></tr><tr><td>Host identity (user, uid, hostname)</td><td>leaks into archive metadata and embedded build stamps</td><td>normalize during packaging</td></tr><tr><td>CPU feature detection</td><td>binary built on a newer host crashes on an older one</td><td>set an explicit architecture baseline</td></tr><tr><td>Iteration or file order</td><td>generated code and archive members reorder between runs</td><td>sort inputs explicitly; never rely on directory order</td></tr></tbody></table>
@@ -91,13 +91,13 @@
 <p>What it costs is a population split that nothing records. Where an update channel decides staleness by comparing versions rather than digests — which is most of them, because the version is cheap and the digest needs fetching — every consumer already holding the old bytes sees a version equal to the one on offer and never fetches. Every consumer arriving after the upload gets the new bytes. Two groups now run different code under one name, indefinitely, and no log line on either side says so. A defect that reproduces for one and not the other is unattributable by construction: the version is the only handle either party has, and it matches.</p>
 <p>So the rule is <strong>a rebuild is a new version whenever the artifact is addressed by version rather than by digest.</strong> The bump costs a number. Not bumping it costs the ability to ever say which bytes a given consumer is running.</p>
 <p>Two corollaries, both cheap:</p>
-<ul><li><strong>Publish a versioned name even where the name consumers actually use is a moving one.</strong> A moving name cannot be referred back to, so an install taken from it three weeks ago has no identity and nothing can reconstruct what it received. Publishing the immutable name alongside it costs one upload, changes nothing for consumers who want the convenience, and is the entire difference between a population you can count afterwards and one you cannot.</li><li><strong>Where the channel can compare digests, let it.</strong> Version comparison is a proxy for <em>are these the same bytes</em>, adopted because it is cheap. This section is what happens on the days the proxy and the question disagree — and the proxy wins silently, which is the property that makes it worth replacing rather than watching. <a class="skill-link" href="/tbaguette-skills/skills/designing-ci-pipelines/"><code>designing-ci-pipelines</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/auditing-dependencies/"><code>auditing-dependencies</code></a> carry the consumer half of the same rule.</li></ul>
+<ul><li><strong>Publish a versioned name even where the name consumers actually use is a moving one.</strong> A moving name cannot be referred back to, so an install taken from it three weeks ago has no identity and nothing can reconstruct what it received. Publishing the immutable name alongside it costs one upload, changes nothing for consumers who want the convenience, and is the entire difference between a population you can count afterwards and one you cannot.</li><li><strong>Where the channel can compare digests, let it.</strong> Version comparison is a proxy for <em>are these the same bytes</em>, adopted because it is cheap. This section is what happens on the days the proxy and the question disagree — and the proxy wins silently, which is the property that makes it worth replacing rather than watching. <a class="skill-link" href="/skills/designing-ci-pipelines/"><code>designing-ci-pipelines</code></a> and <a class="skill-link" href="/skills/auditing-dependencies/"><code>auditing-dependencies</code></a> carry the consumer half of the same rule.</li></ul>
 <p>If it has already happened, the remedy is not to correct the record but to end the ambiguity: publish the rebuilt artifact under a new version, so that every consumer converges on bytes something can name. The existing split does not heal — it is simply capped, and the population that took the reused version stays unidentifiable for as long as it runs.</p>
 <h2 id="isolation-layers-weakest-to-strongest">Isolation layers, weakest to strongest</h2>
 <table><thead><tr><th>Layer</th><th>Pins</th><th>Leaves open</th><th>Buy it when</th></tr></thead><tbody><tr><td>Documented steps</td><td>nothing</td><td>everything</td><td>never; it is the baseline being replaced</td></tr><tr><td>Version manager</td><td>language runtime and its direct tools</td><td>system libraries, OS, other toolchains, env</td><td>laptops drift on runtime version</td></tr><tr><td>Container pinned by digest</td><td>OS, system packages, every installed tool</td><td>build-time network, clock, host env and mounts passed in</td><td>&quot;missing library on the new machine&quot;</td></tr><tr><td>Hermetic sandboxed build</td><td>every declared input; undeclared ones become errors</td><td>non-determinism inside the tools themselves</td><td>two builds of one commit differ, and that matters</td></tr></tbody></table>
 <p>Choose by the failure you actually have, not by prestige. A container referenced by a mutable tag, or one that runs a package-manager update during the build, has bought you a slower build and no pinning at all — the pin is the digest and the frozen package set, never the tag.</p>
 <h2 id="a-check-that-launches-the-real-artifact-inherits-the-real-environment">A check that launches the real artifact inherits the real environment</h2>
-<p>Isolation gets applied to the build and to the test suite, then quietly skipped for the one command that runs the actual artifact — because that command <em>is</em> the verification, and wrapping it feels like weakening the thing being proved. It is the opposite: an application resolves its data directory, profile, credentials and state through environment variables with a home-directory fallback, so a check that sets no environment opens the operator's real store on every run it has ever had. <a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a> covers why an invocation is an execution and what to isolate it in; this is what to check <strong>afterwards</strong>, because the obvious check is wrong twice over.</p>
+<p>Isolation gets applied to the build and to the test suite, then quietly skipped for the one command that runs the actual artifact — because that command <em>is</em> the verification, and wrapping it feels like weakening the thing being proved. It is the opposite: an application resolves its data directory, profile, credentials and state through environment variables with a home-directory fallback, so a check that sets no environment opens the operator's real store on every run it has ever had. <a class="skill-link" href="/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a> covers why an invocation is an execution and what to isolate it in; this is what to check <strong>afterwards</strong>, because the obvious check is wrong twice over.</p>
 <p>Point every variable the artifact reads at a scratch directory, unset the fallbacks, and then assert two things rather than one — each catches exactly what the other cannot:</p>
 <ul><li><strong>A negative check, aimed at the right files.</strong> &quot;The real store was not modified&quot; gets written as an mtime comparison on the main database file, and a short run leaves that file byte-identical while putting half a megabyte into its write-ahead journal. Compare mtime <em>and</em> size, across the primary file <em>and</em> its sidecars. The obvious check passes while the application writes freely.</li><li><strong>A positive check that the run got far enough to matter.</strong> A launch that died in its first second, never reached its storage layer and exited satisfies every &quot;nothing was touched&quot; assertion by touching nothing. Assert that a store <em>was</em> created under the scratch directory. Without it, your strongest evidence is indistinguishable from the binary failing to start.</li></ul>
 <h2 id="verify-rather-than-assume">Verify rather than assume</h2>
@@ -106,38 +106,38 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;Works on my machine&quot;</td><td>an input was consumed but not declared — usually a system package or an env var</td></tr><tr><td>Build broke and nothing changed</td><td>something unpinned moved upstream; the commit was never the whole input</td></tr><tr><td>CI green, laptop red</td><td>CI starts clean; the laptop carries years of accumulated state</td></tr><tr><td>Containerized and still not reproducible</td><td>mutable base tag, or a package update running inside the build</td></tr><tr><td>Two builds of one commit differ</td><td>embedded timestamps, absolute paths, or unsorted iteration order</td></tr><tr><td>A year-old tag no longer builds</td><td>the build fetched from the network and the network moved on</td></tr><tr><td>Lockfile committed, versions still drift</td><td>the install command is allowed to update it and CI never runs frozen</td></tr><tr><td>Fails only overnight or on one continent</td><td>unpinned timezone or locale</td></tr><tr><td>Onboarding takes days</td><td>setup lives in prose that has never been executed</td></tr><tr><td>A rebuild fails on a missing file you wrote</td><td>the script that reproduced the step lived in a scratch directory, and the scratch directory did its job</td></tr><tr><td>The verification step's own runs show up in the production audit trail</td><td>The check launched the real artifact with no environment set, so it resolved the operator's real profile through the home-directory fallback</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It only runs for a few seconds, it cannot have written anything.&quot; — a write-ahead journal fills in the first second, and the main file's mtime never moves.</li><li>&quot;Nothing was modified, so the isolation worked.&quot; — also true of a binary that failed to start.</li><li>&quot;Just install the latest version&quot; as a setup instruction</li><li>&quot;We'll pin it later&quot; — the pin costs minutes now and an archaeology session later</li><li>Any build input named <code>latest</code>, <code>stable</code>, <code>main</code>, or an unversioned download URL</li><li>A build step that refreshes a package index or upgrades system packages</li><li>Claiming reproducibility that has never been measured by rebuilding and comparing</li><li>The fix for a broken build was to delete a cache or regenerate the lockfile without reading the diff</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/portable-shell-scripting/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/portable-shell-scripting/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← portable-shell-scripting</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/designing-ci-pipelines/">
+<a class="prevnext__link prevnext__link--next" href="/skills/designing-ci-pipelines/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">designing-ci-pipelines →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Environment and tooling</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/portable-shell-scripting/">
+<li><a class="see-also__link" href="/skills/portable-shell-scripting/">
       <span class="see-also__name">portable-shell-scripting</span>
       <span class="see-also__summary">Use when writing or reviewing a shell script, when a script works in one shell but fails in another…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/designing-ci-pipelines/">
+<li><a class="see-also__link" href="/skills/designing-ci-pipelines/">
       <span class="see-also__name">designing-ci-pipelines</span>
       <span class="see-also__summary">Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/upgrading-dependencies/">
+<li><a class="see-also__link" href="/skills/upgrading-dependencies/">
       <span class="see-also__name">upgrading-dependencies</span>
       <span class="see-also__summary">Use when dependency versions have fallen behind, when a security advisory names a package in use…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/keeping-tbaguette-current/">
+<li><a class="see-also__link" href="/skills/keeping-tbaguette-current/">
       <span class="see-also__name">keeping-tbaguette-current</span>
       <span class="see-also__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/tending-tbaguette/">
+<li><a class="see-also__link" href="/skills/tending-tbaguette/">
       <span class="see-also__name">tending-tbaguette</span>
       <span class="see-also__summary">Use at the start of every conversation, in any project or repo…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/automating-repetition/">
+<li><a class="see-also__link" href="/skills/automating-repetition/">
       <span class="see-also__name">automating-repetition</span>
       <span class="see-also__summary">Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating…</span>
     </a></li>
@@ -148,27 +148,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

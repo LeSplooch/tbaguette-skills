@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="schema-evolution — Designing systems — TBaguette’s Atelier">
 <meta property="og:description" content="Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema…">
-<link rel="canonical" href="/tbaguette-skills/skills/schema-evolution/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/schema-evolution/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#designing-systems">Designing systems</a>
+  <a href="/#designing-systems">Designing systems</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">schema-evolution</span>
 </nav>
@@ -71,7 +71,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Once a contract is in production you no longer own both sides of it. Every change must be safe for readers you cannot redeploy and for data written by writers you cannot recall. The question is never &quot;is this change correct&quot; but &quot;is this change correct while both versions are running, and again while rolling back.&quot;</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Adding, removing, renaming, retyping, or re-scoping a field in anything persisted or transmitted</li><li>A rolling deploy produces deserialization errors, unknown-field rejections, or missing-column failures</li><li>Adding a value to an enum, status, or any other closed set</li><li>Old messages sit in a queue or a log and will be read by new code, possibly weeks later</li><li>Planning an API or payload version bump, or being asked whether one is needed</li><li>Not for: moving or rewriting the data that already exists — that is <a class="skill-link" href="/tbaguette-skills/skills/data-migrations/"><code>data-migrations</code></a>, a separate discipline with its own failure modes that follows the order this skill sets</li><li>Not for: designing a new interface that has no deployed callers yet — that is <a class="skill-link" href="/tbaguette-skills/skills/designing-apis/"><code>designing-apis</code></a>; this skill starts once a contract has callers you can no longer redeploy</li></ul>
+<ul><li>Adding, removing, renaming, retyping, or re-scoping a field in anything persisted or transmitted</li><li>A rolling deploy produces deserialization errors, unknown-field rejections, or missing-column failures</li><li>Adding a value to an enum, status, or any other closed set</li><li>Old messages sit in a queue or a log and will be read by new code, possibly weeks later</li><li>Planning an API or payload version bump, or being asked whether one is needed</li><li>Not for: moving or rewriting the data that already exists — that is <a class="skill-link" href="/skills/data-migrations/"><code>data-migrations</code></a>, a separate discipline with its own failure modes that follows the order this skill sets</li><li>Not for: designing a new interface that has no deployed callers yet — that is <a class="skill-link" href="/skills/designing-apis/"><code>designing-apis</code></a>; this skill starts once a contract has callers you can no longer redeploy</li></ul>
 <h2 id="backward-and-forward-compatibility">Backward and forward compatibility</h2>
 <table><thead><tr><th>Term</th><th>Definition</th><th>Broken by</th></tr></thead><tbody><tr><td>Backward compatible</td><td>New code reads old data</td><td>Requiring a field that old writers never produced</td></tr><tr><td>Forward compatible</td><td>Old code reads new data</td><td>Removing or repurposing a field old readers still use; strict readers that reject unknown fields</td></tr></tbody></table>
 <p>A rolling deploy needs both at the same time, because both versions run concurrently for the length of the rollout, and every message or row written during that window is read by whichever version happens to pick it up. A rollback needs forward compatibility specifically: the older binary you are rolling back to must survive data the newer one already wrote. This is the case teams skip, and it is why &quot;the deploy went fine&quot; and &quot;the rollback corrupted things&quot; are the same incident.</p>
@@ -100,71 +100,71 @@
 <p><strong>Then check what fills the field when it is absent</strong>, because the guard is worth no more than the value it reads. A version field with no explicit per-field default, in a format that fills missing fields from a whole-record default, reports <em>the version of the build doing the reading</em>. Every unversioned legacy row then claims to be current and sails through the check written to catch it. This is the reader-side default of the section above at its worst: invisible while the constant is still 1, and it converts the guard into a rubber stamp on the day the constant becomes 2 — the first day it was ever needed. The version is the field where the section above's rule is least optional: keep the absence, so a row that never declared a version stays distinguishable from one that declared the current one.</p>
 <h2 id="reserve-what-you-remove">Reserve what you remove</h2>
 <p>When a field, column, tag number, or enum ordinal is removed, mark the identifier reserved in the schema and never reuse it. Reuse is a silent data-corruption bug: archived rows, replayed messages, and old backups still carry the old identifier, and a new field wearing the same identifier decodes that data into the wrong meaning with no error. This applies to positional tag numbers, column names in stores that resolve by name, enum ordinals in formats that serialize the integer, and API field names any client may still send. Keep the reservation in the schema file, next to the live fields, where the next person will see it.</p>
-<p>Where a column can be written by more than one kind of source, the provenance is part of the contract and needs its own field rather than a shared one — <a class="skill-link" href="/tbaguette-skills/skills/tracking-data-provenance/"><code>tracking-data-provenance</code></a>.</p>
+<p>Where a column can be written by more than one kind of source, the provenance is part of the contract and needs its own field rather than a shared one — <a class="skill-link" href="/skills/tracking-data-provenance/"><code>tracking-data-provenance</code></a>.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Rollback breaks, forward deploy was clean</td><td>Forward compatibility never tested; old code cannot read new data</td></tr><tr><td>Errors only during the rollout window, then clean</td><td>Two versions ran simultaneously and only one direction was safe</td></tr><tr><td>A field is zero or empty for old records and nobody knows if that is real</td><td>Reader-side default erased the difference between absent and set</td></tr><tr><td>Consumer crashes weeks after a change</td><td>A replayed or long-retained message carried the old shape</td></tr><tr><td>Data decodes into the wrong field with no error</td><td>A removed identifier was reused</td></tr><tr><td>An enum value causes a crash in a downstream service</td><td>Readers had no unknown branch when the value was added</td></tr><tr><td>Off-by-1000 or off-by-hours arithmetic</td><td>Units or timezone semantics changed under an unchanged field name</td></tr><tr><td>The change cannot be applied to the existing store at all</td><td>The field was added as required with no default, over records that predate it</td></tr><tr><td>A version guard passes and the value it admitted is corrupt anyway</td><td>The guard was an inequality over a counter that moves when meanings change, so it waved old rows through</td></tr><tr><td>A version check has never rejected anything</td><td>The version field is reader-defaulted, so every unversioned row reports the current build's number</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Nobody uses that field&quot; without a query, log, or metric proving it</li><li>Add and remove in the same pull request, or steps 4 through 6 in one deploy</li><li>&quot;We will deploy both services at the same time&quot;</li><li>Reusing an identifier because it is free</li><li>Repurposing an existing field because it happens to be unused</li><li>A schema change with no plan for data already written in the old shape</li><li>Treating the strictness of a validator as a substitute for reader tolerance</li><li>A <code>&lt;=</code> against a version constant whose documented rule is that it moves when a field's meaning changes</li><li>A version field that inherits a whole-record default instead of being absent when it was never written</li><li>A save path that rebuilds the whole record out of the fields the caller happens to know about</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/caching-strategy/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/caching-strategy/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← caching-strategy</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/data-migrations/">
+<a class="prevnext__link prevnext__link--next" href="/skills/data-migrations/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">data-migrations →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Designing systems</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/designing-apis/">
+<li><a class="see-also__link" href="/skills/designing-apis/">
       <span class="see-also__name">designing-apis</span>
       <span class="see-also__summary">Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/modeling-errors/">
+<li><a class="see-also__link" href="/skills/modeling-errors/">
       <span class="see-also__name">modeling-errors</span>
       <span class="see-also__summary">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/designing-for-idempotency/">
+<li><a class="see-also__link" href="/skills/designing-for-idempotency/">
       <span class="see-also__name">designing-for-idempotency</span>
       <span class="see-also__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/choosing-concurrency-model/">
+<li><a class="see-also__link" href="/skills/choosing-concurrency-model/">
       <span class="see-also__name">choosing-concurrency-model</span>
       <span class="see-also__summary">Use when work must happen at the same time and the approach is undecided — OS threads, async or event loops, actors and message passing…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/modeling-state-machines/">
+<li><a class="see-also__link" href="/skills/modeling-state-machines/">
       <span class="see-also__name">modeling-state-machines</span>
       <span class="see-also__summary">Use when something has a lifecycle — order, job, connection, upload, session, subscription, device…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/drawing-boundaries/">
+<li><a class="see-also__link" href="/skills/drawing-boundaries/">
       <span class="see-also__name">drawing-boundaries</span>
       <span class="see-also__summary">Use when deciding what belongs together — module, package, crate, library, process…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/caching-strategy/">
+<li><a class="see-also__link" href="/skills/caching-strategy/">
       <span class="see-also__name">caching-strategy</span>
       <span class="see-also__summary">Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/data-migrations/">
+<li><a class="see-also__link" href="/skills/data-migrations/">
       <span class="see-also__name">data-migrations</span>
       <span class="see-also__summary">Use when backfilling, transforming, re-encoding, or relocating data that already exists at a size too large for one transaction…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/configuration-management/">
+<li><a class="see-also__link" href="/skills/configuration-management/">
       <span class="see-also__name">configuration-management</span>
       <span class="see-also__summary">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/instrumenting-for-observability/">
+<li><a class="see-also__link" href="/skills/instrumenting-for-observability/">
       <span class="see-also__name">instrumenting-for-observability</span>
       <span class="see-also__summary">Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">
+<li><a class="see-also__link" href="/skills/rate-limiting-and-backpressure/">
       <span class="see-also__name">rate-limiting-and-backpressure</span>
       <span class="see-also__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/tracking-data-provenance/">
+<li><a class="see-also__link" href="/skills/tracking-data-provenance/">
       <span class="see-also__name">tracking-data-provenance</span>
       <span class="see-also__summary">Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/keeping-copies-in-sync/">
+<li><a class="see-also__link" href="/skills/keeping-copies-in-sync/">
       <span class="see-also__name">keeping-copies-in-sync</span>
       <span class="see-also__summary">Use when the same fact — a version number, a constant, a policy document, a generated file, a lockfile entry…</span>
     </a></li>
@@ -175,27 +175,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

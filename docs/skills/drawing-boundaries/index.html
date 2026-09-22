@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="drawing-boundaries — Designing systems — TBaguette’s Atelier">
 <meta property="og:description" content="Use when deciding what belongs together — module, package, crate, library, process…">
-<link rel="canonical" href="/tbaguette-skills/skills/drawing-boundaries/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/drawing-boundaries/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#designing-systems">Designing systems</a>
+  <a href="/#designing-systems">Designing systems</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">drawing-boundaries</span>
 </nav>
@@ -71,7 +71,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A boundary is a promise that two sides can change independently. If they cannot, you paid indirection, serialization, versioning, and cross-boundary debugging and got nothing back.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Deciding module, package, crate, library, or service splits; extracting a component; merging two that never move apart.</li><li>Wrapping a vendor SDK, or reviewing a wrapper that mirrors the vendor exactly.</li><li>Symptoms: every feature touches five modules, circular imports, a <code>common</code> module everyone depends on and nobody owns, deploys that must be ordered, a change needing three coordinated repos.</li><li>Not for: the shape of the interface once the boundary exists (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/designing-apis/">designing-apis</a>), or measuring what currently depends on what (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/mapping-dependencies/">mapping-dependencies</a>).</li></ul>
+<ul><li>Deciding module, package, crate, library, or service splits; extracting a component; merging two that never move apart.</li><li>Wrapping a vendor SDK, or reviewing a wrapper that mirrors the vendor exactly.</li><li>Symptoms: every feature touches five modules, circular imports, a <code>common</code> module everyone depends on and nobody owns, deploys that must be ordered, a change needing three coordinated repos.</li><li>Not for: the shape of the interface once the boundary exists (<a class="skill-link skill-link--bare" href="/skills/designing-apis/">designing-apis</a>), or measuring what currently depends on what (<a class="skill-link skill-link--bare" href="/skills/mapping-dependencies/">mapping-dependencies</a>).</li></ul>
 <h2 id="the-criteria">The criteria</h2>
 <ul><li><strong>Cohesion:</strong> things that change together live together. <strong>Coupling:</strong> what a change on one side forces on the other. Both are measurable from history, not intuition — ask which files appear in the same commit, how often. Files that co-change in more than ~60–70% of their commits belong together regardless of which technical layer they were filed under. This is the most useful and least used input to a module structure.</li><li>Boundaries follow <strong>change frequency and ownership</strong>. Two things with different release cadences, different reviewers, or different risk appetites want a boundary between them. Two that always ship together do not, however different their technology.</li><li><strong>The classic mistake is splitting by tier or by noun</strong> — <code>models/</code>, <code>controllers/</code>, <code>services/</code>, or one service per entity in an ER diagram. Layer splits guarantee every feature crosses every module, which is precisely what a boundary exists to prevent. Split by capability (checkout, pairing, billing, ingest) and let each own its own storage, types, and layers internally.</li><li><strong>The test:</strong> name the next three plausible changes and count the boundaries each crosses. A good structure keeps most changes inside one. A median of four or more means the boundaries are in the wrong places, and no amount of interface polish will fix it.</li><li>A boundary needs an owner who can say no. A boundary nobody owns drifts into a shared utility bucket within two quarters.</li></ul>
 <h2 id="dependency-direction">Dependency direction</h2>
@@ -87,75 +87,75 @@
 <p>The same inversion hides in every knob stated per-module rather than per-path:</p>
 <table><thead><tr><th>Knob</th><th>The per-module statement</th><th>What the composition actually does</th></tr></thead><tbody><tr><td>Retries</td><td>&quot;we retry three times&quot; at two layers</td><td>Nine attempts, and a thundering herd nobody designed</td></tr><tr><td>Timeouts</td><td>Each stage has a sensible one</td><td>An inner timeout longer than the outer one, so the inner never fires</td></tr><tr><td>Rate limits</td><td>Each client is limited</td><td>The aggregate across clients exceeds what the dependency can take</td></tr><tr><td>Caching</td><td>Each layer caches correctly</td><td>Two TTLs in series, and staleness is their sum, not the smaller</td></tr><tr><td>Accept/reject rules</td><td>Each predicate is defensible and independently tested</td><td>Nobody has measured what the chain admits; several correct restrictions compose to admit nothing</td></tr></tbody></table>
 <p>That last row is found latest of the five, because its failure is a silence rather than an incident. Every rule in a chain of decisions — a screen, a filter, a detector, a vote tally, a stop condition — is written by whoever wanted it to fire, so its test cases come from the side its author cared about, and it passes honestly. What no one owns is the <strong>acceptance rate of the composition</strong>. Several individually correct restrictions can compose to admit nothing at all, and there is no defect to find in any of them.</p>
-<p>It survives because an over-strict chain and a genuinely quiet period produce the same empty output stream. <a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a> owns the case where a gate rejects everything because one of its inputs has no source, and its remedy — record which clause rejected, never summing <em>measured and failed</em> with <em>nothing measured</em> — is the right instrument there. This is the harder sibling: every input present, every clause measuring, and the chain still admits nothing. No per-clause accounting reveals that, because each clause is doing exactly what it says.</p>
+<p>It survives because an over-strict chain and a genuinely quiet period produce the same empty output stream. <a class="skill-link" href="/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a> owns the case where a gate rejects everything because one of its inputs has no source, and its remedy — record which clause rejected, never summing <em>measured and failed</em> with <em>nothing measured</em> — is the right instrument there. This is the harder sibling: every input present, every clause measuring, and the chain still admits nothing. No per-clause accounting reveals that, because each clause is doing exactly what it says.</p>
 <p>Two instruments do, and neither is a unit test on a rule. Push a population whose correct verdict you already know independently through the <strong>whole assembled chain</strong>, from outside, and count what comes out against what should have. And pair every assertion that something fires with a control that must <em>not</em> fire — on its own, a passing positive test is equally consistent with a detector that fires on everything. Two tells are worth recognising on sight. A threshold that happens to equal a constant of the thing producing its input — the sampling interval, the buffer size, the retry count, the display precision — is a coincidence rather than a decision, and the first test written against it freezes the coincidence into an invariant. And a condition that has only ever fired on inputs later judged healthy is evidence that it is measuring something other than what it was named for; that is settled by auditing what each historical firing actually was, never by counting the firings.</p>
 <h2 id="when-not-to-split">When not to split</h2>
 <ul><li><strong>The two sides share a transactional invariant.</strong> If correctness requires both to change atomically, they are one unit; splitting buys a saga and a new class of bugs in exchange for a diagram.</li><li>You have fewer than about three real use cases. The abstraction is a guess, and a wrong boundary costs far more than duplication. Duplicate twice, extract on the third.</li><li><strong>The distributed monolith</strong> is the outcome of splitting without decoupling. Diagnose with four questions: can each side be deployed alone, in either order? Does a schema change require a coordinated release? Does one going down make the other useless rather than degraded? Do they share a database? Two yeses and you have one system with network calls inside it — every cost of distribution, none of the independence.</li><li>A shared database between two components is not a boundary; it is a boundary with a hole in it. The schema is the real interface and nobody versioned it or wrote it down.</li><li><strong>Chatty crossings mean the boundary cuts a cohesive operation.</strong> A loop containing a cross-boundary call, or N calls per user action, is a signal to move the loop across the boundary (one coarse call) or move the boundary.</li><li><strong>Merging is a legitimate refactor and badly under-used.</strong> Two modules that always change together and are used by nobody else should be merged, then re-split later along the seam the changes actually revealed.</li></ul>
-<p>Before merging two things that look alike, establish that the resemblance is a shared reason rather than a coincidence — <a class="skill-link" href="/tbaguette-skills/skills/judging-duplication/"><code>judging-duplication</code></a>.</p>
+<p>Before merging two things that look alike, establish that the resemblance is a shared reason rather than a coincidence — <a class="skill-link" href="/skills/judging-duplication/"><code>judging-duplication</code></a>.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Every feature touches every module</td><td>Split by technical layer instead of by capability</td></tr><tr><td>Circular imports between modules</td><td>Boundary in the wrong place, or a missing third concept</td></tr><tr><td><code>shared</code> / <code>common</code> grows without limit</td><td>A boundary with no owner, used as a dumping ground for anything ambiguous</td></tr><tr><td>Components must be deployed in a fixed order</td><td>Distributed monolith; the interface between them is not versioned</td></tr><tr><td>Vendor types appear throughout the core</td><td>Port defined by the vendor's API rather than by your need</td></tr><tr><td>A &quot;port&quot; with 40 methods</td><td>Mirroring the SDK, so nothing is actually abstracted</td></tr><tr><td>A simple change needs three repos and three reviews</td><td>Ownership boundaries and change boundaries do not line up</td></tr><tr><td>Two services share a table</td><td>The schema is the real interface, and it is unversioned</td></tr><tr><td>N+1 calls across a service boundary</td><td>Boundary cuts through a cohesive operation</td></tr><tr><td>An interface with exactly one implementation, forever</td><td>Extracted before a second use case existed</td></tr><tr><td>The expensive stage runs, then a static flag discards its result</td><td>Gate ordering treated as a per-module property; the free gate sits below the costly one</td></tr><tr><td>Every module's timeouts and retries are sensible; the system's are not</td><td>Knobs set per-module for a property that only exists per-path</td></tr><tr><td>An output stream has been empty for weeks and nobody can say whether that is correct</td><td>Nothing measures the chain's acceptance rate, and a strict chain looks exactly like a quiet period</td></tr><tr><td>Every predicate in a chain has a passing test and the chain admits nothing</td><td>Each rule was tested from the side its author wanted; the composition has no owner</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Let's make it a microservice so it's decoupled.&quot;</li><li>&quot;Put it in <code>common</code> for now.&quot;</li><li>&quot;It's cleaner as its own package&quot; — with no second consumer.</li><li>&quot;We just need to coordinate the deploys.&quot;</li><li>&quot;We'll abstract the database in case we switch&quot; — said while copying one vendor's exact method names.</li><li>Any architecture diagram whose top-level boxes are all technical layers.</li><li>Extracting an interface to make something testable when the real problem is that it does too much.</li><li>A cost-ordering or retry rule written down for one stage, with nothing owning it across the stages.</li><li>A filter, screen, or detector whose positive test has no companion that must not fire.</li><li>&quot;It hasn't flagged anything, so there's been nothing to flag.&quot;</li><li>The cheapest possible rejection — a config flag, an entitlement — consulted after the most expensive stage has already run.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/modeling-state-machines/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/modeling-state-machines/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← modeling-state-machines</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/caching-strategy/">
+<a class="prevnext__link prevnext__link--next" href="/skills/caching-strategy/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">caching-strategy →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Designing systems</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/designing-apis/">
+<li><a class="see-also__link" href="/skills/designing-apis/">
       <span class="see-also__name">designing-apis</span>
       <span class="see-also__summary">Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/modeling-errors/">
+<li><a class="see-also__link" href="/skills/modeling-errors/">
       <span class="see-also__name">modeling-errors</span>
       <span class="see-also__summary">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/designing-for-idempotency/">
+<li><a class="see-also__link" href="/skills/designing-for-idempotency/">
       <span class="see-also__name">designing-for-idempotency</span>
       <span class="see-also__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/choosing-concurrency-model/">
+<li><a class="see-also__link" href="/skills/choosing-concurrency-model/">
       <span class="see-also__name">choosing-concurrency-model</span>
       <span class="see-also__summary">Use when work must happen at the same time and the approach is undecided — OS threads, async or event loops, actors and message passing…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/modeling-state-machines/">
+<li><a class="see-also__link" href="/skills/modeling-state-machines/">
       <span class="see-also__name">modeling-state-machines</span>
       <span class="see-also__summary">Use when something has a lifecycle — order, job, connection, upload, session, subscription, device…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/caching-strategy/">
+<li><a class="see-also__link" href="/skills/caching-strategy/">
       <span class="see-also__name">caching-strategy</span>
       <span class="see-also__summary">Use when adding a cache, memo table, CDN layer, or precomputed read path, when users report stale or wrong data after saving a change…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/schema-evolution/">
+<li><a class="see-also__link" href="/skills/schema-evolution/">
       <span class="see-also__name">schema-evolution</span>
       <span class="see-also__summary">Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/data-migrations/">
+<li><a class="see-also__link" href="/skills/data-migrations/">
       <span class="see-also__name">data-migrations</span>
       <span class="see-also__summary">Use when backfilling, transforming, re-encoding, or relocating data that already exists at a size too large for one transaction…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/configuration-management/">
+<li><a class="see-also__link" href="/skills/configuration-management/">
       <span class="see-also__name">configuration-management</span>
       <span class="see-also__summary">Use when adding an environment variable, setting, toggle, or config file entry, when secrets and configuration are tangled together…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/instrumenting-for-observability/">
+<li><a class="see-also__link" href="/skills/instrumenting-for-observability/">
       <span class="see-also__name">instrumenting-for-observability</span>
       <span class="see-also__summary">Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">
+<li><a class="see-also__link" href="/skills/rate-limiting-and-backpressure/">
       <span class="see-also__name">rate-limiting-and-backpressure</span>
       <span class="see-also__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/tracking-data-provenance/">
+<li><a class="see-also__link" href="/skills/tracking-data-provenance/">
       <span class="see-also__name">tracking-data-provenance</span>
       <span class="see-also__summary">Use when a record can be written from more than one kind of source — measured, imported, inferred, user-asserted…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/keeping-copies-in-sync/">
+<li><a class="see-also__link" href="/skills/keeping-copies-in-sync/">
       <span class="see-also__name">keeping-copies-in-sync</span>
       <span class="see-also__summary">Use when the same fact — a version number, a constant, a policy document, a generated file, a lockfile entry…</span>
     </a></li>
@@ -166,27 +166,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

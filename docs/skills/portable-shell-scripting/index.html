@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="portable-shell-scripting — Environment and tooling — TBaguette’s Atelier">
 <meta property="og:description" content="Use when writing or reviewing a shell script, when a script works in one shell but fails in another…">
-<link rel="canonical" href="/tbaguette-skills/skills/portable-shell-scripting/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/portable-shell-scripting/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a>
+  <a href="/#environment-and-tooling">Environment and tooling</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">portable-shell-scripting</span>
 </nav>
@@ -72,7 +72,7 @@
 <p>Shell expands text and then splits and globs the result; quoting is not politeness, it is the mechanism that turns that off. <code>set -e</code> is a seatbelt with documented holes rather than error handling, and the shell you tested in is rarely the shell that will run the script.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Writing a script that runs somewhere you do not control: a CI runner, a container image, a BSD or Alpine host, a colleague's laptop</li><li>A script fails only in CI, only on macOS, or only for one person</li><li>Symptoms: <code>[: too many arguments</code>, <code>unbound variable</code>, <code>bad substitution</code>, a loop whose variables are unchanged afterwards, <code>rm</code> treating a filename as an option</li><li>Auditing a script that outgrew its one-off origin</li></ul>
-<p>Not for: deciding whether the automation should exist at all (<a class="skill-link" href="/tbaguette-skills/skills/automating-repetition/"><code>automating-repetition</code></a>), or pinning the tools it invokes (<a class="skill-link" href="/tbaguette-skills/skills/reproducible-environments/"><code>reproducible-environments</code></a>).</p>
+<p>Not for: deciding whether the automation should exist at all (<a class="skill-link" href="/skills/automating-repetition/"><code>automating-repetition</code></a>), or pinning the tools it invokes (<a class="skill-link" href="/skills/reproducible-environments/"><code>reproducible-environments</code></a>).</p>
 <h2 id="quoting-splitting-globbing">Quoting, splitting, globbing</h2>
 <p>An unquoted expansion is split on <code>IFS</code> (space, tab, newline) and every resulting field is then glob-expanded against the filesystem. Quote every expansion and treat an unquoted one as a deliberate, commented request for splitting.</p>
 <table><thead><tr><th>Form</th><th>Behavior</th></tr></thead><tbody><tr><td><code>&quot;$@&quot;</code></td><td>Each argument stays one word; an empty list expands to nothing. The only correct argument forwarding.</td></tr><tr><td><code>$@</code>, <code>$*</code></td><td>Split and globbed. <code>&quot;$*&quot;</code> joins into one word with the first <code>IFS</code> character.</td></tr><tr><td><code>x=$y</code>, <code>case $y in</code></td><td>The two contexts that never split. Quoting is optional there, and harmless.</td></tr><tr><td><code>[ $x = y ]</code></td><td>A syntax error when <code>$x</code> is empty or contains a space. Write <code>[ &quot;$x&quot; = y ]</code>.</td></tr><tr><td><code>for f in *.log</code></td><td>POSIX leaves the literal <code>*.log</code> when nothing matches; guard with <code>[ -e &quot;$f&quot; ] || continue</code>.</td></tr></tbody></table>
@@ -89,7 +89,7 @@
 <p><code>cmd | head -20</code> reads as a way to shorten <em>output</em>. It is also a way to shorten <code>cmd</code>. When <code>head</code> has taken its twenty lines it exits, the pipe's read end closes, and the next write from <code>cmd</code> raises <code>SIGPIPE</code> — which by default terminates it. The same happens with <code>sed 3q</code>, a pager the reader quits, a <code>grep -q</code> that has found its match, and any consumer that stops early by design.</p>
 <p>For a command that only prints, that is the intended behaviour and costs nothing. The damage is that <strong>the shell draws no distinction between a command that prints and a command that acts</strong>, so the identical idiom applied to something that mutates state truncates the <em>work</em>, wherever it had got to. A tool that mutates in stages and writes its bookkeeping at the end can be killed in between, leaving a result its own cleanup and resume paths do not recognise — the recovery command reports nothing to recover while the wreckage sits in plain sight, reading as ordinary mess. The class is wide: a package manager mid-transaction, an archiver mid-extract, a formatter rewriting in place, a version-control operation that stages many paths and then writes one reference.</p>
 <p>How visible this is depends entirely on settings made elsewhere in the script, which is why it is worth knowing rather than guessing. A bare pipeline reports only its <strong>last</strong> stage, so the status is the reader's <code>0</code> and nothing anywhere says the writer died. With <code>pipefail</code> the pipeline reports <code>141</code> — <code>128 + SIGPIPE</code> — and in shells that have <code>PIPESTATUS</code> / <code>pipestatus</code> the per-stage array names which stage it was. So the failure is detectable exactly where the <code>set -eu</code> section above has already been followed, and silent everywhere else: in a one-off command typed at a prompt, inside <code>$(…)</code>, in a <code>sh</code> script with no <code>pipefail</code> available, or under any caller that reads only the final status.</p>
-<p>Two rules, and neither depends on remembering the arithmetic. <strong>Never pipe a state-changing command into a reader that stops early</strong> — <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/crouton/"><code>crouton</code></a> both already say to redirect a long run to a file and search the file, and that advice keeps the writer alive as a side effect, which is the more important half here. And when a mutating command's output looks truncated, check the pipeline's per-stage status rather than <code>$?</code>, then ask the tool what state it thinks it is in — and be ready for the answer that it thinks nothing happened.</p>
+<p>Two rules, and neither depends on remembering the arithmetic. <strong>Never pipe a state-changing command into a reader that stops early</strong> — <a class="skill-link" href="/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> and <a class="skill-link" href="/skills/crouton/"><code>crouton</code></a> both already say to redirect a long run to a file and search the file, and that advice keeps the writer alive as a side effect, which is the more important half here. And when a mutating command's output looks truncated, check the pipeline's per-stage status rather than <code>$?</code>, then ask the tool what state it thinks it is in — and be ready for the answer that it thinks nothing happened.</p>
 <h2 id="hostile-filenames-and-safe-iteration">Hostile filenames and safe iteration</h2>
 <p>Only <code>/</code> and NUL cannot appear in a filename. Newlines, leading dashes, quotes, glob characters, and non-UTF-8 bytes are all legal and all occur in the wild.</p>
 <ul><li><code>for f in *</code> and <code>for f in dir/*</code> are safe — globs do not word-split. Prefer them to everything below.</li><li>Never parse <code>ls</code>. Its output is ambiguous by construction and it silently substitutes non-printing bytes when stdout is not a terminal.</li><li>For recursion, <code>find … -exec cmd {} +</code> is POSIX. <code>-print0 | xargs -0</code> is a GNU/BSD extension: fine when you require those, not portable.</li><li>Reading a list: <code>while IFS= read -r line</code>. <code>IFS=</code> stops whitespace trimming, <code>-r</code> stops backslash mangling, and neither is the default.</li><li>A leading dash is an option: use <code>rm -- &quot;$f&quot;</code> or <code>rm &quot;./$f&quot;</code>.</li><li>Sorting and case folding follow the locale. Set <code>LC_ALL=C</code> when you need byte order or ASCII rules.</li></ul>
@@ -117,7 +117,7 @@ trap 'cleanup; exit 143' TERM HUP</code></pre>
 <p><code>pkill -f</code> and <code>pgrep -f</code> match against a process's <em>entire</em> command line, not just its name — every argument, every embedded string, whatever ends up in argv. That's most dangerous when the caller and the target share a harness — an <code>eval</code>, a heredoc, a wrapper script — because the same substring that identifies the target then also shows up in the caller's own command line. The bullets below are about killing by pattern; waiting on one fails through the same mechanism in the opposite direction, and is covered after them.</p>
 <ul><li>Prefer a saved PID over pattern matching: write <code>$!</code> to a file right after starting the background process, then <code>kill &quot;$(cat &quot;$pidfile&quot;)&quot;</code> to stop it later. No pattern, no risk of matching something else.</li><li>If <code>-f</code> is unavoidable, check what it would hit before running it. <code>pgrep -f 'pattern'</code> lists the matching PIDs; <code>ps -o pid,args= -p &lt;pids&gt;</code> shows their exact command lines, including, potentially, the shell about to run the <code>pkill</code>. (GNU <code>pgrep -a</code> does both in one step; it's a procps extension, not available on BSD/macOS <code>pgrep</code>.)</li><li>Anchor the pattern on something only the target has — a unique flag, a full path — not a bare project or script name.</li><li>A precise pattern is still not a private one. Anchoring narrows the match to one program; it does not narrow it to <em>your copy</em> of that program. The process table is a single machine-wide namespace, shared with the user's editor, window manager, and browser, and with any other agent session running the same tooling — so a pattern can be exactly right and still name a process you did not start. Defeating self-match — the <code>'[p]attern'</code> bracket trick, a tighter anchor — closes that direction and leaves this one wide open, so on a shared or desktop machine assume a pattern naming a common binary also matches a stranger's copy of it. The saved PID above is the only handle that cannot.</li><li>The most common way this hazard reaches you is a single <code>pkill -f</code>/<code>kill</code> typed straight into a tool call rather than saved in a script — and the framing &quot;am I writing a script&quot; is exactly why it slips past review: nothing about composing one inline command reads as scripting. If the pattern happens to be a substring of the invoking shell's own command line, the kill takes that shell down mid-call, and the tell is distinctive: every subsequent call in that shell context returns a nonstandard exit code with <strong>no output at all</strong> — not an error message, not a partial result, just silence, because the interpreter died before it could write anything. That symptom looks like a mysterious tool failure and costs several calls to recognize unless you know to read total silence right after a pattern-based kill as the kill having caught its own caller.</li><li>Never put the cleanup and the relaunch in one command. <code>pkill -f foo; start foo &amp;</code> reads as stop-then-start and is not: by the time the pattern is evaluated the replacement can already be in the process table, so the kill takes the process it was run to make room for. The symptom is the reason this one costs so much — the job reports starting and then produces nothing, which reads as the job failing rather than as the cleanup having killed it, and every subsequent minute is spent debugging the wrong process. Kill, confirm the target is gone, then start.</li><li><code>pkill</code> without <code>-f</code> matches only the process's short kernel-tracked name (<code>comm</code>), which is immune to <code>argv[0]</code> spoofing but not to how the target was launched: for a script run directly (<code>./script.sh</code>), <code>comm</code> is the script's own basename, narrow enough to target; for a script run through an explicit interpreter (<code>bash script.sh</code>), <code>comm</code> is the <em>interpreter's</em> name, which matches every other script running under that interpreter too.</li></ul>
 <p>The same match used as a <em>wait condition</em> fails in the opposite direction, and is much easier to miss. <code>until ! pgrep -f foo; do sleep 20; done</code> never exits: the waiting shell's own command line contains the pattern, so the loop is waiting for itself to stop existing. Nothing is killed and nothing errors, so the shape reads as correct and gets written again — what a later observer finds is several loops that will never exit and that, from the process table, look exactly like several concurrent copies of the job. A kill that matches wrong is loud and gets debugged in the minute it happens; a wait that matches wrong is silent and accumulates for hours.</p>
-<p>The fix is not a better pattern. Wait on the thing you actually care about: the artifact the job writes, a file it touches on completion, or — when this shell started the job — its own exit status, via <code>cmd &amp; pid=$!</code> then <code>wait &quot;$pid&quot;</code>, which is POSIX and reports the job's own status. A completion file has to be removed before the job starts, or the previous run's copy satisfies the wait instantly. Whatever the condition, bound the loop with a counter, since <code>timeout</code> is not POSIX, and fail with a message naming what it waited for — so a wait that is wrong anyway gives up in minutes rather than at whatever hour someone happens to look. (<a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> has the general form: poll the real condition, never a proxy, always with a bound.)</p>
+<p>The fix is not a better pattern. Wait on the thing you actually care about: the artifact the job writes, a file it touches on completion, or — when this shell started the job — its own exit status, via <code>cmd &amp; pid=$!</code> then <code>wait &quot;$pid&quot;</code>, which is POSIX and reports the job's own status. A completion file has to be removed before the job starts, or the previous run's copy satisfies the wait instantly. Whatever the condition, bound the loop with a counter, since <code>timeout</code> is not POSIX, and fail with a message naming what it waited for — so a wait that is wrong anyway gives up in minutes rather than at whatever hour someone happens to look. (<a class="skill-link" href="/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> has the general form: poll the real condition, never a proxy, always with a bound.)</p>
 <p>The quietest form is the same match asked <em>once</em>, as a question: <code>if pgrep -f foo; then echo still running; else restart; fi</code>. The loop above at least leaves something to find — several processes that never exit. A single query leaves nothing. The shell asking carries the pattern in its own argv, <code>pgrep</code> answers yes, the restart is skipped, and the thing under test stays dead while every later step — a capture, a probe, a verification round — runs against a process that is not there. Nothing dies, nothing hangs, no line says anything went wrong, and the false <em>alive</em> is indistinguishable from a true one until something downstream fails for a reason nobody connects to a liveness check that passed. In one project this bit three times in a week — twice as a kill, once as this — and the check that passed cost a full verification round against a dead process. Ask liveness by handle, never by pattern: <code>kill -0 &quot;$pid&quot;</code> against the saved PID is POSIX and answers for exactly that process. Where no PID was saved, <code>pgrep -x</code> matches the kernel's short name only, which an asking shell's argv cannot contain, with the same interpreter caveat <code>pkill</code> without <code>-f</code> carries above. And the trap does not need a script to spring: an inline <code>pgrep -f</code> typed into a tool call is a shell whose argv contains the pattern, whether or not anyone called it a script.</p>
 <h2 id="same-name-different-tool">Same name, different tool</h2>
 <p>The usual GNU-versus-BSD casualties: <code>sed -i</code> (BSD requires an argument, GNU forbids one), <code>readlink -f</code>, <code>date -d</code> versus <code>date -v</code>, <code>stat -c</code> versus <code>stat -f</code>, <code>grep -P</code>, <code>find -printf</code>, <code>xargs -r</code>, <code>sort -h</code>, <code>head -n -1</code>, <code>seq</code>, <code>tac</code>. <code>awk</code> splits three ways (gawk, mawk, busybox); the POSIX awk subset avoids nearly all of it.</p>
@@ -126,34 +126,34 @@ trap 'cleanup; exit 143' TERM HUP</code></pre>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Works locally, <code>bad substitution</code> in CI</td><td>bash syntax under a <code>#!/bin/sh</code> shebang; CI's <code>sh</code> is dash</td></tr><tr><td>Script continues past an obvious failure</td><td>an errexit exemption — the failure sat in a function called from <code>if</code>, or upstream of a pipe</td></tr><tr><td>Counter is 0 after a <code>while read</code> loop</td><td>the loop body ran in a subshell on the right-hand side of a pipe</td></tr><tr><td>Loop runs once with a literal <code>*.txt</code></td><td>the glob matched nothing and POSIX left the pattern unexpanded</td></tr><tr><td><code>[: too many arguments</code></td><td>an unquoted variable that was empty or contained spaces inside <code>[ ]</code></td></tr><tr><td>Cleanup deleted the wrong tree</td><td>unquoted path, or an unset variable expanding to nothing with no <code>set -u</code></td></tr><tr><td>Trailing newlines missing from captured output</td><td><code>$(…)</code> strips every trailing newline; append a sentinel and remove it</td></tr><tr><td>Fails on exactly one machine</td><td>GNU versus BSD flags for <code>sed</code>, <code>date</code>, <code>readlink</code>, or <code>stat</code></td></tr><tr><td><code>pkill -f</code> killed the calling shell, not the target</td><td>the pattern also matched the shell's own wrapped or eval'd command line, not just the target's argv</td></tr><tr><td>Every call after an inline <code>pkill -f</code>/<code>kill</code> returns a nonstandard exit code with zero output</td><td>that one call killed the shell it ran in; nothing wrote anything because the interpreter died first</td></tr><tr><td>A restarted background job reports starting, then does nothing</td><td>cleanup and relaunch ran in one command; the pattern matched the replacement, which was already in the process table</td></tr><tr><td>A <code>pgrep -f</code> wait loop never finishes, and there are now several of them</td><td>the pattern matched the waiting shell itself, so each loop waits for its own exit</td></tr><tr><td>A restart was skipped because the job was &quot;still running&quot;; it was dead</td><td>a one-shot <code>pgrep -f</code> liveness check matched the asking shell's own command line and answered yes</td></tr><tr><td>A <code>pkill</code> aimed at the script's job took down one of the user's</td><td>the pattern named a program, not an instance; every copy on the machine matched</td></tr><tr><td>A file &quot;does not exist&quot; and then plainly does</td><td>A <code>cd</code> in an earlier command re-rooted every relative path after it</td></tr><tr><td>A file was written successfully, into the wrong tree</td><td>A <code>cd</code> failed or fell through to a fallback, and the relative write resolved against a root nobody chose</td></tr><tr><td>A tool reports nothing to recover from damage that is plainly there</td><td>It was killed by <code>SIGPIPE</code> before writing its own bookkeeping, because its output was piped into a reader that stopped early</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>A command that changes state, piped into <code>head</code>, <code>tail</code>, a pager, or <code>grep -q</code>.</li><li>&quot;It works on my machine&quot; about anything carrying a <code>#!/bin/sh</code> shebang</li><li>Reaching for <code>ls | while read</code>, <code>for f in $(find …)</code>, or <code>eval</code> on a constructed string</li><li>A second level of quoting inside <code>ssh</code>, <code>sudo sh -c</code>, or a generated command line</li><li>Adding <code>|| true</code> to silence a failure rather than to declare it non-fatal</li><li>The script now holds arrays of records, parses JSON or CSV with <code>sed</code>, retries with backoff, or passes 200 lines — it has outgrown shell and should become a program in a language with data structures and a test runner</li><li><code>pkill -f</code> or <code>pgrep -f</code> run with a pattern nobody checked against every process it could match — the caller's own, and the user's</li><li>A loop that waits for a process matching a string to disappear — the shell running the loop matches the string too</li><li>A yes-or-no &quot;is it still running&quot; answered by <code>pgrep -f</code>, from a shell whose own command line carries the pattern — including a one-liner in a tool call</li><li>A negative result from a relative path — nothing found, no such file — trusted without checking <code>pwd</code> first</li><li>A <code>cd</code> whose failure is silenced or absorbed by a <code>||</code> fallback, with anything that writes after it</li><li>A relative-path write checked by reading back the same relative path — that confirms the write and never the place</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/reproducible-environments/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/skills/reproducible-environments/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">reproducible-environments →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Environment and tooling</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/reproducible-environments/">
+<li><a class="see-also__link" href="/skills/reproducible-environments/">
       <span class="see-also__name">reproducible-environments</span>
       <span class="see-also__summary">Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/designing-ci-pipelines/">
+<li><a class="see-also__link" href="/skills/designing-ci-pipelines/">
       <span class="see-also__name">designing-ci-pipelines</span>
       <span class="see-also__summary">Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/upgrading-dependencies/">
+<li><a class="see-also__link" href="/skills/upgrading-dependencies/">
       <span class="see-also__name">upgrading-dependencies</span>
       <span class="see-also__summary">Use when dependency versions have fallen behind, when a security advisory names a package in use…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/keeping-tbaguette-current/">
+<li><a class="see-also__link" href="/skills/keeping-tbaguette-current/">
       <span class="see-also__name">keeping-tbaguette-current</span>
       <span class="see-also__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/tending-tbaguette/">
+<li><a class="see-also__link" href="/skills/tending-tbaguette/">
       <span class="see-also__name">tending-tbaguette</span>
       <span class="see-also__summary">Use at the start of every conversation, in any project or repo…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/automating-repetition/">
+<li><a class="see-also__link" href="/skills/automating-repetition/">
       <span class="see-also__name">automating-repetition</span>
       <span class="see-also__summary">Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating…</span>
     </a></li>
@@ -164,27 +164,27 @@ trap 'cleanup; exit 143' TERM HUP</code></pre>
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

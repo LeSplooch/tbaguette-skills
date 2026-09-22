@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="writing-the-failing-test-first — Testing — TBaguette’s Atelier">
 <meta property="og:description" content="Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written.">
-<link rel="canonical" href="/tbaguette-skills/skills/writing-the-failing-test-first/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/writing-the-failing-test-first/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#testing">Testing</a>
+  <a href="/#testing">Testing</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">writing-the-failing-test-first</span>
 </nav>
@@ -71,7 +71,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A test written after the code has never been seen to fail. It cannot prove it catches the bug it claims to guard against, because the only code it has ever run against is code already built to satisfy it. Red-green-refactor — the actual mechanism behind the word &quot;TDD&quot; — exists to keep that proof honest: watch the test fail before the code exists, watch it pass with the smallest code that could work, then clean up with that proof already in hand. Skip the order and the tests still run; they just stop proving anything.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Writing new behavior — a feature, endpoint, or function that doesn't exist yet.</li><li>Fixing a bug: the failing test is the reproduction, and that same test proves the fix (see <a class="skill-link" href="/tbaguette-skills/skills/regression-test-from-bug/"><code>regression-test-from-bug</code></a> for scoping the assertion and naming the test after the defect).</li><li>Changing behavior on purpose, where the new behavior can be stated as a test before the change lands.</li><li>Refactoring code that already has tests protecting it — the loop still governs any new test added along the way.</li><li>Not for: code with no tests and no spec, where you don't yet know what it's supposed to do — pin what it actually does first (see <a class="skill-link" href="/tbaguette-skills/skills/characterization-testing/"><code>characterization-testing</code></a>).</li><li>Not for: which test level catches a given kind of bug (see <a class="skill-link" href="/tbaguette-skills/skills/choosing-test-scope/"><code>choosing-test-scope</code></a>).</li><li>Not for: what makes a generated or fixture value trustworthy (see <a class="skill-link" href="/tbaguette-skills/skills/designing-test-data/"><code>designing-test-data</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/property-based-testing/"><code>property-based-testing</code></a>).</li><li>This skill owns the loop — red, green, refactor, repeat — not test design. What a good test contains, which layer it belongs at, and what data goes into it belong to the skills above; this one only governs the order you write things in.</li></ul>
+<ul><li>Writing new behavior — a feature, endpoint, or function that doesn't exist yet.</li><li>Fixing a bug: the failing test is the reproduction, and that same test proves the fix (see <a class="skill-link" href="/skills/regression-test-from-bug/"><code>regression-test-from-bug</code></a> for scoping the assertion and naming the test after the defect).</li><li>Changing behavior on purpose, where the new behavior can be stated as a test before the change lands.</li><li>Refactoring code that already has tests protecting it — the loop still governs any new test added along the way.</li><li>Not for: code with no tests and no spec, where you don't yet know what it's supposed to do — pin what it actually does first (see <a class="skill-link" href="/skills/characterization-testing/"><code>characterization-testing</code></a>).</li><li>Not for: which test level catches a given kind of bug (see <a class="skill-link" href="/skills/choosing-test-scope/"><code>choosing-test-scope</code></a>).</li><li>Not for: what makes a generated or fixture value trustworthy (see <a class="skill-link" href="/skills/designing-test-data/"><code>designing-test-data</code></a>, <a class="skill-link" href="/skills/property-based-testing/"><code>property-based-testing</code></a>).</li><li>This skill owns the loop — red, green, refactor, repeat — not test design. What a good test contains, which layer it belongs at, and what data goes into it belong to the skills above; this one only governs the order you write things in.</li></ul>
 <h2 id="no-production-code-before-a-failing-test">No production code before a failing test</h2>
 <p>Catching yourself already mid-implementation — &quot;just this once,&quot; &quot;I'll backfill the test after,&quot; &quot;this one's too simple to bother&quot; — is the signal to stop and delete what you wrote. Not comment it out, not keep it open in another tab to &quot;adapt&quot; while writing the test: delete it. A test written while looking at a solution you already have is not a test-first test no matter what the file timestamps say — you already know what the answer looks like, and you'll write the assertion to match it instead of to specify it.</p>
 <p>That includes the version of this thought that sounds like judgment rather than shortcut: &quot;I already know what this should look like, so rewriting it from a test won't teach me anything new.&quot; It's true and beside the point — the loop was never about being surprised by your own solution. It's about watching a test fail for the reason you predicted, which is the only check that the test could have caught you being wrong. A reason for skipping the order that sounds compelling is exactly the moment to run the order anyway; if the reason is right, the red step confirms it in thirty seconds, and if it's wrong, that's the bug the whole discipline exists to catch before it ships.</p>
@@ -81,12 +81,12 @@
 <p>Write one test for one behavior, name it after that behavior, and before you write its body, answer: what production change would make this fail? If you can't name one, you don't yet know what you're testing — go find the actual behavior first, rather than writing an assertion and hoping it lands on something real.</p>
 <p>That question also rules out change detectors: a test that only fails when someone deliberately redesigns a constant, a private field, or exact wording is testing that nothing changed, not testing behavior. Test the outcome that depends on the decision — retried three times, rejected with this specific error, sorted this way — never the decision's literal value.</p>
 <p>Run the test and read the failure. A useful failure tells you why: feature missing is correct, a typo or a broken import is not — fix the harness and run it again until it fails for the right reason. A test that passes immediately is testing something that already works; that's not a red step, that's a test in the wrong place.</p>
-<p>Deriving the expected value by hand — not by calling the same helper the code under test calls — is what makes the failure trustworthy. How to build that value well is <a class="skill-link" href="/tbaguette-skills/skills/designing-test-data/"><code>designing-test-data</code></a> territory; the loop only requires that it existed before green did.</p>
+<p>Deriving the expected value by hand — not by calling the same helper the code under test calls — is what makes the failure trustworthy. How to build that value well is <a class="skill-link" href="/skills/designing-test-data/"><code>designing-test-data</code></a> territory; the loop only requires that it existed before green did.</p>
 <h2 id="when-nothing-behavioral-can-go-red">When nothing behavioral can go red</h2>
 <p>Some changes are not meant to alter behavior at all. An optimization, a cache, a batched call, a switch to a cheaper backend — the whole point is that the answer stays the same and something else gets smaller. Write a test for one of those and it passes the moment it is written, against the old code and the new, and the natural conclusion is that the loop does not apply here.</p>
 <p>That conclusion is wrong, and the diagnosis is one section up: a test that passes immediately is testing something that already works. The change did have a property that moved. It just was not the answer. <strong>Assert the property the change existed to change</strong> — elapsed time, queries issued, calls made, allocations, bytes read — and that assertion goes red before the change exactly like any other.</p>
 <p>Skipping it is how a change ships having achieved nothing while its suite stays green. A slow lookup replaced by a fast path returned the right value and passed; an assertion on elapsed time failed immediately, because the fast path internally called a helper that still went through the rate limiter the change existed to escape. Nothing in the diff of the new path looked slow — the cost was reached one call further down, in code the change never touched. Only an assertion on the cost could tell a change that worked from one that did not.</p>
-<p>Two things make such an assertion usable rather than flaky. Give it a <strong>wide threshold</strong>: it exists to catch a regression to the old order of magnitude, not to police a 5% drift. And make it exercise the <strong>state the cost is actually paid in</strong> — for anything cached, pooled, or lazily built, that is the cold one, and a test that reuses a warm fixture measures the half of the behavior that was never in question. <a class="skill-link" href="/tbaguette-skills/skills/performance-profiling/"><code>performance-profiling</code></a> owns choosing the number and defending it against noise; the loop only requires that something was red first.</p>
+<p>Two things make such an assertion usable rather than flaky. Give it a <strong>wide threshold</strong>: it exists to catch a regression to the old order of magnitude, not to police a 5% drift. And make it exercise the <strong>state the cost is actually paid in</strong> — for anything cached, pooled, or lazily built, that is the cold one, and a test that reuses a warm fixture measures the half of the behavior that was never in question. <a class="skill-link" href="/skills/performance-profiling/"><code>performance-profiling</code></a> owns choosing the number and defending it against noise; the loop only requires that something was red first.</p>
 <h2 id="an-assertion-over-the-result-cannot-see-what-the-result-is-missing">An assertion over the result cannot see what the result is missing</h2>
 <p>Deriving the expected value by hand covers the scalar case. The collection case slips past it, because the assertion looks like it is checking everything: <em>for each item in the result, assert it is well-formed.</em> Every item passes. The test is green.</p>
 <p>It is green because it quantifies over a set the code under test chose. If the code dropped half its input, the survivors are all still well-formed. If it dropped all of it, the loop body never runs and the assertion is vacuously true — so <strong>the test is at its most confident exactly when the code has failed hardest</strong>, which is the reverse of what a test is for. Lossy-by-design code makes this routine rather than exotic: a parser that skips entries it cannot read, pagination, deduplication, permission scoping, any filter with a sensible default of &quot;leave it out.&quot;</p>
@@ -100,7 +100,7 @@ fails the moment anything is dropped, including all of it:
 <p>Any assertion whose expected value was produced by the code under test is self-referential, and universally-quantified ones are the dangerous shape, because emptiness makes them true rather than false. &quot;Mutate it before you trust it&quot; below is the check that catches it: delete the loader's body and see whether anything goes red. Nothing will.</p>
 <h2 id="green-the-smallest-code-that-passes">Green — the smallest code that passes</h2>
 <p>Write just enough production code to pass the one test in front of you, not the feature you can see coming. A config flag nobody's test asked for, a caching layer nobody's test exercises, a drive-by refactor of the neighboring function — all of that is scope the test hasn't earned yet. It arrives later, with its own test, when its own red step demands it.</p>
-<p>Keep every collaborator the test touches real. Reach for a double only where something is genuinely slow or external, and once you do, don't assert on the double itself — assert on what your code does with what it returned. A test that checks a mock was called proves the mock exists, not that your code works; if a double is what you're tempted to assert on, unmock it or delete the assertion. <a class="skill-link" href="/tbaguette-skills/skills/grounding-test-doubles/"><code>grounding-test-doubles</code></a> covers grounding a double against a system you don't control; <a class="skill-link" href="/tbaguette-skills/skills/choosing-test-scope/"><code>choosing-test-scope</code></a> covers the point where a double has grown enough conditional logic to be a second, untested implementation of the real thing.</p>
+<p>Keep every collaborator the test touches real. Reach for a double only where something is genuinely slow or external, and once you do, don't assert on the double itself — assert on what your code does with what it returned. A test that checks a mock was called proves the mock exists, not that your code works; if a double is what you're tempted to assert on, unmock it or delete the assertion. <a class="skill-link" href="/skills/grounding-test-doubles/"><code>grounding-test-doubles</code></a> covers grounding a double against a system you don't control; <a class="skill-link" href="/skills/choosing-test-scope/"><code>choosing-test-scope</code></a> covers the point where a double has grown enough conditional logic to be a second, untested implementation of the real thing.</p>
 <p>Run the whole suite, not just the new test — a green new test next to a red old one is not green. Pristine output counts too: a warning everyone's learned to scroll past is exactly where the next real failure will hide.</p>
 <p>If passing requires mocking everything in sight, that isn't a fact about the test. It's the design telling you it's too coupled to construct — simplify the interface or wire the dependency in properly, rather than reaching around it with more test scaffolding.</p>
 <h2 id="refactor-clean-up-with-the-net-already-there">Refactor — clean up with the net already there</h2>
@@ -111,58 +111,58 @@ fails the moment anything is dropped, including all of it:
 <p>The red step is per-behavior by construction, so <em>n</em> red steps produce <em>n</em> passing paths, and nothing in red or green ever asks whether those paths belong to one system. Refactor as scoped above cannot answer it either — a case that <em>spans</em> two features is new behavior, not a structure change, so by this file's own rule it needs a red step of its own. Nobody writes that red step, because no single feature was ever missing anything. That is the direct cause of a suite green feature by feature and broken the moment two features have to agree.</p>
 <p>The failure has a recognizable shape: <strong>feature isolation</strong>. Each capability implemented as its own handler, passing its own test, sharing no state with the others. Every test green, the design a pile, and nothing at all resolving a case that spans two of them. It appears in hand-written code too, so it is not an artifact of generation.</p>
 <p>Two consequences, neither obvious:</p>
-<ul><li><strong>More attempts make it worse rather than better.</strong> A long run of fix-rerun-still-red converges on whatever satisfies the visible checks, and the later attempts are the ones likeliest to find a hack instead of a structure. A lengthening loop is evidence you are optimizing the signal, not evidence of progress. <a class="skill-link" href="/tbaguette-skills/skills/knowing-when-to-stop/"><code>knowing-when-to-stop</code></a> gives the count at which repeated same-shape attempts stop being progress; the diagnosis here is narrower — the loop is converging on the suite rather than on the problem.</li><li><strong>Enlarging the visible suite mid-build is not a reliable correction.</strong> A check added while the code is still being iterated against it is just another thing to satisfy, and gets satisfied. What works is a composition test, which differs in exactly one way that matters: it is written <em>after</em> both features are finished, so neither was ever built against it. Before opening a third feature on top of two that have never met, write one test that exercises those two together. If it fails you have found the gap this section is about; if it passes, that is the cheapest evidence available that the two paths really do belong to one system — the check, not a red step in the wrong place.</li></ul>
+<ul><li><strong>More attempts make it worse rather than better.</strong> A long run of fix-rerun-still-red converges on whatever satisfies the visible checks, and the later attempts are the ones likeliest to find a hack instead of a structure. A lengthening loop is evidence you are optimizing the signal, not evidence of progress. <a class="skill-link" href="/skills/knowing-when-to-stop/"><code>knowing-when-to-stop</code></a> gives the count at which repeated same-shape attempts stop being progress; the diagnosis here is narrower — the loop is converging on the suite rather than on the problem.</li><li><strong>Enlarging the visible suite mid-build is not a reliable correction.</strong> A check added while the code is still being iterated against it is just another thing to satisfy, and gets satisfied. What works is a composition test, which differs in exactly one way that matters: it is written <em>after</em> both features are finished, so neither was ever built against it. Before opening a third feature on top of two that have never met, write one test that exercises those two together. If it fails you have found the gap this section is about; if it passes, that is the cheapest evidence available that the two paths really do belong to one system — the check, not a red step in the wrong place.</li></ul>
 <p>The divergence grows with the size of the work, which is the opposite of where attention usually goes. Not because a small suite is trustworthy — the rest of this file exists to deny that — but because a small change has fewer places where two features have to agree, which is the one thing this failure needs. A large one, built the same way, can be entirely green and not a working system.</p>
 <h2 id="mutate-it-before-you-trust-it">Mutate it before you trust it</h2>
-<p>Before calling a piece of behavior finished, mutate the code you just wrote — flip a comparison, swap a branch, delete a validation — and confirm some test goes red for each mutation you'd realistically make. A suite that stays green through a real mutation didn't prove what you thought it proved: the behavior was never actually covered, or the test was tautological from the start. <a class="skill-link" href="/tbaguette-skills/skills/characterization-testing/"><code>characterization-testing</code></a> runs this identical check against a pinned legacy behavior instead of a new one — same technique, different target.</p>
+<p>Before calling a piece of behavior finished, mutate the code you just wrote — flip a comparison, swap a branch, delete a validation — and confirm some test goes red for each mutation you'd realistically make. A suite that stays green through a real mutation didn't prove what you thought it proved: the behavior was never actually covered, or the test was tautological from the start. <a class="skill-link" href="/skills/characterization-testing/"><code>characterization-testing</code></a> runs this identical check against a pinned legacy behavior instead of a new one — same technique, different target.</p>
 <p>A mutation only tells you something if the result <em>changed</em>. Red after the mutation is half an observation; the claim is that the test is red <strong>because of</strong> the mutation, and that needs the green reading beside it. A check that was already failing — a broken selector, a fixture that no longer loads, an assertion against a value it can never see — goes red under every mutation you make and looks exactly like a check that works. The pair is the evidence, never the single reading, and the question that separates them is the same one a retry has to answer: <strong>what differed between those two runs?</strong> If the honest answer is &quot;nothing, it was red both times&quot;, nothing was learned and the check itself is now the thing to go and read.</p>
 <p>That check is the actual definition of done, not &quot;coverage went up.&quot; Ship the tests the behavior needs, in the order the loop produced them, and stop. A test added afterward to satisfy a process rather than a red step is maintenance cost with no proof behind it.</p>
 <h2 id="when-you-get-stuck">When you get stuck</h2>
-<table><thead><tr><th>Stuck on</th><th>What it's telling you</th></tr></thead><tbody><tr><td>Don't know how to write the test</td><td>Write the call you wish existed — the assertion first, then whatever setup makes it compile. The test is the API's first real consumer; if you can't call it the way you want yet, that's the design decision to make now, not during green.</td></tr><tr><td>Test setup is huge before you even reach an assertion</td><td>Not a loop problem — see <a class="skill-link" href="/tbaguette-skills/skills/designing-test-data/"><code>designing-test-data</code></a>.</td></tr><tr><td>Test depends on time, randomness, the filesystem, or the network</td><td>Not a loop problem either — see <a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a> for making the dependency fake-able.</td></tr></tbody></table>
+<table><thead><tr><th>Stuck on</th><th>What it's telling you</th></tr></thead><tbody><tr><td>Don't know how to write the test</td><td>Write the call you wish existed — the assertion first, then whatever setup makes it compile. The test is the API's first real consumer; if you can't call it the way you want yet, that's the design decision to make now, not during green.</td></tr><tr><td>Test setup is huge before you even reach an assertion</td><td>Not a loop problem — see <a class="skill-link" href="/skills/designing-test-data/"><code>designing-test-data</code></a>.</td></tr><tr><td>Test depends on time, randomness, the filesystem, or the network</td><td>Not a loop problem either — see <a class="skill-link" href="/skills/testing-the-untestable/"><code>testing-the-untestable</code></a> for making the dependency fake-able.</td></tr></tbody></table>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Test passes the moment it's written</td><td>Written after the code, or asserts a value computed by the same logic it's testing — proves nothing either way</td></tr><tr><td>Can't say what production change would break a passing test</td><td>The test was never watched failing; it may be asserting on a constant or an implementation detail instead of behavior</td></tr><tr><td>&quot;I'll write the test right after, same result&quot;</td><td>Tests-after answer &quot;what does this do&quot;; tests-first answer &quot;what should it do&quot; — the case you forgot never gets asked</td></tr><tr><td>Implementation grows a feature its test never asked for</td><td>Green step scope-crept into design instead of stopping at &quot;this one test passes&quot;</td></tr><tr><td>A teardown or reset method exists only for tests to call</td><td>Test-only cleanup leaked onto the production class instead of into a test utility</td></tr><tr><td>Refactor step quietly changes an assertion</td><td>Refactor is being used to smuggle in a second, unproven change</td></tr><tr><td>Whole suite re-run &quot;to be safe&quot; instead of reading the one failure</td><td>The failure message was never actually read closely enough to say why it failed</td></tr><tr><td>Bug fixed with no test written first</td><td>The only evidence the fix works is manual checking, which leaves nothing to catch the regression</td></tr><tr><td>A change made for speed shipped with only correctness tests</td><td>Every behavioral assertion passed before the change too; the property that moved was a cost, and nothing asserted it</td></tr><tr><td>A suite over a collection stays green while the collection is empty</td><td>Every assertion quantified over the result the code produced; nothing counted the input</td></tr><tr><td>Code kept and tests backfilled because &quot;I already know this cold&quot;</td><td>Confidence in the solution stood in for proof a test could catch it being wrong</td></tr><tr><td>Every feature green, nothing that spans two of them works</td><td>Each red step produced its own path, and the case spanning two never got a red step of its own</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Too simple to bother testing.&quot;</li><li>&quot;I'll add the test right after — same result.&quot;</li><li>&quot;Already tested it by hand, it works.&quot;</li><li>&quot;I'll keep this implementation open in another tab while I write the test.&quot;</li><li>&quot;Already spent three hours on this; deleting it now would be wasteful.&quot;</li><li>&quot;It's about the spirit of TDD, not the ritual.&quot;</li><li>&quot;This case is different, the rule doesn't really fit here.&quot;</li><li>&quot;I already know what this should look like — rewriting it teaches me nothing.&quot;</li><li>&quot;The suite's green&quot; — said about a test nobody watched fail first.</li><li>Every assertion in a test iterates something the code under test returned, and no number in the test came from outside it.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/grounding-test-doubles/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/grounding-test-doubles/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← grounding-test-doubles</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Testing</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/designing-test-data/">
+<li><a class="see-also__link" href="/skills/designing-test-data/">
       <span class="see-also__name">designing-test-data</span>
       <span class="see-also__summary">Use when a test&#x27;s setup is longer than its assertions, when fixtures are shared across files…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/auditing-new-input-categories/">
+<li><a class="see-also__link" href="/skills/auditing-new-input-categories/">
       <span class="see-also__name">auditing-new-input-categories</span>
       <span class="see-also__summary">Use when extending a system to handle a new category of input — a new script or writing system, file format, payment method…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/property-based-testing/">
+<li><a class="see-also__link" href="/skills/property-based-testing/">
       <span class="see-also__name">property-based-testing</span>
       <span class="see-also__summary">Use when example tests only cover the cases someone thought of, when testing parsers, serializers, encoders, sorting, comparators…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/testing-the-untestable/">
+<li><a class="see-also__link" href="/skills/testing-the-untestable/">
       <span class="see-also__name">testing-the-untestable</span>
       <span class="see-also__summary">Use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/flaky-test-triage/">
+<li><a class="see-also__link" href="/skills/flaky-test-triage/">
       <span class="see-also__name">flaky-test-triage</span>
       <span class="see-also__summary">Use when a test passes on rerun, fails only in CI, fails only when the whole suite runs, fails after midnight or across a DST change…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/regression-test-from-bug/">
+<li><a class="see-also__link" href="/skills/regression-test-from-bug/">
       <span class="see-also__name">regression-test-from-bug</span>
       <span class="see-also__summary">Use when a defect has been reported, reproduced, or patched, when writing a test for a production incident or hotfix…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/characterization-testing/">
+<li><a class="see-also__link" href="/skills/characterization-testing/">
       <span class="see-also__name">characterization-testing</span>
       <span class="see-also__summary">Use when changing, refactoring, extracting, porting, or deleting code that has no tests…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/choosing-test-scope/">
+<li><a class="see-also__link" href="/skills/choosing-test-scope/">
       <span class="see-also__name">choosing-test-scope</span>
       <span class="see-also__summary">Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/grounding-test-doubles/">
+<li><a class="see-also__link" href="/skills/grounding-test-doubles/">
       <span class="see-also__name">grounding-test-doubles</span>
       <span class="see-also__summary">Use when writing a mock, stub, fake, or fixture for something you do not control — an HTTP API, a vendor SDK, a queue, a device…</span>
     </a></li>
@@ -173,27 +173,27 @@ fails the moment anything is dropped, including all of it:
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

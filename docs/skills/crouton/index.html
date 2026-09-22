@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="crouton — Communicating — TBaguette’s Atelier">
 <meta property="og:description" content="Use when asked for terse, compressed, or token-saving output — &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;keep it short&quot;, &quot;stop explaining&quot;…">
-<link rel="canonical" href="/tbaguette-skills/skills/crouton/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/crouton/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#communicating">Communicating</a>
+  <a href="/#communicating">Communicating</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">crouton</span>
 </nav>
@@ -73,7 +73,7 @@
 <p>And before that, knowing that words were never where most of the water was. Asked to use fewer tokens, almost everyone tightens their prose, because prose is the part they can see themselves writing. In a measured agent session it is a rounding error. What costs is what gets pulled <em>in</em>.</p>
 <p>Two failures sit on either side of this, and the second is the expensive one. Padding costs the reader time. Cutting a negation, a unit, or an &quot;unverified&quot; costs them a wrong decision, and nothing in the shorter text tells them to check.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>The user asks for brevity, terseness, &quot;caveman mode&quot;, fewer tokens, or less context burn.</li><li>A long session where remaining context is the binding constraint.</li><li>Replies have drifted into preamble, tool narration, and closing summaries.</li><li>Output goes to someone watching the work live, who will catch a gap before it becomes a wrong decision.</li><li>Any run long enough to read more than a couple of files, whether or not anyone asked for brevity.</li><li><strong>Not for:</strong> a written explanation aimed at one reader with one pending question → <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a>, which settles <em>what</em> to say before this settles how tightly to say it. Marking claims verified, inferred, or assumed → <a class="skill-link" href="/tbaguette-skills/skills/calibrating-confidence/"><code>calibrating-confidence</code></a>, which this never overrides. Anything written to last → <a class="skill-link" href="/tbaguette-skills/skills/writing-durable-docs/"><code>writing-durable-docs</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/writing-commit-messages/"><code>writing-commit-messages</code></a>, <a class="skill-link" href="/tbaguette-skills/skills/writing-release-notes/"><code>writing-release-notes</code></a>.</li></ul>
+<ul><li>The user asks for brevity, terseness, &quot;caveman mode&quot;, fewer tokens, or less context burn.</li><li>A long session where remaining context is the binding constraint.</li><li>Replies have drifted into preamble, tool narration, and closing summaries.</li><li>Output goes to someone watching the work live, who will catch a gap before it becomes a wrong decision.</li><li>Any run long enough to read more than a couple of files, whether or not anyone asked for brevity.</li><li><strong>Not for:</strong> a written explanation aimed at one reader with one pending question → <a class="skill-link" href="/skills/explaining-technical-work/"><code>explaining-technical-work</code></a>, which settles <em>what</em> to say before this settles how tightly to say it. Marking claims verified, inferred, or assumed → <a class="skill-link" href="/skills/calibrating-confidence/"><code>calibrating-confidence</code></a>, which this never overrides. Anything written to last → <a class="skill-link" href="/skills/writing-durable-docs/"><code>writing-durable-docs</code></a>, <a class="skill-link" href="/skills/writing-commit-messages/"><code>writing-commit-messages</code></a>, <a class="skill-link" href="/skills/writing-release-notes/"><code>writing-release-notes</code></a>.</li></ul>
 <h2 id="where-the-tokens-actually-are">Where the tokens actually are</h2>
 <p>Every turn re-sends the whole conversation. So anything pulled into context is not paid for once — it is paid for again on every turn that follows it, which is what makes the ordering below so lopsided.</p>
 <table><thead><tr><th>Spend</th><th>Roughly what it costs</th><th>Cut by</th></tr></thead><tbody><tr><td>The per-request floor — system prompt, tool schemas, skill list</td><td>The largest single number, and mostly fixed. In one measured harness a run that made no tool calls at all still cost tens of thousands of tokens</td><td>You cannot compress it. You can decline to <em>add</em> to it — see the tool row under false economies</td></tr><tr><td>Content pulled into context — files, logs, command output, diffs</td><td>Its own size, multiplied by the turns that follow it — every one re-sends it. Measured over one harness that averaged about <strong>three times</strong>, so a 1,300-line file is not a 13k-token read, it is nearer a 40k-token decision. Read on the last turn it costs 1x; read early in a long run, far more</td><td>The read rules below</td></tr><tr><td>Tool calls themselves</td><td>Low thousands each, before whatever they return</td><td>Name what the result would change before firing; if nothing, skip it — except on discovery work, where not knowing is the point. See the limit under &quot;Where compression stops&quot;</td></tr><tr><td>Repeated context — re-pasting background, restating the task, re-quoting a diff</td><td>Grows with session length</td><td>Say it once, refer back</td></tr><tr><td>Your own prose</td><td>Tens of tokens per reply. Low single-digit percent of a session</td><td>The registers below</td></tr></tbody></table>
@@ -81,7 +81,7 @@
 <p>The practical consequence is blunt: a session that shaves every article while reading a 2,000-line file it already had has compressed nothing. It has changed its accent. Fix the reads first; prose is the last row of that table, not the first.</p>
 <h2 id="the-read-rules">The read rules</h2>
 <p>Checkable, roughly in the order they pay. Assume you are starting from the expensive default: across 307 file reads in 25 real sessions on one machine, <strong>95% pulled the whole file</strong> — no range, no offset. Small n, one harness, and still worth acting on, because the direction is not in doubt: this is not a list of edge cases to watch for, it is the normal thing, priced.</p>
-<ul><li><strong>Never read what you already have.</strong> A file read at turn 3 is still in context at turn 30. In that same 25-session sample, 10% of reads repeated a path already read and 44% of sessions did it at least once. Re-reading it does not refresh anything; it buys a second copy at full price. This includes re-reading a file you just edited to confirm the edit — an edit tool already reported success or failed loudly. A <em>shell</em> edit is the exception that proves it: <code>sed -i</code> with a pattern that matches nothing exits 0 and changes nothing. Confirm that one with a single <code>grep</code> for the new text, never with a re-read.</li><li><strong>Locate, then read the range — above a couple of hundred lines.</strong> <code>grep -n</code> for the symbol, then <code>sed -n '120,180p'</code>. Below that threshold one read beats two calls: a small file costs less than the calls spent avoiding it, and the rule under false economies applies to this rule too.</li><li><strong>Outline before opening.</strong> For anything over a couple of hundred lines, <code>grep -n '^\(def\|class\|func\|function\|type\) '</code> costs a few hundred tokens and usually answers the question, or tells you exactly which range to pull.</li><li><strong>Cap what a command can return, when you already know the shape of the answer.</strong> <code>--stat</code> before a full diff, <code>| head</code> on a listing, <code>| tail -n 50</code> on a log you are reading rather than citing. An unbounded command is an unbounded read with a different name. Never cap the first look at a failure: test runners print failures last, so <code>| head</code> and <code>-q</code> hide exactly what you ran it for, and the re-run costs more than the cap saved. And never cap a run you will have to quote from afterwards — redirect it to a file and <code>grep</code> that. The file puts none of the run in context, which makes it the cheaper move as well as the safer one; <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> has why the lines a cap discards are reliably the ones the report wanted.</li><li><strong>Do not re-run a command whose output cannot have changed</strong> — and nothing outside this run can have touched. Two identical test runs with no edit between them cost twice and prove once. A flaky suite, a clock-dependent command, or a tree another writer is in breaks the premise rather than the rule.</li><li><strong>Search rather than enumerate.</strong> Reading ten files to find which one defines something costs ten files; one <code>grep -rn</code> costs one result set.</li></ul>
+<ul><li><strong>Never read what you already have.</strong> A file read at turn 3 is still in context at turn 30. In that same 25-session sample, 10% of reads repeated a path already read and 44% of sessions did it at least once. Re-reading it does not refresh anything; it buys a second copy at full price. This includes re-reading a file you just edited to confirm the edit — an edit tool already reported success or failed loudly. A <em>shell</em> edit is the exception that proves it: <code>sed -i</code> with a pattern that matches nothing exits 0 and changes nothing. Confirm that one with a single <code>grep</code> for the new text, never with a re-read.</li><li><strong>Locate, then read the range — above a couple of hundred lines.</strong> <code>grep -n</code> for the symbol, then <code>sed -n '120,180p'</code>. Below that threshold one read beats two calls: a small file costs less than the calls spent avoiding it, and the rule under false economies applies to this rule too.</li><li><strong>Outline before opening.</strong> For anything over a couple of hundred lines, <code>grep -n '^\(def\|class\|func\|function\|type\) '</code> costs a few hundred tokens and usually answers the question, or tells you exactly which range to pull.</li><li><strong>Cap what a command can return, when you already know the shape of the answer.</strong> <code>--stat</code> before a full diff, <code>| head</code> on a listing, <code>| tail -n 50</code> on a log you are reading rather than citing. An unbounded command is an unbounded read with a different name. Never cap the first look at a failure: test runners print failures last, so <code>| head</code> and <code>-q</code> hide exactly what you ran it for, and the re-run costs more than the cap saved. And never cap a run you will have to quote from afterwards — redirect it to a file and <code>grep</code> that. The file puts none of the run in context, which makes it the cheaper move as well as the safer one; <a class="skill-link" href="/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> has why the lines a cap discards are reliably the ones the report wanted.</li><li><strong>Do not re-run a command whose output cannot have changed</strong> — and nothing outside this run can have touched. Two identical test runs with no edit between them cost twice and prove once. A flaky suite, a clock-dependent command, or a tree another writer is in breaks the premise rather than the rule.</li><li><strong>Search rather than enumerate.</strong> Reading ten files to find which one defines something costs ten files; one <code>grep -rn</code> costs one result set.</li></ul>
 <p>Two of these are free outright: content you already have, and a command whose answer cannot have moved, both return <em>the same</em> information for less. The other four trade away information you did not ask for — a range is not the file, an outline is not the body, a capped command is not its whole output. That is the right trade when you know the question and the wrong one when you are still looking for it, which is what the limit under &quot;Where compression stops&quot; is about.</p>
 <p>There is a sharper form of that cost, and it is the one that actually bites. A bounded read does not merely omit — it <em>answers</em>. Count the entries in <code>head -80</code> of a file and you have counted the entries in the first eighty lines, but the number arrives looking like the file's, with nothing on it saying otherwise, and the next action spends it as if it were. So every <strong>count</strong>, every <strong>absence</strong>, and every <strong>last one</strong> taken off a capped command is a claim about the cap until something unbounded confirms it. That confirmation is nearly free and it is the reason to prefer the tool that computes the answer over the one that shows you a prefix of it: <code>wc -l</code>, <code>grep -c</code>, <code>git diff --stat</code>, <code>--name-only | wc -l</code> are unbounded answers to bounded questions. Cap what you are <em>reading</em>; never cap what you are <em>counting</em>.</p>
 <h2 id="what-survives-at-any-length">What survives at any length</h2>
@@ -94,7 +94,7 @@
 <p>The tool row above prices a capability in tokens: its schema joins the per-request floor and is re-sent whether or not it fires. That is the smaller half of the bill.</p>
 <p>The larger half is that <strong>the set of options you carry is re-read before every choice you make.</strong> Every option is charged against choices it has nothing to do with, so selection degrades as the set grows — and it degrades in a shape worse than picking the second-best tool, toward referencing capabilities instead of answering the question. Where that begins is not something this skill has measured, and the figures quoted for it come from other people's harnesses. What is not in doubt is the direction, and that a larger context window does not fix it, because the problem was never that the descriptions did not fit.</p>
 <p>That changes the decision rule rather than merely sharpening it. The token argument says a capability must save more than it costs. The accuracy argument says it must be worth making <strong>every unrelated decision slightly worse</strong> — a much higher bar, and one a rarely-used tool essentially never clears. So the shape to want is a per-task loadout rather than a permanent one: carry what this task needs, put the rest behind a lookup, and treat anything not needed on a typical run as deferred by default.</p>
-<p><a class="skill-link" href="/tbaguette-skills/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a> reaches the same conclusion about set size from the other direction: what is connected is part of the exposure, and the check belongs at connection time. That is the same consideration rather than the same prescription — but two independent arguments for one economy are worth noticing before anything is added permanently.</p>
+<p><a class="skill-link" href="/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a> reaches the same conclusion about set size from the other direction: what is connected is part of the exposure, and the check belongs at connection time. That is the same consideration rather than the same prescription — but two independent arguments for one economy are worth noticing before anything is added permanently.</p>
 <h2 id="registers">Registers</h2>
 <p>This is the smallest row of the spend table above. Pick by who reads it and what they do next, not by how compressed it feels like being.</p>
 <table><thead><tr><th>Register</th><th>Shape</th><th>Fits</th></tr></thead><tbody><tr><td><strong>Trimmed</strong></td><td>Full grammar; preamble, filler, and closing summaries gone</td><td>Default. Anything read once and carefully, or quoted later</td></tr><tr><td><strong>Clipped</strong></td><td>Fragments and dropped articles, but the facts still joined into sentences</td><td>Live back-and-forth with someone watching the work and able to ask</td></tr><tr><td><strong>Telegraphic</strong></td><td>One line per fact, nothing joining them — a list, not a paragraph</td><td>Status during a long run; findings the reader will scan and pick from</td></tr></tbody></table>
@@ -124,51 +124,51 @@
 <h2 id="compressing-in-another-language">Compressing in another language</h2>
 <ul><li>Reply in the language the user writes in — every line, including status lines, not just the final answer. Compress the register, not the language.</li><li>&quot;Drop articles&quot; is advice for languages that have articles. Where small words carry case or role — Japanese and Korean particles, Turkish and Finnish suffixes, Hindi postpositions — they are grammar, and dropping them changes who did what to whom.</li><li>Leave the politeness level the user set. In several languages that level is social information rather than filler; cut set phrases and repetition instead.</li><li>Technical terms, code, API names, CLI flags, commit-type keywords, and exact error strings stay verbatim in every language, unless a translation was asked for.</li></ul>
 <h2 id="checking-that-it-worked">Checking that it worked</h2>
-<ul><li>Count something on one real before/after pair — words, characters, lines, tokens — before believing a change did anything. Unmeasured compression is a claim about tone.</li><li><strong>Know the noise before believing the number.</strong> Two runs of the same agent on the same task differ by a lot on their own — in one measured harness the median gap between replicates was a few percent and the worst was over twenty, because one run decides to double-check something and the other doesn't. A change that moves the total by less than that gap has not been shown to do anything. Hold the task identical and vary one thing if you want a number you can trust.</li><li><strong>A saving on one model is not a saving on every model.</strong> The same guidance measured 10% cheaper under one model and indistinguishable from nothing under a stronger one that was already reading in ranges without being told. Measure on the model you actually run; a number from another tier is a hypothesis, not a result.</li><li>Don't quote a percentage nothing counted. Per <a class="skill-link" href="/tbaguette-skills/skills/calibrating-confidence/"><code>calibrating-confidence</code></a>, &quot;shorter&quot; is honest and a fabricated 60% is not.</li><li>Two ways an answer gets shorter without saving anything: it dropped a caveat, or it moved the work into the reader's next question.</li></ul>
+<ul><li>Count something on one real before/after pair — words, characters, lines, tokens — before believing a change did anything. Unmeasured compression is a claim about tone.</li><li><strong>Know the noise before believing the number.</strong> Two runs of the same agent on the same task differ by a lot on their own — in one measured harness the median gap between replicates was a few percent and the worst was over twenty, because one run decides to double-check something and the other doesn't. A change that moves the total by less than that gap has not been shown to do anything. Hold the task identical and vary one thing if you want a number you can trust.</li><li><strong>A saving on one model is not a saving on every model.</strong> The same guidance measured 10% cheaper under one model and indistinguishable from nothing under a stronger one that was already reading in ranges without being told. Measure on the model you actually run; a number from another tier is a hypothesis, not a result.</li><li>Don't quote a percentage nothing counted. Per <a class="skill-link" href="/skills/calibrating-confidence/"><code>calibrating-confidence</code></a>, &quot;shorter&quot; is honest and a fabricated 60% is not.</li><li>Two ways an answer gets shorter without saving anything: it dropped a caveat, or it moved the work into the reader's next question.</li></ul>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Session token use barely moves</td><td>Prose trimmed; the reads were never examined. This is the default failure, not an edge case</td></tr><tr><td>The same file appears in context three times</td><td>Re-read instead of scrolled back to; paid for at full price each time</td></tr><tr><td>A 40-line answer required reading 2,000 lines</td><td>No outline pass — the whole file was opened to find one function</td></tr><tr><td>A tool was added to save context and the session got more expensive</td><td>Its schema is charged every turn whether or not it is used</td></tr><tr><td>Nearly every reply draws a clarifying question</td><td>Register a step too tight; the saving moved to the reader's turn, and a turn costs more than the words did</td></tr><tr><td>A terse answer followed by a prose summary of it</td><td>Both halves paid for; net cost above doing nothing</td></tr><tr><td>Output reads as broken English and is the same length</td><td>Grammar mangled as costume; none of it tokenizes shorter</td></tr><tr><td>A commit message or PR body reads like chat</td><td>Mode applied to an artifact; the gate skipped</td></tr><tr><td>A confident one-liner turns out to have been a guess</td><td>An uncertainty marker cut along with the filler it resembled</td></tr><tr><td>Mode quietly gone by turn 30</td><td>Treated as a reply style rather than as session state</td></tr><tr><td>&quot;Dropped the old rows&quot; — and there was no backup</td><td>The warning compressed with everything else</td></tr><tr><td>A measured 4% improvement reported as a win</td><td>Smaller than the run-to-run noise; nothing was shown</td></tr><tr><td>Terse in English, verbose in the user's own language</td><td>Register applied to the reply, not to every line</td></tr><tr><td>Answers reference the available tools instead of answering the question</td><td>The option set is re-read before every choice; it is large enough to be crowding them out</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;I'll be more concise&quot; — said about a session whose cost is reads.</li><li>&quot;Let me re-read that file to make sure.&quot;</li><li>&quot;I'll just look at the whole file, it's easier.&quot;</li><li>&quot;I'll add a short normal-prose summary so it's clear.&quot;</li><li>Naming or announcing the mode inside an answer.</li><li>Abbreviating a word that was already one token.</li><li>Cutting a hedge without checking whether it marked something unverified.</li><li>Reaching for the tightest register on the hardest question.</li><li>Writing a commit message in the conversation's register.</li><li>Quoting a savings percentage nothing measured, or one smaller than the noise.</li><li>&quot;Task's done, so the mode's done.&quot;</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/explaining-technical-work/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/explaining-technical-work/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← explaining-technical-work</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/handing-off-for-review/">
+<a class="prevnext__link prevnext__link--next" href="/skills/handing-off-for-review/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">handing-off-for-review →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Communicating</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-durable-docs/">
+<li><a class="see-also__link" href="/skills/writing-durable-docs/">
       <span class="see-also__name">writing-durable-docs</span>
       <span class="see-also__summary">Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-adrs/">
+<li><a class="see-also__link" href="/skills/writing-adrs/">
       <span class="see-also__name">writing-adrs</span>
       <span class="see-also__summary">Use when recording a technical or architectural decision — picking between technologies, changing a system boundary…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-release-notes/">
+<li><a class="see-also__link" href="/skills/writing-release-notes/">
       <span class="see-also__name">writing-release-notes</span>
       <span class="see-also__summary">Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-postmortems/">
+<li><a class="see-also__link" href="/skills/writing-postmortems/">
       <span class="see-also__name">writing-postmortems</span>
       <span class="see-also__summary">Use when writing an incident review or postmortem after an outage, degradation, data loss, failed deploy…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/reviewing-code-deeply/">
+<li><a class="see-also__link" href="/skills/reviewing-code-deeply/">
       <span class="see-also__name">reviewing-code-deeply</span>
       <span class="see-also__summary">Use when reviewing someone else&#x27;s change — a pull request, patch, diff, or commit series — deciding what deserves a comment…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/explaining-technical-work/">
+<li><a class="see-also__link" href="/skills/explaining-technical-work/">
       <span class="see-also__name">explaining-technical-work</span>
       <span class="see-also__summary">Use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/handing-off-for-review/">
+<li><a class="see-also__link" href="/skills/handing-off-for-review/">
       <span class="see-also__name">handing-off-for-review</span>
       <span class="see-also__summary">Use when completing a task or feature and about to hand it off before merging, when stuck and a fresh perspective would help…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/verifying-review-feedback/">
+<li><a class="see-also__link" href="/skills/verifying-review-feedback/">
       <span class="see-also__name">verifying-review-feedback</span>
       <span class="see-also__summary">Use when code review feedback lands on your own change — from a person, a bot…</span>
     </a></li>
@@ -179,27 +179,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

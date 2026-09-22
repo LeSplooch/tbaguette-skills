@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="calibrating-confidence — Judgment and meta — TBaguette’s Atelier">
 <meta property="og:description" content="Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session…">
-<link rel="canonical" href="/tbaguette-skills/skills/calibrating-confidence/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/calibrating-confidence/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a>
+  <a href="/#judgment-and-meta">Judgment and meta</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">calibrating-confidence</span>
 </nav>
@@ -69,11 +69,11 @@
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when stating a fact, a cause, a version detail, or an API name that was not checked in this session, when asked whether a claim is certain or being pushed back on, when a conclusion rests on recalled knowledge rather than something read, when every sentence has acquired a hedge, when the accurate answer is that you do not know, when a field with no data source of its own is about to be mapped onto a named concept as a proxy, when a search's hit list or match count is about to be reported as the answer to the question it was run for, when a ranked match returns multiple plausible candidates and the top one is about to be trusted, or when a tool result that may have been truncated on its way to you is about to be treated as the whole of what the tool produced. Covers evidence tiers, telling a capped tool result from a complete one, false precision, probability language, proxies that inherit the name of the thing they stand in for, reading the hits rather than the result set, and unearned certainty.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
-<p>A claim read from a file and a claim recalled from training must not sound the same. <a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> covers the sharpest version of the same failure — a model that cannot open the file still produces a fluent paragraph about its contents, and nothing in that paragraph is marked as invented. Confidence tracks evidence, not fluency — and the strongest internal signal, how smoothly an answer arrives, is uncorrelated with truth for anything version-specific, recently changed, or particular to this project.</p>
+<p>A claim read from a file and a claim recalled from training must not sound the same. <a class="skill-link" href="/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> covers the sharpest version of the same failure — a model that cannot open the file still produces a fluent paragraph about its contents, and nothing in that paragraph is marked as invented. Confidence tracks evidence, not fluency — and the strongest internal signal, how smoothly an answer arrives, is uncorrelated with truth for anything version-specific, recently changed, or particular to this project.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> owns that gate. This is how to speak when the check has not been run.</li><li>Not for: turning a named unknown into something the reader can act on — <a class="skill-link" href="/tbaguette-skills/skills/offering-the-next-move/"><code>offering-the-next-move</code></a> does that when the work closes. Marking a claim assumed says how much to trust it; an assumption that would change what happens next is also an option, and belongs on the menu rather than only in a caveat.</li></ul>
+<ul><li>About to state a specific value: a flag name, a default, a path, a version, a config key, whether an API exists</li><li>A conclusion rests on a chain in which one link was never checked</li><li>The user asks whether you are sure, or contradicts a claim</li><li>Every sentence in a draft has a qualifier, or none does</li><li>The accurate answer is that you do not know</li><li>Not for: whether a completion claim has been proven by running something — <a class="skill-link" href="/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> owns that gate. This is how to speak when the check has not been run.</li><li>Not for: turning a named unknown into something the reader can act on — <a class="skill-link" href="/skills/offering-the-next-move/"><code>offering-the-next-move</code></a> does that when the work closes. Marking a claim assumed says how much to trust it; an assumption that would change what happens next is also an option, and belongs on the menu rather than only in a caveat.</li></ul>
 <h2 id="three-tiers-marked-in-the-sentence">Three tiers, marked in the sentence</h2>
-<p>The same three-way split applies to data as it does to claims: <a class="skill-link" href="/tbaguette-skills/skills/tracking-data-provenance/"><code>tracking-data-provenance</code></a> carries observed, inferred, and defaulted through a system so a downstream consumer can still tell them apart. Confidence laundering is what happens when either taxonomy is dropped at a boundary — a hedged claim and an unhedged one arrive identical on the far side.</p>
+<p>The same three-way split applies to data as it does to claims: <a class="skill-link" href="/skills/tracking-data-provenance/"><code>tracking-data-provenance</code></a> carries observed, inferred, and defaulted through a system so a downstream consumer can still tell them apart. Confidence laundering is what happens when either taxonomy is dropped at a boundary — a hedged claim and an unhedged one arrive identical on the far side.</p>
 <table><thead><tr><th>Tier</th><th>What earns it</th><th>How it must read</th></tr></thead><tbody><tr><td>Verified</td><td>Observed in this session's tool output — file contents, command output, a test result, a response body</td><td>Flat assertion, source named when naming it is cheap</td></tr><tr><td>Inferred</td><td>Follows from verified facts by an argument you could write in one line</td><td>Assertion plus the inference: &quot;so X, because Y is set and Z reads it&quot;</td></tr><tr><td>Assumed</td><td>Plausible from convention, priors, or recall — including confident recall</td><td>Marked: &quot;conventionally defaults to X; not checked here&quot;</td></tr></tbody></table>
 <p>Rules that make the tiers real:</p>
 <ul><li><strong>Verification decays.</strong> A file read thirty tool calls ago and edited since is not verified. A test that passed before the last change is not evidence about the current code.</li><li><strong>Verify the claim, not its neighbour.</strong> Reading a signature does not verify what the function returns. Reading an import does not verify the symbol exists. This is the most common way a careful answer ends in a wrong leaf fact.</li><li><strong>Your own prior output is not evidence.</strong> Confidence that rises when you reread your own summary is laundering an assumption into a fact.</li><li><strong>Load-bearing assumptions get checked first.</strong> If the plan cannot survive being wrong about it, check before building on it. Everything else may stay marked and unchecked.</li></ul>
@@ -92,9 +92,9 @@
 <p>This is the involuntary sibling of <em>A search result is the input to a check, not the check</em> below. That section is about a narrowing <strong>you</strong> chose, and its whole remedy is to disclose it. Here nobody chose and nobody was told, so there is nothing to disclose until you go looking for the cap.</p>
 <h2 id="a-proxy-inherits-the-name-of-the-thing-it-stands-in-for">A proxy inherits the name of the thing it stands in for</h2>
 <p>The tiers above mark a claim you are making, in a sentence you control. This is the same failure built into a system, where nothing is left to do the marking: a named concept has no data source, the nearest available field gets mapped onto it, and from that moment every message, log line and screen naming the concept is making the original claim with the proxy's evidence behind it.</p>
-<p>Marking does not survive the mapping on its own, because the name travels downstream and the caveat stays where it was written. Carrying it is possible and it is work — <a class="skill-link" href="/tbaguette-skills/skills/tracking-data-provenance/"><code>tracking-data-provenance</code></a> is what that work looks like — and until somebody does it, the default is that the caveat is lost. A field counting how often an actor did the benign version of an act, mapped onto &quot;has a history of the harmful version&quot;, flags every subject in a population where the benign act is near universal — and emits a sentence asserting the specific harmful history. That is not a system hedging badly. It is a system stating something false, in its own voice, to a reader with no way to know a substitution ever happened.</p>
+<p>Marking does not survive the mapping on its own, because the name travels downstream and the caveat stays where it was written. Carrying it is possible and it is work — <a class="skill-link" href="/skills/tracking-data-provenance/"><code>tracking-data-provenance</code></a> is what that work looks like — and until somebody does it, the default is that the caveat is lost. A field counting how often an actor did the benign version of an act, mapped onto &quot;has a history of the harmful version&quot;, flags every subject in a population where the benign act is near universal — and emits a sentence asserting the specific harmful history. That is not a system hedging badly. It is a system stating something false, in its own voice, to a reader with no way to know a substitution ever happened.</p>
 <p>The check runs before the mapping and costs a minute: <strong>read what the system will say when the proxy fires.</strong> If the sentence is a specific claim the proxy's evidence cannot support, the mapping is wrong however reasonable the correlation looked. Leave the value absent.</p>
-<p>That is the counterintuitive half and it is the whole point. An admitted gap is worse for the feature and better for the reader: a rule that abstains says something true about what is known, while a rule wearing a borrowed name says something false about the world. <a class="skill-link" href="/tbaguette-skills/skills/tracking-data-provenance/"><code>tracking-data-provenance</code></a> keeps observed, inferred and defaulted distinguishable as data moves; this is what to do when the honest answer is that no tier applies, because nothing was measured at all.</p>
+<p>That is the counterintuitive half and it is the whole point. An admitted gap is worse for the feature and better for the reader: a rule that abstains says something true about what is known, while a rule wearing a borrowed name says something false about the world. <a class="skill-link" href="/skills/tracking-data-provenance/"><code>tracking-data-provenance</code></a> keeps observed, inferred and defaulted distinguishable as data moves; this is what to do when the honest answer is that no tier applies, because nothing was measured at all.</p>
 <p><strong>You do this to yourself too, and it is triggered by something entirely mundane.</strong> Everything above is a substitution built into a system at design time, where a field with no source acquires a name. The same substitution happens live, inside a single piece of work, and the thing that sets it off is not a hard problem — it is a small, boring obstruction. A file that is not there, a page that returns 404, a dependency that will not install, a permission denied. The correct response is to report what was actually attempted. The response that comes naturally is to find the nearest thing that <em>does</em> work — a mirror of the missing document, a similar file one directory over, an adjacent version of the package — answer about that instead, and then write up the finding under the original's name. Nothing about that feels like fabrication at any step. Each individual move was resourceful, and the substitution is disclosed nowhere, because it never presented itself as a decision.</p>
 <p>The tell is a report whose subject is not the subject you were asked about, and it is only visible by comparison. So when an obstacle has been routed around, name the thing you actually examined in the sentence that states the finding — the path you actually opened, the version you actually ran, the endpoint that actually answered. If that name differs from the one in the request, the difference is the finding, and it goes above the result rather than into a footnote under it.</p>
 <h2 id="when-a-number-and-when-it-is-false-precision">When a number, and when it is false precision</h2>
@@ -111,54 +111,54 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Certainty about a library API never opened in this repo</td><td>Fluency mistaken for accuracy; version drift is invisible from the inside</td></tr><tr><td>Long correct reasoning ending in a wrong specific value</td><td>The argument was verified, the leaf fact never was</td></tr><tr><td>&quot;I am about 85% sure&quot;</td><td>A number chosen to sound calibrated, with no bet and no moving evidence behind it</td></tr><tr><td>The answer flips the moment the user says &quot;really?&quot;</td><td>Confidence anchored on approval rather than on evidence</td></tr><tr><td>Every sentence hedged</td><td>Qualifiers are free and checking is not; hedging bought the appearance of care</td></tr><tr><td>A claim restated more confidently on its second telling</td><td>Own output recycled as a source</td></tr><tr><td>&quot;The function returns X&quot; after reading only the signature</td><td>Verified something adjacent to the claim and reported the claim</td></tr><tr><td>A cause stated for a failure that was never reproduced</td><td>Explanation quality mistaken for diagnostic evidence</td></tr><tr><td>&quot;There are no other occurrences&quot;, from a result that stopped on a round number</td><td>The result was capped in transit; truncation takes the tail, which is where a counterexample would be</td></tr><tr><td>A report about a near-neighbour of the thing that was asked about</td><td>A small obstruction was routed around and the substitute inherited the original's name</td></tr><tr><td>Everything built on an automated match turns out wrong, and confidently so</td><td>A ranked or scored selector picked the top candidate among several plausible ones instead of reporting the ambiguity</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;I am pretty sure it is called…&quot; about a name you could search for in seconds</li><li>Stating a default, a flag, or a version from memory in a project whose source is right there</li><li>Adding a percentage to make an unchecked claim sound rigorous</li><li>Answering a version-specific question without establishing the version</li><li>Speaking at the same volume whether the source was a file or a recollection</li><li>A tool result ending exactly on a limit, mid-record, or carrying a cursor nobody followed</li><li>A finding whose subject is not the thing that was asked about, with the swap named nowhere above it</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/clairvoyance/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/clairvoyance/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← clairvoyance</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/estimating-effort/">
+<a class="prevnext__link prevnext__link--next" href="/skills/estimating-effort/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">estimating-effort →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Judgment and meta</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/using-tbaguette/">
+<li><a class="see-also__link" href="/skills/using-tbaguette/">
       <span class="see-also__name">using-tbaguette</span>
       <span class="see-also__summary">Use at the start of every conversation, in every project…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">
+<li><a class="see-also__link" href="/skills/orchestrating-work-end-to-end/">
       <span class="see-also__name">orchestrating-work-end-to-end</span>
       <span class="see-also__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/clairvoyance/">
+<li><a class="see-also__link" href="/skills/clairvoyance/">
       <span class="see-also__name">clairvoyance</span>
       <span class="see-also__summary">Use when a request has been understood and is about to be executed and nothing has yet asked whether it is the right request; before a…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/estimating-effort/">
+<li><a class="see-also__link" href="/skills/estimating-effort/">
       <span class="see-also__name">estimating-effort</span>
       <span class="see-also__summary">Use when asked how long something will take, how big a change is, or whether work fits a given window; when producing a plan, schedule…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/deciding-reversibility/">
+<li><a class="see-also__link" href="/skills/deciding-reversibility/">
       <span class="see-also__name">deciding-reversibility</span>
       <span class="see-also__summary">Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/steelmanning-alternatives/">
+<li><a class="see-also__link" href="/skills/steelmanning-alternatives/">
       <span class="see-also__name">steelmanning-alternatives</span>
       <span class="see-also__summary">Use when an approach was adopted because it was the first one that worked and no other was seriously examined…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/managing-scope-drift/">
+<li><a class="see-also__link" href="/skills/managing-scope-drift/">
       <span class="see-also__name">managing-scope-drift</span>
       <span class="see-also__summary">Use when work has grown past what was asked or the diff is larger than the request implies…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/revalidating-decisions/">
+<li><a class="see-also__link" href="/skills/revalidating-decisions/">
       <span class="see-also__name">revalidating-decisions</span>
       <span class="see-also__summary">Use when a recorded decision — an ADR, design doc, wontfix, runbook line…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/reading-specifications/">
+<li><a class="see-also__link" href="/skills/reading-specifications/">
       <span class="see-also__name">reading-specifications</span>
       <span class="see-also__summary">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user&#x27;s request into work; when requirements are vague…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/scoping-before-building/">
+<li><a class="see-also__link" href="/skills/scoping-before-building/">
       <span class="see-also__name">scoping-before-building</span>
       <span class="see-also__summary">Use when an idea, feature request, or new project needs to become an approved design before any code gets written…</span>
     </a></li>
@@ -169,27 +169,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

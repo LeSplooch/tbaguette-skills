@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="designing-ci-pipelines — Environment and tooling — TBaguette’s Atelier">
 <meta property="og:description" content="Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI…">
-<link rel="canonical" href="/tbaguette-skills/skills/designing-ci-pipelines/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/designing-ci-pipelines/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a>
+  <a href="/#environment-and-tooling">Environment and tooling</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">designing-ci-pipelines</span>
 </nav>
@@ -72,7 +72,7 @@
 <p>A pipeline is a product whose user is a person waiting, and its budget is their attention. Every design choice is a trade against two failure states: feedback so slow that people stop waiting for it, and results so unreliable that people stop reading them.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Creating a pipeline, adding a stage, or reworking one that has grown organically</li><li>Feedback takes long enough that people context-switch away from the change</li><li>People rerun a red build before reading it, or merge with a failing check</li><li>A failure reproduces only on the runner</li><li>Deciding whether a new check blocks merges, and what a fork's pull request is allowed to touch</li></ul>
-<p>Not for: diagnosing one specific intermittent test (<a class="skill-link" href="/tbaguette-skills/skills/flaky-test-triage/"><code>flaky-test-triage</code></a>), deciding which tests should exist (<a class="skill-link" href="/tbaguette-skills/skills/choosing-test-scope/"><code>choosing-test-scope</code></a>), or making the build itself deterministic (<a class="skill-link" href="/tbaguette-skills/skills/reproducible-environments/"><code>reproducible-environments</code></a>).</p>
+<p>Not for: diagnosing one specific intermittent test (<a class="skill-link" href="/skills/flaky-test-triage/"><code>flaky-test-triage</code></a>), deciding which tests should exist (<a class="skill-link" href="/skills/choosing-test-scope/"><code>choosing-test-scope</code></a>), or making the build itself deterministic (<a class="skill-link" href="/skills/reproducible-environments/"><code>reproducible-environments</code></a>).</p>
 <h2 id="order-by-cost-to-signal">Order by cost-to-signal</h2>
 <p>The fastest check that can fail must fail first. Ordering is free; parallelism is not.</p>
 <table><thead><tr><th>Stage</th><th>Budget</th><th>Catches</th></tr></thead><tbody><tr><td>Format, lint, config and manifest validation</td><td>under 60s</td><td>typos, style, malformed pipeline and schema files</td></tr><tr><td>Type check or compile</td><td>1–3 min</td><td>missing symbols, signature misuse</td></tr><tr><td>Unit tests</td><td>under 5 min, sharded</td><td>logic defects</td></tr><tr><td>Build and package the artifact</td><td>parallel with tests when independent</td><td>packaging and dependency-resolution breaks</td></tr><tr><td>Integration and contract tests</td><td>5–15 min</td><td>wiring, boundaries, serialization</td></tr><tr><td>End-to-end, device, or browser</td><td>10–30 min, smallest blocking set</td><td>full-stack regressions</td></tr><tr><td>Fuzzing, perf, full matrix, licence and vulnerability sweeps</td><td>nightly or post-merge</td><td>low per-commit yield, high cost</td></tr></tbody></table>
@@ -97,48 +97,48 @@
 <p>So a job that has never once run successfully is indistinguishable from a healthy one on every dashboard that reports last-run status, because a job with no runs has no status to report and renders as blank, neutral, or simply missing from the list. The ways it ends up never-run are all mundane — merged before its credentials were armed, a schedule expression that parses but never matches, disabled at the platform level, pinned to a branch that was later renamed, or suspended automatically because the repository went quiet long enough for the provider to stop scheduling it.</p>
 <p>The consequence is what makes this worth a section rather than a bullet. The breakage never announces itself. It surfaces as the absence of whatever the job existed to maintain — the backup that is not there, the certificate that expired, the index that went stale, the dependency audit nobody has seen in four months — and it surfaces after the deadline the job was protecting has already passed.</p>
 <p>Two things follow:</p>
-<ul><li><strong>Force one run when the job lands, rather than waiting for its schedule.</strong> A job's first successful run is the only evidence it can run at all; until then it is untested code that happens to have a cron expression. Treat the change as unfinished until that run is green, the same way <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> treats any requirement about a condition that has not occurred yet.</li><li><strong>Report age of last success, not status of last run.</strong> These differ exactly when it matters. A job that succeeded once in March and has been suspended since is green on the second measure and four months stale on the first, and only one of those two numbers would have told anyone. Whatever surfaces job health needs to separate <em>passing</em>, <em>failing</em>, and <em>never executed</em> rather than folding the third into either of the first two.</li></ul>
+<ul><li><strong>Force one run when the job lands, rather than waiting for its schedule.</strong> A job's first successful run is the only evidence it can run at all; until then it is untested code that happens to have a cron expression. Treat the change as unfinished until that run is green, the same way <a class="skill-link" href="/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> treats any requirement about a condition that has not occurred yet.</li><li><strong>Report age of last success, not status of last run.</strong> These differ exactly when it matters. A job that succeeded once in March and has been suspended since is green on the second measure and four months stale on the first, and only one of those two numbers would have told anyone. Whatever surfaces job health needs to separate <em>passing</em>, <em>failing</em>, and <em>never executed</em> rather than folding the third into either of the first two.</li></ul>
 <h2 id="discovering-prerequisites-one-failure-at-a-time-costs-a-full-cycle-each">Discovering prerequisites one failure at a time costs a full cycle each</h2>
 <p>A job that has run once is past the section above and straight into the failure that replaces it: it runs, and it fails on the first thing it is missing. You supply that one; the next run fails on the second. Where you can trigger the job by hand, that loop costs minutes and the section above's advice — force a run — is also the answer here, six times over. This section is about the jobs where you cannot. A real release, a job whose inputs only exist at the hour it fires, one that consumes the previous night's output, a provider with no manual dispatch, an environment whose credentials are only injected on the schedule: for those, every missing prerequisite costs a full period, and a list of six that would fit on one screen takes six periods to read, one line at a time.</p>
 <p>What hides the shape is that the message names the reporter rather than the requirement. A job missing six credentials fails in seconds inside whichever early step happens to touch the first one, and the error belongs to that step: a checkout complaining about a token, a client refusing to construct, a registry returning 401. Nothing in it is false and nothing in it is a list. Read as a diagnosis it says <em>you are missing this</em>, when the true statement is <em>you are missing this and an unknown number of others</em> — and the gap between those two readings is every remaining cycle.</p>
 <p>So give any job with an expensive cycle a first step that enumerates every prerequisite it will need — each secret, credential, tool, network destination, and mounted path — checks all of them, and reports every failure at once instead of exiting on the first. Two things make that worth more than it looks:</p>
-<ul><li><strong>An expired credential fails identically to one that was never set.</strong> Both surface as an authorization error from whatever tried to use it, at whatever hour the job fires, with nobody reading. Only a preflight that separates <em>absent</em>, <em>present and rejected</em>, and <em>present and accepted</em> distinguishes them, and that is the difference between a fix and an investigation.</li><li><strong>Test the preflight against every state it claims to distinguish</strong>, including the ones you expect never to see. A check that has only ever printed <em>ok</em> is indistinguishable from a check incapable of printing anything else — <a class="skill-link" href="/tbaguette-skills/skills/writing-the-failing-test-first/"><code>writing-the-failing-test-first</code></a>'s rule, and it applies to the instrument you just built exactly as much as to the code it guards.</li></ul>
+<ul><li><strong>An expired credential fails identically to one that was never set.</strong> Both surface as an authorization error from whatever tried to use it, at whatever hour the job fires, with nobody reading. Only a preflight that separates <em>absent</em>, <em>present and rejected</em>, and <em>present and accepted</em> distinguishes them, and that is the difference between a fix and an investigation.</li><li><strong>Test the preflight against every state it claims to distinguish</strong>, including the ones you expect never to see. A check that has only ever printed <em>ok</em> is indistinguishable from a check incapable of printing anything else — <a class="skill-link" href="/skills/writing-the-failing-test-first/"><code>writing-the-failing-test-first</code></a>'s rule, and it applies to the instrument you just built exactly as much as to the code it guards.</li></ul>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;It only fails in CI&quot;</td><td>an undeclared environment difference, or a stale cache entry</td></tr><tr><td>A green build shipped a broken artifact</td><td>the cache key omitted an input, so a stale entry was reused</td></tr><tr><td>Nobody reads pipeline output any more</td><td>advisory checks with no expiry taught everyone that red is survivable</td></tr><tr><td>Flake count flat for months</td><td>retries made flakes invisible, so nothing was ever owned or fixed</td></tr><tr><td>&quot;Fix CI&quot; commits accumulate on the default branch</td><td>no stage can be run locally; pushing is the only way to test</td></tr><tr><td>40-minute pull-request pipeline</td><td>stages ordered by history rather than cost-to-signal</td></tr><tr><td>More runners did not help</td><td>the critical path is serial, or the cache misses every run</td></tr><tr><td>A secret leaked through a pull request</td><td>a fork's PR ran with the same permissions as a branch PR</td></tr><tr><td>The same failure gets debugged twice</td><td>logs omitted the command and the resolved versions</td></tr><tr><td>A scheduled job's dashboard is green and the thing it maintains is months stale</td><td>Last-run status reported where age of last success was the question</td></tr><tr><td>A nightly job has failed for weeks, each time on a different missing secret</td><td>No preflight, so each run discovers exactly one prerequisite and the cycle is a night</td></tr><tr><td>A credential that worked last month now fails and nobody can tell if it was revoked</td><td>Absent and rejected produce the same error from the step that used it</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;Just hit rerun&quot; as the standard response to red</li><li>Adding a retry, a sleep, or a longer timeout to make a specific test pass</li><li>A cache key that does not include the toolchain version</li><li>Logic accumulating in pipeline configuration that exists nowhere a developer can run</li><li>A check that has been advisory for more than a month</li><li>Any job holding secrets that executes code from a fork</li><li>&quot;The build is red, but it's unrelated&quot; said more than once in a week — trust is already gone, and a real failure will be rerun rather than read</li><li>A scheduled job merged and never once run by hand — its first real execution will be unattended, at whatever hour it fires</li><li>Job health shown as pass/fail, with no way to see a job that has never executed</li><li>A job on a slow cycle whose required secrets and tools are written down nowhere the job itself checks</li><li>A preflight or health check that has printed the same word on every run it has ever had</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/reproducible-environments/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/reproducible-environments/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← reproducible-environments</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/upgrading-dependencies/">
+<a class="prevnext__link prevnext__link--next" href="/skills/upgrading-dependencies/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">upgrading-dependencies →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Environment and tooling</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/portable-shell-scripting/">
+<li><a class="see-also__link" href="/skills/portable-shell-scripting/">
       <span class="see-also__name">portable-shell-scripting</span>
       <span class="see-also__summary">Use when writing or reviewing a shell script, when a script works in one shell but fails in another…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/reproducible-environments/">
+<li><a class="see-also__link" href="/skills/reproducible-environments/">
       <span class="see-also__name">reproducible-environments</span>
       <span class="see-also__summary">Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/upgrading-dependencies/">
+<li><a class="see-also__link" href="/skills/upgrading-dependencies/">
       <span class="see-also__name">upgrading-dependencies</span>
       <span class="see-also__summary">Use when dependency versions have fallen behind, when a security advisory names a package in use…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/keeping-tbaguette-current/">
+<li><a class="see-also__link" href="/skills/keeping-tbaguette-current/">
       <span class="see-also__name">keeping-tbaguette-current</span>
       <span class="see-also__summary">Use at the start of every conversation, unconditionally — not gated on how long it&#x27;s been since the last check — and any time the user…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/tending-tbaguette/">
+<li><a class="see-also__link" href="/skills/tending-tbaguette/">
       <span class="see-also__name">tending-tbaguette</span>
       <span class="see-also__summary">Use at the start of every conversation, in any project or repo…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/automating-repetition/">
+<li><a class="see-also__link" href="/skills/automating-repetition/">
       <span class="see-also__name">automating-repetition</span>
       <span class="see-also__summary">Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating…</span>
     </a></li>
@@ -149,27 +149,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

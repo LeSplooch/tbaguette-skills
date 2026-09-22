@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="How to actually use these skills — TBaguette’s Atelier">
 <meta property="og:description" content="What to do after you install TBaguette’s Atelier: the reload new conversations need, how skills fire without being invoked, six worth trying first, and what to check when nothing seems to happen.">
-<link rel="canonical" href="/tbaguette-skills/getting-started/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/getting-started/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,33 +29,33 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/" aria-current="page">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/" aria-current="page">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">Getting started</span>
 </nav>
@@ -67,12 +67,12 @@
 
   <div class="prose">
     <h2 id="install">Install it, if you haven’t</h2>
-    <p>Here it is — the same box <a href="/tbaguette-skills/">the landing page</a> leads with, repeated so this page does not send you elsewhere for the one thing you have to paste. It carries a prompt rather than a command: put it into whichever coding agent you use, and it works out which harness it’s in and takes that harness’s route. On Claude Code that route is a clone-or-pull into <code>~/.claude/skills/TBaguette</code>, and nothing else on your machine is touched. <a href="/tbaguette-skills/verify-install/">Install verification</a> is the page that proves that claim, with the actual test source rather than the claim restated in different words.</p>
+    <p>Here it is — the same box <a href="/">the landing page</a> leads with, repeated so this page does not send you elsewhere for the one thing you have to paste. It carries a prompt rather than a command: put it into whichever coding agent you use, and it works out which harness it’s in and takes that harness’s route. On Claude Code that route is a clone-or-pull into <code>~/.claude/skills/TBaguette</code>, and nothing else on your machine is touched. <a href="/verify-install/">Install verification</a> is the page that proves that claim, with the actual test source rather than the claim restated in different words.</p>
   </div>
 
   <div class="install-frame">
   <p class="install-frame__label">
-    <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-crust"></use></svg>
+    <svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#icon-crust"></use></svg>
     Install TBaguette’s Atelier
   </p>
   <div class="install-frame__body">
@@ -111,23 +111,23 @@ Flag one more thing, because it applies to this very conversation: this session 
       <button class="install__copy" type="button" data-copy-target="install-prompt-command"
               aria-label="Copy install command">
         <span class="install__copy-icons">
-          <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-copy"></use></svg>
-          <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
+          <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="/assets/icons.svg#icon-copy"></use></svg>
+          <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="/assets/icons.svg#icon-check"></use></svg>
         </span>
         <span data-copy-label>Copy</span>
       </button>
     </div>
     <p class="install__hint">Paste into whichever coding agent you use — it works out which harness it&#x27;s in and installs the right way for it. It needs a shell tool, which rules out Claude Desktop; on Claude Code it&#x27;s been exercised against Claude Sonnet (Max).</p>
     <p class="install-frame__note">
-      <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
-      <span>Only ever touches this folder — verified against your other skills, not just claimed. <a href="/tbaguette-skills/verify-install/">See how</a>.</span>
+      <svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#icon-check"></use></svg>
+      <span>Only ever touches this folder — verified against your other skills, not just claimed. <a href="/verify-install/">See how</a>.</span>
     </p>
     <p class="install-frame__note">
-      <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
+      <svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#icon-check"></use></svg>
       <span>Restart your agent (in Claude Code, <code>/reload-plugins</code>), then invoke a skill as <code>TBaguette:skill-name</code>. On Claude that means Claude Code specifically — the Claude Desktop app and claude.ai chat load skills from your account instead of this folder, so cloning here won’t make them appear there.</span>
     </p>
     <p class="install-frame__note">
-      <svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-check"></use></svg>
+      <svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#icon-check"></use></svg>
       <span>A conversation that was already open when you installed or updated — including the one you installed from — is still running on the skill list it started with. Open a new conversation to pick up the latest, or invoke <code>TBaguette:using-tbaguette</code> in the old one.</span>
     </p>
     
@@ -145,7 +145,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 
     <h2 id="how-skills-fire">Most of the time you won’t invoke anything</h2>
     <p>Every skill carries a trigger description — the situations it is for, written out at length rather than summarized into a category. Your agent matches what you are doing against those, and <code>TBaguette:using-tbaguette</code> is the piece that makes that check habitual rather than occasional.</p>
-    <p>So the ordinary experience is that you never type a skill name. You say <em>fix this bug</em>, and <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> arrives before a patch does — a reproduction first, then the cause, then the fix. You ask for an interface, and <a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a> turns up with the questions a designer would have asked. You do not have to memorize 98 names, and you should not try.</p>
+    <p>So the ordinary experience is that you never type a skill name. You say <em>fix this bug</em>, and <a class="skill-link" href="/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> arrives before a patch does — a reproduction first, then the cause, then the fix. You ask for an interface, and <a class="skill-link" href="/skills/formidable/"><code>formidable</code></a> turns up with the questions a designer would have asked. You do not have to memorize 98 names, and you should not try.</p>
 
     <h2 id="by-name">When you do want one by name</h2>
     <p>Invoke it directly — <code>TBaguette:formidable</code>, <code>TBaguette:knowing-when-to-stop</code>, whichever one you mean. There are two honest reasons to override the automatic path. The first is that you know your own situation better than a trigger description can: the work does not look like the skill’s trigger, but the discipline still applies. The second is timing — you want it before your agent has decided this task is simple enough to skip it, which is reliably the moment it is not.</p>
@@ -153,26 +153,26 @@ Flag one more thing, because it applies to this very conversation: this session 
     <h2 id="starter-set">Six worth trying on purpose</h2>
     <p>Not a ranking, and not the six that matter most — the six whose effect you can watch inside a single session, which makes them the fastest way to find out whether any of this is for you.</p>
     <ul>
-<li><a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a> &mdash; The flagship, and the one with the most visible before-and-after. Design craft for every stack there is — web, terminal, native, game HUD, print, voice — so it applies to the interface you actually have rather than the one a web tutorial assumed you had. Ask it for nothing in particular and it goes looking for the best shipped work in your domain first, then builds past what you asked for.</li>
-<li><a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> &mdash; Turns <em>fix this</em> into a reproduction before a patch. The fastest way to see the difference: hand it a bug whose obvious fix you already have in mind, and watch where it goes first.</li>
-<li><a class="skill-link" href="/tbaguette-skills/skills/writing-the-failing-test-first/"><code>writing-the-failing-test-first</code></a> &mdash; The most concrete behavior change on this list. One test that fails for the right reason before any production code exists — a different thing from a test written afterwards that has never once been red.</li>
-<li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> &mdash; For anyone who has been told something was finished and found out otherwise. It replaces <em>this should work</em> with a command that was actually run, and treats a tool’s own success report as a claim rather than as evidence.</li>
-<li><a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> &mdash; The entry point for anything bigger than a single edit — which is the next section, because it is the one piece of this that changes how a whole run is shaped rather than how one response is.</li>
-<li><a class="skill-link" href="/tbaguette-skills/skills/knowing-when-to-stop/"><code>knowing-when-to-stop</code></a> &mdash; The counterweight to everything above. Bounded passes, diminishing returns, and naming what is being left undone instead of quietly polishing until the context runs out.</li>
+<li><a class="skill-link" href="/skills/formidable/"><code>formidable</code></a> &mdash; The flagship, and the one with the most visible before-and-after. Design craft for every stack there is — web, terminal, native, game HUD, print, voice — so it applies to the interface you actually have rather than the one a web tutorial assumed you had. Ask it for nothing in particular and it goes looking for the best shipped work in your domain first, then builds past what you asked for.</li>
+<li><a class="skill-link" href="/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a> &mdash; Turns <em>fix this</em> into a reproduction before a patch. The fastest way to see the difference: hand it a bug whose obvious fix you already have in mind, and watch where it goes first.</li>
+<li><a class="skill-link" href="/skills/writing-the-failing-test-first/"><code>writing-the-failing-test-first</code></a> &mdash; The most concrete behavior change on this list. One test that fails for the right reason before any production code exists — a different thing from a test written afterwards that has never once been red.</li>
+<li><a class="skill-link" href="/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> &mdash; For anyone who has been told something was finished and found out otherwise. It replaces <em>this should work</em> with a command that was actually run, and treats a tool’s own success report as a claim rather than as evidence.</li>
+<li><a class="skill-link" href="/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> &mdash; The entry point for anything bigger than a single edit — which is the next section, because it is the one piece of this that changes how a whole run is shaped rather than how one response is.</li>
+<li><a class="skill-link" href="/skills/knowing-when-to-stop/"><code>knowing-when-to-stop</code></a> &mdash; The counterweight to everything above. Bounded passes, diminishing returns, and naming what is being left undone instead of quietly polishing until the context runs out.</li>
     </ul>
 
     <h2 id="bigger-work">Anything bigger than one edit starts somewhere else</h2>
-    <p>One skill covers one stretch of work. A feature, a bug with no known cause, a migration, an audit — those take several of them, in an order, and that order is its own skill: <a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a>. It routes the request to the lightest track that fits, says which phase the work is in, and names the evidence that has to exist before the next phase is allowed to open.</p>
+    <p>One skill covers one stretch of work. A feature, a bug with no known cause, a migration, an audit — those take several of them, in an order, and that order is its own skill: <a class="skill-link" href="/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a>. It routes the request to the lightest track that fits, says which phase the work is in, and names the evidence that has to exist before the next phase is allowed to open.</p>
     <p>The practical version, for you: describe what you want, and let it open with scoping rather than with an editor. What comes back first is a design to say yes or no to — which is a great deal cheaper to argue with than a finished implementation of the wrong thing.</p>
 
     <h2 id="updating">Keeping it current</h2>
     <p>Run the same install prompt again — it takes whichever route it took the first time. On the Claude Code route that route is a clone-or-pull, so a second run updates in place rather than erroring, duplicating anything, or touching whatever else lives beside it. On a harness with its own plugin command, the prompt hands back to that command, and updating is whatever that harness already does.</p>
-    <p>Mostly you will not have to remember. <a class="skill-link" href="/tbaguette-skills/skills/keeping-tbaguette-current/"><code>keeping-tbaguette-current</code></a> runs that check at the start of a conversation and reports what changed in readable terms rather than as a commit log. This site’s own header carries the published version and the moment it was last built, if you would rather compare by hand.</p>
+    <p>Mostly you will not have to remember. <a class="skill-link" href="/skills/keeping-tbaguette-current/"><code>keeping-tbaguette-current</code></a> runs that check at the start of a conversation and reports what changed in readable terms rather than as a commit log. This site’s own header carries the published version and the moment it was last built, if you would rather compare by hand.</p>
 
     <h2 id="alongside-others">Living beside your other skills</h2>
-    <p>Installing TBaguette adds exactly one directory, <code>~/.claude/skills/TBaguette</code>, and touches nothing else — not another library’s skills, not a plugin you already run, not your settings. If that one path is already occupied by something unrelated, the install refuses outright rather than merging into it, so a name collision fails loudly instead of quietly costing you whatever was there. <a href="/tbaguette-skills/verify-install/">Install verification</a> is where that is proved against the real command rather than asserted.</p>
+    <p>Installing TBaguette adds exactly one directory, <code>~/.claude/skills/TBaguette</code>, and touches nothing else — not another library’s skills, not a plugin you already run, not your settings. If that one path is already occupied by something unrelated, the install refuses outright rather than merging into it, so a name collision fails loudly instead of quietly costing you whatever was there. <a href="/verify-install/">Install verification</a> is where that is proved against the real command rather than asserted.</p>
     <p>Skill <em>names</em> can repeat across libraries, and that is fine, because TBaguette’s are called with its prefix. <code>TBaguette:naming-things</code> is always this library’s; the same name without the prefix is whoever else’s. Two skills that share a name stay separately reachable and neither one shadows the other — so nothing has to be uninstalled to make room.</p>
-    <p>If you also run a library that injects its own check-the-skills-first notice — Superpowers is the one you are most likely to have — both fire, and both apply. They are not competing for the same job: <a class="skill-link" href="/tbaguette-skills/skills/using-tbaguette/"><code>using-tbaguette</code></a> speaks only for TBaguette’s own skills and says nothing about anyone else’s. When the other library has the better answer for the job in front of you, that is the one to use. The rule here is to check what is available before answering, never to prefer this library’s skill because it is this library’s.</p>
+    <p>If you also run a library that injects its own check-the-skills-first notice — Superpowers is the one you are most likely to have — both fire, and both apply. They are not competing for the same job: <a class="skill-link" href="/skills/using-tbaguette/"><code>using-tbaguette</code></a> speaks only for TBaguette’s own skills and says nothing about anyone else’s. When the other library has the better answer for the job in front of you, that is the one to use. The rule here is to check what is available before answering, never to prefer this library’s skill because it is this library’s.</p>
     <p>And if it does get in your way, removing it is deleting that one directory. There is no uninstaller, no settings entry to unpick, and nothing else on your machine to unwind — on Windows, delete the same folder.</p>
     <pre class="prose-code-block" dir="ltr"><code>rm -rf ~/.claude/skills/TBaguette</code></pre>
 
@@ -189,7 +189,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     </ul>
 
     <h2 id="next">Where to go from here</h2>
-    <p>Every skill on this site is readable in full and searchable by name, summary, or category, grouped into categories on <a href="/tbaguette-skills/">the landing page</a>. <a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/CATALOG.md">CATALOG.md</a> is that same catalog as a single file, which is the better one to hand your agent when you want it to read rather than search.</p>
+    <p>Every skill on this site is readable in full and searchable by name, summary, or category, grouped into categories on <a href="/">the landing page</a>. <a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/CATALOG.md">CATALOG.md</a> is that same catalog as a single file, which is the better one to hand your agent when you want it to read rather than search.</p>
   </div>
 </article>
 </main>
@@ -197,27 +197,27 @@ Flag one more thing, because it applies to this very conversation: this session 
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="validating-numeric-input — Security (defensive) — TBaguette’s Atelier">
 <meta property="og:description" content="Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…">
-<link rel="canonical" href="/tbaguette-skills/skills/validating-numeric-input/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/validating-numeric-input/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#security">Security (defensive)</a>
+  <a href="/#security">Security (defensive)</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">validating-numeric-input</span>
 </nav>
@@ -72,7 +72,7 @@
 <p>A guard written as a comparison is not a parse, and it is not total over its own input domain. <code>value &lt; MINIMUM</code> asks a question about a number; it silently answers &quot;no&quot; for inputs that are not numbers at all.</p>
 <p>Parsing a number means asserting that it <strong>is</strong> one — finite first, then in range — rather than testing a relation and inferring the rest from the test not having fired.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Any external number: form, query string, JSON, header, config, CSV, spreadsheet, sensor, upstream API.</li><li>Before clamping, bounding, summing, indexing, allocating, or scaling by a value.</li><li>A value passed every check and surfaced as an exception somewhere unrelated.</li><li>Anything involving money, quantities, durations, or identifiers that look numeric.</li><li>Not for: the general parse-don't-validate argument and the injection family (<a class="skill-link" href="/tbaguette-skills/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a>), or how to represent the resulting failure (<a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a>).</li></ul>
+<ul><li>Any external number: form, query string, JSON, header, config, CSV, spreadsheet, sensor, upstream API.</li><li>Before clamping, bounding, summing, indexing, allocating, or scaling by a value.</li><li>A value passed every check and surfaced as an exception somewhere unrelated.</li><li>Anything involving money, quantities, durations, or identifiers that look numeric.</li><li>Not for: the general parse-don't-validate argument and the injection family (<a class="skill-link" href="/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a>), or how to represent the resulting failure (<a class="skill-link" href="/skills/modeling-errors/"><code>modeling-errors</code></a>).</li></ul>
 <h2 id="the-order-that-works">The order that works</h2>
 <ol><li><strong>Assert it is a number of the expected kind</strong> — integer versus real, and reject the string forms you did not intend to accept.</li><li><strong>Assert it is finite.</strong> This is the step everyone skips, and it is the one that makes every later step meaningful.</li><li><strong>Assert the range</strong>, now that comparison means something.</li><li><strong>Convert to the domain type</strong> — cents, a duration, a bounded quantity — and let the rest of the program hold that type rather than a raw number.</li></ol>
 <p>Steps 2 and 3 are not interchangeable. Range-then-finite is the same bug in a different order.</p>
@@ -93,38 +93,38 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>A number passed every range check and broke something far downstream</td><td>The checks were relations, and NaN makes every relation false</td></tr><tr><td>A clamp returned a value outside its own bounds</td><td>Clamp built from min/max, which passes NaN through unchanged</td></tr><tr><td>Two distinct identifiers collided</td><td>Large integer crossed a boundary into a 53-bit number type</td></tr><tr><td>A missing field became a legitimate <code>0</code></td><td>Empty string coerced instead of rejected</td></tr><tr><td><code>&quot;12abc&quot;</code> was accepted as 12</td><td>Lenient parse; no assertion that the whole input was consumed</td></tr><tr><td>A total came out cents short, sometimes</td><td>Money held as a binary float</td></tr><tr><td>A bounds check passed and the arithmetic still overflowed</td><td>Checked the result rather than the operands</td></tr><tr><td>A European user's <code>1,5</code> became 15</td><td>Locale-dependent parse on an interchange format</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's just an integer from the form.&quot;</li><li>&quot;I already check the range.&quot;</li><li>&quot;We never generate NaN&quot; — about a value that arrives from outside.</li><li>&quot;The parser returns 0 if it fails, which is a safe default.&quot;</li><li>Clamping without a finiteness assertion first.</li><li>Storing money, or any exact quantity, in a floating-point type.</li><li>A numeric parse whose failure path and whose zero path are the same path.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/handling-untrusted-input/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/handling-untrusted-input/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← handling-untrusted-input</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/secrets-hygiene/">
+<a class="prevnext__link prevnext__link--next" href="/skills/secrets-hygiene/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">secrets-hygiene →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Security (defensive)</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/threat-modeling/">
+<li><a class="see-also__link" href="/skills/threat-modeling/">
       <span class="see-also__name">threat-modeling</span>
       <span class="see-also__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/handling-untrusted-input/">
+<li><a class="see-also__link" href="/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
       <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/secrets-hygiene/">
+<li><a class="see-also__link" href="/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
       <span class="see-also__summary">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/redacting-sensitive-output/">
+<li><a class="see-also__link" href="/skills/redacting-sensitive-output/">
       <span class="see-also__name">redacting-sensitive-output</span>
       <span class="see-also__summary">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/auditing-dependencies/">
+<li><a class="see-also__link" href="/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>
       <span class="see-also__summary">Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/least-privilege-design/">
+<li><a class="see-also__link" href="/skills/least-privilege-design/">
       <span class="see-also__name">least-privilege-design</span>
       <span class="see-also__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</span>
     </a></li>
@@ -135,27 +135,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

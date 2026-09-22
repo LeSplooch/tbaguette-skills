@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="threat-modeling — Security (defensive) — TBaguette’s Atelier">
 <meta property="og:description" content="Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…">
-<link rel="canonical" href="/tbaguette-skills/skills/threat-modeling/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/threat-modeling/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#security">Security (defensive)</a>
+  <a href="/#security">Security (defensive)</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">threat-modeling</span>
 </nav>
@@ -71,7 +71,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A threat model is a 30–60 minute conversation that produces decisions, not a document. Its output is a list of design changes, mitigations with tests, and explicitly accepted risks with owners. If the design did not change and nothing got a test, the session was theater.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A new trust boundary appears: a new listener, IPC surface, plugin or extension point, tenant, file format you now parse, or a queue you now consume.</li><li>A new class of data enters: credentials, personal data, payment, health, keys, or telemetry that can carry user content.</li><li>A new external integration or an authorization change: third-party API, webhook receiver, identity provider, a new role, a new token type, a session mechanism, or any delegation.</li><li>Before writing the security section of a design doc, so the section reports decisions instead of inventing them.</li><li>Not for: root-causing a specific reported bug; evaluating a package's supply chain (<a class="skill-link" href="/tbaguette-skills/skills/auditing-dependencies/"><code>auditing-dependencies</code></a>); writing the actual permission scopes (<a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a>); the input-handling rules themselves (<a class="skill-link" href="/tbaguette-skills/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a>).</li></ul>
+<ul><li>A new trust boundary appears: a new listener, IPC surface, plugin or extension point, tenant, file format you now parse, or a queue you now consume.</li><li>A new class of data enters: credentials, personal data, payment, health, keys, or telemetry that can carry user content.</li><li>A new external integration or an authorization change: third-party API, webhook receiver, identity provider, a new role, a new token type, a session mechanism, or any delegation.</li><li>Before writing the security section of a design doc, so the section reports decisions instead of inventing them.</li><li>Not for: root-causing a specific reported bug; evaluating a package's supply chain (<a class="skill-link" href="/skills/auditing-dependencies/"><code>auditing-dependencies</code></a>); writing the actual permission scopes (<a class="skill-link" href="/skills/least-privilege-design/"><code>least-privilege-design</code></a>); the input-handling rules themselves (<a class="skill-link" href="/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a>).</li></ul>
 <h2 id="the-four-questions">The four questions</h2>
 <ol><li><strong>What are we building.</strong> One diagram, drawn from the running system, not the architecture doc — the doc is aspirational and the real system has an extra debug endpoint, a legacy path, and one listener nobody remembers. Data flows, not boxes: label what crosses each arrow.</li><li><strong>What can go wrong.</strong> Enumerated per boundary, never per component. Component lists are unbounded; boundary lists come out at 5–15 and terminate.</li><li><strong>What are we going to do about it.</strong> Every threat gets one of four verbs: eliminate, mitigate, transfer, accept — with a named owner.</li><li><strong>Did we do a good enough job.</strong> Every &quot;what can go wrong&quot; has a decision; every mitigation names the test or assertion that will fail if someone removes it.</li></ol>
 <h2 id="the-boundary-list-is-where-the-value-is">The boundary list is where the value is</h2>
@@ -83,7 +83,7 @@
 <table><thead><tr><th>Prompt</th><th>Question at this boundary</th><th>Property it defends</th></tr></thead><tbody><tr><td>Spoofing</td><td>Can the far side claim an identity it does not have?</td><td>Authentication</td></tr><tr><td>Tampering</td><td>Can data or code be altered in transit or at rest?</td><td>Integrity</td></tr><tr><td>Repudiation</td><td>Can an actor deny an action we cannot prove?</td><td>Attribution</td></tr><tr><td>Information disclosure</td><td>Who else can read this, including logs and errors?</td><td>Confidentiality</td></tr><tr><td>Denial of service</td><td>What unbounded work can a caller cause?</td><td>Availability</td></tr><tr><td>Elevation of privilege</td><td>Can a caller act with authority it was not granted?</td><td>Authorization</td></tr></tbody></table>
 <p>Skip categories that genuinely do not apply — a read-only static asset path has no meaningful repudiation story — and say so out loud rather than filling the cell.</p>
 <h2 id="attackers-in-capability-tiers">Attackers, in capability tiers</h2>
-<p>Naming the tier turns &quot;someone could&quot; into &quot;who, and would they bother&quot;. A generic &quot;hacker&quot; produces a generic mitigation. A <a class="skill-link" href="/tbaguette-skills/skills/clairvoyance/"><code>clairvoyance</code></a> sweep's actor pass — the empty chairs, the field a request sits in — hands off here the moment an adversarial chair is occupied; the tiers below are the enumeration it deliberately does not attempt.</p>
+<p>Naming the tier turns &quot;someone could&quot; into &quot;who, and would they bother&quot;. A generic &quot;hacker&quot; produces a generic mitigation. A <a class="skill-link" href="/skills/clairvoyance/"><code>clairvoyance</code></a> sweep's actor pass — the empty chairs, the field a request sits in — hands off here the moment an adversarial chair is occupied; the tiers below are the enumeration it deliberately does not attempt.</p>
 <table><thead><tr><th>Tier</th><th>Has</th><th>Wants</th><th>Effort</th></tr></thead><tbody><tr><td>0 Curious user</td><td>a valid account, dev tools, your API docs</td><td>another tenant's data, a role upgrade, free usage</td><td>minutes</td></tr><tr><td>1 Opportunist</td><td>mass scanners, credential lists, public exploits within days</td><td>any foothold, compute, a proxy</td><td>near zero, untargeted</td></tr><tr><td>2 Targeted</td><td>reads your source, registers lookalike names, phishes staff, buys your expired domain</td><td>your specific data or money</td><td>days to weeks</td></tr><tr><td>3 Insider / supply chain</td><td>a valid credential, a maintainer account, a CI token</td><td>anything, with your own authority</td><td>mitigated structurally, not detectively</td></tr></tbody></table>
 <p>Label any mitigation that only stops tier 0 — unguessable URLs, undocumented endpoints, client-side checks — as exactly that. Tier 4 (state-level) is out of scope unless you can name why you are a target; write the exclusion down instead of leaving it ambiguous.</p>
 <h2 id="ranking-impact-reachability">Ranking: impact × reachability</h2>
@@ -94,14 +94,14 @@
 <h2 id="a-limit-is-a-property-of-state-not-of-one-transition">A limit is a property of state, not of one transition</h2>
 <p>A limit, a quota, an entitlement, a uniqueness rule — each of these is a property of a <strong>state</strong>, and each gets implemented as a check on a single <strong>transition</strong>, almost always the interactive one that was in mind when it was written. The gate is real, it works, and it guards one door of a building with several.</p>
 <p>Every other route that can reach the same state walks past it: first-run seeding that creates in bulk, import, migration, restore from backup, sync from another replica, admin tooling, an undo that re-adds what was removed. These are the paths that typically run with more authority and less scrutiny than the one that got the check, which is the wrong way round.</p>
-<p>So the question is never &quot;is the limit enforced?&quot; It is: <strong>enumerate every path that can produce this state, and does each one pass the same gate?</strong> Write the list; a limit with one enforcement site and four producers is a finding, and it is findable in minutes by grepping for writes to the thing being limited rather than for the check. <a class="skill-link" href="/tbaguette-skills/skills/tracing-data-flow/"><code>tracing-data-flow</code></a> covers doing that enumeration properly when the producers are not obvious.</p>
+<p>So the question is never &quot;is the limit enforced?&quot; It is: <strong>enumerate every path that can produce this state, and does each one pass the same gate?</strong> Write the list; a limit with one enforcement site and four producers is a finding, and it is findable in minutes by grepping for writes to the thing being limited rather than for the check. <a class="skill-link" href="/skills/tracing-data-flow/"><code>tracing-data-flow</code></a> covers doing that enumeration properly when the producers are not obvious.</p>
 <p>Then ask the second half, which is what turns a temporary breach into a permanent one: <strong>does anything re-check the state after it exists?</strong> A gate that runs only at creation cannot repair what arrived before it, around it, or from a version of the code that predates it. Enforcement only at creation encodes an assumption that state can only ever arrive by creation, and every item in the list above violates that assumption. Without a read-time or load-time check as well, the rule degrades into an honour system the moment a second writer appears, and the violation persists for the lifetime of the install rather than until the next request.</p>
 <p>This generalizes past security limits to any invariant worth stating: if it is only ever established, and never verified, it is a hope with a constructor.</p>
 <h2 id="confining-what-something-may-run-does-not-confine-what-it-may-write">Confining what something may run does not confine what it may write</h2>
 <p>A containment boundary is drawn around <strong>execution</strong>: this process may call these things, reach these hosts, touch these paths. The audit that follows matches the boundary — enumerate what it can invoke, attempt to step outside, confirm the attempts fail. That audit comes back clean on a system with an exit in it, because the exit is not an invocation.</p>
 <p>The boundary says nothing about <strong>authorship</strong>. Anything the confined thing may write, that something <em>outside</em> the boundary will later read, run, or treat as configuration, is a way out at the outer thing's privilege — deferred until the next time that outer thing reads. The confined process never steps over the line; it leaves something on its own side of the line for a trusted reader to pick up. Familiar carriers: a task, hook, or launch definition a surrounding tool discovers on its own; an interpreter, plugin, or shim on a path something else resolves through; a lockfile or dependency manifest a later build obeys; a socket or state file a privileged local service consumes; a rule file that widens the very allowlist doing the confining.</p>
 <p>Two things make this hard to find with the usual pass. It is <strong>time-shifted</strong>, so nothing is happening at the moment of the write and there is no request to inspect — the trace at the interesting instant shows a file being created inside a permitted directory. And the escalation is performed by a component that is behaving correctly: it loaded its configuration, as designed, from where it has always loaded it.</p>
-<p>So run the boundary list twice. Once for reachability, which is the pass everyone runs. Then once for authorship: <strong>for every location the confined thing can write, name who else reads it and with what privilege.</strong> Wherever that answer names something outside, the boundary is drawn in the wrong place — either that reader belongs inside it, or what you have is not a boundary. <a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a> carries the same-moment version of this, where the gap is between an approved name and what that name resolves to at the instant it runs; this is the delayed version, where the gap is a file sitting between the two. The strong version of the question is worth asking out loud, because it makes the failure obvious in one sentence — <em>does this thing get to write the future inputs of anything that is not contained?</em> Where it does, containment was never the property you had.</p>
+<p>So run the boundary list twice. Once for reachability, which is the pass everyone runs. Then once for authorship: <strong>for every location the confined thing can write, name who else reads it and with what privilege.</strong> Wherever that answer names something outside, the boundary is drawn in the wrong place — either that reader belongs inside it, or what you have is not a boundary. <a class="skill-link" href="/skills/least-privilege-design/"><code>least-privilege-design</code></a> carries the same-moment version of this, where the gap is between an approved name and what that name resolves to at the instant it runs; this is the delayed version, where the gap is a file sitting between the two. The strong version of the question is worth asking out loud, because it makes the failure obvious in one sentence — <em>does this thing get to write the future inputs of anything that is not contained?</em> Where it does, containment was never the property you had.</p>
 <h2 id="assumptions-are-the-tripwires">Assumptions are the tripwires</h2>
 <p>List them at the top of the model. Each one, if false, invalidates everything below it, and each has a cheap check that almost nobody runs.</p>
 <table><thead><tr><th>Assumption</th><th>Cheap verification</th></tr></thead><tbody><tr><td>&quot;This port is not reachable from the internet&quot;</td><td>scan it from outside</td></tr><tr><td>&quot;Only our own code calls this&quot; — service, queue, or storage path</td><td>list who can actually call, publish, or write, from access logs rather than memory</td></tr><tr><td>&quot;The input was sanitized upstream&quot;</td><td>find the line that does it</td></tr><tr><td>&quot;Only admins hold this role&quot;</td><td>list current role assignments</td></tr></tbody></table>
@@ -110,34 +110,34 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>40 threats, zero decisions</td><td>Modeled components instead of boundaries; component enumeration never terminates</td></tr><tr><td>Every threat begins &quot;an attacker gains access and then…&quot;</td><td>No capability tiers; &quot;gains access&quot; is a conclusion being used as a premise</td></tr><tr><td>Ranked by CVSS or a severity label</td><td>A context-free score used in place of reachability in your system</td></tr><tr><td>Long debate on crypto choice, nothing on authorization</td><td>Novel-looking risks crowd out the common ones; broken access control outnumbers crypto flaws by a wide margin</td></tr><tr><td>Mitigation exists, no test</td><td>A mitigation without a test is a comment; the next refactor deletes it silently</td></tr><tr><td>&quot;The gateway will block that&quot;</td><td>Control placed at a layer any direct caller bypasses</td></tr><tr><td>The paid tier stops existing for users who arrived by one particular route</td><td>A limit enforced at one write path; the bulk or seeding path never consulted it</td></tr><tr><td>A violated invariant that never repairs itself</td><td>Checked at creation only, so nothing re-examines the state once it exists</td></tr><tr><td>A sandboxed component escaped without ever calling anything it was not allowed to call</td><td>The boundary was drawn around execution; it wrote a file something outside the boundary later loaded</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>A containment claim supported by a list of what the thing can call, with no list of what it can write.</li><li>&quot;That's an edge case, no real user would do that&quot; — the attacker is not a user.</li><li>&quot;It's internal-only,&quot; asserted without a check that it is.</li><li>&quot;We authenticate the caller, so we're covered&quot; — authentication answers <em>who</em>, not <em>what on whose behalf</em>.</li><li>&quot;We'll do security after the MVP&quot; — trust boundaries are architecture; they are not retrofitted, and the session that ends with zero design changes has already conceded this.</li><li>Nobody in the room can say which single credential could delete all customer data.</li><li>Exactly one mitigation per threat — defense in depth was never considered.</li><li>A rule described as &quot;enforced&quot; with exactly one enforcement site named, and no list of what else writes to the same state.</li><li>An invariant that is established at creation and never checked again, on a system that also imports, migrates, restores, or syncs.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/handling-untrusted-input/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link prevnext__link--next" href="/skills/handling-untrusted-input/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">handling-untrusted-input →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Security (defensive)</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/handling-untrusted-input/">
+<li><a class="see-also__link" href="/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
       <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/validating-numeric-input/">
+<li><a class="see-also__link" href="/skills/validating-numeric-input/">
       <span class="see-also__name">validating-numeric-input</span>
       <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/secrets-hygiene/">
+<li><a class="see-also__link" href="/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
       <span class="see-also__summary">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/redacting-sensitive-output/">
+<li><a class="see-also__link" href="/skills/redacting-sensitive-output/">
       <span class="see-also__name">redacting-sensitive-output</span>
       <span class="see-also__summary">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/auditing-dependencies/">
+<li><a class="see-also__link" href="/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>
       <span class="see-also__summary">Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/least-privilege-design/">
+<li><a class="see-also__link" href="/skills/least-privilege-design/">
       <span class="see-also__name">least-privilege-design</span>
       <span class="see-also__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</span>
     </a></li>
@@ -148,27 +148,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

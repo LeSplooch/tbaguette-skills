@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="least-privilege-design — Security (defensive) — TBaguette’s Atelier">
 <meta property="og:description" content="Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…">
-<link rel="canonical" href="/tbaguette-skills/skills/least-privilege-design/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/least-privilege-design/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#security">Security (defensive)</a>
+  <a href="/#security">Security (defensive)</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">least-privilege-design</span>
 </nav>
@@ -71,7 +71,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Least privilege is the property that decides what a bug costs. Every other control is probabilistic — this one is deterministic: it bounds the damage of the compromise you did not detect. Design for the assumption that some component will be fully controlled by an attacker, and choose which ones can afford that.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Creating a role, service account, key, token scope, policy, or access control entry, or a component needs access to something it did not previously reach.</li><li>Designing service-to-service authentication, or any path where a service acts on a caller's request.</li><li>Reviewing existing permissions, an over-broad policy, a wildcard, or a credential shared across services or environments; deciding what a build or pipeline may reach; designing irreversible or money-moving operations.</li><li>Not for: where the credential is stored and how it is rotated (<a class="skill-link" href="/tbaguette-skills/skills/secrets-hygiene/"><code>secrets-hygiene</code></a>); whether the boundary should exist at all (<a class="skill-link" href="/tbaguette-skills/skills/threat-modeling/"><code>threat-modeling</code></a>).</li></ul>
+<ul><li>Creating a role, service account, key, token scope, policy, or access control entry, or a component needs access to something it did not previously reach.</li><li>Designing service-to-service authentication, or any path where a service acts on a caller's request.</li><li>Reviewing existing permissions, an over-broad policy, a wildcard, or a credential shared across services or environments; deciding what a build or pipeline may reach; designing irreversible or money-moving operations.</li><li>Not for: where the credential is stored and how it is rotated (<a class="skill-link" href="/skills/secrets-hygiene/"><code>secrets-hygiene</code></a>); whether the boundary should exist at all (<a class="skill-link" href="/skills/threat-modeling/"><code>threat-modeling</code></a>).</li></ul>
 <h2 id="default-deny-and-four-axes-at-once">Default deny, and four axes at once</h2>
 <p>Start from zero and add only what a failed operation proves is required. The only reliable derivation is: deny everything, run the workload, read the denials, grant exactly those. Permissions derived from a design document are a superset every time, because the ones that turned out to be unnecessary are never removed.</p>
 <table><thead><tr><th>Axis</th><th>Question</th><th>Weak</th><th>Strong</th></tr></thead><tbody><tr><td>Identity</td><td>Who is asking</td><td>one account for the fleet</td><td>one per workload, per environment</td></tr><tr><td>Resource</td><td>On what</td><td><code>*</code>, whole bucket, whole database</td><td>one prefix, one table, one row predicate, one queue</td></tr><tr><td>Action</td><td>Doing what</td><td>admin, or a &quot;full access&quot; role</td><td>the three verbs actually called; read-only wherever reads suffice</td></tr><tr><td>Time</td><td>For how long</td><td>a permanent key</td><td>a token bounded to the job, minutes to hours</td></tr></tbody></table>
@@ -134,34 +134,34 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>One bug became total compromise</td><td>A shared broadly-scoped credential; the vulnerable component was never the sensitive one</td></tr><tr><td>A disabled capability stayed reachable</td><td>The revoke path cleared the one route its own subsystem tracked; a cache, a second config source, or a second grantor left another route open</td></tr><tr><td>An operator disabled the whole control to get past one blocked case</td><td>The narrow bypass built for that case silently didn't work, so the switch was the only route that reliably did</td></tr><tr><td>Permissions were reviewed and are still too broad</td><td>The intended grant was reviewed, not the effective set with inheritance and assumable roles</td></tr><tr><td>Wildcards everywhere, and a dev credential that also works in production</td><td>Permissions derived up front from a design instead of from observed denials; one identity spanning environments</td></tr><tr><td>A &quot;read-only&quot; role can escalate</td><td>It can modify a policy, a pipeline, or a config that something later executes</td></tr><tr><td>Every entry in the audit log was approved and the outcome was still hostile</td><td>The allowlist matched names; an unlisted, effect-free operation had already changed what one of those names meant</td></tr><tr><td>An exempted command's second half did something nobody approved</td><td>The exemption matched the whole compound line, not the one unit it was written for</td></tr><tr><td>A directory or session became pre-authorized for something added to it later</td><td>A cached trust decision's key named the identity but not the dimension that changed</td></tr><tr><td>A plugin quietly redirected which binary or library a later command used</td><td>An extension's environment-mutation request was treated as configuration, not as a capability grant</td></tr><tr><td>An internal service was reached through a user-supplied URL</td><td>The deputy used its own network position; no check on the resolved target</td></tr><tr><td>A token was accepted by the wrong service</td><td>Signature verified, audience not</td></tr><tr><td>The two-person rule was bypassed</td><td>Approval enforced by process, not verified by the executing system</td></tr><tr><td>A restriction everyone can point to in the policy file was never in force</td><td>The loader skipped a rule it could not parse; a deny that never loaded and one that was never triggered log the same nothing</td></tr><tr><td>Temporary elevation became permanent</td><td>Grant with no expiry, and no review comparing grants against use</td></tr><tr><td>A compromised container exfiltrated data over an ordinary connection</td><td>Egress unrestricted, which is the default everywhere</td></tr><tr><td>A component with no outbound access still exfiltrated</td><td>Egress was enforced on connections and written in hostnames; resolution is neither, and it was left open because a container that cannot resolve looks broken</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;The docs say the sandbox has no external access.&quot; — a sentence written by somebody who was not measuring; try a resolution.</li><li>&quot;Give it admin for now, we'll narrow it later&quot; — <em>later</em> has no trigger.</li><li>&quot;Declare it now so it's ready when we build the feature&quot; — the feature is hypothetical; the review cost is not.</li><li>&quot;It's behind the firewall&quot; / &quot;only our own code calls it.&quot;</li><li>A permission set that has only ever grown, or a wildcard with no written reason next to it.</li><li>Being unable to name the single process that uses a credential.</li><li>A role reviewed by reading its name or its description.</li><li>&quot;The user is authenticated&quot; offered as the answer to an authorization question.</li><li>Any credential with no expiry and no owner.</li><li>Break-glass used more than a few times a year, or a pipeline that can modify its own permissions.</li><li>&quot;We turned it off&quot; said about a capability with more than one source that can grant it.</li><li>An escape hatch nobody who built it has ever actually walked through end to end.</li><li>An exemption or allowlist pattern tested only against a whole command line, never against each unit a <code>&amp;&amp;</code>, <code>;</code>, <code>|</code>, or subshell splits it into.</li><li>&quot;It's just setting an environment variable&quot; said about anything a plugin or extension does to the host process.</li><li>A trust or consent decision cached under an identity or a path, with nothing that re-checks it when what that identity or path actually holds changes.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/auditing-dependencies/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/auditing-dependencies/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← auditing-dependencies</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Security (defensive)</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/threat-modeling/">
+<li><a class="see-also__link" href="/skills/threat-modeling/">
       <span class="see-also__name">threat-modeling</span>
       <span class="see-also__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/handling-untrusted-input/">
+<li><a class="see-also__link" href="/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
       <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/validating-numeric-input/">
+<li><a class="see-also__link" href="/skills/validating-numeric-input/">
       <span class="see-also__name">validating-numeric-input</span>
       <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/secrets-hygiene/">
+<li><a class="see-also__link" href="/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
       <span class="see-also__summary">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/redacting-sensitive-output/">
+<li><a class="see-also__link" href="/skills/redacting-sensitive-output/">
       <span class="see-also__name">redacting-sensitive-output</span>
       <span class="see-also__summary">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/auditing-dependencies/">
+<li><a class="see-also__link" href="/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>
       <span class="see-also__summary">Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries…</span>
     </a></li>
@@ -172,27 +172,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="auditing-dependencies — Security (defensive) — TBaguette’s Atelier">
 <meta property="og:description" content="Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries…">
-<link rel="canonical" href="/tbaguette-skills/skills/auditing-dependencies/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/auditing-dependencies/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#security">Security (defensive)</a>
+  <a href="/#security">Security (defensive)</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">auditing-dependencies</span>
 </nav>
@@ -71,7 +71,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Every dependency is code you ship, run at your own privilege, and never reviewed — and its dependencies are code you did not even choose. Adoption is the cheapest moment to say no and the only moment when saying no costs nothing.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Adding or replacing a package, or choosing between two libraries that do the same thing.</li><li>A pull request's lockfile diff adds transitive entries, or a major version upgrade is proposed.</li><li>A scanner, advisory feed, or audit command fails a build and the finding needs triage; or a dependency has gone quiet, been archived, or changed maintainers.</li><li>Not for: what the code may do at runtime once installed (<a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a>); how it must treat the data it parses (<a class="skill-link" href="/tbaguette-skills/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a>).</li><li>Not for: actually carrying out a version bump once it's decided — <a class="skill-link" href="/tbaguette-skills/skills/upgrading-dependencies/"><code>upgrading-dependencies</code></a> covers that half; this skill covers whether to adopt, and the quarterly sweep for a dependency that's gone quiet.</li></ul>
+<ul><li>Adding or replacing a package, or choosing between two libraries that do the same thing.</li><li>A pull request's lockfile diff adds transitive entries, or a major version upgrade is proposed.</li><li>A scanner, advisory feed, or audit command fails a build and the finding needs triage; or a dependency has gone quiet, been archived, or changed maintainers.</li><li>Not for: what the code may do at runtime once installed (<a class="skill-link" href="/skills/least-privilege-design/"><code>least-privilege-design</code></a>); how it must treat the data it parses (<a class="skill-link" href="/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a>).</li><li>Not for: actually carrying out a version bump once it's decided — <a class="skill-link" href="/skills/upgrading-dependencies/"><code>upgrading-dependencies</code></a> covers that half; this skill covers whether to adopt, and the quarterly sweep for a dependency that's gone quiet.</li></ul>
 <h2 id="adoption-review-ten-minutes-before-the-first-install">Adoption review — ten minutes, before the first install</h2>
 <p>Ask in order and stop at the first disqualifier.</p>
 <table><thead><tr><th>Check</th><th>What to look at</th><th>Disqualifier</th></tr></thead><tbody><tr><td>Need</td><td>Lines of your code it replaces</td><td>Under ~100 lines you could write and test — you just bought an upgrade treadmill for a helper</td></tr><tr><td>Transitive weight</td><td>The <strong>resolved tree</strong>, not the direct entry</td><td>A leaf utility pulling 40 packages is a statement about its author's judgment, not just its size</td></tr><tr><td>Maintenance</td><td>Release cadence, issue response, <strong>how many humans hold commit rights</strong></td><td>One maintainer and no release in 18 months, on anything that parses input or opens sockets</td></tr><tr><td>Footprint</td><td>Does it open sockets, touch the filesystem, spawn processes, load native code, or phone home</td><td>Any of those in a library whose stated job needs none of them</td></tr><tr><td>Install-time execution</td><td>Does it run a script at install or build</td><td>Yes, and the script is not a compile step you can read and explain</td></tr><tr><td>Escape cost</td><td>How many files would import it; whether its types would enter your domain model</td><td>Its types spread past one adapter — removal becomes a rewrite</td></tr><tr><td>Provenance and license</td><td>Does the repository linked from the registry correspond to the published artifact; is there signing or build attestation; do the terms fit how you distribute</td><td>No source link, a repository that does not match the artifact, or unclear licensing</td></tr></tbody></table>
@@ -107,7 +107,7 @@
 <p><strong>Pinning does not reach a dependency that is never fetched.</strong> Everything in the paragraph above assumes an artifact you retrieve and keep: a file with a hash, a diff to read when it moves. Part of this class does not arrive that way. A connected provider hands over its instructions at connect time, over the wire, and is free to hand over different ones tomorrow — there is no commit to pin, no diff to review, and nothing local that changed. Approving what it said once is not approving what it says next, and the usual signal that a dependency moved never fires.</p>
 <p>Where you cannot pin, three weaker substitutes are what remain. Record what the instructions said when you approved them and compare them on reconnect, so a change is something you see rather than something you obey — worth preferring a client that does this for you, since doing it by hand rarely survives contact with a busy week.</p>
 <p>Reconnect is not the only event a payload can wait for, and a diff keyed only on it has a blind spot: a connection that never drops still lets a provider hand over something different between calls, and a change timed to arrive a few calls into an otherwise-clean session slips past both a one-time human read and an early smoke test, precisely because nothing about that session ever reconnects for the diff to run against. Where the provider can be asked, re-request and re-diff its current instructions periodically within a long-lived session, not only when the connection reopens; where it cannot, treat a session that has been open a while, with many calls behind it, as its own reason to re-verify — the way a long-lived credential gets rotated on age rather than only on suspicion.</p>
-<p>Keep the set connected at one time no larger than the task needs, too, because the second property this class has is that the prose is not scoped to the provider that supplied it. Everything connected is read together, in one context, by one reader, so a provider you barely use can still change how that reader handles the one you depend on — and it does so without ever being called, which means it leaves no trace in the log of which tools ran. The narrowing rule is the one <a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a> applies to capabilities, and instruction sources earn it for the same reason.</p>
+<p>Keep the set connected at one time no larger than the task needs, too, because the second property this class has is that the prose is not scoped to the provider that supplied it. Everything connected is read together, in one context, by one reader, so a provider you barely use can still change how that reader handles the one you depend on — and it does so without ever being called, which means it leaves no trace in the log of which tools ran. The narrowing rule is the one <a class="skill-link" href="/skills/least-privilege-design/"><code>least-privilege-design</code></a> applies to capabilities, and instruction sources earn it for the same reason.</p>
 <h2 id="vendoring-and-pinning">Vendoring and pinning</h2>
 <table><thead><tr><th>Approach</th><th>Buys</th><th>Costs</th><th>Use when</th></tr></thead><tbody><tr><td>Range + committed lockfile</td><td>Routine patch flow</td><td>Requires frozen CI installs and actual lockfile review</td><td>Default</td></tr><tr><td>Exact pins everywhere</td><td>Deterministic, no surprise resolution</td><td>Manual upgrade work; drifts behind security patches</td><td>Regulated builds, firmware, anything slow to redeploy</td></tr><tr><td>Vendored source in tree</td><td>No install-time fetch, reviewable diffs, offline builds</td><td>You own every merge; upgrades become patch management</td><td>Few dependencies, air-gapped or high-assurance</td></tr><tr><td>Internal mirror or proxy</td><td>Availability, one chokepoint for scanning and allowlisting, immunity to upstream deletion</td><td>Infrastructure to run</td><td>Once the org is past a handful of engineers</td></tr></tbody></table>
 <p>Pinning without a scheduled upgrade cadence converts supply-chain risk into unpatched-vulnerability risk. Batch upgrades roughly monthly on a quiet day beats emergency upgrades under an advisory.</p>
@@ -118,38 +118,38 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>A dependency was added, removed, and something it configured stayed behind</td><td>Its payload was prose, and one of its instructions wrote into a file that is not a dependency and does not get uninstalled</td></tr><tr><td>Scanner alerts ignored in bulk</td><td>Triaged by severity rather than reachability; the queue filled with unreachable findings and lost credibility</td></tr><tr><td>&quot;We upgraded&quot; but the vulnerable version is still installed</td><td>Two copies in the tree; the transitive one was never overridden</td></tr><tr><td>Lockfile committed, CI still resolves new versions</td><td>Install not run in frozen/locked mode</td></tr><tr><td>Build breaks when a package is deleted upstream or a registry is down</td><td>The supply chain includes uptime you do not control and no mirror exists</td></tr><tr><td>A one-line utility pulled in a large tree</td><td>Reviewed the direct package, never the resolved graph</td></tr><tr><td>CI compromised through a dependency</td><td>Install ran in a job holding publish or cloud credentials</td></tr><tr><td>The wrong package installed under a plausible name</td><td>Name typed from memory or copied from a search result</td></tr><tr><td>A dependency cannot be removed</td><td>Its types leaked into the domain model; no adapter boundary was ever drawn</td></tr><tr><td>A downloaded artifact accepted unverified</td><td>Its publisher listed no hash, and a missing canonical signal was read as permission to skip the check rather than as a reason to compose several</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;It's only a dev dependency&quot; — install hooks run at your privilege regardless of which section lists it.</li><li>Download counts or stars used as the entire review.</li><li>Adding a dependency for something under ~100 lines.</li><li>Spending an hour on reachability analysis when a patch release exists.</li><li>&quot;We'll deal with the unmaintained one when it breaks.&quot;</li><li>A dependency being added during an incident, at speed, from a search result.</li><li>A public registry configured as a fallback for a private namespace.</li><li>&quot;There's no published checksum for this one, so there's nothing to verify.&quot;</li><li>&quot;It's just a prompt, it isn't code&quot; — it is instructions to something holding all of your privileges.</li><li>Adopting a skill, plugin, or instruction file without having read the whole of it, when the whole of it is a page.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/redacting-sensitive-output/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/redacting-sensitive-output/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← redacting-sensitive-output</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/least-privilege-design/">
+<a class="prevnext__link prevnext__link--next" href="/skills/least-privilege-design/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">least-privilege-design →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Security (defensive)</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/threat-modeling/">
+<li><a class="see-also__link" href="/skills/threat-modeling/">
       <span class="see-also__name">threat-modeling</span>
       <span class="see-also__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/handling-untrusted-input/">
+<li><a class="see-also__link" href="/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
       <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/validating-numeric-input/">
+<li><a class="see-also__link" href="/skills/validating-numeric-input/">
       <span class="see-also__name">validating-numeric-input</span>
       <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/secrets-hygiene/">
+<li><a class="see-also__link" href="/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
       <span class="see-also__summary">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/redacting-sensitive-output/">
+<li><a class="see-also__link" href="/skills/redacting-sensitive-output/">
       <span class="see-also__name">redacting-sensitive-output</span>
       <span class="see-also__summary">Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/least-privilege-design/">
+<li><a class="see-also__link" href="/skills/least-privilege-design/">
       <span class="see-also__name">least-privilege-design</span>
       <span class="see-also__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</span>
     </a></li>
@@ -160,27 +160,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

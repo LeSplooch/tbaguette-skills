@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="recovering-agent-context — Reading code — TBaguette’s Atelier">
 <meta property="og:description" content="Use when picking up an existing project for the first time, resuming work that someone or something else started…">
-<link rel="canonical" href="/tbaguette-skills/skills/recovering-agent-context/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/recovering-agent-context/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#reading-code">Reading code</a>
+  <a href="/#reading-code">Reading code</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">recovering-agent-context</span>
 </nav>
@@ -72,7 +72,7 @@
 <p>Someone worked on this repo before you, and on an existing project it was rarely a person alone. Git records what shipped. Agent sessions record what was tried and thrown away, which options were rejected and why, and every instruction the human gave that never became a file — the three things that separate resuming from restarting.</p>
 <p>The same sessions also record plans that were never executed, APIs that never existed, and decisions reversed four turns later, in identical prose. What you recover is testimony, not ground truth.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>First contact with an existing repo, running alongside <a class="skill-link" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/"><code>orienting-in-unfamiliar-code</code></a>.</li><li>The task is phrased as <em>continue</em>, <em>finish</em>, or <em>pick up where it left off</em>, with no handoff attached.</li><li>An instruction file, plan directory, or spec folder exists that nobody in this conversation wrote.</li><li>You are about to re-derive a decision, retry an approach, or ask the human something they have plainly answered before.</li><li>Not for: leaving a trail rather than following one. This skill is the cold arrival; <a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> is what the previous run owed you, and what you owe the next one.</li><li>Not for: why one line exists (<a class="skill-link" href="/tbaguette-skills/skills/code-archaeology/"><code>code-archaeology</code></a>), what the code does (<a class="skill-link" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/"><code>orienting-in-unfamiliar-code</code></a>), or the coupling graph (<a class="skill-link" href="/tbaguette-skills/skills/mapping-dependencies/"><code>mapping-dependencies</code></a>).</li></ul>
+<ul><li>First contact with an existing repo, running alongside <a class="skill-link" href="/skills/orienting-in-unfamiliar-code/"><code>orienting-in-unfamiliar-code</code></a>.</li><li>The task is phrased as <em>continue</em>, <em>finish</em>, or <em>pick up where it left off</em>, with no handoff attached.</li><li>An instruction file, plan directory, or spec folder exists that nobody in this conversation wrote.</li><li>You are about to re-derive a decision, retry an approach, or ask the human something they have plainly answered before.</li><li>Not for: leaving a trail rather than following one. This skill is the cold arrival; <a class="skill-link" href="/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> is what the previous run owed you, and what you owe the next one.</li><li>Not for: why one line exists (<a class="skill-link" href="/skills/code-archaeology/"><code>code-archaeology</code></a>), what the code does (<a class="skill-link" href="/skills/orienting-in-unfamiliar-code/"><code>orienting-in-unfamiliar-code</code></a>), or the coupling graph (<a class="skill-link" href="/skills/mapping-dependencies/"><code>mapping-dependencies</code></a>).</li></ul>
 <h2 id="check-every-provider-and-not-your-own-first">Check every provider, and not your own first</h2>
 <p>The default failure is searching your own tool's store, finding a session, and stopping there. Your own history is the <em>least</em> likely to hold what you are missing — if you had done this work, you would know about it. The gap is in the tool you do not use.</p>
 <p>Enumerate every store before opening any. Then:</p>
@@ -97,11 +97,11 @@ sqlite3 state.vscdb &quot;select key from ItemTable where key like '%chat%'&quot
 <p>Session stores run to hundreds of megabytes of JSONL, and a single session can exceed your entire context. Reading one whole is not thoroughness, it is the mistake.</p>
 <ul><li><strong>Newest first, and stop early.</strong> Recency beats completeness here; the last two sessions usually contain the state you need, and older ones describe a codebase that no longer exists.</li><li><strong>Grep for anchors, not topics.</strong> A function name, a file path, an error string, a dependency version. Topic words match every session ever recorded.</li><li><strong>Read the tail, not the head.</strong> The opening of a session is the human's request, which you can usually infer. The end holds where it actually stopped, and that is the part with no other source.</li><li><strong>Extract, then close.</strong> Pull the specific exchange into your notes and drop the file. Never carry a transcript forward &quot;in case&quot;.</li><li><strong>Delegate a wide sweep.</strong> When the search spans many stores or many sessions, delegate it if your harness can — the search is megabytes and the finding is a paragraph.</li></ul>
 <h2 id="an-executed-plan-and-an-abandoned-one-read-identically">An executed plan and an abandoned one read identically</h2>
-<p>Transcripts are a record of <em>intent and attempt</em>, and nothing in the format marks which attempts landed. Every one of these appears in confident, well-formed prose — and a recovered plan carries its author's judgments compiled out, which is why <a class="skill-link" href="/tbaguette-skills/skills/clairvoyance/"><code>clairvoyance</code></a> sweeps it as a plan, before task one and never task by task:</p>
+<p>Transcripts are a record of <em>intent and attempt</em>, and nothing in the format marks which attempts landed. Every one of these appears in confident, well-formed prose — and a recovered plan carries its author's judgments compiled out, which is why <a class="skill-link" href="/skills/clairvoyance/"><code>clairvoyance</code></a> sweeps it as a plan, before task one and never task by task:</p>
 <table><thead><tr><th>What you read</th><th>What may actually be true</th></tr></thead><tbody><tr><td>A detailed implementation plan</td><td>Never started; the session ended right after it was written</td></tr><tr><td>&quot;I've updated the handler to…&quot;</td><td>The edit failed, was reverted, or was made in a different branch</td></tr><tr><td>A firm architectural decision</td><td>Reversed by the human six turns later, in one line</td></tr><tr><td>An API, flag, or config key used throughout</td><td>Hallucinated, and the session ended before anyone ran it</td></tr><tr><td>A confident final summary</td><td>Written from the agent's intentions, not from the diff</td></tr></tbody></table>
 <p>So: <strong>every claim gets checked against the working tree before you act on it.</strong> Does the file exist, does the symbol exist, does the test pass, is the commit in <code>git log</code>. This is fast — it is the cheapest verification in this whole skill — and skipping it is how you inherit a hallucination and then defend it as a prior decision.</p>
 <p>Read the human's turns with more weight than the agent's — but know which turns those are. Most formats record tool output as a <code>user</code> turn as well, so filtering naively on the user role returns command output, file contents, and error text alongside the handful of messages a person actually typed. The human's real turns are the short ones between the long machine ones.</p>
-<p>Corrections, refusals, and stated preferences are first-hand and durable; an agent's account of its own work is neither. When the two conflict, the human's last word wins. Carry the distinction into whatever you report — see <a class="skill-link" href="/tbaguette-skills/skills/calibrating-confidence/"><code>calibrating-confidence</code></a> for saying which is which.</p>
+<p>Corrections, refusals, and stated preferences are first-hand and durable; an agent's account of its own work is neither. When the two conflict, the human's last word wins. Carry the distinction into whatever you report — see <a class="skill-link" href="/skills/calibrating-confidence/"><code>calibrating-confidence</code></a> for saying which is which.</p>
 <h2 id="what-you-are-extracting">What you are extracting</h2>
 <p>Not a summary of the sessions. Five things; anything fitting none of them stays out of the brief:</p>
 <ol><li><strong>Where it stopped</strong> — the last thing actually completed, verified against the tree, and the first thing that was not.</li><li><strong>Decided, with the reason</strong> — choices already made and still standing in the code. Re-opening one of these without new information is pure waste.</li><li><strong>Already paid for</strong> — approaches tried and abandoned, and what went wrong. The single highest-value category, and the only one that exists nowhere else.</li><li><strong>Standing corrections</strong> — what the human told a previous agent to do or stop doing. These outlive the session and apply to you now.</li><li><strong>Open</strong> — questions raised and never answered. Carry them forward as questions, not as assumptions.</li></ol>
@@ -113,38 +113,38 @@ sqlite3 state.vscdb &quot;select key from ItemTable where key like '%chat%'&quot
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Rebuilt something that already existed</td><td>Never looked; the tree had residue from a tool you don't use</td></tr><tr><td>Re-litigated a settled decision</td><td>Read the code, not the sessions where the alternatives were rejected</td></tr><tr><td>Implemented against an API that doesn't exist</td><td>Trusted a transcript claim without checking the tree</td></tr><tr><td>Repeated an approach that failed before</td><td>Dead ends are recorded only in sessions, and only if you read them</td></tr><tr><td>Context window gone before starting work</td><td>Read whole transcripts instead of grepping for anchors</td></tr><tr><td>Human repeats a correction they gave weeks ago</td><td>The correction was in another tool's session and never written to a file</td></tr><tr><td>&quot;No prior agent work here&quot; — and there was</td><td>Checked your own provider only</td></tr><tr><td>Confidently resumed at the wrong point</td><td>Trusted a final summary written from intentions rather than from a diff</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;I checked my own history, there's nothing.&quot; — you checked one store out of a dozen.</li><li>&quot;There's an AGENTS.md, so I've got the context.&quot; — that file is the residue, not the record.</li><li>&quot;The transcript says it was implemented.&quot; — check the tree, then say it.</li><li>&quot;I'll read the whole session to be thorough.&quot;</li><li>&quot;That decision looks wrong, I'll redo it.&quot; — before finding out whether it was already tried the other way.</li><li>&quot;No point looking, the repo's clean.&quot; — IDE and cloud assistants leave nearly nothing behind.</li><li>Quoting a plan without checking whether it survived the session it was written in.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/code-archaeology/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/code-archaeology/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← code-archaeology</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/mapping-dependencies/">
+<a class="prevnext__link prevnext__link--next" href="/skills/mapping-dependencies/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">mapping-dependencies →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Reading code</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/orienting-in-unfamiliar-code/">
+<li><a class="see-also__link" href="/skills/orienting-in-unfamiliar-code/">
       <span class="see-also__name">orienting-in-unfamiliar-code</span>
       <span class="see-also__summary">Use when opening a codebase for the first time, inheriting an unfamiliar or legacy repo, onboarding onto a new project…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/tracing-data-flow/">
+<li><a class="see-also__link" href="/skills/tracing-data-flow/">
       <span class="see-also__name">tracing-data-flow</span>
       <span class="see-also__summary">Use when a value is wrong, missing, null, empty, or unexpectedly defaulted and its origin is unclear; when asking where a field comes from…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/code-archaeology/">
+<li><a class="see-also__link" href="/skills/code-archaeology/">
       <span class="see-also__name">code-archaeology</span>
       <span class="see-also__summary">Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/mapping-dependencies/">
+<li><a class="see-also__link" href="/skills/mapping-dependencies/">
       <span class="see-also__name">mapping-dependencies</span>
       <span class="see-also__summary">Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/finding-the-seam/">
+<li><a class="see-also__link" href="/skills/finding-the-seam/">
       <span class="see-also__name">finding-the-seam</span>
       <span class="see-also__summary">Use when deciding where in a codebase to make a change, when a fix could plausibly go in several places…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/naming-things/">
+<li><a class="see-also__link" href="/skills/naming-things/">
       <span class="see-also__name">naming-things</span>
       <span class="see-also__summary">Use when choosing an identifier for a variable, function, type, module, flag, config key, table, or event; when a name is misleading…</span>
     </a></li>
@@ -155,27 +155,27 @@ sqlite3 state.vscdb &quot;select key from ItemTable where key like '%chat%'&quot
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

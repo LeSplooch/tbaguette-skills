@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="redacting-sensitive-output — Security (defensive) — TBaguette’s Atelier">
 <meta property="og:description" content="Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace…">
-<link rel="canonical" href="/tbaguette-skills/skills/redacting-sensitive-output/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/redacting-sensitive-output/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#security">Security (defensive)</a>
+  <a href="/#security">Security (defensive)</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">redacting-sensitive-output</span>
 </nav>
@@ -72,7 +72,7 @@
 <p>Redaction is the last line of defence, applied at the moment data leaves the program for somewhere a human or a vendor will read it. It fails quietly by construction: a redactor that redacts nothing produces output that looks exactly like output it redacted correctly.</p>
 <p>The two rules that carry most of the value: <strong>the replacement must not quote the match</strong>, and <strong>the test asserts the input is gone, never that the marker is present.</strong></p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Any log, error, trace, metric, crash report, support bundle, or analytics event that can contain values from a request, a config, or a user.</li><li>Recording a fixture from a real response (<a class="skill-link" href="/tbaguette-skills/skills/grounding-test-doubles/"><code>grounding-test-doubles</code></a>).</li><li>Adding debug output during an incident, when the temptation to log the whole object is highest.</li><li>Sharing a reproduction, a bug report, or a paste with a vendor or a colleague.</li><li>Not for: where secrets should live and how to rotate them (<a class="skill-link" href="/tbaguette-skills/skills/secrets-hygiene/"><code>secrets-hygiene</code></a>), restricting who can reach the data at all (<a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a>), or deciding what is worth emitting in the first place (<a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a>) — redaction assumes the data already reached code that should not emit it.</li></ul>
+<ul><li>Any log, error, trace, metric, crash report, support bundle, or analytics event that can contain values from a request, a config, or a user.</li><li>Recording a fixture from a real response (<a class="skill-link" href="/skills/grounding-test-doubles/"><code>grounding-test-doubles</code></a>).</li><li>Adding debug output during an incident, when the temptation to log the whole object is highest.</li><li>Sharing a reproduction, a bug report, or a paste with a vendor or a colleague.</li><li>Not for: where secrets should live and how to rotate them (<a class="skill-link" href="/skills/secrets-hygiene/"><code>secrets-hygiene</code></a>), restricting who can reach the data at all (<a class="skill-link" href="/skills/least-privilege-design/"><code>least-privilege-design</code></a>), or deciding what is worth emitting in the first place (<a class="skill-link" href="/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a>) — redaction assumes the data already reached code that should not emit it.</li></ul>
 <h2 id="the-replacement-must-not-quote-the-match">The replacement must not quote the match</h2>
 <p>A redactor that substitutes a marker containing the first N characters of whatever it matched — added for debuggability, or to make a log line useful — <strong>reproduces the thing it exists to remove</strong> whenever the match is around N characters long, and then hands it to exactly the consumer the filter was protecting.</p>
 <p>The trap covers secret masking, PII scrubbing, and profanity filtering equally, and it is attractive precisely because the quoted context is what makes the log useful.</p>
@@ -80,7 +80,7 @@
 <table><thead><tr><th>Safe</th><th>Unsafe</th><th>Why</th></tr></thead><tbody><tr><td>That a value was present</td><td>Any substring of it</td><td>Short values are fully reproduced by a &quot;prefix&quot;</td></tr><tr><td>A fixed-width marker</td><td>A marker whose length tracks the input</td><td>Length leaks entropy and identifies format</td></tr><tr><td>Which field or rule matched</td><td>The matched text as &quot;context&quot;</td><td>The context is the secret</td></tr><tr><td>A keyed hash, for correlation</td><td>A plain hash</td><td>Plain hashes of low-entropy values are trivially reversed</td></tr><tr><td>A stable opaque identifier</td><td>&quot;Last 4 characters&quot; of a low-cardinality value</td><td>Enough to re-identify across records</td></tr></tbody></table>
 <p>Partial reveals are a product decision, not a debugging convenience. Last-4 on a card number exists because a standard permits it; the same pattern applied to an API key or an email address leaks a real fraction of a real secret to whoever reads the log.</p>
 <h2 id="allowlist-fields-do-not-denylist-patterns">Allowlist fields, do not denylist patterns</h2>
-<p>Pattern-based redaction over free text is a losing game: it must anticipate every format, and it fails open — an unmatched secret passes through silently, which is the same failure shape as <a class="skill-link" href="/tbaguette-skills/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a>'s argument against denylists.</p>
+<p>Pattern-based redaction over free text is a losing game: it must anticipate every format, and it fails open — an unmatched secret passes through silently, which is the same failure shape as <a class="skill-link" href="/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a>'s argument against denylists.</p>
 <p>Prefer structure. Emit a chosen set of fields, and let anything unlisted be dropped by default rather than inspected. This inverts the failure: the mistake becomes a missing field in a log line, which someone notices and fixes, instead of a leaked credential nobody sees.</p>
 <p>Where structured logging is available, this is nearly free — mark fields sensitive at the type or schema level so the redaction travels with the value instead of being reapplied at every call site. A value that knows it is a secret cannot be accidentally formatted by a call site that forgot.</p>
 <p>Pattern matching still earns a place as a <strong>backstop over the allowlisted output</strong>, catching a token that ended up inside a field that was supposed to be safe. Backstop, not primary.</p>
@@ -95,38 +95,38 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>&quot;Redacted&quot; output still contains the matched string</td><td>The replacement embedded the match for context</td></tr><tr><td>A test passes against a redactor that redacts nothing</td><td>Asserted the marker's presence, never the input's absence</td></tr><tr><td>Secrets in logs despite a redactor</td><td>Leaked via a stack trace, a URL, or an SDK's automatic capture</td></tr><tr><td>A token inside a base64 field passed through</td><td>Field-level matching never decoded the payload</td></tr><tr><td>Short secrets leak, long ones do not</td><td>A fixed-size prefix reveals a short value entirely</td></tr><tr><td>A new field started leaking silently</td><td>Denylist by pattern, which fails open on anything unanticipated — or a derived whole-value formatter, which consulted no list at all</td></tr><tr><td>Redacted logs still identify individuals</td><td>Partial reveals correlate across records</td></tr><tr><td>Marker length varies with the input</td><td>The redaction leaks the value's length</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;I'll include the first few characters so it's debuggable.&quot;</li><li>&quot;It's hashed, so it's fine.&quot;</li><li>&quot;We redact that in the logger&quot; — about a value reaching an error reporter.</li><li>&quot;The regex covers all the token formats.&quot;</li><li>&quot;It's just in the URL.&quot;</li><li>&quot;Let me log the whole request object to debug this.&quot;</li><li>A redaction test whose only assertion is that the marker appears.</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/secrets-hygiene/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/secrets-hygiene/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← secrets-hygiene</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/auditing-dependencies/">
+<a class="prevnext__link prevnext__link--next" href="/skills/auditing-dependencies/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">auditing-dependencies →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Security (defensive)</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/threat-modeling/">
+<li><a class="see-also__link" href="/skills/threat-modeling/">
       <span class="see-also__name">threat-modeling</span>
       <span class="see-also__summary">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/handling-untrusted-input/">
+<li><a class="see-also__link" href="/skills/handling-untrusted-input/">
       <span class="see-also__name">handling-untrusted-input</span>
       <span class="see-also__summary">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/validating-numeric-input/">
+<li><a class="see-also__link" href="/skills/validating-numeric-input/">
       <span class="see-also__name">validating-numeric-input</span>
       <span class="see-also__summary">Use when a number crosses a trust boundary — a form field, query parameter, JSON body, config value, CSV cell, sensor reading…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/secrets-hygiene/">
+<li><a class="see-also__link" href="/skills/secrets-hygiene/">
       <span class="see-also__name">secrets-hygiene</span>
       <span class="see-also__summary">Use when handling API keys, tokens, passwords, private keys, certificates, or connection strings — adding one to a service, CI pipeline…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/auditing-dependencies/">
+<li><a class="see-also__link" href="/skills/auditing-dependencies/">
       <span class="see-also__name">auditing-dependencies</span>
       <span class="see-also__summary">Use when adding, upgrading, replacing, or removing a third-party package or library, when a lockfile diff adds transitive entries…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/least-privilege-design/">
+<li><a class="see-also__link" href="/skills/least-privilege-design/">
       <span class="see-also__name">least-privilege-design</span>
       <span class="see-also__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</span>
     </a></li>
@@ -137,27 +137,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

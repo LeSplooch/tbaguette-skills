@@ -9,11 +9,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="reviewing-code-deeply — Communicating — TBaguette’s Atelier">
 <meta property="og:description" content="Use when reviewing someone else&#x27;s change — a pull request, patch, diff, or commit series — deciding what deserves a comment…">
-<link rel="canonical" href="/tbaguette-skills/skills/reviewing-code-deeply/">
-<link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
-<link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
+<link rel="canonical" href="/skills/reviewing-code-deeply/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/styles.css">
 <script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -29,35 +29,35 @@
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
     <div class="site-header__brand">
-      <a class="wordmark" href="/tbaguette-skills/">
-        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
+      <a class="wordmark" href="/">
+        <svg class="icon wordmark__icon" aria-hidden="true"><use href="/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
       <span class="wordmark-version" dir="ltr">v1.1.57</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
-        <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link" href="/getting-started/">Getting started</a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-21T22:26:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-21T22:26:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-22T04:53:01+00:00" data-format-updated data-version-url="/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T04:53:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
               data-i18n-theme-light="Switch to light theme"
               data-i18n-theme-dark="Switch to dark theme">
-        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-sun"></use></svg>
-        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-moon"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true"><use href="/assets/icons.svg#icon-sun"></use></svg>
+        <svg class="icon theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><use href="/assets/icons.svg#icon-moon"></use></svg>
       </button>
     </div>
   </div>
 </header>
 <main id="main">
 <nav class="container breadcrumb" aria-label="Breadcrumb">
-  <a href="/tbaguette-skills/">Home</a>
+  <a href="/">Home</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
-  <a href="/tbaguette-skills/#communicating">Communicating</a>
+  <a href="/#communicating">Communicating</a>
   <span class="breadcrumb__sep" aria-hidden="true">/</span>
   <span class="breadcrumb__current" aria-current="page">reviewing-code-deeply</span>
 </nav>
@@ -71,7 +71,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Review in strict priority order and stop when your attention is spent. Comments about naming, spent on a diff whose failure handling is wrong, are worse than no review at all — they signal the change was examined when it was not.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Reviewing a pull request, patch series, or diff written by someone else</li><li>Deciding whether a concern blocks a merge</li><li>A review has produced more than a dozen comments and none of them are about behavior</li><li>Reviewed code shipped a defect and the review process needs a look</li><li><strong>Not for:</strong> asking someone else to review your work → <a class="skill-link" href="/tbaguette-skills/skills/handing-off-for-review/"><code>handing-off-for-review</code></a>. Responding to feedback on your own change → <a class="skill-link" href="/tbaguette-skills/skills/verifying-review-feedback/"><code>verifying-review-feedback</code></a>.</li></ul>
+<ul><li>Reviewing a pull request, patch series, or diff written by someone else</li><li>Deciding whether a concern blocks a merge</li><li>A review has produced more than a dozen comments and none of them are about behavior</li><li>Reviewed code shipped a defect and the review process needs a look</li><li><strong>Not for:</strong> asking someone else to review your work → <a class="skill-link" href="/skills/handing-off-for-review/"><code>handing-off-for-review</code></a>. Responding to feedback on your own change → <a class="skill-link" href="/skills/verifying-review-feedback/"><code>verifying-review-feedback</code></a>.</li></ul>
 <h2 id="priority-order-descend-only-when-the-level-above-is-clear">Priority order — descend only when the level above is clear</h2>
 <table><thead><tr><th>#</th><th>Level</th><th>Question</th><th>Cost of never reaching it</th></tr></thead><tbody><tr><td>1</td><td>Correctness</td><td>Does it do what the change claims, at the boundaries and on the failure paths?</td><td>The review had no value</td></tr><tr><td>2</td><td>Security &amp; data safety</td><td>Untrusted input, authorization at every entry, secrets, destructive or irreversible operations, migrations that cannot roll back, personal data in logs</td><td>The review had negative value</td></tr><tr><td>3</td><td>Design &amp; boundaries</td><td>Is this the right seam? Does it leak state, create a cycle, or make the next change harder?</td><td>The cost arrives in six months</td></tr><tr><td>4</td><td>Readability &amp; naming</td><td>Will the next reader understand this without the author present?</td><td>Mild, permanent</td></tr><tr><td>5</td><td>Style &amp; formatting</td><td>—</td><td>None; this is a tool's job</td></tr></tbody></table>
 <p>Level 5 is never a human's work. A comment about formatting is a bug report against the CI configuration, and should be filed as one.</p>
@@ -84,7 +84,7 @@
 <p>Diffs show what is present; most serious defects are a missing case.</p>
 <table><thead><tr><th>Category</th><th>What to check</th></tr></thead><tbody><tr><td>Error paths</td><td>Every fallible call: handled, propagated, or knowingly swallowed — and is the swallow explained?</td></tr><tr><td>Partial failure</td><td>If step 3 of 5 fails, what state remains? Is it recoverable, and does a retry make it worse?</td></tr><tr><td>Concurrency</td><td>Two callers at once; the same caller twice; the operation interleaved with its own retry; check-then-act on shared state</td></tr><tr><td>Resources</td><td>Anything acquired must be released on the error path too — handles, locks, connections, transactions</td></tr><tr><td>Boundaries</td><td>Empty, single, negative, zero, overflow, unicode, timezone, clock skew</td></tr><tr><td>Compatibility</td><td>Old clients, old rows, old messages during the deploy window — is it safe while both versions run?</td></tr><tr><td>Reversibility</td><td>Can this be rolled back after it has written data?</td></tr></tbody></table>
 <p>At every network or IPC boundary in the diff, ask what happens if the call never returns. Absence of a timeout is invisible in a diff and is a level-1 finding.</p>
-<p>The table above is an enumeration from the domain rather than from the diff, and that is the only method that finds absence — you cannot review your way to a case nobody wrote, because review examines what is in front of you. When the change is large enough that the categories here do not cover its subject matter, <a class="skill-link" href="/tbaguette-skills/skills/clairvoyance/"><code>clairvoyance</code></a> generalizes the move: enumerate the states, actors, and lifecycle stages the <em>thing itself</em> has, then find each one in the diff. The ones with no counterpart are the finding.</p>
+<p>The table above is an enumeration from the domain rather than from the diff, and that is the only method that finds absence — you cannot review your way to a case nobody wrote, because review examines what is in front of you. When the change is large enough that the categories here do not cover its subject matter, <a class="skill-link" href="/skills/clairvoyance/"><code>clairvoyance</code></a> generalizes the move: enumerate the states, actors, and lifecycle stages the <em>thing itself</em> has, then find each one in the diff. The ones with no counterpart are the finding.</p>
 <h2 id="an-exemption-is-a-belief-and-it-is-where-the-guard-was-needed">An exemption is a belief, and it is where the guard was needed</h2>
 <p>A guard applied across a class of things with one member exempted is among the highest-value shapes to notice in a diff, because the exemption is almost never argued for. It is granted on a reliability <em>belief</em> about that member: this one is local, this one is ours, this one is the fast path, this one has never failed.</p>
 <p>The belief may even be true today. What makes the shape worth a blocking comment is the asymmetry. Applying the guard uniformly usually costs nothing measurable. The exemption is precisely where the failure it guards against will not be caught — and by construction nobody is watching that path, since the reason it was exempted is that nobody expected to have to.</p>
@@ -108,46 +108,46 @@
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Thirty comments, all naming and formatting</td><td>Reviewed bottom-up; levels 1–2 never received attention</td></tr><tr><td>The review took four days</td><td>Comments unmarked; the author waited for a signal that never came</td></tr><tr><td>A defect shipped in reviewed code</td><td>Reviewed what was present; the defect was an absent case</td></tr><tr><td>Large diffs get fast approvals, small ones get scrutiny</td><td>Attention scaled with readability instead of risk</td></tr><tr><td>&quot;This is wrong&quot; and the reviewer was mistaken</td><td>Asserted where a question was warranted</td></tr><tr><td>Every review becomes an architecture argument</td><td>The design was never reviewed before implementation</td></tr><tr><td>The reviewer rewrites the change in comments</td><td>Reviewing against their own solution rather than the stated intent</td></tr><tr><td>The same style debate recurs on every change</td><td>No formatter in CI; a human is doing a tool's job</td></tr><tr><td>A guard on every case but one, approved without comment</td><td>The exemption was read as a fact about that case rather than as an unargued belief</td></tr><tr><td>Several review rounds, none of which ever said yes or no</td><td>Steering the next revision displaced judging this one; both produce comments at the same rate</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>A review whose comments could all be satisfied without anyone deciding the change was right.</li><li>Reading the diff before reading what it is meant to do</li><li>Commenting on a name before you have traced one error path</li><li>&quot;LGTM&quot; on a diff you scrolled rather than read</li><li>A comment you would withdraw the moment the author pushed back once</li><li>Approving because the author is senior, or blocking because they are not</li><li>More than three nits</li><li>Requesting changes without saying which comment is the blocker</li><li>Reviewing only the lines the diff shows, never opening the file around them</li></ul></div></article>
-<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/writing-postmortems/">
+<nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/skills/writing-postmortems/">
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← writing-postmortems</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/explaining-technical-work/">
+<a class="prevnext__link prevnext__link--next" href="/skills/explaining-technical-work/">
   <span class="prevnext__label">Next</span>
   <span class="prevnext__name">explaining-technical-work →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Communicating</h2>
   <ul class="see-also__list">
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-durable-docs/">
+<li><a class="see-also__link" href="/skills/writing-durable-docs/">
       <span class="see-also__name">writing-durable-docs</span>
       <span class="see-also__summary">Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-adrs/">
+<li><a class="see-also__link" href="/skills/writing-adrs/">
       <span class="see-also__name">writing-adrs</span>
       <span class="see-also__summary">Use when recording a technical or architectural decision — picking between technologies, changing a system boundary…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-release-notes/">
+<li><a class="see-also__link" href="/skills/writing-release-notes/">
       <span class="see-also__name">writing-release-notes</span>
       <span class="see-also__summary">Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-postmortems/">
+<li><a class="see-also__link" href="/skills/writing-postmortems/">
       <span class="see-also__name">writing-postmortems</span>
       <span class="see-also__summary">Use when writing an incident review or postmortem after an outage, degradation, data loss, failed deploy…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/explaining-technical-work/">
+<li><a class="see-also__link" href="/skills/explaining-technical-work/">
       <span class="see-also__name">explaining-technical-work</span>
       <span class="see-also__summary">Use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/crouton/">
+<li><a class="see-also__link" href="/skills/crouton/">
       <span class="see-also__name">crouton</span>
       <span class="see-also__summary">Use when asked for terse, compressed, or token-saving output — &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;keep it short&quot;, &quot;stop explaining&quot;…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/handing-off-for-review/">
+<li><a class="see-also__link" href="/skills/handing-off-for-review/">
       <span class="see-also__name">handing-off-for-review</span>
       <span class="see-also__summary">Use when completing a task or feature and about to hand it off before merging, when stuck and a fresh perspective would help…</span>
     </a></li>
-<li><a class="see-also__link" href="/tbaguette-skills/skills/verifying-review-feedback/">
+<li><a class="see-also__link" href="/skills/verifying-review-feedback/">
       <span class="see-also__name">verifying-review-feedback</span>
       <span class="see-also__summary">Use when code review feedback lands on your own change — from a person, a bot…</span>
     </a></li>
@@ -158,27 +158,27 @@
   <div class="container site-footer__inner">
     <div class="site-footer__brand-col">
       <p class="site-footer__brand"><strong>TBaguette&rsquo;s Atelier</strong> — the judgment calls that sit between the ticket and the commit, organized like a proper bench.</p>
-      <p class="site-footer__start">New here? Start with <a href="/tbaguette-skills/getting-started/">Getting started</a>.</p>
+      <p class="site-footer__start">New here? Start with <a href="/getting-started/">Getting started</a>.</p>
     </div>
     <nav aria-label="Categories">
       <p class="site-footer__nav-title">Categories</p>
       <ul class="site-footer__categories">
-<li><a href="/tbaguette-skills/#ui-and-design">UI and design</a></li>
-<li><a href="/tbaguette-skills/#judgment-and-meta">Judgment and meta</a></li>
-<li><a href="/tbaguette-skills/#planning-and-delegation">Planning and delegation</a></li>
-<li><a href="/tbaguette-skills/#reading-code">Reading code</a></li>
-<li><a href="/tbaguette-skills/#landing-changes">Landing changes</a></li>
-<li><a href="/tbaguette-skills/#testing">Testing</a></li>
-<li><a href="/tbaguette-skills/#debugging-and-performance">Debugging and performance</a></li>
-<li><a href="/tbaguette-skills/#designing-systems">Designing systems</a></li>
-<li><a href="/tbaguette-skills/#security">Security (defensive)</a></li>
-<li><a href="/tbaguette-skills/#finishing-and-proving">Finishing and proving</a></li>
-<li><a href="/tbaguette-skills/#communicating">Communicating</a></li>
-<li><a href="/tbaguette-skills/#environment-and-tooling">Environment and tooling</a></li>
+<li><a href="/#ui-and-design">UI and design</a></li>
+<li><a href="/#judgment-and-meta">Judgment and meta</a></li>
+<li><a href="/#planning-and-delegation">Planning and delegation</a></li>
+<li><a href="/#reading-code">Reading code</a></li>
+<li><a href="/#landing-changes">Landing changes</a></li>
+<li><a href="/#testing">Testing</a></li>
+<li><a href="/#debugging-and-performance">Debugging and performance</a></li>
+<li><a href="/#designing-systems">Designing systems</a></li>
+<li><a href="/#security">Security (defensive)</a></li>
+<li><a href="/#finishing-and-proving">Finishing and proving</a></li>
+<li><a href="/#communicating">Communicating</a></li>
+<li><a href="/#environment-and-tooling">Environment and tooling</a></li>
       </ul>
     </nav>
   </div>
 </footer>
-<script src="/tbaguette-skills/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>

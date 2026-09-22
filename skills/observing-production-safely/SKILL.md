@@ -1,6 +1,6 @@
 ---
 name: observing-production-safely
-description: Use when diagnosing a live system that users depend on, when the only evidence sits behind production data, when enabling a debug flag, verbose logging, a heap dump, a profiler, or a breakpoint against a running service, when tempted to change production state to test a theory, or when extracting dumps, traces, or samples that contain customer data.
+description: Use when diagnosing a live system that users depend on, when the only evidence sits behind production data, when enabling a debug flag, verbose logging, a heap dump, a profiler, or a breakpoint against a running service, when tempted to change production state to test a theory, or when extracting dumps, traces, or samples that contain customer data, or when reading or searching a large log or dump on the affected host itself.
 ---
 
 # Observing production safely
@@ -25,7 +25,7 @@ Not for: deciding what should be emitted in the first place — that's `instrume
 
 Descend in order. Stop at the first rung that answers the question — most investigations are finished by rung 2 and reach for rung 5 out of habit.
 
-1. **Existing telemetry.** Metrics, logs, traces, dashboards already collected. Zero marginal cost, and the only rung that is free.
+1. **Existing telemetry.** Metrics, logs, traces, dashboards already collected. Zero marginal cost to *collect* — but free also requires reading it from somewhere other than the struggling host. Querying a dashboard is free; pulling a multi-gigabyte log off the box that is currently failing is rung 4 wearing rung 1's clothes.
 2. **Read-only queries** against a replica, with a statement timeout and a row limit set before the query is typed.
 3. **Sampled diagnostics.** One-in-N tracing, a debug header on a single request id, one canary instance out of the fleet.
 4. **Passive process inspection.** Sampling profiler, thread dump, process counters, existing admin or health endpoints.
@@ -48,8 +48,11 @@ A breakpoint on a live service is not on this ladder at any rung. A stopped thre
 | Query against the primary | lock contention and replication lag | replica, timeout, explicit LIMIT |
 | Packet capture | CPU and disk, and it records credentials in plaintext | narrow filter, short duration, encrypted destination |
 | Extra shell session on the instance | memory, file descriptors, and CPU on an already-degraded host | prefer a drained instance |
+| Whole-file read or text search over a large log **on the host** | depends entirely on the tool: a streaming matcher costs I/O and cache pressure, one that materialises the file or its lines costs its size in memory — and the log is largest exactly when the incident is worst | know which one you are invoking; prefer a bounded tail or a byte-offset read, and copy it off rather than scanning in place |
 
 The pattern to recognize: the diagnostics that are cheap on one instance are frequently catastrophic across the fleet, because the shared thing they consume — log pipeline, metrics cardinality, storage backend — is not per-instance.
+
+And the one that does not feel like a diagnostic at all: **reading a file that already exists.** Nothing is enabled, nothing is written, the command is read-only, so it reads as rung 1. What decides whether it is depends on the tool rather than the intent: a streaming matcher walks a large log for the price of I/O, while one that materialises the file — or reads it into a list of lines first, which several shells' idiomatic spellings do — spends its size in memory on the host that is already struggling. The free part of rung 1 is that the data was *already collected*; it says nothing about the cost of collecting it *from here*. Ask the file's size, and know which kind of tool you are about to point at it, before asking the question it might answer.
 
 ## Rules that do not bend
 
