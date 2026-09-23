@@ -40,6 +40,8 @@ Not POSIX: arrays, `[[ ]]`, `+=`, `$'...'`, `${x^^}`, `<(...)`, `set -o pipefail
 
 Commit in the shebang and hold to it: `#!/usr/bin/env bash` with bash features, or `#!/bin/sh` with the POSIX subset only. Verify by running the script under `dash` or `busybox sh` in CI and by linting with the dialect set explicitly — never by reading. `$SHELL` is the user's login shell and says nothing about the interpreter you are inside; check `$BASH_VERSION` / `$ZSH_VERSION` if code must branch. Interactive shells such as fish, zsh, and nushell are not sh-compatible and belong in nobody's shebang.
 
+zsh is also where a POSIX-looking snippet breaks on a variable name. It ties several lowercase arrays to environment variables — `path` to `PATH`, and likewise `fpath`, `cdpath`, `manpath`, `mailpath`, `module_path` — so `for path in a b; do …; done` replaces the command search path, and from the first iteration on every command fails with *command not found*, a symptom that points nowhere near the loop. Pick other names (`p`, `dir`, `route`) in anything that might be pasted, sourced, or run by a tool whose shell you have not checked; the tell is ordinary utilities going missing partway through a snippet.
+
 ## `set -e` and its documented holes
 
 `set -e` exits on an unchecked non-zero status, with exemptions that are surprising and are the reason scripts silently continue after a failure:
