@@ -1,6 +1,6 @@
 ---
 name: observing-production-safely
-description: Use when diagnosing a live system that users depend on, when the only evidence sits behind production data, when enabling a debug flag, verbose logging, a heap dump, a profiler, or a breakpoint against a running service, when tempted to change production state to test a theory, or when extracting dumps, traces, or samples that contain customer data, or when reading or searching a large log or dump on the affected host itself.
+description: Use when diagnosing a live system that users depend on, when the only evidence sits behind production data, when enabling a debug flag, verbose logging, a heap dump, a profiler, or a breakpoint against a running service, when tempted to change production state to test a theory, when extracting dumps, traces, or samples that contain customer data, or when reading or searching a large log or dump on the affected host itself.
 ---
 
 # Observing production safely
@@ -25,7 +25,7 @@ Not for: deciding what should be emitted in the first place — that's `instrume
 
 Descend in order. Stop at the first rung that answers the question — most investigations are finished by rung 2 and reach for rung 5 out of habit.
 
-1. **Existing telemetry.** Metrics, logs, traces, dashboards already collected. Zero marginal cost to *collect* — but free also requires reading it from somewhere other than the struggling host. Querying a dashboard is free; pulling a multi-gigabyte log off the box that is currently failing is rung 4 wearing rung 1's clothes.
+1. **Existing telemetry.** Metrics, logs, traces, dashboards already collected. Zero marginal cost to *collect* — but free also requires that reading it costs the struggling host nothing. Querying a dashboard is free; scanning a multi-gigabyte log in place on the box that is currently failing is rung 4 wearing rung 1's clothes.
 2. **Read-only queries** against a replica, with a statement timeout and a row limit set before the query is typed.
 3. **Sampled diagnostics.** One-in-N tracing, a debug header on a single request id, one canary instance out of the fleet.
 4. **Passive process inspection.** Sampling profiler, thread dump, process counters, existing admin or health endpoints.

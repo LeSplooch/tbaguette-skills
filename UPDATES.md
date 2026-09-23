@@ -27,9 +27,10 @@ Everything above the first `##` is preamble and is never rendered.
 ## 2026-09-24 — Reading the log is a diagnostic too (contributed)
 
 - From an outside contribution: `observing-production-safely` now says that rung 1 is only free when the data is
-  read from somewhere other than the struggling host. A whole-file read, grep, or
-  text search over a large log allocates against the memory of the box you are
-  diagnosing, and the log is largest exactly when the incident is worst — so the
+  read without costing the struggling host anything. Whether a whole-file read or
+  text search over a large log does depends on the tool — a streaming matcher costs
+  I/O, one that loads the file or its lines spends its size in memory on the box you
+  are diagnosing — and the log is largest exactly when the incident is worst — so the
   commonest ad-hoc diagnostic of all can be the thing that finishes the host off,
   while looking like the cheapest rung on the ladder because nothing was enabled
   and nothing was written.
