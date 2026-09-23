@@ -31,6 +31,8 @@ Two-way despite feeling permanent: internal module boundaries, most naming, dire
 
 The rule that catches most misclassification: **reversibility is the cost to undo after the work built on top of it, not the cost to undo today.** A choice that is trivial to change now and gets built on for two weeks was a one-way door the day it was made. The clock closes doors, not the choice.
 
+**Looking can be the write.** Classify the act of acquiring the thing, not only what you meant to do with it. Opening a datastore can run its schema migrations; attaching to a service can take a lease or replay a journal; mounting or loading a file can rewrite a lock or an index. A "read-only" preview, dry run, or inspection therefore may already have changed the thing it exists to inspect, and a safety copy taken after the handle is open preserves the state the open already altered. Copy before anything opens it, on every path including the read-only one.
+
 ## Matching process to weight
 
 | Cost to undo | Budget | Form |
