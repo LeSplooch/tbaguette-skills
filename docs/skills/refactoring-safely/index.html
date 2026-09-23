@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.61</span>
+      <span class="wordmark-version" dir="ltr">v1.1.62</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:11:57+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:11:57Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-23T22:18:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:18:04Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">refactoring-safely</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-24T00:16:59+02:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Landing changes</span>
   <p class="lede">Use when restructuring existing code without changing what it does, when a change touches many call sites at once, when tests break in the middle of a restructure, when code needs cleaning up before a feature can be added, when working in untested or legacy code, when two near-identical functions look like an obvious deduplication, or when tempted to rewrite rather than transform. Covers behavior preservation, extracting and inlining, large-scale renames, load-bearing duplication, and refactor-versus-rewrite decisions.</p>
@@ -80,6 +80,7 @@
 <p>Apply a single named move, run the tests, commit. The interval between two green states is the size of the search space when it goes red — keep it under a few minutes of work. &quot;Tests green at the end&quot; is not the same discipline and does not produce the same outcome. Each commit this produces is the atomic kind <a class="skill-link" href="/tbaguette-skills/skills/atomic-commits/"><code>atomic-commits</code></a> covers — a refactor commit that also carries a behavior change isn't atomic no matter how small it is.</p>
 <table><thead><tr><th>Move</th><th>Preserves when done right</th><th>How it breaks when done in bulk</th></tr></thead><tbody><tr><td>Rename</td><td>Everything, given every reference is updated</td><td>Reflective, string-keyed, cross-language, and config references are invisible to the tool</td></tr><tr><td>Extract function</td><td>Behavior, given captured state is passed faithfully</td><td>Turning captured state into a parameter changes evaluation order and time of read</td></tr><tr><td>Inline</td><td>Behavior, given the callee is pure</td><td>Inlining a side effect changes how often it happens</td></tr><tr><td>Move to another module or type</td><td>Behavior, given initialization order holds</td><td>Import graph, visibility, and static-initialization order all shift</td></tr><tr><td>Introduce parameter</td><td>Behavior, given the default matches current use</td><td>A default chosen for the new caller silently changes every old one</td></tr><tr><td>Replace conditional with dispatch</td><td>Behavior, given the fallback branch is preserved</td><td>The unhandled case that used to fall through now throws</td></tr><tr><td>Merge two near-duplicates</td><td>Behavior, given nothing outside the process can tell them apart</td><td>The difference was the point, and its observer is a signature verifier, a stored format, or a wire peer</td></tr></tbody></table>
 <p>Chained small moves beat one large one because each is mechanically checkable, individually revertible, and individually explainable in a subject line. The composite is none of the three. Where an automated refactoring tool exists for a move, use it — it updates references you would not have found. Where none exists, restrict yourself to transformations precise enough that you could describe the rule and have someone else verify it.</p>
+<p>A script that rewrites text is the same kind of tool, minus the tool's safety checks, so write those checks yourself. Before every programmatic replace, assert that the text being searched for is non-empty and occurs exactly as many times as you expect — usually once — and stop without writing if either fails. A replace-all treats an empty pattern as matching at every position, so a needle computed from a slice that came out empty does not fail: it inserts the replacement before, between, and after every character of the file and reports success. A needle that matches twice is the quieter version of the same defect, rewriting a second site nobody looked at.</p>
 <h2 id="duplication-that-is-load-bearing">Duplication that is load-bearing</h2>
 <p>Before unifying a near-duplicate pair, find out who observes the difference. When the observer sits outside this process — a peer, a wire format, a stored file — the duplication is a contract, and the merge fails there rather than here, long after the diff.</p>
 <p><a class="skill-link" href="/tbaguette-skills/skills/judging-duplication/"><code>judging-duplication</code></a> covers making that call.</p>

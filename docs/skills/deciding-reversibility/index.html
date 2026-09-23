@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.61</span>
+      <span class="wordmark-version" dir="ltr">v1.1.62</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:11:57+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:11:57Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-23T22:18:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:18:04Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -64,7 +64,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">deciding-reversibility</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-24T00:16:59+02:00">Updated</span>
   </div>
   <span class="tag skill-article__tag">Judgment and meta</span>
   <p class="lede">Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, overwrite a setting or a configuration file, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it.</p>
@@ -77,6 +77,7 @@
 <ul><li><strong>Data gets written in a shape you would later have to migrate</strong>, or data gets destroyed.</li><li><strong>Consumers outside your control have copied it</strong> — published interfaces, wire and file formats, URLs, command-line flags, anything already integrated against.</li><li><strong>It was said out loud</strong> — user-visible names, external commitments, anything announced.</li><li><strong>Trust or secrecy is spent</strong> — leaked credentials, rewritten history, messages sent.</li><li><strong>Other work will compound on it</strong> before anyone revisits it.</li></ul>
 <p>Two-way despite feeling permanent: internal module boundaries, most naming, directory layout, any dependency reachable only through your own wrapper, algorithm choice behind a stable interface, defaults with no data written against them yet.</p>
 <p>The rule that catches most misclassification: <strong>reversibility is the cost to undo after the work built on top of it, not the cost to undo today.</strong> A choice that is trivial to change now and gets built on for two weeks was a one-way door the day it was made. The clock closes doors, not the choice.</p>
+<p><strong>Looking can be the write.</strong> Classify the act of acquiring the thing, not only what you meant to do with it. Opening a datastore can run its schema migrations; attaching to a service can take a lease or replay a journal; mounting or loading a file can rewrite a lock or an index. A &quot;read-only&quot; preview, dry run, or inspection therefore may already have changed the thing it exists to inspect, and a safety copy taken after the handle is open preserves the state the open already altered. Copy before anything opens it, on every path including the read-only one.</p>
 <h2 id="matching-process-to-weight">Matching process to weight</h2>
 <table><thead><tr><th>Cost to undo</th><th>Budget</th><th>Form</th></tr></thead><tbody><tr><td>Minutes — rename, reorder, swap a local implementation</td><td>Decide immediately, alone</td><td>Pick; note the runner-up in one clause</td></tr><tr><td>Hours to a day — move a boundary, change an internal shape before data exists</td><td>One bounded comparison of two options</td><td>Pick; state the deciding criterion in a line</td></tr><tr><td>Days to weeks — a data shape with rows in it, an interface another team consumes</td><td>Write the options and the criteria; involve the owner</td><td>A recorded decision</td></tr><tr><td>Effectively permanent — public API, destructive migration, deletion, external send</td><td>Do not decide unilaterally</td><td>Surface it and wait for an explicit answer</td></tr></tbody></table>
 <p>Calibration: if undoing costs under roughly an hour and no data or external consumer is involved, deciding should cost under five minutes. Three rounds of discussion about a ten-minute change has already cost more than the mistake would have.</p>

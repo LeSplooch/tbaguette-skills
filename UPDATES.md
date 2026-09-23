@@ -24,16 +24,27 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-24 — Reading the log is a diagnostic too (contributed)
+## 2026-09-24 — Reading the log is a diagnostic too (contributed), and four smaller sharpenings
 
 - From an outside contribution: `observing-production-safely` now says that rung 1 is only free when the data is
   read without costing the struggling host anything. Whether a whole-file read or
   text search over a large log does depends on the tool — a streaming matcher costs
   I/O, one that loads the file or its lines spends its size in memory on the box you
-  are diagnosing — and the log is largest exactly when the incident is worst — so the
+  are diagnosing. The log is largest exactly when the incident is worst, so the
   commonest ad-hoc diagnostic of all can be the thing that finishes the host off,
   while looking like the cheapest rung on the ladder because nothing was enabled
   and nothing was written.
+- `deciding-reversibility` now says the act of *opening* something can be the write: opening a
+  datastore can run its migrations, attaching can take a lease, so a read-only preview may have
+  changed what it inspects — take the safety copy before anything opens it.
+- `handling-untrusted-input` now covers forwarding someone else's text into an agent's *prompt*:
+  the harness may parse it first (a leading slash runs a command, an at-sign pulls in a file), so
+  use a literal prompt mode, or pass the text as an attachment instead.
+- `portable-shell-scripting` now warns that under zsh a loop variable named `path` replaces `PATH`
+  (as do `fpath`, `cdpath`, `manpath`), so every later command goes *not found*.
+- `refactoring-safely` now says to check a scripted replace's search text is non-empty and matches
+  the expected number of times before writing: an empty pattern matches everywhere and inserts the
+  replacement between every character.
 
 ## 2026-09-23 — A contributor's site build aimed at the wrong address, and a retry that forgot its first failure
 
