@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-24 — Reading the log is a diagnostic too (contributed), and five smaller sharpenings
+## 2026-09-24 — Reading the log is a diagnostic too (contributed), and six smaller sharpenings
 
 - From an outside contribution: `observing-production-safely` now says that rung 1 is only free when the data is
   read without costing the struggling host anything. Whether a whole-file read or
@@ -50,6 +50,11 @@ Everything above the first `##` is preamble and is never rendered.
   the half-finished state. The working tree now stays at its final state; each commit is tested in
   a throwaway worktree first, then staged file by file straight into the index and committed once
   `git write-tree` shows the staged tree is the one that was tested.
+- `diagnosing-before-fixing` now helps tell a real defect from a test-environment artifact when a
+  check fails only where something never ran — a hidden browser pane that gets no animation frames
+  or scroll events, a suspended app, a sleeping host. Comparing against the real path puts every
+  such failure down to the environment; the question that sorts them is whether production can be
+  in that state too, and for a view left in the background it can.
 
 ## 2026-09-23 — A contributor's site build aimed at the wrong address, and a retry that forgot its first failure
 
