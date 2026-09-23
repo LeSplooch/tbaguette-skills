@@ -47,6 +47,8 @@ Apply a single named move, run the tests, commit. The interval between two green
 
 Chained small moves beat one large one because each is mechanically checkable, individually revertible, and individually explainable in a subject line. The composite is none of the three. Where an automated refactoring tool exists for a move, use it — it updates references you would not have found. Where none exists, restrict yourself to transformations precise enough that you could describe the rule and have someone else verify it.
 
+A script that rewrites text is the same kind of tool, minus the tool's safety checks, so write those checks yourself. Before every programmatic replace, assert that the text being searched for is non-empty and occurs exactly as many times as you expect — usually once — and stop without writing if either fails. A replace-all treats an empty pattern as matching at every position, so a needle computed from a slice that came out empty does not fail: it inserts the replacement before, between, and after every character of the file and reports success. A needle that matches twice is the quieter version of the same defect, rewriting a second site nobody looked at.
+
 ## Duplication that is load-bearing
 
 Before unifying a near-duplicate pair, find out who observes the difference. When the observer sits outside this process — a peer, a wire format, a stored file — the duplication is a contract, and the merge fails there rather than here, long after the diff.
