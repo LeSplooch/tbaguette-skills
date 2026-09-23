@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-23 — A contributor's own site build could point at the wrong address
+## 2026-09-23 — A contributor's site build aimed at the wrong address, and a retry that forgot its first failure
 
 - `tending-tbaguette` now tells a contributor who can't run this repo's
   pre-commit hook exactly how to rebuild the site by hand. Skipping the one
@@ -32,6 +32,13 @@ Everything above the first `##` is preamble and is never rendered.
   at the domain root instead of where the site actually lives — a mistake the
   test suite has no way to catch, since it checks the files are well-formed,
   not where they think they're served from.
+- `modeling-errors` now says what a retry should report. A loop that keeps
+  only its last attempt's error names the wrong failure whenever an attempt
+  leaves something behind, such as a lock or a half-started process. The next
+  attempt fails on that leftover, and every report after it describes the
+  consequence while the real cause is recorded nowhere. The boundary that owns
+  the retry should keep every distinct reason, the first one leading, and the
+  skill's `description:` now routes that symptom to the skill.
 
 ## 2026-09-22 — One shout instead of two at session start
 

@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.59</span>
+      <span class="wordmark-version" dir="ltr">v1.1.60</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -41,7 +41,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-22T22:21:03+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-22T22:21:03Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-23T14:09:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T14:09:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -139,8 +139,19 @@ Flag one more thing, because it applies to this very conversation: this session 
     <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-09-23T00:16:51+02:00" draggable="false" style="--cf-offset: 0">
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/modeling-errors/" data-fresh-at="2026-09-23T14:09:40.302357+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">modeling-errors</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-23T14:09:40.302357+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…</p>
+  <span class="card__foot">
+    <span class="tag">Designing systems</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-09-23T00:16:51+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-23T00:16:51+02:00">Updated</span>
@@ -151,7 +162,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/instrumenting-for-observability/" data-fresh-at="2026-09-21T18:06:50+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/instrumenting-for-observability/" data-fresh-at="2026-09-21T18:06:50+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">instrumenting-for-observability</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-21T18:06:50+02:00">Updated</span>
@@ -184,10 +195,11 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-23">23 Sep 2026</time>
-    <span class="notes__entry-title">A contributor's own site build could point at the wrong address</span>
+    <span class="notes__entry-title">A contributor's site build aimed at the wrong address, and a retry that forgot its first failure</span>
   </h3>
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> now tells a contributor who can't run this repo's pre-commit hook exactly how to rebuild the site by hand. Skipping the one flag that rebuild needs makes every stylesheet, font, and script link point at the domain root instead of where the site actually lives — a mistake the test suite has no way to catch, since it checks the files are well-formed, not where they think they're served from.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a> now says what a retry should report. A loop that keeps only its last attempt's error names the wrong failure whenever an attempt leaves something behind, such as a lock or a half-started process. The next attempt fails on that leftover, and every report after it describes the consequence while the real cause is recorded nowhere. The boundary that owns the retry should keep every distinct reason, the first one leading, and the skill's <code>description:</code> now routes that symptom to the skill.</li>
   </ul>
 </li>
   </ol>
@@ -203,10 +215,11 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-23">23 Sep 2026</time>
-    <span class="notes__entry-title">A contributor's own site build could point at the wrong address</span>
+    <span class="notes__entry-title">A contributor's site build aimed at the wrong address, and a retry that forgot its first failure</span>
   </h3>
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> now tells a contributor who can't run this repo's pre-commit hook exactly how to rebuild the site by hand. Skipping the one flag that rebuild needs makes every stylesheet, font, and script link point at the domain root instead of where the site actually lives — a mistake the test suite has no way to catch, since it checks the files are well-formed, not where they think they're served from.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a> now says what a retry should report. A loop that keeps only its last attempt's error names the wrong failure whenever an attempt leaves something behind, such as a lock or a half-started process. The next attempt fails on that leftover, and every report after it describes the consequence while the real cause is recorded nowhere. The boundary that owns the retry should keep every distinct reason, the first one leading, and the skill's <code>description:</code> now routes that symptom to the skill.</li>
   </ul>
 </li>
 <li class="notes__entry">
@@ -1174,7 +1187,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/modeling-errors/" data-search-card data-search-terms="modeling-errors use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes… designing systems">
   <span class="card__name-row">
     <span class="card__name">modeling-errors</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-23T14:09:40.302357+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…</p>
   <span class="card__foot">

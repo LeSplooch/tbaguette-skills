@@ -1,6 +1,6 @@
 ---
 name: modeling-errors
-description: Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, undiagnosable production incidents, duplicated log noise, and callers parsing error strings. Also use from the other side, when your own code must detect a state in a system you do not own and the only anchor on offer is a printed status word, a window title, or a generated class name, or when two different upstream failure causes render identically with no stable code to tell them apart.
+description: Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, undiagnosable production incidents, duplicated log noise, a retry whose reported error hides the failure that started it, and callers parsing error strings. Also use from the other side, when your own code must detect a state in a system you do not own and the only anchor on offer is a printed status word, a window title, or a generated class name, or when two different upstream failure causes render identically with no stable code to tell them apart.
 ---
 
 # Modeling errors
@@ -13,7 +13,7 @@ Classify the failure before choosing a mechanism. Almost all bad error handling 
 
 - Adding error handling to a new operation, or reviewing a `catch` you did not write.
 - Designing the error side of an interface: what callers can be told, and what they can do about it.
-- Symptoms: a subsystem "silently does nothing", one failure produces four log lines, a retry loop that can never succeed, an incident where nothing recorded what actually failed.
+- Symptoms: a subsystem "silently does nothing", one failure produces four log lines, a retry loop that can never succeed, an incident where nothing recorded what actually failed, a retry whose reported error hides the failure that started it.
 - Not for: the wire-level shape of the error contract at a public boundary (designing-apis), or the safety of the retry itself (designing-for-idempotency).
 
 ## Four classes, four treatments
@@ -86,6 +86,8 @@ The section above is about detecting *state* with no stable signal. The same gap
 
 **The error boundary is one per unit of work** — request, message, job, frame, transaction. It catches whatever remains, logs once with the full chain and the correlation id, converts to the caller-facing contract, and decides the unit's disposition (fail, retry, dead-letter). A service typically has 2–5, one per kind of unit. Log at the boundary, not at the raise site, and never at both: log-and-rethrow at each layer is why "how many errors happened" is unanswerable in most systems.
 
+**A retry that keeps only its last error can report the wrong failure.** Keeping the last attempt's error is what a retry loop does unless told otherwise, and it is harmless only while every attempt starts from the state the first one did. Once an attempt can leave something behind — a process still starting, a lock still held, a half-written file, a connection still open — the next attempt meets that leftover and fails at once, for a reason that is real, specific, and caused by the first attempt. The report now names the consequence; the cause, which only the first attempt saw, is recorded nowhere. When whatever sits above the retry runs the whole unit again, every later pass meets the same leftover and reports the same consequence, so the log fills with one confident explanation of the wrong failure. The boundary that owns the retry therefore keeps every attempt's reason instead of overwriting it: each distinct reason in order, the first one leading, a repeat listed once with its count. One test pins it — an attempt that fails one way, a second that fails another way because of the first, and a report that still names the first — and a retry that later succeeds reports the success, not the history.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -99,6 +101,7 @@ The section above is about detecting *state* with no stable signal. The same gap
 | Wrap chain reads "failed to process: failed to handle: failed to run" | Wrapping with verbs instead of nouns |
 | One bad message kills the whole consumer | Error boundary at process granularity instead of per-message |
 | Load spike during a partial outage | Retries nested at multiple layers, multiplying attempts |
+| The log repeats one specific, plausible failure while the failure that started it appears nowhere | A retry kept only its last attempt's reason, and the later attempts failed because of what the first one left behind |
 | A detector works for the author and reports the wrong state on every other machine | It matched a rendered string — a localized status word, a title, a generated class name — instead of something the target uses as identity |
 | A fallback ladder's first rung has never been seen to succeed on its own | Every rung was tested with the ones below it live, so the sturdy fallback silently rescued the fragile probe |
 | A health/quality verdict looked broken during what was actually a rate-limit window | Quota exhaustion and a genuine outage rendered identically upstream and were folded into one "degraded" signal |
