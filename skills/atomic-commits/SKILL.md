@@ -1,6 +1,6 @@
 ---
 name: atomic-commits
-description: Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit, when a diff mixes a rename or a reformat with a logic change, when a bisect lands on a commit too large to reason about, when a revert or a backport drags in changes nobody asked for, when the checkout is shared with another agent, a colleague, or a tool that writes to it, or when a reviewer cannot find the real change in a diff. Covers splitting by file and by hunk, mechanical versus semantic separation, staging in a tree you do not solely own, clearing a foreign edit versus sweeping it in, and commit granularity.
+description: Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit, when a diff mixes a rename or a reformat with a logic change, when a bisect lands on a commit too large to reason about, when a revert or a backport drags in changes nobody asked for, when the checkout is shared with another agent, a colleague, or a tool that writes to it, or when a reviewer cannot find the real change in a diff. Covers splitting by file and by hunk, mechanical versus semantic separation, staging in a tree you do not solely own, clearing a foreign edit versus sweeping it in, proving each split commit builds and passes without disturbing a shared tree, and commit granularity.
 ---
 
 # Atomic commits
@@ -41,7 +41,7 @@ The build test overrides the other two. Atomic means *the smallest change that s
 | Change plus the refactor that enabled it | refactor first | Reorder history so the enabler precedes the change. |
 | One edit whose two callers each needed something | do not split | One change with two consequences is still one change. |
 
-After any hunk-level split, verify each commit in isolation: set the remainder aside, build, test, restore. Splitting by hunk without this check is the standard way a branch acquires a commit that never compiled, discovered months later by someone bisecting an unrelated failure.
+After any hunk-level split, verify each commit in isolation: set the remainder aside, build, test, restore — except where others commit from the same checkout, which "Staging a tree you do not solely own" covers. Splitting by hunk without this check is the standard way a branch acquires a commit that never compiled, discovered months later by someone bisecting an unrelated failure.
 
 A mechanical commit is allowed to be arbitrarily large **when its message names a transformation the reviewer can re-run and diff against it**. "Rename X to Y across the tree, no other edits" is reviewable at 4,000 lines because the reviewer verifies the rule, not the lines. "Cleanup" is not reviewable at 40.
 
@@ -56,6 +56,10 @@ Re-read the status output immediately before *each* stage, not once when the tas
 The other way to mishandle a foreign edit is to clear it out of the way first — `git stash -u`, `git clean -fd`, `git restore` over the paths in your way — to start from a tidy tree. Each of those *removes* the work rather than mis-attributing it, and leaves no commit for its author to recover it from. What makes the move tempting is not ignorance of the risk: stashing is the documented tidy step, reversible by you and recommended by procedures, so a rule that only warns against the careless option never reaches the person reaching for the careful one.
 
 It is also the quietest failure here. A stash appears in no view either party normally checks — no commit, no branch, no dirty file, nothing in a status output — so the outcome is not that they notice and object, it is that nobody notices until the author looks for work they assumed was still there. Where the tree holds changes that are not yours, ask whoever owns them: it costs one message, and an owner who is still working will move their own edit somewhere safe rather than have you handle it. Where nobody answers, leave the edit where it is and enumerate your own paths around it.
+
+The split check above makes the same move wherever others commit from the checkout, even if every dirty file in it is yours: setting the remainder aside is a stash by another name. While the build runs, the tree holds a half-finished state — another writer's sweep commits it, their build breaks on it, a hook that publishes on commit publishes it — and the restore collides with whatever anyone changed meanwhile.
+
+When the finished work already sits in such a tree, leave it at its final state and never put an intermediate state in it. Make each intermediate state in a throwaway worktree instead — outside the checkout, or ignored by it (`isolating-work-with-worktrees`) — and build and test it there. Then write the files it changes, exactly as tested, into the shared index without touching the shared tree: `git hash-object -w` on each, then `git update-index --cacheinfo` with the file's own mode. Before committing, compare `git write-tree` in the shared checkout with the same command in the throwaway one after `git add -A` there, and commit at once if they match: the index is shared too, and anything another writer stages in between rides along. After the last commit, check out each one in the throwaway worktree with `--force`, since a plain checkout carries that tree's leftovers along, and build it again. The shared tree never holds a half-finished state, and the shared index holds one only for the seconds a commit takes.
 
 If the sweep already happened and is published, do not rewrite. Land a follow-up commit that names what was pulled in and where it actually belongs. History that is wrong and annotated stays navigable; history that is silently corrected under everyone else's checkouts does not.
 
@@ -95,4 +99,5 @@ Land the enabling refactor first even when it is justified only by what follows.
 - Staging everything at once without reading the diff first
 - "I scoped the stage to the directory I was working in" — so did the change you did not write
 - "Those files were already dirty when I started" — true when you checked, and not a claim about now
+- "It is only my own remainder I am setting aside" — anyone committing from that checkout meanwhile gets the half-finished tree
 - Discovering at commit time that the tree holds three changes — that is a planning failure, and the fix is committing before starting the next thing, not better staging

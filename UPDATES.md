@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-24 — Reading the log is a diagnostic too (contributed), and four smaller sharpenings
+## 2026-09-24 — Reading the log is a diagnostic too (contributed), and five smaller sharpenings
 
 - From an outside contribution: `observing-production-safely` now says that rung 1 is only free when the data is
   read without costing the struggling host anything. Whether a whole-file read or
@@ -45,6 +45,11 @@ Everything above the first `##` is preamble and is never rendered.
 - `refactoring-safely` now says to check a scripted replace's search text is non-empty and matches
   the expected number of times before writing: an empty pattern matches everywhere and inserts the
   replacement between every character.
+- `atomic-commits` no longer has you set your remaining changes aside to test each commit of a split
+  when others commit from the same checkout: while the build runs, their next commit can sweep up
+  the half-finished state. The working tree now stays at its final state; each commit is tested in
+  a throwaway worktree first, then staged file by file straight into the index and committed once
+  `git write-tree` shows the staged tree is the one that was tested.
 
 ## 2026-09-23 — A contributor's site build aimed at the wrong address, and a retry that forgot its first failure
 
