@@ -14,7 +14,7 @@
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/tbaguette-skills/assets/styles.css">
-<script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
+<script>(function(){try{var s=localStorage.getItem('tbaguette-theme');var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}if(localStorage.getItem('tbaguette-graph-banner-hidden')==='2026-10-08'){document.documentElement.classList.add('graph-banner-hidden');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
       data-i18n-copied="Copied!"
@@ -38,11 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/" aria-current="page">Getting started</a>
-        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
+        <a class="site-header__nav-link site-header__nav-link--graph site-header__nav-link--new" href="/tbaguette-skills/graph/" data-graph-magnet><span class="site-header__graph-face"><svg class="icon site-header__nav-icon graph-mark" viewBox="0 0 24 24" aria-hidden="true"><path class="graph-mark__tie" d="M8.2 6.6 L15.8 5.9"/><path class="graph-mark__flow" d="M8.2 6.6 L15.8 5.9" pathLength="10" style="--i:0"/><path class="graph-mark__tie" d="M6.1 9.25 L6.4 15.25"/><path class="graph-mark__flow" d="M6.1 9.25 L6.4 15.25" pathLength="10" style="--i:1"/><path class="graph-mark__tie" d="M8.75 17.6 L14.75 17.9"/><path class="graph-mark__flow" d="M8.75 17.6 L14.75 17.9" pathLength="10" style="--i:2"/><path class="graph-mark__tie" d="M17.8 7.75 L17.2 15.75"/><path class="graph-mark__flow" d="M17.8 7.75 L17.2 15.75" pathLength="10" style="--i:3"/><path class="graph-mark__tie" d="M7.7 8.8 L15.4 16.3"/><path class="graph-mark__flow" d="M7.7 8.8 L15.4 16.3" pathLength="10" style="--i:4"/><circle class="graph-mark__node" cx="6" cy="7" r="2.25" style="--i:0"/><circle class="graph-mark__node" cx="18" cy="5.5" r="2.25" style="--i:1"/><circle class="graph-mark__node" cx="17" cy="18" r="2.25" style="--i:2"/><circle class="graph-mark__node" cx="6.5" cy="17.5" r="2.25" style="--i:3"/></svg><span>Graph</span><span class="site-header__new" data-graph-new-until="2026-10-08">New</span></span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-24T04:28:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:28:36Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:40:15+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:40:15Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"

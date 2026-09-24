@@ -201,6 +201,36 @@ class RealLibraryTests(unittest.TestCase):
                 for target, quote in section["quotes"].items():
                     self.assertIn(target, quote, f"{skill['slug']} → {target}")
 
+    def test_the_banner_summary_agrees_with_the_graph(self):
+        summary = skill_graph.banner_summary(self.graph)
+        weights = skill_graph.edge_weights(self.graph)
+        self.assertEqual(summary["pair_count"], len(weights))
+        self.assertEqual(summary["skill_count"], len(self.graph["skills"]))
+        self.assertEqual(summary["mutual_count"],
+                         sum(1 for (a, b) in weights if (b, a) in weights) // 2)
+        self.assertEqual([f["count"] for f in summary["families"]],
+                         [len(c["skill_slugs"]) for c in self.graph["categories"]])
+        # Family links are unordered pairs of distinct families, each once.
+        pairs = [(a, b) for a, b, _ in summary["links"]]
+        self.assertTrue(all(a < b for a, b in pairs))
+        self.assertEqual(len(pairs), len(set(pairs)))
+        # Every cross-family citation lands in exactly one link.
+        family = {s["slug"]: s["category"] for s in self.graph["skills"]}
+        cross = sum(n for (a, b), n in weights.items() if family[a] != family[b])
+        self.assertEqual(sum(w for _, _, w in summary["links"]), cross)
+        self.assertGreaterEqual(summary["max_steps"], 1)
+
+    def test_the_banner_summary_notices_an_unreachable_skill(self):
+        graph = {"categories": [{"slug": "c", "title": "C", "skill_slugs": ["a", "b"]}],
+                 "skills": [
+                     {"slug": "a", "category": "c", "trigger": {"refs": {}},
+                      "sections": [{"refs": {"b": 1}}]},
+                     {"slug": "b", "category": "c", "trigger": {"refs": {}}, "sections": []},
+                 ]}
+        summary = skill_graph.banner_summary(graph)
+        self.assertFalse(summary["reachable"])
+        self.assertEqual(summary["max_steps"], 1)
+
     def test_the_document_stays_small_enough_to_fetch_on_a_click(self):
         # The dialog fetches this the first time Graph is clicked. Well past
         # this and the fetch is noticeable; the likeliest way to get there is

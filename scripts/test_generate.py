@@ -486,6 +486,18 @@ def main() -> None:
               f"{pair_count} cross-references" in graph_html)
         check("the landing page's header opens the graph",
               'href="/tbaguette-skills/graph/"' in index_html)
+        # The build is real, so its clock is too: the banner's presence is
+        # decided by the date this suite happens to run on, and the check
+        # follows the same rule rather than hardcoding which side of it today is.
+        built_at = re.search(r'datetime="([^"]+)"', index_html)
+        announcing = templates.graph_is_new(built_at.group(1) if built_at else "")
+        banner_there = '<aside class="graph-banner"' in index_html
+        check("the landing page announces the graph exactly while it is new "
+              f"({'inside' if announcing else 'past'} the window on this run)",
+              banner_there == announcing)
+        if banner_there:
+            check("...with the real library's numbers in it",
+                  f"<dd>{pair_count}</dd>" in index_html)
 
         version_txt_path = docs / "version.txt"
         check("version.txt exists after generation", version_txt_path.exists())

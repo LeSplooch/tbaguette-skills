@@ -3537,7 +3537,8 @@ a.skill-link--bare:focus-visible {
    the legend, and spelled out in every tooltip and panel.
    ------------------------------------------------------------------------- */
 
-.crumb {
+.crumb,
+.graph-banner {
   --graph-cat-1: #c8635d;
   --graph-cat-2: #009bab;
   --graph-cat-3: #ed9658;
@@ -3552,7 +3553,7 @@ a.skill-link--bare:focus-visible {
   --graph-cat-12: #5f83d4;
 }
 
-[data-theme='flour'] .crumb {
+[data-theme='flour'] :is(.crumb, .graph-banner) {
   --graph-cat-1: #90302e;
   --graph-cat-2: #006777;
   --graph-cat-3: #ad5c15;
@@ -3575,10 +3576,50 @@ a.skill-link--bare:focus-visible {
   gap: var(--space-2);
 }
 
-.site-header__nav-link--graph {
+/* The Graph link is a hit target and nothing else; its pill is the inner
+   face. That split is what lets site.js swell the face toward an approaching
+   pointer: a transform grows what is drawn and, on this element, nothing
+   that can be clicked, so a face three times its size still never takes a
+   click meant for Getting started beside it. */
+.site-header__nav-link--graph,
+.site-header__nav-link--graph:hover,
+.site-header__nav-link--graph[aria-current="page"] {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  padding: 0;
+  border-color: transparent;
+  background: none;
+}
+
+.site-header__graph-face {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
+  padding: var(--space-2) var(--space-3);
+  color: var(--text-secondary);
+  background: var(--bg-deep);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  /* Grows down into the page rather than up past the top of the window,
+     where a header-height pill has nowhere to go. */
+  transform-origin: 50% 12%;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              box-shadow var(--duration-enter) var(--ease-out);
+}
+
+.site-header__nav-link--graph:hover .site-header__graph-face {
+  color: var(--text-accent);
+  border-color: var(--border-strong);
+}
+
+.site-header__nav-link--graph[aria-current="page"] .site-header__graph-face {
+  color: var(--text-accent);
+  border-color: var(--border-strong);
+  background: color-mix(in oklch, var(--accent) 10%, var(--bg-deep));
 }
 
 .site-header__nav-icon {
@@ -3587,7 +3628,309 @@ a.skill-link--bare:focus-visible {
   color: var(--accent);
 }
 
-.site-header__nav-link--graph:hover .site-header__nav-icon { color: var(--accent-hover); }
+/* The mark: the graph's own vocabulary at icon size — ties, and on them
+   travellers; nodes that take a turn to light. At rest it is the plain
+   mark. It moves while the graph is new, and under the pointer always. */
+.graph-mark__tie { opacity: 0.6; }
+
+.graph-mark__flow {
+  stroke: var(--accent-solid);
+  stroke-width: 2.4;
+  stroke-dasharray: 1.4 8.6;
+  opacity: 0;
+}
+
+.graph-mark__node {
+  fill: var(--bg-deep);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* While new: the face is gilded, a ring breathes out of it the way a freshly
+   changed skill's does in the graph, and a foil tag sits on its shoulder —
+   the same "New" the skill cards wear. */
+.site-header__nav-link--new .site-header__graph-face {
+  color: var(--text-primary);
+  border-color: color-mix(in oklch, var(--accent) 70%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--accent) 14%, transparent),
+              0 0 22px -6px color-mix(in oklch, var(--accent-solid) 75%, transparent);
+}
+
+.site-header__new {
+  position: absolute;
+  top: -0.72em;
+  right: -0.85em;
+  padding: 0.12em 0.45em;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 2px var(--bg-deep);
+}
+
+.site-header__nav-link--new .site-header__graph-face::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1.5px solid var(--accent-solid);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-header__nav-link--new .graph-mark__flow,
+  .site-header__nav-link--graph:hover .graph-mark__flow {
+    opacity: 1;
+    animation: graph-mark-flow 1.7s linear infinite;
+    animation-delay: calc(var(--i) * -0.34s);
+  }
+
+  .site-header__nav-link--new .graph-mark__node,
+  .site-header__nav-link--graph:hover .graph-mark__node {
+    animation: graph-mark-node 3.2s var(--ease-in-out) infinite;
+    animation-delay: calc(var(--i) * 0.8s);
+  }
+
+  .site-header__nav-link--new .site-header__graph-face::after {
+    animation: graph-ring 2.8s var(--ease-out) infinite;
+  }
+
+  .site-header__new { animation: graph-new-bob 2.8s var(--ease-in-out) infinite; }
+}
+
+@keyframes graph-mark-flow {
+  from { stroke-dashoffset: 10; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes graph-mark-node {
+  0%, 30%, 100% { fill: var(--bg-deep); transform: scale(1); }
+  12% { fill: var(--accent-solid); transform: scale(1.3); }
+}
+
+@keyframes graph-ring {
+  0% { opacity: 0.85; transform: scale(1); }
+  70%, 100% { opacity: 0; transform: scale(1.22, 1.75); }
+}
+
+@keyframes graph-new-bob {
+  0%, 100% { transform: translateY(0) rotate(6deg); }
+  50% { transform: translateY(-2px) rotate(-3deg); }
+}
+
+@media (forced-colors: active) {
+  .site-header__graph-face { border-color: ButtonText; }
+  .site-header__new { border: 1px solid ButtonText; }
+}
+
+/* --- the announcement banner ------------------------------------------------ */
+
+/* The graph announcing itself at the top of the landing page, in its own
+   materials: the stage's dark field and gold bloom, the app bar's gilded
+   hairline, its stat tiles and its foil button, and a small live
+   constellation of the twelve families drawn by site.js. The copy sits on the
+   left over a fade of the page colour, so every word is measured against
+   --bg rather than against whatever the canvas happens to be drawing
+   behind it. Hidden before first paint once dismissed (see the head
+   bootstrap script), so it never flashes in and out. */
+
+.graph-banner {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: 16.5rem;
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-6);
+  border: 1px solid color-mix(in oklch, var(--accent) 40%, var(--border-subtle));
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(ellipse 55% 95% at 74% 50%,
+      color-mix(in oklch, var(--accent-solid) 9%, var(--bg)) 0%,
+      var(--bg) 78%);
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 10%, transparent),
+    0 30px 60px -34px hsl(var(--shadow-ink) / 0.7),
+    0 0 90px -40px color-mix(in oklch, var(--accent-solid) 50%, transparent);
+}
+
+.graph-banner::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  inset-inline: 10%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent,
+    color-mix(in oklch, var(--accent) 75%, transparent) 25%,
+    color-mix(in oklch, var(--accent) 75%, transparent) 75%, transparent);
+}
+
+.graph-banner-hidden .graph-banner { display: none; }
+
+.graph-banner__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.graph-banner__body {
+  position: relative;
+  z-index: 1;
+  width: min(36rem, 58%);
+  padding: var(--space-6) var(--space-6) var(--space-6) var(--space-6);
+  pointer-events: none;
+}
+
+/* The fade the copy reads against, drawn as its own layer so the canvas can
+   run under the whole banner and still never sit behind a letter. */
+.graph-banner__body::before {
+  content: '';
+  position: absolute;
+  inset: 0 -30% 0 0;
+  z-index: -1;
+  background: linear-gradient(to right, var(--bg) 62%, color-mix(in oklch, var(--bg) 70%, transparent) 82%, transparent);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+
+.graph-banner__body a { pointer-events: auto; }
+
+.graph-banner__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 650;
+  font-size: var(--text-5);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.graph-banner__lede {
+  margin-top: var(--space-3);
+  max-width: 46ch;
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.graph-banner__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+}
+
+.graph-banner__stat {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  min-width: 6.5rem;
+  max-width: 9.5rem;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.graph-banner__stat dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-4);
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.graph-banner__stat dt {
+  font-size: 0.72rem;
+  line-height: 1.3;
+  color: var(--text-secondary);
+}
+
+.graph-banner__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: var(--space-5);
+  padding: 0.55em 1.1em;
+  font-weight: 600;
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border: 1px solid var(--accent-solid);
+  border-radius: var(--radius-full);
+  box-shadow: 0 10px 26px -14px color-mix(in oklch, var(--accent-solid) 90%, transparent);
+  transition: background-color var(--duration-micro) var(--ease-out),
+              transform var(--duration-micro) var(--ease-out);
+}
+
+.graph-banner__cta:hover { background: var(--accent-solid-hover); }
+.graph-banner__cta-icon { width: 1.15em; height: 1.15em; }
+
+.graph-banner__close {
+  position: absolute;
+  z-index: 2;
+  top: var(--space-3);
+  inset-inline-end: var(--space-3);
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--text-secondary);
+  background: color-mix(in oklch, var(--surface) 80%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.graph-banner__close[hidden] { display: none; }
+.graph-banner__close:hover { color: var(--text-accent); border-color: var(--border-strong); }
+.graph-banner__close .icon { width: 1.1em; height: 1.1em; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .graph-banner__cta:hover { transform: translateY(-1px); }
+}
+
+/* Narrow: the constellation takes a band of its own above the copy rather
+   than sharing a row it would have to squeeze into. */
+@media (max-width: 40rem) {
+  .graph-banner {
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 0;
+    padding-top: 11rem;
+  }
+  .graph-banner__canvas { height: 12rem; }
+  .graph-banner__body { width: auto; padding: var(--space-4) var(--space-5) var(--space-5); }
+  .graph-banner__body::before {
+    inset: 0;
+    background: linear-gradient(to bottom, transparent, var(--bg) 2.5rem);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+  .graph-banner__title { font-size: var(--text-4); }
+  .graph-banner__stat { min-width: 0; flex: 1 1 5.5rem; }
+}
+
+@media (forced-colors: active) {
+  .graph-banner { border: 2px solid CanvasText; }
+  .graph-banner::before, .graph-banner__body::before { display: none; }
+  .graph-banner__stat, .graph-banner__close { border: 1px solid CanvasText; }
+  .graph-banner__cta { border: 1px solid ButtonText; }
+}
 
 .skill-article__meta {
   display: flex;

@@ -401,6 +401,30 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
     categories = content["categories"]
     skills = content["skills"]
 
+    # The graph's data is read back out of the same rendered bodies the skill
+    # pages below are built from, so an edge exists in it exactly when a
+    # reader can click that cross-reference on a page. It comes first because
+    # the landing page's announcement banner carries a summary of it. No generated-file
+    # header on the JSON: a comment would make it invalid JSON, and the
+    # page beside it carries the header for the directory.
+    graph = skill_graph.build_graph(
+        content,
+        skill_url_template=templates.skill_url("{slug}", base_path, locale),
+    )
+    graph_dir = output_dir / templates.GRAPH_PATH
+    graph_dir.mkdir(parents=True, exist_ok=True)
+    (graph_dir / templates.GRAPH_DATA_FILENAME).write_text(
+        json.dumps(graph, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
+    )
+    _write(
+        graph_dir / "index.html",
+        templates.render_graph_page(
+            categories, base_path, last_updated_utc=last_updated_utc,
+            skill_count=len(skills), pair_count=len(skill_graph.edge_weights(graph)),
+            locale=locale, strings=strings, plugin_version=plugin_version,
+        ),
+    )
+
     _write(
         output_dir / "index.html",
         templates.render_index(
@@ -408,6 +432,7 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
             fresh_skills=content.get("fresh_skills", []),
             update_notes=update_notes or [],
             locale=locale, strings=strings, plugin_version=plugin_version,
+            graph_banner=skill_graph.banner_summary(graph),
         ),
     )
 
@@ -437,28 +462,6 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
     )
     _write(output_dir / templates.GETTING_STARTED_PATH / "index.html", getting_started_html)
 
-    # The graph's data is read back out of the same rendered bodies the skill
-    # pages above were built from, so an edge exists in it exactly when a
-    # reader can click that cross-reference on a page. No generated-file
-    # header on the JSON: a comment would make it invalid JSON, and the
-    # page beside it carries the header for the directory.
-    graph = skill_graph.build_graph(
-        content,
-        skill_url_template=templates.skill_url("{slug}", base_path, locale),
-    )
-    graph_dir = output_dir / templates.GRAPH_PATH
-    graph_dir.mkdir(parents=True, exist_ok=True)
-    (graph_dir / templates.GRAPH_DATA_FILENAME).write_text(
-        json.dumps(graph, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
-    )
-    _write(
-        graph_dir / "index.html",
-        templates.render_graph_page(
-            categories, base_path, last_updated_utc=last_updated_utc,
-            skill_count=len(skills), pair_count=len(skill_graph.edge_weights(graph)),
-            locale=locale, strings=strings, plugin_version=plugin_version,
-        ),
-    )
 
 
 def generate(project_root: Path, skills_root: Path, *, base_path: str = "",

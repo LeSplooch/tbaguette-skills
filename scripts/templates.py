@@ -39,6 +39,7 @@ vocabulary for "make this safe to interpolate" across both halves of the
 generator.
 """
 
+import json
 from html import escape as _escape_html_impl
 
 import locales
@@ -140,6 +141,19 @@ class Strings:
         "The graph is drawn in the browser and needs JavaScript. Every "
         "cross-reference it shows is also a link on the skill pages themselves."
     )
+    graph_new_badge: str = "New"
+    graph_banner_label: str = "New: the skill graph"
+    graph_banner_lede_template: str = (
+        "Every skill, and every place one names another: {pair_count} "
+        "cross-references between {skill_count} skills, traced section by "
+        "section. Open any skill to see its anatomy, or trace how one leads "
+        "to another."
+    )
+    graph_banner_stat_pairs: str = "cross-references"
+    graph_banner_stat_mutual: str = "pairs cite each other"
+    graph_banner_stat_steps: str = "steps at most, between any two"
+    graph_banner_cta: str = "Open the graph"
+    graph_banner_close: str = "Hide this announcement"
 
 
 ENGLISH_STRINGS = Strings(
@@ -856,17 +870,41 @@ GETTING_STARTED_PATH = "getting-started/"
 GRAPH_PATH = "graph/"
 GRAPH_DATA_FILENAME = "graph.json"
 
+# The graph is announced -- a "New" tag on the header's Graph link and a
+# banner at the top of the landing page -- until this date, inclusive. A date
+# rather than a flag for the milestone plaque's reason: an announcement left
+# up past its news is how a live site starts reading as abandoned, and nobody
+# files a bug about a banner that is merely old. The build leaves both out
+# once its own clock is past it; site.js retires them against the reader's
+# clock in between builds.
+GRAPH_NEW_UNTIL = "2026-10-08"
+
+
+def graph_is_new(last_updated_utc: str) -> bool:
+    """Whether a page built at this instant still announces the graph. A
+    render with no build instant (a fixture) counts as inside the window."""
+    return not last_updated_utc or last_updated_utc[:10] <= GRAPH_NEW_UNTIL
+
 _THEME_STORAGE_KEY = "tbaguette-theme"
+
+# Holds the GRAPH_NEW_UNTIL of the announcement a reader dismissed, so the
+# next announcement -- a different date -- shows again on its own.
+GRAPH_BANNER_STORAGE_KEY = "tbaguette-graph-banner-hidden"
 
 # Runs synchronously in <head>, before first paint, so the stored or
 # OS-preferred theme applies before any pixel is drawn — the alternative is a
 # flash of the wrong theme on every reload. Deliberately tiny and dependency
 # free; the rest of the theme logic (the toggle button) lives in site.js.
+# It also hides a graph banner the reader already dismissed, for the same
+# reason: waiting for site.js would paint the banner and then pull the page
+# up by its height.
 _THEME_BOOTSTRAP_JS = (
     "(function(){try{"
     f"var s=localStorage.getItem('{_THEME_STORAGE_KEY}');"
     "var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;"
     "if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}"
+    f"if(localStorage.getItem('{GRAPH_BANNER_STORAGE_KEY}')==='{GRAPH_NEW_UNTIL}')"
+    "{document.documentElement.classList.add('graph-banner-hidden');}"
     "}catch(e){}})();"
 )
 
@@ -982,8 +1020,32 @@ def _render_plugin_version(version: str) -> str:
     return f'<span class="wordmark-version" dir="ltr">v{escape_html(version)}</span>'
 
 
+# The Graph link's mark, inline rather than from the sprite so its parts can
+# move: each tie carries a travelling particle and each node takes a turn to
+# light, the graph's own motion at 1.15em. The geometry is icon-graph's.
+_GRAPH_MARK_TIES = (
+    "M8.2 6.6 L15.8 5.9", "M6.1 9.25 L6.4 15.25", "M8.75 17.6 L14.75 17.9",
+    "M17.8 7.75 L17.2 15.75", "M7.7 8.8 L15.4 16.3",
+)
+_GRAPH_MARK_NODES = ((6, 7), (18, 5.5), (17, 18), (6.5, 17.5))
+
+
+def _render_graph_mark() -> str:
+    ties = "".join(
+        f'<path class="graph-mark__tie" d="{d}"/>'
+        f'<path class="graph-mark__flow" d="{d}" pathLength="10" style="--i:{i}"/>'
+        for i, d in enumerate(_GRAPH_MARK_TIES)
+    )
+    nodes = "".join(
+        f'<circle class="graph-mark__node" cx="{x}" cy="{y}" r="2.25" style="--i:{i}"/>'
+        for i, (x, y) in enumerate(_GRAPH_MARK_NODES)
+    )
+    return (f'<svg class="icon site-header__nav-icon graph-mark" viewBox="0 0 24 24" '
+            f'aria-hidden="true">{ties}{nodes}</svg>')
+
+
 def _render_header_nav(base_path: str, locale: "locales.Locale", path_suffix: str,
-                        strings: Strings) -> str:
+                        strings: Strings, *, graph_new: bool = False) -> str:
     """The header's navigation: Getting started, then Graph. aria-current
     marks whichever page the reader is on rather than leaving a link that
     appears to go somewhere and does not -- the same page this nav points at
@@ -993,15 +1055,27 @@ def _render_header_nav(base_path: str, locale: "locales.Locale", path_suffix: st
     Graph is the second seat because it is the other thing no skill page can
     show: the library as a whole, and what holds it together. It carries an
     icon where Getting started does not: it leads to an instrument rather
-    than to a page of prose, and the mark says which kind of place it is."""
+    than to a page of prose, and the mark says which kind of place it is.
+
+    Its visible pill is an inner face rather than the link itself, so the
+    face can swell toward an approaching pointer (site.js) while the link --
+    the hit target -- keeps its resting size and never covers a neighbour's.
+    While the graph is new the face also carries a "New" tag, which site.js
+    retires against the reader's clock."""
     current = ' aria-current="page"' if path_suffix == GETTING_STARTED_PATH else ""
     href = _locale_url(locale, base_path, GETTING_STARTED_PATH)
     graph_current = ' aria-current="page"' if path_suffix == GRAPH_PATH else ""
     graph_href = _locale_url(locale, base_path, GRAPH_PATH)
-    graph_icon = _icon("icon-graph", css_class="icon site-header__nav-icon", base_path=base_path)
+    new_tag = (
+        f'<span class="site-header__new" data-graph-new-until="{GRAPH_NEW_UNTIL}">'
+        f'{escape_html(strings.graph_new_badge)}</span>'
+    ) if graph_new else ""
+    graph_class = "site-header__nav-link site-header__nav-link--graph"
+    if graph_new:
+        graph_class += " site-header__nav-link--new"
     return f"""<nav class="site-header__nav" aria-label="{escape_html(strings.nav_aria_label)}">
         <a class="site-header__nav-link" href="{href}"{current}>{escape_html(strings.nav_getting_started)}</a>
-        <a class="site-header__nav-link site-header__nav-link--graph" href="{graph_href}"{graph_current}>{graph_icon}<span>{escape_html(strings.nav_graph)}</span></a>
+        <a class="{graph_class}" href="{graph_href}"{graph_current} data-graph-magnet><span class="site-header__graph-face">{_render_graph_mark()}<span>{escape_html(strings.nav_graph)}</span>{new_tag}</span></a>
       </nav>"""
 
 
@@ -1011,7 +1085,8 @@ def _render_header(base_path: str = "", last_updated_utc: str = "",
                     plugin_version: str = "") -> str:
     updated_html = _render_updated_time(last_updated_utc, base_path, strings) if last_updated_utc else ""
     version_html = _render_plugin_version(plugin_version) if plugin_version else ""
-    nav_html = _render_header_nav(base_path, locale, path_suffix, strings)
+    nav_html = _render_header_nav(base_path, locale, path_suffix, strings,
+                                  graph_new=graph_is_new(last_updated_utc))
     return f"""<header class="site-header">
   <div class="site-header__band" aria-hidden="true"></div>
   <div class="container site-header__inner">
@@ -1387,17 +1462,66 @@ def _render_milestone(plugin_version: str, skill_count: int, *,
   </aside>"""
 
 
+def _render_graph_banner(summary: dict | None, base_path: str = "", *,
+                         last_updated_utc: str = "",
+                         locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                         strings: Strings = ENGLISH_STRINGS) -> str:
+    """The graph's announcement, at the top of the landing page while it is
+    new -- the slot the 1.0 plaque held, on the same terms: an <aside> with a
+    label rather than a heading above the page's <h1>, and a date that takes
+    it down without anyone remembering to (GRAPH_NEW_UNTIL).
+
+    It draws its own small constellation: the twelve families as bodies with
+    their skills in orbit, and the citations between families as threads
+    carrying travellers, in the graph's own colours. That picture rides in
+    the page as data attributes -- a few hundred bytes from
+    skill_graph.banner_summary -- so a teaser never fetches the graph's
+    350 KB. Every number in the copy comes from the same summary."""
+    if not summary or not graph_is_new(last_updated_utc):
+        return ""
+    graph_url = _locale_url(locale, base_path, GRAPH_PATH)
+    families = json.dumps([f["count"] for f in summary["families"]], separators=(",", ":"))
+    family_titles = json.dumps([f["title"] for f in summary["families"]], ensure_ascii=False,
+                               separators=(",", ":"))
+    links = json.dumps(summary["links"], separators=(",", ":"))
+    lede = strings.graph_banner_lede_template.format(
+        pair_count=summary["pair_count"], skill_count=summary["skill_count"])
+    stats = [(summary["pair_count"], strings.graph_banner_stat_pairs),
+             (summary["mutual_count"], strings.graph_banner_stat_mutual)]
+    if summary.get("reachable"):
+        # "At most N steps" is only true when every skill reaches every other.
+        stats.append((summary["max_steps"], strings.graph_banner_stat_steps))
+    stats_html = "".join(
+        f'<div class="graph-banner__stat"><dt>{escape_html(label)}</dt><dd>{value}</dd></div>'
+        for value, label in stats
+    )
+    arrow = _icon("icon-route", css_class="icon graph-banner__cta-icon", base_path=base_path)
+    close = _icon("icon-close", base_path=base_path)
+    return f"""<aside class="graph-banner" aria-label="{escape_html(strings.graph_banner_label)}" data-graph-banner data-graph-new-until="{GRAPH_NEW_UNTIL}" data-families="{escape_html(families)}" data-family-titles="{escape_html(family_titles)}" data-links="{escape_html(links)}">
+      <canvas class="graph-banner__canvas" aria-hidden="true"></canvas>
+      <div class="graph-banner__body">
+        <p class="graph-banner__title"><span class="change-badge change-badge--new">{escape_html(strings.graph_new_badge)}</span><span>{escape_html(strings.graph_page_title)}</span></p>
+        <p class="graph-banner__lede">{escape_html(lede)}</p>
+        <dl class="graph-banner__stats">{stats_html}</dl>
+        <a class="graph-banner__cta" href="{graph_url}">{arrow}<span>{escape_html(strings.graph_banner_cta)}</span></a>
+      </div>
+      <button class="graph-banner__close" type="button" data-graph-banner-close hidden aria-label="{escape_html(strings.graph_banner_close)}" title="{escape_html(strings.graph_banner_close)}">{close}</button>
+    </aside>"""
+
+
 def _render_hero(skill_count: int, category_count: int, base_path: str = "", *,
                   fresh_skills: list[dict] | None = None,
                   update_notes: list[dict] | None = None,
                   locale: "locales.Locale" = locales.DEFAULT_LOCALE,
                   strings: Strings = ENGLISH_STRINGS,
-                  plugin_version: str = "") -> str:
+                  plugin_version: str = "",
+                  banner_html: str = "") -> str:
     lede = strings.hero_lede_template.format(skill_count=skill_count, category_count=category_count)
     milestone = _render_milestone(plugin_version, skill_count,
                                   has_update_notes=bool(update_notes))
     return f"""<section class="hero">
   <div class="container">
+    {banner_html}
     {milestone}
     <h1 class="hero__headline">{escape_html(strings.hero_headline)}</h1>
     {_render_install(base_path, locale=locale, strings=strings)}
@@ -1770,11 +1894,13 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
                   update_notes: list[dict] | None = None,
                   locale: "locales.Locale" = locales.DEFAULT_LOCALE,
                   strings: Strings = ENGLISH_STRINGS,
-                  plugin_version: str = "") -> str:
+                  plugin_version: str = "",
+                  graph_banner: dict | None = None) -> str:
     """Full HTML document string for the landing page. fresh_skills arrives
     already ordered newest-first from generate.py, which is the only place
     that can know a change's real timestamp; update_notes arrives parsed from
-    UPDATES.md, in the order that file declares."""
+    UPDATES.md, in the order that file declares; graph_banner is
+    skill_graph.banner_summary's output, or None for no announcement."""
     sections = _join(*(
         _render_category_section(cat, skills, i, base_path, locale, strings)
         for i, cat in enumerate(categories)
@@ -1785,7 +1911,10 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
         _render_hero(skill_count, category_count, base_path,
                      fresh_skills=fresh_skills, update_notes=update_notes,
                      locale=locale, strings=strings,
-                     plugin_version=plugin_version),
+                     plugin_version=plugin_version,
+                     banner_html=_render_graph_banner(
+                         graph_banner, base_path, last_updated_utc=last_updated_utc,
+                         locale=locale, strings=strings)),
         _render_search_empty_state(skill_count, strings),
         f'<div data-categories>\n{sections}\n</div>',
     )

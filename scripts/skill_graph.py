@@ -8,8 +8,9 @@ the links back out of body_html means the graph and the pages can never
 disagree about what cites what: an edge exists here if and only if a reader
 can click it on the site.
 
-The output is the JSON the /graph/ page and the header's Graph dialog fetch
-(see docs/assets/graph.js). Its shape, per skill:
+The output is the JSON the /graph/ page fetches (see docs/assets/graph.js),
+plus, from banner_summary, the handful of numbers the landing page's
+announcement banner carries inline. The JSON's shape, per skill:
 
     {"slug", "name", "category", "summary", "words", "always_on",
      "change_status", "change_at",
@@ -299,3 +300,57 @@ def edge_weights(graph: dict) -> dict[tuple[str, str], int]:
                 key = (skill["slug"], slug)
                 weights[key] = weights.get(key, 0) + count
     return weights
+
+
+def banner_summary(graph: dict) -> dict:
+    """The few numbers, and the family-level picture, the landing page's
+    announcement banner draws -- small enough to ride in the page itself, so
+    the banner never fetches graph.json for a teaser.
+
+    families: one entry per category, in catalog order, with its skill count.
+    links: [a, b, citations] for every pair of families with any citation
+    between them, either way, a < b. max_steps is the longest of the
+    shortest walks along citations; reachable says whether every skill can
+    reach every other, which is what makes max_steps worth a sentence."""
+    weights = edge_weights(graph)
+    category_index = {c["slug"]: i for i, c in enumerate(graph["categories"])}
+    family_of = {s["slug"]: category_index[s["category"]] for s in graph["skills"]}
+    links: dict[tuple[int, int], int] = {}
+    for (source, target), count in weights.items():
+        a, b = family_of[source], family_of[target]
+        if a == b:
+            continue
+        key = (min(a, b), max(a, b))
+        links[key] = links.get(key, 0) + count
+    mutual = sum(1 for (a, b) in weights if a < b and (b, a) in weights)
+
+    out: dict[str, list[str]] = {}
+    for (source, target) in weights:
+        out.setdefault(source, []).append(target)
+    slugs = [s["slug"] for s in graph["skills"]]
+    max_steps, reachable = 0, True
+    for start in slugs:
+        dist = {start: 0}
+        frontier = [start]
+        while frontier:
+            nxt = []
+            for node in frontier:
+                for target in out.get(node, ()):
+                    if target not in dist:
+                        dist[target] = dist[node] + 1
+                        nxt.append(target)
+            frontier = nxt
+        if len(dist) < len(slugs):
+            reachable = False
+        max_steps = max(max_steps, max(dist.values()))
+
+    return {
+        "skill_count": len(slugs),
+        "pair_count": len(weights),
+        "mutual_count": mutual,
+        "max_steps": max_steps,
+        "reachable": reachable,
+        "families": [{"index": i, "title": c["title"], "count": len(c["skill_slugs"])}
+                     for i, c in enumerate(graph["categories"])],
+        "links": [[a, b, w] for (a, b), w in sorted(links.items())],
+    }

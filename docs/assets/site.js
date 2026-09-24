@@ -23,6 +23,10 @@
  *   - post-reload scroll restore (every page — companion to the update
  *                                  check; restores scroll position after
  *                                  the reload it triggered)
+ *   - graph announcement (every page's Graph link swells toward the
+ *                          pointer; the landing page's banner draws a live
+ *                          constellation of the families; both retire the
+ *                          "new" treatment after its date)
  * Loaded with `defer`, so the DOM is fully parsed before any of this runs —
  * no DOMContentLoaded wrapper needed.
  */
@@ -1144,6 +1148,300 @@
     });
   }
 
+  // --- The skill graph's announcement --------------------------------------
+  //
+  // Three small features around one launch: the header's Graph link swells
+  // toward the pointer (comically, on purpose), the landing page's banner
+  // draws a live constellation of the library's families, and both retire
+  // the "new" treatment against the reader's own clock once the build's
+  // announcement date has passed.
+
+  var GRAPH_BANNER_KEY = 'tbaguette-graph-banner-hidden';
+
+  // The build leaves the announcement out once its own clock is past the
+  // date; this covers the days between builds, against the reader's clock in
+  // UTC, the same zone the build compared in.
+  function initGraphNews() {
+    var today = new Date().toISOString().slice(0, 10);
+    toArray(document.querySelectorAll('[data-graph-new-until]')).forEach(function (el) {
+      if (today <= el.getAttribute('data-graph-new-until')) return;
+      var link = el.closest('.site-header__nav-link--new');
+      if (link) link.classList.remove('site-header__nav-link--new');
+      el.parentNode.removeChild(el);
+    });
+  }
+
+  // The magnet. Only the link's inner face is transformed, never the link,
+  // so however large it gets it never covers a neighbour's click target.
+  // Springs, under-damped, so it overshoots and wobbles like something made
+  // of dough: it grows as the pointer nears — faster the nearer it gets —
+  // leans toward it, drifts a little after it, and boings on contact.
+  function initGraphMagnet() {
+    var link = document.querySelector('[data-graph-magnet]');
+    if (!link || prefersReducedMotion()) return;
+    // Mouse and pen only, decided per event rather than by a media query: a
+    // finger has no "approaching", and a touch laptop with a mouse plugged in
+    // should still get the joke.
+    var face = link.querySelector('.site-header__graph-face');
+    if (!face) return;
+    var REACH = 300;      // px from the pill's edge at which it starts to care
+    var GROWTH = 1.7;     // extra scale when the pointer is on it: 2.7x
+    var rect = null;
+    var s = 1, sv = 0, sT = 1;          // scale
+    var w = 0, wv = 0;                  // squash-and-stretch wobble
+    var tilt = 0, tiltV = 0, tiltT = 0; // lean toward the pointer, degrees
+    var dx = 0, dxV = 0, dxT = 0;       // drift toward the pointer, px
+    var dy = 0, dyV = 0, dyT = 0;
+    var inside = false, raf = 0, last = 0;
+
+    function measure() { rect = link.getBoundingClientRect(); }
+    window.addEventListener('resize', function () { rect = null; }, { passive: true });
+    window.addEventListener('scroll', function () { rect = null; }, { passive: true });
+
+    function aim(x, y) {
+      if (!rect) measure();
+      var cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+      var ox = x - cx, oy = y - cy;
+      var ex = Math.max(0, Math.abs(ox) - rect.width / 2);
+      var ey = Math.max(0, Math.abs(oy) - rect.height / 2);
+      var t = Math.max(0, 1 - Math.sqrt(ex * ex + ey * ey) / REACH);
+      var now = ex === 0 && ey === 0;
+      if (now && !inside) { sv += 9; wv += 14; }   // boing
+      if (!now && inside) { wv -= 8; }
+      inside = now;
+      sT = 1 + GROWTH * Math.pow(t, 2.4);
+      tiltT = Math.max(-1, Math.min(1, ox / 90)) * 9 * t;
+      dxT = Math.max(-14, Math.min(14, ox * 0.09)) * t;
+      dyT = Math.max(-8, Math.min(8, oy * 0.09)) * t;
+      link.classList.toggle('site-header__nav-link--near', t > 0.35);
+      start();
+    }
+
+    function spring(x, v, target, k, c, dt) {
+      var a = (target - x) * k - v * c;
+      v += a * dt;
+      return [x + v * dt, v];
+    }
+
+    function frame(time) {
+      var dt = Math.min(0.033, (time - (last || time)) / 1000);
+      last = time;
+      var r = spring(s, sv, sT, 170, 11, dt); s = r[0]; sv = r[1];
+      r = spring(w, wv, -sv * 0.012, 260, 9, dt); w = r[0]; wv = r[1];
+      r = spring(tilt, tiltV, tiltT, 120, 12, dt); tilt = r[0]; tiltV = r[1];
+      r = spring(dx, dxV, dxT, 120, 14, dt); dx = r[0]; dxV = r[1];
+      r = spring(dy, dyV, dyT, 120, 14, dt); dy = r[0]; dyV = r[1];
+      var sx = s * (1 - w), sy = s * (1 + w);
+      face.style.transform = 'translate(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px) rotate(' +
+        tilt.toFixed(2) + 'deg) scale(' + sx.toFixed(4) + ',' + sy.toFixed(4) + ')';
+      var settled = Math.abs(s - sT) + Math.abs(sv) + Math.abs(w) + Math.abs(wv) + Math.abs(tilt - tiltT) +
+        Math.abs(dx - dxT) + Math.abs(dy - dyT) < 0.002;
+      if (settled && sT === 1) { face.style.transform = ''; raf = 0; last = 0; return; }
+      raf = requestAnimationFrame(frame);
+    }
+
+    function start() { if (!raf) raf = requestAnimationFrame(frame); }
+
+    document.addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+      aim(e.clientX, e.clientY);
+    }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', function () {
+      sT = 1; tiltT = 0; dxT = 0; dyT = 0; inside = false;
+      link.classList.remove('site-header__nav-link--near');
+      start();
+    });
+    // A press squashes it, a release springs it back.
+    link.addEventListener('pointerdown', function () { sv -= 14; wv -= 10; start(); });
+  }
+
+  function initGraphBanner() {
+    var banner = document.querySelector('[data-graph-banner]');
+    if (!banner) return;
+    var until = banner.getAttribute('data-graph-new-until');
+    var stopped = false;
+    var close = banner.querySelector('[data-graph-banner-close]');
+    if (close) {
+      close.hidden = false;
+      close.addEventListener('click', function () {
+        try { localStorage.setItem(GRAPH_BANNER_KEY, until); } catch (e) {}
+        stopped = true;
+        banner.parentNode.removeChild(banner);
+      });
+    }
+    var canvas = banner.querySelector('canvas');
+    var cta = banner.querySelector('.graph-banner__cta');
+    if (!canvas || !canvas.getContext) return;
+    // The picture is decoration with a destination: clicking it goes where
+    // the button goes. The button stays the thing a keyboard reaches.
+    canvas.addEventListener('click', function () { if (cta) window.location.href = cta.href; });
+
+    var counts, titles, links;
+    try {
+      counts = JSON.parse(banner.getAttribute('data-families') || '[]');
+      titles = JSON.parse(banner.getAttribute('data-family-titles') || '[]');
+      links = JSON.parse(banner.getAttribute('data-links') || '[]');
+    } catch (e) { return; }
+    if (!counts.length) return;
+
+    var ctx = canvas.getContext('2d');
+    var reduced = prefersReducedMotion();
+    var TAU = Math.PI * 2;
+    var maxW = links.reduce(function (m, l) { return Math.max(m, l[2]); }, 1);
+    var W = 0, H = 0, dpr = 1, colors = [], sprites = [], bg = [0, 0, 0], text2 = [200, 180, 150], dark = true;
+    var hover = -1, pointer = null, visible = true, raf = 0, t0 = performance.now();
+
+    var probe = document.createElement('canvas').getContext('2d');
+    function parse(value, fallback) {
+      probe.fillStyle = '#000';
+      probe.fillStyle = (value || '').trim() || fallback;
+      var v = probe.fillStyle;
+      if (v.charAt(0) === '#') return [parseInt(v.slice(1, 3), 16), parseInt(v.slice(3, 5), 16), parseInt(v.slice(5, 7), 16)];
+      var m = v.match(/[\d.]+/g) || [0, 0, 0];
+      return [+m[0], +m[1], +m[2]];
+    }
+    function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+    function palette() {
+      var cs = getComputedStyle(banner);
+      dark = document.documentElement.getAttribute('data-theme') !== 'flour';
+      bg = parse(cs.getPropertyValue('--bg'), '#1a130f');
+      text2 = parse(cs.getPropertyValue('--text-secondary'), '#cbb79c');
+      colors = counts.map(function (_, i) { return parse(cs.getPropertyValue('--graph-cat-' + (i + 1)), '#dda25c'); });
+      sprites = colors.map(function (c) {
+        var g = document.createElement('canvas');
+        g.width = g.height = 64;
+        var x = g.getContext('2d'), grad = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+        grad.addColorStop(0, rgba(c, dark ? 0.6 : 0.34));
+        grad.addColorStop(0.4, rgba(c, dark ? 0.18 : 0.1));
+        grad.addColorStop(1, rgba(c, 0));
+        x.fillStyle = grad; x.fillRect(0, 0, 64, 64);
+        return g;
+      });
+    }
+
+    function resize() {
+      var r = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = r.width; H = r.height;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    }
+
+    function layout(t) {
+      var narrow = W < 560;
+      var cx = narrow ? W / 2 : W * 0.74, cy = narrow ? Math.min(H, 192) / 2 : H / 2;
+      var rx = narrow ? W * 0.36 : Math.min(W * 0.2, 250), ry = narrow ? 62 : H * 0.33;
+      var turn = reduced ? 0 : t * 0.035;
+      return counts.map(function (count, i) {
+        var a = -Math.PI / 2 + i * TAU / counts.length + turn;
+        var bob = reduced ? 0 : Math.sin(t * 0.8 + i * 1.7) * 3;
+        return { x: cx + Math.cos(a) * rx, y: cy + Math.sin(a) * ry + bob, r: 3.5 + 2.1 * Math.sqrt(count), count: count, cx: cx, cy: cy };
+      });
+    }
+
+    function draw(now) {
+      var t = (now - t0) / 1000;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      var nodes = layout(t);
+      // With nobody pointing, the banner gives a slow tour: one family at a
+      // time lights its threads and says its name.
+      var lit = hover >= 0 ? hover : (reduced ? -1 : Math.floor(t / 3.2) % counts.length);
+      ctx.lineCap = 'round';
+      links.forEach(function (l) {
+        var a = nodes[l[0]], b = nodes[l[1]], k = l[2] / maxW;
+        var on = lit < 0 || l[0] === lit || l[1] === lit;
+        var qx = (a.x + b.x) / 2 + (a.cx - (a.x + b.x) / 2) * 0.38;
+        var qy = (a.y + b.y) / 2 + (a.cy - (a.y + b.y) / 2) * 0.38;
+        var grad = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+        var alpha = on ? 0.12 + 0.5 * k : 0.04 + 0.08 * k;
+        grad.addColorStop(0, rgba(colors[l[0]], alpha));
+        grad.addColorStop(1, rgba(colors[l[1]], alpha));
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.quadraticCurveTo(qx, qy, b.x, b.y);
+        ctx.strokeStyle = grad; ctx.lineWidth = 0.6 + 2.4 * k * (on ? 1 : 0.6); ctx.stroke();
+        if (reduced || !on) return;
+        // Travellers both ways, one colour each way: citations run in both
+        // directions between most pairs of families.
+        var n = 1 + Math.round(2 * k);
+        for (var p = 0; p < n; p++) {
+          for (var dir = 0; dir < 2; dir++) {
+            var ph = ((t * (0.16 + 0.05 * (p % 2)) + p / n + l[0] * 0.13 + dir * 0.5) % 1 + 1) % 1;
+            var u = dir ? 1 - ph : ph, v = 1 - u;
+            var x = v * v * a.x + 2 * v * u * qx + u * u * b.x;
+            var y = v * v * a.y + 2 * v * u * qy + u * u * b.y;
+            ctx.fillStyle = rgba(colors[dir ? l[1] : l[0]], 0.9 * Math.sin(ph * Math.PI));
+            ctx.beginPath(); ctx.arc(x, y, 1.5 + k, 0, TAU); ctx.fill();
+          }
+        }
+      });
+      ctx.globalCompositeOperation = dark ? 'lighter' : 'source-over';
+      nodes.forEach(function (n, i) {
+        var g = n.r * (i === lit ? 5.5 : 4.2);
+        ctx.globalAlpha = i === lit || lit < 0 ? 0.9 : 0.55;
+        ctx.drawImage(sprites[i], n.x - g, n.y - g, g * 2, g * 2);
+      });
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+      nodes.forEach(function (n, i) {
+        var dim = lit >= 0 && i !== lit;
+        // The family's skills, in orbit around it: 98 motes in all.
+        for (var k = 0; k < n.count; k++) {
+          var ring = n.r + 5 + (k % 3) * 3.4;
+          var a = k * TAU / n.count + (reduced ? 0 : t * (0.5 + (k % 3) * 0.14) * (i % 2 ? 1 : -1));
+          ctx.fillStyle = rgba(colors[i], dim ? 0.35 : 0.85);
+          ctx.beginPath(); ctx.arc(n.x + Math.cos(a) * ring, n.y + Math.sin(a) * ring, 1.2, 0, TAU); ctx.fill();
+        }
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r + 1.6, 0, TAU); ctx.fillStyle = rgba(bg, 1); ctx.fill();
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, TAU); ctx.fillStyle = rgba(colors[i], dim ? 0.55 : 1); ctx.fill();
+      });
+      if (lit >= 0 && titles[lit]) {
+        var n = nodes[lit];
+        ctx.font = 'italic 500 14px "Fraunces", ui-serif, Georgia, serif';
+        // Outward from the ring, unless that side runs off the canvas.
+        var tw = ctx.measureText(titles[lit]).width, off = n.r + 18;
+        var side = n.x < n.cx - 4 ? 'right' : n.x > n.cx + 4 ? 'left' : 'center';
+        if (side === 'left' && n.x + off + tw > W - 8) side = 'right';
+        if (side === 'right' && n.x - off - tw < 8) side = 'left';
+        ctx.textAlign = side;
+        var lx = n.x + (side === 'left' ? off : side === 'right' ? -off : 0);
+        var ly = n.y + (side === 'center' ? (n.y < n.cy ? -off : off) : 0);
+        if (side === 'center') lx = Math.max(8 + tw / 2, Math.min(W - 8 - tw / 2, lx));
+        ctx.textBaseline = 'middle';
+        ctx.lineJoin = 'round'; ctx.lineWidth = 4; ctx.strokeStyle = rgba(bg, 0.85);
+        ctx.strokeText(titles[lit], lx, ly);
+        ctx.fillStyle = rgba(text2, 1);
+        ctx.fillText(titles[lit], lx, ly);
+      }
+    }
+
+    function loop(now) {
+      raf = 0;
+      if (stopped || !visible || document.hidden) return;
+      draw(now);
+      if (!reduced) raf = requestAnimationFrame(loop);
+    }
+    function kick() { if (!raf && !stopped) raf = requestAnimationFrame(loop); }
+
+    canvas.addEventListener('pointermove', function (e) {
+      var r = canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      var nodes = layout((performance.now() - t0) / 1000), best = -1, bestD = Infinity;
+      nodes.forEach(function (n, i) { var d = Math.hypot(n.x - x, n.y - y); if (d < n.r + 22 && d < bestD) { best = i; bestD = d; } });
+      if (best !== hover) { hover = best; kick(); }
+    });
+    canvas.addEventListener('pointerleave', function () { hover = -1; kick(); });
+
+    palette();
+    resize();
+    if (window.ResizeObserver) new ResizeObserver(function () { resize(); kick(); }).observe(canvas);
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; kick(); }).observe(banner);
+    }
+    new MutationObserver(function () { palette(); kick(); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    document.addEventListener('visibilitychange', kick);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(kick);
+    kick();
+  }
+
   function initScrollRestore() {
     var saved;
     try {
@@ -1173,5 +1471,8 @@
   initLanguageSwitcher();
   initScrollRestore();
   initNotesArchive();
+  initGraphNews();
+  initGraphMagnet();
+  initGraphBanner();
   initVersionCheck();
 })();

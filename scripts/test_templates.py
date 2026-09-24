@@ -446,8 +446,9 @@ def check_graph_entry_points() -> None:
     print("graph entry points check")
     index_html = render_index(FIXTURE["categories"], FIXTURE["skills"])
     header = index_html.split("<main", 1)[0]
+    graph_link = re.search(r'<a class="([^"]*site-header__nav-link--graph[^"]*)" href="([^"]*)"', header)
     check("the header carries a Graph link to /graph/",
-          'class="site-header__nav-link site-header__nav-link--graph" href="/graph/">' in header)
+          graph_link is not None and graph_link.group(2) == "/graph/")
     check("...after Getting started, not before it",
           header.index("Getting started") < header.index(">Graph<"))
     check("the Getting started link is untouched by its new neighbour",
@@ -461,6 +462,25 @@ def check_graph_entry_points() -> None:
     )
     check("a skill page links to its own place in the graph",
           'class="skill-article__graph-link" href="/graph/#skill=formidable">' in skill_html)
+
+    check("the link's pill is an inner face, so the magnet can swell what is drawn "
+          "without growing what can be clicked",
+          '<span class="site-header__graph-face">' in header and "data-graph-magnet" in header)
+    check("while the graph is new the link says so, with a date the browser can retire it by",
+          "site-header__nav-link--new" in graph_link.group(1)
+          and f'data-graph-new-until="{templates.GRAPH_NEW_UNTIL}"' in header)
+    past = templates.GRAPH_NEW_UNTIL[:8] + "31T12:00:00+00:00"
+    if past[:10] <= templates.GRAPH_NEW_UNTIL:
+        past = "2099-01-01T00:00:00+00:00"
+    old_header = render_index(FIXTURE["categories"], FIXTURE["skills"],
+                              last_updated_utc=past).split("<main", 1)[0]
+    check("...and a build past that date leaves the New tag out altogether",
+          "site-header__new" not in old_header and "site-header__nav-link--new" not in old_header
+          and "data-graph-magnet" in old_header)
+    last_day = templates.GRAPH_NEW_UNTIL + "T23:59:59+00:00"
+    check("...while one on the last day still carries it — the date is inclusive",
+          "site-header__new" in render_index(FIXTURE["categories"], FIXTURE["skills"],
+                                             last_updated_utc=last_day).split("<main", 1)[0])
     check("...on the category tag's line, so the tag keeps its own markup",
           '<div class="skill-article__meta">\n    <span class="tag skill-article__tag">' in skill_html)
 
@@ -488,6 +508,53 @@ def check_graph_entry_points() -> None:
           f'href="{base}/graph/"' in prefixed
           and f'<script src="{base}/assets/graph.js" defer></script>' in prefixed_graph
           and f'data-graph-data="{base}/graph/graph.json"' in prefixed_graph)
+
+
+def check_graph_banner() -> None:
+    """The landing page announces the graph while it is new: an aside at the
+    top of the hero, carrying its own small picture as data and every number
+    from the summary it was handed — and nothing at all once the date passes
+    or when there is no summary to announce."""
+    print("graph banner check")
+    summary = {
+        "skill_count": 98, "pair_count": 573, "mutual_count": 114, "max_steps": 7,
+        "reachable": True,
+        "families": [{"index": 0, "title": "UI and design", "count": 1},
+                     {"index": 1, "title": "Testing", "count": 10}],
+        "links": [[0, 1, 5]],
+    }
+    html = render_index(FIXTURE["categories"], FIXTURE["skills"], graph_banner=summary)
+    check("with a summary, the landing page carries the banner",
+          '<aside class="graph-banner" aria-label="New: the skill graph"' in html)
+    check("...above the page's <h1>, in the slot the release plaque held",
+          html.index("graph-banner") < html.index('<h1 class="hero__headline">'))
+    check("...as an aside with a label, never a heading ahead of the <h1>",
+          html.split('<aside class="graph-banner"', 1)[1].split("</aside>", 1)[0].count("<h2") == 0)
+    banner = html.split('<aside class="graph-banner"', 1)[1].split("</aside>", 1)[0]
+    check("every number comes from the summary",
+          "573 cross-references between 98 skills" in banner
+          and "<dd>573</dd>" in banner and "<dd>114</dd>" in banner and "<dd>7</dd>" in banner)
+    check("the constellation's data rides in the page, so a teaser never fetches graph.json",
+          'data-families="[1,10]"' in banner and 'data-links="[[0,1,5]]"' in banner
+          and "&quot;Testing&quot;" in banner)
+    check("its button goes to the graph page", 'class="graph-banner__cta" href="/graph/"' in banner)
+    check("the dismiss button starts hidden, so a page without JS shows no dead control",
+          "data-graph-banner-close hidden" in banner)
+
+    unreachable = dict(summary, reachable=False)
+    html_u = render_index(FIXTURE["categories"], FIXTURE["skills"], graph_banner=unreachable)
+    check("'at most N steps' is only claimed when every skill reaches every other",
+          "steps at most" not in html_u)
+
+    check("no summary, no banner",
+          "graph-banner" not in render_index(FIXTURE["categories"], FIXTURE["skills"]).split("<main", 1)[1])
+    after = render_index(FIXTURE["categories"], FIXTURE["skills"], graph_banner=summary,
+                         last_updated_utc="2099-01-01T00:00:00+00:00")
+    check("a build past the announcement date leaves the banner out",
+          '<aside class="graph-banner"' not in after)
+    check("the head hides a banner this reader dismissed before first paint, keyed to "
+          "this announcement's date so the next one still shows",
+          f"'{templates.GRAPH_BANNER_STORAGE_KEY}')==='{templates.GRAPH_NEW_UNTIL}'" in html)
 
 
 def check_i18n_getting_started_page() -> None:
@@ -1712,6 +1779,7 @@ def main() -> None:
     check_milestone_plaque()
     check_getting_started_is_reachable()
     check_graph_entry_points()
+    check_graph_banner()
     check_header_and_badges()
     check_fresh_section()
     check_dialog_ua_defaults()
