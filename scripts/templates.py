@@ -886,15 +886,16 @@ def graph_is_new(last_updated_utc: str) -> bool:
 
 _THEME_STORAGE_KEY = "tbaguette-theme"
 
-# Runs synchronously in <head>, before first paint, so the stored or
-# OS-preferred theme applies before any pixel is drawn — the alternative is a
-# flash of the wrong theme on every reload. Deliberately tiny and dependency
-# free; the rest of the theme logic (the toggle button) lives in site.js.
+# Runs synchronously in <head>, before first paint, so a stored theme applies
+# before any pixel is drawn — the alternative is a flash of the wrong theme on
+# every reload. Dark ("crust") is the default for everyone, whatever the OS
+# prefers: only a reader who picked flour with the toggle gets it. Deliberately
+# tiny and dependency free; the rest of the theme logic (the toggle button)
+# lives in site.js.
 _THEME_BOOTSTRAP_JS = (
     "(function(){try{"
-    f"var s=localStorage.getItem('{_THEME_STORAGE_KEY}');"
-    "var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;"
-    "if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}"
+    f"if(localStorage.getItem('{_THEME_STORAGE_KEY}')==='flour')"
+    "{document.documentElement.setAttribute('data-theme','flour');}"
     "}catch(e){}})();"
 )
 
