@@ -122,6 +122,8 @@ honest answer is that no tier applies, because nothing was measured at all.
 
 The tell is a report whose subject is not the subject you were asked about, and it is only visible by comparison. So when an obstacle has been routed around, name the thing you actually examined in the sentence that states the finding — the path you actually opened, the version you actually ran, the endpoint that actually answered. If that name differs from the one in the request, the difference is the finding, and it goes above the result rather than into a footnote under it.
 
+**Machinery being present is a proxy for the feature being on.** A search of a build, a lockfile, or a schema turns up the classes, the dependency, or the key that a capability would use, and that reads as proof the capability ships. Many frameworks link their plumbing into every build whether anything uses it or not. A package in the lockfile is not a feature wired up, a class in a binary is not a reachable entry point, and a schema that accepts a key is not that key being set. What settles it is a different search, and it is one you have no reason to run once you are convinced: the thing that would have to be *registered* or *configured* for the capability to be reachable. Find that too before you write "it ships" anywhere a reader will act on it.
+
 ## When a number, and when it is false precision
 
 State a probability only if you would accept a bet at those odds and can name the evidence that would move it. Otherwise use bands, which carry the same information without the costume of rigour: almost certain, likely, even, unlikely, almost certainly not.
