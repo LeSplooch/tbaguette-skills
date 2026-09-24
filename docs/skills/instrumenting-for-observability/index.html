@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">instrumenting-for-observability</h1>
     
   </div>
-  <span class="tag skill-article__tag">Designing systems</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Designing systems</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=instrumenting-for-observability" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="instrumenting-for-observability"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when deciding what to log, measure, or trace, when an incident could not be explained from the telemetry that existed, when a metrics or logging bill spikes from label cardinality, when defining an alert, SLI, or SLO, when a request or correlation id is lost across a queue or async boundary, when logs are unstructured formatted strings, when a failure counter has never once incremented, when a filter, gate, or safety rule rejects everything it sees and nothing distinguishes a strict rule from an input that never arrived, or when choosing a log level. Also use when choosing the fallback for a value another component will read as if it were a measurement, when defining a computed rate whose plausible magnitude would not reveal a bad denominator, when writing or debugging a tool that tails or polls a log file for new content, or when a generated report's own narration of its basis — data source, setting, window — is a string written once rather than computed fresh each run.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>You choose what you will be able to see during an incident before the incident, and no amount of urgency later changes that. Instrumentation added while an outage is running explains the next occurrence, never this one. The bar is not &quot;we have logging&quot; — it is that a specific question you have not thought of yet can be answered in minutes from what is already being emitted.</p>

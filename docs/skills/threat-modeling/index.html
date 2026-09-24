@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">threat-modeling</h1>
     
   </div>
-  <span class="tag skill-article__tag">Security (defensive)</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Security (defensive)</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=threat-modeling" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="threat-modeling"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration, or a change to authentication or authorization, when a design review needs a security section, when asked what could go wrong with a system or feature, or when reasoning about attackers, attack surface, blast radius, and which risks to fix first. Also use when a limit, quota, entitlement, or uniqueness rule is enforced at the one write path whoever wrote it had in mind, while import, sync, restore, bulk seeding, or admin tooling can reach the same state, or when such a rule is checked only at creation and nothing re-checks it afterwards. Also use when a component is sandboxed, jailed, or otherwise confined, and the audit of what it can reach came back clean. Covers STRIDE, trust boundaries, data flow, attacker capability tiers, risk ranking, and enumerating every path that can produce a guarded state.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A threat model is a 30–60 minute conversation that produces decisions, not a document. Its output is a list of design changes, mitigations with tests, and explicitly accepted risks with owners. If the design did not change and nothing got a test, the session was theater.</p>

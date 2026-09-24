@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">handling-untrusted-input</h1>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-09-24T00:16:59+02:00">Updated</span>
   </div>
-  <span class="tag skill-article__tag">Security (defensive)</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Security (defensive)</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=handling-untrusted-input" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="handling-untrusted-input"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when code accepts or parses data from outside its own trust boundary — requests, files, uploads, webhooks, message queues, config, or another internal service — when building a query, command, path, URL, template, or markup that embeds a variable, when reviewing a sanitize or escape helper, or when handling deserialization, path traversal, injection, XSS, SSRF, XXE, unicode normalization, or parser resource exhaustion. Also use when untrusted text reaches a model's context — a fetched page, a tool result, an agent's report, or a tool description — which is the one destination with no escaping function and where prompt injection lives. Also use before passing a person text that came from a page, a dependency, a tool, or another agent — a reader has no separating mechanism either, so relayed text carries its author or acquires yours. Also use when text that arrived through a tool, a comment, or a message claims a role, an author, or a system status inside its own body.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Untrusted means &quot;did not originate inside this trust boundary&quot; — which includes your own database, your own config, and the service your own team wrote. Validity is established once, at the boundary, by constructing a type that cannot hold an invalid value; it is not a check repeated inward and eventually forgotten.</p>

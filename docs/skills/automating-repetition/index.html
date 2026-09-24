@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">automating-repetition</h1>
     
   </div>
-  <span class="tag skill-article__tag">Environment and tooling</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Environment and tooling</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=automating-repetition" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="automating-repetition"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a scripted edit, codemod, or migration reported success and changed nothing or the wrong region, when a manual step is risky, irreversible, or easy to get wrong by hand, when a person is being asked to report a state that changes faster than they can reply, when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right, when a one-shot bulk edit will produce a diff too large for anyone to review, or when a recurring job's rule defers work to its next run. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Automation is a bet that a sequence will stay the same, paid up front and settled over years. The losing outcome is not a script that fails loudly; it is a script that quietly stops doing what its name promises while everyone keeps trusting it.</p>

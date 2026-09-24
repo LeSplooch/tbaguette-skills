@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">bounding-autonomous-work</h1>
     
   </div>
-  <span class="tag skill-article__tag">Planning and delegation</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Planning and delegation</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=bounding-autonomous-work" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="bounding-autonomous-work"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan, a subagent dispatched without a way to ask, a hook or cron or loop with no reader, or a question just asked into a silence that the run is about to answer for itself. Also use when a run is about to defer something to a human because it believes it cannot verify it, or when a stop condition has just fired on a run that does not otherwise look like it was in trouble. Also use when a verification is blocked by the system under test refusing, and clearing local state or loosening the check would unblock it. Covers substituting each approval gate rather than skipping it, the human-only prompt a detached job waits behind forever, telling a real door from an untried one, telling a read-only probe from an execution, the four pre-committed stop conditions, the actions no confidence level licenses without a human, and reporting to someone who was not there.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>An agent working with someone present is bounded by that person. Every few turns they see what happened and can say stop, and that single mechanism is quietly enforcing a dozen obligations nobody has written down. Remove the person and those obligations do not get looser — they get <strong>unwritten</strong>. The run keeps all of them and loses the only thing that was checking any of them.</p>

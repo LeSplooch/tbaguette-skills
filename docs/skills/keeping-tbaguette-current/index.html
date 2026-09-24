@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">keeping-tbaguette-current</h1>
     
   </div>
-  <span class="tag skill-article__tag">Environment and tooling</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Environment and tooling</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=keeping-tbaguette-current" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="keeping-tbaguette-current"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use at the start of every conversation, unconditionally — not gated on how long it's been since the last check — and any time the user asks whether TBaguette is current, what changed recently, or wants to sync to the latest skills. Checks the installed plugin against the published repo, updates it if it can fast-forward cleanly, and reports what changed in a short, readable summary — never a raw commit log.</p>
 </div><div class="prose"><h2 id="what-this-is">What this is</h2>
 <p>The TBaguette plugin, once installed, is a git clone (<code>~/.claude/skills/TBaguette</code>) that only ever moves forward when someone explicitly re-runs the install command. Nothing tells a user it's fallen behind. This skill is that check — and, since checking and then leaving the user to go run a command themselves is half a job, it also applies the update when it's safe to, and tells them what actually changed rather than just &quot;updated.&quot;</p>

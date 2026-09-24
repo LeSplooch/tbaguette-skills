@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">isolating-work-with-worktrees</h1>
     
   </div>
-  <span class="tag skill-article__tag">Landing changes</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Landing changes</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=isolating-work-with-worktrees" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="isolating-work-with-worktrees"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when starting work that shouldn't touch the current checkout, before running a multi-step plan you might need to abandon cleanly, or when several tasks are about to run against the same repo at once. Covers judging whether isolation is worth its setup cost, detecting when you're already isolated, preferring a native isolated-workspace tool over a manual git worktree, and worktree placement, safety, and cleanup.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A worktree is a second checkout of the same repository on its own branch, so work that goes wrong can be thrown away without touching the checkout something else depends on staying clean — your own current branch a step from now, another agent's in-flight edits, a colleague's review. That protection costs a full setup cycle (install, build) and leaves a workspace on disk that has to be remembered and removed later. Isolation is worth choosing deliberately, not reaching for automatically; once it's chosen, prefer whatever isolated-workspace tool your harness already provides over building one from git plumbing yourself.</p>

@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">routing-around-capability-gaps</h1>
     
   </div>
-  <span class="tag skill-article__tag">Planning and delegation</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Planning and delegation</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=routing-around-capability-gaps" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="routing-around-capability-gaps"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output, a context larger than this window, a real browser, GPU or offline inference, a cheap pass over thousands of items — or when a file type will not open, a tool answers &quot;unsupported&quot;, no tool in the harness's list appears to do it, or the next sentence is about to describe something that was never actually read. Also use when a system under investigation has stopped reporting its state and no direct channel reads it, or when a call was refused by the harness rather than failing, or a refusal is about to be retried, reworded, or split. Covers telling a refusal from a capability gap, surveying what else is installed, telling installed from credentialed from reachable, preferring a deterministic local tool over a second model, the consent a provider boundary needs, driving another harness non-interactively, proving the delegate got the prompt, and a capability spec with an expiry.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>The dangerous moment in a capability gap is not the refusal — it's the substitution. A model that cannot hear an audio file will still write a paragraph about it, sourced from the filename, the surrounding conversation, and the shape of what an answer usually looks like. Nothing in that paragraph is marked as invented. The same substitution produces summaries of unread videos, transcriptions of unopened PDFs, and descriptions of images inferred from their alt text.</p>

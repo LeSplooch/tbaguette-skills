@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">recovering-agent-context</h1>
     
   </div>
-  <span class="tag skill-article__tag">Reading code</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Reading code</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=recovering-agent-context" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="recovering-agent-context"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when picking up an existing project for the first time, resuming work that someone or something else started, inheriting a repo that shows signs of prior AI agent work, or being told to continue or finish a task with no handoff attached. Covers sweeping every assistant that touched the repo rather than only your own, finding session transcripts and instruction files by shape when vendor paths have moved, searching huge transcript stores without reading them whole, telling an executed plan from an abandoned one, and turning what you find into a resume brief.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Someone worked on this repo before you, and on an existing project it was rarely a person alone. Git records what shipped. Agent sessions record what was tried and thrown away, which options were rejected and why, and every instruction the human gave that never became a file — the three things that separate resuming from restarting.</p>

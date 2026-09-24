@@ -128,6 +128,18 @@ class Strings:
     # machinery, and a default keeps every existing Strings construction
     # valid rather than turning one new heading into a breaking change.
     reference_heading: str = "Reference"
+    # The skill graph's two entry points, defaulted for the same reason.
+    nav_graph: str = "Graph"
+    skill_graph_link: str = "See its place in the graph"
+    graph_page_title: str = "The crumb"
+    graph_page_lede_template: str = (
+        "How {skill_count} skills lean on each other: {pair_count} cross-references, "
+        "traced section by section."
+    )
+    graph_noscript: str = (
+        "The graph is drawn in the browser and needs JavaScript. Every "
+        "cross-reference it shows is also a link on the skill pages themselves."
+    )
 
 
 ENGLISH_STRINGS = Strings(
@@ -838,6 +850,14 @@ UPDATE_NOTES_SOURCE_PATH = "UPDATES.md"
 # page, the footer, the install frame, and generate.py's output path).
 GETTING_STARTED_PATH = "getting-started/"
 
+# The skill graph's page, and the data file beside it that both the page and
+# the header's Graph dialog fetch. One JSON for both rather than one inlined
+# into every page: the dialog can open from any page on the site, and
+# ~350 KB of citations has no business riding along on a page that never
+# opens it.
+GRAPH_PATH = "graph/"
+GRAPH_DATA_FILENAME = "graph.json"
+
 _THEME_STORAGE_KEY = "tbaguette-theme"
 
 # Runs synchronously in <head>, before first paint, so the stored or
@@ -964,16 +984,40 @@ def _render_plugin_version(version: str) -> str:
     return f'<span class="wordmark-version" dir="ltr">v{escape_html(version)}</span>'
 
 
+def _graph_launcher_attrs(base_path: str, locale: "locales.Locale", skill_slug: str = "") -> str:
+    """The data attributes site.js reads to open the graph as a dialog
+    instead of following the link. The href stays a real page, so a phone,
+    a middle-click, or a browser without JS still lands somewhere whole."""
+    graph_dir = _locale_url(locale, base_path, GRAPH_PATH)
+    attrs = (
+        f' data-graph-open data-graph-data="{graph_dir}{GRAPH_DATA_FILENAME}"'
+        f' data-graph-script="{base_path}/assets/graph.js"'
+    )
+    if skill_slug:
+        attrs += f' data-graph-skill="{escape_html(skill_slug)}"'
+    return attrs
+
+
 def _render_header_nav(base_path: str, locale: "locales.Locale", path_suffix: str,
                         strings: Strings) -> str:
-    """The header's one navigation link. aria-current marks it on its own
-    page rather than leaving a link that appears to go somewhere and does
-    not -- the same page this nav points at is the one a first-time visitor
-    is most likely to already be standing on when they look for it."""
+    """The header's navigation: Getting started, then Graph. aria-current
+    marks whichever page the reader is on rather than leaving a link that
+    appears to go somewhere and does not -- the same page this nav points at
+    is the one a first-time visitor is most likely to already be standing on
+    when they look for it.
+
+    Graph is the second seat because it is the other thing no skill page can
+    show: the library as a whole, and what holds it together. It carries an
+    icon where Getting started does not, since it opens a view rather than a
+    page on every wide screen, and the mark says which kind of view."""
     current = ' aria-current="page"' if path_suffix == GETTING_STARTED_PATH else ""
     href = _locale_url(locale, base_path, GETTING_STARTED_PATH)
+    graph_current = ' aria-current="page"' if path_suffix == GRAPH_PATH else ""
+    graph_href = _locale_url(locale, base_path, GRAPH_PATH)
+    graph_icon = _icon("icon-graph", css_class="icon site-header__nav-icon", base_path=base_path)
     return f"""<nav class="site-header__nav" aria-label="{escape_html(strings.nav_aria_label)}">
         <a class="site-header__nav-link" href="{href}"{current}>{escape_html(strings.nav_getting_started)}</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="{graph_href}"{graph_current}{_graph_launcher_attrs(base_path, locale)}>{graph_icon}<span>{escape_html(strings.nav_graph)}</span></a>
       </nav>"""
 
 
@@ -1798,14 +1842,29 @@ def _render_breadcrumb(skill: dict, base_path: str = "",
 </nav>"""
 
 
-def _render_skill_head(skill: dict, strings: Strings = ENGLISH_STRINGS) -> str:
+def _render_skill_head(skill: dict, strings: Strings = ENGLISH_STRINGS, *,
+                        base_path: str = "",
+                        locale: "locales.Locale" = locales.DEFAULT_LOCALE) -> str:
     badge = _render_change_badge(skill.get("change_status"), skill.get("change_at"), strings)
+    # The graph link sits on the tag's line rather than in the title row: it
+    # is about where this skill sits among the others, which is what the
+    # category tag beside it already starts to say.
+    slug = skill.get("slug", "")
+    graph_link = (
+        f'<a class="skill-article__graph-link" '
+        f'href="{_locale_url(locale, base_path, GRAPH_PATH)}#skill={escape_html(slug)}"'
+        f'{_graph_launcher_attrs(base_path, locale, slug)}>'
+        f'{_icon("icon-graph", base_path=base_path)}<span>{escape_html(strings.skill_graph_link)}</span></a>'
+    ) if slug else ""
     return f"""<div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">{escape_html(skill['name'])}</h1>
     {badge}
   </div>
-  <span class="tag skill-article__tag">{escape_html(skill.get('category_title', ''))}</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">{escape_html(skill.get('category_title', ''))}</span>
+    {graph_link}
+  </div>
   <p class="lede">{skill.get('description_html') or escape_html(skill.get('description', ''))}</p>
 </div>"""
 
@@ -2063,7 +2122,7 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
     body_dir = None if is_translated else fallback_locale.dir
     article = (
         '<article class="container skill-article">'
-        + _render_skill_head(skill, strings)
+        + _render_skill_head(skill, strings, base_path=base_path, locale=locale)
         + banner
         + _render_prose(skill.get("body_html", ""), lang=body_lang, text_dir=body_dir)
         + _render_formidable_extras(skill, strings, lang=body_lang, text_dir=body_dir)
@@ -2369,6 +2428,61 @@ def render_getting_started_page(categories: list[dict], base_path: str = "",
         last_updated_utc=last_updated_utc,
         locale=locale,
         path_suffix=GETTING_STARTED_PATH,
+        strings=strings,
+        plugin_version=plugin_version,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Skill graph page
+# ---------------------------------------------------------------------------
+
+
+def render_graph_page(categories: list[dict], base_path: str = "",
+                      last_updated_utc: str = "", *, skill_count: int = 0,
+                      pair_count: int = 0,
+                      locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                      strings: Strings = ENGLISH_STRINGS,
+                      plugin_version: str = "") -> str:
+    """Full HTML document for /graph/ -- the graph as a page of its own.
+
+    Wide screens mostly never arrive here: the header's Graph link opens the
+    same app in a dialog over whatever page the reader was on. This is where
+    a phone lands, where a shared link lands, and what a browser without JS
+    gets, so it states in plain text what the graph would have shown.
+
+    The page renders only a host element; graph.js mounts into it and
+    fetches graph.json from beside this page. The head stays in the markup
+    rather than being drawn by the app, so the page means something before
+    the script runs and after it fails."""
+    home_url = _locale_url(locale, base_path, "")
+    graph_dir = _locale_url(locale, base_path, GRAPH_PATH)
+    breadcrumb = f"""<nav class="container breadcrumb" aria-label="{escape_html(strings.breadcrumb_aria_label)}">
+  <a href="{home_url}">{escape_html(strings.breadcrumb_home)}</a>
+  <span class="breadcrumb__sep" aria-hidden="true">/</span>
+  <span class="breadcrumb__current" aria-current="page">{escape_html(strings.nav_graph)}</span>
+</nav>"""
+    lede = strings.graph_page_lede_template.format(skill_count=skill_count, pair_count=pair_count)
+    section = f"""<section class="graph-page" aria-labelledby="graph-page-title">
+  <div class="container graph-page__head">
+    <h1 class="graph-page__title" id="graph-page-title">{escape_html(strings.graph_page_title)}</h1>
+    <p class="graph-page__lede">{escape_html(lede)}</p>
+  </div>
+  <div class="graph-host" data-graph-host data-graph-data="{graph_dir}{GRAPH_DATA_FILENAME}">
+    <noscript><p class="graph-host__noscript">{escape_html(strings.graph_noscript)}</p></noscript>
+  </div>
+</section>
+<script src="{base_path}/assets/graph.js" defer></script>"""
+    return _render_document(
+        title=f"{strings.graph_page_title} — {BRAND_ATELIER_TEXT}",
+        meta_description=lede,
+        body_class="page-graph",
+        main_html=_join(breadcrumb, section),
+        categories=categories,
+        base_path=base_path,
+        last_updated_utc=last_updated_utc,
+        locale=locale,
+        path_suffix=GRAPH_PATH,
         strings=strings,
         plugin_version=plugin_version,
     )

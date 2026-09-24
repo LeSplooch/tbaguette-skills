@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">structuring-an-implementation-plan</h1>
     
   </div>
-  <span class="tag skill-article__tag">Planning and delegation</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Planning and delegation</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=structuring-an-implementation-plan" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="structuring-an-implementation-plan"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan, before any code changes start. Covers deciding file structure ahead of the tasks, right-sizing tasks and steps, the plan document's required header and per-task structure, banning placeholder content, and self-reviewing a finished plan against its spec.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A plan is written for the reader with the least context anyone touching this work will ever have — less than whoever wrote the spec, less than the reviewer, less than you an hour from now. Assume that reader is skilled but has questionable taste on anything left for them to decide: every fact or choice the plan omits becomes a decision they invent instead, and an invented decision is exactly what a fresh reviewer's gate exists to catch — one task too late. The fix isn't more prose; it's smaller tasks, exact paths and signatures, and no sentence that describes what to do without showing how.</p>

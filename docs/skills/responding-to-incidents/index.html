@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">responding-to-incidents</h1>
     
   </div>
-  <span class="tag skill-article__tag">Debugging and performance</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Debugging and performance</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=responding-to-incidents" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="responding-to-incidents"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when something is broken in production right now — an outage, a degradation, a bad deploy, data going wrong in flight, an alert that is real — and there is a clock and an audience. Also use when a debugging session has quietly become an incident because users are affected while you investigate, or when deciding whether to roll back or fix forward. Covers mitigating before diagnosing, holding the three roles when you are the only responder, preserving the evidence your own mitigation would destroy, choosing reversible mitigations over correct fixes, communicating on a cadence, and handing back to an ordinary diagnosis once the bleeding stops.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Ordinary debugging has one correct first move: reproduce the failure so it is available on demand, then find where it actually originates, then fix it. An incident inverts that, and the inversion is the whole skill. While you are reproducing, users are still broken. <strong>Stop the harm first; understand it second.</strong> A response that gets the cause exactly right in forty minutes is worse than one that restores service in four and gets the cause right in an hour.</p>

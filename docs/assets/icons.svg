@@ -4,7 +4,7 @@
     Single stroke weight throughout (consumers set stroke-width via the
     shared .icon class in styles.css; these symbols carry no fill/stroke
     styling of their own so they inherit currentColor correctly in both
-    themes). Six marks total:
+    themes):
       icon-wheat, icon-crust, icon-grain  — category markers, cycled across
         the ten landing-page category headings. Decorative, not a
         per-category semantic mapping (the content schema carries no such
@@ -16,6 +16,13 @@
       icon-rotate                         — the update modal's Reload
         button. The one glyph here that carries meaning rather than
         flavour: the modal's loaf seal is brand, this is the action.
+      icon-graph                          — the header's Graph link and a
+        skill page's "see it in the graph" link: four nodes, five ties.
+      icon-close, icon-back, icon-open    — the graph's close, step back
+        out of a skill, and open-as-its-own-page controls.
+      icon-list, icon-route               — the graph's list view and
+        its trace-a-path tool.
+      icon-plus, icon-minus, icon-fit     — the graph's zoom controls.
     All symbols share a 0 0 24 24 viewBox so they drop in at a consistent
     optical size wherever used.
   -->
@@ -73,5 +80,57 @@
   <symbol id="icon-rotate" viewBox="0 0 24 24">
     <path d="M20 12 A8 8 0 1 1 12 4 C14.24 4 16.38 4.94 17.93 6.4 L19.5 8" />
     <path d="M19.5 3.5 L19.5 8 L15 8" />
+  </symbol>
+
+  <!-- Four nodes, five ties: one of them crosses, so it reads as a network
+       rather than a polygon. The nodes are rings, not dots, so the mark has
+       the same single-stroke weight as every other symbol here. -->
+  <symbol id="icon-graph" viewBox="0 0 24 24">
+    <circle cx="6" cy="7" r="2.25" />
+    <circle cx="18" cy="5.5" r="2.25" />
+    <circle cx="17" cy="18" r="2.25" />
+    <circle cx="6.5" cy="17.5" r="2.25" />
+    <path d="M8.2 6.6 L15.8 5.9 M6.1 9.25 L6.4 15.25 M8.75 17.6 L14.75 17.9 M17.8 7.75 L17.2 15.75 M7.7 8.8 L15.4 16.3" />
+  </symbol>
+
+  <symbol id="icon-close" viewBox="0 0 24 24">
+    <path d="M6 6 L18 18 M18 6 L6 18" />
+  </symbol>
+
+  <symbol id="icon-back" viewBox="0 0 24 24">
+    <path d="M19 12 H5.5 M11 6 L5 12 L11 18" />
+  </symbol>
+
+  <symbol id="icon-open" viewBox="0 0 24 24">
+    <path d="M13.5 4.5 H19.5 V10.5 M19.5 4.5 L11.5 12.5" />
+    <path d="M17 13.5 V18 A1.5 1.5 0 0 1 15.5 19.5 H6 A1.5 1.5 0 0 1 4.5 18 V8.5 A1.5 1.5 0 0 1 6 7 H10.5" />
+  </symbol>
+
+  <symbol id="icon-list" viewBox="0 0 24 24">
+    <path d="M9 6.5 H19.5 M9 12 H19.5 M9 17.5 H19.5" />
+    <circle cx="5" cy="6.5" r="0.9" />
+    <circle cx="5" cy="12" r="0.9" />
+    <circle cx="5" cy="17.5" r="0.9" />
+  </symbol>
+
+  <!-- Two stops and the way between them, bent twice: the trace-a-path tool
+       finds a route through the citations, not a straight line. -->
+  <symbol id="icon-route" viewBox="0 0 24 24">
+    <circle cx="5.5" cy="18.5" r="2" />
+    <circle cx="18.5" cy="5.5" r="2" />
+    <path d="M7.5 18.5 H13.5 A3 3 0 0 0 13.5 12.5 H10.5 A3 3 0 0 1 10.5 6.5 H16.5" />
+  </symbol>
+
+  <symbol id="icon-plus" viewBox="0 0 24 24">
+    <path d="M12 5.5 V18.5 M5.5 12 H18.5" />
+  </symbol>
+
+  <symbol id="icon-minus" viewBox="0 0 24 24">
+    <path d="M5.5 12 H18.5" />
+  </symbol>
+
+  <symbol id="icon-fit" viewBox="0 0 24 24">
+    <path d="M4.5 9 V4.5 H9 M15 4.5 H19.5 V9 M19.5 15 V19.5 H15 M9 19.5 H4.5 V15" />
+    <circle cx="12" cy="12" r="2.5" />
   </symbol>
 </svg>

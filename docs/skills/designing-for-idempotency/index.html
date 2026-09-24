@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">designing-for-idempotency</h1>
     
   </div>
-  <span class="tag skill-article__tag">Designing systems</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Designing systems</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=designing-for-idempotency" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="designing-for-idempotency"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues, consumer restarts and redelivery, replayed webhooks, double-clicked buttons, resumed jobs, a crash partway through a write, or a confirmation, approval, or clarifying question being added partway through an operation that cannot pause. Also use when a setup, install, provisioning, or bootstrap step written to be safe to re-run may run again long afterwards, with someone having deliberately changed what it sets in between — a setting that keeps turning itself back on after every upgrade. Covers duplicate charges, duplicate emails and notifications, idempotency keys, deduplication windows, retry safety under concurrency, why a mid-operation gate re-runs every effect before it, telling a default from an assertion when both compile to the same write, and claims of exactly-once delivery.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Assume every operation arrives twice. Retries, restarts, redeliveries, and impatient users are the same problem, and exactly-once <em>delivery</em> does not exist — exactly-once <em>effect</em> does, and you build it at the receiver.</p>

@@ -27,6 +27,9 @@
   15. Motion + reduced-motion
   16. Code block (install-verification page: line numbers, syntax tokens)
   17. Responsive notes (fluid by default; hard breakpoints only where noted)
+  18. Update-check modal
+  19. The skill graph ("the crumb"): header and skill-page entry points,
+      the dialog and /graph/ page that hold it, and the app's chrome
 */
 
 /* ---------------------------------------------------------------------------
@@ -3512,4 +3515,1239 @@ a.skill-link--bare:focus-visible {
 
 @media (max-width: 400px) {
   .update-modal { padding: var(--space-5); }
+}
+
+/* ---------------------------------------------------------------------------
+   19. The skill graph ("the crumb")
+
+   A loaf's crumb is the web of cells inside it, which is what this draws of
+   the library: every skill, and every place one names another. The canvas is
+   drawn by graph.js; everything here is the chrome around it, the header and
+   skill-page links that open it, and the dialog and page that hold it.
+
+   The twelve family colours are the one place this site carries more than
+   its gold and its ember, and they are data colours, not decoration: one per
+   family, in catalog order, validated as a set in both themes (OKLab ΔE
+   between neighbouring families — which the constellation places side by
+   side — is at least 11.2 under simulated protanopia and deuteranopia and
+   21.3 in full colour, and every step clears 3:1 against both of that
+   theme's surfaces). Twelve is past what hue alone can keep apart when any
+   two might touch, so colour never carries a family by itself: the families
+   are also places (the layout gathers them), named on the canvas, listed in
+   the legend, and spelled out in every tooltip and panel.
+   ------------------------------------------------------------------------- */
+
+.crumb {
+  --graph-cat-1: #c8635d;
+  --graph-cat-2: #009bab;
+  --graph-cat-3: #ed9658;
+  --graph-cat-4: #ad69b1;
+  --graph-cat-5: #32c8a9;
+  --graph-cat-6: #b49cf7;
+  --graph-cat-7: #aa7e00;
+  --graph-cat-8: #4abaf4;
+  --graph-cat-9: #abb74f;
+  --graph-cat-10: #ee8ab2;
+  --graph-cat-11: #4e9a52;
+  --graph-cat-12: #5f83d4;
+}
+
+[data-theme='flour'] .crumb {
+  --graph-cat-1: #90302e;
+  --graph-cat-2: #006777;
+  --graph-cat-3: #ad5c15;
+  --graph-cat-4: #78377c;
+  --graph-cat-5: #008c70;
+  --graph-cat-6: #7b62b8;
+  --graph-cat-7: #764c00;
+  --graph-cat-8: #007eb5;
+  --graph-cat-9: #737c00;
+  --graph-cat-10: #ad5078;
+  --graph-cat-11: #146720;
+  --graph-cat-12: #31509d;
+}
+
+/* --- entry points ---------------------------------------------------------- */
+
+.site-header__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.site-header__nav-link--graph {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.site-header__nav-icon {
+  width: 1.15em;
+  height: 1.15em;
+  color: var(--accent);
+}
+
+.site-header__nav-link--graph:hover .site-header__nav-icon { color: var(--accent-hover); }
+
+.skill-article__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.skill-article__meta .skill-article__tag { margin-top: 0; }
+
+.skill-article__graph-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  font-size: var(--text-2);
+  color: var(--text-accent);
+  border-radius: var(--radius-sm);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--accent) 45%, transparent);
+  text-underline-offset: 0.22em;
+  transition: color var(--duration-micro) var(--ease-out),
+              text-decoration-color var(--duration-micro) var(--ease-out);
+}
+
+.skill-article__graph-link .icon { width: 1.2em; height: 1.2em; }
+
+.skill-article__graph-link:hover {
+  color: var(--accent-hover);
+  text-decoration-color: currentColor;
+}
+
+/* --- the dialog -------------------------------------------------------------- */
+
+.graph-dialog {
+  width: min(100vw - 2 * var(--space-5), 112rem);
+  height: min(100dvh - 2 * var(--space-5), 64rem);
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  color: var(--text-primary);
+  background: var(--bg);
+  border: 1px solid color-mix(in oklch, var(--accent) 45%, transparent);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 10%, transparent),
+    0 40px 90px -30px hsl(var(--shadow-ink) / 0.8),
+    0 0 120px -40px color-mix(in oklch, var(--accent-solid) 55%, transparent);
+}
+
+/* Explicit rather than left to the UA sheet, for the reason the notes
+   dialog spells out: a closed dialog stays hidden only while nothing else
+   declares its display. */
+.graph-dialog:not([open]) { display: none; }
+
+.graph-dialog::backdrop {
+  background: hsl(var(--scrim) / 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.graph-dialog__host { height: 100%; }
+
+html.has-graph-dialog { overflow: hidden; }
+
+/* Entrance only, from a visible resting state — the notes dialog's ordering,
+   for the notes dialog's reason: a browser that skips the transition shows
+   the dialog, never an invisible one holding the page hostage. */
+@media (prefers-reduced-motion: no-preference) {
+  .graph-dialog {
+    transition:
+      opacity var(--duration-view) var(--ease-out),
+      transform var(--duration-view) var(--ease-out);
+  }
+  @starting-style {
+    .graph-dialog[open] { opacity: 0; transform: translateY(16px) scale(0.975); }
+  }
+  .graph-dialog::backdrop { transition: opacity var(--duration-view) var(--ease-out); }
+  @starting-style {
+    .graph-dialog[open]::backdrop { opacity: 0; }
+  }
+}
+
+/* --- the page ------------------------------------------------------------------ */
+
+.graph-page__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-5);
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-4);
+}
+
+.graph-page__title {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 650;
+  font-size: var(--text-5);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.015em;
+}
+
+.graph-page__lede {
+  max-width: var(--measure-prose);
+  color: var(--text-secondary);
+}
+
+.graph-host {
+  width: min(100% - 2 * var(--space-4), var(--container-wide) + 16rem);
+  /* The header, breadcrumb and this page's own head measure ~15rem on a
+     wide screen; what is left of the viewport is the graph's. */
+  height: clamp(30rem, 100svh - 15.5rem, 62rem);
+  margin: 0 auto var(--space-8);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.graph-host__noscript {
+  padding: var(--space-6);
+  max-width: var(--measure-prose);
+  color: var(--text-secondary);
+}
+
+@media (max-width: 40rem) {
+  .graph-page__head { padding-bottom: var(--space-3); }
+  .graph-page__title { font-size: var(--text-5); }
+  .graph-page__lede { font-size: var(--text-2); }
+  .graph-host {
+    width: 100%;
+    height: calc(100svh - 4rem);
+    border-radius: 0;
+    border-inline: 0;
+  }
+}
+
+/* --- the app ---------------------------------------------------------------------- */
+
+.crumb {
+  container-type: inline-size;
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  font-size: var(--text-2);
+  color: var(--text-primary);
+}
+
+/* The prose rhythm in section 5 — a top margin on every paragraph, 64px
+   above any heading that follows something — is right for an article and
+   wrong for an app's chrome. Zeroed here, at the specificity of one class,
+   so every rule below this one still sets its own spacing. */
+.crumb :where(h2, h3, h4, p, blockquote, ol, ul, dl, dd, li + li) { margin: 0; }
+
+.crumb__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface);
+  position: relative;
+  z-index: 2;
+}
+
+/* The gilded hairline the header and the update modal both end on. */
+.crumb__bar::after {
+  content: '';
+  position: absolute;
+  inset-inline: 8%;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(to right, transparent,
+    color-mix(in oklch, var(--accent) 60%, transparent) 25%,
+    color-mix(in oklch, var(--accent) 60%, transparent) 75%, transparent);
+}
+
+.crumb__heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 var(--space-3);
+  margin-inline-end: auto;
+}
+
+.crumb__title {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 650;
+  font-size: var(--text-4);
+  letter-spacing: -0.01em;
+}
+
+.crumb__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.crumb__views {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  background: var(--bg);
+}
+
+.crumb__view {
+  padding: 0.35em 0.9em;
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.crumb__view:hover { color: var(--text-accent); }
+
+/* Selected: fill plus weight, never the fill alone. */
+.crumb__view[aria-selected='true'] {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  font-weight: 600;
+}
+
+.crumb__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.crumb__search .icon {
+  position: absolute;
+  inset-inline-start: 0.7em;
+  width: 1.05em;
+  height: 1.05em;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.crumb__search input {
+  width: 14rem;
+  padding: 0.5em 0.9em 0.5em 2.2em;
+  font-size: var(--text-2);
+  color: var(--text-primary);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+}
+
+.crumb__search input::placeholder { color: var(--text-secondary); opacity: 1; }
+.crumb__search input:focus-visible { border-color: var(--focus-ring); outline-offset: 2px; }
+
+.crumb__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+  min-height: 2.25rem;
+  padding: 0.4em 0.9em;
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.crumb__btn .icon { width: 1.15em; height: 1.15em; }
+.crumb__btn:hover { color: var(--text-accent); border-color: var(--border-strong); }
+
+.crumb__btn--icon { width: 2.25rem; padding: 0; }
+.crumb__btn--icon .icon { width: 1.25em; height: 1.25em; }
+
+.crumb__btn--solid {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border-color: var(--accent-solid);
+  font-weight: 600;
+}
+
+.crumb__btn--solid:hover {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid-hover);
+  border-color: var(--accent-solid-hover);
+}
+
+.crumb__btn--quiet { border-color: transparent; }
+.crumb__btn--small { min-height: 1.9rem; padding: 0.2em 0.6em; font-size: var(--text-1); }
+
+/* The row is pinned to the space the app gives it. Left implicit, it sizes
+   to its tallest child — the panel, once a section's quotes open — and the
+   stage grows with it, which re-lays the canvas out for a height nobody can
+   see. */
+.crumb__body {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22rem;
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+}
+
+/* --- stage -------------------------------------------------------------------------- */
+
+.crumb__stage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  border-radius: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 48%,
+      color-mix(in oklch, var(--accent-solid) 7%, var(--bg)) 0%,
+      var(--bg) 72%);
+}
+
+[data-theme='flour'] .crumb__stage {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 48%,
+      color-mix(in oklch, white 38%, var(--bg)) 0%,
+      var(--bg) 75%);
+}
+
+.crumb__stage:focus-visible { outline-offset: -3px; border-radius: 0; }
+.crumb__stage--grabbing { cursor: grabbing; }
+.crumb--loading .crumb__stage { cursor: progress; }
+
+.crumb__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.crumb__status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.crumb__status:empty { display: none; }
+
+/* Several overlays set their own display; the attribute has to win. */
+.crumb [hidden] { display: none !important; }
+
+.crumb__loading,
+.crumb__failed p {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-4);
+  color: var(--text-secondary);
+}
+
+.crumb__failed {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .crumb__loading { animation: crumb-breathe 1.8s var(--ease-in-out) infinite; }
+}
+
+@keyframes crumb-breathe {
+  50% { opacity: 0.45; }
+}
+
+.crumb__hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--space-3) + 0.4rem);
+  transform: translateX(-50%);
+  padding: 0.35em 0.9em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+  background: color-mix(in oklch, var(--surface) 85%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity var(--duration-view) var(--ease-out);
+}
+
+.crumb__hint--gone { opacity: 0; }
+.crumb[data-view='anatomy'] .crumb__hint,
+.crumb[data-view='list'] .crumb__hint { display: none; }
+
+/* Trail: where you walked from, so a walk can be retraced a step at a time. */
+.crumb__trail {
+  position: absolute;
+  top: var(--space-3);
+  inset-inline-start: var(--space-3);
+  max-width: calc(100% - 2 * var(--space-3));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.25em;
+  background: color-mix(in oklch, var(--surface) 88%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  z-index: 1;
+}
+
+.crumb__crumb {
+  padding: 0.25em 0.65em;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.crumb__crumb:hover { color: var(--text-accent); background: var(--surface-hover); }
+.crumb__crumb--back { display: inline-grid; place-items: center; width: 1.9rem; height: 1.9rem; padding: 0; }
+.crumb__crumb--back .icon { width: 1.1em; height: 1.1em; }
+.crumb__crumb--here { color: var(--text-primary); font-weight: 500; cursor: default; }
+.crumb__crumb--here:hover { color: var(--text-primary); background: none; }
+.crumb__crumb-sep { color: var(--text-secondary); opacity: 0.6; }
+
+.crumb__legend {
+  position: absolute;
+  inset-inline-start: var(--space-3);
+  bottom: var(--space-3);
+  max-width: min(44rem, calc(100% - 18rem));
+  z-index: 1;
+}
+
+.crumb__legend-title {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-accent);
+}
+
+.crumb__legend-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.crumb[data-view='anatomy'] .crumb__legend,
+.crumb[data-view='list'] .crumb__legend { display: none; }
+
+/* A wide stage has width to spare and height to protect: the key stands up
+   along the left edge, the way a map's does, and the graph keeps the full
+   height. graph.js reads which way it stands and fits the camera beside it. */
+@container (min-width: 60rem) {
+  .crumb__legend {
+    top: var(--space-4);
+    bottom: auto;
+    max-width: 15rem;
+  }
+  .crumb-family { white-space: nowrap; }
+  .crumb__legend-list { flex-direction: column; align-items: flex-start; }
+}
+
+.crumb-family {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.2em 0.55em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+  background: color-mix(in oklch, var(--surface) 88%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out);
+}
+
+.crumb-family:hover { color: var(--text-primary); border-color: var(--chip); }
+
+/* Pressed: the family's own colour as the border, plus bolder text — two
+   channels, so a filter that is on never rests on hue. */
+.crumb-family[aria-pressed='true'] {
+  color: var(--text-primary);
+  font-weight: 600;
+  border-color: var(--chip);
+  box-shadow: inset 0 0 0 1px var(--chip);
+}
+
+.crumb-family__count {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+.crumb-swatch {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: var(--radius-full);
+  background: var(--chip);
+}
+
+.crumb__anatomy-key {
+  position: absolute;
+  inset-inline-start: var(--space-3);
+  bottom: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  padding: 0.4em 0.9em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+  background: color-mix(in oklch, var(--surface) 88%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  z-index: 1;
+}
+
+.crumb__anatomy-key span { display: inline-flex; align-items: center; gap: 0.4em; }
+.crumb__anatomy-key svg { width: 1em; height: 1em; color: var(--text-accent); }
+
+.crumb__tools {
+  position: absolute;
+  inset-inline-end: var(--space-3);
+  bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem;
+  background: color-mix(in oklch, var(--surface) 88%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  z-index: 1;
+}
+
+.crumb__tools .crumb__btn { border-color: transparent; min-height: 2rem; width: 2rem; }
+.crumb[data-view='list'] .crumb__tools { display: none; }
+
+.crumb__size {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding-inline: 0.6em 0.2em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.crumb__size select {
+  padding: 0.25em 0.4em;
+  font: inherit;
+  color: var(--text-primary);
+  background: var(--bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.crumb[data-view='anatomy'] .crumb__size { display: none; }
+
+/* --- tooltip -------------------------------------------------------------------------- */
+
+.crumb__tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: max-content;
+  max-width: min(22rem, calc(100% - 16px));
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: 0 18px 40px -18px hsl(var(--shadow-ink) / 0.7);
+  pointer-events: none;
+}
+
+.crumb__tip[hidden] { display: none; }
+
+.crumb-tip__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-3);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.crumb-tip__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  margin-block: 0.15em 0.4em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.crumb-tip__body { color: var(--text-secondary); line-height: var(--leading-normal); }
+.crumb-tip__stats { margin-top: 0.4em; font-family: var(--font-mono); font-size: var(--text-1); color: var(--text-accent); }
+
+.crumb-tip__rel {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45em;
+  margin-top: var(--space-2);
+  font-size: var(--text-1);
+  color: var(--text-accent);
+}
+
+.crumb-tip__rel--in { color: var(--text-secondary); }
+
+.crumb-tip__num,
+.crumb-section__num {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  min-width: 1.5em;
+  height: 1.5em;
+  padding-inline: 0.3em;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+}
+
+.crumb-quote {
+  margin: 0.35em 0 0;
+  padding-inline-start: 0.75em;
+  border-inline-start: 2px solid color-mix(in oklch, var(--accent) 55%, transparent);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-2);
+  line-height: 1.45;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.crumb-quote mark {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 0.88em;
+  color: var(--text-accent);
+  background: color-mix(in oklch, var(--accent) 12%, transparent);
+  border-radius: 4px;
+  padding: 0 0.2em;
+}
+
+/* --- panel -------------------------------------------------------------------------------- */
+
+.crumb__panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface);
+  border-inline-start: 1px solid var(--border-subtle);
+}
+
+.crumb__sheet-handle { display: none; }
+
+.crumb__panel-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-4) var(--space-5) var(--space-6);
+}
+
+.crumb-panel__section + .crumb-panel__section {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.crumb-panel__title {
+  margin-bottom: var(--space-3);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--text-1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-accent);
+}
+
+.crumb-panel__count { color: var(--text-secondary); }
+
+.crumb-panel__text {
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.crumb-panel__hint {
+  margin-top: var(--space-3);
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.crumb-notes,
+.crumb-roles,
+.crumb-sections,
+.crumb-inbounds,
+.crumb-route {
+  list-style: none;
+  padding: 0;
+}
+
+.crumb-notes li + li,
+.crumb-inbounds li + li { margin-top: var(--space-2); }
+
+.crumb-note {
+  display: block;
+  width: 100%;
+  padding: var(--space-3);
+  text-align: start;
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.crumb-note b { color: var(--text-primary); font-weight: 600; }
+.crumb-note:hover { border-color: var(--border-strong); background: var(--surface-hover); }
+
+.crumb-note[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: color-mix(in oklch, var(--accent) 9%, var(--surface));
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.crumb-chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 0.05em 0.45em;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--surface-hover);
+  border-inline-start: 3px solid var(--chip);
+  border-radius: 5px;
+  overflow-wrap: anywhere;
+  vertical-align: baseline;
+}
+
+a.crumb-chip:hover,
+.crumb-chip--button:hover { color: var(--text-accent); }
+
+.crumb-chip--button { cursor: pointer; }
+.crumb-chip--family { font-family: var(--font-body); font-size: var(--text-1); }
+
+.crumb-roles li + li { margin-top: var(--space-3); }
+
+.crumb-role {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.crumb-role b { color: var(--text-primary); font-weight: 600; }
+.crumb-role__count { font-family: var(--font-mono); font-size: var(--text-1); color: var(--text-accent); }
+
+.crumb-role-glyph {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--text-accent);
+}
+
+/* --- panel: one skill ------------------------------------------------------------------ */
+
+.crumb-skill__name {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 650;
+  font-size: var(--text-5);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.crumb-skill__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-block: var(--space-3);
+}
+
+.crumb-skill__role {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.crumb-skill__role .crumb-role-glyph { width: 1.15rem; height: 1.15rem; }
+
+.crumb-skill__flag {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  color: var(--text-accent);
+}
+
+.crumb-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-block: var(--space-4);
+}
+
+.crumb-stats div {
+  padding: var(--space-2);
+  text-align: center;
+  background: var(--bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.crumb-stats dt {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.crumb-stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.crumb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.crumb-sections li + li { margin-top: 2px; }
+
+.crumb-section__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 0.45em 0.5em;
+  text-align: start;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.crumb-section__head:hover { color: var(--text-primary); background: var(--surface-hover); }
+.crumb-section__title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+
+.crumb-section__cites {
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  color: var(--text-accent);
+}
+
+.crumb-section__cites::before { content: '→ '; }
+.crumb-section--ref .crumb-section__num { border-style: dashed; }
+
+.crumb-section--on > .crumb-section__head {
+  color: var(--text-primary);
+  background: color-mix(in oklch, var(--accent) 10%, var(--surface));
+}
+
+.crumb-section--on .crumb-section__num {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border-color: var(--accent-solid);
+}
+
+.crumb-section__detail {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-2) var(--space-3) 2.3em;
+}
+
+.crumb-cite { display: grid; gap: 0.2em; justify-items: start; }
+.crumb-cite + .crumb-cite { margin-top: var(--space-2); }
+
+.crumb-link {
+  font-size: var(--text-1);
+  color: var(--text-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.crumb-link:hover { color: var(--accent-hover); }
+
+.crumb-inbound {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0 0.55em;
+  width: 100%;
+  padding: 0.4em 0.5em;
+  text-align: start;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.crumb-inbound:hover { background: var(--surface-hover); }
+.crumb-inbound__name { font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; }
+.crumb-inbound__from { grid-column: 2; font-size: var(--text-1); color: var(--text-secondary); overflow-wrap: anywhere; }
+
+/* --- panel: trace ----------------------------------------------------------------------- */
+
+.crumb-trace { display: grid; gap: var(--space-3); margin-top: var(--space-3); }
+
+.crumb-trace label { display: grid; gap: 0.3em; font-size: var(--text-1); color: var(--text-secondary); }
+
+.crumb-trace input {
+  padding: 0.5em 0.75em;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.crumb-trace__error:empty { display: none; }
+.crumb-trace__error { font-size: var(--text-1); color: var(--text-accent); }
+
+/* The route: a gilded spine with each skill a stop on it. */
+.crumb-route { position: relative; padding-inline-start: 1.4em; }
+
+.crumb-route::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.8em 0.8em;
+  inset-inline-start: 0.35em;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent-solid), color-mix(in oklch, var(--accent-solid) 30%, transparent));
+  border-radius: 2px;
+}
+
+.crumb-route__stop { position: relative; display: grid; gap: 0.3em; justify-items: start; }
+.crumb-route__stop + .crumb-route__stop { margin-top: var(--space-4); }
+
+.crumb-route__stop::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: -1.35em;
+  top: 0.45em;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  border: 2px solid var(--accent-solid);
+}
+
+.crumb-route__via { font-size: var(--text-1); color: var(--text-secondary); }
+
+/* --- list view ---------------------------------------------------------------------------- */
+
+.crumb__list {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow-y: auto;
+  padding: var(--space-5) var(--space-6) var(--space-7);
+  background: var(--bg);
+  cursor: auto;
+  touch-action: auto;
+}
+
+.crumb__list[hidden] { display: none; }
+
+.crumb-list__intro { color: var(--text-secondary); margin-bottom: var(--space-5); }
+
+.crumb-list__family + .crumb-list__family { margin-top: var(--space-6); }
+
+.crumb-list__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: var(--space-3);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-4);
+}
+
+.crumb-list__skill {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.crumb-list__skill h4 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--text-2);
+}
+
+.crumb-list__skill h4 a { color: var(--text-primary); text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 0.2em; }
+.crumb-list__skill h4 a:hover { color: var(--text-accent); }
+
+.crumb-list__role {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  margin-top: 0.3em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.crumb-list__role .crumb-role-glyph { width: 1rem; height: 1rem; }
+
+.crumb-list__refs {
+  margin-top: var(--space-2);
+  line-height: 2;
+  color: var(--text-secondary);
+}
+
+.crumb-list__refs b {
+  margin-inline-end: 0.4em;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--text-1);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-accent);
+}
+
+/* --- narrow: the panel becomes a sheet over the stage -------------------------------------- */
+
+@container (max-width: 46rem) {
+  .crumb__bar { gap: var(--space-2); padding: var(--space-2) var(--space-3); }
+  .crumb__heading { flex-basis: 100%; }
+  .crumb__heading--page { display: none; }
+  .crumb__views { order: 1; }
+  .crumb__search { order: 2; flex: 1; min-width: 9rem; }
+  .crumb__search input { width: 100%; }
+  .crumb [data-crumb-trace] { order: 3; }
+  .crumb [data-crumb-trace] span { display: none; }
+  .crumb [data-crumb-trace] { width: 2.25rem; padding: 0; }
+  .crumb__view { padding: 0.35em 0.7em; }
+
+  .crumb__body { display: block; }
+  .crumb__stage { position: absolute; inset: 0; }
+
+  .crumb__panel {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 3;
+    max-height: 3.25rem;
+    border-inline-start: 0;
+    border-top: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: 0 -18px 40px -24px hsl(var(--shadow-ink) / 0.7);
+    transition: max-height var(--duration-view) var(--ease-out);
+  }
+
+  .crumb--sheet-open .crumb__panel { max-height: 72%; }
+
+  .crumb__sheet-handle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3em;
+    width: 100%;
+    min-height: 3.2rem;
+    padding: 0.45em var(--space-4) 0.6em;
+    font-family: var(--font-mono);
+    font-size: var(--text-1);
+    color: var(--text-accent);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .crumb__sheet-grip {
+    width: 2.5rem;
+    height: 4px;
+    border-radius: var(--radius-full);
+    background: var(--border-strong);
+  }
+
+  .crumb__panel-body { padding-top: 0; }
+  .crumb:not(.crumb--sheet-open) .crumb__panel-body { visibility: hidden; }
+
+  .crumb__legend {
+    inset-inline: var(--space-2);
+    bottom: calc(3.25rem + var(--space-2));
+    max-width: none;
+  }
+
+  .crumb__legend-title { display: none; }
+
+  .crumb__legend-list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .crumb-family { flex-shrink: 0; }
+
+  .crumb__anatomy-key { bottom: calc(3.25rem + var(--space-2)); inset-inline-start: var(--space-2); }
+
+  .crumb__tools {
+    top: var(--space-2);
+    bottom: auto;
+    inset-inline-end: var(--space-2);
+    flex-direction: column;
+  }
+
+  .crumb__size { display: none; }
+  .crumb__hint { bottom: calc(3.25rem + 3.5rem); white-space: normal; text-align: center; width: max-content; max-width: 90%; }
+  .crumb__trail { max-width: calc(100% - 4rem); }
+  .crumb__list { padding: var(--space-4) var(--space-4) calc(3.25rem + var(--space-6)); }
+  .crumb-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crumb__panel,
+  .crumb__hint,
+  .crumb__view,
+  .crumb__btn,
+  .crumb-note,
+  .crumb-family { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .crumb-chip,
+  .crumb-family,
+  .crumb-note,
+  .crumb__btn,
+  .crumb__views { border: 1px solid ButtonText; }
+  .crumb__view[aria-selected='true'],
+  .crumb-family[aria-pressed='true'],
+  .crumb-note[aria-pressed='true'] { outline: 2px solid Highlight; }
+  .crumb-swatch { forced-color-adjust: none; }
+  .graph-dialog { border: 2px solid CanvasText; }
 }

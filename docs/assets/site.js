@@ -23,6 +23,9 @@
  *   - post-reload scroll restore (every page — companion to the update
  *                                  check; restores scroll position after
  *                                  the reload it triggered)
+ *   - graph launcher (every page — opens the skill graph in a dialog on a
+ *                      wide screen, loading graph.js on first use; the
+ *                      link itself goes to /graph/ everywhere else)
  * Loaded with `defer`, so the DOM is fully parsed before any of this runs —
  * no DOMContentLoaded wrapper needed.
  */
@@ -1144,6 +1147,116 @@
     });
   }
 
+  // The skill graph. Every Graph link is a real link to /graph/, and stays
+  // one on a phone, on a middle- or modified click, and without JS. On a
+  // screen wide enough to hold it over the page, a plain click opens the same
+  // app in a dialog instead, so the reader never loses the page they were on
+  // — and graph.js, which nothing else on the site needs, is only fetched the
+  // first time that happens.
+  var graphDialog = null;
+  var graphApp = null;
+  var graphScript = null;
+
+  function graphFitsDialog() {
+    return !!(window.matchMedia && window.matchMedia('(min-width: 48rem) and (min-height: 30rem)').matches);
+  }
+
+  function loadGraphScript(src, done) {
+    if (window.TBaguetteGraph) { done(); return; }
+    if (!graphScript) {
+      graphScript = document.createElement('script');
+      graphScript.src = src;
+      graphScript.async = true;
+      document.head.appendChild(graphScript);
+    }
+    graphScript.addEventListener('load', done);
+    graphScript.addEventListener('error', function () {
+      // Fall back to the page, which carries its own script tag and will
+      // say something useful if that one fails too.
+      if (graphDialog) graphDialog.close();
+      window.location.href = graphDialog ? graphDialog.getAttribute('data-page') : '/';
+    });
+  }
+
+  function buildGraphDialog() {
+    var dialog = document.createElement('dialog');
+    dialog.className = 'graph-dialog';
+    dialog.setAttribute('aria-labelledby', 'crumb-title');
+    var host = document.createElement('div');
+    host.className = 'graph-dialog__host';
+    dialog.appendChild(host);
+    document.body.appendChild(dialog);
+
+    // Same reasoning as the notes archive: the scroll lock follows the `open`
+    // attribute, which cannot disagree with what is on screen, rather than a
+    // close event that might not arrive.
+    var openState = new MutationObserver(function () {
+      document.documentElement.classList.toggle('has-graph-dialog', dialog.open);
+      if (graphApp) graphApp.setVisible(dialog.open);
+    });
+    openState.observe(dialog, { attributes: true, attributeFilter: ['open'] });
+
+    // Escape steps back out of whatever the graph has open — a section, a
+    // skill, a traced path — and only closes the dialog once there is
+    // nothing left to step out of. The keydown decides; the cancel event
+    // that follows it is suppressed when the keydown was spent.
+    var spentAt = 0;
+    dialog.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape' || !graphApp) return;
+      if (graphApp.handleEscape()) {
+        event.preventDefault();
+        spentAt = Date.now();
+      }
+    }, true);
+    dialog.addEventListener('cancel', function (event) {
+      if (Date.now() - spentAt < 250) event.preventDefault();
+    });
+    // A click on the backdrop — outside the card — closes it, the way the
+    // scrim invites.
+    dialog.addEventListener('click', function (event) {
+      if (event.target === dialog) dialog.close();
+    });
+    return dialog;
+  }
+
+  function openGraphDialog(link) {
+    if (!graphDialog) graphDialog = buildGraphDialog();
+    graphDialog.setAttribute('data-page', link.getAttribute('href'));
+    var skill = link.getAttribute('data-graph-skill');
+    graphDialog.showModal();
+    document.documentElement.classList.add('has-graph-dialog');
+    loadGraphScript(link.getAttribute('data-graph-script'), function () {
+      if (!graphApp) {
+        graphApp = window.TBaguetteGraph.mount(graphDialog.querySelector('.graph-dialog__host'), {
+          mode: 'dialog',
+          dataUrl: link.getAttribute('data-graph-data'),
+          pageUrl: link.getAttribute('href').split('#')[0],
+          skill: skill,
+          onClose: function () { graphDialog.close(); }
+        });
+      } else if (skill) {
+        graphApp.showSkill(skill);
+      }
+      graphApp.setVisible(true);
+      var stage = graphDialog.querySelector('.crumb__stage');
+      if (stage) stage.focus({ preventScroll: true });
+    });
+  }
+
+  function initGraphLauncher() {
+    var links = toArray(document.querySelectorAll('[data-graph-open]'));
+    if (!links.length || typeof document.createElement('dialog').showModal !== 'function') return;
+    links.forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        if (event.defaultPrevented || event.button !== 0 ||
+            event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (!graphFitsDialog()) return;
+        event.preventDefault();
+        openGraphDialog(link);
+      });
+    });
+  }
+
   function initScrollRestore() {
     var saved;
     try {
@@ -1173,5 +1286,6 @@
   initLanguageSwitcher();
   initScrollRestore();
   initNotesArchive();
+  initGraphLauncher();
   initVersionCheck();
 })();

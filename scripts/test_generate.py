@@ -11,6 +11,7 @@ Usage:
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import shutil
@@ -20,6 +21,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import generate
+import skill_graph
 import templates
 from checker import Checker
 
@@ -468,6 +470,22 @@ def main() -> None:
             "and so does a skill page's header, on a real build rather than a fixture",
             'href="/tbaguette-skills/getting-started/"' in karen_html,
         )
+
+        graph_page = docs / "graph" / "index.html"
+        graph_json = docs / "graph" / "graph.json"
+        check("docs/graph/ holds the graph's page and its data after a real build",
+              graph_page.exists() and graph_json.exists())
+        graph = json.loads(graph_json.read_text(encoding="utf-8")) if graph_json.exists() else {}
+        check("graph.json lists every skill the build shipped",
+              len(graph.get("skills", [])) == generate.EXPECTED_SKILL_COUNT)
+        check("...and builds skill URLs with the base path, as the pages do",
+              graph.get("skill_url_template") == "/tbaguette-skills/skills/{slug}/")
+        graph_html = graph_page.read_text(encoding="utf-8") if graph_page.exists() else ""
+        pair_count = len(skill_graph.edge_weights(graph)) if graph else -1
+        check("the page's own count of cross-references is the data's, not a guess",
+              f"{pair_count} cross-references" in graph_html)
+        check("the landing page's header opens the graph",
+              'href="/tbaguette-skills/graph/"' in index_html)
 
         version_txt_path = docs / "version.txt"
         check("version.txt exists after generation", version_txt_path.exists())

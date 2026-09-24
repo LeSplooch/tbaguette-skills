@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">writing-the-failing-test-first</h1>
     
   </div>
-  <span class="tag skill-article__tag">Testing</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Testing</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=writing-the-failing-test-first" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="writing-the-failing-test-first"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written. Also use when the change is meant to alter a cost rather than a behavior — an optimization, a cache, a batch, a cheaper backend — so every behavioral test passes both before and after it and the loop looks inapplicable. Also use when a suite is green feature by feature and the features have never been exercised together, or when a fix-rerun loop has run long enough to be finding hacks rather than structure. Covers writing one failing test first, confirming it fails for the right reason, writing the minimal code that makes it pass, and refactoring only once the suite is green again.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A test written after the code has never been seen to fail. It cannot prove it catches the bug it claims to guard against, because the only code it has ever run against is code already built to satisfy it. Red-green-refactor — the actual mechanism behind the word &quot;TDD&quot; — exists to keep that proof honest: watch the test fail before the code exists, watch it pass with the smallest code that could work, then clean up with that proof already in hand. Skip the order and the tests still run; they just stop proving anything.</p>

@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">verifying-review-feedback</h1>
     
   </div>
-  <span class="tag skill-article__tag">Communicating</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Communicating</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=verifying-review-feedback" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="verifying-review-feedback"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when code review feedback lands on your own change — from a person, a bot, or an automated reviewer — before any of it gets implemented, especially when a suggestion is unclear, stated with more confidence than evidence, hard to reconcile with what the code actually does, or reported by an automated check as a precise number on something that looks visibly correct. Covers verifying a claim against the codebase before acting on it, treating a mechanical finding as a candidate until the specific instance is confirmed through the mechanism actually in use, choosing a fix versus a pushback versus a clarifying question, and responding to correct feedback without performative agreement.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A review comment is a claim about the code, not an instruction. The right first move is the one you'd use for any other claim: understand what it asserts, check it against what the code and tests actually do, then respond — with a fix, a question, or a reasoned no. Implementing on request without checking isn't deference; it's the same shortcut as dismissing the comment on principle. Both skip the evaluation and let something other than the code decide the outcome.</p>

@@ -38,10 +38,11 @@
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
         <a class="site-header__nav-link" href="/tbaguette-skills/getting-started/">Getting started</a>
+        <a class="site-header__nav-link site-header__nav-link--graph" href="/tbaguette-skills/graph/" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js"><svg class="icon site-header__nav-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>Graph</span></a>
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-23T22:52:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-23T22:52:33Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T04:18:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T04:18:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -66,7 +67,10 @@
     <h1 class="skill-article__title">code-archaeology</h1>
     
   </div>
-  <span class="tag skill-article__tag">Reading code</span>
+  <div class="skill-article__meta">
+    <span class="tag skill-article__tag">Reading code</span>
+    <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=code-archaeology" data-graph-open data-graph-data="/tbaguette-skills/graph/graph.json" data-graph-script="/tbaguette-skills/assets/graph.js" data-graph-skill="code-archaeology"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
+  </div>
   <p class="lede">Use when code exists without an explanation and the reason matters — an odd workaround, a magic constant, a conditional nobody can justify, a comment that contradicts the code, an unexplained TODO, or a line that looks safe to delete. Also when locating the commit that introduced a behavior or regression, following a file through renames and moves, judging whether old code is still load-bearing, or when a recorded decision appears to rule out the work in front of you.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Code records what was decided; history records why, and only history knows what was tried and rejected. The reason a line exists is almost never in the file that contains it, and the cost of deleting a line whose reason you did not find is paid in production.</p>
