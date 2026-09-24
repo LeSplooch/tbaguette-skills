@@ -4,14 +4,36 @@
     {
       "name": "docs-preview",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8842", "--directory", "docs"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8842",
+        "--directory",
+        "docs"
+      ],
       "port": 8842
     },
     {
       "name": "docs-preview-verify",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8843", "--directory", "docs"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8843",
+        "--directory",
+        "docs"
+      ],
       "port": 8843
+    },
+    {
+      "name": "docs-preview-pages",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-c",
+        "import http.server as h, functools as f\nclass H(h.SimpleHTTPRequestHandler):\n    def translate_path(self, path):\n        prefix = '/tbaguette-skills'\n        return super().translate_path(path[len(prefix):] if path.startswith(prefix) else path)\nh.ThreadingHTTPServer(('127.0.0.1', 8844), f.partial(H, directory='docs')).serve_forever()"
+      ],
+      "port": 8844,
+      "url": "http://localhost:8844"
     }
   ]
 }
