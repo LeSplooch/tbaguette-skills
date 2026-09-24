@@ -50,6 +50,11 @@ Everything above the first `##` is preamble and is never rendered.
   commonest ad-hoc diagnostic of all can be the thing that finishes the host off,
   while looking like the cheapest rung on the ladder because nothing was enabled
   and nothing was written.
+- On GitHub Copilot CLI, `using-tbaguette`'s Copilot mapping now says how a fan-out is
+  actually spelled there: parallel `task` calls go in one response, an agent file is a
+  role, a subagent starts without TBaguette's context and shares your checkout, and three
+  or more independent units get dispatched before you have read them all yourself —
+  measured, the softer "fan out if it splits" rule never dispatched once.
 - `deciding-reversibility` now says the act of *opening* something can be the write: opening a
   datastore can run its migrations, attaching can take a lease, so a read-only preview may have
   changed what it inspects — take the safety copy before anything opens it.

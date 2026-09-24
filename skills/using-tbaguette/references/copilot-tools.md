@@ -66,12 +66,57 @@ does not resolve.
 
 ## Subagents
 
-Copilot has custom agents — `*.agent.md` files, dispatched as subagents. Where a
-skill asks for a subagent (`fanning-out-independent-work`,
-`delegating-tasks-with-review-gates`), use that mechanism. Where it is
-unavailable, every one of those skills already carries its own fallback: do the
-work inline, in sequence, rather than inventing a dispatch that will not run.
-Same rule for todo tracking and web fetch — degrade, don't improvise.
+Copilot CLI dispatches a subagent through its `task` tool, and custom agents —
+`*.agent.md` files — are the roles it can dispatch. Where a skill asks for a
+subagent (`fanning-out-independent-work`, `delegating-tasks-with-review-gates`,
+the fanned crew of `orchestrating-work-end-to-end`), use that mechanism. Five
+things about it change how those skills read here.
+
+**Parallel means one response.** Several `task` calls in the same response run
+concurrently; the same calls spread over consecutive responses run one after
+another, which is a queue, not a fan-out. A call with `mode: "background"`
+returns at once and the harness reports when the agent finishes, so the
+controller can work its own lane meanwhile instead of polling. An idle agent
+takes a follow-up message with its context intact — that is the resume the fix
+loop in `delegating-tasks-with-review-gates` asks for.
+
+**An agent file is a role.** An `*.agent.md` under `~/.copilot/agents/`, under a
+repository's `.github/agents/`, or shipped by a plugin, becomes an `agent_type`
+the `task` tool accepts, with its own standing instructions, tool list, and
+model. One with no `model:` line inherits the session's model — the expensive
+default `delegating-tasks-with-review-gates` warns about — so either pin one in
+the file or name the model in every dispatch.
+
+**A subagent starts without this plugin's context.** It gets no session-start
+injection and no per-prompt nudge; it does get the skill tool and the file
+tools. So the prompt has to stand alone, as `fanning-out-independent-work`
+already demands, and a skill the subagent needs is named in the prompt rather
+than assumed.
+
+**Every subagent shares the session's checkout.** None gets a worktree of its
+own. Disjoint write sets are the only isolation between parallel lanes unless
+the controller creates worktrees itself (`isolating-work-with-worktrees`).
+
+**Decide the fan-out before reading everything.** Copilot's own instructions
+tell the model to keep small work inline, and a model that has already read
+every unit into its context will always find inline cheaper. Measured on
+Copilot CLI with four independent packages to fix: a soft "fan out if the work
+splits" rule produced no dispatch in nine runs, while "three or more
+independent units, each checkable on its own, means one `task` per unit — decide
+right after orienting, before reading each one" produced four concurrent
+dispatches in three runs of three, with a one-file rename still done inline in
+three of three and a dependent two-step chain still done in sequence.
+
+`/fleet` — or `copilot --fleet`, or plan mode's option to build on autopilot
+with fleet — hands the partitioning to the harness itself. It partitions from
+whatever the plan says, so a plan that marks each task's dependencies and which
+tasks may run together (`structuring-an-implementation-plan`) is what makes the
+split safe.
+
+Where no `task` tool is offered, every one of those skills already carries its
+own fallback: do the work inline, in sequence, rather than inventing a dispatch
+that will not run. Same rule for todo tracking and web fetch — degrade, don't
+improvise.
 
 ## One thing the coding agent changes about every other skill
 
