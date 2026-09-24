@@ -441,29 +441,26 @@ def check_getting_started_is_reachable() -> None:
 def check_graph_entry_points() -> None:
     """The graph is reached from two places: the header, beside Getting
     started, on every page; and each skill page, which opens the graph on
-    that skill. Both are real links to /graph/ — a phone, a middle-click and
-    a browser without JS must still land somewhere — and carry the data
-    site.js needs to open the same thing as a dialog instead."""
+    that skill. Both are plain links to the /graph/ page, on every screen —
+    the graph is a page of its own, never a dialog over another one."""
     print("graph entry points check")
     index_html = render_index(FIXTURE["categories"], FIXTURE["skills"])
     header = index_html.split("<main", 1)[0]
     check("the header carries a Graph link to /graph/",
-          'class="site-header__nav-link site-header__nav-link--graph" href="/graph/"' in header)
+          'class="site-header__nav-link site-header__nav-link--graph" href="/graph/">' in header)
     check("...after Getting started, not before it",
           header.index("Getting started") < header.index(">Graph<"))
-    check("...and it knows where the dialog's script and data live",
-          'data-graph-script="/assets/graph.js"' in header
-          and 'data-graph-data="/graph/graph.json"' in header and "data-graph-open" in header)
     check("the Getting started link is untouched by its new neighbour",
           '<a class="site-header__nav-link" href="/getting-started/">Getting started</a>' in header)
+    check("no page carries a dialog launcher any more — every Graph link is a link",
+          "data-graph-open" not in index_html)
 
     skill_html = render_skill_page(
         FIXTURE["skills"]["formidable"], prev_skill=None, next_skill=None,
         siblings=[], categories=FIXTURE["categories"],
     )
     check("a skill page links to its own place in the graph",
-          'class="skill-article__graph-link" href="/graph/#skill=formidable"' in skill_html
-          and 'data-graph-skill="formidable"' in skill_html)
+          'class="skill-article__graph-link" href="/graph/#skill=formidable">' in skill_html)
     check("...on the category tag's line, so the tag keeps its own markup",
           '<div class="skill-article__meta">\n    <span class="tag skill-article__tag">' in skill_html)
 
@@ -475,17 +472,22 @@ def check_graph_entry_points() -> None:
     check("the page holds a host for graph.js and loads it",
           'data-graph-host data-graph-data="/graph/graph.json"' in graph_html
           and '<script src="/assets/graph.js" defer></script>' in graph_html)
+    check("...under a real <h1>, which stays the page's heading once the app has the screen",
+          '<h1 class="graph-page__title" id="graph-page-title">The crumb</h1>' in graph_html)
     check("...says what the graph shows in plain text, before any script runs",
           "How 98 skills lean on each other: 573 cross-references" in graph_html)
     check("...and says what is missing when JS is off, rather than showing an empty box",
           "<noscript>" in graph_html)
+    check("...with no breadcrumb spending the height the graph needs",
+          'class="container breadcrumb"' not in graph_html)
 
     base = "/tbaguette-skills"
     prefixed = render_index(FIXTURE["categories"], FIXTURE["skills"], base_path=base)
+    prefixed_graph = render_graph_page(FIXTURE["categories"], base_path=base)
     check("every graph URL carries the base path",
           f'href="{base}/graph/"' in prefixed
-          and f'data-graph-script="{base}/assets/graph.js"' in prefixed
-          and f'data-graph-data="{base}/graph/graph.json"' in prefixed)
+          and f'<script src="{base}/assets/graph.js" defer></script>' in prefixed_graph
+          and f'data-graph-data="{base}/graph/graph.json"' in prefixed_graph)
 
 
 def check_i18n_getting_started_page() -> None:

@@ -29,7 +29,7 @@
   17. Responsive notes (fluid by default; hard breakpoints only where noted)
   18. Update-check modal
   19. The skill graph ("the crumb"): header and skill-page entry points,
-      the dialog and /graph/ page that hold it, and the app's chrome
+      the full-viewport /graph/ page that holds it, and the app's chrome
 */
 
 /* ---------------------------------------------------------------------------
@@ -3523,7 +3523,7 @@ a.skill-link--bare:focus-visible {
    A loaf's crumb is the web of cells inside it, which is what this draws of
    the library: every skill, and every place one names another. The canvas is
    drawn by graph.js; everything here is the chrome around it, the header and
-   skill-page links that open it, and the dialog and page that hold it.
+   skill-page links that lead to it, and the page that holds it.
 
    The twelve family colours are the one place this site carries more than
    its gold and its ember, and they are data colours, not decoration: one per
@@ -3620,67 +3620,27 @@ a.skill-link--bare:focus-visible {
   text-decoration-color: currentColor;
 }
 
-/* --- the dialog -------------------------------------------------------------- */
-
-.graph-dialog {
-  width: min(100vw - 2 * var(--space-5), 112rem);
-  height: min(100dvh - 2 * var(--space-5), 64rem);
-  max-width: none;
-  max-height: none;
-  margin: auto;
-  padding: 0;
-  overflow: hidden;
-  color: var(--text-primary);
-  background: var(--bg);
-  border: 1px solid color-mix(in oklch, var(--accent) 45%, transparent);
-  border-radius: var(--radius-lg);
-  box-shadow:
-    0 0 0 1px color-mix(in oklch, var(--accent) 10%, transparent),
-    0 40px 90px -30px hsl(var(--shadow-ink) / 0.8),
-    0 0 120px -40px color-mix(in oklch, var(--accent-solid) 55%, transparent);
-}
-
-/* Explicit rather than left to the UA sheet, for the reason the notes
-   dialog spells out: a closed dialog stays hidden only while nothing else
-   declares its display. */
-.graph-dialog:not([open]) { display: none; }
-
-.graph-dialog::backdrop {
-  background: hsl(var(--scrim) / 0.72);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
-.graph-dialog__host { height: 100%; }
-
-html.has-graph-dialog { overflow: hidden; }
-
-/* Entrance only, from a visible resting state — the notes dialog's ordering,
-   for the notes dialog's reason: a browser that skips the transition shows
-   the dialog, never an invisible one holding the page hostage. */
-@media (prefers-reduced-motion: no-preference) {
-  .graph-dialog {
-    transition:
-      opacity var(--duration-view) var(--ease-out),
-      transform var(--duration-view) var(--ease-out);
-  }
-  @starting-style {
-    .graph-dialog[open] { opacity: 0; transform: translateY(16px) scale(0.975); }
-  }
-  .graph-dialog::backdrop { transition: opacity var(--duration-view) var(--ease-out); }
-  @starting-style {
-    .graph-dialog[open]::backdrop { opacity: 0; }
-  }
-}
-
 /* --- the page ------------------------------------------------------------------ */
+
+/* Before graph.js runs (and if it never does) this is an ordinary page: a
+   head saying what the graph shows, a host holding the noscript note, the
+   footer. Once the app mounts it adds .graph-live to <body>, and the page
+   becomes the instrument: the body is exactly one viewport tall, the host
+   takes every pixel below the site header, edge to edge, and the head and
+   footer step out of the way. The head is hidden visually only — it is still
+   the page's heading for a screen reader. The footer is removed outright:
+   below a canvas that spends the wheel on zooming it could only be reached
+   by the scrollbar, and everything in it is one click away in the header.
+
+   The height is max(100dvh, 30rem) rather than 100dvh, so a phone held
+   sideways scrolls to a usable graph rather than squeezing it flat. */
 
 .graph-page__head {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: var(--space-2) var(--space-5);
-  padding-top: var(--space-2);
+  padding-top: var(--space-6);
   padding-bottom: var(--space-4);
 }
 
@@ -3699,33 +3659,67 @@ html.has-graph-dialog { overflow: hidden; }
 }
 
 .graph-host {
-  width: min(100% - 2 * var(--space-4), var(--container-wide) + 16rem);
-  /* The header, breadcrumb and this page's own head measure ~15rem on a
-     wide screen; what is left of the viewport is the graph's. */
-  height: clamp(30rem, 100svh - 15.5rem, 62rem);
+  width: min(100% - 2 * var(--space-4), var(--container-wide));
   margin: 0 auto var(--space-8);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
   background: var(--bg);
 }
 
 .graph-host__noscript {
-  padding: var(--space-6);
+  padding: var(--space-5) 0;
   max-width: var(--measure-prose);
   color: var(--text-secondary);
 }
 
+.page-graph.graph-live {
+  display: flex;
+  flex-direction: column;
+  height: max(100dvh, 30rem);
+  min-height: 0;
+}
+
+.page-graph.graph-live > main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.page-graph.graph-live .graph-page {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.page-graph.graph-live .graph-page__head {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.page-graph.graph-live .graph-host {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.page-graph.graph-live .site-footer { display: none; }
+
+/* On a phone the site header wraps to four rows, and every one of them is
+   height the graph does not get. The build time is metadata every other page
+   still shows; here it gives its two rows back, and the nav and the theme
+   toggle close up onto one. */
 @media (max-width: 40rem) {
-  .graph-page__head { padding-bottom: var(--space-3); }
-  .graph-page__title { font-size: var(--text-5); }
-  .graph-page__lede { font-size: var(--text-2); }
-  .graph-host {
-    width: 100%;
-    height: calc(100svh - 4rem);
-    border-radius: 0;
-    border-inline: 0;
-  }
+  .page-graph.graph-live .site-header__updated { display: none; }
+  .page-graph.graph-live .site-header__inner { padding-block: var(--space-3); }
 }
 
 /* --- the app ---------------------------------------------------------------------- */
@@ -4644,12 +4638,13 @@ a.crumb-chip:hover,
 
 @container (max-width: 46rem) {
   .crumb__bar { gap: var(--space-2); padding: var(--space-2) var(--space-3); }
-  .crumb__heading { flex-basis: 100%; }
-  .crumb__heading--page { display: none; }
+  /* The page's heading names the graph already, and the header's Graph link
+     is marked current; the repeated title is a row the stage can have. */
+  .crumb__heading { display: none; }
   .crumb__views { order: 1; }
-  .crumb__search { order: 2; flex: 1; min-width: 9rem; }
+  .crumb [data-crumb-trace] { order: 2; margin-inline-start: auto; }
+  .crumb__search { order: 3; flex: 1 1 100%; min-width: 9rem; }
   .crumb__search input { width: 100%; }
-  .crumb [data-crumb-trace] { order: 3; }
   .crumb [data-crumb-trace] span { display: none; }
   .crumb [data-crumb-trace] { width: 2.25rem; padding: 0; }
   .crumb__view { padding: 0.35em 0.7em; }
@@ -4749,5 +4744,4 @@ a.crumb-chip:hover,
   .crumb-family[aria-pressed='true'],
   .crumb-note[aria-pressed='true'] { outline: 2px solid Highlight; }
   .crumb-swatch { forced-color-adjust: none; }
-  .graph-dialog { border: 2px solid CanvasText; }
 }
