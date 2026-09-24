@@ -66,6 +66,11 @@ Everything above the first `##` is preamble and is never rendered.
 - `refactoring-safely` now says to check a scripted replace's search text is non-empty and matches
   the expected number of times before writing: an empty pattern matches everywhere and inserts the
   replacement between every character.
+- `structuring-an-implementation-plan` now gives each task a `Depends on:` and a
+  `Parallel-safe:` line and, when the plan may run in parallel, a phase list up front —
+  so a controller fanning tasks out, or Copilot CLI's `/fleet` partitioning the plan
+  itself, knows which tasks can run together instead of guessing. Its self-review
+  gains a parallel-safety check: no two tasks in a phase share a file.
 - `atomic-commits` no longer has you set your remaining changes aside to test each commit of a split
   when others commit from the same checkout: while the build runs, their next commit can sweep up
   the half-finished state. The working tree now stays at its final state; each commit is tested in

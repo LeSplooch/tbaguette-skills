@@ -93,6 +93,9 @@ The blockquote is the whole handoff instruction — it's how whoever picks up th
 - Consumes: [what this task uses from earlier tasks — exact names and signatures]
 - Produces: [what later tasks rely on — exact names and types]
 
+**Depends on:** [Task numbers whose Produces this task consumes, or whose files it also writes — or "none"]
+**Parallel-safe:** [yes — its write set is disjoint from every other task in its phase / no — why]
+
 - [ ] **Step 1: [one action]**
 - [ ] **Step 2: [one action]**
 - [ ] **Step N: Commit**
@@ -102,6 +105,18 @@ Two details carry more weight than they look like they should:
 
 - **Line ranges on Modify, not just the path.** `existing.ext:123-145` tells the implementer where to look before they open the file; a bare path means reading the whole thing to find the change.
 - **Interfaces is the only place cross-task agreement lives.** An implementer working Task 7 will not read Task 3's steps — they read Task 7's Interfaces block and trust it. If Task 3 actually produces a function called `clearLayers()` and Task 7's Interfaces block says `clearFullLayers()`, that mismatch ships, because nothing forces anyone to notice before runtime.
+
+## Phases, when the plan may run in parallel
+
+A plan executed by more than one worker at a time — a controller fanning tasks out (`fanning-out-independent-work`), or a harness that partitions a plan across subagents by itself, as Copilot CLI's `/fleet` does — can only do it safely if the plan says which tasks may run together. Nobody downstream re-derives that: a partitioner reads `Depends on:` and `Parallel-safe:` and trusts them the way an implementer trusts an Interfaces block. So when parallel execution is on the table, group the tasks into phases right after the header:
+
+```markdown
+## Phase 1 (parallel): Task 1, Task 2, Task 4
+## Phase 2 (after Phase 1): Task 3 — consumes Task 1's parse_config
+## Phase 3 (sequential): Task 5 — writes files Tasks 2 and 4 also write
+```
+
+A phase holds only tasks with no dependency on one another and no shared path in their write sets; a task goes in the first phase after every task it depends on; tasks that share a file land in different phases. A shared registry, index, or changelog every task would touch counts as a shared file (`fanning-out-independent-work`'s collisions). A wrong `Parallel-safe: yes` is a correctness bug, not a performance one — two workers edit one file at once, and whichever finishes last wins. A plan that will only ever run task by task can leave the two lines at "none" and "no" and skip the phase list.
 
 ## No placeholders
 
@@ -127,6 +142,7 @@ Before calling the plan finished, check it against the spec with fresh eyes — 
 | Spec coverage | For every section or requirement in the spec, which task implements it? List the gaps. |
 | Placeholder scan | Does anything match the "No placeholders" table above? |
 | Type consistency | Do the names, signatures, and types a later task's Interfaces block relies on match what the producing task actually defines? |
+| Parallel safety | Within each phase, do any two tasks share a path in their write sets, or does any task consume something produced inside its own phase? |
 | Task decomposition | Does every task have a clear boundary, with steps concrete enough to act on without guessing? |
 | Buildability | Could an implementer with zero context on this codebase follow the plan start to finish without getting stuck? |
 
