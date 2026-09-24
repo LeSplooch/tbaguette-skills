@@ -124,6 +124,15 @@ A layer that hides which backend served is not a neutral convenience for
 benchmarking. If it cannot be pinned or cannot report, say so as a limit on the
 result rather than reporting the number as though it were about the code.
 
+The unit a rate is aggregated over may not be one thing either. A per-process frame-drop
+percentage, a per-container error rate, or a per-service p99 counts everything
+that unit did, including work the change never touched. When a before/after on
+the ratio moves and the change could not have moved the numerator, look at the
+denominator: a second window that stopped redrawing takes its cheap frames with
+it, and the percentage can double with no rendering code changed. List what else
+the measured unit was doing in each arm, and compare absolute counts alongside
+the ratio.
+
 ## Reliable is not large
 
 Once A and B are being compared properly, the rule that decides which one wins
