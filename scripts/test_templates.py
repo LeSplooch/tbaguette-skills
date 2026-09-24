@@ -538,8 +538,8 @@ def check_graph_banner() -> None:
           'data-families="[1,10]"' in banner and 'data-links="[[0,1,5]]"' in banner
           and "&quot;Testing&quot;" in banner)
     check("its button goes to the graph page", 'class="graph-banner__cta" href="/graph/"' in banner)
-    check("the dismiss button starts hidden, so a page without JS shows no dead control",
-          "data-graph-banner-close hidden" in banner)
+    check("it cannot be dismissed: no close control, nothing remembered per reader",
+          "graph-banner__close" not in banner and "banner-hidden" not in html)
 
     unreachable = dict(summary, reachable=False)
     html_u = render_index(FIXTURE["categories"], FIXTURE["skills"], graph_banner=unreachable)
@@ -552,9 +552,6 @@ def check_graph_banner() -> None:
                          last_updated_utc="2099-01-01T00:00:00+00:00")
     check("a build past the announcement date leaves the banner out",
           '<aside class="graph-banner"' not in after)
-    check("the head hides a banner this reader dismissed before first paint, keyed to "
-          "this announcement's date so the next one still shows",
-          f"'{templates.GRAPH_BANNER_STORAGE_KEY}')==='{templates.GRAPH_NEW_UNTIL}'" in html)
 
 
 def check_i18n_getting_started_page() -> None:

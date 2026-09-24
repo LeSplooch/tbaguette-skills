@@ -153,7 +153,6 @@ class Strings:
     graph_banner_stat_mutual: str = "pairs cite each other"
     graph_banner_stat_steps: str = "steps at most, between any two"
     graph_banner_cta: str = "Open the graph"
-    graph_banner_close: str = "Hide this announcement"
 
 
 ENGLISH_STRINGS = Strings(
@@ -887,24 +886,15 @@ def graph_is_new(last_updated_utc: str) -> bool:
 
 _THEME_STORAGE_KEY = "tbaguette-theme"
 
-# Holds the GRAPH_NEW_UNTIL of the announcement a reader dismissed, so the
-# next announcement -- a different date -- shows again on its own.
-GRAPH_BANNER_STORAGE_KEY = "tbaguette-graph-banner-hidden"
-
 # Runs synchronously in <head>, before first paint, so the stored or
 # OS-preferred theme applies before any pixel is drawn — the alternative is a
 # flash of the wrong theme on every reload. Deliberately tiny and dependency
 # free; the rest of the theme logic (the toggle button) lives in site.js.
-# It also hides a graph banner the reader already dismissed, for the same
-# reason: waiting for site.js would paint the banner and then pull the page
-# up by its height.
 _THEME_BOOTSTRAP_JS = (
     "(function(){try{"
     f"var s=localStorage.getItem('{_THEME_STORAGE_KEY}');"
     "var wantsFlour=s?s==='flour':matchMedia('(prefers-color-scheme: light)').matches;"
     "if(wantsFlour){document.documentElement.setAttribute('data-theme','flour');}"
-    f"if(localStorage.getItem('{GRAPH_BANNER_STORAGE_KEY}')==='{GRAPH_NEW_UNTIL}')"
-    "{document.documentElement.classList.add('graph-banner-hidden');}"
     "}catch(e){}})();"
 )
 
@@ -1476,7 +1466,10 @@ def _render_graph_banner(summary: dict | None, base_path: str = "", *,
     carrying travellers, in the graph's own colours. That picture rides in
     the page as data attributes -- a few hundred bytes from
     skill_graph.banner_summary -- so a teaser never fetches the graph's
-    350 KB. Every number in the copy comes from the same summary."""
+    350 KB. Every number in the copy comes from the same summary.
+
+    It cannot be dismissed. It is up for two weeks and then gone for
+    everyone, so the date is the only thing that takes it down."""
     if not summary or not graph_is_new(last_updated_utc):
         return ""
     graph_url = _locale_url(locale, base_path, GRAPH_PATH)
@@ -1496,7 +1489,6 @@ def _render_graph_banner(summary: dict | None, base_path: str = "", *,
         for value, label in stats
     )
     arrow = _icon("icon-route", css_class="icon graph-banner__cta-icon", base_path=base_path)
-    close = _icon("icon-close", base_path=base_path)
     return f"""<aside class="graph-banner" aria-label="{escape_html(strings.graph_banner_label)}" data-graph-banner data-graph-new-until="{GRAPH_NEW_UNTIL}" data-families="{escape_html(families)}" data-family-titles="{escape_html(family_titles)}" data-links="{escape_html(links)}">
       <canvas class="graph-banner__canvas" aria-hidden="true"></canvas>
       <div class="graph-banner__body">
@@ -1505,7 +1497,6 @@ def _render_graph_banner(summary: dict | None, base_path: str = "", *,
         <dl class="graph-banner__stats">{stats_html}</dl>
         <a class="graph-banner__cta" href="{graph_url}">{arrow}<span>{escape_html(strings.graph_banner_cta)}</span></a>
       </div>
-      <button class="graph-banner__close" type="button" data-graph-banner-close hidden aria-label="{escape_html(strings.graph_banner_close)}" title="{escape_html(strings.graph_banner_close)}">{close}</button>
     </aside>"""
 
 

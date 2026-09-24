@@ -1156,8 +1156,6 @@
   // the "new" treatment against the reader's own clock once the build's
   // announcement date has passed.
 
-  var GRAPH_BANNER_KEY = 'tbaguette-graph-banner-hidden';
-
   // The build leaves the announcement out once its own clock is past the
   // date; this covers the days between builds, against the reader's clock in
   // UTC, the same zone the build compared in.
@@ -1258,17 +1256,6 @@
   function initGraphBanner() {
     var banner = document.querySelector('[data-graph-banner]');
     if (!banner) return;
-    var until = banner.getAttribute('data-graph-new-until');
-    var stopped = false;
-    var close = banner.querySelector('[data-graph-banner-close]');
-    if (close) {
-      close.hidden = false;
-      close.addEventListener('click', function () {
-        try { localStorage.setItem(GRAPH_BANNER_KEY, until); } catch (e) {}
-        stopped = true;
-        banner.parentNode.removeChild(banner);
-      });
-    }
     var canvas = banner.querySelector('canvas');
     var cta = banner.querySelector('.graph-banner__cta');
     if (!canvas || !canvas.getContext) return;
@@ -1415,11 +1402,11 @@
 
     function loop(now) {
       raf = 0;
-      if (stopped || !visible || document.hidden) return;
+      if (!visible || document.hidden) return;
       draw(now);
       if (!reduced) raf = requestAnimationFrame(loop);
     }
-    function kick() { if (!raf && !stopped) raf = requestAnimationFrame(loop); }
+    function kick() { if (!raf) raf = requestAnimationFrame(loop); }
 
     canvas.addEventListener('pointermove', function (e) {
       var r = canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;

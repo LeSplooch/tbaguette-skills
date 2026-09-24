@@ -3737,8 +3737,7 @@ a.skill-link--bare:focus-visible {
    constellation of the twelve families drawn by site.js. The copy sits on the
    left over a fade of the page colour, so every word is measured against
    --bg rather than against whatever the canvas happens to be drawing
-   behind it. Hidden before first paint once dismissed (see the head
-   bootstrap script), so it never flashes in and out. */
+   behind it. */
 
 .graph-banner {
   position: relative;
@@ -3772,8 +3771,6 @@ a.skill-link--bare:focus-visible {
     color-mix(in oklch, var(--accent) 75%, transparent) 25%,
     color-mix(in oklch, var(--accent) 75%, transparent) 75%, transparent);
 }
-
-.graph-banner-hidden .graph-banner { display: none; }
 
 .graph-banner__canvas {
   position: absolute;
@@ -3881,26 +3878,6 @@ a.skill-link--bare:focus-visible {
 .graph-banner__cta:hover { background: var(--accent-solid-hover); }
 .graph-banner__cta-icon { width: 1.15em; height: 1.15em; }
 
-.graph-banner__close {
-  position: absolute;
-  z-index: 2;
-  top: var(--space-3);
-  inset-inline-end: var(--space-3);
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  color: var(--text-secondary);
-  background: color-mix(in oklch, var(--surface) 80%, transparent);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  cursor: pointer;
-}
-
-.graph-banner__close[hidden] { display: none; }
-.graph-banner__close:hover { color: var(--text-accent); border-color: var(--border-strong); }
-.graph-banner__close .icon { width: 1.1em; height: 1.1em; }
-
 @media (prefers-reduced-motion: no-preference) {
   .graph-banner__cta:hover { transform: translateY(-1px); }
 }
@@ -3928,7 +3905,7 @@ a.skill-link--bare:focus-visible {
 @media (forced-colors: active) {
   .graph-banner { border: 2px solid CanvasText; }
   .graph-banner::before, .graph-banner__body::before { display: none; }
-  .graph-banner__stat, .graph-banner__close { border: 1px solid CanvasText; }
+  .graph-banner__stat { border: 1px solid CanvasText; }
   .graph-banner__cta { border: 1px solid ButtonText; }
 }
 
