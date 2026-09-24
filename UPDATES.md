@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-24 — Reading the log is a diagnostic too (contributed), and six smaller sharpenings
+## 2026-09-24 — Reading the log is a diagnostic too (contributed), and seven smaller sharpenings
 
 - From an outside contribution: `observing-production-safely` now says that rung 1 is only free when the data is
   read without costing the struggling host anything. Whether a whole-file read or
@@ -55,6 +55,12 @@ Everything above the first `##` is preamble and is never rendered.
   or scroll events, a suspended app, a sleeping host. Comparing against the real path puts every
   such failure down to the environment; the question that sorts them is whether production can be
   in that state too, and for a view left in the background it can.
+- `tending-tbaguette`'s approval gate (nothing is pushed, forked, or opened as a pull request
+  without an explicit yes for that one contribution) now has a heading of its own. It used to sit
+  under the heading about reopening settled questions, where anyone scanning the headings could
+  miss it and a reorganization of that section could carry it off unnoticed. The paragraph on
+  re-reading a staged pull request body or review comment just before sending it now lives in the
+  contribution procedure, at the step where an unattended run stops to wait for the yes.
 
 ## 2026-09-23 — A contributor's site build aimed at the wrong address, and a retry that forgot its first failure
 

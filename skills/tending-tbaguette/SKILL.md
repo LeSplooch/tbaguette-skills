@@ -510,7 +510,7 @@ circumstance somebody would have to notice. That preference belongs to settled e
 specifically; the deferral premises above govern `## Pending`, and those are legitimately
 circumstances, because what they wait on is a second sighting rather than a number.
 
-
+## The approval gate that no absent human lifts
 
 <EXTREMELY-IMPORTANT>
 Nothing gets pushed, forked, or opened as a pull request without an
@@ -586,18 +586,9 @@ is the one category no confidence level and no envelope converts into a
 self-answer. So an unattended run does everything up to it — the edit, the
 suite, the adversarial pass, the commit on a local branch — and then stops with
 the work staged and a report saying exactly what is waiting for a yes. Reaching
-that point is the run finishing correctly, not failing.
-
-**Whatever gets staged for that later yes is a file, and the file is what gets
-posted — not what it was written to mean.** A pull request body or a review
-comment drafted now for a future pass to send often carries its own scaffolding
-aimed at whoever reads it before that later yes arrives: a note that it is not
-yet sent, the exact command to send it with, an instruction to delete this
-header first. A posting command does not know which lines were for that future
-reader and which were for the pull request's own audience — it sends whatever
-bytes it is handed. Read the literal content immediately before the send, once
-the yes has actually arrived, rather than trusting that the file already says
-what it is supposed to say.
+that point is the run finishing correctly, not failing. Anything staged for that
+yes is read again, word for word, just before it is sent; the *Ask* step of
+`reference/contribution-procedure.md` explains why.
 
 ## Contribution procedure
 

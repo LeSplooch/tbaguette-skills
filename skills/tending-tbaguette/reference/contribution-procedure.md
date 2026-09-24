@@ -248,6 +248,17 @@ is fixed by retrying the same command in the same checkout.
    nobody is there to answer, this is where the run ends, with the work
    committed on a local branch and a report saying what is waiting.
 
+   **Whatever gets staged for that later yes is a file, and the file is what gets
+   posted — not what it was written to mean.** A pull request body or a review
+   comment drafted now for a future pass to send often carries its own scaffolding
+   aimed at whoever reads it before that later yes arrives: a note that it is not
+   yet sent, the exact command to send it with, an instruction to delete this
+   header first. A posting command does not know which lines were for that future
+   reader and which were for the pull request's own audience — it sends whatever
+   bytes it is handed. Read the literal content immediately before the send, once
+   the yes has actually arrived, rather than trusting that the file already says
+   what it is supposed to say.
+
 9. **Push and open the pull request:**
 
    ```bash
