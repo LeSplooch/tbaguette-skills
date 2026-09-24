@@ -1,8 +1,11 @@
 # GitHub Copilot Tool Mapping
 
-Covers all three surfaces TBaguette installs into: Copilot CLI, Copilot in
-VS Code, and the Copilot coding agent. Where they differ, it says so; where
-nothing below distinguishes them, they behave the same.
+Covers the surfaces TBaguette installs into: Copilot CLI, the GitHub Copilot
+desktop app, Copilot in VS Code, and the Copilot coding agent. Where they
+differ, it says so; where nothing below distinguishes them, they behave the
+same. The desktop app runs the same agent as the CLI, so everything said about
+the CLI holds there too, and the section on the desktop app adds what it has on
+top.
 
 Almost nothing in this library needs mapping. TBaguette's skills describe
 *actions* — read a file, run a command, dispatch a subagent — and Copilot CLI
@@ -117,6 +120,43 @@ Where no `task` tool is offered, every one of those skills already carries its
 own fallback: do the work inline, in sequence, rather than inventing a dispatch
 that will not run. Same rule for todo tracking and web fetch — degrade, don't
 improvise.
+
+## The desktop app
+
+The GitHub Copilot desktop app hosts the same agent runtime as the CLI, and it
+reads the same `~/.copilot/` home for global instructions, agents, skills and
+extensions. Everything in the sections above therefore applies there
+unchanged. Three things are new.
+
+**A project session is a CLI session; the general chat is not.** Work in a
+repository happens in a project session, bound to a checkout. There the
+session-start context, the per-prompt reminder, the global instructions and
+the custom agents all arrive, as they do on the CLI, provided this plugin's
+hooks run. They are `bash` scripts, so on Windows the app needs a `bash` it can
+find. The session-start context arrives as a block prepended to the first
+message rather than as a separate one. The app's general chat is a lighter surface with no repository
+behind it. It was observed not to offer custom agents as `task` types and not
+to carry the global instructions. There, a fan-out goes to the built-in
+`general-purpose` and `explore` agents, and repository changes are handed to
+a project session instead of being made from the chat.
+
+**A worker can be a whole session.** Besides `task`, the app gives the agent
+`create_session`, which starts another project session. That session has its
+own agent, its own context and, with `workspace_type: "worktree"`, its own git
+worktree and branch. With `notify_on_idle` set, the creator is told when it
+finishes, so it does not poll. It can read the worker's state with
+`get_session`, message it with `send_session_message`, and archive it with
+`archive_session`, which removes the worktree. This is the isolation `task`
+lacks. Use it for the lanes that need it: lanes that would collide on a file,
+on the index lock or on a build tree, lanes that run long, and lanes the user
+should get back as their own branch. It costs a full session each, so `task`
+stays the default for small disjoint lanes. The gate does not move: a
+worker's summary is a claim, and its diff is reviewed before anything is
+integrated (`delegating-tasks-with-review-gates`).
+
+**Plan approval can fan out too.** Approving a plan in the app offers the same
+build-on-autopilot-with-fleet choice as the CLI, so the same markup from
+`structuring-an-implementation-plan` is what makes that split safe.
 
 ## One thing the coding agent changes about every other skill
 

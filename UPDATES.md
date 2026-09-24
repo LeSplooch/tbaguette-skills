@@ -50,6 +50,10 @@ Everything above the first `##` is preamble and is never rendered.
   commonest ad-hoc diagnostic of all can be the thing that finishes the host off,
   while looking like the cheapest rung on the ladder because nothing was enabled
   and nothing was written.
+- The Copilot mapping now covers the GitHub Copilot desktop app. It runs the same agent as the CLI,
+  and it can also run a parallel lane as a whole project session in its own worktree
+  (`create_session`), which fixes the shared checkout that `task` agents write into. The app's
+  general chat offers no custom agents, so repository work goes to a project session.
 - On GitHub Copilot CLI, `using-tbaguette`'s Copilot mapping now says how a fan-out is
   actually spelled there: parallel `task` calls go in one response, an agent file is a
   role, a subagent starts without TBaguette's context and shares your checkout, and three
