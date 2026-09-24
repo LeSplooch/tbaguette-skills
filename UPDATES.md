@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-24 — Reading the log is a diagnostic too (contributed), and seven smaller sharpenings
+## 2026-09-24 — Reading the log is a diagnostic too (contributed), and eight smaller sharpenings
 
 - From an outside contribution: `observing-production-safely` now says that rung 1 is only free when the data is
   read without costing the struggling host anything. Whether a whole-file read or
@@ -61,6 +61,11 @@ Everything above the first `##` is preamble and is never rendered.
   miss it and a reorganization of that section could carry it off unnoticed. The paragraph on
   re-reading a staged pull request body or review comment just before sending it now lives in the
   contribution procedure, at the step where an unattended run stops to wait for the yes.
+- `flaky-test-triage` now names a cause for a test that times out waiting for a message at a steady
+  rate while its passing runs are fast: an earlier wait in the same test read that message off the
+  socket or queue and threw it away as noise, which happens whenever two messages with no guaranteed
+  order arrive the other way round. A longer timeout cannot bring the message back; the fix is one
+  wait for the whole set, in any order.
 
 ## 2026-09-23 — A contributor's site build aimed at the wrong address, and a retry that forgot its first failure
 

@@ -1,6 +1,6 @@
 ---
 name: flaky-test-triage
-description: Use when a test passes on rerun, fails only in CI, fails only when the whole suite runs, fails after midnight or across a DST change, fails under parallel execution, or fails on a loaded machine; or when someone proposes a retry, a skip, or a longer timeout to make the build green. Covers intermittent failures, order dependence, shared state, races, and quarantine.
+description: Use when a test passes on rerun, fails only in CI, fails only when the whole suite runs, fails after midnight or across a DST change, fails under parallel execution, fails on a loaded machine, or intermittently times out waiting for a message or event; or when someone proposes a retry, a skip, or a longer timeout to make the build green. Covers intermittent failures, order dependence, shared state, races, and quarantine.
 ---
 
 # Flaky test triage
@@ -34,11 +34,14 @@ Independent per-test reliability compounds. At 99.9% per test, a 500-test suite 
 | Starts failing after N runs, then always | Resource leak: file descriptors, connections, disk, ports in TIME_WAIT | Watch handle and connection counts across the run |
 | Fails only on the first run of the day or in a clean environment | Test depends on a warm cache, existing data, or a previously-created account | Run against a freshly provisioned environment |
 | Order-dependent assertion on a callback-built list | The callback only preserves delivery order under a real dispatcher/event-loop context; without one — the normal case in a test harness — the guarantee disappears, whether the runtime falls back to unordered dispatch, throws, or no-ops | Check whether the code normally runs under a real dispatcher or event loop that the test doesn't supply |
+| Fails at a stable rate, always on a wait's timeout; passing runs are fast, and a longer timeout only makes the failures slower | An earlier wait read the message and threw it away: where reading takes a message off the stream (a socket, queue, channel, or a child process's output), a helper that skips what it is not waiting for deletes it for every later wait, and two messages with no guaranteed order sometimes arrive the other way round | Log every message each wait reads, including the ones it skips; ask whether the first wait skips the kind the next one waits for, and whether anything guarantees their order |
 | A different assertion fails each time | A real race in the product, not in the test | Stop triaging the test; treat it as a production incident |
 
 The last row is the one that gets misfiled most often, and it is the one that matters most.
 
 The order-dependent-callback row has the opposite prescription: the fix is asserting an order-independent invariant — max value reached, set membership, monotonic non-decrease — instead of position, or giving the test a synchronous stand-in for the missing dispatcher context, never a retry.
+
+Like the callback row, the wait-timeout row is usually the test's defect; it is the product's only if the protocol promises the order that flipped. Wait once for the whole set of expected messages, in any order, under one deadline, or make the helper keep what it skips for the next wait to read first. A longer timeout cannot bring the message back: it is not late, it was read and thrown away, and the failure rate is how often the order flips.
 
 ## Diagnosis
 
