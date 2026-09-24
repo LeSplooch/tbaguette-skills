@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-24 — Reading the log is a diagnostic too (contributed), and eight smaller sharpenings
+## 2026-09-24 — Reading the log is a diagnostic too (contributed), and nine smaller sharpenings
 
 - From an outside contribution: `observing-production-safely` now says that rung 1 is only free when the data is
   read without costing the struggling host anything. Whether a whole-file read or
@@ -66,6 +66,10 @@ Everything above the first `##` is preamble and is never rendered.
   socket or queue and threw it away as noise, which happens whenever two messages with no guaranteed
   order arrive the other way round. A longer timeout cannot bring the message back; the fix is one
   wait for the whole set, in any order.
+- `flaky-test-triage` now says a clean run count after a race fix is evidence only if the race still
+  happened. A fix can shift the timing so the bad interleaving stops occurring, and the count comes
+  back clean for the wrong reason. Count the interleaving itself on the fixed build: the fix is
+  verified when it still occurs at about the old failure rate and every run that saw it passed.
 
 ## 2026-09-23 — A contributor's site build aimed at the wrong address, and a retry that forgot its first failure
 

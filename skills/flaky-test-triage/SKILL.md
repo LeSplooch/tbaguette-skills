@@ -1,6 +1,6 @@
 ---
 name: flaky-test-triage
-description: Use when a test passes on rerun, fails only in CI, fails only when the whole suite runs, fails after midnight or across a DST change, fails under parallel execution, fails on a loaded machine, or intermittently times out waiting for a message or event; or when someone proposes a retry, a skip, or a longer timeout to make the build green. Covers intermittent failures, order dependence, shared state, races, and quarantine.
+description: Use when a test passes on rerun, fails only in CI, fails only when the whole suite runs, fails after midnight or across a DST change, fails under parallel execution, fails on a loaded machine, or intermittently times out waiting for a message or event; or when someone proposes a retry, a skip, or a longer timeout to make the build green, or declares a flaky test fixed because it stopped failing after a change. Covers intermittent failures, order dependence, shared state, races, and quarantine.
 ---
 
 # Flaky test triage
@@ -51,6 +51,8 @@ Like the callback row, the wait-timeout row is usually the test's defect; it is 
 4. **Bisect the order.** With a reproducing order fixed, binary-search the prefix of tests run before the victim. Roughly 10 runs isolates one polluter out of 1,000. This finds shared-state bugs no amount of reading finds.
 5. **Vary one axis at a time.** Threads: parallel versus single. Clock: shifted date and non-hour-offset timezone. Load: constrained CPU. Randomness: fixed seed. Each axis that changes the failure rate names the category.
 6. **Attribute.** Write down whether the defect is in the test or the product before writing any fix. A fix applied without attribution usually just moves the flake. When the defect is in the test — it's exercising something inherently non-deterministic rather than a real product race — `testing-the-untestable` covers making that source of non-determinism controllable instead of retried around.
+
+**A clean run count after a race fix is evidence only if the race still happened.** A fix can make the bad interleaving rare instead of harmless — it moves the timing and the race window closes — and the count then comes back clean for the wrong reason. So while measuring the fixed build, also count the interleaving itself, with a throwaway log line recording which order each run saw. The fix is verified when that order still turns up at about the old failure rate and every run that saw it passed; the matching rate confirms the attribution too. If the order has stopped turning up, the clean count proves nothing either way, since the fix or the log line itself may have moved the timing: force the order with `debugging-concurrency`'s injected delay and test the fix under that.
 
 ## Quarantine, with an expiry
 
