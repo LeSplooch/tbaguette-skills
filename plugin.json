@@ -22,5 +22,6 @@
     "workflow"
   ],
   "skills": "./skills/",
-  "hooks": "./hooks/hooks-copilot.json"
+  "hooks": "./hooks/hooks-copilot.json",
+  "agents": "./com.github.copilot/agents/"
 }

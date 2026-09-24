@@ -37,6 +37,7 @@ SUITES = [
     ("generate.py integration", [sys.executable, "test_generate.py"]),
     ("i18n", [sys.executable, "test_i18n.py"]),
     ("hooks", [sys.executable, "test_hooks.py"]),
+    ("copilot agents", [sys.executable, "-m", "unittest", "test_copilot_agents", "-v"]),
     ("harness manifests", [sys.executable, "test_harness_manifests.py"]),
     ("hermes bootstrap", [sys.executable, "test_hermes_bootstrap.py"]),
     ("CATALOG.md vs CATEGORIES", [sys.executable, "test_catalog.py"]),

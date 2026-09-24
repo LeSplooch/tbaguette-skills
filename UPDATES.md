@@ -92,6 +92,12 @@ Everything above the first `##` is preamble and is never rendered.
   socket or queue and threw it away as noise, which happens whenever two messages with no guaranteed
   order arrive the other way round. A longer timeout cannot bring the message back; the fix is one
   wait for the whole set, in any order.
+- On GitHub Copilot CLI, the plugin now ships three custom agents —
+  `TBaguette:implementer`, `TBaguette:reviewer` (read-only), and
+  `TBaguette:investigator` (read-only) — that `delegating-tasks-with-review-gates`
+  and `fanning-out-independent-work` can dispatch by name. Each carries its role's
+  standing rules from the skill's own templates, so a dispatch prompt only has to
+  carry the task. None pins a model: name one per dispatch, as the skill says.
 - `flaky-test-triage` now says a clean run count after a race fix is evidence only if the race still
   happened. A fix can shift the timing so the bad interleaving stops occurring, and the count comes
   back clean for the wrong reason. Count the interleaving itself on the fixed build: the fix is
