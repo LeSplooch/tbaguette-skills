@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.67</span>
+      <span class="wordmark-version" dir="ltr">v1.1.68</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-24T12:46:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T12:46:36Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T22:15:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T22:15:33Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">red-teaming-your-own-work</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-25T00:12:59+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Finishing and proving</span>
@@ -112,6 +112,7 @@
 <p>One pass. Collect every finding before fixing any of them — fixing mid-pass truncates the pass, because attention moves to the repair. Then rank and act:</p>
 <table><thead><tr><th>Finding</th><th>Action</th></tr></thead><tbody><tr><td>Wrong result on an input the system will actually receive</td><td>Fix before delivering</td></tr><tr><td>Correct, but fails on input nothing can produce</td><td>Note in the report, do not fix</td></tr><tr><td>Disagreement with the request's own design</td><td>Raise it, do not unilaterally change it</td></tr><tr><td>Naming, formatting, structure</td><td>Fix silently or leave; do not report</td></tr></tbody></table>
 <p>Fixes written during the pass are unreviewed new work carrying the same defect rate as the original — re-attack the fix specifically, not the whole artifact again. A second full pass is warranted only when the first found a defect of a <em>kind</em> you had not considered, which means the pass was aimed wrong rather than that a third is owed. A second pass yielding only nits is the signal to stop.</p>
+<p><strong>When a change is named after a class of defect, hunt that class inside the change.</strong> Work that removes silent failures, unbounded waits, or a false statement is the last place anyone looks for a fresh instance of the same class. Its author has just built the mental model that says the class is gone, and that model is what makes the new instance unreadable. So take the class the change claims to remove and search the diff for it by name, as though someone else had written the diff and made the same claim. Two instances: a startup path cleared of silent failures that gained a wait-forever call before anything was listening, and a bound placed on the outer loop of a walk, so that it limited the shape of the tree rather than the work. When the fix replaces a claim (an error message, a status line, a sentence in a report), ask what the <em>new</em> claim is false about, and list every branch that reaches it. A replacement that names one reason for a missing value, when two different reasons reach that branch, is the original defect moved one layer in.</p>
 <p>A pass that comes back clean, on work about to ship, is not evidence there is nothing left — it is precisely the moment <a class="skill-link" href="/tbaguette-skills/skills/karen-and-the-manager/"><code>karen-and-the-manager</code></a> exists for. This skill finds behavioral defects; that one runs after, adversarially, for everything a correctness-focused attack list does not aim at.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The pass finds only cosmetic issues</td><td>Asked whether it is right instead of where it is wrong</td></tr><tr><td>Confidence is higher after the review than before it</td><td>The pass confirmed intent rather than testing behaviour</td></tr><tr><td>Found a defect, fixed it, shipped without re-attacking the fix</td><td>Fixes treated as corrections rather than as new untested code</td></tr><tr><td>The review keeps expanding into a rewrite</td><td>No budget; adversarial mode has no natural stopping point</td></tr><tr><td>&quot;Edge cases are handled&quot; with no enumeration</td><td>Handled the cases you thought of, which is exactly the set that produced the defect</td></tr><tr><td>The part reviewed is the part you already doubted</td><td>Attacked the known weak point; the strong point stayed undefended</td></tr><tr><td>A large change reviews clean in one sitting</td><td>Reviewed the artifact you remember writing, not the one that exists</td></tr><tr><td>A citation is wrong in a way that survived two reviews</td><td>Nobody opened the cited file, because a reference reads as something already checked</td></tr><tr><td>A vague reference was sharpened into a precise one that is false</td><td>Naming the mechanism felt like verifying it, and the reviewer read it the same way</td></tr><tr><td>A shipped build bricks itself, phones home, or trips antivirus on a user machine</td><td>A development-audience behaviour was never re-examined when publication changed the audience</td></tr></tbody></table>

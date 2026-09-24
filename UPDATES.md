@@ -24,6 +24,22 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-25 — Four checks that come back clean for the wrong reason
+
+- `confirming-before-claiming-done`: a screenshot taken right after a resize, a navigation or a click
+  can show the frame from before the change, sometimes only in one region. When the claim is about
+  layout or state, measure that property directly, and when a picture and a same-second measurement
+  disagree, suspect the picture.
+- `red-teaming-your-own-work`: when a change is named after a class of defect (silent failures,
+  unbounded waits, a false message), search that change for a new instance of the same class. When a
+  fix replaces a message, check the new message against every path that reaches it.
+- `calibrating-confidence`: finding a feature's classes, dependency or config key in a build does not
+  show the feature is on, because frameworks ship that plumbing either way. Look for what registers or
+  enables it before saying it ships.
+- `performance-profiling`: a per-process or per-service rate counts everything that unit did. If the
+  ratio moved and the change could not have moved the numerator, check what else was feeding the
+  denominator, and compare absolute counts.
+
 ## 2026-09-24 — Reading the log is a diagnostic too (contributed), and nine smaller sharpenings
 
 - From an outside contribution: `observing-production-safely` now says that rung 1 is only free when the data is

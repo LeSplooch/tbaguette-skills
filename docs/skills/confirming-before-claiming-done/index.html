@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.67</span>
+      <span class="wordmark-version" dir="ltr">v1.1.68</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-24T12:46:36+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T12:46:36Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-24T22:15:33+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-24T22:15:33Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">confirming-before-claiming-done</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-25T00:12:56+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Finishing and proving</span>
@@ -113,6 +113,7 @@
 <p><strong>The artifact is fresh and came from somewhere else.</strong> This is the one a digest cannot see. A hash answers <em>did these bytes arrive intact</em> and is silent on <em>are these the bytes I meant</em>: a correct hash over an artifact built from the wrong source passes every check in the chain, because each stage compares against the one before it and none of them compares against the change you made. Integrity and identity are different questions, and only the first is being asked. The check is a <strong>positive probe</strong> — search the artifact for content unique to the source you expect produced it, a string or symbol or constant the change itself introduced. Finding it is a claim no hash can make.</p>
 <p>Build the probe from <strong>long, distinctive content</strong>, because one built from short content fails open. Short strings get folded into the surrounding code and leave no searchable trace, so a wrong build sails through a probe made of them, silently and in the costliest direction. This is the mirror of the rule that a negative result from an artifact proves nothing: there absence was uninformative, here absence is the whole signal — so the probe has to be built from content substantial enough that its absence means something.</p>
 <p><strong>The capture is fresh and shows somebody else's surface.</strong> A screenshot or recording taken from a shared instrument — a test phone, a browser profile, a display, a staging box — is the same case in a different medium: it arrived on time, it is real, and it can be a correct picture of whatever owned the surface at that instant, because another session, a dialog, or a hand on the device can take the foreground between two steps of a scripted pass. The positive probe here is the owner: read what had the foreground at capture time, record it beside the capture, and treat a capture without that line as an artifact of unknown source. <a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>'s audit reference carries the addressing rule — capture by window id, package, or tab, never by whatever has focus.</p>
+<p><strong>The capture predates the change it was taken to show.</strong> A screenshot says what was last composited, not what the layout or the state is, and the compositor keeps its own clock. Taken within a frame or two of a resize, a navigation, or a click, it can hand back the frame from before the reflow: content filling two-thirds of a window whose every element measures full width. It can also be stale <em>by region</em>, with the content area already showing the new tab while the tab strip still highlights the old one. When the claim is about geometry or state, measure that property directly (element bounds, the active attribute) and let the picture corroborate. When a picture disagrees with a measurement taken in the same second, suspect the picture first, and capture again once the surface has settled before calling anything a defect.</p>
 <h2 id="the-run-is-not-the-return">The run is not the return</h2>
 <p>Some requirements are not about the present at all. <em>Comes back after a restart. Survives a cold cache. Works from a fresh clone. Persists across a session. Recovers when the network drops.</em> Each of those is a claim about a condition that has not occurred yet — and the check that is conveniently available almost always measures the present instead: it is running, it answers, it is registered to start, the cache has entries in it.</p>
 <p>Those checks pass. They would also pass, identically, in the world where the requirement is entirely unmet. That is the whole problem, and it is invisible from inside the check, because nothing about a green result advertises which of the two worlds produced it.</p>
