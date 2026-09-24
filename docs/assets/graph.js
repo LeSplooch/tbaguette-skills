@@ -1853,12 +1853,24 @@
       ctx.beginPath(); ctx.arc(o[0], o[1], R + 13, a0, a1);
       ctx.strokeStyle = rgba(pal.cats[b.cat.index], 0.85);
       ctx.lineWidth = 3; ctx.stroke();
+    });
+    if (ring < 0.9) { return; }
+    // Names go on in order of band size, and a name that would overlap one
+    // already placed is left off — the band keeps its colour, and the
+    // tooltip still names the family.
+    var placed = [];
+    L.bands.slice().sort(function (p, q) { return (q.a1 - q.a0) - (p.a1 - p.a0); }).forEach(function (b) {
       var mid = (b.a0 + b.a1) / 2, span = (b.a1 - b.a0) * R;
-      if (span < 34 || ring < 0.9) { return; }
+      if (span < 20) { return; }
       var x = o[0] + Math.cos(mid) * (R + 26), y = o[1] + Math.sin(mid) * (R + 26);
       var c = Math.cos(mid);
       ctx.textAlign = c > 0.25 ? 'left' : c < -0.25 ? 'right' : 'center';
       if (Math.abs(c) <= 0.25) { y += Math.sin(mid) * 6; }
+      var w = ctx.measureText(b.cat.title).width;
+      var left = ctx.textAlign === 'left' ? x : ctx.textAlign === 'right' ? x - w : x - w / 2;
+      var box = [left - 6, y - 9, left + w + 6, y + 9];
+      if (placed.some(function (q) { return box[0] < q[2] && box[2] > q[0] && box[1] < q[3] && box[3] > q[1]; })) { return; }
+      placed.push(box);
       ctx.globalAlpha = alpha;
       ctx.strokeStyle = rgba(pal.bg, 0.8); ctx.lineWidth = 3.5; ctx.lineJoin = 'round';
       ctx.strokeText(b.cat.title, x, y);
