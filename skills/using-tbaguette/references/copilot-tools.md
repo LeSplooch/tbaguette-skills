@@ -73,8 +73,8 @@ them. On Copilot CLI and in the GitHub Copilot app the dispatching tool is
 `task`; another surface may name its own differently. Where a skill asks for a
 subagent (`fanning-out-independent-work`, `delegating-tasks-with-review-gates`,
 the fanned crew of `orchestrating-work-end-to-end`), use whatever your surface
-offers. Five things about it, observed on Copilot CLI 1.0.87 in September 2026,
-change how those skills read there.
+offers. Five things about it change how those skills read there; the first four
+were observed on Copilot CLI 1.0.87 in September 2026.
 
 **Parallel means one response.** Several `task` calls in the same response run
 concurrently; the same calls spread over consecutive responses run one after
@@ -90,11 +90,12 @@ the `task` tool accepts, with its own standing instructions, tool list, and
 model. One with no `model:` line inherits the session's model — the expensive
 default `delegating-tasks-with-review-gates` warns about — so either pin one in
 the file or name the model in every dispatch. This plugin ships the three roles
-those skills dispatch, offered as `TBaguette:implementer`, `TBaguette:reviewer`
-and `TBaguette:investigator`. The reviewer and investigator are given no edit
-tool — they keep a shell, so that limits their tools rather than guaranteeing
-they cannot write — and none pins a model, so name one per dispatch. A listed
-agent that nothing names tends to go unused: name the role in the dispatch.
+the delegation skills dispatch, and Copilot CLI offers them as
+`TBaguette:implementer`, `TBaguette:reviewer` and `TBaguette:investigator`. The
+reviewer and investigator are given no edit tool — they keep a shell, so that
+limits their tools rather than guaranteeing they cannot write — and none pins a
+model, so name one per dispatch. A listed agent that nothing names tends to go
+unused: name the role in the dispatch.
 
 **A subagent starts without this plugin's context.** It gets no session-start
 injection and no per-prompt nudge; it does get the skill tool and the file
@@ -115,10 +116,12 @@ writes — before opening each unit, and decide it on
 `fanning-out-independent-work`'s own grounds: isolation and wall-clock time,
 never the length of the list. One contributed measurement, on Copilot CLI with
 four independent packages to fix: a soft "fan out if the work splits" rule,
-delivered with every prompt, dispatched in none of three runs, while a rule that
-forced the decision before reading dispatched all four packages in three runs
-of three — at roughly twice the credits, and with no wall-clock gain on work
-that small.
+delivered with every prompt, dispatched in none of three runs, while a firmer
+rule — three or more units means one `task` each, decided before reading —
+dispatched all four packages in three runs of three, at roughly twice the
+credits and with no wall-clock gain on work that small. That measurement cannot
+say whether the count or the timing did it; the count is the half this file
+does not adopt.
 
 `/fleet` — or `copilot --fleet`, or plan mode's option to build on autopilot
 with fleet — hands the partitioning to the harness itself. What it reads to
@@ -145,12 +148,14 @@ repository happens in a project session, bound to a checkout. There the
 session-start context, the per-prompt reminder, the global instructions and
 the custom agents all arrive, as they do on the CLI, provided this plugin's
 hooks run. They are `bash` scripts, so on Windows the app needs a `bash` it can
-find. The session-start context arrives as a block prepended to the first
+find; without one the hooks exit silently and nothing this plugin injects
+arrives. The session-start context arrives as a block prepended to the first
 message rather than as a separate one. The app's general chat is a lighter
-surface with no repository behind it. It was observed not to offer custom agents as `task` types and not
-to carry the global instructions. There, a fan-out goes to the built-in
-`general-purpose` and `explore` agents, and repository changes are handed to
-a project session instead of being made from the chat.
+surface with no repository behind it. It was observed not to offer custom
+agents as `task` types and not to carry the global instructions. There, a
+fan-out goes to the built-in `general-purpose` and `explore` agents, and
+repository changes are handed to a project session instead of being made
+from the chat.
 
 **A worker can be a whole session.** Besides `task`, the app gives the agent
 `create_session`, which starts another project session. That session has its
@@ -159,12 +164,13 @@ worktree and branch. With `notify_on_idle` set, the creator is told when it
 finishes, so it does not poll. It can read the worker's state with
 `get_session`, message it with `send_session_message`, and archive it with
 `archive_session`, which removes the worktree — so archive a worker only once
-nothing on it is left to keep. This is the isolation `task` lacks. Use it for the lanes that need it: lanes that would collide on a file,
-on the index lock or on a build tree, lanes that run long, and lanes the user
-should get back as their own branch. It costs a full session each, so `task`
-stays the default for small disjoint lanes. The gate does not move: a
-worker's summary is a claim, and its diff is reviewed before anything is
-integrated (`delegating-tasks-with-review-gates`).
+nothing on it is left to keep. This is the isolation `task` lacks. Use it for
+the lanes that need it: lanes that would collide on a file, on the index lock
+or on a build tree, lanes that run long, and lanes the user should get back as
+their own branch. It costs a full session each, so `task` stays the default
+for small disjoint lanes. The gate does not move: a worker's summary is a
+claim, and its diff is reviewed before anything is integrated
+(`delegating-tasks-with-review-gates`).
 
 **Plan approval can fan out too.** Approving a plan in the app offers the same
 build-on-autopilot-with-fleet choice as the CLI, so the same markup from
@@ -191,8 +197,9 @@ would be guessing at names that the harness already puts in front of you
 accurately, and a stale mapping is worse than none. Use the tools you actually
 have, by the names you are actually given.
 
-The few names that do appear above — `task`, `create_session` and their
-parameters — are there because their shape changes how a skill should behave:
+The names that do appear above — `task` and `create_session`, the session
+tools beside it, and the built-in agents — are there because their shape
+changes how a skill should behave:
 one response means parallel, and a worker session has a worktree of its own.
 Each is dated to the version it was observed on. Where your harness offers
 something different, the harness is right.

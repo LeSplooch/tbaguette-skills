@@ -1,6 +1,6 @@
 ---
 name: structuring-an-implementation-plan
-description: Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan, before any code changes start. Covers deciding file structure ahead of the tasks, right-sizing tasks and steps, the plan document's required header and per-task structure, banning placeholder content, and self-reviewing a finished plan against its spec.
+description: Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan, before any code changes start, including a plan several workers will execute at once. Covers deciding file structure ahead of the tasks, right-sizing tasks and steps, the plan document's required header and per-task structure, marking which tasks depend on which and which may run in parallel, banning placeholder content, and self-reviewing a finished plan against its spec.
 ---
 
 # Structuring an implementation plan
@@ -108,7 +108,7 @@ Two details carry more weight than they look like they should:
 
 ## Phases, when the plan may run in parallel
 
-A plan executed by more than one worker at a time — a controller fanning tasks out (`fanning-out-independent-work`), or a harness that partitions a plan across subagents by itself, as Copilot CLI's `/fleet` does — can only do it safely if the plan says which tasks may run together. Nobody downstream re-derives that: a partitioner reads `Depends on:` and `Parallel-safe:` and trusts them the way an implementer trusts an Interfaces block. So when parallel execution is on the table, group the tasks into phases right after the header:
+A plan executed by more than one worker at a time — a controller fanning tasks out (`fanning-out-independent-work`), or a harness that partitions a plan across subagents by itself, as Copilot CLI's `/fleet` does — can only do it safely if the plan says which tasks may run together. Nobody downstream re-derives that: whoever partitions the plan, a controller or a harness, can only trust what it states, the way an implementer trusts an Interfaces block. So when parallel execution is on the table, group the tasks into phases right after the header:
 
 ```markdown
 ## Phase 1 (parallel): Task 1, Task 2, Task 4

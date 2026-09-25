@@ -409,9 +409,10 @@ cannot rewrite a prompt instead of emitting both and hoping.
   Copilot format, and the 1.0 schema's `additionalProperties: false` rejects
   it (as it already rejects `skills` and `hooks`). It stays anyway. Copilot
   CLI issue #4655 (https://github.com/github/copilot-cli/issues/4655, CLI
-  1.0.81) reported 1.0-format agents at that path going undiscovered, and the
-  explicit key is what the CLI was observed honouring (1.0.87, loaded with
-  `--plugin-dir`). VS Code reads the same manifest and has not been observed
+  1.0.81) reported 1.0-format agents at that path going undiscovered, and with
+  both the key and the fixed directory present the CLI listed the agents
+  (1.0.87, loaded with `--plugin-dir`); which of the two it read was not
+  isolated. VS Code reads the same manifest and has not been observed
   with it; check it the first time anyone installs there, and drop the key
   once the CLI discovers the fixed path on its own.
 - **A harness that reads `.claude-plugin/plugin.json` is not thereby
