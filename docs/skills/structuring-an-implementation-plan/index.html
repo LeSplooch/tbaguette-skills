@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.68</span>
+      <span class="wordmark-version" dir="ltr">v1.1.69</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-25T03:16:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-25T03:16:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-25T03:52:09+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-25T03:52:09Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,13 +65,13 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">structuring-an-implementation-plan</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-25T05:50:36+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Planning and delegation</span>
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=structuring-an-implementation-plan"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
-  <p class="lede">Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan, before any code changes start. Covers deciding file structure ahead of the tasks, right-sizing tasks and steps, the plan document's required header and per-task structure, banning placeholder content, and self-reviewing a finished plan against its spec.</p>
+  <p class="lede">Use when a spec or set of requirements is settled and the next step is turning it into a multi-step implementation plan, before any code changes start, including a plan several workers will execute at once. Covers deciding file structure ahead of the tasks, right-sizing tasks and steps, the plan document's required header and per-task structure, marking which tasks depend on which and which may run in parallel, banning placeholder content, and self-reviewing a finished plan against its spec.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A plan is written for the reader with the least context anyone touching this work will ever have — less than whoever wrote the spec, less than the reviewer, less than you an hour from now. Assume that reader is skilled but has questionable taste on anything left for them to decide: every fact or choice the plan omits becomes a decision they invent instead, and an invented decision is exactly what a fresh reviewer's gate exists to catch — one task too late. The fix isn't more prose; it's smaller tasks, exact paths and signatures, and no sentence that describes what to do without showing how.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -125,18 +125,27 @@ include this section.]
 - Consumes: [what this task uses from earlier tasks — exact names and signatures]
 - Produces: [what later tasks rely on — exact names and types]
 
+**Depends on:** [Task numbers whose Produces this task consumes, or whose files it also writes — or &quot;none&quot;]
+**Parallel-safe:** [yes — its write set is disjoint from every other task in its phase / no — why]
+
 - [ ] **Step 1: [one action]**
 - [ ] **Step 2: [one action]**
 - [ ] **Step N: Commit**</code></pre>
 <p>Two details carry more weight than they look like they should:</p>
 <ul><li><strong>Line ranges on Modify, not just the path.</strong> <code>existing.ext:123-145</code> tells the implementer where to look before they open the file; a bare path means reading the whole thing to find the change.</li><li><strong>Interfaces is the only place cross-task agreement lives.</strong> An implementer working Task 7 will not read Task 3's steps — they read Task 7's Interfaces block and trust it. If Task 3 actually produces a function called <code>clearLayers()</code> and Task 7's Interfaces block says <code>clearFullLayers()</code>, that mismatch ships, because nothing forces anyone to notice before runtime.</li></ul>
+<h2 id="phases-when-the-plan-may-run-in-parallel">Phases, when the plan may run in parallel</h2>
+<p>A plan executed by more than one worker at a time — a controller fanning tasks out (<a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a>), or a harness that partitions a plan across subagents by itself, as Copilot CLI's <code>/fleet</code> does — can only do it safely if the plan says which tasks may run together. Nobody downstream re-derives that: whoever partitions the plan, a controller or a harness, can only trust what it states, the way an implementer trusts an Interfaces block. So when parallel execution is on the table, group the tasks into phases right after the header:</p>
+<pre class="prose-code-block"><code>## Phase 1 (parallel): Task 1, Task 2, Task 4
+## Phase 2 (after Phase 1): Task 3 — consumes Task 1's parse_config
+## Phase 3 (sequential): Task 5 — writes files Tasks 2 and 4 also write</code></pre>
+<p>A phase holds only tasks with no dependency on one another and no shared path in their write sets; a task goes in the first phase after every task it depends on; tasks that share a file land in different phases. A shared registry, index, or changelog every task would touch counts as a shared file (<a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a>'s collisions). A wrong <code>Parallel-safe: yes</code> is a correctness bug, not a performance one — two workers edit one file at once, and whichever finishes last wins. A plan that will only ever run task by task can leave the two lines at &quot;none&quot; and &quot;no&quot; and skip the phase list.</p>
 <h2 id="no-placeholders">No placeholders</h2>
 <p>Every step needs the actual content an implementer would otherwise have to invent. These are plan failures, not style preferences — an implementer who hits one either stops to ask, costing a round trip, or guesses, costing a review cycle:</p>
 <table><thead><tr><th>Placeholder</th><th>What it hides</th></tr></thead><tbody><tr><td>&quot;TBD&quot;, &quot;TODO&quot;, &quot;implement later&quot;</td><td>The task wasn't planned — it was named</td></tr><tr><td>&quot;Handle appropriately&quot;, &quot;add validation&quot;, &quot;handle edge cases&quot;</td><td>The specific edge cases, unstated because they were never enumerated</td></tr><tr><td>&quot;Write tests for the above&quot;</td><td>The actual test code and its assertions</td></tr><tr><td>&quot;Similar to Task N&quot;</td><td>The actual content — a plan isn't guaranteed to be read in order, and Task N may not be nearby when this one is worked</td></tr><tr><td>A step that describes an action without showing it</td><td>The code, command, or exact text a code step requires</td></tr><tr><td>A type, function, or method used but never defined in any task</td><td>Which task actually owns it</td></tr></tbody></table>
 <p>A plan with a placeholder in it isn't a draft of a finished plan — it's a to-do list wearing a plan's formatting.</p>
 <h2 id="self-review">Self-review</h2>
 <p>Before calling the plan finished, check it against the spec with fresh eyes — genuinely fresh, not the eyes that just finished writing it. Run this yourself first. For a plan whose blast radius justifies the extra confidence, the same checklist is also what to hand a second reviewer — human or a freshly dispatched subagent with no sunk cost in the plan's current shape — since writing it and reviewing it are different acts even when done back to back by the same author.</p>
-<table><thead><tr><th>Check</th><th>Question</th></tr></thead><tbody><tr><td>Spec coverage</td><td>For every section or requirement in the spec, which task implements it? List the gaps.</td></tr><tr><td>Placeholder scan</td><td>Does anything match the &quot;No placeholders&quot; table above?</td></tr><tr><td>Type consistency</td><td>Do the names, signatures, and types a later task's Interfaces block relies on match what the producing task actually defines?</td></tr><tr><td>Task decomposition</td><td>Does every task have a clear boundary, with steps concrete enough to act on without guessing?</td></tr><tr><td>Buildability</td><td>Could an implementer with zero context on this codebase follow the plan start to finish without getting stuck?</td></tr></tbody></table>
+<table><thead><tr><th>Check</th><th>Question</th></tr></thead><tbody><tr><td>Spec coverage</td><td>For every section or requirement in the spec, which task implements it? List the gaps.</td></tr><tr><td>Placeholder scan</td><td>Does anything match the &quot;No placeholders&quot; table above?</td></tr><tr><td>Type consistency</td><td>Do the names, signatures, and types a later task's Interfaces block relies on match what the producing task actually defines?</td></tr><tr><td>Parallel safety</td><td>Within each phase, do any two tasks share a path in their write sets, or does any task consume something produced inside its own phase?</td></tr><tr><td>Task decomposition</td><td>Does every task have a clear boundary, with steps concrete enough to act on without guessing?</td></tr><tr><td>Buildability</td><td>Could an implementer with zero context on this codebase follow the plan start to finish without getting stuck?</td></tr></tbody></table>
 <p>Fix what you find inline, immediately — no separate re-review pass required. A spec requirement with no task gets a new task, on the spot.</p>
 <p>Calibrate what's worth flagging: an issue that would cause an implementer to build the wrong thing, stall, or guess is real. A wording preference or a &quot;nicer&quot; phrasing isn't, and it doesn't block the plan. When a second reviewer runs this same list, the output is a status — approved, or issues found — with each issue naming its exact task and step and why it would derail implementation, and any recommendations kept separate and explicitly non-blocking: a plan doesn't fail review over advice.</p>
 <h2 id="when-execution-reveals-the-plan-was-wrong">When execution reveals the plan was wrong</h2>

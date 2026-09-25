@@ -24,6 +24,25 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-25 — Plans that say what can run in parallel, and a GitHub Copilot map for fanning out (contributed)
+
+- `structuring-an-implementation-plan` now gives each task a `Depends on:` and a
+  `Parallel-safe:` line and, when a plan may run in parallel, a phase list up front, so a
+  controller fanning tasks out, or Copilot's `/fleet` partitioning the plan itself, knows
+  which tasks can run together instead of guessing. Its self-review gains a parallel-safety
+  check: no two tasks in a phase share a file.
+- On GitHub Copilot, `using-tbaguette`'s Copilot mapping now says how dispatching really
+  works there: several `task` calls in one response run in parallel, a subagent starts
+  without TBaguette's context and shares your checkout, and the split is best decided before
+  you have read every unit, because by then doing it all inline nearly always looks cheaper.
+- On GitHub Copilot CLI, the plugin now ships three custom agents, `TBaguette:implementer`,
+  `TBaguette:reviewer` and `TBaguette:investigator`; the first two carry their standing rules
+  word for word from `delegating-tasks-with-review-gates`' own templates. The reviewer and investigator get no
+  edit tool, and none pins a model: name one when you dispatch.
+- The Copilot mapping now covers the GitHub Copilot app: a project session behaves like the
+  CLI, the general chat offers no custom agents, and a lane that needs real isolation can run
+  as a session of its own, in its own worktree.
+
 ## 2026-09-25 — Four checks that come back clean for the wrong reason
 
 - `confirming-before-claiming-done`: a screenshot taken right after a resize, a navigation or a click
@@ -50,15 +69,6 @@ Everything above the first `##` is preamble and is never rendered.
   commonest ad-hoc diagnostic of all can be the thing that finishes the host off,
   while looking like the cheapest rung on the ladder because nothing was enabled
   and nothing was written.
-- The Copilot mapping now covers the GitHub Copilot desktop app. It runs the same agent as the CLI,
-  and it can also run a parallel lane as a whole project session in its own worktree
-  (`create_session`), which fixes the shared checkout that `task` agents write into. The app's
-  general chat offers no custom agents, so repository work goes to a project session.
-- On GitHub Copilot CLI, `using-tbaguette`'s Copilot mapping now says how a fan-out is
-  actually spelled there: parallel `task` calls go in one response, an agent file is a
-  role, a subagent starts without TBaguette's context and shares your checkout, and three
-  or more independent units get dispatched before you have read them all yourself —
-  measured, the softer "fan out if it splits" rule never dispatched once.
 - `deciding-reversibility` now says the act of *opening* something can be the write: opening a
   datastore can run its migrations, attaching can take a lease, so a read-only preview may have
   changed what it inspects — take the safety copy before anything opens it.
@@ -70,11 +80,6 @@ Everything above the first `##` is preamble and is never rendered.
 - `refactoring-safely` now says to check a scripted replace's search text is non-empty and matches
   the expected number of times before writing: an empty pattern matches everywhere and inserts the
   replacement between every character.
-- `structuring-an-implementation-plan` now gives each task a `Depends on:` and a
-  `Parallel-safe:` line and, when the plan may run in parallel, a phase list up front —
-  so a controller fanning tasks out, or Copilot CLI's `/fleet` partitioning the plan
-  itself, knows which tasks can run together instead of guessing. Its self-review
-  gains a parallel-safety check: no two tasks in a phase share a file.
 - `atomic-commits` no longer has you set your remaining changes aside to test each commit of a split
   when others commit from the same checkout: while the build runs, their next commit can sweep up
   the half-finished state. The working tree now stays at its final state; each commit is tested in
@@ -96,12 +101,6 @@ Everything above the first `##` is preamble and is never rendered.
   socket or queue and threw it away as noise, which happens whenever two messages with no guaranteed
   order arrive the other way round. A longer timeout cannot bring the message back; the fix is one
   wait for the whole set, in any order.
-- On GitHub Copilot CLI, the plugin now ships three custom agents —
-  `TBaguette:implementer`, `TBaguette:reviewer` (read-only), and
-  `TBaguette:investigator` (read-only) — that `delegating-tasks-with-review-gates`
-  and `fanning-out-independent-work` can dispatch by name. Each carries its role's
-  standing rules from the skill's own templates, so a dispatch prompt only has to
-  carry the task. None pins a model: name one per dispatch, as the skill says.
 - `flaky-test-triage` now says a clean run count after a race fix is evidence only if the race still
   happened. A fix can shift the timing so the bad interleaving stops occurring, and the count comes
   back clean for the wrong reason. Count the interleaving itself on the fixed build: the fix is
