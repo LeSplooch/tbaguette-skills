@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.71</span>
+      <span class="wordmark-version" dir="ltr">v1.1.72</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-25T16:40:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-25T16:40:02Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-25T22:14:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-25T22:14:39Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,13 +65,13 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">modeling-errors</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-26T00:12:47+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Designing systems</span>
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=modeling-errors"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
-  <p class="lede">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, undiagnosable production incidents, duplicated log noise, a retry whose reported error hides the failure that started it, and callers parsing error strings. Also use from the other side, when your own code must detect a state in a system you do not own and the only anchor on offer is a printed status word, a window title, or a generated class name, or when two different upstream failure causes render identically with no stable code to tell them apart.</p>
+  <p class="lede">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, a placeholder value that slips past the guard meant to stop it, undiagnosable production incidents, duplicated log noise, a retry whose reported error hides the failure that started it, and callers parsing error strings. Also use from the other side, when your own code must detect a state in a system you do not own and the only anchor on offer is a printed status word, a window title, or a generated class name, or when two different upstream failure causes render identically with no stable code to tell them apart.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Classify the failure before choosing a mechanism. Almost all bad error handling is one mechanism applied uniformly to four kinds of failure that need four different treatments.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -81,6 +81,7 @@
 <p><strong>Treating class 3 as class 1 is the single most common way a system becomes undiagnosable.</strong> A broad catch low in the stack turns a bug into a plausible-looking default value, and the wrong answer propagates for months. Class 3 must never be inside a retry loop and must never be caught by a generic handler. Where crashing is unacceptable (firmware, kernel, single-process device), fail the smallest schedulable unit and record the specific invariant that broke — do not substitute a default.</p>
 <p>Class 4 is defined by one property only: <strong>retrying the identical input might succeed.</strong> If it cannot, it is class 1 or 2 no matter how infrastructural it looks. An authorization failure from a network call is not transient.</p>
 <p><strong>Which default gets substituted decides whether anyone finds out.</strong> The substitution is a defect wherever it happens, but the ones that survive for months share one property: the value substituted is the value a healthy system produces. An empty collection where the load failed, a zero where the read was never made, a <code>false</code> where the check could not run — each is indistinguishable on sight from good news, so nobody investigates, and the reading someone would act on is the wrong one. The same collapse with a value nobody could mistake for health gets found the same afternoon. So where a layer genuinely cannot propagate the failure and has to put <em>something</em> in the slot, the move is to widen the slot until absence is representable in it — an explicit unknown or not-yet-loaded state alongside the real values — rather than to reach for an in-band sentinel, which is the same collapse with an extra decoding step. The idiom that hides all of this is usually the one that discards the error on the way past, which is why it reads as concise rather than as dangerous.</p>
+<p><strong>The guard downstream repeats the collapse one step removed.</strong> Where several producers can fill one slot and only some of them can measure it, the check protecting a consumer from the placeholder tends to ask <em>which producer ran</em> rather than <em>whether a value was observed</em>. The two agree almost every time and disagree exactly where the guard is load-bearing: the measuring producer ran and came back empty, and its placeholder went through as a reading. The tell is a boolean named after a source or a branch, sitting beside a value that could have carried its own absence. The fix is to let the slot say <em>not observed</em> and delete the boolean, not to write a better one. A comment promising the consumer never sees a fabricated value is evidence the invariant was intended, never evidence that it held.</p>
 <h2 id="choosing-the-mechanism">Choosing the mechanism</h2>
 <ul><li>Choose what the language makes ergonomic, not what you prefer. In an exception-based codebase, a lovingly hand-rolled result type does not remove exceptions — it just means third-party ones are now unhandled.</li><li>The landscape: unwinding exceptions (Java, Python, C#, C++, Ruby); result/either values (Rust, Haskell, Swift typed throws, Go's error-return convention); error codes with out-params (C, syscalls, most embedded); conditions and restarts (Common Lisp — the handler decides at the raise point, the only mainstream mechanism that can resume); crash-and-supervise (Erlang, Elixir — class 3 discipline made structural).</li><li>Three properties actually differentiate them: whether the type system can tell you an error is unhandled, whether the mechanism carries a cause chain and a stack, and whether the happy path pays a cost. Rank those for your context and the choice falls out; arguing result-versus-exception in the abstract does not.</li><li>Whatever the mechanism: <strong>the set of failures an operation can produce is part of its signature</strong>, documented even when the language refuses to type it.</li></ul>
 <h2 id="errors-as-values-a-caller-can-act-on">Errors as values a caller can act on</h2>

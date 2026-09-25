@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.71</span>
+      <span class="wordmark-version" dir="ltr">v1.1.72</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-25T16:40:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-25T16:40:02Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-25T22:14:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-25T22:14:39Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">handling-untrusted-input</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-24T00:16:59+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-26T00:12:47+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Security (defensive)</span>
@@ -108,6 +108,7 @@ GOOD:  let addr = Email::parse(s)?             // Email cannot exist unless pars
 <ul><li>Decode exactly once, then reject any input that still contains encoded sequences. Loop-until-stable decoding is itself a vulnerability, and single-decode filters are what double-encoding is for.</li><li>Paths: resolve to absolute <em>and</em> resolve symlinks, then prefix-compare including the separator — <code>/base</code> matches <code>/base-evil</code>, <code>/base/</code> does not.</li><li>Hosts and URLs: parse with a real URL parser and compare the parsed host. Regex or prefix matching on a URL string is the standard SSRF allowlist bypass. Re-resolve at connect time or bind to the resolved address, since DNS answers change between check and use.</li><li>Unicode: normalize (NFC generally; NFKC where confusables decide identity, as with usernames and hostnames) before uniqueness checks and before any authorization comparison, and case-fold afterwards, locale-independently. Comparisons that decide authorization run on canonical bytes — and constant-time whenever either side is a secret.</li></ul>
 <h2 id="allowlists-and-limits-on-every-parse">Allowlists, and limits on every parse</h2>
 <p>A denylist enumerates what you thought of; the dangerous set is unbounded and grows with every downstream library update. An allowlist enumerates what you support, which is finite and known. Allowlist the <em>value</em> wherever the value space is finite: column names, sort directions, redirect targets, template names, locales, file types. Use a denylist only where the accepted set is genuinely open — free prose — and there the real defense is output encoding, not filtering. If the allowlist must be a pattern, anchor both ends and bound the length.</p>
+<p><strong>Invisible text is the denylist that most often comes up short.</strong> A sanitizer that strips &quot;zero-width and bidi characters&quot; before untrusted text reaches a model or a reviewer has listed the two families everyone remembers and let the rest through: the tag block <code>U+E0000</code>–<code>U+E007F</code>, which mirrors ASCII invisibly; the invisible operators <code>U+2060</code>–<code>U+2064</code>; the soft hyphen <code>U+00AD</code>; the Mongolian vowel separator <code>U+180E</code>. Each reaches a model intact and renders blank for the person approving the text. Where the text only has to be read, allowlist what it needs — letters, marks, digits, punctuation, symbols, spaces, and the controls you mean — and drop the format (<code>Cf</code>) and private-use categories rather than growing the list, adding back by name the few you need, such as the joiner inside emoji sequences. Variation selectors are classed as marks, so a category rule keeps them and they can still carry hidden bytes; decide those explicitly. Test the scrubber with a tag-block string, not with a zero-width space. <a class="skill-link" href="/tbaguette-skills/skills/auditing-dependencies/"><code>auditing-dependencies</code></a> covers the same characters where the carrier is a dependency's own prose.</p>
 <p>Where you do filter, <strong>the replacement must not quote the match</strong> — a redactor that embeds the first N characters of what it matched, for debuggability, reproduces the thing it exists to remove and hands it to the consumer the filter was protecting. Test by asserting the <strong>absence of the input</strong>, never the presence of the marker, which is trivially satisfiable while the removal fails. Applying this across logs, traces, and crash dumps is <a class="skill-link" href="/tbaguette-skills/skills/redacting-sensitive-output/"><code>redacting-sensitive-output</code></a>.</p>
 <p>Every parser needs four numbers chosen deliberately, because every default is &quot;unbounded&quot;:</p>
 <table><thead><tr><th>Limit</th><th>Starting point</th></tr></thead><tbody><tr><td>Body size</td><td>1 MB for API bodies; uploads on a separate path with their own cap</td></tr><tr><td>Nesting depth</td><td>≤ 32 for JSON/XML/YAML-family structures</td></tr><tr><td>Element count</td><td>≤ 10k entries; also cap archive members, multipart parts, headers, and page size</td></tr><tr><td>Time</td><td>a parse deadline ≤ 1s enforced by the caller, plus a 1–4 KB input bound on any backtracking pattern engine</td></tr><tr><td>Decompression</td><td>absolute output cap plus a ratio cap ≤ 100:1</td></tr></tbody></table>

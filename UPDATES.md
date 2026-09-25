@@ -24,6 +24,22 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-26 — Hidden characters a scrubber misses, guards that trust the wrong signal, and the decision a failing fix ignores
+
+- `handling-untrusted-input` now lists the invisible characters a scrubber usually
+  misses when it strips only zero-width and bidi marks: the Unicode tag block, the
+  invisible operators, the soft hyphen and the Mongolian vowel separator. Each one
+  reaches a model intact and shows nothing to the person approving the text. It
+  recommends dropping whole character categories over growing a denylist, and warns
+  that variation selectors count as marks, so a category rule keeps them.
+- `modeling-errors` covers the guard that checks *which producer ran* when it
+  should check *whether a value was observed*. The two disagree in exactly the case
+  the guard is for, so a placeholder gets through as a real reading. The fix is to
+  let the value say it is missing, not to write a better guard.
+- `diagnosing-before-fixing`: after three failed fixes, read the design decision the
+  code says it implements before trying a fourth. Code that has drifted from that
+  decision puts every patch inside the drift.
+
 ## 2026-09-25 — Plans that say what can run in parallel, a GitHub Copilot map for fanning out (contributed), and fixes for Windows and other harnesses
 
 - `structuring-an-implementation-plan` now gives each task a `Depends on:` and a
