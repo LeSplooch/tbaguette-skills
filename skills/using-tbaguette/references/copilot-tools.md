@@ -1,11 +1,10 @@
 # GitHub Copilot Tool Mapping
 
 Covers the surfaces TBaguette installs into: Copilot CLI, the GitHub Copilot
-desktop app, Copilot in VS Code, and the Copilot coding agent. Where they
-differ, it says so; where nothing below distinguishes them, they behave the
-same. The desktop app runs the same agent as the CLI, so everything said about
-the CLI holds there too, and the section on the desktop app adds what it has on
-top.
+app, Copilot in VS Code, and the Copilot coding agent. Where they differ, it
+says so; where nothing below distinguishes them, they behave the same. The app
+runs the same agent as the CLI, so everything said about the CLI holds there
+too, and the section on the app adds what it has on top.
 
 Almost nothing in this library needs mapping. TBaguette's skills describe
 *actions* — read a file, run a command, dispatch a subagent — and Copilot CLI
@@ -17,7 +16,7 @@ difference, and the few things downstream of it, is what this file is for.
 ## Invoking a skill
 
 Two routes, and the first one is doing most of the work already. Both work the
-same on all three surfaces:
+same on every surface:
 
 1. **Automatic.** Copilot loads a skill when the prompt matches its
    `description:` frontmatter. Every TBaguette skill is written so that its
@@ -69,11 +68,13 @@ does not resolve.
 
 ## Subagents
 
-Copilot CLI dispatches a subagent through its `task` tool, and custom agents —
-`*.agent.md` files — are the roles it can dispatch. Where a skill asks for a
+Copilot has custom agents — `*.agent.md` files — and dispatches subagents from
+them. On Copilot CLI and in the GitHub Copilot app the dispatching tool is
+`task`; another surface may name its own differently. Where a skill asks for a
 subagent (`fanning-out-independent-work`, `delegating-tasks-with-review-gates`,
-the fanned crew of `orchestrating-work-end-to-end`), use that mechanism. Five
-things about it change how those skills read here.
+the fanned crew of `orchestrating-work-end-to-end`), use whatever your surface
+offers. Five things about it, observed on Copilot CLI 1.0.87 in September 2026,
+change how those skills read there.
 
 **Parallel means one response.** Several `task` calls in the same response run
 concurrently; the same calls spread over consecutive responses run one after
@@ -88,7 +89,12 @@ repository's `.github/agents/`, or shipped by a plugin, becomes an `agent_type`
 the `task` tool accepts, with its own standing instructions, tool list, and
 model. One with no `model:` line inherits the session's model — the expensive
 default `delegating-tasks-with-review-gates` warns about — so either pin one in
-the file or name the model in every dispatch.
+the file or name the model in every dispatch. This plugin ships the three roles
+those skills dispatch, offered as `TBaguette:implementer`, `TBaguette:reviewer`
+and `TBaguette:investigator`. The reviewer and investigator are given no edit
+tool — they keep a shell, so that limits their tools rather than guaranteeing
+they cannot write — and none pins a model, so name one per dispatch. A listed
+agent that nothing names tends to go unused: name the role in the dispatch.
 
 **A subagent starts without this plugin's context.** It gets no session-start
 injection and no per-prompt nudge; it does get the skill tool and the file
@@ -102,31 +108,37 @@ the controller creates worktrees itself (`isolating-work-with-worktrees`).
 
 **Decide the fan-out before reading everything.** Copilot's own instructions
 tell the model to keep small work inline, and a model that has already read
-every unit into its context will always find inline cheaper. Measured on
-Copilot CLI with four independent packages to fix: a soft "fan out if the work
-splits" rule produced no dispatch in nine runs, while "three or more
-independent units, each checkable on its own, means one `task` per unit — decide
-right after orienting, before reading each one" produced four concurrent
-dispatches in three runs of three, with a one-file rename still done inline in
-three of three and a dependent two-step chain still done in sequence.
+every unit into its context will nearly always find inline cheaper: the reading
+is paid for by then, and only the dispatch overhead is still visible. So decide
+the split from the orientation pass — the list of units and the files each one
+writes — before opening each unit, and decide it on
+`fanning-out-independent-work`'s own grounds: isolation and wall-clock time,
+never the length of the list. One contributed measurement, on Copilot CLI with
+four independent packages to fix: a soft "fan out if the work splits" rule,
+delivered with every prompt, dispatched in none of three runs, while a rule that
+forced the decision before reading dispatched all four packages in three runs
+of three — at roughly twice the credits, and with no wall-clock gain on work
+that small.
 
 `/fleet` — or `copilot --fleet`, or plan mode's option to build on autopilot
-with fleet — hands the partitioning to the harness itself. It partitions from
-whatever the plan says, so a plan that marks each task's dependencies and which
-tasks may run together (`structuring-an-implementation-plan`) is what makes the
-split safe.
+with fleet — hands the partitioning to the harness itself. What it reads to
+partition is not documented, so give it a plan that states the split outright:
+one that marks each task's dependencies and which tasks may run together
+(`structuring-an-implementation-plan`) is legible to any partitioner, a model's
+or a person's.
 
-Where no `task` tool is offered, every one of those skills already carries its
-own fallback: do the work inline, in sequence, rather than inventing a dispatch
-that will not run. Same rule for todo tracking and web fetch — degrade, don't
-improvise.
+Where your surface offers no way to dispatch a subagent at all, every one of
+those skills already carries its own fallback: do the work inline, in sequence,
+rather than inventing a dispatch that will not run. Same rule for todo tracking
+and web fetch — degrade, don't improvise.
 
-## The desktop app
+## The GitHub Copilot app
 
-The GitHub Copilot desktop app hosts the same agent runtime as the CLI, and it
-reads the same `~/.copilot/` home for global instructions, agents, skills and
+The GitHub Copilot app hosts the same agent runtime as the CLI, and it reads
+the same `~/.copilot/` home for global instructions, agents, skills and
 extensions. Everything in the sections above therefore applies there
-unchanged. Three things are new.
+unchanged. Three things are new — observed on the app's agent runtime 1.0.87 in
+September 2026 and not documented, so trust what the app actually offers you.
 
 **A project session is a CLI session; the general chat is not.** Work in a
 repository happens in a project session, bound to a checkout. There the
@@ -134,8 +146,8 @@ session-start context, the per-prompt reminder, the global instructions and
 the custom agents all arrive, as they do on the CLI, provided this plugin's
 hooks run. They are `bash` scripts, so on Windows the app needs a `bash` it can
 find. The session-start context arrives as a block prepended to the first
-message rather than as a separate one. The app's general chat is a lighter surface with no repository
-behind it. It was observed not to offer custom agents as `task` types and not
+message rather than as a separate one. The app's general chat is a lighter
+surface with no repository behind it. It was observed not to offer custom agents as `task` types and not
 to carry the global instructions. There, a fan-out goes to the built-in
 `general-purpose` and `explore` agents, and repository changes are handed to
 a project session instead of being made from the chat.
@@ -146,8 +158,8 @@ own agent, its own context and, with `workspace_type: "worktree"`, its own git
 worktree and branch. With `notify_on_idle` set, the creator is told when it
 finishes, so it does not poll. It can read the worker's state with
 `get_session`, message it with `send_session_message`, and archive it with
-`archive_session`, which removes the worktree. This is the isolation `task`
-lacks. Use it for the lanes that need it: lanes that would collide on a file,
+`archive_session`, which removes the worktree — so archive a worker only once
+nothing on it is left to keep. This is the isolation `task` lacks. Use it for the lanes that need it: lanes that would collide on a file,
 on the index lock or on a build tree, lanes that run long, and lanes the user
 should get back as their own branch. It costs a full session each, so `task`
 stays the default for small disjoint lanes. The gate does not move: a
@@ -156,7 +168,7 @@ integrated (`delegating-tasks-with-review-gates`).
 
 **Plan approval can fan out too.** Approving a plan in the app offers the same
 build-on-autopilot-with-fleet choice as the CLI, so the same markup from
-`structuring-an-implementation-plan` is what makes that split safe.
+`structuring-an-implementation-plan` is what to hand it.
 
 ## One thing the coding agent changes about every other skill
 
@@ -178,3 +190,9 @@ There is no table of Copilot's tool names in this file, because writing one
 would be guessing at names that the harness already puts in front of you
 accurately, and a stale mapping is worse than none. Use the tools you actually
 have, by the names you are actually given.
+
+The few names that do appear above — `task`, `create_session` and their
+parameters — are there because their shape changes how a skill should behave:
+one response means parallel, and a worker session has a worktree of its own.
+Each is dated to the version it was observed on. Where your harness offers
+something different, the harness is right.
