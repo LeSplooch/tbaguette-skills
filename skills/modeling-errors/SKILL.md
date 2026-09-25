@@ -1,6 +1,6 @@
 ---
 name: modeling-errors
-description: Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, undiagnosable production incidents, duplicated log noise, a retry whose reported error hides the failure that started it, and callers parsing error strings. Also use from the other side, when your own code must detect a state in a system you do not own and the only anchor on offer is a printed status word, a window title, or a generated class name, or when two different upstream failure causes render identically with no stable code to tell them apart.
+description: Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, a placeholder value that slips past the guard meant to stop it, undiagnosable production incidents, duplicated log noise, a retry whose reported error hides the failure that started it, and callers parsing error strings. Also use from the other side, when your own code must detect a state in a system you do not own and the only anchor on offer is a printed status word, a window title, or a generated class name, or when two different upstream failure causes render identically with no stable code to tell them apart.
 ---
 
 # Modeling errors
@@ -43,6 +43,8 @@ not-yet-loaded state alongside the real values — rather than to reach for an
 in-band sentinel, which is the same collapse with an extra decoding step. The
 idiom that hides all of this is usually the one that discards the error on the
 way past, which is why it reads as concise rather than as dangerous.
+
+**The guard downstream repeats the collapse one step removed.** Where several producers can fill one slot and only some of them can measure it, the check protecting a consumer from the placeholder tends to ask *which producer ran* rather than *whether a value was observed*. The two agree almost every time and disagree exactly where the guard is load-bearing: the measuring producer ran and came back empty, and its placeholder went through as a reading. The tell is a boolean named after a source or a branch, sitting beside a value that could have carried its own absence. The fix is to let the slot say *not observed* and delete the boolean, not to write a better one. A comment promising the consumer never sees a fabricated value is evidence the invariant was intended, never evidence that it held.
 
 
 ## Choosing the mechanism
