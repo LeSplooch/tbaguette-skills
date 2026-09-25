@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v1.1.69</span>
+      <span class="wordmark-version" dir="ltr">v1.1.70</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-25T03:52:09+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-25T03:52:09Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-25T03:59:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-25T03:59:02Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -293,13 +293,14 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-25">25 Sep 2026</time>
-    <span class="notes__entry-title">Plans that say what can run in parallel, and a GitHub Copilot map for fanning out (contributed)</span>
+    <span class="notes__entry-title">Plans that say what can run in parallel, a GitHub Copilot map for fanning out (contributed), and sturdier Windows hooks</span>
   </h3>
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a> now gives each task a <code>Depends on:</code> and a <code>Parallel-safe:</code> line and, when a plan may run in parallel, a phase list up front, so a controller fanning tasks out, or Copilot's <code>/fleet</code> partitioning the plan itself, knows which tasks can run together instead of guessing. Its self-review gains a parallel-safety check: no two tasks in a phase share a file.</li>
     <li>On GitHub Copilot, <a class="skill-link" href="/tbaguette-skills/skills/using-tbaguette/"><code>using-tbaguette</code></a>'s Copilot mapping now says how dispatching really works there: several <code>task</code> calls in one response run in parallel, a subagent starts without TBaguette's context and shares your checkout, and the split is best decided before you have read every unit, because by then doing it all inline nearly always looks cheaper.</li>
     <li>On GitHub Copilot CLI, the plugin now ships three custom agents, <code>TBaguette:implementer</code>, <code>TBaguette:reviewer</code> and <code>TBaguette:investigator</code>; the first two carry their standing rules word for word from <a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a>' own templates. The reviewer and investigator get no edit tool, and none pins a model: name one when you dispatch.</li>
     <li>The Copilot mapping now covers the GitHub Copilot app: a project session behaves like the CLI, the general chat offers no custom agents, and a lane that needs real isolation can run as a session of its own, in its own worktree.</li>
+    <li>On Windows, TBaguette's hook launcher no longer runs a <code>bash</code> it finds in the project you opened: it looks only in Git for Windows' install folders and on your <code>PATH</code>. The repository also checks every text file out with LF endings now, so a fresh Windows install made with Git's default settings keeps the hooks runnable. An older Windows install whose hooks never ran picks this up only when it is reinstalled.</li>
   </ul>
 </li>
   </ol>
@@ -315,13 +316,14 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-25">25 Sep 2026</time>
-    <span class="notes__entry-title">Plans that say what can run in parallel, and a GitHub Copilot map for fanning out (contributed)</span>
+    <span class="notes__entry-title">Plans that say what can run in parallel, a GitHub Copilot map for fanning out (contributed), and sturdier Windows hooks</span>
   </h3>
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/structuring-an-implementation-plan/"><code>structuring-an-implementation-plan</code></a> now gives each task a <code>Depends on:</code> and a <code>Parallel-safe:</code> line and, when a plan may run in parallel, a phase list up front, so a controller fanning tasks out, or Copilot's <code>/fleet</code> partitioning the plan itself, knows which tasks can run together instead of guessing. Its self-review gains a parallel-safety check: no two tasks in a phase share a file.</li>
     <li>On GitHub Copilot, <a class="skill-link" href="/tbaguette-skills/skills/using-tbaguette/"><code>using-tbaguette</code></a>'s Copilot mapping now says how dispatching really works there: several <code>task</code> calls in one response run in parallel, a subagent starts without TBaguette's context and shares your checkout, and the split is best decided before you have read every unit, because by then doing it all inline nearly always looks cheaper.</li>
     <li>On GitHub Copilot CLI, the plugin now ships three custom agents, <code>TBaguette:implementer</code>, <code>TBaguette:reviewer</code> and <code>TBaguette:investigator</code>; the first two carry their standing rules word for word from <a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a>' own templates. The reviewer and investigator get no edit tool, and none pins a model: name one when you dispatch.</li>
     <li>The Copilot mapping now covers the GitHub Copilot app: a project session behaves like the CLI, the general chat offers no custom agents, and a lane that needs real isolation can run as a session of its own, in its own worktree.</li>
+    <li>On Windows, TBaguette's hook launcher no longer runs a <code>bash</code> it finds in the project you opened: it looks only in Git for Windows' install folders and on your <code>PATH</code>. The repository also checks every text file out with LF endings now, so a fresh Windows install made with Git's default settings keeps the hooks runnable. An older Windows install whose hooks never ran picks this up only when it is reinstalled.</li>
   </ul>
 </li>
 <li class="notes__entry">

@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-25 — Plans that say what can run in parallel, and a GitHub Copilot map for fanning out (contributed)
+## 2026-09-25 — Plans that say what can run in parallel, a GitHub Copilot map for fanning out (contributed), and sturdier Windows hooks
 
 - `structuring-an-implementation-plan` now gives each task a `Depends on:` and a
   `Parallel-safe:` line and, when a plan may run in parallel, a phase list up front, so a
@@ -42,6 +42,11 @@ Everything above the first `##` is preamble and is never rendered.
 - The Copilot mapping now covers the GitHub Copilot app: a project session behaves like the
   CLI, the general chat offers no custom agents, and a lane that needs real isolation can run
   as a session of its own, in its own worktree.
+- On Windows, TBaguette's hook launcher no longer runs a `bash` it finds in the project you
+  opened: it looks only in Git for Windows' install folders and on your `PATH`. The
+  repository also checks every text file out with LF endings now, so a fresh Windows install
+  made with Git's default settings keeps the hooks runnable. An older Windows install whose
+  hooks never ran picks this up only when it is reinstalled.
 
 ## 2026-09-25 — Four checks that come back clean for the wrong reason
 
