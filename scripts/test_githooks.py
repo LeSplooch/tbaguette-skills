@@ -38,22 +38,37 @@ def _throwaway_repo(tmp: Path) -> Path:
     return tmp
 
 
+HOOKS = ("pre-commit", "pre-push")
+
+
 class TestTheRealHook(unittest.TestCase):
     def test_hook_exists_and_is_executable(self):
-        hook = REPO_ROOT / HOOKS_DIRNAME / "pre-commit"
-        self.assertTrue(hook.is_file())
-        self.assertTrue(hook.stat().st_mode & stat.S_IXUSR, "pre-commit is not executable")
+        for name in HOOKS:
+            with self.subTest(hook=name):
+                hook = REPO_ROOT / HOOKS_DIRNAME / name
+                self.assertTrue(hook.is_file())
+                self.assertTrue(hook.stat().st_mode & stat.S_IXUSR, f"{name} is not executable")
 
     def test_hook_is_committed_with_its_executable_bit(self):
         """A hook that loses its +x in the index is inert on every fresh clone,
         and the symptom is silence rather than an error."""
-        out = _git(REPO_ROOT, "ls-files", "-s", f"{HOOKS_DIRNAME}/pre-commit").stdout
-        self.assertTrue(out.startswith("100755"), f"expected mode 100755, got {out.split()[0:1]}")
+        for name in HOOKS:
+            with self.subTest(hook=name):
+                out = _git(REPO_ROOT, "ls-files", "-s", f"{HOOKS_DIRNAME}/{name}").stdout
+                self.assertTrue(out.startswith("100755"),
+                                f"expected mode 100755, got {out.split()[0:1]}")
 
     def test_hook_regenerates_the_site(self):
         body = (REPO_ROOT / HOOKS_DIRNAME / "pre-commit").read_text(encoding="utf-8")
         self.assertIn("scripts/generate.py", body)
         self.assertIn("git add docs/", body)
+
+    def test_push_hook_checks_the_crumb_on_master_only(self):
+        """What it does is covered end to end in test_crumb_check.py; this
+        only pins that the file shipped is the one those tests drive."""
+        body = (REPO_ROOT / HOOKS_DIRNAME / "pre-push").read_text(encoding="utf-8")
+        self.assertIn("scripts/crumb_check.py", body)
+        self.assertIn('"refs/heads/master"', body)
 
 
 class TestEnsureWired(unittest.TestCase):

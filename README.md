@@ -105,14 +105,18 @@ three test files). Design rationale — the palette, the content schema, why it 
 like a bakery — is in
 [`superpowers/specs/2026-08-13-tbaguette-showcase-design.md`](superpowers/specs/2026-08-13-tbaguette-showcase-design.md).
 
-No setup step after cloning. `python3 scripts/run_tests.py` wires the pre-commit
-hook itself the first time you run it, and says so when it does.
+No setup step after cloning. `python3 scripts/run_tests.py` wires the git hooks
+itself the first time you run it, and says so when it does.
 
-The hook lives in [`.githooks/`](.githooks/pre-commit) and regenerates the site before
-every commit, unconditionally — including a CSS- or skills-only change, which is still
-"the site was updated." It exists because that got missed manually once: a styles-only
-commit shipped without regenerating, leaving the header's own "Updated" timestamp
-pointing at the previous commit instead of itself.
+The hooks live in [`.githooks/`](.githooks/pre-commit). `pre-commit` regenerates the
+site before every commit, unconditionally — including a CSS- or skills-only change,
+which is still "the site was updated." It exists because that got missed manually once:
+a styles-only commit shipped without regenerating, leaving the header's own "Updated"
+timestamp pointing at the previous commit instead of itself. `pre-push` refuses a push
+to `master` whose skill graph (the Crumb) no longer matches the skills in the same commit, which
+catches the routes around the first hook: a commit made with hooks off, a merge, a
+regeneration from edits nobody staged. `python3 scripts/crumb_check.py [REV] [--live]`
+runs the same check by hand, `--live` against the deployed site.
 
 It needs wiring because git will not read it otherwise: hooks come from `.git/hooks` by
 default, and `core.hooksPath` — the setting that redirects it — is local to each clone

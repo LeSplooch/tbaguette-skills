@@ -43,6 +43,8 @@ SUITES = [
     ("git hooks", [sys.executable, "test_githooks.py"]),
     ("skill cross-references", [sys.executable, "test_skill_references.py"]),
     ("skill graph", [sys.executable, "-m", "unittest", "test_skill_graph", "-v"]),
+    ("the Crumb matches its skills",
+     [sys.executable, "-m", "unittest", "test_crumb_check", "-v"]),
     ("skill frontmatter limits",
      [sys.executable, "-m", "unittest", "test_skill_frontmatter", "-v"]),
     # The only suite that hits the network (clones the real, published repo

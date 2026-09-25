@@ -41,6 +41,12 @@ This repo's GitHub Pages site is served directly from `docs/` on `master`,
 with no separate build or deploy step. Pushing *is* publishing here, and
 that's intentional, not something to gate behind an extra confirmation.
 
+A push to `master` runs `.githooks/pre-push`, which refuses to publish a Crumb
+(the skill graph at `/graph/`) that no longer matches the skills in the same
+commit; `scripts/crumb_check.py` names what is stale. That refusal is not a
+permissions problem: rebuild the site in a tree that matches the commit, commit
+`docs/`, and push again. Never `--no-verify` past it.
+
 This does not extend to destructive or hard-to-reverse git operations
 (force-push, `reset --hard`, rewriting published history, deleting branches).
 Those still need explicit confirmation, same as anywhere else.

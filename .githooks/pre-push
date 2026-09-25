@@ -1,0 +1,48 @@
+#!/bin/sh
+# Pre-push hook: refuse to publish a Crumb that describes other skills.
+#
+# The Crumb -- the skill graph at /graph/, the graph.json it draws, and the
+# landing page's banner -- is generated from skills/, and pushing to master is
+# publishing: GitHub Pages serves docs/ straight off it. The pre-commit hook
+# keeps the two in step on an ordinary commit. This catches the routes around
+# it: a commit made with hooks off, a merge (git runs pre-merge-commit there,
+# never pre-commit), and a hook that regenerated from edits nobody staged.
+#
+# It checks only the commit a push would leave master at, reading that commit
+# and nothing in the working tree -- see scripts/crumb_check.py. A push to any
+# other branch passes untouched: only master is served, and a branch may carry
+# commits whose site gets rebuilt later.
+#
+# Wired the same way as pre-commit (core.hooksPath -> .githooks, which
+# scripts/run_tests.py sets on its first run).
+
+set -u
+
+# No work tree (a bare mirror pushing on): no scripts/ to check with.
+repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+checker="$repo_root/scripts/crumb_check.py"
+if [ ! -f "$checker" ]; then
+    # A checkout from before the check existed: nothing to run it with.
+    exit 0
+fi
+
+status=0
+while read -r local_ref local_sha remote_ref remote_sha; do
+    [ "$remote_ref" = "refs/heads/master" ] || continue
+    case "$local_sha" in
+        *[!0]*) ;;
+        *) continue ;;  # a deletion publishes nothing
+    esac
+    # </dev/null: the checker must never read the ref lines this loop is reading.
+    python3 "$checker" "$local_sha" </dev/null || status=$?
+done
+
+if [ "$status" -ne 0 ]; then
+    printf '%s\n' \
+        "pre-push: refused -- the Crumb this push would publish does not match its skills (crumb_check exit $status)." \
+        "pre-push: rebuild the site in a tree that matches the commit (clean status, or a fresh worktree):" \
+        "pre-push:   python3 scripts/generate.py --base-path /tbaguette-skills" \
+        "pre-push: then commit docs/ and push again. If it names skills this push never touched," \
+        "pre-push: the site was built from edits nobody staged -- another session's, in a shared tree." >&2
+fi
+exit "$status"
