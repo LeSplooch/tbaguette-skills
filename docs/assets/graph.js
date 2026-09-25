@@ -1253,6 +1253,7 @@
     if (this.view === 'anatomy' || this.ring > 0.01) { this.drawAnatomyUnder(ctx, t); }
     if (this.view !== 'anatomy') {
       this.familyBoxes = null;
+      this.overlays = this.overlayBoxes();
       this.drawFamilyLabels(ctx);
       if (this.mix > 0.01) { this.drawWheelBands(ctx); }
       this.drawEdges(ctx, t);
@@ -1441,11 +1442,12 @@
   };
 
   // Greedy placement: the most important labels claim space first, and a
-  // label that would overlap one already placed is simply not drawn — the
-  // same rule a good map follows.
+  // label with nowhere to go is simply not drawn — the same rule a good map
+  // follows. Zooming in makes room, and the pointer always gets its name.
   App.prototype.drawLabels = function (ctx) {
-    var pal = this.palette, self = this, emph = this.emphasis();
-    var boxes = (this.mix < 0.5 && this.familyBoxes) ? this.familyBoxes.slice() : [], k = this.cam.k;
+    var pal = this.palette, self = this, emph = this.emphasis(), nodes = this.model.nodes;
+    var boxes = ((this.mix < 0.5 && this.familyBoxes) ? this.familyBoxes : []).concat(this.overlays || []), k = this.cam.k;
+    var placedLabels = this.labelBoxes = [];
     var wheel = this.mix > 0.5 && this.wheelLabelsAll;
     var budget = wheel ? 999 : clamp(Math.round(10 + (k - 0.6) * 40), 8, 999);
     var font = this.labelFont(500, wheel ? 10.5 : 12, 'body');
@@ -1478,17 +1480,26 @@
         drawn++;
         continue;
       }
-      var x = n.sx + n.sr + 6, y = n.sy;
-      var left = x + w > this.W - 8;
-      if (left) { x = n.sx - n.sr - 6 - w; }
-      var box = [x - 3, y - 8, x + w + 3, y + 8];
-      var clash = false;
-      for (var j = 0; j < boxes.length; j++) {
-        var b = boxes[j];
-        if (box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1]) { clash = true; break; }
+      // Four spots, in the order a reader looks: right of the dot, left of
+      // it, above, below. The first that covers no other label, no other
+      // skill and none of the stage's furniture wins, and last frame's spot
+      // is tried first so a label does not hop while the skills drift.
+      var spots = [[n.sx + n.sr + 6, n.sy], [n.sx - n.sr - 6 - w, n.sy],
+        [n.sx - w / 2, n.sy - n.sr - 11], [n.sx - w / 2, n.sy + n.sr + 11]];
+      var tries = n.labelSpot > 0 ? [n.labelSpot, 0, 1, 2, 3] : [0, 1, 2, 3], chosen = -1, box = null;
+      for (var s = 0; s < tries.length && chosen < 0; s++) {
+        var sp = spots[tries[s]], bx = [sp[0] - 3, sp[1] - 8, sp[0] + w + 3, sp[1] + 8];
+        if (this.labelFits(bx, n, boxes, nodes)) { chosen = tries[s]; box = bx; }
       }
-      if (clash && !forced) { continue; }
+      if (chosen < 0) {
+        if (!forced) { continue; }
+        chosen = spots[0][0] + w > this.W - 8 ? 1 : 0;
+        box = [spots[chosen][0] - 3, spots[chosen][1] - 8, spots[chosen][0] + w + 3, spots[chosen][1] + 8];
+      }
+      n.labelSpot = chosen;
+      var x = spots[chosen][0], y = spots[chosen][1];
       boxes.push(box);
+      placedLabels.push({ n: n, box: box });
       ctx.strokeStyle = rgba(pal.bg, 0.85);
       ctx.lineWidth = 3.5;
       ctx.globalAlpha = n.pa;
@@ -1498,6 +1509,18 @@
       ctx.globalAlpha = 1;
       drawn++;
     }
+  };
+
+  // A skill's name fits where it stays on the canvas, clear of every box
+  // already claimed and of every other visible skill's dot.
+  App.prototype.labelFits = function (box, owner, boxes, nodes) {
+    if (box[0] < 4 || box[1] < 4 || box[2] > this.W - 8 || box[3] > this.H - 4) { return false; }
+    for (var i = 0; i < boxes.length; i++) { if (boxesMeet(box, boxes[i])) { return false; } }
+    for (i = 0; i < nodes.length; i++) {
+      var m = nodes[i];
+      if (m !== owner && m.pa >= 0.3 && boxMeetsDisc(box, m.sx, m.sy, m.sr + 2)) { return false; }
+    }
+    return true;
   };
 
   App.prototype.drawRadialLabel = function (ctx, text, x, y, angle, offset, color, strong, size) {
@@ -1518,90 +1541,184 @@
   };
 
   App.prototype.drawFamilyLabels = function (ctx) {
-    var pal = this.palette, self = this, emph = this.emphasis();
+    var pal = this.palette, emph = this.emphasis();
     var a = (1 - this.mix) * this.edgeFade;
     if (a < 0.02) { return; }
     ctx.font = 'italic 500 ' + (this.compact ? 15 : 19) + 'px "Fraunces", ui-serif, Georgia, serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    // Each family's name sits over its own core — the centroid weighted
-    // away from the widely connected skills that live between families —
-    // and the names then push each other apart until none overlap.
-    var nodes = this.model.nodes, memo = this.familySpot || (this.familySpot = {});
-    var band = this.overlayMargins(10), W = this.W, H = this.H, placed = [];
-    var cost = function (x, y, w, h) {
-      var hits = 0;
-      // Off the free band — under the legend or the tools, or past an edge —
-      // is worse than crossing any number of skills.
-      if (x - w / 2 < band.left || x + w / 2 > W - band.right || y - h / 2 < band.top || y + h / 2 > H - band.bottom) { hits += 40; }
-      for (var j = 0; j < placed.length; j++) {
-        var q = placed[j];
-        if (Math.abs(q.x - x) < (q.w + w) / 2 + 8 && Math.abs(q.y - y) < (q.h + h) / 2) { hits += 12; }
-      }
-      for (var i = 0; i < nodes.length; i++) {
-        var n = nodes[i];
-        if (n.pa < 0.3) { continue; }
-        var r = n.sr + 3;
-        if (n.sx + r > x - w / 2 && n.sx - r < x + w / 2 && n.sy + r > y - h / 2 && n.sy - r < y + h / 2) { hits += 1 + n.sr / 6; }
-      }
-      return hits;
+    var labels = this.placeFamilyLabels(ctx);
+    this.familyBoxes = labels.filter(function (l) { return l.show; }).map(function (l) { return l.box; });
+    // Names come and go with a short fade rather than a blink.
+    var vis = this.familyVis || (this.familyVis = {}), snap = this.reduced;
+    labels.forEach(function (l) {
+      var c = l.c, v = vis[c.slug] === undefined || snap ? (l.show ? 1 : 0) : clamp(vis[c.slug] + (l.show ? 0.12 : -0.12), 0, 1);
+      vis[c.slug] = v;
+      if (v <= 0) { return; }
+      var dim = emph && !c.nodes.some(function (n) { return emph.nodes[n.slug] === 1; });
+      ctx.globalAlpha = a * (dim ? 0.25 : 0.85) * v;
+      ctx.strokeStyle = rgba(pal.bg, 0.7);
+      ctx.lineWidth = 4;
+      ctx.lineJoin = 'round';
+      ctx.fillStyle = rgba(pal.text2);
+      var top = l.y - (l.lines.length - 1) * l.lineH / 2;
+      l.lines.forEach(function (line, i) {
+        ctx.strokeText(line, l.x, top + i * l.lineH);
+        ctx.fillText(line, l.x, top + i * l.lineH);
+      });
+      // A short rule in the family's colour under its name: the label is
+      // text-coloured (legible), the rule carries the identity.
+      var w = Math.min(l.w, 56);
+      ctx.fillStyle = rgba(pal.cats[c.index]);
+      ctx.fillRect(l.x - w / 2, top + (l.lines.length - 1) * l.lineH + 12, w, 2);
+    });
+    ctx.globalAlpha = 1;
+    ctx.textAlign = 'left';
+  };
+
+  // Where a family's name may go: its core, then rings of twelve directions
+  // at growing distance. The offset is half the name's width sideways and
+  // half its height up or down, so a spot at distance r keeps the name's
+  // near edge about r from the core whichever way it points.
+  var FAMILY_RINGS = [0, 0.55, 1, 1.5, 2.1];
+  var FAMILY_TURNS = 12;
+
+  // Each family's name goes where it crosses the fewest skills and no other
+  // name or overlay, as near its own core as that allows, and never nearer
+  // another family's core than its own: a name that drifts toward the
+  // neighbours reads as theirs. A long name may break onto two balanced
+  // lines when that finds it room, as a map stacks a long place name.
+  // Bigger families choose first. A name keeps last frame's spot unless
+  // another is clearly better, so the skills' gentle drift never makes it
+  // hop.
+  App.prototype.placeFamilyLabels = function (ctx) {
+    var nodes = this.model.nodes, W = this.W, H = this.H;
+    var band = this.overlayMargins(10), overlays = this.overlays || [];
+    var memo = this.familySpot || (this.familySpot = {}), shown = this.familyShown || (this.familyShown = {});
+    var lineH = Math.round((this.compact ? 15 : 19) * 1.2), frozen = !!this.emphasis();
+    var layout = function (lines) {
+      var w = 0;
+      lines.forEach(function (line) { w = Math.max(w, ctx.measureText(line).width); });
+      return { lines: lines, w: w, h: 22 + (lines.length - 1) * lineH };
     };
-    var labels = this.model.categories.filter(function (c) { return c.nodes.length; }).map(function (c) {
+    var fams = this.model.categories.filter(function (c) { return c.nodes.length; }).map(function (c) {
+      // The core: the centroid, weighted away from the widely connected
+      // skills that live between families.
       var x = 0, y = 0, wsum = 0, spread = 0;
       c.nodes.forEach(function (n) { var w = 1 / (1 + n.degree / 6); x += n.sx * w; y += n.sy * w; wsum += w; });
       x /= wsum; y /= wsum;
       c.nodes.forEach(function (n) { spread += Math.hypot(n.sx - x, n.sy - y); });
       spread /= c.nodes.length;
-      var w = ctx.measureText(c.title).width, h = 22, d = Math.min(spread * 0.9, 70) + 14;
-      // Try the four sides of the family and keep whichever crosses the
-      // fewest skills — sticking with last frame's choice unless another is
-      // clearly better, so a name never flickers between two spots.
-      var spots = [[x, y - d], [x, y + d + 4], [x - d - w / 2, y], [x + d + w / 2, y]];
-      var prev = memo[c.slug] === undefined ? 0 : memo[c.slug], best = prev, bestCost = cost(spots[prev][0], spots[prev][1], w, h) - 1.5;
-      for (var i = 0; i < spots.length; i++) {
-        var ci = cost(spots[i][0], spots[i][1], w, h) + i * 0.2;
-        if (ci < bestCost) { bestCost = ci; best = i; }
+      var words = c.title.split(' '), layouts = [layout([c.title])], split = null;
+      for (var i = 1; i < words.length; i++) {
+        var two = layout([words.slice(0, i).join(' '), words.slice(i).join(' ')]);
+        if (!split || two.w < split.w) { split = two; }
       }
-      memo[c.slug] = best;
-      var label = { c: c, x: spots[best][0], y: spots[best][1], w: w, h: h };
-      placed.push(label);
-      return label;
+      if (split) { layouts.push(split); }
+      return { c: c, cx: x, cy: y, layouts: layouts, lineH: lineH, d: Math.min(spread * 0.9, 70) + 14 };
     });
-    for (var pass = 0; pass < 24; pass++) {
-      var moved = false;
-      for (var i = 0; i < labels.length; i++) {
-        for (var j = i + 1; j < labels.length; j++) {
-          var p = labels[i], q = labels[j];
-          var ox = (p.w + q.w) / 2 + 10 - Math.abs(p.x - q.x), oy = (p.h + q.h) / 2 + 2 - Math.abs(p.y - q.y);
-          if (ox > 0 && oy > 0) {
-            moved = true;
-            if (oy < ox) { var sy = (p.y < q.y ? -1 : 1) * oy / 2; p.y += sy; q.y -= sy; }
-            else { var sx = (p.x < q.x ? -1 : 1) * ox / 2; p.x += sx; q.x -= sx; }
+    var placed = [];
+    fams.slice().sort(function (p, q) { return q.c.nodes.length - p.c.nodes.length || p.c.index - q.c.index; }).forEach(function (f) {
+      // Only skills close enough to reach some spot can cost anything. A
+      // skill counts by where its fade is headed, not where it is: one
+      // brightening back after a highlight is an obstacle already, or the
+      // names would shuffle into room that is about to close.
+      var reach = f.d * FAMILY_RINGS[FAMILY_RINGS.length - 1] + f.layouts[0].w + 24;
+      var near = nodes.filter(function (n) { return n.ta >= 0.3 && Math.abs(n.sx - f.cx) < reach && Math.abs(n.sy - f.cy) < reach; });
+      // A spot's cost, plus the two facts the name's visibility turns on:
+      // whether it breaks a rule outright, and how many dots it truly covers
+      // (the cost counts a few pixels of clearance too, which is taste).
+      var hard = false, covered = 0;
+      var cost = function (x, y, box) {
+        var hits = 0, i;
+        hard = false; covered = 0;
+        // Off the free band or under the stage's furniture is worse than
+        // crossing any number of skills, and so is covering another name.
+        if (box[0] < band.left || box[2] > W - band.right || box[1] < band.top || box[3] > H - band.bottom) { hits += 40; hard = true; }
+        for (i = 0; i < overlays.length; i++) { if (boxesMeet(box, overlays[i])) { hits += 40; hard = true; } }
+        for (i = 0; i < placed.length; i++) { if (boxesMeet(box, placed[i].box)) { hits += 30; hard = true; } }
+        for (i = 0; i < near.length; i++) {
+          var n = near[i];
+          if (boxMeetsDisc(box, n.sx, n.sy, n.sr + 3)) {
+            hits += 1 + n.sr / 6;
+            if (boxMeetsDisc(box, n.sx, n.sy, n.sr)) { covered++; }
           }
         }
+        var own = Math.hypot(x - f.cx, y - f.cy);
+        for (i = 0; i < fams.length; i++) {
+          if (fams[i] !== f && Math.hypot(x - fams[i].cx, y - fams[i].cy) < own) { hits += 3; hard = true; break; }
+        }
+        return hits;
+      };
+      var spots = [];
+      f.layouts.forEach(function (L, li) {
+        for (var ring = 0; ring < FAMILY_RINGS.length; ring++) {
+          var r = FAMILY_RINGS[ring] * f.d, turns = ring === 0 ? 1 : FAMILY_TURNS;
+          for (var t = 0; t < turns; t++) {
+            // Straight up first: where a reader looks for a heading. One
+            // line reads better than two, so a break has to earn its place.
+            var ang = -Math.PI / 2 + t * TAU / FAMILY_TURNS;
+            var x = f.cx + (r > 0 ? Math.cos(ang) * (r + L.w / 2) : 0);
+            var y = f.cy + (r > 0 ? Math.sin(ang) * (r + L.h / 2) : 0);
+            var rise = (L.lines.length - 1) * lineH / 2;
+            spots.push({ k: spots.length, x: x, y: y, L: L, bias: ring * 0.35 + li * 0.6 + t * 0.002,
+              box: [x - L.w / 2 - 4, y - rise - 11, x + L.w / 2 + 4, y + rise + 15] });
+          }
+        }
+      });
+      // A name may be shown at a spot that breaks no rule outright and
+      // crosses at most one dot — two if it is already showing, so none
+      // blinks at the threshold. The best such spot wins. Where there is
+      // none — a phone, or a view zoomed far out — the name is left off, as
+      // a map leaves off a town it has no room to letter: the family chips
+      // still name every family, and zooming in brings the names back.
+      var prev = memo[f.c.slug], allow = shown[f.c.slug] ? 2 : 1, chosen;
+      if (frozen && spots[prev]) {
+        // While something is lit the names hold still and ride with their
+        // families: the lit skills clear room by dimming the rest, and a name
+        // that moved every time the pointer did would be noise.
+        chosen = spots[prev];
+        f.show = !!shown[f.c.slug];
+      } else {
+        var best = null, bestScore = Infinity, spare = null, spareScore = Infinity;
+        spots.forEach(function (spot) {
+          var score = cost(spot.x, spot.y, spot.box) + spot.bias - (spot.k === prev ? 1.5 : 0);
+          if (!hard && covered <= allow) {
+            if (score < bestScore) { bestScore = score; best = spot; }
+          } else if (score < spareScore) { spareScore = score; spare = spot; }
+        });
+        f.show = !!best;
+        chosen = best || spare;
       }
-      if (!moved) { break; }
-    }
-    this.familyBoxes = labels.map(function (l) { return [l.x - l.w / 2 - 4, l.y - 11, l.x + l.w / 2 + 4, l.y + 15]; });
-    labels.forEach(function (l) {
-      var c = l.c;
-      var dim = emph && !c.nodes.some(function (n) { return emph.nodes[n.slug] === 1; });
-      ctx.globalAlpha = a * (dim ? 0.25 : 0.85);
-      ctx.strokeStyle = rgba(pal.bg, 0.7);
-      ctx.lineWidth = 4;
-      ctx.lineJoin = 'round';
-      ctx.strokeText(c.title, l.x, l.y);
-      ctx.fillStyle = rgba(pal.text2);
-      ctx.fillText(c.title, l.x, l.y);
-      // A short rule in the family's colour under its name: the label is
-      // text-coloured (legible), the rule carries the identity.
-      var w = Math.min(l.w, 56);
-      ctx.fillStyle = rgba(pal.cats[c.index]);
-      ctx.fillRect(l.x - w / 2, l.y + 12, w, 2);
+      f.x = chosen.x; f.y = chosen.y; f.box = chosen.box; f.lines = chosen.L.lines; f.w = chosen.L.w;
+      memo[f.c.slug] = chosen.k;
+      shown[f.c.slug] = f.show;
+      if (f.show) { placed.push(f); }
     });
-    ctx.globalAlpha = 1;
-    ctx.textAlign = 'left';
+    return fams;
   };
+
+  // The stage's own furniture — the hint, the zoom tools, the legend, the
+  // trail, the notes handle — as boxes in canvas coordinates, so no label
+  // lands under something drawn over the canvas. Read every frame: the hint
+  // retires, the trail comes and goes, and phones stack these differently.
+  App.prototype.overlayBoxes = function () {
+    var stage = this.stage.getBoundingClientRect(), boxes = [];
+    var els = this.root.querySelectorAll('[data-crumb-hint], .crumb__tools, [data-crumb-legend], [data-crumb-trail], [data-crumb-sheet]');
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].hidden || els[i].classList.contains('crumb__hint--gone')) { continue; }
+      var r = els[i].getBoundingClientRect();
+      var box = [r.left - stage.left, r.top - stage.top, r.right - stage.left, r.bottom - stage.top];
+      if (r.width && r.height && box[2] > 0 && box[0] < this.W && box[3] > 0 && box[1] < this.H) { boxes.push(box); }
+    }
+    return boxes;
+  };
+
+  function boxesMeet(a, b) { return a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1]; }
+  function boxMeetsDisc(b, x, y, r) {
+    var dx = x - clamp(x, b[0], b[2]), dy = y - clamp(y, b[1], b[3]);
+    return dx * dx + dy * dy < r * r;
+  }
 
   App.prototype.drawWheelBands = function (ctx) {
     var pal = this.palette, self = this, m = easeInOutCubic(this.mix);
