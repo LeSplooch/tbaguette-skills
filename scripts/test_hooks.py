@@ -662,6 +662,37 @@ def check_user_prompt_submit_cursor() -> None:
               list(other.keys()) == ["additional_context"])
 
 
+def check_run_hook_cmd_windows_bash_lookup() -> None:
+    # A hook runs with the opened project as its working directory, and on
+    # Windows cmd.exe and where.exe both look in the current directory before
+    # PATH. Without this guard, a project shipping its own bash.exe or bash.cmd
+    # is run at session start on any machine whose Git for Windows is not in
+    # one of the two Program Files locations checked first.
+    print("run-hook.cmd: Windows bash lookup ignores the current directory")
+    parts = RUN_HOOK_CMD.read_text(encoding="utf-8").split("CMDBLOCK", 2)
+    check("the batch half is delimited by the CMDBLOCK heredoc", len(parts) == 3)
+    batch = parts[1]
+    guard = batch.find('set "NoDefaultCurrentDirectoryInExePath=1"')
+    lookups = [i for i in (batch.find("where "), batch.find("\n    bash ")) if i >= 0]
+    check("the batch half looks bash up somewhere", bool(lookups))
+    check("sets NoDefaultCurrentDirectoryInExePath before any bare bash lookup",
+          0 <= guard < min(lookups or [0]))
+    check("asks where.exe to search PATH only",
+          "where $PATH:bash" in batch and "where bash" not in batch)
+
+
+def check_gitattributes_pins_lf() -> None:
+    # Git for Windows checks text out with CRLF by default, and a bash hook
+    # with CRLF endings fails on its first line -- after which the plugin's
+    # hooks inject nothing, silently.
+    print(".gitattributes: LF on every checkout")
+    attrs = REPO_ROOT / ".gitattributes"
+    lines = attrs.read_text(encoding="utf-8").splitlines() if attrs.exists() else []
+    check(".gitattributes exists", attrs.exists())
+    check("every text file checks out with LF",
+          any(line.split() == ["*", "text=auto", "eol=lf"] for line in lines))
+
+
 def main() -> None:
     check_hooks_json_shape()
     check_hooks_copilot_json_shape()
@@ -677,6 +708,8 @@ def main() -> None:
     check_session_start_vscode_shape()
     check_session_start_cursor_shape()
     check_run_hook_cmd_unix_passthrough()
+    check_run_hook_cmd_windows_bash_lookup()
+    check_gitattributes_pins_lf()
     check_update_check_same_sha()
     check_update_check_update_available()
     check_update_check_dirty_tree()

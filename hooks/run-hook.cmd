@@ -33,7 +33,11 @@ if exist "C:\Program Files (x86)\Git\bin\bash.exe" (
     exit /b %ERRORLEVEL%
 )
 
-where bash >nul 2>nul
+REM Never take bash from the current directory. A hook runs with the opened
+REM project as its working directory, and cmd.exe and where.exe both look
+REM there before PATH, so a project shipping its own bash.exe would run here.
+set "NoDefaultCurrentDirectoryInExePath=1"
+where $PATH:bash >nul 2>nul
 if %ERRORLEVEL% equ 0 (
     bash "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
     exit /b %ERRORLEVEL%

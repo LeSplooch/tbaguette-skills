@@ -1,0 +1,6 @@
+# Every text file checks out with LF, on every platform. The hooks are bash
+# scripts, and Git for Windows' default of converting to CRLF on checkout
+# breaks them at their first command. run-hook.cmd is a batch/bash polyglot;
+# its batch half never jumps to a label (no goto, no call), so cmd.exe reads it
+# correctly with LF too.
+* text=auto eol=lf

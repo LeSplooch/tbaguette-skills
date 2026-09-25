@@ -349,7 +349,12 @@ do. Worth re-checking the first time anyone runs each for real:
   here with a fallback chain, so that if neither turns out to be true the
   failure mode is Cursor's cwd-relative assumption rather than a path rooted at
   `/`. The VS Code file falls back through `CLAUDE_PLUGIN_ROOT` first, since
-  VS Code is documented as setting that one.
+  VS Code is documented as setting that one. Weigh the fallback's cost when
+  re-checking it: `.` is the session's working directory, which in a project
+  session is the project, so if the fallback ever fires it runs whatever
+  `hooks/run-hook.cmd` that project carries. Copilot CLI was seen expanding
+  `PLUGIN_ROOT` (1.0.87, `--plugin-dir`); once every Copilot surface is
+  confirmed to, make the fallback fail closed instead.
 - **A manifest `name` with capitals in it.** `TBaguette` is kept because the
   plugin name is what prefixes every skill (`/TBaguette:naming-things`), and
   because `.claude-plugin/plugin.json` — a manifest location both surfaces
