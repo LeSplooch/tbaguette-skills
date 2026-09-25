@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-25 — Plans that say what can run in parallel, a GitHub Copilot map for fanning out (contributed), and sturdier Windows hooks
+## 2026-09-25 — Plans that say what can run in parallel, a GitHub Copilot map for fanning out (contributed), and fixes for Windows and other harnesses
 
 - `structuring-an-implementation-plan` now gives each task a `Depends on:` and a
   `Parallel-safe:` line and, when a plan may run in parallel, a phase list up front, so a
@@ -42,6 +42,10 @@ Everything above the first `##` is preamble and is never rendered.
 - The Copilot mapping now covers the GitHub Copilot app: a project session behaves like the
   CLI, the general chat offers no custom agents, and a lane that needs real isolation can run
   as a session of its own, in its own worktree.
+- `keeping-tbaguette-current` now works wherever TBaguette is installed: it uses the install
+  path the session-start check reports instead of assuming Claude Code's
+  `~/.claude/skills/TBaguette`, so on another harness it no longer decides there is nothing
+  to update because it looked in the wrong folder.
 - On Windows, TBaguette's hook launcher no longer runs a `bash` it finds in the project you
   opened: it looks only in Git for Windows' install folders and on your `PATH`. The
   repository also checks every text file out with LF endings now, so a fresh Windows install
