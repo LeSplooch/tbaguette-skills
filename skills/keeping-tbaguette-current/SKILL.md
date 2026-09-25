@@ -7,9 +7,10 @@ description: Use at the start of every conversation, unconditionally — not gat
 
 ## What this is
 
-The TBaguette plugin, once installed, is a git clone
-(`~/.claude/skills/TBaguette`) that only ever moves forward when someone
-explicitly re-runs the install command. Nothing tells a user it's fallen
+The TBaguette plugin, once installed, is on most harnesses a git clone
+(`~/.claude/skills/TBaguette` on Claude Code; wherever the harness put it on
+any other) that only ever moves forward when someone explicitly re-runs the
+install command. Nothing tells a user it's fallen
 behind. This skill is that check — and, since checking and then leaving the
 user to go run a command themselves is half a job, it also applies the
 update when it's safe to, and tells them what actually changed rather than
@@ -20,16 +21,28 @@ report**.
 
 ## Where things live
 
-- The installed plugin: `~/.claude/skills/TBaguette` (a git clone tracking
-  `origin/master` of `github.com/LeSplooch/tbaguette-skills`).
-- The changelog this skill maintains: `~/.claude/tbaguette-update-log.md` —
-  outside the plugin's own directory on purpose, since that directory gets
-  overwritten by every pull and is no place to keep state that needs to
-  survive one.
+- The installed plugin: the path the session-start check reports as
+  `Installed plugin path:` — `~/.claude/skills/TBaguette` on Claude Code, and
+  wherever the harness installed it on any other (a git clone tracking
+  `origin/master` of `github.com/LeSplooch/tbaguette-skills`). With no report
+  in view, it is the directory two levels above this skill's own `SKILL.md`.
+  The commands below write it as `<install>`: put the real path in its place,
+  never Claude Code's by default. It is deliberately not a shell variable —
+  shell state does not survive from one command to the next, and an empty
+  `git -C ""` runs in the user's own project, not in the plugin.
+- The changelog this skill maintains: `tbaguette-update-log.md` in the
+  harness's own user directory — `~/.claude/` on Claude Code, `~/.copilot/` on
+  GitHub Copilot — outside the plugin's own directory on purpose, since that
+  directory gets overwritten by every pull and is no place to keep state that
+  needs to survive one.
 
-If `~/.claude/skills/TBaguette/.git` doesn't exist, there's nothing to do —
-stop quietly. This shouldn't normally happen (this skill only runs from
-inside that same installed plugin), but don't assume; check.
+If `<install>/.git` doesn't exist, there's nothing to do — stop quietly. The
+session-start check says so in as many words when the install is not a
+clone; such an install is its harness's to update, through the harness's own
+plugin-update command, and if the user asked, say that rather than calling
+it current. Draw that conclusion only from the reported path or from where
+this skill was loaded: finding nothing at Claude Code's path on another
+harness means you looked in the wrong place.
 
 ## 1. Check — already done automatically at session start
 
@@ -51,12 +64,12 @@ state already read.
   commands as before, now as the fallback path rather than the only path:
 
   ```
-  git -C ~/.claude/skills/TBaguette fetch origin master --quiet
+  git -C <install> fetch origin master --quiet
   ```
 
   (run with roughly a 15-second timeout). Compare
-  `git -C ~/.claude/skills/TBaguette rev-parse HEAD` against
-  `git -C ~/.claude/skills/TBaguette rev-parse origin/master`.
+  `git -C <install> rev-parse HEAD` against
+  `git -C <install> rev-parse origin/master`.
 
 Either way — hook-provided or freshly run — update the `Last checked:`
 timestamp in the log, including when the fetch itself failed. It's a record
@@ -76,7 +89,7 @@ decision this skill makes.
 ## 2. Safety gate before touching anything
 
 ```
-git -C ~/.claude/skills/TBaguette status --porcelain
+git -C <install> status --porcelain
 ```
 
 If this prints anything, the installed clone has local changes — someone
@@ -84,7 +97,7 @@ hand-edited a file in there, which this directory was never meant to carry.
 **Do not update automatically.** Tell the user plainly: their installed
 TBaguette has local changes that would be affected by updating, so the
 automatic update was skipped, and point them at
-`git -C ~/.claude/skills/TBaguette status` to see what's there. Never
+`git -C <install> status` to see what's there. Never
 discard local changes on someone's behalf to force an update through.
 
 Then hand it to `tending-tbaguette`, which owns the other half of this
@@ -102,11 +115,11 @@ the exception, not the rule.
 ## 3. Update — fast-forward only
 
 ```
-old_head=$(git -C ~/.claude/skills/TBaguette rev-parse HEAD)
+old_head=$(git -C <install> rev-parse HEAD)
 
-git -C ~/.claude/skills/TBaguette merge --ff-only origin/master
+git -C <install> merge --ff-only origin/master
 
-new_head=$(git -C ~/.claude/skills/TBaguette rev-parse HEAD)
+new_head=$(git -C <install> rev-parse HEAD)
 ```
 
 `merge --ff-only`, not `pull` — step 1 already fetched; there's no reason
@@ -129,8 +142,8 @@ commit SHAs alone and leave the version number out of the summary.
 ## 4. Understand what changed — read it, don't just relay it
 
 ```
-git -C ~/.claude/skills/TBaguette log --oneline "$old_head..$new_head"
-git -C ~/.claude/skills/TBaguette diff --name-status "$old_head..$new_head" -- skills/
+git -C <install> log --oneline "$old_head..$new_head"
+git -C <install> diff --name-status "$old_head..$new_head" -- skills/
 ```
 
 `--name-status`, not `--stat` — it prefixes every changed path with `A`
@@ -173,16 +186,15 @@ for.
 
 ## 6. Record it
 
-Prepend a dated entry (newest first) to `~/.claude/tbaguette-update-log.md`
-under `## Updates`, and refresh the `Last checked:` line. Create the file
+Prepend a dated entry (newest first) to the update log (see *Where things
+live*) under `## Updates`, and refresh the `Last checked:` line. Create the file
 with its header if it doesn't exist yet:
 
 ```markdown
 # TBaguette update log
 
 Maintained by the `keeping-tbaguette-current` skill. Records every time the
-installed plugin (`~/.claude/skills/TBaguette`) was checked or updated
-against the published repo.
+installed plugin was checked or updated against the published repo.
 
 Last checked: 2026-08-14T10:03:12Z
 
@@ -202,8 +214,7 @@ on its own, going back as far as this skill has been running.
 
 - **Never rewrites history, never force-pushes** — it only ever fetches and
   fast-forward merges.
-- **Never touches anything outside `~/.claude/skills/TBaguette`** and its
-  own log file.
+- **Never touches anything outside `<install>`** and its own log file.
 - **The plugin's `SessionStart` hook only ever reads.** It runs step 1
   (fetch, compare, `status --porcelain`) and nothing past it — no merge, no
   changelog write, no settings change. Steps 2–6 stay exactly as documented

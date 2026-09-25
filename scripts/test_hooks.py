@@ -693,6 +693,21 @@ def check_gitattributes_pins_lf() -> None:
           any(line.split() == ["*", "text=auto", "eol=lf"] for line in lines))
 
 
+def check_keeping_current_uses_reported_install_path() -> None:
+    # The session-start hook reports the real install path on every harness.
+    # A skill whose commands assume Claude Code's path finds no clone on any
+    # other harness and quietly decides there is nothing to update. The
+    # placeholder is a literal <install>, never a shell variable: shell state
+    # does not survive between tool calls, and an empty `git -C ""` runs in
+    # the user's own project.
+    print("keeping-tbaguette-current: commands use the reported install path")
+    text = (REPO_ROOT / "skills" / "keeping-tbaguette-current" / "SKILL.md").read_text(encoding="utf-8")
+    check("no command hard-codes Claude Code's install path",
+          "git -C ~/.claude/skills/TBaguette" not in text)
+    check("commands take the <install> placeholder", "git -C <install>" in text)
+    check("names where the path comes from", "Installed plugin path:" in text)
+
+
 def main() -> None:
     check_hooks_json_shape()
     check_hooks_copilot_json_shape()
@@ -714,6 +729,7 @@ def main() -> None:
     check_update_check_update_available()
     check_update_check_dirty_tree()
     check_update_check_no_git()
+    check_keeping_current_uses_reported_install_path()
 
     print(f"\n{checker.total} checks passed.")
 
