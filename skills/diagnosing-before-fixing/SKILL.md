@@ -294,6 +294,8 @@ Three failed fixes in a row is a different problem than the one being solved. If
 
 Question *what*, though — three correct fixes that did not hold are one wrong model applied three times, and the model lives in the reproduction rather than in the patches. `clairvoyance` is the pass for that, aimed at the assumptions the bug report's own wording installed: that the failure is where it surfaced, that it is deterministic, that it is one bug rather than two, that the component named is the component at fault.
 
+One oracle a fix loop never consults is the decision the code claims to implement. Where the failing part cites an ADR, a design note, or a spec, read that decision literally against what the code now does before the fourth fix. An implementation that drifted from the decision it names puts every patch inside the drift, and the check that settles it is often named in the decision's own context section. `revalidating-decisions` is the other direction: the decision itself has gone out of date.
+
 Occasionally a complete investigation turns up nothing fixable: the cause is environmental, an inherent timing dependency, or in code nobody here controls. That's a legitimate outcome — document what was ruled out, add the retry, timeout, or error handling the situation actually calls for, and instrument it for next time. Treat the conclusion with suspicion before accepting it, though: the large majority of "no root cause" verdicts turn out to be an incomplete investigation wearing a conclusion's clothes.
 
 ## Common mistakes
