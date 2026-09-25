@@ -4307,7 +4307,7 @@ a.skill-link--bare:focus-visible {
 
 .crumb__hint--gone { opacity: 0; }
 .crumb[data-view='anatomy'] .crumb__hint,
-.crumb[data-view='list'] .crumb__hint { display: none; }
+.crumb:is([data-view='list'], [data-view='matrix']) .crumb__hint { display: none; }
 
 /* Trail: where you walked from, so a walk can be retraced a step at a time. */
 .crumb__trail {
@@ -4366,7 +4366,7 @@ a.skill-link--bare:focus-visible {
 }
 
 .crumb[data-view='anatomy'] .crumb__legend,
-.crumb[data-view='list'] .crumb__legend { display: none; }
+.crumb:is([data-view='list'], [data-view='matrix']) .crumb__legend { display: none; }
 
 /* A wide stage has width to spare and height to protect: the key stands up
    along the left edge, the way a map's does, and the graph keeps the full
@@ -4456,7 +4456,7 @@ a.skill-link--bare:focus-visible {
 }
 
 .crumb__tools .crumb__btn { border-color: transparent; min-height: 2rem; width: 2rem; }
-.crumb[data-view='list'] .crumb__tools { display: none; }
+.crumb:is([data-view='list'], [data-view='matrix']) .crumb__tools { display: none; }
 
 .crumb__size {
   display: inline-flex;
@@ -4958,6 +4958,101 @@ a.crumb-chip:hover,
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-accent);
+}
+
+/* --- matrix view -------------------------------------------------------------------------- */
+
+/* One hue, dim to bright, mixed into the page so both themes keep the number
+   legible: at the strongest cell the digits hold 5.2:1 on crust and 6.2:1 on
+   flour, which is why the two themes stop at different strengths. The number
+   is always printed, so the shade is never the only channel. */
+.crumb__matrix {
+  --matrix-hue: var(--gold-500);
+  --matrix-max: 50%;
+}
+[data-theme='flour'] .crumb__matrix {
+  --matrix-hue: var(--gold-700);
+  --matrix-max: 70%;
+}
+
+.crumb-matrix__lede {
+  max-width: 60ch;
+  margin: calc(-1 * var(--space-3)) 0 var(--space-5);
+  color: var(--text-primary);
+}
+
+.crumb-matrix__scroll { overflow-x: auto; padding-bottom: var(--space-2); }
+
+.crumb-matrix {
+  border-collapse: separate;
+  border-spacing: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.crumb-matrix th { font-weight: 500; }
+
+.crumb-matrix__corner,
+.crumb-matrix__row {
+  /* The family column stays put while the grid scrolls under it. */
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  background: var(--bg);
+}
+
+.crumb-matrix__corner {
+  padding: 0 var(--space-2) var(--space-2) 0;
+  vertical-align: bottom;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.crumb-matrix__col { padding-bottom: var(--space-1); vertical-align: bottom; }
+.crumb-matrix__col abbr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25em;
+  text-decoration: none;
+  color: var(--text-secondary);
+  cursor: help;
+}
+
+.crumb-matrix__row {
+  padding-inline-end: var(--space-3);
+  text-align: start;
+  white-space: nowrap;
+}
+.crumb-matrix__row .crumb-swatch { margin-inline-end: 0.5em; vertical-align: 0.05em; }
+.crumb-matrix__row .crumb-matrix__num { display: inline-block; min-width: 1.6em; color: var(--text-secondary); }
+.crumb-matrix__name { font-family: var(--font-body); color: var(--text-primary); }
+
+.crumb-matrix__cell { width: 2.75rem; height: 2.75rem; padding: 0; }
+.crumb-matrix__cell--self { box-shadow: inset 0 0 0 1px var(--text-secondary); border-radius: var(--radius-sm); }
+.crumb-matrix__cell--self button { box-shadow: inset 0 0 0 1px var(--text-secondary); }
+
+.crumb-matrix__cell button {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--matrix-hue) calc(6% + var(--m) * (var(--matrix-max) - 6%)), var(--bg));
+  color: var(--text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+.crumb-matrix__cell button:hover { outline: 2px solid var(--text-accent); outline-offset: -2px; }
+.crumb-matrix__cell button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+
+/* On a phone the family names would take the whole width; the numbers in the
+   first column stand for them, as they do along the top. */
+@container (width < 40rem) {
+  .crumb-matrix__name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .crumb-matrix__cell { width: 2.25rem; height: 2.25rem; }
+  .crumb-matrix__corner span { display: block; }
 }
 
 /* --- narrow: the panel becomes a sheet over the stage -------------------------------------- */

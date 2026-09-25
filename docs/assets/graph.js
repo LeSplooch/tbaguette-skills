@@ -18,7 +18,9 @@
  *   wheel         — every skill on one circle, citations bundled through it;
  *   anatomy       — one skill opened up: its sections as a ring (arc length
  *                   is word count), what each section cites, who cites it;
- *   list          — the same facts as text, for reading or a screen reader.
+ *   list          — the same facts as text, for reading or a screen reader;
+ *   matrix        — the families against each other: how many citations run
+ *                   from each one to each other one, as a table.
  * Plus a path tracer (how does one skill lead to another, and in which
  * sentences) and a few computed notes about the whole library.
  *
@@ -38,7 +40,7 @@
   var STR = {
     title: 'The crumb',
     meta: '{skills} skills · {pairs} cross-references',
-    views: { constellation: 'Constellation', wheel: 'Wheel', list: 'List' },
+    views: { constellation: 'Constellation', wheel: 'Wheel', matrix: 'Matrix', list: 'List' },
     viewsLabel: 'View',
     searchLabel: 'Find a skill',
     searchPlaceholder: 'Find a skill…',
@@ -105,6 +107,14 @@
     legendBoth: 'both ways',
     listIntro: 'Every skill, what it cites, and what cites it.',
     listOpen: 'Open in the graph',
+    matrixCaption: 'Citations between families. Rows cite, columns are cited.',
+    matrixIntro: 'How the families lean on each other. Read a row across for what that family cites, a column down for who cites it. Each number counts pairs of skills, so the whole grid adds up to the {pairs} cross-references; the outlined diagonal is each family citing itself. Choose a number to see those citations in the graph.',
+    matrixCorner: ['Cites ↓', 'Cited →'],
+    matrixStrongest: 'Across families, the strongest pull is {a} citing {b}, {n} times; the family most cited from outside itself is {c}.',
+    matrixCell: '{a} cites {b}: {n}',
+    matrixCellSelf: '{a} cites itself: {n}',
+    matrixNone: '{a} never cites {b}',
+    matrixShown: '{a} citing {b}: {n}, shown in the graph.',
     announceNode: '{name}, {family}. {role}. Cited by {in}, cites {out}.',
     announceSection: 'Section {n}: {title}. {words} words. Cites {cites}.',
     notes: {
@@ -650,7 +660,7 @@
     var titleHtml = '<div class="crumb__heading"><p class="crumb__title" aria-hidden="true">' + escapeHtml(STR.title) + '</p><p class="crumb__meta" data-crumb-meta></p></div>';
     bar.innerHTML = titleHtml +
       '<div class="crumb__views" role="tablist" aria-label="' + escapeHtml(STR.viewsLabel) + '">' +
-      ['constellation', 'wheel', 'list'].map(function (v) {
+      ['constellation', 'wheel', 'matrix', 'list'].map(function (v) {
         return '<button type="button" role="tab" class="crumb__view" data-crumb-view="' + v + '" aria-selected="' + (v === 'constellation') + '">' + escapeHtml(STR.views[v]) + '</button>';
       }).join('') + '</div>' +
       '<form class="crumb__search" role="search" data-crumb-search>' +
@@ -689,7 +699,8 @@
       '</div>' +
       '<div class="crumb__tip" data-crumb-tip hidden></div>' +
       '<div class="crumb__status" data-crumb-status></div>' +
-      '<div class="crumb__list" data-crumb-list hidden></div>');
+      '<div class="crumb__list" data-crumb-list hidden></div>' +
+      '<div class="crumb__list crumb__matrix" data-crumb-matrix hidden></div>');
     body.appendChild(stage);
     var panel = this.panel = el('aside', 'crumb__panel');
     panel.setAttribute('aria-label', 'Details');
@@ -912,7 +923,7 @@
     var legend = this.$('[data-crumb-legend]');
     var m = { top: pad, bottom: pad + 12, left: pad, right: pad };
     if (this.compact || this.sheet) { m.top = 60; m.bottom = 120; return m; }
-    if (legend && this.view !== 'anatomy' && this.view !== 'list') {
+    if (legend && this.view !== 'anatomy' && !this.isPage()) {
       if (legend.offsetHeight > legend.offsetWidth) { m.left = legend.offsetWidth + 28; m.bottom = 64; }
       else { m.bottom = legend.offsetHeight + 24; }
     }
@@ -1156,7 +1167,9 @@
     var nodes = {}, edges = {};
     if (this.spot) {
       var spot = this.spot;
-      if (spot.type === 'mutual') {
+      if (spot.type === 'flow') {
+        model.edges.forEach(function (e) { if (e.s.cat.slug === spot.from && e.t.cat.slug === spot.to) { edges[e.key] = 1; nodes[e.s.slug] = nodes[e.t.slug] = 1; } });
+      } else if (spot.type === 'mutual') {
         model.edges.forEach(function (e) { if (e.mutual) { edges[e.key] = 1; nodes[e.s.slug] = nodes[e.t.slug] = 1; } });
       } else {
         spot.nodes.forEach(function (slug) {
@@ -1208,7 +1221,7 @@
     this.last = now;
     this.now = now;
     var busy = false;
-    if (this.view !== 'list') {
+    if (!this.isPage()) {
       if (this.sim && this.sim.active() && this.view !== 'anatomy') {
         for (var s = 0; s < 2; s++) { this.sim.tick(); }
         busy = true;
@@ -2217,7 +2230,7 @@
     stage.addEventListener('pointercancel', function (e) { self.onPointerUp(e, true); });
     stage.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { self.setHover(null, -1); self.hideTip(); } });
     stage.addEventListener('wheel', function (e) {
-      if (!self.model || self.view === 'list') { return; }
+      if (!self.model || self.isPage()) { return; }
       e.preventDefault();
       var rect = stage.getBoundingClientRect();
       var factor = Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0018));
@@ -2262,7 +2275,7 @@
   };
 
   App.prototype.onPointerDown = function (e) {
-    if (!this.model || this.view === 'list' || e.target !== this.canvas) { return; }
+    if (!this.model || this.isPage() || e.target !== this.canvas) { return; }
     var p = this.localPoint(e);
     this.pointers[e.pointerId] = { x: p[0], y: p[1], x0: p[0], y0: p[1], t0: performance.now() };
     var ids = Object.keys(this.pointers);
@@ -2283,7 +2296,7 @@
   };
 
   App.prototype.onPointerMove = function (e) {
-    if (!this.model || this.view === 'list') { return; }
+    if (!this.model || this.isPage()) { return; }
     var p = this.localPoint(e);
     var ptr = this.pointers[e.pointerId];
     if (ptr) { ptr.x = p[0]; ptr.y = p[1]; }
@@ -2388,7 +2401,7 @@
   };
 
   App.prototype.onKey = function (e) {
-    if (!this.model || this.view === 'list') { return; }
+    if (!this.model || this.isPage()) { return; }
     var key = e.key;
     if (key === 'Escape') { return; }
     if (this.view === 'anatomy') {
@@ -2532,15 +2545,15 @@
     if (!this.model) { return; }
     var root = this.root;
     root.querySelectorAll('[data-crumb-view]').forEach(function (b) { b.setAttribute('aria-selected', String(b.getAttribute('data-crumb-view') === view)); });
-    var list = this.$('[data-crumb-list]');
-    if (view === 'list') {
-      this.view = 'list';
-      this.renderList();
-      list.hidden = false;
-      root.setAttribute('data-view', 'list');
+    var list = this.$('[data-crumb-list]'), matrix = this.$('[data-crumb-matrix]');
+    list.hidden = view !== 'list';
+    matrix.hidden = view !== 'matrix';
+    if (view === 'list' || view === 'matrix') {
+      this.view = view;
+      if (view === 'list') { this.renderList(); } else { this.renderMatrix(); }
+      root.setAttribute('data-view', view);
       return;
     }
-    list.hidden = true;
     if (this.focus) { this.leaveAnatomy(); }
     this.overview = view;
     this.view = view;
@@ -2553,11 +2566,15 @@
     this.kick();
   };
 
+  // The list and the matrix are pages laid over the stage: no canvas input,
+  // no camera, no frame loop while one is up.
+  App.prototype.isPage = function () { return this.view === 'list' || this.view === 'matrix'; };
+
   App.prototype.openSkill = function (node, opts) {
     if (!this.model) { return; }
     opts = opts || {};
     this.clearEmphasis(true);
-    if (this.view === 'list') { this.$('[data-crumb-list]').hidden = true; }
+    if (this.isPage()) { this.$('[data-crumb-list]').hidden = true; this.$('[data-crumb-matrix]').hidden = true; }
     if (this.view !== 'anatomy') {
       this.trail = [];
       this.root.querySelectorAll('[data-crumb-view]').forEach(function (b) { b.setAttribute('aria-selected', 'false'); });
@@ -2616,7 +2633,15 @@
       this.setView(this.overview);
       return true;
     }
-    if (this.view === 'list') { this.setView(this.overview); return true; }
+    if (this.isPage()) { this.setView(this.overview); return true; }
+    // A flow chosen in the matrix steps back to the matrix, on the same number.
+    if (this.spot && this.spot.type === 'flow') {
+      this.clearEmphasis(true);
+      this.setView('matrix');
+      var cell = this.root.querySelector('[data-crumb-matrix] [tabindex="0"]');
+      if (cell) { cell.focus(); }
+      return true;
+    }
     if (this.trace || this.spot || this.families) { this.clearEmphasis(); return true; }
     return false;
   };
@@ -2653,7 +2678,7 @@
       this.kick();
     } else if (type === 'family') {
       var slug = btn.getAttribute('data-crumb-family');
-      if (this.view === 'anatomy' || this.view === 'list') { this.setView(this.overview); }
+      if (this.view === 'anatomy' || this.isPage()) { this.setView(this.overview); }
       var fam = this.familiesPreview ? {} : (this.families || {});
       this.familiesPreview = false;
       this.spot = null; this.trace = null;
@@ -2664,6 +2689,16 @@
         var on = !!(self.families && self.families[b.getAttribute('data-crumb-family')]);
         b.classList.toggle('crumb-family--on', on); b.setAttribute('aria-pressed', String(on));
       });
+      this.kick();
+    } else if (type === 'flow') {
+      var from = model.categories[+btn.getAttribute('data-crumb-from')], to = model.categories[+btn.getAttribute('data-crumb-to')];
+      var count = +btn.getAttribute('data-crumb-count');
+      this.matrixAt = [from.index, to.index];
+      this.setView(this.overview);
+      this.clearEmphasis(true);
+      this.spot = { type: 'flow', from: from.slug, to: to.slug };
+      this.focusEmphasis();
+      this.say(fmt(STR.matrixShown, { a: from.title, b: to.title, n: count }));
       this.kick();
     } else if (type === 'open') {
       var n = model.bySlug[btn.getAttribute('data-crumb-node')];
@@ -2698,7 +2733,7 @@
 
   App.prototype.openTrace = function (from) {
     if (!this.model) { return; }
-    if (this.view === 'anatomy' || this.view === 'list') { this.setView(this.overview); }
+    if (this.view === 'anatomy' || this.isPage()) { this.setView(this.overview); }
     this.clearEmphasis(true);
     this.trace = { from: from || null, to: null, path: null };
     this.renderPanel();
@@ -2899,6 +2934,94 @@
             '<p class="crumb-list__refs"><b>' + escapeHtml(STR.citedBy) + ' ' + ins.length + '</b> ' + chips(ins) + '</p></article>';
         }).join('') + '</section>';
     }).join('');
+  };
+
+  // --- matrix view -------------------------------------------------------------------------
+
+  App.prototype.matrixCounts = function () {
+    var cats = this.model.categories;
+    var m = cats.map(function () { return cats.map(function () { return 0; }); });
+    this.model.edges.forEach(function (e) { m[e.s.cat.index][e.t.cat.index] += 1; });
+    return m;
+  };
+
+  App.prototype.renderMatrix = function () {
+    var model = this.model, cats = model.categories, box = this.$('[data-crumb-matrix]');
+    var m = this.matrixCounts(), max = 1, best = null, inside = cats.map(function () { return 0; });
+    m.forEach(function (row, i) {
+      row.forEach(function (n, j) {
+        max = Math.max(max, n);
+        if (i !== j) {
+          inside[j] += n;
+          if (!best || n > best.n) { best = { a: cats[i], b: cats[j], n: n }; }
+        }
+      });
+    });
+    var sink = cats[inside.indexOf(Math.max.apply(null, inside))];
+    var swatch = function (c) { return '<span class="crumb-swatch" style="--chip:var(--graph-cat-' + (c.index + 1) + ')" aria-hidden="true"></span>'; };
+    var head = '<tr><td class="crumb-matrix__corner" aria-hidden="true"><span>' + escapeHtml(STR.matrixCorner[0]) + '</span> <span>' + escapeHtml(STR.matrixCorner[1]) + '</span></td>' + cats.map(function (c) {
+      return '<th scope="col" class="crumb-matrix__col"><abbr title="' + escapeHtml(c.title) + '">' + swatch(c) + '<span class="crumb-matrix__num">' + (c.index + 1) + '</span></abbr><span class="visually-hidden">' + escapeHtml(c.title) + '</span></th>';
+    }).join('') + '</tr>';
+    var body = cats.map(function (a, i) {
+      return '<tr><th scope="row" class="crumb-matrix__row">' + swatch(a) + '<span class="crumb-matrix__num" aria-hidden="true">' + (i + 1) + '</span><span class="crumb-matrix__name">' + escapeHtml(a.title) + '</span></th>' + cats.map(function (b, j) {
+        var n = m[i][j], cls = 'crumb-matrix__cell' + (i === j ? ' crumb-matrix__cell--self' : '');
+        if (!n) { return '<td class="' + cls + '"><span class="visually-hidden">' + escapeHtml(fmt(STR.matrixNone, { a: a.title, b: b.title })) + '</span></td>'; }
+        var label = fmt(i === j ? STR.matrixCellSelf : STR.matrixCell, { a: a.title, b: b.title, n: n });
+        // Square root, so a family with twice the citations is not twice as loud.
+        return '<td class="' + cls + '"><button type="button" tabindex="-1" data-crumb-act="flow" data-crumb-from="' + i + '" data-crumb-to="' + j + '" data-crumb-count="' + n + '" style="--m:' + Math.sqrt(n / max).toFixed(3) + '" aria-label="' + escapeHtml(label) + '" title="' + escapeHtml(label) + '">' + n + '</button></td>';
+      }).join('') + '</tr>';
+    }).join('');
+    box.innerHTML = '<p class="crumb-list__intro">' + escapeHtml(fmt(STR.matrixIntro, { pairs: model.edges.length })) + '</p>' +
+      '<p class="crumb-matrix__lede">' + escapeHtml(fmt(STR.matrixStrongest, { a: best.a.title, b: best.b.title, n: best.n, c: sink.title })) + '</p>' +
+      '<div class="crumb-matrix__scroll"><table class="crumb-matrix"><caption class="visually-hidden">' + escapeHtml(STR.matrixCaption) + '</caption><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>';
+    this.bindMatrixKeys(box);
+  };
+
+  // One tab stop for the whole grid; arrow keys, Home and End move inside it.
+  App.prototype.bindMatrixKeys = function (box) {
+    var cells = Array.prototype.slice.call(box.querySelectorAll('[data-crumb-act="flow"]'));
+    if (!cells.length) { return; }
+    var at = function (b) { return [+b.getAttribute('data-crumb-from'), +b.getAttribute('data-crumb-to')]; };
+    var current = this.matrixAt && box.querySelector('[data-crumb-from="' + this.matrixAt[0] + '"][data-crumb-to="' + this.matrixAt[1] + '"]');
+    (current || cells[0]).tabIndex = 0;
+    var self = this;
+    var move = function (from, dr, dc, edge) {
+      var p = at(from), best = null, bestD = Infinity;
+      cells.forEach(function (b) {
+        var q = at(b), d;
+        if (edge === 'home') { d = q[0] === p[0] ? q[1] : Infinity; }
+        else if (edge === 'end') { d = q[0] === p[0] ? -q[1] : Infinity; }
+        else {
+          var along = dr ? (q[0] - p[0]) * dr : (q[1] - p[1]) * dc;
+          var across = dr ? Math.abs(q[1] - p[1]) : Math.abs(q[0] - p[0]);
+          if (along <= 0) { return; }
+          d = along * 100 + across;
+        }
+        if (d < bestD) { bestD = d; best = b; }
+      });
+      return best;
+    };
+    box.addEventListener('keydown', function (e) {
+      var b = e.target.closest && e.target.closest('[data-crumb-act="flow"]');
+      if (!b) { return; }
+      var k = e.key, next = null;
+      if (k === 'ArrowRight') { next = move(b, 0, 1); }
+      else if (k === 'ArrowLeft') { next = move(b, 0, -1); }
+      else if (k === 'ArrowDown') { next = move(b, 1, 0); }
+      else if (k === 'ArrowUp') { next = move(b, -1, 0); }
+      else if (k === 'Home') { next = move(b, 0, 0, 'home'); }
+      else if (k === 'End') { next = move(b, 0, 0, 'end'); }
+      else if (k === 'Escape') { e.preventDefault(); self.back(); return; }
+      else { return; }
+      e.preventDefault();
+      if (!next) { return; }
+      b.tabIndex = -1; next.tabIndex = 0; next.focus();
+      self.matrixAt = at(next);
+    });
+    box.addEventListener('focusin', function (e) {
+      var b = e.target.closest && e.target.closest('[data-crumb-act="flow"]');
+      if (b) { self.matrixAt = at(b); }
+    });
   };
 
   window.TBaguetteGraph = {
