@@ -1290,10 +1290,10 @@
       n.sy = s[1] + Math.sin(t * 0.9 + n.phase * 1.3) * wobble;
       n.sr = n.pr * zoomScale;
     });
+    this.overlays = this.overlayBoxes();
     if (this.view === 'anatomy' || this.ring > 0.01) { this.drawAnatomyUnder(ctx, t); }
     if (this.view !== 'anatomy') {
       this.familyBoxes = null;
-      this.overlays = this.overlayBoxes();
       this.drawFamilyLabels(ctx);
       if (this.mix > 0.01) { this.drawWheelBands(ctx); }
       this.drawEdges(ctx, t);
@@ -1739,12 +1739,13 @@
   };
 
   // The stage's own furniture — the hint, the zoom tools, the legend, the
-  // trail, the notes handle — as boxes in canvas coordinates, so no label
-  // lands under something drawn over the canvas. Read every frame: the hint
-  // retires, the trail comes and goes, and phones stack these differently.
+  // trail, the notes handle, the anatomy's key — as boxes in canvas
+  // coordinates, so no label lands under something drawn over the canvas.
+  // Read every frame: the hint retires, the trail comes and goes, and phones
+  // stack these differently.
   App.prototype.overlayBoxes = function () {
     var stage = this.stage.getBoundingClientRect(), boxes = [];
-    var els = this.root.querySelectorAll('[data-crumb-hint], .crumb__tools, [data-crumb-legend], [data-crumb-trail], [data-crumb-sheet]');
+    var els = this.root.querySelectorAll('[data-crumb-hint], .crumb__tools, [data-crumb-legend], [data-crumb-trail], [data-crumb-sheet], [data-crumb-key]');
     for (var i = 0; i < els.length; i++) {
       if (els[i].hidden || els[i].classList.contains('crumb__hint--gone')) { continue; }
       var r = els[i].getBoundingClientRect();
@@ -1955,6 +1956,7 @@
       // Two columns, one per side, pushed apart vertically; a leader line
       // wherever a label had to move off its skill.
       var sides = { l: [], r: [] };
+      this.anatBoxes = [];
       labels.forEach(function (item) {
         var n = item.node;
         var right = n.sx >= o[0];
@@ -1971,21 +1973,26 @@
           var n = lab.item.node;
           var strong = n === self.hover || (sec && sec.refs[n.slug]);
           var x = lab.right ? n.sx + n.sr + 7 : n.sx - n.sr - 7;
+          ctx.font = self.labelFont(strong ? 600 : 500, 12, 'body');
+          // A name that would run off the stage is cut to fit, with an
+          // ellipsis, and one that would sit under the stage's furniture is
+          // left off; the tooltip still carries either one whole.
+          var room = lab.right ? self.W - 6 - x : x - 6, text = n.name;
+          if (room < 36) { return; }
+          if (ctx.measureText(text).width > room) {
+            while (text.length > 3 && ctx.measureText(text + '…').width > room) { text = text.slice(0, -1); }
+            text += '…';
+          }
+          var tw = ctx.measureText(text).width;
+          var box = lab.right ? [x, lab.y - 8, x + tw, lab.y + 8] : [x - tw, lab.y - 8, x, lab.y + 8];
+          if ((self.overlays || []).some(function (q) { return boxesMeet(box, q); })) { return; }
+          self.anatBoxes.push({ n: n, box: box });
           ctx.globalAlpha = n.pa * (sec && !sec.refs[n.slug] ? 0.4 : 1);
           if (Math.abs(lab.y - n.sy) > 3) {
             ctx.beginPath(); ctx.moveTo(n.sx + (lab.right ? n.sr : -n.sr), n.sy); ctx.lineTo(x + (lab.right ? -2 : 2), lab.y);
             ctx.strokeStyle = rgba(pal.text2, 0.35); ctx.lineWidth = 1; ctx.stroke();
           }
-          ctx.font = self.labelFont(strong ? 600 : 500, 12, 'body');
           ctx.textAlign = lab.right ? 'left' : 'right';
-          // A name that would run off the stage is cut to fit, with an
-          // ellipsis; the tooltip still carries it whole.
-          var room = lab.right ? self.W - 6 - x : x - 6, text = n.name;
-          if (room < 36) { ctx.globalAlpha = 1; return; }
-          if (ctx.measureText(text).width > room) {
-            while (text.length > 3 && ctx.measureText(text + '…').width > room) { text = text.slice(0, -1); }
-            text += '…';
-          }
           ctx.strokeStyle = rgba(pal.bg, 0.85); ctx.lineWidth = 3.5; ctx.lineJoin = 'round';
           ctx.strokeText(text, x, lab.y);
           ctx.fillStyle = rgba(strong ? pal.text : pal.text2);
@@ -2010,27 +2017,50 @@
       ctx.lineWidth = 3; ctx.stroke();
     });
     if (ring < 0.9) { return; }
-    // Names go on in order of band size, and a name that would overlap one
-    // already placed is left off — the band keeps its colour, and the
-    // tooltip still names the family.
-    var placed = [];
+    // Names go on in order of band size. Each tries the middle of its band,
+    // then points further along it, on one line and then broken onto two;
+    // the first spot inside the canvas, clear of the stage's furniture and of
+    // every name already placed, wins. A name with no such spot is left off:
+    // the band keeps its colour, and the tooltip still names the family.
+    var placed = this.bandBoxes = [], overlays = this.overlays || [], W = this.W, H = this.H, lineH = 15;
+    var along = [0.5, 0.32, 0.68, 0.18, 0.82];
     L.bands.slice().sort(function (p, q) { return (q.a1 - q.a0) - (p.a1 - p.a0); }).forEach(function (b) {
-      var mid = (b.a0 + b.a1) / 2, span = (b.a1 - b.a0) * R;
-      if (span < 20) { return; }
-      var x = o[0] + Math.cos(mid) * (R + 26), y = o[1] + Math.sin(mid) * (R + 26);
-      var c = Math.cos(mid);
-      ctx.textAlign = c > 0.25 ? 'left' : c < -0.25 ? 'right' : 'center';
-      if (Math.abs(c) <= 0.25) { y += Math.sin(mid) * 6; }
-      var w = ctx.measureText(b.cat.title).width;
-      var left = ctx.textAlign === 'left' ? x : ctx.textAlign === 'right' ? x - w : x - w / 2;
-      var box = [left - 6, y - 9, left + w + 6, y + 9];
-      if (placed.some(function (q) { return box[0] < q[2] && box[2] > q[0] && box[1] < q[3] && box[3] > q[1]; })) { return; }
-      placed.push(box);
+      var sweep = b.a1 - b.a0;
+      if (sweep * R < 20) { return; }
+      var words = b.cat.title.split(' '), layouts = [[b.cat.title]], split = null;
+      for (var wi = 1; wi < words.length; wi++) {
+        var two = [words.slice(0, wi).join(' '), words.slice(wi).join(' ')];
+        var twoW = Math.max(ctx.measureText(two[0]).width, ctx.measureText(two[1]).width);
+        if (!split || twoW < split.w) { split = { lines: two, w: twoW }; }
+      }
+      if (split) { layouts.push(split.lines); }
+      var spot = null;
+      for (var li = 0; li < layouts.length && !spot; li++) {
+        var lines = layouts[li], rise = (lines.length - 1) * lineH / 2, w = 0;
+        lines.forEach(function (line) { w = Math.max(w, ctx.measureText(line).width); });
+        for (var ai = 0; ai < along.length && !spot; ai++) {
+          var ang = b.a0 + sweep * along[ai], c = Math.cos(ang), s = Math.sin(ang);
+          var x = o[0] + c * (R + 26), y = o[1] + s * (R + 26);
+          var align = c > 0.25 ? 'left' : c < -0.25 ? 'right' : 'center';
+          // Above or below the ring, a taller name grows outward, not inward.
+          if (align === 'center') { y += s * (6 + rise); }
+          var left = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+          var box = [left - 6, y - rise - 9, left + w + 6, y + rise + 9];
+          if (box[0] < 4 || box[1] < 4 || box[2] > W - 4 || box[3] > H - 4) { continue; }
+          if (overlays.some(function (q) { return boxesMeet(box, q); }) || placed.some(function (q) { return boxesMeet(box, q); })) { continue; }
+          spot = { x: x, top: y - rise, align: align, lines: lines, box: box };
+        }
+      }
+      if (!spot) { return; }
+      placed.push(spot.box);
       ctx.globalAlpha = alpha;
+      ctx.textAlign = spot.align;
       ctx.strokeStyle = rgba(pal.bg, 0.8); ctx.lineWidth = 3.5; ctx.lineJoin = 'round';
-      ctx.strokeText(b.cat.title, x, y);
       ctx.fillStyle = rgba(pal.text2);
-      ctx.fillText(b.cat.title, x, y);
+      spot.lines.forEach(function (line, i) {
+        ctx.strokeText(line, spot.x, spot.top + i * lineH);
+        ctx.fillText(line, spot.x, spot.top + i * lineH);
+      });
       ctx.globalAlpha = 1;
     });
     ctx.textAlign = 'left';
