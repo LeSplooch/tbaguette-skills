@@ -818,6 +818,37 @@
     } else {
       window.addEventListener('resize', function () { self.resize(); });
     }
+    // The hint shares the stage's bottom edge with the tools, and on a narrow
+    // stage with the legend too, and keeps clear of both by their measured
+    // boxes however they grow — a font arriving late, a longer size label,
+    // one more button. Centred while the bottom row has room for a readable
+    // measure; otherwise in whatever the row leaves between the legend and
+    // the tools; and where even that is too narrow, just above the tools.
+    // The wide layout reads the result (styles.css); a phone has its own.
+    var tools = this.$('.crumb__tools'), legend = this.$('[data-crumb-legend]');
+    var root = this.root, stage = this.stage;
+    var fitHint = function () {
+      if (!tools) { return; }
+      var sw = stage.clientWidth, sh = stage.clientHeight, tw = tools.offsetWidth, th = tools.offsetHeight;
+      var gap = Math.max(0, sw - tools.offsetLeft - tw), beside = tw + 2 * gap;
+      var left = gap, mode = 'centre', l = beside, r = beside, b = null;
+      // A legend reaching down into the tools' row walls off the left of it.
+      if (legend && legend.offsetHeight && legend.offsetTop + legend.offsetHeight > sh - th - 2 * gap) {
+        left = legend.offsetLeft + legend.offsetWidth + gap;
+        mode = 'row'; l = left;
+      }
+      if (sw - l - r < 240) { mode = 'row'; l = left; }
+      if (sw - l - r < 240) { mode = 'above'; r = gap; b = gap + th + 8; }
+      root.setAttribute('data-crumb-hint', mode);
+      root.style.setProperty('--crumb-hint-l', l + 'px');
+      root.style.setProperty('--crumb-hint-r', r + 'px');
+      if (b === null) { root.style.removeProperty('--crumb-hint-b'); } else { root.style.setProperty('--crumb-hint-b', b + 'px'); }
+    };
+    fitHint();
+    if (window.ResizeObserver && tools) {
+      this.toolsRo = new ResizeObserver(fitHint);
+      [tools, stage, legend].forEach(function (el) { if (el) { self.toolsRo.observe(el); } });
+    }
     this.mo = new MutationObserver(function () {
       self.palette = readPalette(self.root, self.model.categories.length);
       self.sprites = self.palette.cats.map(function (c) { return glowSprite(c, self.palette.dark); });

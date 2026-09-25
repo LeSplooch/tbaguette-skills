@@ -4283,18 +4283,24 @@ a.skill-link--bare:focus-visible {
   50% { opacity: 0.45; }
 }
 
+/* Never under the tools or the legend: graph.js measures both and hands over
+   the room left for the hint (--crumb-hint-l, -r, -b). Centred within that
+   room, it wraps onto balanced lines rather than reach either of them. */
 .crumb__hint {
   position: absolute;
-  left: 50%;
-  bottom: calc(var(--space-3) + 0.4rem);
-  transform: translateX(-50%);
+  left: var(--crumb-hint-l, var(--space-3));
+  right: var(--crumb-hint-r, var(--space-3));
+  bottom: var(--crumb-hint-b, calc(var(--space-3) + 0.4rem));
+  width: fit-content;
+  margin-inline: auto;
   padding: 0.35em 0.9em;
   font-size: var(--text-1);
   color: var(--text-secondary);
+  text-align: center;
+  text-wrap: balance;
   background: color-mix(in oklch, var(--surface) 85%, transparent);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
-  white-space: nowrap;
   pointer-events: none;
   transition: opacity var(--duration-view) var(--ease-out);
 }
@@ -5039,7 +5045,9 @@ a.crumb-chip:hover,
   }
 
   .crumb__size { display: none; }
-  .crumb__hint { bottom: calc(3.25rem + 3.5rem); white-space: normal; text-align: center; width: max-content; max-width: 90%; }
+  /* The tools have moved to the top and the legend to its own row here, so
+     only the edges bound the hint. */
+  .crumb__hint { left: 5%; right: 5%; bottom: calc(3.25rem + 3.5rem); }
   .crumb__trail { max-width: calc(100% - 4rem); }
   .crumb__list { padding: var(--space-4) var(--space-4) calc(3.25rem + var(--space-6)); }
   .crumb-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
