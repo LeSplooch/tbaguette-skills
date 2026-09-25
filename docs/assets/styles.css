@@ -4962,7 +4962,11 @@ a.crumb-chip:hover,
 
 /* --- narrow: the panel becomes a sheet over the stage -------------------------------------- */
 
-@container (max-width: 46rem) {
+/* Below 60rem a side panel leaves the stage too narrow to read — at 50rem it
+   was 440px, and the legend, capped at the width the tools leave, stacked
+   into a column over the graph. So the panel becomes a sheet wherever the
+   legend stops standing up the left edge, and the graph takes the width. */
+@container (width < 60rem) {
   .crumb__bar { gap: var(--space-2); padding: var(--space-2) var(--space-3); }
   /* The page's heading names the graph already, and the header's Graph link
      is marked current; the repeated title is a row the stage can have. */

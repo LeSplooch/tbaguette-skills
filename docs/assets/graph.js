@@ -740,7 +740,7 @@
     this.foilSprite = glowSprite(this.palette.foil, this.palette.dark);
     this.applySizes(true);
     var rect = this.stage.getBoundingClientRect();
-    this.W = rect.width; this.H = rect.height; this.compact = this.W < 640;
+    this.W = rect.width; this.H = rect.height; this.compact = this.W < 640; this.sheet = this.isSheet();
     var m = this.overlayMargins(36);
     this.sim = new Simulation(model, (rect.width - m.left - m.right) / Math.max(1, rect.height - m.top - m.bottom));
     // Settle most of the way before the first frame, so what opens is the
@@ -804,6 +804,7 @@
     this.canvas.style.width = this.W + 'px';
     this.canvas.style.height = this.H + 'px';
     this.compact = this.W < 640;
+    this.sheet = this.isSheet();
     if (this.view === 'anatomy' && this.focus) { this.layoutAnatomy(); }
     if (this.model) { this.layoutWheel(); }
     if (!this.userCam) { this.fitCamera(false); }
@@ -899,10 +900,18 @@
     this.kick();
   };
 
+  // The notes panel is a sheet over the stage whenever the stylesheet says
+  // so (a container query) — on a phone, and on any stage too narrow to share
+  // with a side panel. The graph then keeps clear of the same furniture a
+  // phone's does, however wide the stage itself is.
+  App.prototype.isSheet = function () {
+    return !!this.panel && getComputedStyle(this.panel).position === 'absolute';
+  };
+
   App.prototype.overlayMargins = function (pad) {
     var legend = this.$('[data-crumb-legend]');
     var m = { top: pad, bottom: pad + 12, left: pad, right: pad };
-    if (this.compact) { m.top = 60; m.bottom = 120; return m; }
+    if (this.compact || this.sheet) { m.top = 60; m.bottom = 120; return m; }
     if (legend && this.view !== 'anatomy' && this.view !== 'list') {
       if (legend.offsetHeight > legend.offsetWidth) { m.left = legend.offsetWidth + 28; m.bottom = 64; }
       else { m.bottom = legend.offsetHeight + 24; }
