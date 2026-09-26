@@ -122,6 +122,7 @@
       reachPartial: 'Following citations, {pct}% of all pairs of skills are connected. The longest walk runs from {a} to {b}, {d} steps.',
       mostCited: '{a} is cited by <b>{n} skills</b>, more than any other.',
       widest: '{a} points to <b>{n} of the other {total}</b>.',
+      widestAll: '{a} points to <b>every other skill</b>, all {total} of them.',
       bridge: '{a} is the bridge: more of the shortest routes between skills run through it than through any other.',
       bond: '{a} and {b} cite each other <b>{n} times</b> — the strongest bond here.',
       family: '{a} keeps <b>{p}%</b> of its citations in the family; {b} sends <b>{q}%</b> of its outward.',
@@ -362,7 +363,8 @@
     notes.push({ html: fmt(STR.notes.mostCited, { a: chip(cited), n: cited.inDeg }), action: { type: 'spot', nodes: [cited.slug], dir: 'in' } });
 
     var wide = top(function (n) { return n.outDeg; });
-    notes.push({ html: fmt(STR.notes.widest, { a: chip(wide), n: wide.outDeg, total: nodes.length - 1 }), action: { type: 'spot', nodes: [wide.slug], dir: 'out' } });
+    var everyOther = wide.outDeg === nodes.length - 1;
+    notes.push({ html: fmt(everyOther ? STR.notes.widestAll : STR.notes.widest, { a: chip(wide), n: wide.outDeg, total: nodes.length - 1 }), action: { type: 'spot', nodes: [wide.slug], dir: 'out' } });
 
     var cb = betweenness(model);
     var bridge = top(function (n) { return cb[n.slug]; });
