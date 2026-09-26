@@ -130,6 +130,7 @@ not once the run is already in trouble.
 | `mapping-dependencies` | The blast radius of the change is not yet known |
 | `finding-the-seam` | Several places could hold the change and one of them is much cheaper |
 | `judging-duplication` | The design either repeats something or couples two things to avoid repeating it |
+| `keeping-copies-in-sync` | The design records a fact in a second place, and something other than memory has to keep the two agreeing |
 | `naming-things` | The design introduces vocabulary the rest of the work will inherit |
 | `formidable` | Anything with a user interface, on any stack |
 | `writing-adrs` | The decision is one a future reader will need to re-judge against its premises |
@@ -176,6 +177,7 @@ not once the run is already in trouble.
 | `naming-things` | Every identifier the task introduces |
 | `refactoring-safely` | Behavior must be preserved exactly while structure changes |
 | `judging-duplication` | The third occurrence of something has just appeared |
+| `keeping-copies-in-sync` | The task changes a value that is also recorded somewhere else, and the other copy is the one nobody will be looking at |
 | `finding-the-seam` | The obvious insertion point turns out to be the expensive one |
 | `configuration-management` | New knobs, defaults, or environment-dependent values appear |
 | `feature-flagging` | The task lands behind a flag |
@@ -215,6 +217,7 @@ not once the run is already in trouble.
 | `auditing-dependencies` | The diff added, bumped, or replaced a third-party package |
 | `secrets-hygiene` | Before anything is published, as a scan of what the diff actually contains |
 | `judging-duplication` | The review found repetition and it needs deciding, not just noting |
+| `keeping-copies-in-sync` | The diff changes one copy of a fact that lives in several places and leaves the others as they were |
 | `calibrating-confidence` | Findings are being reported with more certainty than the evidence supports |
 
 ## Phase 7 — Prove
@@ -305,6 +308,7 @@ and the gate is coverage of the diff rather than confidence in a conclusion.
 | `secrets-hygiene` | Always, as a scan of what the diff actually contains |
 | `handling-untrusted-input` | The diff parses anything from outside its own trust boundary |
 | `judging-duplication` | The review found repetition and it needs deciding rather than noting |
+| `keeping-copies-in-sync` | The diff changes one copy of a fact recorded in several places; the copies it left alone are exactly what a diff cannot show |
 | `calibrating-confidence` | Findings are being reported with more certainty than the reading behind them supports |
 | `red-teaming-your-own-work` | The review came back clean and nothing was tried to make it look otherwise |
 | `explaining-technical-work` | Delivering the findings to someone who has to act on them |

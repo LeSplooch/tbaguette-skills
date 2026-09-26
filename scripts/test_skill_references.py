@@ -80,6 +80,20 @@ class TestSkillReferencesResolve(unittest.TestCase):
                     incoming[target] += 1
         self.assertEqual(sorted(s for s, n in incoming.items() if n == 0), [])
 
+    def test_the_orchestrators_phase_index_names_every_skill(self):
+        """orchestrating-work-end-to-end tells every run that its
+        reference/phase-routing.md "indexes every skill in the library", so a
+        run looks the phase up there instead of recalling the library from
+        memory, and a skill missing from the index is invisible to exactly
+        that lookup. `keeping-copies-in-sync` was, for eight days after it
+        shipped, because nothing compared the index with this directory.
+        Like the test above, this turns the suite red the day a skill is
+        added, until the index says where it earns its place."""
+        index = SKILLS_DIR / "orchestrating-work-end-to-end" / "reference" / "phase-routing.md"
+        named = set(re.findall(r"`([a-z0-9]+(?:-[a-z0-9]+)*)`", index.read_text(encoding="utf-8")))
+        missing = sorted(_skill_slugs() - named - {"orchestrating-work-end-to-end"})
+        self.assertEqual(missing, [], "reference/phase-routing.md claims to index every skill")
+
     def test_the_exemption_lists_stay_honest(self):
         """An exemption that becomes a real skill is a silenced check."""
         slugs = _skill_slugs()

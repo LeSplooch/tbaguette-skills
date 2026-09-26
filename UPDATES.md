@@ -39,6 +39,10 @@ Everything above the first `##` is preamble and is never rendered.
 - `diagnosing-before-fixing`: after three failed fixes, read the design decision the
   code says it implements before trying a fourth. Code that has drifted from that
   decision puts every patch inside the drift.
+- `orchestrating-work-end-to-end` now routes to `keeping-copies-in-sync`: when a
+  design writes a fact down in a second place, when a change edits one copy of it,
+  and when a review has to notice the copies a diff left alone. Its phase index
+  promises to cover every skill, and had missed this one since it shipped.
 
 ## 2026-09-25 — Plans that say what can run in parallel, a GitHub Copilot map for fanning out (contributed), and fixes for Windows and other harnesses
 
