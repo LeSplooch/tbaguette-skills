@@ -970,11 +970,30 @@ def escape_html(value: object) -> str:
     return _escape_html_impl(str(value), quote=True)
 
 
+# Content fingerprints of the hand-written files under docs/assets/, which
+# generate.py fills in before it renders a page. GitHub Pages lets a browser
+# keep them for ten minutes, and a reload -- the one the update dialog offers
+# included -- revalidates the page but reuses assets still inside that
+# window. So a page built against a new stylesheet could arrive wearing the
+# old one: new markup nothing had styled yet, which is how the 2.0 banner
+# first reached a reader, as bare text and a bulleted list. A URL that
+# changes with the file's contents cannot be served from an older copy. A
+# render with nothing filled in (a fixture) keeps the plain URLs.
+ASSET_VERSIONS: dict[str, str] = {}
+
+
+def asset_url(name: str, base_path: str = "") -> str:
+    """The URL of a file in docs/assets/, fingerprinted when the build knows
+    its contents."""
+    version = ASSET_VERSIONS.get(name)
+    return f"{base_path}/assets/{name}" + (f"?v={version}" if version else "")
+
+
 def _icon(symbol_id: str, *, css_class: str = "icon", base_path: str = "") -> str:
     """A <use>-referenced icon from the shared /assets/icons.svg sprite."""
     return (
         f'<svg class="{css_class}" aria-hidden="true">'
-        f'<use href="{base_path}/assets/icons.svg#{symbol_id}"></use></svg>'
+        f'<use href="{asset_url("icons.svg", base_path)}#{symbol_id}"></use></svg>'
     )
 
 
@@ -1041,7 +1060,7 @@ def _render_head(*, title: str, meta_description: str, base_path: str = "",
 <link rel="icon" type="image/svg+xml" href="{base_path}/assets/favicon.svg">
 <link rel="preload" href="{base_path}/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{base_path}/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{base_path}/assets/styles.css">
+<link rel="stylesheet" href="{asset_url("styles.css", base_path)}">
 <script>{_THEME_BOOTSTRAP_JS}</script>"""
 
 
@@ -1227,7 +1246,7 @@ def _render_document(*, title: str, meta_description: str, body_class: str,
 {main_html}
 </main>
 {_render_footer(categories, base_path, locale=locale, strings=strings)}
-<script src="{base_path}/assets/site.js" defer></script>
+<script src="{asset_url("site.js", base_path)}" defer></script>
 </body>
 </html>
 """
@@ -1436,8 +1455,8 @@ def _render_install(base_path: str = "", *,
       <button class="install__copy" type="button" data-copy-target="install-prompt-command"
               aria-label="{escape_html(strings.install_copy_aria_label)}">
         <span class="install__copy-icons">
-          <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-copy"></use></svg>
-          <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-check"></use></svg>
+          <svg class="icon install__copy-icon install__copy-icon--copy" aria-hidden="true"><use href="{asset_url("icons.svg", base_path)}#icon-copy"></use></svg>
+          <svg class="icon install__copy-icon install__copy-icon--check" aria-hidden="true"><use href="{asset_url("icons.svg", base_path)}#icon-check"></use></svg>
         </span>
         <span data-copy-label>{escape_html(strings.install_copy_label)}</span>
       </button>
@@ -1662,7 +1681,7 @@ def _render_hero(skill_count: int, category_count: int, base_path: str = "", *,
     {_render_install(base_path, locale=locale, strings=strings)}
     <p class="hero__lede">{escape_html(lede)}</p>
     <a class="hero__jump" href="#skills">
-      <svg class="icon hero__jump-icon" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-search"></use></svg>
+      <svg class="icon hero__jump-icon" aria-hidden="true"><use href="{asset_url("icons.svg", base_path)}#icon-search"></use></svg>
       {escape_html(strings.hero_jump)}
     </a>
     {_render_fresh_section(fresh_skills or [], base_path)}
@@ -1675,7 +1694,7 @@ def _render_hero(skill_count: int, category_count: int, base_path: str = "", *,
 def _render_search_field(base_path: str = "", strings: Strings = ENGLISH_STRINGS) -> str:
     return f"""<div class="search" id="skills" data-search-root>
   <div class="search__field">
-    <svg class="icon search__icon" aria-hidden="true"><use href="{base_path}/assets/icons.svg#icon-search"></use></svg>
+    <svg class="icon search__icon" aria-hidden="true"><use href="{asset_url("icons.svg", base_path)}#icon-search"></use></svg>
     <label class="visually-hidden" for="skill-search">{escape_html(strings.search_label)}</label>
     <input class="search__input" type="search" id="skill-search" data-search-input
            placeholder="{escape_html(strings.search_placeholder)}" autocomplete="off">
@@ -2722,7 +2741,7 @@ def render_graph_page(categories: list[dict], base_path: str = "",
     <noscript><p class="graph-host__noscript">{escape_html(strings.graph_noscript)}</p></noscript>
   </div>
 </section>
-<script src="{base_path}/assets/graph.js" defer></script>"""
+<script src="{asset_url("graph.js", base_path)}" defer></script>"""
     return _render_document(
         title=f"{strings.graph_page_title} — {BRAND_ATELIER_TEXT}",
         meta_description=lede,

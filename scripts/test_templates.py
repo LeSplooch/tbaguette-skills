@@ -153,6 +153,20 @@ def check_base_path() -> None:
     check("prefixed skill card link", f'href="{base}/skills/formidable/"' in index_html)
     check("version-check URL is base_path-prefixed too", f'data-version-url="{base}/version.txt"' in index_html)
     check("un-prefixed root-relative form is absent once base_path is set", '"/assets/styles.css"' not in index_html)
+    templates.ASSET_VERSIONS = {"styles.css": "aaaa", "site.js": "bbbb", "icons.svg": "cccc"}
+    try:
+        versioned = render_index(categories, skills, base_path=base, last_updated_utc=iso)
+    finally:
+        templates.ASSET_VERSIONS = {}
+    check("with fingerprints known, every asset URL carries its own",
+          f'href="{base}/assets/styles.css?v=aaaa"' in versioned
+          and f'src="{base}/assets/site.js?v=bbbb"' in versioned
+          and f'href="{base}/assets/icons.svg?v=cccc#icon-' in versioned
+          and f'"{base}/assets/styles.css"' not in versioned)
+    graph_js = (Path(__file__).resolve().parent.parent / "docs/assets/graph.js").read_text(encoding="utf-8")
+    check("graph.js finds the stylesheet whatever follows its name, so a fingerprint "
+          "cannot send its icons to the wrong base path",
+          'href$="/assets/styles.css"' not in graph_js and 'href*="/assets/styles.css"' in graph_js)
 
     formidable = skills["formidable"]
     page_html = render_skill_page(

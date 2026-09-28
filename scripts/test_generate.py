@@ -11,6 +11,7 @@ Usage:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -382,6 +383,9 @@ def main() -> None:
     tmp_root = Path(tempfile.mkdtemp(prefix="tbaguette-generate-test-"))
     try:
         print(f"building into throwaway root: {tmp_root}")
+        # The hand-written assets a real build links to, so the fingerprints
+        # it puts on their URLs are computed from the files that ship.
+        shutil.copytree(real_project_root / "docs" / "assets", tmp_root / "docs" / "assets")
         content = generate.generate(tmp_root, real_skills_root, base_path="/tbaguette-skills")
 
         check(
@@ -406,9 +410,27 @@ def main() -> None:
             check(f"{slug}'s page exists", (docs / "skills" / slug / "index.html").exists())
 
         formidable_html = (docs / "skills" / "formidable" / "index.html").read_text(encoding="utf-8")
+        # Fingerprinted by content, so a reload can never pair this build's
+        # markup with a stylesheet or script a browser kept from the last one.
+        assets = docs / "assets"
+        fingerprints = {
+            name: hashlib.sha256((assets / name).read_bytes()).hexdigest()[:10]
+            for name in ("styles.css", "site.js", "graph.js", "icons.svg")
+        }
         check(
-            "formidable's page has the base_path-prefixed stylesheet link",
-            '"/tbaguette-skills/assets/styles.css"' in formidable_html,
+            "formidable's page has the base_path-prefixed stylesheet link, "
+            "fingerprinted with the stylesheet's own contents",
+            f'"/tbaguette-skills/assets/styles.css?v={fingerprints["styles.css"]}"' in formidable_html,
+        )
+        check(
+            "...and so do its script and its icons",
+            f'"/tbaguette-skills/assets/site.js?v={fingerprints["site.js"]}"' in formidable_html
+            and f'"/tbaguette-skills/assets/icons.svg?v={fingerprints["icons.svg"]}#' in formidable_html,
+        )
+        check(
+            "no page links an asset without its fingerprint",
+            not any(re.search(r'/assets/(?:styles\.css|site\.js|graph\.js|icons\.svg)(?!\?v=)', p.read_text(encoding="utf-8"))
+                    for p in docs.rglob("*.html")),
         )
         check(
             "formidable's craft-floor anchor resolves end to end (the earlier bug fix, under real data)",

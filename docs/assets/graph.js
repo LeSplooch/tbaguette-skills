@@ -611,9 +611,13 @@
   }
 
   function iconHref(name) {
-    var link = document.querySelector('link[rel="stylesheet"][href$="/assets/styles.css"]');
-    var base = link ? link.getAttribute('href').replace(/styles\.css$/, '') : '/assets/';
-    return base + 'icons.svg#' + name;
+    // The stylesheet's href carries the base path, and a ?v= fingerprint
+    // after it; the sprite's own fingerprint rides on the page's icons.
+    var link = document.querySelector('link[rel="stylesheet"][href*="/assets/styles.css"]');
+    var base = link ? link.getAttribute('href').replace(/styles\.css(\?.*)?$/, '') : '/assets/';
+    var used = document.querySelector('use[href*="/assets/icons.svg"]');
+    var sprite = used ? used.getAttribute('href').replace(/^.*\/assets\/(icons\.svg[^#]*)#.*$/, '$1') : 'icons.svg';
+    return base + sprite + '#' + name;
   }
   function icon(name) {
     return '<svg class="icon" aria-hidden="true"><use href="' + iconHref(name) + '"></use></svg>';

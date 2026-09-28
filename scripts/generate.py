@@ -48,6 +48,7 @@ generation and commit drift apart in time.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import shutil
 import subprocess
@@ -489,6 +490,7 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
 
     now = datetime.now(timezone.utc)
     plugin_version = _plugin_version()
+    templates.ASSET_VERSIONS = asset_versions(project_root / "docs" / "assets")
     fresh = _fresh_skills(project_root, now=now)
     last_updated_utc = now.isoformat(timespec="seconds")
 
@@ -588,6 +590,23 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
 
 def _default_project_root() -> Path:
     return Path(__file__).resolve().parent.parent
+
+
+# The hand-written files under docs/assets/ that pages link to, and so the
+# ones whose URLs carry a fingerprint of their contents (templates.asset_url).
+VERSIONED_ASSETS = ("styles.css", "site.js", "graph.js", "icons.svg")
+
+
+def asset_versions(assets_dir: Path) -> dict[str, str]:
+    """A short content hash for each linked asset that exists. Content, not
+    the build time or the commit: a page rebuilt around an unchanged
+    stylesheet keeps the URL a reader already has cached, and a changed one
+    gets a new URL on the same build that starts depending on it."""
+    return {
+        name: hashlib.sha256((assets_dir / name).read_bytes()).hexdigest()[:10]
+        for name in VERSIONED_ASSETS
+        if (assets_dir / name).is_file()
+    }
 
 
 def _plugin_version() -> str:
