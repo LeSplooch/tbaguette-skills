@@ -681,16 +681,63 @@ def check_run_hook_cmd_windows_bash_lookup() -> None:
           "where $PATH:bash" in batch and "where bash" not in batch)
 
 
-def check_gitattributes_pins_lf() -> None:
+def check_gitattributes_keeps_hooks_lf() -> None:
     # Git for Windows checks text out with CRLF by default, and a bash hook
     # with CRLF endings fails on its first line -- after which the plugin's
-    # hooks inject nothing, silently.
-    print(".gitattributes: LF on every checkout")
+    # hooks inject nothing, silently. The fix has to stay out of the one class
+    # of attribute Anthropic's plugin directory refuses to validate past:
+    # anything that rewrites file contents. `-text` switches conversion off
+    # rather than asking for a rewrite, so it is scoped to the scripts.
+    print(".gitattributes: hooks keep LF on a Windows checkout")
     attrs = REPO_ROOT / ".gitattributes"
-    lines = attrs.read_text(encoding="utf-8").splitlines() if attrs.exists() else []
     check(".gitattributes exists", attrs.exists())
-    check("every text file checks out with LF",
-          any(line.split() == ["*", "text=auto", "eol=lf"] for line in lines))
+    rules = [line.split() for line in attrs.read_text(encoding="utf-8").splitlines()
+             if line.strip() and not line.lstrip().startswith("#")]
+    rewriting = [
+        " ".join(rule) for rule in rules
+        if any(a == "text" or a.split("=")[0] in {
+                   "text", "eol", "filter", "ident", "working-tree-encoding",
+                   "export-subst", "export-ignore"}
+               for a in rule[1:])
+    ]
+    check(f"no attribute that rewrites or drops file contents (found: {rewriting})",
+          not rewriting)
+
+    # Every file that runs as a shell script: a shebang, or the polyglot that
+    # launches the hooks. A new hook script without its own -text line fails
+    # here instead of on the first Windows machine that clones it.
+    tracked = git(["ls-files"], REPO_ROOT).stdout.split()
+    scripts = [p for p in tracked
+               if (REPO_ROOT / p).read_bytes()[:2] == b"#!" or p.endswith("run-hook.cmd")]
+    check("found the hook scripts to guard", "hooks/session-start" in scripts
+          and "hooks/run-hook.cmd" in scripts)
+    unset = {line.rsplit(": ", 2)[0] for line in
+             git(["check-attr", "text", "--", *scripts], REPO_ROOT).stdout.splitlines()
+             if line.endswith(": text: unset")}
+    check(f"every shell script has line-ending conversion off (missing: {sorted(set(scripts) - unset)})",
+          set(scripts) <= unset)
+
+    # And the behavior itself, against this working tree's .gitattributes
+    # rather than the last commit's: commit the scripts into a throwaway repo,
+    # clone it the way Git for Windows does by default, and read the bytes.
+    with tempfile.TemporaryDirectory() as tmp:
+        src = Path(tmp) / "src"
+        (src / "hooks").mkdir(parents=True)
+        shutil.copy(attrs, src / ".gitattributes")
+        for name in ("session-start", "user-prompt-submit", "run-hook.cmd"):
+            shutil.copy(REPO_ROOT / "hooks" / name, src / "hooks" / name)
+        (src / "notes.md").write_text("one\ntwo\n", encoding="utf-8")
+        git(["init", "--quiet", "--initial-branch=master"], src)
+        git(["-c", "user.name=t", "-c", "user.email=t@t", "add", "-A"], src)
+        git(["-c", "user.name=t", "-c", "user.email=t@t", "commit", "--quiet", "-m", "x"], src)
+        clone = Path(tmp) / "clone"
+        git(["-c", "core.autocrlf=true", "clone", "--quiet",
+             "--config", "core.autocrlf=true", str(src), str(clone)], Path(tmp))
+        check("the autocrlf clone really converts ordinary text (else this proves nothing)",
+              b"\r\n" in (clone / "notes.md").read_bytes())
+        for name in ("session-start", "user-prompt-submit", "run-hook.cmd"):
+            check(f"hooks/{name} checks out with LF under core.autocrlf=true",
+                  b"\r" not in (clone / "hooks" / name).read_bytes())
 
 
 def check_keeping_current_uses_reported_install_path() -> None:
@@ -724,7 +771,7 @@ def main() -> None:
     check_session_start_cursor_shape()
     check_run_hook_cmd_unix_passthrough()
     check_run_hook_cmd_windows_bash_lookup()
-    check_gitattributes_pins_lf()
+    check_gitattributes_keeps_hooks_lf()
     check_update_check_same_sha()
     check_update_check_update_available()
     check_update_check_dirty_tree()

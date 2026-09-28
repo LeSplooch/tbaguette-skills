@@ -1,6 +1,15 @@
-# Every text file checks out with LF, on every platform. The hooks are bash
-# scripts, and Git for Windows' default of converting to CRLF on checkout
-# breaks them at their first command. run-hook.cmd is a batch/bash polyglot;
-# its batch half never jumps to a label (no goto, no call), so cmd.exe reads it
+# The hook scripts are bash, and Git for Windows converts text to CRLF on
+# checkout by default, which breaks a bash script at its first command. `-text`
+# turns line-ending conversion off for these files, so every checkout gets the
+# LF bytes they were committed with. run-hook.cmd is a batch/bash polyglot; its
+# batch half never jumps to a label (no goto, no call), so cmd.exe reads it
 # correctly with LF too.
-* text=auto eol=lf
+#
+# This replaced a repo-wide `* text=auto eol=lf`. Anthropic's plugin directory
+# stops validating a repository whose .gitattributes carries attributes that
+# rewrite file contents, and an eol rule was too close to that to risk. `-text`
+# asks git to leave contents alone, and it is scoped to the files that break.
+hooks/session-start -text
+hooks/user-prompt-submit -text
+hooks/run-hook.cmd -text
+.githooks/* -text
