@@ -188,6 +188,27 @@ That list is missing the culprit that survives longest, because it is the only o
 
 The move is to stop prescribing one fix at a time. Enumerate every stage between the input and the observed output *before* changing anything, and say for each whether it is known to pass the value, known to drop it, or unexamined — then fix all the unexamined ones together and take one reading. Otherwise each attempt buys a single bit of information at the cost of a full cycle, and the bit it buys is ambiguous.
 
+## A symptom read off a screen has passed through a renderer first
+
+A value on a dashboard, a badge, a status line or a report is not a reading of
+the system behind it. It is that reading after one more stage of code — the one
+that chose what to print when the value was missing, stale, or failed to load —
+and that stage sits between you and every hypothesis you can form about the
+stages behind it. `modeling-errors` explains why its author reaches for a
+default that looks like health; this is the same collapse seen from the other
+end, by whoever is debugging it. A `?? 0`, or its equivalent in any language, over a fetch whose failure is
+swallowed prints the identical `0` for *not read yet*, *the read threw*, and *genuinely
+zero*.
+
+So before tracing backward from a displayed value, open the code that displays
+it and read what it does with absence. Two tells make the display the suspect
+rather than the source: the value is its type's zero or empty case, and a second,
+independent record of the same quantity — a log line, a database row, another
+screen — disagrees with it. In one observed case, several hours went on five backend hypotheses about a tile reading `0` while the same process had
+logged the true count of four at every startup; the renderer took two minutes
+once anyone looked at it. Reading the second record first is nearly always
+cheaper than the first backend hypothesis.
+
 ## A guard that refuses to run has already measured something
 
 The instrument can also refuse to take a reading, and a refusal arrives looking
