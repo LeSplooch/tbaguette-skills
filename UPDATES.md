@@ -24,6 +24,25 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-28 — The plugin is now called tbaguette-atelier
+
+- Every skill has a new prefix: `tbaguette-atelier:formidable` instead of
+  `TBaguette:formidable`, and `/tbaguette-atelier:naming-things` where your
+  agent calls skills as slash commands. Anything you saved that spells the old
+  one, such as a prompt, a note, or `claude plugin disable TBaguette@skills-dir`,
+  needs the new one. The skills themselves read exactly as they did.
+- If you enabled the plugin for the Copilot coding agent, change the key in that
+  repository's `.github/copilot/settings.json` to
+  `"tbaguette-atelier@tbaguette-dev": true`. The Copilot CLI install is now
+  `copilot plugin install tbaguette-atelier@tbaguette-dev`.
+- A Claude Code install stays where it is, in `~/.claude/skills/TBaguette`, and
+  switches to the new prefix on its next update. After that it shows up as
+  `tbaguette-atelier@skills-dir`.
+- The name is lowercase because claude.ai takes nothing else, and that is what
+  it takes to list the Atelier in Anthropic's plugin directory, where it can
+  reach the Claude apps and Cowork as well as Claude Code. Listings show it as
+  TBaguette's Atelier.
+
 ## 2026-09-28 — A synthetic click that lands on nothing
 
 - `grounding-test-doubles` now covers automation acting for real, not only

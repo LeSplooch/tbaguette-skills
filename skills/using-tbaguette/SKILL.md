@@ -6,12 +6,12 @@ description: Use at the start of every conversation, in every project, and keep 
 # Using TBaguette
 
 <EXTREMELY-IMPORTANT>
-If there is even a small chance one of TBaguette's skills applies to what you're about to do, invoke it — with the Skill tool, as `TBaguette:<skill-name>`. This holds for every response for the rest of this conversation, not just the one right after this notice.
+If there is even a small chance one of TBaguette's skills applies to what you're about to do, invoke it — with the Skill tool, as `tbaguette-atelier:<skill-name>`. This holds for every response for the rest of this conversation, not just the one right after this notice.
 </EXTREMELY-IMPORTANT>
 
 ## The rule
 
-Before responding — including a clarifying question, "let me look at the code first," or anything that feels too small to bother — check whether a TBaguette skill covers it. You don't need to open a file to see what exists: every `TBaguette:*` skill and its trigger description is normally already listed in your available-skills context — with one failure mode, immediately below, that this library is big enough to hit. `CATALOG.md` in this repo has the longer versions when a one-line trigger isn't enough to judge relevance.
+Before responding — including a clarifying question, "let me look at the code first," or anything that feels too small to bother — check whether a TBaguette skill covers it. You don't need to open a file to see what exists: every `tbaguette-atelier:*` skill and its trigger description is normally already listed in your available-skills context — with one failure mode, immediately below, that this library is big enough to hit. `CATALOG.md` in this repo has the longer versions when a one-line trigger isn't enough to judge relevance.
 
 If a skill turns out not to fit once you're in it, that's fine — drop it. But check first, every time.
 
@@ -138,10 +138,10 @@ If you're running on a harness other than Claude Code, read its reference file f
 - GitHub Copilot — the CLI, VS Code, and the coding agent: `references/copilot-tools.md`
 - Hermes Agent: `references/hermes-tools.md`
 
-Copilot is on that list for one reason: it has no Skill tool on any of its three surfaces, so the sentence above telling you to invoke `TBaguette:<skill-name>` with one names something you cannot find. There a skill is a slash command, and skills also load on their own when a prompt matches their description.
+Copilot is on that list for one reason: it has no Skill tool on any of its three surfaces, so the sentence above telling you to invoke `tbaguette-atelier:<skill-name>` with one names something you cannot find. There a skill is a slash command, and skills also load on their own when a prompt matches their description.
 
 Other harnesses TBaguette ships a manifest for (Codex, Cursor, Devin, Gemini CLI, Kimi Code, OpenCode, Pi) don't currently need a separate reference file here — their tool mapping either lives inline in that harness's own manifest (Kimi's `skillInstructions`) or needs none at all, since most TBaguette skills describe actions rather than naming a specific tool. See `PORTING.md` at the repo root for the full harness-by-harness breakdown.
 
 ## Automatic update check
 
-If a `TBaguette:keeping-tbaguette-current` update-check block is attached below this notice, act on it per that skill's instructions — the network check already ran for this session, so don't repeat it.
+If a `tbaguette-atelier:keeping-tbaguette-current` update-check block is attached below this notice, act on it per that skill's instructions — the network check already ran for this session, so don't repeat it.

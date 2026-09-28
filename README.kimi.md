@@ -66,13 +66,13 @@ Select TBaguette's Atelier and update it from there. Start a fresh session with
 
 ### Plugin not loading
 
-1. Run `/plugins info TBaguette` and check diagnostics.
+1. Run `/plugins info tbaguette-atelier` and check diagnostics.
 2. Make sure the plugin is enabled.
 3. Start a fresh session with `/new` after install or update.
 
 ### Skills not triggering
 
-1. Confirm `/plugins info TBaguette` shows the plugin enabled.
+1. Confirm `/plugins info tbaguette-atelier` shows the plugin enabled.
 2. Start a fresh session with `/new`.
 3. Try an acceptance prompt that should trigger a skill by description —
    e.g. asking to review unfamiliar code should load

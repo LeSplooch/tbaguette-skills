@@ -13,17 +13,19 @@ for both in exactly one place, the plugin directory root:
 The nesting also had a second, louder cost. With no native manifest at the
 root, `_read_manifest_for_install` falls through to the portable Agent Plugins
 reader for the root `plugin.json` we ship for GitHub Copilot — and that reader
-enforces a lowercase name (`^[a-z0-9][a-z0-9.-]*[a-z0-9]$`). "TBaguette" fails
-it, so `hermes plugins install LeSplooch/tbaguette-skills` aborted outright
-rather than degrading. A native `plugin.yaml` here is checked first and
-shadows the portable manifest for Hermes only; no other harness reads it.
+enforces a lowercase name (`^[a-z0-9][a-z0-9.-]*[a-z0-9]$`). "TBaguette", the
+name until 2.0.0, failed it, so `hermes plugins install LeSplooch/tbaguette-skills`
+aborted outright rather than degrading. A native `plugin.yaml` here is checked
+first and shadows the portable manifest for Hermes only; no other harness reads
+it. The name is `tbaguette-atelier` now, which the portable reader accepts, but
+this module still loads only beside a native manifest, so both stay here.
 """
 
 import os
 import re
 from pathlib import Path
 
-BOOTSTRAP_MARKER = "TBaguette:using-tbaguette bootstrap for hermes"
+BOOTSTRAP_MARKER = "tbaguette-atelier:using-tbaguette bootstrap for hermes"
 
 # Re-asserted on every turn after the first. Deliberately not the whole
 # SKILL.md: the first turn already injected that, and every skill's trigger
@@ -43,8 +45,8 @@ BOOTSTRAP_MARKER = "TBaguette:using-tbaguette bootstrap for hermes"
 NUDGE = (
     "<TBAGUETTE_SKILL_CHECK>\n"
     "Before responding: does a TBaguette skill cover this turn? Questions and "
-    '"too small to bother" count — see TBaguette:using-tbaguette. If one '
-    "plausibly applies, invoke it — `skill_view(\"TBaguette:<skill-name>\")`. "
+    '"too small to bother" count — see tbaguette-atelier:using-tbaguette. If one '
+    "plausibly applies, invoke it — `skill_view(\"tbaguette-atelier:<skill-name>\")`. "
     "Triggers are already registered with your skill loader; drop the skill if "
     "it does not fit once you are in it.\n"
     "</TBAGUETTE_SKILL_CHECK>"
@@ -214,8 +216,8 @@ def _assemble(kept, left_out, skills_dir, tool_mapping) -> str:
         + f"\n\n## Loading TBaguette Skills on Hermes\n\n"
         f"TBaguette's {len(_stock_skill_names(skills_dir))} skills are "
         f"registered with Hermes' native skill loader: invoke one with "
-        f'`skill_view("TBaguette:skill-name")` (for example '
-        f'`skill_view("TBaguette:naming-things")`). The `TBaguette:` prefix is '
+        f'`skill_view("tbaguette-atelier:skill-name")` (for example '
+        f'`skill_view("tbaguette-atelier:naming-things")`). The `tbaguette-atelier:` prefix is '
         f"not decoration — Hermes derives it from the plugin name, and the "
         f"bare name will not resolve.\n\n"
         f"These are explicit loads: unlike a Claude Code skill listing, they "
@@ -239,7 +241,7 @@ def _assemble(kept, left_out, skills_dir, tool_mapping) -> str:
             else ""
         )
         + f". Read the whole thing with "
-        f'`skill_view("TBaguette:using-tbaguette")` whenever you want it; '
+        f'`skill_view("tbaguette-atelier:using-tbaguette")` whenever you want it; '
         f"nothing here says not to.\n\n"
         f"If a lookup returns 'not found', read the skill file directly "
         f"instead:\n"
@@ -276,7 +278,7 @@ def register(ctx):
     #
     # The name registered here is the bare one: Hermes namespaces it itself, as
     # `f"{manifest.skill_namespace or manifest.name}:{name}"`, and rejects a
-    # name containing ':'. That is what makes `TBaguette:naming-things` the
+    # name containing ':'. That is what makes `tbaguette-atelier:naming-things` the
     # resolvable form and the bare name a miss.
     for name in _stock_skill_names(skills_dir):
         ctx.register_skill(name, Path(skills_dir, name, "SKILL.md"))

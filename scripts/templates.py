@@ -212,7 +212,7 @@ ENGLISH_STRINGS = Strings(
     ),
     install_note_restart_html_template=(
         "Restart your agent (in Claude Code, <code>/reload-plugins</code>), then "
-        "invoke a skill as <code>{brand}:skill-name</code>. On Claude that means "
+        "invoke a skill as <code>{plugin}:skill-name</code>. On Claude that means "
         "Claude Code specifically — the Claude Desktop app and claude.ai chat "
         "load skills from your account instead of this folder, so cloning here "
         "won’t make them appear there."
@@ -221,7 +221,7 @@ ENGLISH_STRINGS = Strings(
         "A conversation that was already open when you installed or updated — "
         "including the one you installed from — is still running on the skill "
         "list it started with. Open a new conversation to pick up the latest, or "
-        "invoke <code>{brand}:using-tbaguette</code> in the old one."
+        "invoke <code>{plugin}:using-tbaguette</code> in the old one."
     ),
     install_tab_posix_label="macOS / Linux",
     install_tab_windows_label="Windows (PowerShell)",
@@ -566,7 +566,7 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
         "because it\u2019s the one you\u2019re most likely to test in. It started before "
         "the install, so it still has the old list, and nothing you just did "
         "changes that. Open a new conversation, or invoke "
-        "<code>{brand}:using-tbaguette</code> in the old one to load the entry "
+        "<code>{plugin}:using-tbaguette</code> in the old one to load the entry "
         "point by hand."
     ),
     reload_desktop_html=(
@@ -579,7 +579,7 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
     ),
     confirm_heading="Confirm it landed",
     confirm_html_template=(
-        "Ask your agent to invoke <code>{brand}:using-tbaguette</code>. If the "
+        "Ask your agent to invoke <code>{plugin}:using-tbaguette</code>. If the "
         "install worked, it comes back with a short notice about checking skills "
         "before every response \u2014 that notice is the library\u2019s entry point, and "
         "seeing it is proof the whole thing is loaded and callable, not just "
@@ -592,7 +592,7 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
         "Every skill carries a trigger description \u2014 the situations it is for, "
         "written out at length rather than summarized into a category. Your agent "
         "matches what you are doing against those, and "
-        "<code>{brand}:using-tbaguette</code> is the piece that makes that check "
+        "<code>{plugin}:using-tbaguette</code> is the piece that makes that check "
         "habitual rather than occasional."
     ),
     how_they_fire_examples_html_template=(
@@ -607,8 +607,8 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
     ),
     by_name_heading="When you do want one by name",
     by_name_html_template=(
-        "Invoke it directly \u2014 <code>{brand}:formidable</code>, "
-        "<code>{brand}:knowing-when-to-stop</code>, whichever one you mean. There "
+        "Invoke it directly \u2014 <code>{plugin}:formidable</code>, "
+        "<code>{plugin}:knowing-when-to-stop</code>, whichever one you mean. There "
         "are two honest reasons to override the automatic path. The first is that "
         "you know your own situation better than a trigger description can: the "
         "work does not look like the skill\u2019s trigger, but the discipline still "
@@ -703,7 +703,7 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
     coexistence_names_html_template=(
         "Skill <em>names</em> can repeat across libraries, and that is fine, "
         "because {brand}\u2019s are called with its prefix. "
-        "<code>TBaguette:naming-things</code> is always this library\u2019s; the "
+        "<code>tbaguette-atelier:naming-things</code> is always this library\u2019s; the "
         "same name without the prefix is whoever else\u2019s. Two skills that "
         "share a name stay separately reachable and neither one shadows the "
         "other \u2014 so nothing has to be uninstalled to make room."
@@ -746,7 +746,7 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
     troubleshooting_session_html_template=(
         "<strong>The conversation predates the install</strong> \u2014 including the "
         "one you installed from. Open a new one, or invoke "
-        "<code>{brand}:using-tbaguette</code> to load the entry point by hand."
+        "<code>{plugin}:using-tbaguette</code> to load the entry point by hand."
     ),
     troubleshooting_desktop_html=(
         "<strong>You are in Claude Desktop or claude.ai chat, not Claude Code.</strong> "
@@ -809,6 +809,13 @@ GETTING_STARTED_STARTERS: tuple[tuple[str, str], ...] = (
 # count-interpolated templates above, just for a name that must never
 # translate instead of a number that must always agree grammatically.
 BRAND_NAME = "TBaguette"
+# The plugin's identifier, which is not the brand: it is the `name` in
+# .claude-plugin/plugin.json and so the prefix on every skill
+# (`tbaguette-atelier:naming-things`). Lowercase because claude.ai syncs a
+# plugin only under a kebab-case name. Any template that shows a skill being
+# invoked takes {plugin}; {brand} stays for the product in prose and the
+# install directory, which kept its name through the 2.0.0 rename.
+PLUGIN_NAME = "tbaguette-atelier"
 BRAND_ATELIER = "TBaguette&rsquo;s Atelier"
 # The same name for the two places that need it as *text* rather than as
 # markup: a <title>, and any other value _render_head escapes on the way
@@ -1316,9 +1323,9 @@ Route A — you read Claude Code's skills directory. Target: ~/.claude/skills/TB
 3. <target> exists, has content, isn't a git repo, but contains CATALOG.md and skills/ — this is very likely a previous TBaguette install that lost its own git history. Say that plainly, not a "naming collision", and ask me whether to move it aside and re-clone, rather than doing that yourself.
 4. Anything else already at that path — stop. Do not delete or modify it. Tell me there's a naming collision that needs a manual look.
 
-Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills --enable`, where the flag is not optional — Hermes only prompts to enable a plugin when it has a terminal to prompt in, so run from a tool it would otherwise install disabled and load nothing. Hermes also security-scans what it installs, and this library trips that scan: a hundred skills about secrets, untrusted input and shell scripting read, to a pattern matcher, like the things they teach you to watch for. The findings are informational. If the scan stops the install because there is no terminal to confirm in, show me the report and the command and let me decide — do not re-run it with --force on my behalf. Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills` from inside a session or `kimi plugin install https://github.com/LeSplooch/tbaguette-skills.git` from a shell, Gemini CLI is `gemini extensions install https://github.com/LeSplooch/tbaguette-skills`, Codex is `codex plugin marketplace add LeSplooch/tbaguette-skills` and then installing TBaguette from it. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install TBaguette@tbaguette-dev`. In VS Code it is not a shell command at all — tell me to run **Chat: Install Plugin From Source** from the Command Palette and paste https://github.com/LeSplooch/tbaguette-skills.git when it asks; don't clone anything yourself in place of that. If it's a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
+Route B — you install plugins or extensions from a git URL with your own command. Use it, against this same repo: Hermes is `hermes plugins install LeSplooch/tbaguette-skills --enable`, where the flag is not optional — Hermes only prompts to enable a plugin when it has a terminal to prompt in, so run from a tool it would otherwise install disabled and load nothing. Hermes also security-scans what it installs, and this library trips that scan: a hundred skills about secrets, untrusted input and shell scripting read, to a pattern matcher, like the things they teach you to watch for. The findings are informational. If the scan stops the install because there is no terminal to confirm in, show me the report and the command and let me decide — do not re-run it with --force on my behalf. Kimi Code is `/plugins install https://github.com/LeSplooch/tbaguette-skills` from inside a session or `kimi plugin install https://github.com/LeSplooch/tbaguette-skills.git` from a shell, Gemini CLI is `gemini extensions install https://github.com/LeSplooch/tbaguette-skills`, Codex is `codex plugin marketplace add LeSplooch/tbaguette-skills` and then installing TBaguette from it. GitHub Copilot CLI takes two steps rather than one, because the install command needs a marketplace to name first: `copilot plugin marketplace add LeSplooch/tbaguette-skills`, then `copilot plugin install tbaguette-atelier@tbaguette-dev`. In VS Code it is not a shell command at all — tell me to run **Chat: Install Plugin From Source** from the Command Palette and paste https://github.com/LeSplooch/tbaguette-skills.git when it asks; don't clone anything yourself in place of that. If it's a command only I can type, print me the exact line instead of substituting a filesystem clone for it.
 
-Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is "tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git", added to the "plugin" array in opencode.json. If you are the Copilot coding agent, the file is .github/copilot/settings.json in the repository you are working on, and both fields are objects rather than arrays: "extraKnownMarketplaces" gets {"tbaguette-dev": {"source": {"source": "github", "repo": "LeSplooch/tbaguette-skills"}}} and "enabledPlugins" gets {"TBaguette@tbaguette-dev": true}. That edits a repository I share with other people, so show it to me and wait, the same as any other config.
+Route C — you load plugins from a config file. Show me the exact entry and ask before editing — never edit my config silently. On OpenCode that entry is "tbaguette-skills@git+https://github.com/LeSplooch/tbaguette-skills.git", added to the "plugin" array in opencode.json. If you are the Copilot coding agent, the file is .github/copilot/settings.json in the repository you are working on, and both fields are objects rather than arrays: "extraKnownMarketplaces" gets {"tbaguette-dev": {"source": {"source": "github", "repo": "LeSplooch/tbaguette-skills"}}} and "enabledPlugins" gets {"tbaguette-atelier@tbaguette-dev": true}. That edits a repository I share with other people, so show it to me and wait, the same as any other config.
 
 Route D — none of those. Don't invent a path. Find the directory your harness actually reads: its own dotdir in my home directory, or an existing skills/, plugins/, or extensions/ folder — confirmed to be there, not assumed. Clone-or-pull into a TBaguette-named directory inside it, following Route A's four cases. If nothing you find is clearly right, clone nothing: tell me what you checked and ask.
 
@@ -1330,9 +1337,9 @@ After a successful install, verify rather than assume. For a clone you placed yo
 - Read <target>/.claude-plugin/plugin.json's "version" field, if present, so you can tell me which version I'm now on.
 For a harness-managed install, verify it the way your harness reports installed plugins — on Hermes that is `hermes plugins list`, and the row has to say enabled, not just present.
 
-Then tell me what happened (installed fresh, updated, or already current), which version, and the reload step for my agent specifically — restarting it, Claude Code's /reload-plugins, Kimi Code's /new, Hermes' `hermes gateway restart`. Skills then invoke as TBaguette:skill-name.
+Then tell me what happened (installed fresh, updated, or already current), which version, and the reload step for my agent specifically — restarting it, Claude Code's /reload-plugins, Kimi Code's /new, Hermes' `hermes gateway restart`. Skills then invoke as tbaguette-atelier:skill-name.
 
-Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke TBaguette:using-tbaguette here (if you have no skill tool, read skills/using-tbaguette/SKILL.md from the install instead)."""
+Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke tbaguette-atelier:using-tbaguette here (if you have no skill tool, read skills/using-tbaguette/SKILL.md from the install instead)."""
 
 
 def _render_install(base_path: str = "", *,
@@ -1349,8 +1356,8 @@ def _render_install(base_path: str = "", *,
     itself that is a link to the page you are already reading."""
     escaped_prompt = escape_html(INSTALL_PROMPT)
     frame_label = strings.install_frame_label_template.format(brand_atelier=BRAND_ATELIER_TEXT)
-    restart_note_html = strings.install_note_restart_html_template.format(brand=BRAND_NAME)
-    session_note_html = strings.install_note_session_html_template.format(brand=BRAND_NAME)
+    restart_note_html = strings.install_note_restart_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
+    session_note_html = strings.install_note_session_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
     pointer_html = ""
     if show_getting_started_pointer:
         new_here_html = strings.install_note_new_here_html_template.format(
@@ -2311,8 +2318,8 @@ def render_verify_install_page(highlighted_lines: list[str], categories: list[di
     test_itself_html = v.test_itself_template.format(
         test_github_url=INSTALL_TEST_GITHUB_URL, test_source_path=INSTALL_TEST_SOURCE_PATH
     )
-    four_scenarios_intro_html = v.four_scenarios_intro_html_template.format(brand=BRAND_NAME)
-    scenario_c_html = v.scenario_c_html_template.format(brand=BRAND_NAME)
+    four_scenarios_intro_html = v.four_scenarios_intro_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
+    scenario_c_html = v.scenario_c_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
     meta_description = v.meta_description_template.format(brand_atelier=BRAND_ATELIER_TEXT)
 
     article = f"""<article class="container skill-article">
@@ -2423,15 +2430,15 @@ def render_getting_started_page(categories: list[dict], base_path: str = "",
     install_html = g.install_html_template.format(
         home_url=home_url, verify_url=_locale_url(locale, base_path, "verify-install/")
     )
-    reload_session_html = g.reload_session_html_template.format(brand=BRAND_NAME)
-    confirm_html = g.confirm_html_template.format(brand=BRAND_NAME)
-    how_they_fire_html = g.how_they_fire_html_template.format(brand=BRAND_NAME)
+    reload_session_html = g.reload_session_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
+    confirm_html = g.confirm_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
+    how_they_fire_html = g.how_they_fire_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
     how_they_fire_examples_html = g.how_they_fire_examples_html_template.format(
         skill_count=skill_count,
         diagnosing_url=skill_url("diagnosing-before-fixing", base_path, locale),
         formidable_url=skill_url("formidable", base_path, locale),
     )
-    by_name_html = g.by_name_html_template.format(brand=BRAND_NAME)
+    by_name_html = g.by_name_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
     bigger_work_html = g.bigger_work_html_template.format(
         orchestrating_url=skill_url("orchestrating-work-end-to-end", base_path, locale)
     )
@@ -2439,18 +2446,18 @@ def render_getting_started_page(categories: list[dict], base_path: str = "",
         keeping_current_url=skill_url("keeping-tbaguette-current", base_path, locale)
     )
     coexistence_install_html = g.coexistence_install_html_template.format(
-        brand=BRAND_NAME, verify_url=_locale_url(locale, base_path, "verify-install/")
+        brand=BRAND_NAME, plugin=PLUGIN_NAME, verify_url=_locale_url(locale, base_path, "verify-install/")
     )
-    coexistence_names_html = g.coexistence_names_html_template.format(brand=BRAND_NAME)
+    coexistence_names_html = g.coexistence_names_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
     coexistence_notices_html = g.coexistence_notices_html_template.format(
-        brand=BRAND_NAME,
+        brand=BRAND_NAME, plugin=PLUGIN_NAME,
         using_url=skill_url("using-tbaguette", base_path, locale),
     )
-    coexistence_removal_html = g.coexistence_removal_html_template.format(brand=BRAND_NAME)
+    coexistence_removal_html = g.coexistence_removal_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
     other_agents_html = g.other_agents_html_template.format(
         brand_atelier=BRAND_ATELIER, porting_url=PORTING_GITHUB_URL
     )
-    troubleshooting_session_html = g.troubleshooting_session_html_template.format(brand=BRAND_NAME)
+    troubleshooting_session_html = g.troubleshooting_session_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
     next_html = g.next_html_template.format(home_url=home_url, catalog_url=CATALOG_GITHUB_URL)
     meta_description = g.meta_description_template.format(brand_atelier=BRAND_ATELIER_TEXT)
 

@@ -1,9 +1,9 @@
 {
-  "name": "TBaguette",
-  "version": "1.1.74",
+  "name": "tbaguette-atelier",
+  "version": "2.0.0",
   "description": "Ninety-eight project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling.",
   "author": {
-    "name": "verderosa2",
+    "name": "TBaguette",
     "email": "verderosa2@gmail.com"
   },
   "homepage": "https://github.com/LeSplooch/tbaguette-skills",
@@ -28,7 +28,7 @@
     "displayName": "TBaguette's Atelier",
     "shortDescription": "Judgment calls, code comprehension, and change discipline for coding agents",
     "longDescription": "Use TBaguette's Atelier for the craft between the ticket and the commit: reading unfamiliar code, naming, testing strategy, debugging, systems design, defensive security, and communicating the result.",
-    "developerName": "verderosa2",
+    "developerName": "TBaguette",
     "capabilities": [
       "Interactive",
       "Read",

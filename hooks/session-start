@@ -87,7 +87,7 @@ if [ -d "${PLUGIN_ROOT}/.git" ]; then
         fi
 
         update_check_block=$(cat <<EOF
-The TBaguette:keeping-tbaguette-current skill's step 1 (check) already ran automatically for this session -- do not re-fetch.
+The tbaguette-atelier:keeping-tbaguette-current skill's step 1 (check) already ran automatically for this session -- do not re-fetch.
 
 - Installed plugin path: ${PLUGIN_ROOT}
 - HEAD: ${head_sha}
@@ -95,14 +95,14 @@ The TBaguette:keeping-tbaguette-current skill's step 1 (check) already ran autom
 - Comparison: ${sha_status}
 - Working tree: ${tree_status}
 
-If the comparison is "different" and the tree is clean, follow the TBaguette:keeping-tbaguette-current skill's remaining steps (safety gate, fast-forward update, report, record) using this data. If the tree is dirty, follow that skill's local-changes handling instead of updating. If the comparison is "same," this was a background check -- stay silent unless asked.
+If the comparison is "different" and the tree is clean, follow the tbaguette-atelier:keeping-tbaguette-current skill's remaining steps (safety gate, fast-forward update, report, record) using this data. If the tree is dirty, follow that skill's local-changes handling instead of updating. If the comparison is "same," this was a background check -- stay silent unless asked.
 EOF
 )
     else
-        update_check_block="The TBaguette:keeping-tbaguette-current skill's step 1 (check) ran automatically but the fetch failed (offline, DNS, or slow connection) -- treat as a failed background check per that skill: stay silent unless the user explicitly asks."
+        update_check_block="The tbaguette-atelier:keeping-tbaguette-current skill's step 1 (check) ran automatically but the fetch failed (offline, DNS, or slow connection) -- treat as a failed background check per that skill: stay silent unless the user explicitly asks."
     fi
 else
-    update_check_block="Installed plugin path ${PLUGIN_ROOT} is not a git clone (no .git directory) -- TBaguette:keeping-tbaguette-current's update check does not apply here; nothing to do."
+    update_check_block="Installed plugin path ${PLUGIN_ROOT} is not a git clone (no .git directory) -- tbaguette-atelier:keeping-tbaguette-current's update check does not apply here; nothing to do."
 fi
 
 escape_for_json() {
@@ -127,9 +127,9 @@ update_check_escaped=$(escape_for_json "$update_check_block")
 # reachable.
 case "$OUTPUT_FORMAT" in copilot|vscode) copilot_style=1 ;; *) copilot_style=0 ;; esac
 if [ "$copilot_style" -eq 1 ]; then
-    invocation_sentence="**Below is the full content of your 'TBaguette:using-tbaguette' skill. Every other TBaguette skill loads automatically when a prompt matches its description, and you can invoke one deliberately as the slash command '/TBaguette:<skill-name>'; skills/using-tbaguette/references/copilot-tools.md in this plugin has the rest of the mapping:**"
+    invocation_sentence="**Below is the full content of your 'tbaguette-atelier:using-tbaguette' skill. Every other TBaguette skill loads automatically when a prompt matches its description, and you can invoke one deliberately as the slash command '/tbaguette-atelier:<skill-name>'; skills/using-tbaguette/references/copilot-tools.md in this plugin has the rest of the mapping:**"
 else
-    invocation_sentence="**Below is the full content of your 'TBaguette:using-tbaguette' skill - for all other TBaguette skills, use the 'Skill' tool with 'TBaguette:<skill-name>':**"
+    invocation_sentence="**Below is the full content of your 'tbaguette-atelier:using-tbaguette' skill - for all other TBaguette skills, use the 'Skill' tool with 'tbaguette-atelier:<skill-name>':**"
 fi
 invocation_escaped=$(escape_for_json "$invocation_sentence")
 

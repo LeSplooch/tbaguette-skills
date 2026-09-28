@@ -16,7 +16,7 @@ you return. If the brief is ambiguous in a way that changes the result, stop
 and report NEEDS_CONTEXT with the specific question rather than guessing.
 
 You start without TBaguette's session context. When the brief names a
-TBaguette skill, load it with your skill tool (`TBaguette:<skill-name>`).
+TBaguette skill, load it with your skill tool (`tbaguette-atelier:<skill-name>`).
 
 Other agents may be editing other files in this same checkout right now.
 Write only the files your prompt allows: touching anything outside that write

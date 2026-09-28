@@ -70,7 +70,7 @@ class FakeContext:
         assert isinstance(path, Path), f"register_skill needs a Path, got {type(path)}"
         assert ":" not in name, f"Hermes rejects a namespaced skill name: {name!r}"
         assert path.is_file(), f"no SKILL.md at {path}"
-        self.skills[f"TBaguette:{name}"] = path
+        self.skills[f"tbaguette-atelier:{name}"] = path
 
     def register_hook(self, event, callback):
         self.hooks[event] = callback
@@ -247,7 +247,7 @@ def main():
     )
     check(
         "it says how to read the rest",
-        'skill_view("TBaguette:using-tbaguette")' in bootstrap,
+        'skill_view("tbaguette-atelier:using-tbaguette")' in bootstrap,
     )
     check(
         "it names what it left out rather than dropping it silently",
@@ -257,7 +257,7 @@ def main():
         check(f"...naming {omitted!r} and why", omitted in bootstrap and reason in bootstrap)
     check(
         "it carries the namespace rule, which is what makes a lookup resolve",
-        "`TBaguette:` prefix is not decoration" in bootstrap,
+        "`tbaguette-atelier:` prefix is not decoration" in bootstrap,
     )
     check(
         "it carries this harness's tool mapping",
@@ -272,7 +272,7 @@ def main():
     # per-turn seam gets one. Hermes' is pre_llm_call on turns after the first.
     check(
         "the nudge names Hermes' own invocation form, not the Skill tool",
-        'skill_view("TBaguette:<skill-name>")' in plugin.NUDGE
+        'skill_view("tbaguette-atelier:<skill-name>")' in plugin.NUDGE
         and "Skill tool" not in plugin.NUDGE,
     )
     check(
@@ -286,7 +286,7 @@ def main():
     on_disk = {p.name for p in (REPO_ROOT / "skills").iterdir() if (p / "SKILL.md").is_file()}
     check(
         f"every skill on disk is registered ({len(ctx.skills)} of {len(on_disk)})",
-        {f"TBaguette:{name}" for name in on_disk} == set(ctx.skills),
+        {f"tbaguette-atelier:{name}" for name in on_disk} == set(ctx.skills),
     )
     check("the pre_llm_call hook is registered", "pre_llm_call" in ctx.hooks)
 

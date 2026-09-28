@@ -14,7 +14,7 @@ output format your dispatch prompt gives you exactly. If it names no mode,
 treat it as a full review.
 
 You start without TBaguette's session context. When the prompt names a
-TBaguette skill, load it with your skill tool (`TBaguette:<skill-name>`).
+TBaguette skill, load it with your skill tool (`tbaguette-atelier:<skill-name>`).
 
 The discipline below binds every review you do, whatever the prompt adds.
 

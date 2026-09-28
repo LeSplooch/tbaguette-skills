@@ -13,7 +13,7 @@ from unittest import mock
 
 import copilot_agents as ca
 
-# Copilot namespaces plugin agents itself: these are offered as TBaguette:implementer etc.
+# Copilot namespaces plugin agents itself: these are offered as tbaguette-atelier:implementer etc.
 ROLES = ("implementer", "reviewer", "investigator")
 
 

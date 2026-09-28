@@ -26,15 +26,15 @@ same on every surface:
 2. **Deliberate.** Invoke one by name as a slash command:
 
    ```
-   /TBaguette:orienting-in-unfamiliar-code
-   /TBaguette:karen-and-the-manager
+   /tbaguette-atelier:orienting-in-unfamiliar-code
+   /tbaguette-atelier:karen-and-the-manager
    ```
 
-   The `TBaguette:` prefix comes from the plugin name and is added by Copilot
+   The `tbaguette-atelier:` prefix comes from the plugin name and is added by Copilot
    itself. Do not go looking for it inside any `SKILL.md` — a skill that writes
    a prefix into its own `name:` field fails to load, silently.
 
-Where a TBaguette skill says "invoke `TBaguette:<skill-name>` with the Skill
+Where a TBaguette skill says "invoke `tbaguette-atelier:<skill-name>` with the Skill
 tool," read it as route 2.
 
 ## If a skill will not load
@@ -91,7 +91,7 @@ model. One with no `model:` line inherits the session's model — the expensive
 default `delegating-tasks-with-review-gates` warns about — so either pin one in
 the file or name the model in every dispatch. This plugin ships the three roles
 the delegation skills dispatch, and Copilot CLI offers them as
-`TBaguette:implementer`, `TBaguette:reviewer` and `TBaguette:investigator`. The
+`tbaguette-atelier:implementer`, `tbaguette-atelier:reviewer` and `tbaguette-atelier:investigator`. The
 reviewer and investigator are given no edit tool — they keep a shell, so that
 limits their tools rather than guaranteeing they cannot write — and none pins a
 model, so name one per dispatch. A listed agent that nothing names tends to go

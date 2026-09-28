@@ -1,12 +1,12 @@
 # TBaguette's Atelier
 
-98 skills, shipped as the `TBaguette@skills-dir` plugin. Invoke any of them as
-`TBaguette:<skill-name>` — they also load automatically when their `description:`
+98 skills, shipped as the `tbaguette-atelier@skills-dir` plugin. Invoke any of them as
+`tbaguette-atelier:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
 - Plugin root: `~/.claude/skills/TBaguette/`, skills in `skills/<name>/SKILL.md`
-- Inventory and token cost: `claude plugin details TBaguette`
-- Turn the whole group off: `claude plugin disable TBaguette@skills-dir`
+- Inventory and token cost: `claude plugin details tbaguette-atelier`
+- Turn the whole group off: `claude plugin disable tbaguette-atelier@skills-dir`
 
 Skills marked † are **not** part of the Atelier — they live loose in `~/.claude/skills/`
 or come from the `superpowers` plugin, and are listed here only to show where an

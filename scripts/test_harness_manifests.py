@@ -144,8 +144,10 @@ class TestHarnessManifests(unittest.TestCase):
         outright: with no native manifest at the root, Hermes falls through to
         the portable Agent Plugins reader for our Copilot `plugin.json`, whose
         v1 name constraint is lowercase-only
-        (`^(?!.*(?:--|\\.\\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$`). "TBaguette"
-        fails it and `hermes plugins install` aborts. Verified against
+        (`^(?!.*(?:--|\\.\\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$`). "TBaguette",
+        the name until 2.0.0, failed it and `hermes plugins install` aborted.
+        The name is lowercase now, but `__init__.py` still only loads beside a
+        native manifest, so the layout is guarded all the same. Verified against
         hermes-agent 2026-09-05; the failure was invisible to this suite,
         because every manifest was valid and every version matched."""
         self.assertTrue((REPO_ROOT / "plugin.yaml").is_file())
@@ -158,9 +160,40 @@ class TestHarnessManifests(unittest.TestCase):
         )
         # The name Hermes derives the skill namespace from. register_skill
         # qualifies every skill as f"{manifest.name}:{skill}", so a rename here
-        # silently breaks every `TBaguette:<skill-name>` reference shipped in
+        # silently breaks every `tbaguette-atelier:<skill-name>` reference shipped in
         # the bootstrap, the tool-mapping reference, and the install prompt.
-        self.assertEqual(_load_yaml_scalars("plugin.yaml")["name"], "TBaguette")
+        self.assertEqual(_load_yaml_scalars("plugin.yaml")["name"], "tbaguette-atelier")
+
+    def test_every_manifest_names_the_plugin_the_same_kebab_case_way(self):
+        """The plugin name is the prefix on every skill (`tbaguette-atelier:naming-things`),
+        and the skills, hooks, and bootstraps all spell that prefix out. A
+        harness whose manifest carried a different name would namespace the
+        skills differently from what the text it loads tells the model to call.
+
+        Kebab-case because claude.ai syncs a plugin only under a kebab-case
+        name: `claude plugin validate` warns on anything else, and a listing in
+        Anthropic's plugin directory under the old `TBaguette` would have
+        reached Claude Code and nowhere else."""
+        expected = _load_json(".claude-plugin/plugin.json")["name"]
+        self.assertRegex(expected, r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+        self.assertLessEqual(len(expected), 64)
+        named = {
+            rel_path: _load_json(rel_path)["name"]
+            for rel_path in [
+                "plugin.json",
+                ".codex-plugin/plugin.json",
+                ".cursor-plugin/plugin.json",
+                ".devin-plugin/plugin.json",
+                ".kimi-plugin/plugin.json",
+                "gemini-extension.json",
+            ]
+        }
+        for rel_path in [".claude-plugin/marketplace.json", ".agents/plugins/marketplace.json"]:
+            named[f"{rel_path} (nested)"] = _load_json(rel_path)["plugins"][0]["name"]
+        named["plugin.yaml"] = _load_yaml_scalars("plugin.yaml")["name"]
+        for rel_path, name in named.items():
+            with self.subTest(manifest=rel_path):
+                self.assertEqual(name, expected)
 
     def test_agent_plugins_schema_is_what_routes_vscode_to_its_hooks(self):
         """VS Code ignores a manifest's hooks field entirely and derives the
@@ -188,7 +221,7 @@ class TestHarnessManifests(unittest.TestCase):
         self.assertEqual(set(vscode), {"SessionStart", "UserPromptSubmit"})
 
     def test_published_copilot_install_command_names_a_real_marketplace(self):
-        """`copilot plugin install TBaguette@tbaguette-dev` is printed on the
+        """`copilot plugin install tbaguette-atelier@tbaguette-dev` is printed on the
         live site. Both halves of that spec come from marketplace.json, and
         neither is derived at build time -- renaming either field would leave
         the site publishing an install command for a marketplace and a plugin
@@ -196,7 +229,7 @@ class TestHarnessManifests(unittest.TestCase):
         marketplace = _load_json(".claude-plugin/marketplace.json")
         plugin_name = marketplace["plugins"][0]["name"]
         spec = f"{plugin_name}@{marketplace['name']}"
-        self.assertEqual(spec, "TBaguette@tbaguette-dev")
+        self.assertEqual(spec, "tbaguette-atelier@tbaguette-dev")
 
         porting = (REPO_ROOT / "PORTING.md").read_text(encoding="utf-8")
         self.assertIn(f"copilot plugin install {spec}", porting)

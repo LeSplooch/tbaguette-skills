@@ -67,12 +67,12 @@ OUTPUT_FORMAT="${1:-claude}"
 # for the nudge on every file read.
 NUDGE_EVERY=10
 
-nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see TBaguette:using-tbaguette. If one plausibly applies, invoke it -- Skill tool, \`TBaguette:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
+nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see tbaguette-atelier:using-tbaguette. If one plausibly applies, invoke it -- Skill tool, \`tbaguette-atelier:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
 
 # Same nudge, minus the tool that does not exist here. Copilot -- CLI and VS
 # Code alike -- reaches a skill by description match or by the
-# /TBaguette:<skill-name> slash command.
-copilot_nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see TBaguette:using-tbaguette. If one plausibly applies, invoke it as \`/TBaguette:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
+# /tbaguette-atelier:<skill-name> slash command.
+copilot_nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see tbaguette-atelier:using-tbaguette. If one plausibly applies, invoke it as \`/tbaguette-atelier:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
 
 escape_for_json() {
     local s="$1"

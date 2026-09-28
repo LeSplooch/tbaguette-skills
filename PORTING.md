@@ -93,7 +93,7 @@ never loaded.
 | Claude Code | `.claude-plugin/plugin.json` + `hooks/hooks.json` | shell hook → `hooks/session-start`, plus per-turn `hooks/user-prompt-submit` | native `Skill` tool; no adapter needed |
 | Codex | `.codex-plugin/plugin.json` + `hooks/hooks-codex.json` (installed with `codex plugin marketplace add LeSplooch/tbaguette-skills`, reusing `.agents/plugins/marketplace.json`) | shell hook → `hooks/session-start`, plus per-turn `hooks/user-prompt-submit` — Codex's hook config, stdout shape and `CLAUDE_PLUGIN_ROOT` are all Claude Code's | none needed |
 | Cursor | `.cursor-plugin/plugin.json` + `hooks/hooks-cursor.json` | shell hook → `hooks/session-start cursor`, plus a throttled re-assertion on `postToolUse` → `hooks/user-prompt-submit cursor` | none needed (Claude Code–compatible tool surface) |
-| GitHub Copilot CLI | root `plugin.json` + `hooks/hooks-copilot.json` (installed with `copilot plugin marketplace add LeSplooch/tbaguette-skills` then `copilot plugin install TBaguette@tbaguette-dev`, reusing `.claude-plugin/marketplace.json` — the CLI reads that location too) | shell hook → `hooks/session-start copilot`, plus per-turn `hooks/user-prompt-submit copilot` | `skills/using-tbaguette/references/copilot-tools.md` |
+| GitHub Copilot CLI | root `plugin.json` + `hooks/hooks-copilot.json` (installed with `copilot plugin marketplace add LeSplooch/tbaguette-skills` then `copilot plugin install tbaguette-atelier@tbaguette-dev`, reusing `.claude-plugin/marketplace.json` — the CLI reads that location too) | shell hook → `hooks/session-start copilot`, plus per-turn `hooks/user-prompt-submit copilot` | `skills/using-tbaguette/references/copilot-tools.md` |
 | Copilot in VS Code | root `plugin.json` + `com.github.copilot/hooks/hooks.json` (installed with the **Chat: Install Plugin From Source** command and this repo's git URL) | shell hook → `hooks/session-start vscode`, plus per-turn `hooks/user-prompt-submit vscode` | same file as the CLI |
 | Copilot coding agent | root `plugin.json`, enabled per repository in that repo's `.github/copilot/settings.json` (see below) | the CLI's `hooks/hooks-copilot.json`, run in the cloud sandbox — only the `bash` field is honored there | same file as the CLI |
 | Devin | `.devin-plugin/plugin.json` | Devin's own `skills/` convention | none shipped |
@@ -122,7 +122,7 @@ default:
     }
   },
   "enabledPlugins": {
-    "TBaguette@tbaguette-dev": true
+    "tbaguette-atelier@tbaguette-dev": true
   }
 }
 ```
@@ -279,17 +279,25 @@ sentence with two halves, and the second is the interesting one:
    behind either.
 2. With no native manifest, Hermes falls through to the portable Agent Plugins
    reader for the root `plugin.json` we ship for Copilot — and that reader
-   enforces a lowercase-only name. `TBaguette` fails it, so the *install
-   command itself* aborted rather than the bootstrap merely being missed. One
+   enforces a lowercase-only name. `TBaguette`, the name then, failed it, so
+   the *install command itself* aborted rather than the bootstrap merely being
+   missed. One
    harness's manifest was breaking another harness's install, which is not a
    failure mode either integration could see on its own.
 
 Both files now sit at the repo root, where a native `plugin.yaml` is checked
 first and shadows the portable manifest for Hermes only. Renaming the plugin to
-satisfy the portable reader was the other available fix and was rejected: it
-would break `copilot plugin install TBaguette@tbaguette-dev` and every
+satisfy the portable reader was the other available fix and was rejected at the
+time: it would have broken the Copilot install command and every
 `TBaguette:<skill-name>` reference, since Hermes derives the skill namespace
 from the manifest name.
+
+The rename came in 2.0.0 anyway, for a different reader. claude.ai syncs a
+plugin only when its name is kebab-case, so listing the Atelier in Anthropic's
+plugin directory made it `tbaguette-atelier` in every manifest at once, and the
+portable reader accepts that too. `plugin.yaml` stays at the root regardless:
+it is the manifest Hermes loads `__init__.py` beside, and `__init__.py` is the
+bootstrap.
 
 Two more things a live run showed that no document did. **`--enable` is not
 optional**: `cmd_install` only prompts to enable when it has a TTY, so an agent
@@ -355,10 +363,12 @@ do. Worth re-checking the first time anyone runs each for real:
   `hooks/run-hook.cmd` that project carries. Copilot CLI was seen expanding
   `PLUGIN_ROOT` (1.0.87, `--plugin-dir`); once every Copilot surface is
   confirmed to, make the fallback fail closed instead.
-- **A manifest `name` with capitals in it.** `TBaguette` is kept because the
-  plugin name is what prefixes every skill (`/TBaguette:naming-things`), and
-  because `.claude-plugin/plugin.json` — a manifest location both surfaces
-  document reading — has always carried it.
+- **The skill prefix after the rename.** The plugin name is what prefixes
+  every skill (`/tbaguette-atelier:naming-things`). It was `TBaguette` until
+  2.0.0, a capitalized name none of the three surfaces documents accepting;
+  `tbaguette-atelier` is the lowercase form all of them do. What is left to
+  check is that each surface shows the new prefix after an update, rather than
+  the one it installed under.
 - **What VS Code reads off a hook's stdout.** Its own docs describe the events
   and say nothing about the output shape. `session-start vscode` emits Claude
   Code's envelope and Copilot's side by side so either reader finds its key;

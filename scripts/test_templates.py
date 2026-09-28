@@ -302,7 +302,7 @@ def check_getting_started_page() -> None:
     check("breadcrumb names the page and marks it current",
           '<span class="breadcrumb__current" aria-current="page">Getting started</span>' in html)
     check("the other-agents section names the product in full — it is this page's "
-          "first prose mention, every earlier one being a TBaguette:<skill> literal",
+          "first prose mention, every earlier one being a tbaguette-atelier:<skill> literal",
           "TBaguette&rsquo;s Atelier ships an integration for Codex" in html)
 
     article = _article_of(html)
@@ -312,7 +312,7 @@ def check_getting_started_page() -> None:
           f"(found: {sorted(set(leftovers))[:5]})", not leftovers)
     check("the brand placeholder really was substituted, so the check above is "
           "proving substitution happened rather than that no field uses one",
-          "TBaguette:using-tbaguette" in article)
+          "tbaguette-atelier:using-tbaguette" in article)
     check("{skill_count} is interpolated from the real catalog size, not hardcoded "
           "in the prose where it would go stale on the next skill added",
           "memorize 92 names" in article)
@@ -363,7 +363,7 @@ def check_getting_started_page() -> None:
           'href="/skills/using-tbaguette/"' in article)
     check("...and names the prefix that keeps a same-named skill from another "
           "library reachable, since that is the whole mechanism",
-          "<code>TBaguette:naming-things</code>" in article)
+          "<code>tbaguette-atelier:naming-things</code>" in article)
 
     # The one string on this site that deletes something. Pinned two ways: it
     # must be exactly the install path, and that path is read back out of
@@ -1586,7 +1586,7 @@ def main() -> None:
           'href="/verify-install/"' in index_html)
     check("a second note tells visitors to restart/reload and how to invoke a skill, "
           "without assuming the agent they installed from is Claude Code",
-          'Restart your agent' in index_html and 'TBaguette:skill-name' in index_html)
+          'Restart your agent' in index_html and 'tbaguette-atelier:skill-name' in index_html)
     check("that note clarifies this is Claude Code-specific, not Desktop app/claude.ai chat "
           "(the actual bug this was written to prevent: a visitor installs correctly but "
           "never sees the skills because they're looking in the wrong product)",
@@ -1600,7 +1600,7 @@ def main() -> None:
           "concludes the install failed)",
           'is still running on the skill list it started with' in index_html
           and 'Open a new conversation' in index_html
-          and 'TBaguette:using-tbaguette' in index_html)
+          and 'tbaguette-atelier:using-tbaguette' in index_html)
     check("that note sits last of the three, still inside the frame and before the lede",
           index_html.index('Restart your agent')
           < index_html.index('Open a new conversation')
@@ -1615,7 +1615,7 @@ def main() -> None:
     # bare "TBaguette". This is the check that would catch a well-meaning
     # search-and-replace reaching into the identifiers. ---
     check("the invocation prefix is untouched by the brand name",
-          "TBaguette:skill-name" in index_html
+          "tbaguette-atelier:skill-name" in index_html
           and "TBaguette&rsquo;s Atelier:" not in index_html
           and "TBaguette\u2019s Atelier:" not in index_html)
     check("the install path in the pasted prompt is untouched by the brand name",
@@ -1641,7 +1641,7 @@ def main() -> None:
           "beside it still hears it — the session running this install is always "
           "one that predates it",
           "open a new conversation" in INSTALL_PROMPT
-          and "TBaguette:using-tbaguette" in INSTALL_PROMPT)
+          and "tbaguette-atelier:using-tbaguette" in INSTALL_PROMPT)
     check("prompt and the on-page note agree that a pre-install session keeps its "
           "startup skill list (same fact, two audiences — drift here means the "
           "page and the prompt start telling visitors different things)",
@@ -1706,11 +1706,25 @@ def main() -> None:
         # install. That the second step names a marketplace that actually
         # exists is checked separately, in test_harness_manifests.py.
         ("copilot plugin marketplace add LeSplooch/tbaguette-skills", "PORTING.md"),
-        ("copilot plugin install TBaguette@tbaguette-dev", "PORTING.md"),
+        ("copilot plugin install tbaguette-atelier@tbaguette-dev", "PORTING.md"),
     ):
         check(f"prompt's {line!r} still matches {doc_rel}",
               line in INSTALL_PROMPT
               and line in (repo_root / doc_rel).read_text(encoding="utf-8"))
+    # The site's skill prefix is a literal, not read from the manifest at build
+    # time, and it stopped being the brand in 2.0.0: TBaguette is still the
+    # product and the install directory, tbaguette-atelier is what a skill is
+    # invoked as. Pages kept printing `TBaguette:using-tbaguette` after the
+    # rename until the two were separate constants.
+    manifest_name = re.search(
+        r'"name":\s*"([^"]+)"',
+        (repo_root / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"),
+    ).group(1)
+    check("PLUGIN_NAME is .claude-plugin/plugin.json's name, the prefix every skill is invoked with",
+          templates.PLUGIN_NAME == manifest_name)
+    check("the install note shows a skill invoked with the plugin's prefix, not the brand",
+          f"{templates.PLUGIN_NAME}:skill-name" in index_html
+          and f"{templates.BRAND_NAME}:skill-name" not in index_html)
     print(f"  wrote {index_path}")
 
     # --- render_skill_page: formidable (the interesting one) --------------

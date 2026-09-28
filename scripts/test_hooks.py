@@ -330,7 +330,7 @@ def check_user_prompt_submit() -> None:
     check("hookEventName is UserPromptSubmit", hook_output.get("hookEventName") == "UserPromptSubmit")
 
     ctx = hook_output.get("additionalContext", "")
-    check("names the Skill tool invocation form", "TBaguette:<skill-name>" in ctx)
+    check("names the Skill tool invocation form", "tbaguette-atelier:<skill-name>" in ctx)
     check("points back at using-tbaguette for the full rule", "using-tbaguette" in ctx)
     # The two rationalizations that the measured misses ran on: treating a
     # question as not-a-task, and treating small work as beneath a skill.
@@ -417,7 +417,7 @@ def check_session_start_copilot_shape() -> None:
         # it cannot find, on the line whose whole job is reaching the other 95
         # skills.
         check("names the slash-command form Copilot actually has",
-              "/TBaguette:<skill-name>" in ctx)
+              "/tbaguette-atelier:<skill-name>" in ctx)
         check("does not name a Skill tool Copilot does not have",
               "use the 'Skill' tool" not in ctx)
         check("points at the Copilot tool mapping",
@@ -446,7 +446,7 @@ def check_user_prompt_submit_copilot() -> None:
           modified.endswith(prompt))
     check("the nudge is prepended, delimited so it does not read as the user",
           modified.startswith("<TBAGUETTE_SKILL_CHECK>"))
-    check("nudge names Copilot's invocation form", "/TBaguette:<skill-name>" in modified)
+    check("nudge names Copilot's invocation form", "/tbaguette-atelier:<skill-name>" in modified)
     check("nudge does not name Claude Code's Skill tool", "Skill tool" not in modified)
     check("closes the 'just a question' loophole", "Questions" in modified)
     check("closes the 'too small' loophole", "too small" in modified)
@@ -539,7 +539,7 @@ def check_session_start_vscode_shape() -> None:
         check("carries using-tbaguette's SKILL.md verbatim",
               USING_TBAGUETTE_FIXTURE.rstrip("\n") in ctx)
         check("names the slash-command form, not a Skill tool",
-              "/TBaguette:<skill-name>" in ctx and "use the 'Skill' tool" not in ctx)
+              "/tbaguette-atelier:<skill-name>" in ctx and "use the 'Skill' tool" not in ctx)
 
 
 def check_user_prompt_submit_vscode() -> None:
@@ -567,7 +567,7 @@ def check_user_prompt_submit_vscode() -> None:
 
     ctx = hook_output.get("additionalContext", "")
     check("carries Copilot's nudge, not Claude Code's",
-          "/TBaguette:<skill-name>" in ctx and "Skill tool" not in ctx)
+          "/tbaguette-atelier:<skill-name>" in ctx and "Skill tool" not in ctx)
     check("closes the 'just a question' loophole", "Questions" in ctx)
     check("closes the 'too small' loophole", "too small" in ctx)
     check(f"stays short enough for per-turn cost ({len(ctx)} bytes)", len(ctx) < 600)

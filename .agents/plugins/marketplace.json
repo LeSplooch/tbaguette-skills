@@ -5,7 +5,7 @@
   },
   "plugins": [
     {
-      "name": "TBaguette",
+      "name": "tbaguette-atelier",
       "source": {
         "source": "url",
         "url": "./"

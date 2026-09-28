@@ -25,8 +25,8 @@ Windows, native PowerShell (5.1 or 7+ — the default terminal since Windows 10)
 if (Test-Path "$HOME\.claude\skills\TBaguette\.git" -PathType Container) { git -C "$HOME\.claude\skills\TBaguette" pull } else { git clone https://github.com/LeSplooch/tbaguette-skills.git "$HOME\.claude\skills\TBaguette" }
 ```
 
-Restart Claude Code (or run `/reload-plugins`). It loads as the `TBaguette@skills-dir`
-plugin — invoke any skill directly (`TBaguette:formidable`, `TBaguette:knowing-when-to-stop`, ...)
+Restart Claude Code (or run `/reload-plugins`). It loads as the `tbaguette-atelier@skills-dir`
+plugin — invoke any skill directly (`tbaguette-atelier:formidable`, `tbaguette-atelier:knowing-when-to-stop`, ...)
 or let them trigger automatically when your situation matches. Run the same command again
 later to pull updates in place.
 
@@ -89,6 +89,32 @@ prompt is written to discover the rest instead of asserting them.
 - **Reading code, landing changes, testing, debugging, designing systems, defensive
   security, communicating, environment and tooling** — 8 more categories, 75 more
   skills. Full breakdown in [`CATALOG.md`](CATALOG.md) or, better, on the site above.
+
+## What it runs
+
+Nearly all of this is text: skill files the model reads when a task matches. The
+parts that go further are listed here, so nothing about them is a surprise.
+
+- **At session start**, `hooks/session-start` adds the text of `using-tbaguette` to
+  the conversation. If the plugin folder is a git clone, which is what the install
+  commands above create, it also runs `git fetch origin master` against this
+  repository and tells the model whether an update is waiting. That fetch is the
+  only network call in the plugin's own code, and it downloads without sending
+  anything. When the plugin folder isn't a git clone, the check says so and
+  stops.
+- **On each prompt**, `hooks/user-prompt-submit` adds a one-sentence reminder to
+  check the skills before replying. On Copilot CLI, which only lets a hook rewrite
+  the prompt, the reminder is prepended to what you typed.
+- **`keeping-tbaguette-current`** acts on that update check. It fast-forwards a
+  git-clone install only when the clone has no local changes, tells you what
+  changed, and appends a line to `tbaguette-update-log.md` in your harness's own
+  folder (`~/.claude/` on Claude Code).
+- **`tending-tbaguette`** saves lessons worth contributing to
+  `~/.claude/tbaguette-candidates.md`. It forks, pushes, or opens a pull request
+  against this repository only after you say yes to that specific contribution.
+
+Where a harness doesn't run plugin hooks, the first two items don't happen and the
+skills are just text.
 
 ## This repo is also the site's source
 

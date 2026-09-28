@@ -25,12 +25,12 @@ When a skill mentions "your instructions file," on Hermes Agent this is **AGENTS
 ## Invoking a skill
 
 Hermes Agent has a `skills` toolset with `skill_view` and `skills_list`.
-TBaguette's skills are registered with that loader under the `TBaguette:`
+TBaguette's skills are registered with that loader under the `tbaguette-atelier:`
 namespace, which Hermes derives from the plugin name — so the prefix is
 required, not decoration, and the bare name is a miss:
 
 ```
-skill_view("TBaguette:orienting-in-unfamiliar-code")
+skill_view("tbaguette-atelier:orienting-in-unfamiliar-code")
 ```
 
 They are explicit loads rather than entries in `<available_skills>`, so

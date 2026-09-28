@@ -1,6 +1,6 @@
-name: TBaguette
-version: 1.1.74
+name: tbaguette-atelier
+version: 2.0.0
 description: Skills and workflow bootstrap for Hermes Agent, from TBaguette's Atelier
-author: verderosa2
+author: TBaguette
 provides_hooks:
   - pre_llm_call
