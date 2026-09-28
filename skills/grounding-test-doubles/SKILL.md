@@ -1,6 +1,6 @@
 ---
 name: grounding-test-doubles
-description: Use when writing a mock, stub, fake, or fixture for something you do not control — an HTTP API, a vendor SDK, a queue, a device, another team's service — when a fully green suite is followed by a failure on the first real call, when deciding between recorded and hand-written fixtures, when a parser and its test data were written by the same person from the same document, or when a benchmark's fixture describes a richer configuration than the shipping system actually produces. Also use when a test fails on code that works when performed by hand, or when something fails with a permission or authorization error only under automation. Covers fixture provenance, capturing over composing, contract and live tests, making an unrecognized shape fail loudly, and the opposite failure where a stand-in is more restrictive than reality because it cannot reproduce the gate a real caller passes.
+description: Use when writing a mock, stub, fake, or fixture for something you do not control — an HTTP API, a vendor SDK, a queue, a device, another team's service — when a fully green suite is followed by a failure on the first real call, when deciding between recorded and hand-written fixtures, when a parser and its test data were written by the same person from the same document, or when a benchmark's fixture describes a richer configuration than the shipping system actually produces. Also use when a test fails on code that works when performed by hand, or when something fails with a permission or authorization error only under automation, or when automation's synthetic input is silently ignored by the real target. Covers fixture provenance, capturing over composing, contract and live tests, making an unrecognized shape fail loudly, and the opposite failure where a stand-in is more restrictive than reality because it cannot reproduce the gate a real caller passes.
 ---
 
 # Grounding test doubles
@@ -17,6 +17,7 @@ A double is exactly as correct as what its author believed while writing it. Com
 - The parser and the fixture it is tested against were written by the same person, from the same document, in the same sitting.
 - A change is green locally and fails on the first real call.
 - Choosing between a recorded payload and a hand-written one.
+- Automation driving a real interface reports its input delivered, and the target shows no reaction.
 - Not for: which layer to test at (`choosing-test-scope`), constructing your own domain objects (`designing-test-data`), or faking time, randomness, and the filesystem (`testing-the-untestable`) — those you *do* control, and this problem does not arise.
 
 ## The one-party trap
@@ -99,6 +100,8 @@ Capabilities gated on *who is asking* rather than on *what is asked* are where t
 
 Two rules follow, and the first is only this skill's own rule pointed the other way. Confirm the stand-in can reproduce the gate before believing a red, exactly as everything above says to confirm a fixture is real before believing a green. And where it cannot, say so rather than quietly switching to the real thing: performing it by hand proves the granted path only, so the *denied* path still needs its own test -- which is the one job a stand-in that cannot pass the gate is perfectly suited to.
 
+**Outside a test, the same limit fails without a sound.** A bot, a script or an agent driving a real interface with synthetic input is a stand-in for a hand, and the gate it misses need not be about who is asking. It can be about the input's form. An application that keeps its own cursor ignores a pointer warp — a game reading relative motion, a page that has locked the pointer — and the click lands wherever that cursor already was. Nothing raises: the tool reports the input delivered, and it was, to a target that threw it away. So before an action that cannot be undone, read the target's own acknowledgement that it took the input — its hover state, its focus, the cursor it draws sitting where you put yours. Where it does not come, switch to the form the target consumes, such as relative moves instead of a warp, rather than repeating the one it ignored. Frames that come back byte-identical after an input are that silence made visible, and `diagnosing-before-fixing`'s exact-null section is how to read them.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -111,6 +114,7 @@ Two rules follow, and the first is only this skill's own rule pointed the other 
 | A recorded fixture leaked a real token into the repo | Scrubbed after committing, or not at all |
 | Nobody can say whether a fixture is current | No date or provider version recorded next to it |
 | A test fails on code that works when done by hand | The stand-in cannot reproduce a precondition the real caller carries, so the harness is what failed |
+| An automated click reported success and nothing on screen changed | The target ignores that input form (a pointer warp to an app with its own cursor), and nothing read the target's acknowledgement before acting |
 
 ## Red flags
 

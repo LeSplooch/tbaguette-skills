@@ -24,6 +24,17 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-28 — A synthetic click that lands on nothing
+
+- `grounding-test-doubles` now covers automation acting for real, not only
+  in tests. A script or agent driving a real interface can have its input
+  ignored without any error. An app that keeps its own cursor, like a game
+  or a page that has locked the pointer, ignores a pointer warp, and the
+  tool still reports the input delivered. The skill now says to read the
+  target's own acknowledgement (hover, focus, where its cursor is) before any
+  action that cannot be undone. If that never comes, switch to the input form
+  the target consumes. The `description:` routes that symptom to the skill.
+
 ## 2026-09-26 — Hidden characters a scrubber misses, guards that trust the wrong signal, and the decision a failing fix ignores
 
 - `handling-untrusted-input` now lists the invisible characters a scrubber usually
