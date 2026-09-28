@@ -1542,9 +1542,13 @@
       // Four spots, in the order a reader looks: right of the dot, left of
       // it, above, below. The first that covers no other label, no other
       // skill and none of the stage's furniture wins, and last frame's spot
-      // is tried first so a label does not hop while the skills drift.
-      var spots = [[n.sx + n.sr + 6, n.sy], [n.sx - n.sr - 6 - w, n.sy],
-        [n.sx - w / 2, n.sy - n.sr - 11], [n.sx - w / 2, n.sy + n.sr + 11]];
+      // is tried first so a label does not hop while the skills drift. The
+      // gap is measured from the outside of the skill's own mark — a
+      // signpost's rays, a foundation's ring, the always-on orbit — so a
+      // name sits beside its skill rather than in its glow.
+      var reach = n.sr + (this.view === 'anatomy' ? 0 : markReach(n));
+      var spots = [[n.sx + reach + 6, n.sy], [n.sx - reach - 6 - w, n.sy],
+        [n.sx - w / 2, n.sy - reach - 11], [n.sx - w / 2, n.sy + reach + 11]];
       var tries = n.labelSpot > 0 ? [n.labelSpot, 0, 1, 2, 3] : [0, 1, 2, 3], chosen = -1, box = null;
       for (var s = 0; s < tries.length && chosen < 0; s++) {
         var sp = spots[tries[s]], bx = [sp[0] - 3, sp[1] - 8, sp[0] + w + 3, sp[1] + 8];
@@ -1569,6 +1573,15 @@
       drawn++;
     }
   };
+
+  // How far past its disc a skill's mark draws, as drawRoleMark and the
+  // always-on orbit paint them (outer edge, stroke included).
+  function markReach(n) {
+    if (n.alwaysOn && n.sr > 2) { return 7.6; }
+    if (n.role === 'signpost') { return 5.6; }
+    if (n.role === 'foundation' || n.role === 'crossroads') { return 3.9; }
+    return 0;
+  }
 
   // A skill's name fits where it stays on the canvas, clear of every box
   // already claimed and of every other visible skill's dot.
