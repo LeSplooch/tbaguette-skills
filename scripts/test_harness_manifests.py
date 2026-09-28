@@ -301,13 +301,11 @@ class TestHarnessManifests(unittest.TestCase):
         five manifests that already carried them -- and one of those five,
         .cursor-plugin/plugin.json, turned out to already be missing two of
         the eight keywords, silently, because nothing compared them either.
-        `homepage` is deliberately excluded from this check: the root
-        plugin.json (Copilot / VS Code) points at the live docs site rather
-        than the repo, and the Claude Code manifest schema's own reference
-        example draws exactly that distinction (homepage as a docs URL,
-        repository as the source URL) -- so this file's difference reads as
-        the more schema-correct choice rather than as drift, even though
-        nothing on record confirms it was chosen on purpose."""
+        `homepage` joined them on 2026-09-28. It is the documentation URL in
+        the Claude Code manifest schema, next to `repository` for the source,
+        and Anthropic's plugin directory builds its listing from
+        .claude-plugin/plugin.json -- so every manifest now points it at the
+        live site, as the root plugin.json (Copilot / VS Code) already did."""
         manifests = [
             ".claude-plugin/plugin.json",
             ".claude-plugin/marketplace.json",
@@ -318,6 +316,7 @@ class TestHarnessManifests(unittest.TestCase):
             "plugin.json",
         ]
         expected_repository = "https://github.com/LeSplooch/tbaguette-skills"
+        expected_homepage = "https://lesplooch.github.io/tbaguette-skills/"
         expected_keywords = {
             "skills", "code-review", "debugging", "testing",
             "systems-design", "security", "naming", "workflow",
@@ -328,6 +327,7 @@ class TestHarnessManifests(unittest.TestCase):
                 data = data["plugins"][0]
             with self.subTest(manifest=rel_path):
                 self.assertEqual(data.get("repository"), expected_repository)
+                self.assertEqual(data.get("homepage"), expected_homepage)
                 self.assertEqual(set(data.get("keywords", [])), expected_keywords)
 
 
