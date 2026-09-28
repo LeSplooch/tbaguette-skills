@@ -77,6 +77,8 @@ Some criteria turn out to be impossible, or wrong, or blocked on something outsi
 
 Surrender a line by marking it surrendered, in place, with the reason, and carry it into the final report as a surrendered line. Never delete it, and never edit a criterion's text after work has started so that it matches what got built. Editing is the more dangerous of the two, because it leaves a fully checked ledger behind and looks like success from every angle, including your own.
 
+A line whose check is a literal command has a third way to go wrong, and it looks like the edit. A later, legitimate change can make the command stop matching while the requirement still holds: the code shape moved behind a helper, the number came out larger than the line guessed. The command is an instrument for the requirement, and instruments break independently of what they measure. Editing the line to the new command is still editing the ledger, and reporting the literal red alone is a false failure. Record both in the evidence slot — the literal result, why it stopped measuring the line's intent, and the replacement measurement — so a reader can re-run either and judge the swap.
+
 A surrendered line is a status the reader can act on. A deleted one is a defect they inherit without knowing it exists. `knowing-when-to-stop` covers what that handoff owes the reader once you are writing it up, and `offering-the-next-move` puts it back in front of them as a choice — a surrendered line is the first thing that close reaches for, because it is the one thing they asked for and did not get.
 
 ## A recurring run can surrender the same line every time, and no single run can see it
