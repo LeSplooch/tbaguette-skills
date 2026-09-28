@@ -113,6 +113,12 @@ whose peak does not reappear, and vindicating an adopted change whose gap holds
 on fresh data. A check that only ever says no is not a check, it is a veto, and
 it earns nothing.
 
+## A clean, surprising result: check what it was aimed at
+
+A check has two halves, the instrument and what it was pointed at, and they fail differently. A broken instrument usually misbehaves where you can see it: it errors, hangs, or contradicts itself. A working instrument aimed at the wrong target returns a real result — of a different question — and nothing in the output carries the aim. A diff anchored at your own last commit instead of the release boundary, a search for the plausible spelling of a name the code spells otherwise, a grep of the neighbouring file: each comes back tidy and confident, which is why scrutinising the finding never catches it. The finding is sound. `reproducing-bugs` covers proving the instrument; this is the other half.
+
+So before acting on a negative or surprising result, restate what exactly it looked at — the anchor, the string, the path, the revision — and check each against the source rather than against memory. Incoherence catches a misaimed check only when the wrong answer happens to be impossible, and you do not get to choose that. The trigger you can always use is consequence: a result about to send someone somewhere — tell a colleague their change is missing, open a defect, revert a commit — gets its aim re-read first. The tell is a result that is clean and surprising at once; a real defect usually arrives with corroborating mess.
+
 ## A null result is bounded by what the search could have seen
 
 The section above attacks a result that confirmed. The opposite outcome gets no
