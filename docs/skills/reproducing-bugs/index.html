@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.0.0</span>
+      <span class="wordmark-version" dir="ltr">v2.0.1</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-28T18:35:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-28T18:35:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-28T22:15:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-28T22:15:31Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,13 +65,13 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">reproducing-bugs</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T00:13:49+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Debugging and performance</span>
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=reproducing-bugs"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
-  <p class="lede">Use when a bug report must be turned into a failure that happens on demand, when a defect cannot be reproduced locally, when it only occurs in production or for a single user, when a failure is intermittent or shows up at a low rate, when a probe or measurement returns plausible values that might just be defaults, or when a fix has no test that proves it. Covers missing report variables, minimal reproductions, input reduction, flake rates, validating the harness before trusting it, and capturing evidence instead of guessing.</p>
+  <p class="lede">Use when a bug report must be turned into a failure that happens on demand, when a defect cannot be reproduced locally, when it only occurs in production or for a single user, when a failure is intermittent or shows up at a low rate, when a probe or measurement returns plausible values that might just be defaults, when a search of a built or transformed artifact for a changed string comes back absent, or when a fix has no test that proves it. Covers missing report variables, minimal reproductions, input reduction, flake rates, validating the harness before trusting it, and capturing evidence instead of guessing.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Until the failure happens on demand, every fix is a guess and every claim of &quot;fixed&quot; is unfalsifiable. The reproduction is the deliverable that makes the rest of debugging possible, and it is the step most bug work skips.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -88,6 +88,7 @@
 <h2 id="prove-the-harness-before-trusting-its-readings">Prove the harness before trusting its readings</h2>
 <p>A tool that reports values instead of raising is the most dangerous instrument in debugging, because a silent degradation and a real negative result are the same output. A probe reading a property off a component that never loaded returns the default, formatted exactly like a measurement. A query against a stale replica returns rows, not an error. A check run against a cached copy of the artifact you just rebuilt reports your fix missing, confidently, in the correct units.</p>
 <p>Before concluding anything from a measurement, assert that the thing being measured is actually present, attached, and current — not merely that the read returned something. The cheapest form is a <strong>positive control</strong>: read one value whose answer you already know. A probe that cannot see the value you are certain is there cannot see the one you are asking about either, and every number it has produced so far is worthless.</p>
+<p>A positive control validates the probe only for the class of thing it already finds, so choose it from the class the question is about. The sharpest case is a search of a compiled or transformed artifact for a token from the source. A doc comment chosen as the control reads absent from a correct build, because comments are not compiled, and the probe can no longer tell a removed string from one that was never there. A control that does survive can still pass while the probe is blind to the token in question: an optimiser can build a short literal out of instruction immediates instead of copying it from the data section, where a byte search looks. So the control is something the toolchain demonstrably emits in the same form as the target — a runtime literal of similar length, a symbol name — and an ABSENT result stays ambiguous between <em>the change is missing</em> and <em>the token was transformed</em> until one of them is ruled out.</p>
 <p>Both directions need it. Before believing a fix landed, confirm the build under test is the build you just made; before believing it did not, confirm you are not reading a cached, stale, or default-substituted copy. The failure is identical either way — the run agreed with you, and nobody checked that it was looking at the right thing.</p>
 <h2 id="cannot-reproduce-is-not-a-result-the-rate-is">&quot;Cannot reproduce&quot; is not a result — the rate is</h2>
 <p>Run it n times and write down the number. An unmeasured &quot;intermittent&quot; is the single most expensive phrase in a bug tracker.</p>

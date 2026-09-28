@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.0.0</span>
+      <span class="wordmark-version" dir="ltr">v2.0.1</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-28T18:35:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-28T18:35:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-28T22:15:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-28T22:15:31Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">red-teaming-your-own-work</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T00:13:49+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Finishing and proving</span>
@@ -98,6 +98,9 @@
 <p>That is not a hypothetical failure. A comparison careful on all three counts can still produce a result at four or five standard errors that falls to indistinguishable once an unrelated instrument bug is fixed, an adopted change whose advantage quietly decays from six standard errors to under one and a half, and a fresh proposal at over two that does not reproduce at all on the next untouched sample.</p>
 <p>The attack is cheap: before acting on a confirmed result, re-run the whole sweep — the curve, not the chosen point — on one further sample nothing has touched, and ask whether the shape holds rather than whether the point confirms again. Two readings decide it. A peak whose <em>neighbours</em> do not also beat the incumbent is a spike, and a spike is noise. And if the incumbent turns out to be the best point on the fresh curve, the original selection was noise from the start.</p>
 <p>Do this because it discriminates, not because it is conservative. Run on two consecutive results it will happily give opposite answers — killing a proposal whose peak does not reappear, and vindicating an adopted change whose gap holds on fresh data. A check that only ever says no is not a check, it is a veto, and it earns nothing.</p>
+<h2 id="a-clean-surprising-result-check-what-it-was-aimed-at">A clean, surprising result: check what it was aimed at</h2>
+<p>A check has two halves, the instrument and what it was pointed at, and they fail differently. A broken instrument usually misbehaves where you can see it: it errors, hangs, or contradicts itself. A working instrument aimed at the wrong target returns a real result — of a different question — and nothing in the output carries the aim. A diff anchored at your own last commit instead of the release boundary, a search for the plausible spelling of a name the code spells otherwise, a grep of the neighbouring file: each comes back tidy and confident, which is why scrutinising the finding never catches it. The finding is sound. <a class="skill-link" href="/tbaguette-skills/skills/reproducing-bugs/"><code>reproducing-bugs</code></a> covers proving the instrument; this is the other half.</p>
+<p>So before acting on a negative or surprising result, restate what exactly it looked at — the anchor, the string, the path, the revision — and check each against the source rather than against memory. Incoherence catches a misaimed check only when the wrong answer happens to be impossible, and you do not get to choose that. The trigger you can always use is consequence: a result about to send someone somewhere — tell a colleague their change is missing, open a defect, revert a commit — gets its aim re-read first. The tell is a result that is clean and surprising at once; a real defect usually arrives with corroborating mess.</p>
 <h2 id="a-null-result-is-bounded-by-what-the-search-could-have-seen">A null result is bounded by what the search could have seen</h2>
 <p>The section above attacks a result that confirmed. The opposite outcome gets no scrutiny at all, because a search that found nothing feels like it has nothing to be wrong about — and that is the error. A null does not say no improvement exists. It says the search could not tell an improvement from noise at the sample size it ran, and until somebody measures the noise, &quot;no effect&quot; and &quot;no effect larger than X&quot; are indistinguishable claims of which only one is true.</p>
 <p>Both get written down as the same sentence. A ledger accumulating &quot;no improvement found&quot; across eight sweeps reads as eight independent failures to find anything, and is one unmeasured instrument reported eight times.</p>

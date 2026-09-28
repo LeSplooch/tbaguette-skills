@@ -24,6 +24,27 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-29 — Checking where a result was pointed before trusting it
+
+- `diagnosing-before-fixing`: a value you read off a dashboard, badge or
+  status line has already been through the code that decided what to print
+  when the data was missing or failed to load. That code often shows `0` for
+  "not loaded", "failed" and "really zero" alike. Read it before chasing the
+  backend, and check any second record of the same number first.
+- `red-teaming-your-own-work`: a check that runs cleanly can still have been
+  pointed at the wrong thing, like the wrong commit, the wrong spelling or the
+  file next door, and its answer looks just as sound. Before a surprising
+  result sends someone to look for a problem, restate exactly what it checked.
+- `reproducing-bugs`: when you search a built file for a string your change
+  added, the known-good string you test the search with has to survive the
+  build the same way. Comments don't survive at all, and short strings can be
+  compiled into forms a text search can't find. Until you've ruled that out,
+  "not found" doesn't tell you the change is missing.
+- `finishing-what-you-started`: when a later, legitimate change breaks the
+  command a checklist line used as its check, write down the old result, why
+  it stopped measuring, and the replacement. Don't rewrite the line, and don't
+  report it as failing.
+
 ## 2026-09-28 — The plugin is now called tbaguette-atelier
 
 - Every skill has a new prefix: `tbaguette-atelier:formidable` instead of
