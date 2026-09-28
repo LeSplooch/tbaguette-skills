@@ -498,6 +498,18 @@ def main() -> None:
         if banner_there:
             check("...with the real library's numbers in it",
                   f"<dd>{pair_count}</dd>" in index_html)
+        # The release banner follows the same clock, and the plugin's real
+        # version: up on the 2.0 line until its date, gone otherwise.
+        releasing = templates.release_is_new(generate._plugin_version(),
+                                             built_at.group(1) if built_at else "")
+        release_there = '<aside class="release-banner"' in index_html
+        check("the landing page announces the 2.0 release exactly while it is new "
+              f"({'inside' if releasing else 'past'} the window on this run)",
+              release_there == releasing)
+        if release_there and banner_there:
+            check("...on the left of the graph's banner, in the same row",
+                  index_html.index('<aside class="release-banner"')
+                  < index_html.index('<aside class="graph-banner"'))
 
         version_txt_path = docs / "version.txt"
         check("version.txt exists after generation", version_txt_path.exists())

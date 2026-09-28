@@ -3739,15 +3739,14 @@ a.skill-link--bare:focus-visible {
    --bg rather than against whatever the canvas happens to be drawing
    behind it. */
 
-.graph-banner {
+.graph-banner,
+.release-banner {
   position: relative;
   overflow: hidden;
   isolation: isolate;
   display: flex;
   align-items: center;
   min-height: 16.5rem;
-  margin-top: var(--space-5);
-  margin-bottom: var(--space-6);
   border: 1px solid color-mix(in oklch, var(--accent) 40%, var(--border-subtle));
   border-radius: var(--radius-lg);
   background:
@@ -3760,7 +3759,8 @@ a.skill-link--bare:focus-visible {
     0 0 90px -40px color-mix(in oklch, var(--accent-solid) 50%, transparent);
 }
 
-.graph-banner::before {
+.graph-banner::before,
+.release-banner::before {
   content: '';
   position: absolute;
   z-index: 2;
@@ -3781,7 +3781,8 @@ a.skill-link--bare:focus-visible {
   cursor: pointer;
 }
 
-.graph-banner__body {
+.graph-banner__body,
+.release-banner__body {
   position: relative;
   z-index: 1;
   width: min(36rem, 58%);
@@ -3791,7 +3792,8 @@ a.skill-link--bare:focus-visible {
 
 /* The fade the copy reads against, drawn as its own layer so the canvas can
    run under the whole banner and still never sit behind a letter. */
-.graph-banner__body::before {
+.graph-banner__body::before,
+.release-banner__body::before {
   content: '';
   position: absolute;
   inset: 0 -30% 0 0;
@@ -3800,9 +3802,11 @@ a.skill-link--bare:focus-visible {
   border-radius: var(--radius-lg) 0 0 var(--radius-lg);
 }
 
-.graph-banner__body a { pointer-events: auto; }
+.graph-banner__body a,
+.release-banner__body a { pointer-events: auto; }
 
-.graph-banner__title {
+.graph-banner__title,
+.release-banner__title {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -3817,7 +3821,8 @@ a.skill-link--bare:focus-visible {
   color: var(--text-primary);
 }
 
-.graph-banner__lede {
+.graph-banner__lede,
+.release-banner__lede {
   margin-top: var(--space-3);
   max-width: 46ch;
   color: var(--text-secondary);
@@ -3859,7 +3864,8 @@ a.skill-link--bare:focus-visible {
   color: var(--text-secondary);
 }
 
-.graph-banner__cta {
+.graph-banner__cta,
+.release-banner__cta {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
@@ -3875,31 +3881,53 @@ a.skill-link--bare:focus-visible {
               transform var(--duration-micro) var(--ease-out);
 }
 
-.graph-banner__cta:hover { background: var(--accent-solid-hover); }
-.graph-banner__cta-icon { width: 1.15em; height: 1.15em; }
+.graph-banner__cta:hover,
+.release-banner__cta:hover { background: var(--accent-solid-hover); }
+.graph-banner__cta-icon,
+.release-banner__cta-icon { width: 1.15em; height: 1.15em; }
 
 @media (prefers-reduced-motion: no-preference) {
-  .graph-banner__cta:hover { transform: translateY(-1px); }
+  .graph-banner__cta:hover,
+  .release-banner__cta:hover { transform: translateY(-1px); }
 }
 
 /* Narrow: the constellation takes a band of its own above the copy rather
-   than sharing a row it would have to squeeze into. */
-@media (max-width: 40rem) {
-  .graph-banner {
+   than sharing a row it would have to squeeze into. Measured on the banner's
+   own slot, not the viewport (see .hero__banners): half of a desktop row is
+   as narrow as a phone to a banner, and gets the same layout. site.js reads
+   which one applied off flex-direction, so the picture follows. */
+@container banner (max-width: 44rem) {
+  .graph-banner,
+  .release-banner {
     flex-direction: column;
     align-items: stretch;
     min-height: 0;
     padding-top: 11rem;
   }
   .graph-banner__canvas { height: 12rem; }
-  .graph-banner__body { width: auto; padding: var(--space-4) var(--space-5) var(--space-5); }
-  .graph-banner__body::before {
+  .graph-banner__body,
+  .release-banner__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: auto;
+    padding: var(--space-4) var(--space-5) var(--space-5);
+  }
+  .graph-banner__body::before,
+  .release-banner__body::before {
     inset: 0;
     background: linear-gradient(to bottom, transparent, var(--bg) 2.5rem);
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
-  .graph-banner__title { font-size: var(--text-4); }
+  .graph-banner__title,
+  .release-banner__title { font-size: var(--text-4); }
   .graph-banner__stat { min-width: 0; flex: 1 1 5.5rem; }
+  /* Side by side, the two banners stretch to one height; the buttons sit on
+     the same line at the bottom rather than wherever each copy ran out. */
+  .graph-banner__stats,
+  .release-banner__prefix { margin-bottom: var(--space-5); }
+  .graph-banner__cta,
+  .release-banner__cta { margin-top: auto; align-self: flex-start; }
 }
 
 @media (forced-colors: active) {
@@ -3907,6 +3935,266 @@ a.skill-link--bare:focus-visible {
   .graph-banner::before, .graph-banner__body::before { display: none; }
   .graph-banner__stat { border: 1px solid CanvasText; }
   .graph-banner__cta { border: 1px solid ButtonText; }
+}
+
+/* The announcements' row, at the top of the hero: the 2.0 release on the
+   left, the graph on the right, one height, one gutter. auto-fit collapses
+   the column a retired banner leaves, so the one still up takes the row.
+   Each slot is a size container, and each banner lays itself out for the
+   width it is given rather than for the viewport's. */
+.hero__banners {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: var(--space-5);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.banner-slot {
+  container: banner / inline-size;
+  display: flex;
+  min-width: 0;
+}
+
+.banner-slot > * { flex: 1; min-width: 0; }
+
+/* The 2.0 release. The shell -- hairline, fade, title, lede, button, the
+   stacked layout -- is the graph banner's, shared above, so the pair reads
+   as one set. What is its own is the picture: the numeral as a few thousand
+   grains of gold that steam off the top and part around the pointer, drawn
+   by site.js over a type-set numeral it measures and then replaces. The
+   type-set one is what anyone without the canvas sees, so it is finished
+   work in its own right: foil, warm glow, and nothing that depends on JS. */
+
+.release-banner {
+  background:
+    radial-gradient(ellipse 50% 90% at 76% 52%,
+      color-mix(in oklch, var(--accent-solid) 12%, var(--bg)) 0%,
+      var(--bg) 78%);
+}
+
+.release-banner__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 22% 55% at 76% 62%,
+      color-mix(in oklch, var(--accent-solid) 22%, transparent),
+      transparent 70%);
+}
+
+.release-banner__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.release-banner__numeral {
+  position: absolute;
+  top: 50%;
+  left: 76%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 13rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  /* The italic 0 leans past its own advance, and a text-clipped background
+     paints only inside the box: the padding is room for the lean. */
+  padding-inline: 0.14em;
+  color: var(--accent);
+  background: linear-gradient(172deg, var(--gold-400) 18%, var(--gold-500) 48%, var(--gold-700) 88%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 28px color-mix(in oklch, var(--accent-solid) 40%, transparent));
+  user-select: none;
+  transition: opacity 1200ms var(--ease-out);
+}
+
+[data-theme='flour'] .release-banner__numeral {
+  background-image: linear-gradient(172deg, var(--gold-700) 15%, var(--gold-800) 85%);
+  filter: drop-shadow(0 6px 18px color-mix(in oklch, var(--gold-700) 30%, transparent));
+}
+
+/* site.js sets this once its first frame is on the canvas. */
+.release-banner.is-drawn .release-banner__numeral { opacity: 0; }
+
+.release-banner__body { width: min(36rem, 56%); }
+
+.release-banner__surfaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.release-banner__surface {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0;
+  padding: 0.3em 0.75em;
+  font-size: var(--text-2);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-full);
+}
+
+.release-banner__surface.is-live {
+  color: var(--text-primary);
+  background: color-mix(in oklch, var(--accent-solid) 14%, var(--surface));
+  border: 1px solid color-mix(in oklch, var(--accent) 55%, transparent);
+}
+
+.release-banner__surface-dot,
+.release-banner__legend-item::before {
+  flex: none;
+  width: 0.55em;
+  height: 0.55em;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.65;
+}
+
+.release-banner__surface.is-live .release-banner__surface-dot,
+.release-banner__legend-item.is-live::before {
+  background: var(--accent);
+  border-color: var(--accent);
+  opacity: 1;
+  box-shadow: 0 0 8px color-mix(in oklch, var(--accent) 80%, transparent);
+}
+
+.release-banner__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: var(--space-2) 0 0;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  color: var(--text-secondary);
+}
+
+.release-banner__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+}
+
+.release-banner__legend-item::before { content: ''; }
+
+.release-banner__prefix {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.release-banner__prefix-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.release-banner__prefix-code {
+  padding: 0.25em 0.6em;
+  font-family: var(--font-mono);
+  font-size: var(--text-2);
+  color: var(--text-primary);
+  background: var(--bg-deep);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow-wrap: anywhere;
+}
+
+.release-banner__prefix-code del {
+  margin-right: 0.6em;
+  color: var(--text-secondary);
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: color-mix(in oklch, var(--critical) 80%, transparent);
+}
+
+.release-banner__prefix-code ins {
+  text-decoration: none;
+  color: var(--text-accent);
+}
+
+/* Narrow slot: the numeral takes the band the constellation takes next door,
+   at the same height, so the two pictures sit on one line. */
+@container banner (max-width: 44rem) {
+  .release-banner {
+    background: var(--bg);
+  }
+  .release-banner__stage {
+    height: 12rem;
+    background:
+      radial-gradient(ellipse 45% 60% at 50% 62%,
+        color-mix(in oklch, var(--accent-solid) 18%, transparent),
+        transparent 72%);
+  }
+  .release-banner__numeral { left: 50%; font-size: 9.5rem; }
+  .release-banner__body { width: auto; }
+}
+
+/* Motion: the old prefix is struck through in front of the reader, once, and
+   the new one arrives after it. Without motion, both are simply there. */
+@media (prefers-reduced-motion: no-preference) {
+  .release-banner__prefix-code del {
+    text-decoration: none;
+    background: linear-gradient(color-mix(in oklch, var(--critical) 80%, transparent), color-mix(in oklch, var(--critical) 80%, transparent))
+      no-repeat 0 58% / 0% 1.5px;
+    animation: release-strike 520ms var(--ease-out) 1100ms forwards;
+  }
+  .release-banner__prefix-code ins {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.35em);
+    animation: release-arrive 420ms var(--ease-out) 1550ms forwards;
+  }
+  .release-banner__surface.is-live .release-banner__surface-dot {
+    animation: release-live 2.8s var(--ease-in-out) 2s infinite;
+  }
+}
+
+@keyframes release-strike { to { background-size: 100% 1.5px; } }
+@keyframes release-arrive { to { opacity: 1; transform: none; } }
+@keyframes release-live {
+  0%, 100% { box-shadow: 0 0 8px color-mix(in oklch, var(--accent) 80%, transparent),
+                         0 0 0 0 color-mix(in oklch, var(--accent) 45%, transparent); }
+  50%      { box-shadow: 0 0 8px color-mix(in oklch, var(--accent) 80%, transparent),
+                         0 0 0 5px color-mix(in oklch, var(--accent) 0%, transparent); }
+}
+
+@media (forced-colors: active) {
+  .release-banner { border: 2px solid CanvasText; }
+  .release-banner::before, .release-banner__body::before { display: none; }
+  .release-banner__canvas { display: none; }
+  .release-banner__numeral,
+  .release-banner.is-drawn .release-banner__numeral {
+    opacity: 1;
+    background: none;
+    filter: none;
+    -webkit-text-fill-color: CanvasText;
+    color: CanvasText;
+  }
+  .release-banner__surface { border: 1px solid CanvasText; }
+  .release-banner__surface.is-live { border-width: 2px; }
+  .release-banner__prefix-code del { text-decoration: line-through; background: none; }
+  .release-banner__cta { border: 1px solid ButtonText; }
 }
 
 .skill-article__meta {

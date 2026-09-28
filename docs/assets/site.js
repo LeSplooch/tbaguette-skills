@@ -1159,13 +1159,23 @@
   // The build leaves the announcement out once its own clock is past the
   // date; this covers the days between builds, against the reader's clock in
   // UTC, the same zone the build compared in.
+  //
+  // The 2.0 release banner retires the same way, on its own date. A banner
+  // takes its slot in the row with it, so the one still up widens into the
+  // space, and the row goes when it is empty.
   function initGraphNews() {
     var today = new Date().toISOString().slice(0, 10);
-    toArray(document.querySelectorAll('[data-graph-new-until]')).forEach(function (el) {
-      if (today <= el.getAttribute('data-graph-new-until')) return;
+    toArray(document.querySelectorAll('[data-graph-new-until], [data-release-new-until]')).forEach(function (el) {
+      var until = el.getAttribute('data-graph-new-until') || el.getAttribute('data-release-new-until');
+      if (today <= until) return;
       var link = el.closest('.site-header__nav-link--new');
       if (link) link.classList.remove('site-header__nav-link--new');
-      el.parentNode.removeChild(el);
+      var gone = el.closest('.banner-slot') || el;
+      var row = gone.parentNode;
+      row.removeChild(gone);
+      if (row.classList && row.classList.contains('hero__banners') && !row.querySelector('.banner-slot')) {
+        row.parentNode.removeChild(row);
+      }
     });
   }
 
@@ -1275,7 +1285,7 @@
     var reduced = prefersReducedMotion();
     var TAU = Math.PI * 2;
     var maxW = links.reduce(function (m, l) { return Math.max(m, l[2]); }, 1);
-    var W = 0, H = 0, dpr = 1, colors = [], sprites = [], bg = [0, 0, 0], text2 = [200, 180, 150], dark = true;
+    var W = 0, H = 0, dpr = 1, colors = [], sprites = [], bg = [0, 0, 0], text2 = [200, 180, 150], dark = true, stacked = false;
     var hover = -1, pointer = null, visible = true, raf = 0, t0 = performance.now();
 
     var probe = document.createElement('canvas').getContext('2d');
@@ -1311,10 +1321,14 @@
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = r.width; H = r.height;
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      // The stylesheet decides the layout from the banner's slot, which is
+      // narrow beside the release banner even on a wide screen; read its
+      // answer rather than guessing from the canvas's width.
+      stacked = getComputedStyle(banner).flexDirection === 'column';
     }
 
     function layout(t) {
-      var narrow = W < 560;
+      var narrow = stacked;
       var cx = narrow ? W / 2 : W * 0.74, cy = narrow ? Math.min(H, 192) / 2 : H / 2;
       var rx = narrow ? W * 0.36 : Math.min(W * 0.2, 250), ry = narrow ? 62 : H * 0.33;
       var turn = reduced ? 0 : t * 0.035;
@@ -1429,6 +1443,326 @@
     kick();
   }
 
+  // --- The 2.0 release banner ----------------------------------------------
+  //
+  // The numeral, redrawn as grains of gold. The stylesheet sets a real "2.0"
+  // in type; this measures that element -- its font, its size, where it sits
+  // -- samples its glyphs into grains and draws them in its place, so the
+  // picture is exactly as large and exactly where the stylesheet put it at
+  // every width. Then the grains rise into place like dough, shimmer like a
+  // crust just out of the oven, give off steam and the odd spark from their
+  // upper edge, catch a glint that crosses now and then, and part around the
+  // pointer before settling back. Reduced motion gets one still frame of
+  // grains and none of the rest; forced colours keep the type-set numeral.
+  function initReleaseBanner() {
+    var banner = document.querySelector('[data-release-banner]');
+    if (!banner) return;
+    var canvas = banner.querySelector('.release-banner__canvas');
+    var numeral = banner.querySelector('.release-banner__numeral');
+    var cta = banner.querySelector('.release-banner__cta');
+    if (!canvas || !canvas.getContext || !numeral) return;
+    if (window.matchMedia && window.matchMedia('(forced-colors: active)').matches) return;
+    // Decoration with a destination, like the graph's: a click goes where the
+    // button goes, and the button stays the thing a keyboard reaches.
+    canvas.addEventListener('click', function () { if (cta) window.location.href = cta.href; });
+
+    var ctx = canvas.getContext('2d');
+    var reduced = prefersReducedMotion();
+    var TAU = Math.PI * 2;
+    var text = banner.getAttribute('data-numeral') || numeral.textContent;
+    var W = 0, H = 0, dpr = 1, dark = true, begun = false;
+    var grains = [], buckets = [], steam = [], glow = null, glyph = null;
+    var tones = [], glint = [255, 240, 210], haze = [245, 234, 217], spark = [232, 184, 118];
+    var top = 0, bottom = 0, left = 0, right = 0, grainR = 1.5, spawn = 0;
+    var pointer = null, visible = true, raf = 0, t0 = performance.now(), last = t0, born = -1;
+
+    var probe = document.createElement('canvas').getContext('2d');
+    function parse(value, fallback) {
+      probe.fillStyle = '#000';
+      probe.fillStyle = (value || '').trim() || fallback;
+      var v = probe.fillStyle;
+      if (v.charAt(0) === '#') return [parseInt(v.slice(1, 3), 16), parseInt(v.slice(3, 5), 16), parseInt(v.slice(5, 7), 16)];
+      var m = v.match(/[\d.]+/g) || [0, 0, 0];
+      return [+m[0], +m[1], +m[2]];
+    }
+    function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+    function mix(a, b, k) {
+      return [Math.round(a[0] + (b[0] - a[0]) * k), Math.round(a[1] + (b[1] - a[1]) * k), Math.round(a[2] + (b[2] - a[2]) * k)];
+    }
+
+    function palette() {
+      var cs = getComputedStyle(banner);
+      dark = document.documentElement.getAttribute('data-theme') !== 'flour';
+      var g4 = parse(cs.getPropertyValue('--gold-400'), '#e8b876');
+      var g5 = parse(cs.getPropertyValue('--gold-500'), '#dda25c');
+      var g7 = parse(cs.getPropertyValue('--gold-700'), '#a86f34');
+      var g8 = parse(cs.getPropertyValue('--gold-800'), '#83552a');
+      // Eight tones down the numeral, lightest at the top, like a lit crust.
+      var from = dark ? g4 : g5, via = dark ? g5 : g7, to = dark ? g7 : g8;
+      tones = [];
+      for (var i = 0; i < 8; i++) {
+        var k = i / 7;
+        tones.push(k < 0.5 ? mix(from, via, k * 2) : mix(via, to, (k - 0.5) * 2));
+      }
+      glint = dark ? parse(cs.getPropertyValue('--text-primary'), '#f5ead9') : g4;
+      haze = dark ? parse(cs.getPropertyValue('--text-primary'), '#f5ead9') : g7;
+      spark = dark ? g4 : g5;
+    }
+
+    // The type-set numeral, as the canvas has to set it: same font string,
+    // same letter-spacing, left edge and baseline where the element's are.
+    function setType(c) {
+      c.font = glyph.font;
+      if ('letterSpacing' in c) c.letterSpacing = glyph.spacing;
+      c.textAlign = 'left';
+      c.textBaseline = 'alphabetic';
+    }
+
+    function measure() {
+      var cr = canvas.getBoundingClientRect(), nr = numeral.getBoundingClientRect();
+      var cs = getComputedStyle(numeral);
+      var size = parseFloat(cs.fontSize) || 160;
+      glyph = {
+        font: cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily,
+        spacing: cs.letterSpacing === 'normal' ? '0px' : cs.letterSpacing,
+        size: size, x: nr.left - cr.left + (parseFloat(cs.paddingLeft) || 0), y: 0
+      };
+      setType(probe);
+      var m = probe.measureText(text);
+      var ascent = m.fontBoundingBoxAscent, descent = m.fontBoundingBoxDescent;
+      // With line-height 1 the line box is one em tall and the font's own
+      // ascent and descent sit centred in it; that puts the baseline here.
+      glyph.y = ascent && descent
+        ? nr.top - cr.top + (nr.height - (ascent + descent)) / 2 + ascent
+        : nr.top - cr.top + nr.height * 0.78;
+    }
+
+    function buildGlow() {
+      if (!glyph || W < 2 || H < 2) return;
+      glow = document.createElement('canvas');
+      glow.width = Math.ceil(W); glow.height = Math.ceil(H);
+      var g = glow.getContext('2d');
+      setType(g);
+      // Only the shadow is wanted: the glyphs are drawn far off to the left
+      // and their shadow thrown back into place. shadowBlur works everywhere
+      // a canvas filter does not.
+      g.shadowColor = rgba(tones[2] || [221, 162, 92], 1);
+      g.shadowBlur = glyph.size * 0.2;
+      g.shadowOffsetX = 10000;
+      g.fillStyle = '#000';
+      g.fillText(text, glyph.x - 10000, glyph.y);
+    }
+
+    function sample() {
+      grains = []; buckets = [];
+      if (W < 2 || H < 2) return;
+      measure();
+      var off = document.createElement('canvas');
+      off.width = Math.ceil(W); off.height = Math.ceil(H);
+      var o = off.getContext('2d');
+      setType(o);
+      o.fillStyle = '#fff';
+      o.fillText(text, glyph.x, glyph.y);
+      var img = o.getImageData(0, 0, off.width, off.height).data;
+      var step = Math.max(3, Math.round(glyph.size / 50));
+      grainR = step * 0.5;
+      top = H; bottom = 0; left = W; right = 0;
+      for (var y = step >> 1; y < off.height; y += step) {
+        for (var x = step >> 1; x < off.width; x += step) {
+          if (img[(y * off.width + x) * 4 + 3] < 140) continue;
+          // A little jitter off the grid, so it reads as grains, not pixels.
+          var hx = x + (Math.random() - 0.5) * step * 0.5, hy = y + (Math.random() - 0.5) * step * 0.5;
+          grains.push({ hx: hx, hy: hy, x: hx, y: hy, vx: 0, vy: 0, delay: 0 });
+          if (hy < top) top = hy;
+          if (hy > bottom) bottom = hy;
+          if (hx < left) left = hx;
+          if (hx > right) right = hx;
+        }
+      }
+      for (var b = 0; b < 8; b++) buckets.push([]);
+      var span = Math.max(1, bottom - top);
+      grains.forEach(function (g) {
+        buckets[Math.min(7, Math.floor((g.hy - top) / span * 8))].push(g);
+      });
+      buildGlow();
+    }
+
+    function resize() {
+      var r = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = r.width; H = r.height;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      if (begun) sample();
+    }
+
+    function rise() {
+      // They come up from under the band, left to right, a little out of
+      // step, and the type-set numeral fades out as they arrive.
+      born = performance.now();
+      var width = Math.max(1, right - left);
+      grains.forEach(function (g) {
+        g.x = g.hx + (Math.random() - 0.5) * 70;
+        g.y = H + 12 + Math.random() * 90;
+        g.vx = 0; g.vy = 0;
+        g.delay = 0.1 + (g.hx - left) / width * 0.6 + Math.random() * 0.35;
+      });
+    }
+
+    function emit(t) {
+      if (!grains.length) return;
+      // From the upper edge of the numeral: the first grain found in its top
+      // third, out of a few tries.
+      var g = null;
+      for (var i = 0; i < 6 && !g; i++) {
+        var c = grains[(Math.random() * grains.length) | 0];
+        if (c.hy < top + (bottom - top) * 0.34) g = c;
+      }
+      if (!g) return;
+      var ember = Math.random() < 0.16;
+      steam.push({
+        x: g.x, y: g.y - grainR, ember: ember,
+        vy: ember ? -(46 + Math.random() * 44) : -(15 + Math.random() * 20),
+        drift: (Math.random() - 0.5) * (ember ? 26 : 10),
+        life: 0, max: ember ? 0.9 + Math.random() * 0.8 : 1.8 + Math.random() * 1.9,
+        r: ember ? 0.9 + Math.random() * 0.8 : 3 + Math.random() * 5,
+        ph: Math.random() * TAU + t
+      });
+    }
+
+    function draw(now) {
+      var t = (now - t0) / 1000;
+      var dt = Math.min(0.033, Math.max(0.001, (now - last) / 1000));
+      last = now;
+      var age = born < 0 ? 99 : (now - born) / 1000;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      if (!grains.length) return;
+
+      // The oven's light behind it, breathing slowly, up with the grains.
+      if (glow) {
+        ctx.globalAlpha = (dark ? 0.5 : 0.3) * Math.min(1, age / 1.6) * (reduced ? 1 : 0.86 + 0.14 * Math.sin(t * 0.9));
+        ctx.drawImage(glow, 0, 0, W, H);
+        ctx.globalAlpha = 1;
+      }
+
+      if (!reduced) {
+        grains.forEach(function (g) {
+          var since = age - g.delay;
+          if (since < 0) return;
+          // Softer while rising, so it settles like dough rather than snaps.
+          var k = since < 1.1 ? 34 : 120, c = since < 1.1 ? 7 : 14;
+          var tx = g.hx + Math.sin(t * 1.9 + g.hy * 0.09) * 0.55;
+          var ty = g.hy + Math.cos(t * 1.5 + g.hx * 0.07) * 0.55;
+          var ax = (tx - g.x) * k - g.vx * c, ay = (ty - g.y) * k - g.vy * c;
+          if (pointer) {
+            var dx = g.x - pointer.x, dy = g.y - pointer.y, d2 = dx * dx + dy * dy, R = 62;
+            if (d2 < R * R && d2 > 0.01) {
+              var d = Math.sqrt(d2), f = 1 - d / R;
+              f = f * f * 5600;
+              ax += dx / d * f; ay += dy / d * f;
+            }
+          }
+          g.vx += ax * dt; g.vy += ay * dt;
+          g.x += g.vx * dt; g.y += g.vy * dt;
+        });
+
+        if (age > 1.2 && visible) {
+          spawn += dt * (W < 600 ? 10 : 15);
+          while (spawn >= 1) { spawn -= 1; if (steam.length < 110) emit(t); }
+        }
+        // Steam first, under the grains: soft, widening, drifting as it goes.
+        for (var s = steam.length - 1; s >= 0; s--) {
+          var p = steam[s];
+          p.life += dt;
+          if (p.life > p.max) { steam.splice(s, 1); continue; }
+          p.y += p.vy * dt;
+          p.x += (Math.sin(t * 1.3 + p.ph) * (p.ember ? 14 : 9) + p.drift) * dt;
+          p.vy *= 1 - 0.22 * dt;
+          var fade = Math.sin(Math.PI * p.life / p.max);
+          if (p.ember) continue;
+          var rr = p.r * (1 + p.life * 1.2);
+          var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr);
+          grad.addColorStop(0, rgba(haze, (dark ? 0.12 : 0.1) * fade));
+          grad.addColorStop(1, rgba(haze, 0));
+          ctx.fillStyle = grad;
+          ctx.fillRect(p.x - rr, p.y - rr, rr * 2, rr * 2);
+        }
+      }
+
+      ctx.globalCompositeOperation = dark ? 'lighter' : 'source-over';
+      buckets.forEach(function (bucket, i) {
+        ctx.fillStyle = rgba(tones[i], dark ? 0.92 : 1);
+        ctx.beginPath();
+        bucket.forEach(function (g) {
+          if (age < g.delay) return;
+          ctx.moveTo(g.x + grainR, g.y);
+          ctx.arc(g.x, g.y, grainR, 0, TAU);
+        });
+        ctx.fill();
+      });
+
+      if (!reduced) {
+        // A glint crosses on the slant, once every few seconds, after the
+        // grains are in.
+        var phase = (t - 2.2) % 6.5;
+        if (age > 2 && phase >= 0 && phase < 1.3) {
+          var pos = left - 90 + phase / 1.3 * (right - left + 180);
+          ctx.fillStyle = rgba(glint, 1);
+          grains.forEach(function (g) {
+            var d = g.hx + (g.hy - top) * 0.42 - pos;
+            if (d < -48 || d > 48) return;
+            ctx.globalAlpha = Math.exp(-d * d / 450) * 0.85;
+            ctx.beginPath(); ctx.arc(g.x, g.y, grainR * 1.05, 0, TAU); ctx.fill();
+          });
+          ctx.globalAlpha = 1;
+        }
+        steam.forEach(function (p) {
+          if (!p.ember) return;
+          ctx.fillStyle = rgba(spark, 0.9 * Math.sin(Math.PI * p.life / p.max));
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, TAU); ctx.fill();
+        });
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    function loop(now) {
+      raf = 0;
+      if (!visible || document.hidden) { last = performance.now(); return; }
+      draw(now);
+      if (!reduced) raf = requestAnimationFrame(loop);
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(loop); }
+
+    canvas.addEventListener('pointermove', function (e) {
+      var r = canvas.getBoundingClientRect();
+      pointer = { x: e.clientX - r.left, y: e.clientY - r.top };
+    });
+    canvas.addEventListener('pointerleave', function () { pointer = null; });
+
+    function begin() {
+      if (begun) return;
+      begun = true;
+      palette();
+      resize();
+      if (!grains.length) return;
+      if (!reduced) rise();
+      banner.classList.add('is-drawn');
+      kick();
+    }
+
+    resize();
+    if (window.ResizeObserver) new ResizeObserver(function () { resize(); kick(); }).observe(canvas);
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; kick(); }).observe(banner);
+    }
+    new MutationObserver(function () { palette(); buildGlow(); kick(); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    document.addEventListener('visibilitychange', kick);
+    // Sampled once the display face has loaded, never from its fallback.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(begin);
+    else begin();
+  }
+
   function initScrollRestore() {
     var saved;
     try {
@@ -1461,5 +1795,6 @@
   initGraphNews();
   initGraphMagnet();
   initGraphBanner();
+  initReleaseBanner();
   initVersionCheck();
 })();

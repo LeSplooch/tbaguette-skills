@@ -554,6 +554,80 @@ def check_graph_banner() -> None:
           '<aside class="graph-banner"' not in after)
 
 
+def check_release_banner() -> None:
+    """The 2.0 release is announced to the left of the graph, in one row with
+    it: an aside above the <h1>, retired by version and by date, and honest
+    about the directory listing -- Claude Code today, the other surfaces only
+    once CLAUDE_DIRECTORY_URL says the listing exists."""
+    print("release banner check")
+    summary = {
+        "skill_count": 98, "pair_count": 573, "mutual_count": 114, "max_steps": 7,
+        "reachable": True,
+        "families": [{"index": 0, "title": "UI and design", "count": 1}],
+        "links": [],
+    }
+    notes = [{"date": "2026-09-28", "title": "t", "notes": ["n"]}]
+    html = render_index(FIXTURE["categories"], FIXTURE["skills"], graph_banner=summary,
+                        plugin_version="2.0.0", update_notes=notes)
+    check("on 2.0.0 the landing page carries the release banner",
+          '<aside class="release-banner" aria-label="New release: version 2.0"' in html)
+    check("...to the left of the graph's, both in the one banner row, above the <h1>",
+          html.index('<div class="hero__banners">') < html.index('<aside class="release-banner"')
+          < html.index('<aside class="graph-banner"') < html.index('<h1 class="hero__headline">'))
+    check("...each in a slot of its own, which is what the stylesheet measures",
+          html.split('<div class="hero__banners">', 1)[1].split('<h1', 1)[0].count('<div class="banner-slot">') == 2)
+    banner = html.split('<aside class="release-banner"', 1)[1].split("</aside>", 1)[0]
+    check("...as an aside with a label, never a heading ahead of the <h1>", "<h2" not in banner)
+    check("the numeral is set in type under the canvas, for anyone without it",
+          '<span class="release-banner__numeral">2.0</span>' in banner
+          and '<canvas class="release-banner__canvas"></canvas>' in banner)
+    check("it shows the new prefix, from the plugin's own name",
+          f"<ins>{templates.PLUGIN_NAME}:</ins>formidable" in banner and "<del>TBaguette:</del>" in banner)
+
+    check("the directory listing is not live yet, so the build has no URL for it",
+          templates.CLAUDE_DIRECTORY_URL == "")
+    live = re.findall(r'<li class="release-banner__surface( is-live)?">.*?</li>', banner)
+    check("unlisted: Claude Code is live and the other three surfaces are not",
+          len(live) == 4 and live[0] == " is-live" and live[1:] == ["", "", ""]
+          and re.findall(r'aria-hidden="true"></span>([^<]+)<', banner)
+          == ["Claude Code", "claude.ai", "Desktop", "Cowork"])
+    check("unlisted: nothing offers to add it on Claude",
+          "Add it on Claude" not in banner and "with the directory listing" in banner)
+    check("unlisted: the button goes to what changed, on this page",
+          'class="release-banner__cta" href="#notes-title"' in banner)
+    no_notes = render_index(FIXTURE["categories"], FIXTURE["skills"], plugin_version="2.0.0")
+    check("...or to the update notes on GitHub when there are none on the page",
+          f'class="release-banner__cta" href="{templates.GITHUB_BLOB_BASE}UPDATES.md"' in no_notes)
+
+    templates.CLAUDE_DIRECTORY_URL = "https://claude.ai/directory/example"
+    try:
+        listed = render_index(FIXTURE["categories"], FIXTURE["skills"], plugin_version="2.0.0")
+    finally:
+        templates.CLAUDE_DIRECTORY_URL = ""
+    listed_banner = listed.split('<aside class="release-banner"', 1)[1].split("</aside>", 1)[0]
+    check("listed: one URL flips it -- every surface live, the button goes to the listing",
+          listed_banner.count('class="release-banner__surface is-live"') == 4
+          and 'href="https://claude.ai/directory/example"' in listed_banner
+          and "Add it on Claude" in listed_banner and "release-banner__legend" not in listed_banner)
+
+    for version in ("2.0.1", "2.0.12"):
+        check(f"still up at {version}: the release is the 2.0 line",
+              templates.release_is_new(version, ""))
+    for version in ("1.1.74", "2.1.0", "20.0.0", ""):
+        check(f"not announced at {version!r}", not templates.release_is_new(version, ""))
+    check("not announced past its date either, on a quiet 2.0.x",
+          '<aside class="release-banner"' not in render_index(
+              FIXTURE["categories"], FIXTURE["skills"], plugin_version="2.0.3",
+              last_updated_utc="2026-10-13T00:00:00+00:00"))
+    alone = render_index(FIXTURE["categories"], FIXTURE["skills"], plugin_version="2.0.0")
+    check("with the graph's banner retired, it has the row to itself",
+          alone.split('<div class="hero__banners">', 1)[1].split('<h1', 1)[0].count('<div class="banner-slot">') == 1
+          and "graph-banner" not in alone.split("<main", 1)[1])
+    check("no banners, no row",
+          "hero__banners" not in render_index(FIXTURE["categories"], FIXTURE["skills"],
+                                              plugin_version="1.1.74").split("<main", 1)[1])
+
+
 def check_i18n_getting_started_page() -> None:
     """Same synthetic-locale approach as check_i18n_verify_install_page — the
     registry is English-only, the locale-aware rendering is not."""
@@ -1791,6 +1865,7 @@ def main() -> None:
     check_getting_started_is_reachable()
     check_graph_entry_points()
     check_graph_banner()
+    check_release_banner()
     check_header_and_badges()
     check_fresh_section()
     check_dialog_ua_defaults()

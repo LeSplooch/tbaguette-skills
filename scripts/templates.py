@@ -153,6 +153,31 @@ class Strings:
     graph_banner_stat_mutual: str = "pairs cite each other"
     graph_banner_stat_steps: str = "steps at most, between any two"
     graph_banner_cta: str = "Open the graph"
+    # The 2.0 release banner, beside the graph's. Two sets of copy, because
+    # the release is on Claude's platform in two steps: the plugin is ready
+    # for Anthropic's directory the day 2.0 ships, and on claude.ai, the
+    # Desktop app and Cowork only once the listing is live. Until
+    # CLAUDE_DIRECTORY_URL is set, the banner says the first and never the
+    # second.
+    release_banner_label: str = "New release: version 2.0"
+    release_banner_badge: str = "Release"
+    release_banner_title: str = "The Atelier, ready for Claude"
+    release_banner_lede_pending: str = (
+        "Version 2.0 is one plugin for every Claude surface, renamed "
+        "tbaguette-atelier for Anthropic’s plugin directory: the route "
+        "to claude.ai, the Desktop app and Cowork."
+    )
+    release_banner_lede_listed: str = (
+        "Version 2.0 is one plugin for every Claude surface, and it is in "
+        "Anthropic’s plugin directory: add it once and it follows you to "
+        "claude.ai, the Desktop app, Cowork and Claude Code."
+    )
+    release_banner_surfaces_label: str = "Where it runs"
+    release_banner_surface_today: str = "today"
+    release_banner_surface_pending: str = "with the directory listing"
+    release_banner_prefix_label: str = "New prefix"
+    release_banner_cta_pending: str = "What changed"
+    release_banner_cta_listed: str = "Add it on Claude"
 
 
 ENGLISH_STRINGS = Strings(
@@ -891,6 +916,39 @@ def graph_is_new(last_updated_utc: str) -> bool:
     render with no build instant (a fixture) counts as inside the window."""
     return not last_updated_utc or last_updated_utc[:10] <= GRAPH_NEW_UNTIL
 
+
+# The 2.0 release is announced beside the graph, on both of the plaque's
+# terms at once: only on the 2.0 line (it retires at 2.1.0), and only until
+# this date (it retires on a quiet 2.0.x too). Two weeks, like the graph's.
+RELEASE_LINE = "2.0"
+RELEASE_NEW_UNTIL = "2026-10-12"
+
+# The listing's address in Anthropic's plugin directory, once there is one.
+# Empty means not listed yet, and the banner says only what is true without
+# it: ready for the directory, on Claude Code today, on the other surfaces
+# with the listing. Setting it is the whole switch -- the copy, the surface
+# row and the button all follow.
+CLAUDE_DIRECTORY_URL = ""
+
+# Claude's surfaces, in the order a reader meets them, and whether each has
+# the plugin before the directory listing does. Claude Code installs from
+# this repository; the rest reach it only through the listing.
+CLAUDE_SURFACES = (
+    ("Claude Code", True),
+    ("claude.ai", False),
+    ("Desktop", False),
+    ("Cowork", False),
+)
+
+
+def release_is_new(plugin_version: str, last_updated_utc: str) -> bool:
+    """Whether a page built at this instant, for this version, still
+    announces the 2.0 release. No build instant (a fixture) counts as inside
+    the window, as graph_is_new does; no version never does."""
+    if not plugin_version.startswith(RELEASE_LINE + "."):
+        return False
+    return not last_updated_utc or last_updated_utc[:10] <= RELEASE_NEW_UNTIL
+
 _THEME_STORAGE_KEY = "tbaguette-theme"
 
 # Runs synchronously in <head>, before first paint, so a stored theme applies
@@ -1508,6 +1566,84 @@ def _render_graph_banner(summary: dict | None, base_path: str = "", *,
     </aside>"""
 
 
+def _render_release_banner(plugin_version: str, base_path: str = "", *,
+                           last_updated_utc: str = "",
+                           has_update_notes: bool = False,
+                           locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                           strings: Strings = ENGLISH_STRINGS) -> str:
+    """The 2.0 release, announced to the left of the graph's banner and in
+    its image: an <aside> with a label above the page's <h1>, a picture on
+    one side and the copy on the other, retired by version and by date
+    (release_is_new) rather than by anyone remembering to.
+
+    The picture is the numeral itself, drawn by site.js as a few thousand
+    grains of gold that steam off the top like a loaf out of the oven and
+    part around the pointer. The same numeral is set in type underneath, so
+    a reader without the canvas -- no script, reduced motion's first frame,
+    forced colours -- still sees it.
+
+    What it claims depends on CLAUDE_DIRECTORY_URL: before the listing it
+    says the plugin is ready for Anthropic's directory and on Claude Code
+    today, never that it is on claude.ai. The one thing a 2.0 reader has to
+    act on, the new skill prefix, is shown rather than described."""
+    if not release_is_new(plugin_version, last_updated_utc):
+        return ""
+    listed = bool(CLAUDE_DIRECTORY_URL)
+    lede = strings.release_banner_lede_listed if listed else strings.release_banner_lede_pending
+    surfaces_html = "".join(
+        f'<li class="release-banner__surface{" is-live" if live or listed else ""}">'
+        f'<span class="release-banner__surface-dot" aria-hidden="true"></span>'
+        f'{escape_html(name)}'
+        f'<span class="visually-hidden">, {escape_html(strings.release_banner_surface_today if live or listed else strings.release_banner_surface_pending)}</span>'
+        f'</li>'
+        for name, live in CLAUDE_SURFACES
+    )
+    legend_html = "" if listed else (
+        f'<p class="release-banner__legend" aria-hidden="true">'
+        f'<span class="release-banner__legend-item is-live">{escape_html(strings.release_banner_surface_today)}</span>'
+        f'<span class="release-banner__legend-item">{escape_html(strings.release_banner_surface_pending)}</span></p>'
+    )
+    if listed:
+        cta_href, cta_label = CLAUDE_DIRECTORY_URL, strings.release_banner_cta_listed
+    elif has_update_notes:
+        cta_href, cta_label = "#notes-title", strings.release_banner_cta_pending
+    else:
+        cta_href, cta_label = f"{GITHUB_BLOB_BASE}{UPDATE_NOTES_SOURCE_PATH}", strings.release_banner_cta_pending
+    loaf = _icon("icon-crust", css_class="icon release-banner__cta-icon", base_path=base_path)
+    # The old prefix is history, not the brand: it was the plugin's name
+    # until 2.0, and it is spelled out here because it is what a reader's
+    # saved prompts still say.
+    return f"""<aside class="release-banner" aria-label="{escape_html(strings.release_banner_label)}" data-release-banner data-release-new-until="{RELEASE_NEW_UNTIL}" data-numeral="{escape_html(RELEASE_LINE)}">
+      <div class="release-banner__stage" aria-hidden="true">
+        <span class="release-banner__numeral">{escape_html(RELEASE_LINE)}</span>
+        <canvas class="release-banner__canvas"></canvas>
+      </div>
+      <div class="release-banner__body">
+        <p class="release-banner__title"><span class="change-badge change-badge--new">{escape_html(strings.release_banner_badge)}</span><span>{escape_html(strings.release_banner_title)}</span></p>
+        <p class="release-banner__lede">{escape_html(lede)}</p>
+        <ul class="release-banner__surfaces" aria-label="{escape_html(strings.release_banner_surfaces_label)}">{surfaces_html}</ul>
+        {legend_html}
+        <p class="release-banner__prefix"><span class="release-banner__prefix-label">{escape_html(strings.release_banner_prefix_label)}</span><code class="release-banner__prefix-code"><del>TBaguette:</del><ins>{PLUGIN_NAME}:</ins>formidable</code></p>
+        <a class="release-banner__cta" href="{escape_html(cta_href)}">{loaf}<span>{escape_html(cta_label)}</span></a>
+      </div>
+    </aside>"""
+
+
+def _render_banner_row(*banners: str) -> str:
+    """The announcements at the top of the hero, side by side in one row --
+    the release first, on the left. Each sits in a slot the stylesheet
+    measures, so a banner lays itself out for the width it actually gets:
+    stacked, picture over copy, as half of a pair or on a phone, and side by
+    side when it has the row to itself because the other has retired."""
+    shown = [banner for banner in banners if banner]
+    if not shown:
+        return ""
+    slots = "\n    ".join(f'<div class="banner-slot">\n    {banner}\n    </div>' for banner in shown)
+    return f"""<div class="hero__banners">
+    {slots}
+    </div>"""
+
+
 def _render_hero(skill_count: int, category_count: int, base_path: str = "", *,
                   fresh_skills: list[dict] | None = None,
                   update_notes: list[dict] | None = None,
@@ -1911,9 +2047,14 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
                      fresh_skills=fresh_skills, update_notes=update_notes,
                      locale=locale, strings=strings,
                      plugin_version=plugin_version,
-                     banner_html=_render_graph_banner(
-                         graph_banner, base_path, last_updated_utc=last_updated_utc,
-                         locale=locale, strings=strings)),
+                     banner_html=_render_banner_row(
+                         _render_release_banner(
+                             plugin_version, base_path, last_updated_utc=last_updated_utc,
+                             has_update_notes=bool(update_notes), locale=locale,
+                             strings=strings),
+                         _render_graph_banner(
+                             graph_banner, base_path, last_updated_utc=last_updated_utc,
+                             locale=locale, strings=strings))),
         _render_search_empty_state(skill_count, strings),
         f'<div data-categories>\n{sections}\n</div>',
     )
