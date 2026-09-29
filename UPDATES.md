@@ -24,6 +24,16 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
+## 2026-09-29 — Switches nobody can reach
+
+- `configuration-management`: a feature that stays off until someone opts in
+  can pass every test and still be off for everyone. Tests turn the switch on
+  directly, so they prove the gate opens, not that a user can open it. If the
+  only way to set it is an environment variable or a debug menu, no user can,
+  and the logs count each of them as having said no. The skill now says to
+  find the setting a user would actually use in the build you ship, and its
+  `description:` sends that case to it.
+
 ## 2026-09-29 — Checking where a result was pointed before trusting it
 
 - `diagnosing-before-fixing`: a value you read off a dashboard, badge or
