@@ -188,6 +188,14 @@ That list is missing the culprit that survives longest, because it is the only o
 
 The move is to stop prescribing one fix at a time. Enumerate every stage between the input and the observed output *before* changing anything, and say for each whether it is known to pass the value, known to drop it, or unexamined — then fix all the unexamined ones together and take one reading. Otherwise each attempt buys a single bit of information at the cost of a full cycle, and the bit it buys is ambiguous.
 
+One harness culprit is easy to miss because it freezes the reading rather than
+the input. A tool that writes its result to a fixed path can fail, exit 0, and
+leave the previous run's file in place, so every later reading is the first
+one replayed and "nothing changed" is exactly what you will see. Remove the
+output before each run, or check its timestamp against the run's start, and
+treat a missing or unchanged file as no reading rather than as the same
+reading again.
+
 ## A symptom read off a screen has passed through a renderer first
 
 A value on a dashboard, a badge, a status line or a report is not a reading of
