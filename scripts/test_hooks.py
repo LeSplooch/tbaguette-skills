@@ -706,11 +706,23 @@ def check_gitattributes_keeps_hooks_lf() -> None:
     # Every file that runs as a shell script: a shebang, or the polyglot that
     # launches the hooks. A new hook script without its own -text line fails
     # here instead of on the first Windows machine that clones it.
+    # Shell interpreters only: a Python script reads CRLF without complaint,
+    # and a shebang alone does not make a file one a shell will choke on.
     tracked = git(["ls-files"], REPO_ROOT).stdout.split()
-    scripts = [p for p in tracked
-               if (REPO_ROOT / p).read_bytes()[:2] == b"#!" or p.endswith("run-hook.cmd")]
+
+    def runs_in_a_shell(path: str) -> bool:
+        first = (REPO_ROOT / path).read_bytes().split(b"\n", 1)[0]
+        if not first.startswith(b"#!"):
+            return False
+        words = first[2:].split()
+        interpreter = words[1] if words and words[0].endswith(b"/env") and len(words) > 1 else (words or [b""])[0]
+        return interpreter.rsplit(b"/", 1)[-1] in {b"sh", b"bash", b"dash", b"zsh"}
+
+    scripts = [p for p in tracked if runs_in_a_shell(p) or p.endswith("run-hook.cmd")]
     check("found the hook scripts to guard", "hooks/session-start" in scripts
-          and "hooks/run-hook.cmd" in scripts)
+          and "hooks/run-hook.cmd" in scripts and ".githooks/pre-commit" in scripts)
+    check("...and nothing that is not run by a shell",
+          "scripts/archive_updates.py" not in scripts)
     unset = {line.rsplit(": ", 2)[0] for line in
              git(["check-attr", "text", "--", *scripts], REPO_ROOT).stdout.splitlines()
              if line.endswith(": text: unset")}
