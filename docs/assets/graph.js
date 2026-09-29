@@ -112,6 +112,10 @@
     matrixIntro: 'How the families lean on each other. Read a row across for what that family cites, a column down for who cites it. Each number counts pairs of skills, so the whole grid adds up to the {pairs} cross-references; the outlined diagonal is each family citing itself. Choose a number to see those citations in the graph.',
     matrixCorner: ['Cites ↓', 'Cited →'],
     matrixStrongest: 'Across families, the strongest pull is {a} citing {b}, {n} times; the family most cited from outside itself is {c}.',
+    matrixFamilyOut: '{a} cites {b} most, {n} times',
+    matrixFamilyIn: '{a} is cited most by {b}, {n} times',
+    matrixFamilyInToo: 'and is cited most by {b}, {n} times',
+    matrixFamilyNone: '{a} has no citations to or from other families',
     matrixCell: '{a} cites {b}: {n}',
     matrixCellSelf: '{a} cites itself: {n}',
     matrixNone: '{a} never cites {b}',
@@ -3059,13 +3063,30 @@
       });
     });
     var sink = cats[inside.indexOf(Math.max.apply(null, inside))];
+    // Families chosen in the legend carry in: their row and column are marked,
+    // and a sentence says where each one pulls hardest, out and in.
+    var fams = this.families || {}, on = cats.map(function (c) { return !!fams[c.slug]; });
+    this.matrixFrom = null;
+    var picked = cats.filter(function (c) { return on[c.index]; }).map(function (f) {
+      var i = f.index, out = -1, inn = -1;
+      cats.forEach(function (c, j) {
+        if (j === i) { return; }
+        if (m[i][j] && (out < 0 || m[i][j] > m[i][out])) { out = j; }
+        if (m[j][i] && (inn < 0 || m[j][i] > m[inn][i])) { inn = j; }
+      });
+      if (!this.matrixFrom) { this.matrixFrom = out >= 0 ? [i, out] : inn >= 0 ? [inn, i] : null; }
+      var parts = [];
+      if (out >= 0) { parts.push(fmt(STR.matrixFamilyOut, { a: f.title, b: cats[out].title, n: m[i][out] })); }
+      if (inn >= 0) { parts.push(fmt(parts.length ? STR.matrixFamilyInToo : STR.matrixFamilyIn, { a: f.title, b: cats[inn].title, n: m[inn][i] })); }
+      return (parts.length ? parts.join(', ') : fmt(STR.matrixFamilyNone, { a: f.title })) + '.';
+    }, this);
     var swatch = function (c) { return '<span class="crumb-swatch" style="--chip:var(--graph-cat-' + (c.index + 1) + ')" aria-hidden="true"></span>'; };
     var head = '<tr><td class="crumb-matrix__corner" aria-hidden="true"><span>' + escapeHtml(STR.matrixCorner[0]) + '</span> <span>' + escapeHtml(STR.matrixCorner[1]) + '</span></td>' + cats.map(function (c) {
-      return '<th scope="col" class="crumb-matrix__col"><abbr title="' + escapeHtml(c.title) + '">' + swatch(c) + '<span class="crumb-matrix__num">' + (c.index + 1) + '</span></abbr><span class="visually-hidden">' + escapeHtml(c.title) + '</span></th>';
+      return '<th scope="col" class="crumb-matrix__col' + (on[c.index] ? ' crumb-matrix__col--on' : '') + '"><abbr title="' + escapeHtml(c.title) + '">' + swatch(c) + '<span class="crumb-matrix__num">' + (c.index + 1) + '</span></abbr><span class="visually-hidden">' + escapeHtml(c.title) + '</span></th>';
     }).join('') + '</tr>';
     var body = cats.map(function (a, i) {
-      return '<tr><th scope="row" class="crumb-matrix__row">' + swatch(a) + '<span class="crumb-matrix__num" aria-hidden="true">' + (i + 1) + '</span><span class="crumb-matrix__name">' + escapeHtml(a.title) + '</span></th>' + cats.map(function (b, j) {
-        var n = m[i][j], cls = 'crumb-matrix__cell' + (i === j ? ' crumb-matrix__cell--self' : '');
+      return '<tr><th scope="row" class="crumb-matrix__row' + (on[i] ? ' crumb-matrix__row--on' : '') + '">' + swatch(a) + '<span class="crumb-matrix__num" aria-hidden="true">' + (i + 1) + '</span><span class="crumb-matrix__name">' + escapeHtml(a.title) + '</span></th>' + cats.map(function (b, j) {
+        var n = m[i][j], cls = 'crumb-matrix__cell' + (i === j ? ' crumb-matrix__cell--self' : '') + (on[i] || on[j] ? ' crumb-matrix__cell--on' : '');
         if (!n) { return '<td class="' + cls + '"><span class="visually-hidden">' + escapeHtml(fmt(STR.matrixNone, { a: a.title, b: b.title })) + '</span></td>'; }
         var label = fmt(i === j ? STR.matrixCellSelf : STR.matrixCell, { a: a.title, b: b.title, n: n });
         // Square root, so a family with twice the citations is not twice as loud.
@@ -3074,6 +3095,7 @@
     }).join('');
     box.innerHTML = '<p class="crumb-list__intro">' + escapeHtml(fmt(STR.matrixIntro, { pairs: model.edges.length })) + '</p>' +
       '<p class="crumb-matrix__lede">' + escapeHtml(fmt(STR.matrixStrongest, { a: best.a.title, b: best.b.title, n: best.n, c: sink.title })) + '</p>' +
+      picked.map(function (t) { return '<p class="crumb-matrix__lede crumb-matrix__lede--family">' + escapeHtml(t) + '</p>'; }).join('') +
       '<div class="crumb-matrix__scroll"><table class="crumb-matrix"><caption class="visually-hidden">' + escapeHtml(STR.matrixCaption) + '</caption><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>';
     this.bindMatrixKeys(box);
   };
@@ -3083,7 +3105,8 @@
     var cells = Array.prototype.slice.call(box.querySelectorAll('[data-crumb-act="flow"]'));
     if (!cells.length) { return; }
     var at = function (b) { return [+b.getAttribute('data-crumb-from'), +b.getAttribute('data-crumb-to')]; };
-    var current = this.matrixAt && box.querySelector('[data-crumb-from="' + this.matrixAt[0] + '"][data-crumb-to="' + this.matrixAt[1] + '"]');
+    var at0 = this.matrixAt || this.matrixFrom;
+    var current = at0 && box.querySelector('[data-crumb-from="' + at0[0] + '"][data-crumb-to="' + at0[1] + '"]');
     (current || cells[0]).tabIndex = 0;
     var self = this;
     var move = function (from, dr, dc, edge) {

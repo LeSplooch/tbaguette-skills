@@ -5635,6 +5635,13 @@ a.crumb-chip:hover,
 
 .crumb-matrix__cell { width: 2.75rem; height: 2.75rem; padding: 0; }
 .crumb-matrix__cell--self { box-shadow: inset 0 0 0 1px var(--text-secondary); border-radius: var(--radius-sm); }
+/* A family chosen in the legend: its cross is tinted, and its name and number
+   are set bold, so the mark does not rest on the tint alone. */
+.crumb-matrix__cell--on { background: color-mix(in oklch, var(--text-accent) 12%, transparent); }
+.crumb-matrix__row--on,
+.crumb-matrix__row--on .crumb-matrix__name,
+.crumb-matrix__col--on .crumb-matrix__num { font-weight: 700; color: var(--text-accent); }
+.crumb-matrix__lede--family { font-weight: 500; }
 .crumb-matrix__cell--self button { box-shadow: inset 0 0 0 1px var(--text-secondary); }
 
 .crumb-matrix__cell button {
