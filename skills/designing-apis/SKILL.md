@@ -1,6 +1,6 @@
 ---
 name: designing-apis
-description: Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint, an IPC or wire message, a plugin contract, an exported module boundary, or a tool, command, or server an agent will call. Also use when a design keeps per-client state on the serving instance, or when session affinity is what makes it scale. Covers naming and granularity, required versus optional parameters, statelessness and per-request identity, defaults, pagination and ordering, growing an enum, opaque tokens, separating write paths by data provenance, deprecation and sunset, versioning, and judging whether a proposed change is breaking.
+description: Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint, an IPC or wire message, a plugin contract, an exported module boundary, or a tool, command, or server an agent will call. Also use when a design keeps per-client state on the serving instance, when session affinity is what makes it scale, or when a call to someone else's interface has to turn a setting off. Covers naming and granularity, required versus optional parameters, statelessness and per-request identity, defaults, pagination and ordering, growing an enum, opaque tokens, separating write paths by data provenance, deprecation and sunset, versioning, and judging whether a proposed change is breaking.
 ---
 
 # Designing APIs
@@ -37,6 +37,8 @@ The interface is the only part you cannot refactor later: everything behind it i
 | Patch semantics (unset vs cleared vs set) | Three encodings, not two — a nullable field cannot express this |
 
 Optional-with-default beats nullable for two reasons: null forces every caller to branch, and on any wire format null is indistinguishable from "an older client did not send this field". Put the default in the contract so it is versionable; a default replicated into each caller silently drifts per client.
+
+Absence bites from the calling side too, where the contract is someone else's. Omitting a parameter, sending its lowest named level, and sending an explicit disable are three different requests on most interfaces: omission asks for whatever the provider's default is today, and the lowest level may still do real work. A wrapper or relay that maps its own "off" to omission has inherited that default, and will inherit the next one too. Send the explicit off value, and confirm it with the provider's own accounting of the work done — its usage figures, its logs — never with the absence of an error.
 
 ## Designing for growth
 
