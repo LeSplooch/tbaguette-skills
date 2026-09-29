@@ -178,6 +178,25 @@ class Strings:
     release_banner_prefix_label: str = "New prefix"
     release_banner_cta_pending: str = "What changed"
     release_banner_cta_listed: str = "Add it on Claude"
+    # The hundred-skill milestone, above the release and the graph. The count
+    # is filled in, never written: it is maintained by hand in enough places.
+    century_banner_label: str = "Milestone: past a hundred skills"
+    century_banner_badge: str = "Milestone"
+    century_banner_title: str = "Past a hundred skills"
+    century_banner_lede_template: str = (
+        "The Atelier now holds {skill_count} skills in {category_count} "
+        "families, and every one of them still assumes nothing about your "
+        "stack, your language or your project."
+    )
+    # Only true once site.js has drawn the beads, so it is shown only then.
+    century_banner_hint: str = (
+        "The hundred is made of them: one bead for each skill, in its "
+        "family’s colour. Point at a bead to see which, or click to open it."
+    )
+    century_banner_stat_skills: str = "skills"
+    century_banner_stat_families: str = "families"
+    century_banner_stat_assumed: str = "stacks or languages assumed"
+    century_banner_cta_template: str = "Browse all {skill_count}"
 
 
 ENGLISH_STRINGS = Strings(
@@ -918,10 +937,20 @@ def graph_is_new(last_updated_utc: str) -> bool:
 
 
 # The 2.0 release is announced beside the graph, on both of the plaque's
-# terms at once: only on the 2.0 line (it retires at 2.1.0), and only until
-# this date (it retires on a quiet 2.0.x too). Two weeks, like the graph's.
+# terms at once: only on the 2.x line, and only until this date. It first
+# retired at 2.1.0, and 2.1.0 turned out to be three new skills a week after
+# the release rather than a release of its own, which took the banner down
+# with the news still fresh; so the version half now only ends it at 3.0, and
+# the date does the ordinary work. Two weeks, like the graph's.
 RELEASE_LINE = "2.0"
+RELEASE_MAJOR = "2"
 RELEASE_NEW_UNTIL = "2026-10-12"
+
+# Crossing a hundred skills is announced above the other two, across the
+# whole row, on the same two terms: the count has to be past the mark, and
+# the date has to be inside the window. Two weeks from the day it crossed.
+CENTURY = 100
+CENTURY_NEW_UNTIL = "2026-10-13"
 
 # The listing's address in Anthropic's plugin directory, once there is one.
 # Empty means not listed yet, and the banner says only what is true without
@@ -945,9 +974,18 @@ def release_is_new(plugin_version: str, last_updated_utc: str) -> bool:
     """Whether a page built at this instant, for this version, still
     announces the 2.0 release. No build instant (a fixture) counts as inside
     the window, as graph_is_new does; no version never does."""
-    if not plugin_version.startswith(RELEASE_LINE + "."):
+    if not plugin_version.startswith(RELEASE_MAJOR + "."):
         return False
     return not last_updated_utc or last_updated_utc[:10] <= RELEASE_NEW_UNTIL
+
+
+def century_is_new(skill_count: int, last_updated_utc: str) -> bool:
+    """Whether a page built at this instant, with this many skills, still
+    celebrates passing a hundred. No build instant (a fixture) counts as
+    inside the window, as the other announcements do."""
+    if skill_count < CENTURY:
+        return False
+    return not last_updated_utc or last_updated_utc[:10] <= CENTURY_NEW_UNTIL
 
 _THEME_STORAGE_KEY = "tbaguette-theme"
 
@@ -1648,17 +1686,81 @@ def _render_release_banner(plugin_version: str, base_path: str = "", *,
     </aside>"""
 
 
-def _render_banner_row(*banners: str) -> str:
+def _render_century_banner(categories: list[dict], skills: dict, base_path: str = "", *,
+                           last_updated_utc: str = "",
+                           locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                           strings: Strings = ENGLISH_STRINGS) -> str:
+    """Passing a hundred skills, announced across the top of the hero, above
+    the release and the graph: an <aside> with a label, on the same terms as
+    theirs (century_is_new), sharing their shell.
+
+    The picture is the library itself. The numeral is set in type, and
+    site.js redraws it from exactly as many beads as there are skills, one
+    per skill, in its family's colour from the graph's palette, laid left to
+    right in catalog order so the families read as bands across the digits.
+    Pointing at a bead names its skill and lights its family; clicking opens
+    it. The beads ride in the page as data -- a slug and a family index per
+    skill -- and the copy that describes them is shown only once they are
+    drawn, so a reader without the canvas is never told to point at
+    something that is not there.
+
+    Every number comes from the arguments, never from the copy."""
+    skill_count = len(skills)
+    if not century_is_new(skill_count, last_updated_utc):
+        return ""
+    beads = [
+        [slug, family]
+        for family, category in enumerate(categories)
+        for slug in category["skill_slugs"]
+        if slug in skills
+    ]
+    beads_json = json.dumps(beads, separators=(",", ":"))
+    titles_json = json.dumps([c["title"] for c in categories], ensure_ascii=False,
+                             separators=(",", ":"))
+    href = skill_url("{slug}", base_path, locale)
+    category_count = len(categories)
+    lede = strings.century_banner_lede_template.format(
+        skill_count=skill_count, category_count=category_count)
+    stats = [(skill_count, strings.century_banner_stat_skills),
+             (category_count, strings.century_banner_stat_families),
+             (0, strings.century_banner_stat_assumed)]
+    stats_html = "".join(
+        f'<div class="graph-banner__stat"><dt>{escape_html(label)}</dt><dd>{value}</dd></div>'
+        for value, label in stats
+    )
+    cta = strings.century_banner_cta_template.format(skill_count=skill_count)
+    wheat = _icon("icon-wheat", css_class="icon century-banner__cta-icon", base_path=base_path)
+    return f"""<aside class="century-banner" aria-label="{escape_html(strings.century_banner_label)}" data-century-banner data-century-new-until="{CENTURY_NEW_UNTIL}" data-numeral="{CENTURY}" data-beads="{escape_html(beads_json)}" data-family-titles="{escape_html(titles_json)}" data-href="{escape_html(href)}">
+      <div class="century-banner__stage" aria-hidden="true">
+        <span class="century-banner__numeral">{CENTURY}</span>
+        <canvas class="century-banner__canvas"></canvas>
+      </div>
+      <div class="century-banner__body">
+        <p class="century-banner__title"><span class="change-badge change-badge--new">{escape_html(strings.century_banner_badge)}</span><span>{escape_html(strings.century_banner_title)}</span></p>
+        <p class="century-banner__lede">{escape_html(lede)} <span class="century-banner__hint" aria-hidden="true">{escape_html(strings.century_banner_hint)}</span></p>
+        <dl class="graph-banner__stats century-banner__stats">{stats_html}</dl>
+        <a class="century-banner__cta" href="#skills">{wheat}<span>{escape_html(cta)}</span></a>
+      </div>
+      <span class="century-banner__tip" aria-hidden="true" hidden></span>
+    </aside>"""
+
+
+def _render_banner_row(*banners: str, lead: bool = False) -> str:
     """The announcements at the top of the hero, side by side in one row --
     the release first, on the left. Each sits in a slot the stylesheet
     measures, so a banner lays itself out for the width it actually gets:
     stacked, picture over copy, as half of a pair or on a phone, and side by
-    side when it has the row to itself because the other has retired."""
+    side when it has the row to itself because the other has retired.
+
+    lead marks the row above that one: a single announcement given the
+    whole width, kept out of the pair's grid so neither pair member shrinks
+    to a third of the row to make room for it."""
     shown = [banner for banner in banners if banner]
     if not shown:
         return ""
     slots = "\n    ".join(f'<div class="banner-slot">\n    {banner}\n    </div>' for banner in shown)
-    return f"""<div class="hero__banners">
+    row_class = "hero__banners hero__banners--lead" if lead else "hero__banners"
+    return f"""<div class="{row_class}">
     {slots}
     </div>"""
 
@@ -2066,14 +2168,21 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
                      fresh_skills=fresh_skills, update_notes=update_notes,
                      locale=locale, strings=strings,
                      plugin_version=plugin_version,
-                     banner_html=_render_banner_row(
-                         _render_release_banner(
-                             plugin_version, base_path, last_updated_utc=last_updated_utc,
-                             has_update_notes=bool(update_notes), locale=locale,
-                             strings=strings),
-                         _render_graph_banner(
-                             graph_banner, base_path, last_updated_utc=last_updated_utc,
-                             locale=locale, strings=strings))),
+                     banner_html=_join(
+                         _render_banner_row(
+                             _render_century_banner(
+                                 categories, skills, base_path,
+                                 last_updated_utc=last_updated_utc,
+                                 locale=locale, strings=strings),
+                             lead=True),
+                         _render_banner_row(
+                             _render_release_banner(
+                                 plugin_version, base_path, last_updated_utc=last_updated_utc,
+                                 has_update_notes=bool(update_notes), locale=locale,
+                                 strings=strings),
+                             _render_graph_banner(
+                                 graph_banner, base_path, last_updated_utc=last_updated_utc,
+                                 locale=locale, strings=strings)))),
         _render_search_empty_state(skill_count, strings),
         f'<div data-categories>\n{sections}\n</div>',
     )

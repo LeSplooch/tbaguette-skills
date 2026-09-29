@@ -624,12 +624,12 @@ def check_release_banner() -> None:
           and 'href="https://claude.ai/directory/example"' in listed_banner
           and "Add it on Claude" in listed_banner and "release-banner__legend" not in listed_banner)
 
-    for version in ("2.0.1", "2.0.12"):
-        check(f"still up at {version}: the release is the 2.0 line",
+    for version in ("2.0.1", "2.0.12", "2.1.0", "2.4.7"):
+        check(f"still up at {version}: a 2.x that adds skills is still the 2.0 news",
               templates.release_is_new(version, ""))
-    for version in ("1.1.74", "2.1.0", "20.0.0", ""):
+    for version in ("1.1.74", "3.0.0", "20.0.0", ""):
         check(f"not announced at {version!r}", not templates.release_is_new(version, ""))
-    check("not announced past its date either, on a quiet 2.0.x",
+    check("not announced past its date either, on a quiet 2.x",
           '<aside class="release-banner"' not in render_index(
               FIXTURE["categories"], FIXTURE["skills"], plugin_version="2.0.3",
               last_updated_utc="2026-10-13T00:00:00+00:00"))
@@ -640,6 +640,74 @@ def check_release_banner() -> None:
     check("no banners, no row",
           "hero__banners" not in render_index(FIXTURE["categories"], FIXTURE["skills"],
                                               plugin_version="1.1.74").split("<main", 1)[1])
+
+
+def check_century_banner() -> None:
+    """Passing a hundred skills is announced across the top of the hero,
+    above the release and the graph: gated on the count and on a date, its
+    picture riding in the page as one bead of data per skill, and nothing in
+    its copy claiming beads a reader without the canvas cannot see."""
+    print("century banner check")
+    many = {f"skill-{i:03d}": {"slug": f"skill-{i:03d}", "name": f"skill-{i:03d}"} for i in range(101)}
+    slugs = sorted(many)
+    categories = [
+        {"slug": "first", "title": "First family", "skill_slugs": slugs[:40]},
+        {"slug": "second", "title": "Second family", "skill_slugs": slugs[40:]},
+    ]
+    summary = {
+        "skill_count": 101, "pair_count": 600, "mutual_count": 110, "max_steps": 7,
+        "reachable": True,
+        "families": [{"index": 0, "title": "First family", "count": 40}],
+        "links": [],
+    }
+    html = render_index(categories, many, graph_banner=summary, plugin_version="2.1.0")
+    check("past a hundred, the landing page carries the milestone",
+          '<aside class="century-banner" aria-label="Milestone: past a hundred skills"' in html)
+    check("...in a row of its own, above the release and the graph, above the <h1>",
+          html.index('<div class="hero__banners hero__banners--lead">')
+          < html.index('<aside class="century-banner"')
+          < html.index('<div class="hero__banners">')
+          < html.index('<aside class="release-banner"')
+          < html.index('<aside class="graph-banner"')
+          < html.index('<h1 class="hero__headline">'))
+    check("...with the pair below still two slots in their own row",
+          html.split('<div class="hero__banners">', 1)[1].split('<h1', 1)[0].count('<div class="banner-slot">') == 2)
+    banner = html.split('<aside class="century-banner"', 1)[1].split("</aside>", 1)[0]
+    check("...as an aside with a label, never a heading ahead of the <h1>", "<h2" not in banner)
+    beads = re.search(r'data-beads="([^"]*)"', banner).group(1).replace("&quot;", '"')
+    check("one bead of data per skill, in catalog order, with its family's index",
+          beads.count("[") - 1 == 101 and beads.startswith('[["skill-000",0]')
+          and '["skill-040",1]' in beads)
+    check("the families' names ride along for the bead's label",
+          "First family" in banner and "Second family" in banner)
+    check("a bead's link is built from the page's own skill URLs",
+          'data-href="/skills/{slug}/"' in banner)
+    check("the numeral is set in type under the canvas, for anyone without it",
+          '<span class="century-banner__numeral">100</span>' in banner
+          and '<canvas class="century-banner__canvas"></canvas>' in banner)
+    check("every number comes from the arguments",
+          "holds 101 skills in 2 families" in banner and "<dd>101</dd>" in banner
+          and "<dd>2</dd>" in banner and "Browse all 101" in banner)
+    check("the sentence about beads is hidden from assistive tech, and the stylesheet "
+          "shows it only once they are drawn",
+          '<span class="century-banner__hint" aria-hidden="true">' in banner)
+    check("its button goes to the skills on this page",
+          'class="century-banner__cta" href="#skills"' in banner)
+
+    check("a hundred is the mark, and ninety-nine is short of it",
+          templates.century_is_new(100, "") and not templates.century_is_new(99, ""))
+    check("the fixture's three skills get no milestone",
+          "century-banner" not in render_index(FIXTURE["categories"], FIXTURE["skills"]).split("<main", 1)[1])
+    after = render_index(categories, many, plugin_version="2.1.0",
+                         last_updated_utc="2026-10-14T00:00:00+00:00")
+    check("a build past its date leaves it out",
+          '<aside class="century-banner"' not in after)
+    check("...and it retires in the reader's browser on the same date",
+          f'data-century-new-until="{templates.CENTURY_NEW_UNTIL}"' in banner)
+    alone = render_index(categories, many, plugin_version="3.0.0")
+    check("with the pair retired, the milestone's row is the only one",
+          alone.split("<main", 1)[1].count('<div class="hero__banners') == 1
+          and '<div class="hero__banners hero__banners--lead">' in alone)
 
 
 def check_i18n_getting_started_page() -> None:
@@ -1880,6 +1948,7 @@ def main() -> None:
     check_graph_entry_points()
     check_graph_banner()
     check_release_banner()
+    check_century_banner()
     check_header_and_badges()
     check_fresh_section()
     check_dialog_ua_defaults()

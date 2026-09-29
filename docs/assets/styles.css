@@ -3538,7 +3538,8 @@ a.skill-link--bare:focus-visible {
    ------------------------------------------------------------------------- */
 
 .crumb,
-.graph-banner {
+.graph-banner,
+.century-banner {
   --graph-cat-1: #c8635d;
   --graph-cat-2: #009bab;
   --graph-cat-3: #ed9658;
@@ -3553,7 +3554,7 @@ a.skill-link--bare:focus-visible {
   --graph-cat-12: #5f83d4;
 }
 
-[data-theme='flour'] :is(.crumb, .graph-banner) {
+[data-theme='flour'] :is(.crumb, .graph-banner, .century-banner) {
   --graph-cat-1: #90302e;
   --graph-cat-2: #006777;
   --graph-cat-3: #ad5c15;
@@ -3740,7 +3741,8 @@ a.skill-link--bare:focus-visible {
    behind it. */
 
 .graph-banner,
-.release-banner {
+.release-banner,
+.century-banner {
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -3760,7 +3762,8 @@ a.skill-link--bare:focus-visible {
 }
 
 .graph-banner::before,
-.release-banner::before {
+.release-banner::before,
+.century-banner::before {
   content: '';
   position: absolute;
   z-index: 2;
@@ -3782,7 +3785,8 @@ a.skill-link--bare:focus-visible {
 }
 
 .graph-banner__body,
-.release-banner__body {
+.release-banner__body,
+.century-banner__body {
   position: relative;
   z-index: 1;
   width: min(36rem, 58%);
@@ -3793,7 +3797,8 @@ a.skill-link--bare:focus-visible {
 /* The fade the copy reads against, drawn as its own layer so the canvas can
    run under the whole banner and still never sit behind a letter. */
 .graph-banner__body::before,
-.release-banner__body::before {
+.release-banner__body::before,
+.century-banner__body::before {
   content: '';
   position: absolute;
   inset: 0 -30% 0 0;
@@ -3803,10 +3808,12 @@ a.skill-link--bare:focus-visible {
 }
 
 .graph-banner__body a,
-.release-banner__body a { pointer-events: auto; }
+.release-banner__body a,
+.century-banner__body a { pointer-events: auto; }
 
 .graph-banner__title,
-.release-banner__title {
+.release-banner__title,
+.century-banner__title {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -3822,7 +3829,8 @@ a.skill-link--bare:focus-visible {
 }
 
 .graph-banner__lede,
-.release-banner__lede {
+.release-banner__lede,
+.century-banner__lede {
   margin-top: var(--space-3);
   max-width: 46ch;
   color: var(--text-secondary);
@@ -3865,7 +3873,8 @@ a.skill-link--bare:focus-visible {
 }
 
 .graph-banner__cta,
-.release-banner__cta {
+.release-banner__cta,
+.century-banner__cta {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
@@ -3882,13 +3891,16 @@ a.skill-link--bare:focus-visible {
 }
 
 .graph-banner__cta:hover,
-.release-banner__cta:hover { background: var(--accent-solid-hover); }
+.release-banner__cta:hover,
+.century-banner__cta:hover { background: var(--accent-solid-hover); }
 .graph-banner__cta-icon,
-.release-banner__cta-icon { width: 1.15em; height: 1.15em; }
+.release-banner__cta-icon,
+.century-banner__cta-icon { width: 1.15em; height: 1.15em; }
 
 @media (prefers-reduced-motion: no-preference) {
   .graph-banner__cta:hover,
-  .release-banner__cta:hover { transform: translateY(-1px); }
+  .release-banner__cta:hover,
+  .century-banner__cta:hover { transform: translateY(-1px); }
 }
 
 /* Narrow: the constellation takes a band of its own above the copy rather
@@ -3898,7 +3910,8 @@ a.skill-link--bare:focus-visible {
    which one applied off flex-direction, so the picture follows. */
 @container banner (max-width: 44rem) {
   .graph-banner,
-  .release-banner {
+  .release-banner,
+  .century-banner {
     flex-direction: column;
     align-items: stretch;
     min-height: 0;
@@ -3906,7 +3919,8 @@ a.skill-link--bare:focus-visible {
   }
   .graph-banner__canvas { height: 12rem; }
   .graph-banner__body,
-  .release-banner__body {
+  .release-banner__body,
+  .century-banner__body {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -3914,20 +3928,23 @@ a.skill-link--bare:focus-visible {
     padding: var(--space-4) var(--space-5) var(--space-5);
   }
   .graph-banner__body::before,
-  .release-banner__body::before {
+  .release-banner__body::before,
+  .century-banner__body::before {
     inset: 0;
     background: linear-gradient(to bottom, transparent, var(--bg) 2.5rem);
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
   .graph-banner__title,
-  .release-banner__title { font-size: var(--text-4); }
+  .release-banner__title,
+  .century-banner__title { font-size: var(--text-4); }
   .graph-banner__stat { min-width: 0; flex: 1 1 5.5rem; }
   /* Side by side, the two banners stretch to one height; the buttons sit on
      the same line at the bottom rather than wherever each copy ran out. */
   .graph-banner__stats,
   .release-banner__prefix { margin-bottom: var(--space-5); }
   .graph-banner__cta,
-  .release-banner__cta { margin-top: auto; align-self: flex-start; }
+  .release-banner__cta,
+  .century-banner__cta { margin-top: auto; align-self: flex-start; }
 }
 
 @media (forced-colors: active) {
@@ -4195,6 +4212,148 @@ a.skill-link--bare:focus-visible {
   .release-banner__surface.is-live { border-width: 2px; }
   .release-banner__prefix-code del { text-decoration: line-through; background: none; }
   .release-banner__cta { border: 1px solid ButtonText; }
+}
+
+/* The hundred. Across the whole row, above the release and the graph, in
+   their shell -- hairline, fade, title, lede, stat tiles, button -- so the
+   three read as one set. Its picture is the library: a type-set "100" that
+   site.js measures and redraws from one bead per skill, in the families'
+   colours, lit one at a time in catalog order. The type-set numeral is what
+   anyone without the canvas sees, finished in the release numeral's foil. */
+
+.hero__banners--lead { margin-bottom: var(--space-5); }
+
+.century-banner {
+  min-height: 19rem;
+  background:
+    radial-gradient(ellipse 42% 95% at 73% 52%,
+      color-mix(in oklch, var(--accent-solid) 10%, var(--bg)) 0%,
+      var(--bg) 80%);
+}
+
+.century-banner__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 26% 62% at 73% 56%,
+      color-mix(in oklch, var(--accent-solid) 15%, transparent),
+      transparent 70%);
+}
+
+.century-banner__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.century-banner__numeral {
+  position: absolute;
+  top: 50%;
+  left: 73%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  /* Left at auto, as a canvas sets it too: the glyph site.js lays the beads
+     on has to be the glyph drawn here under them. */
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-size: min(15rem, 21cqi);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--accent);
+  background: linear-gradient(172deg, var(--gold-400) 18%, var(--gold-500) 48%, var(--gold-700) 88%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 28px color-mix(in oklch, var(--accent-solid) 40%, transparent));
+  user-select: none;
+  transition: opacity 900ms var(--ease-out);
+}
+
+[data-theme='flour'] .century-banner__numeral {
+  background-image: linear-gradient(172deg, var(--gold-700) 15%, var(--gold-800) 85%);
+  filter: drop-shadow(0 6px 18px color-mix(in oklch, var(--gold-700) 30%, transparent));
+}
+
+/* site.js sets this once the beads are on the canvas, and only then is the
+   sentence telling a reader to point at them true. The numeral stays, dimmed,
+   as the dough the beads are set in: a hundred beads alone do not hold the
+   shape of a high-contrast serif, and the number is the point. */
+.century-banner.is-drawn .century-banner__numeral { opacity: 0.3; }
+[data-theme='flour'] .century-banner.is-drawn .century-banner__numeral { opacity: 0.36; }
+.century-banner__hint { display: none; }
+.century-banner.is-drawn .century-banner__hint { display: inline; }
+
+.century-banner__body { width: min(38rem, 52%); }
+
+/* The name of the bead under the pointer, placed by site.js above it. A child
+   of the banner rather than of the stage, so it rides over the copy's fade
+   instead of under it when the bead sits near the text. */
+.century-banner__tip {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.3em 0.7em;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 24px -14px hsl(var(--shadow-ink) / 0.7);
+  pointer-events: none;
+}
+
+.century-banner__tip[hidden] { display: none; }
+
+.century-banner__tip::before {
+  content: '';
+  flex: none;
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: var(--tip-colour, var(--accent));
+}
+
+.century-banner__tip-family { color: var(--text-secondary); }
+
+/* Narrow slot: the numeral takes a band of its own above the copy, at the
+   height the pair below gives their pictures. */
+@container banner (max-width: 44rem) {
+  .century-banner { min-height: 0; background: var(--bg); }
+  .century-banner__stage {
+    height: 12rem;
+    background:
+      radial-gradient(ellipse 45% 60% at 50% 60%,
+        color-mix(in oklch, var(--accent-solid) 16%, transparent),
+        transparent 72%);
+  }
+  .century-banner__numeral { left: 50%; font-size: 9.5rem; }
+  .century-banner__body { width: auto; }
+  .century-banner__stats { margin-bottom: var(--space-5); }
+}
+
+@media (forced-colors: active) {
+  .century-banner { border: 2px solid CanvasText; }
+  .century-banner::before, .century-banner__body::before { display: none; }
+  .century-banner__canvas, .century-banner__tip { display: none; }
+  .century-banner__numeral,
+  .century-banner.is-drawn .century-banner__numeral {
+    opacity: 1;
+    background: none;
+    filter: none;
+    -webkit-text-fill-color: CanvasText;
+    color: CanvasText;
+  }
+  .century-banner__cta { border: 1px solid ButtonText; }
 }
 
 .skill-article__meta {

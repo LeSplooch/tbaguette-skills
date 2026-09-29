@@ -1160,13 +1160,15 @@
   // date; this covers the days between builds, against the reader's clock in
   // UTC, the same zone the build compared in.
   //
-  // The 2.0 release banner retires the same way, on its own date. A banner
-  // takes its slot in the row with it, so the one still up widens into the
-  // space, and the row goes when it is empty.
+  // The 2.0 release banner and the hundred-skill milestone retire the same
+  // way, each on its own date. A banner takes its slot in the row with it, so
+  // the one still up widens into the space, and the row goes when it is
+  // empty.
   function initGraphNews() {
     var today = new Date().toISOString().slice(0, 10);
-    toArray(document.querySelectorAll('[data-graph-new-until], [data-release-new-until]')).forEach(function (el) {
-      var until = el.getAttribute('data-graph-new-until') || el.getAttribute('data-release-new-until');
+    toArray(document.querySelectorAll('[data-graph-new-until], [data-release-new-until], [data-century-new-until]')).forEach(function (el) {
+      var until = el.getAttribute('data-graph-new-until') || el.getAttribute('data-release-new-until') ||
+        el.getAttribute('data-century-new-until');
       if (today <= until) return;
       var link = el.closest('.site-header__nav-link--new');
       if (link) link.classList.remove('site-header__nav-link--new');
@@ -1767,6 +1769,321 @@
     else begin();
   }
 
+  // --- The hundred-skill milestone -----------------------------------------
+  //
+  // The numeral, redrawn from the library itself: one bead per skill, exactly
+  // as many as the page says there are, each in its family's colour from the
+  // graph's palette. The stylesheet sets "100" in type; this measures it,
+  // samples its strokes, and spreads the beads over them as evenly as their
+  // number allows -- each next bead goes wherever it is farthest from every
+  // bead already placed -- then hands them out left to right in catalog
+  // order, so the families read as bands across the digits. They light one
+  // at a time, like being counted out, and a slow shimmer crosses them now
+  // and then. Pointing at a bead names its skill and lights its family;
+  // clicking opens it. On touch the first tap names it and a second opens
+  // it. Reduced motion gets every bead lit at once and nothing moving;
+  // forced colours keep the type-set numeral.
+  function initCenturyBanner() {
+    var banner = document.querySelector('[data-century-banner]');
+    if (!banner) return;
+    var canvas = banner.querySelector('.century-banner__canvas');
+    var numeral = banner.querySelector('.century-banner__numeral');
+    var tip = banner.querySelector('.century-banner__tip');
+    if (!canvas || !canvas.getContext || !numeral) return;
+    if (window.matchMedia && window.matchMedia('(forced-colors: active)').matches) return;
+    var skills, families;
+    try {
+      skills = JSON.parse(banner.getAttribute('data-beads') || '[]');
+      families = JSON.parse(banner.getAttribute('data-family-titles') || '[]');
+    } catch (error) {
+      return;
+    }
+    if (!skills.length) return;
+    var href = banner.getAttribute('data-href') || '';
+    var text = banner.getAttribute('data-numeral') || numeral.textContent;
+
+    var ctx = canvas.getContext('2d');
+    var reduced = prefersReducedMotion();
+    var TAU = Math.PI * 2;
+    var W = 0, H = 0, dpr = 1, dark = true, begun = false;
+    var beads = [], colours = [], radius = 4, left = 0, right = 0, glyph = null;
+    var hovered = null, armed = null, lastType = '';
+    var visible = true, raf = 0, t0 = performance.now(), born = -1;
+    var probe = document.createElement('canvas').getContext('2d');
+
+    function parse(value, fallback) {
+      probe.fillStyle = '#000';
+      probe.fillStyle = (value || '').trim() || fallback;
+      var v = probe.fillStyle;
+      if (v.charAt(0) === '#') return [parseInt(v.slice(1, 3), 16), parseInt(v.slice(3, 5), 16), parseInt(v.slice(5, 7), 16)];
+      var m = v.match(/[\d.]+/g) || [0, 0, 0];
+      return [+m[0], +m[1], +m[2]];
+    }
+    function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+    function mix(a, b, k) {
+      return [Math.round(a[0] + (b[0] - a[0]) * k), Math.round(a[1] + (b[1] - a[1]) * k), Math.round(a[2] + (b[2] - a[2]) * k)];
+    }
+
+    function palette() {
+      var cs = getComputedStyle(banner);
+      dark = document.documentElement.getAttribute('data-theme') !== 'flour';
+      colours = families.map(function (_, i) {
+        return parse(cs.getPropertyValue('--graph-cat-' + (i + 1)), '#dda25c');
+      });
+      if (!colours.length) colours = [parse(cs.getPropertyValue('--gold-500'), '#dda25c')];
+    }
+
+    function setType(c) {
+      c.font = glyph.font;
+      if ('letterSpacing' in c) c.letterSpacing = glyph.spacing;
+      c.textAlign = 'left';
+      c.textBaseline = 'alphabetic';
+    }
+
+    // Where the stylesheet put the numeral, in canvas coordinates, set the
+    // way the canvas has to set it.
+    function measure() {
+      var cr = canvas.getBoundingClientRect(), nr = numeral.getBoundingClientRect();
+      var cs = getComputedStyle(numeral);
+      var size = parseFloat(cs.fontSize) || 160;
+      glyph = {
+        font: cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily,
+        spacing: cs.letterSpacing === 'normal' ? '0px' : cs.letterSpacing,
+        size: size, x: nr.left - cr.left + (parseFloat(cs.paddingLeft) || 0), y: 0
+      };
+      setType(probe);
+      var m = probe.measureText(text);
+      var ascent = m.fontBoundingBoxAscent, descent = m.fontBoundingBoxDescent;
+      glyph.y = ascent && descent
+        ? nr.top - cr.top + (nr.height - (ascent + descent)) / 2 + ascent
+        : nr.top - cr.top + nr.height * 0.78;
+    }
+
+    function layout() {
+      beads = [];
+      if (W < 2 || H < 2) return;
+      measure();
+      var off = document.createElement('canvas');
+      off.width = Math.ceil(W); off.height = Math.ceil(H);
+      var o = off.getContext('2d');
+      setType(o);
+      o.fillStyle = '#fff';
+      o.fillText(text, glyph.x, glyph.y);
+      var img = o.getImageData(0, 0, off.width, off.height).data;
+      var n = skills.length;
+      // Candidates on a grid over the strokes, fine enough that the spreading
+      // below has real choices to make: a few times as many as there are beads.
+      var step = Math.max(2, glyph.size / 14), cand = [];
+      for (var tries = 0; tries < 10; tries++) {
+        cand = [];
+        for (var y = step / 2; y < off.height; y += step) {
+          for (var x = step / 2; x < off.width; x += step) {
+            if (img[((y | 0) * off.width + (x | 0)) * 4 + 3] >= 140) cand.push([x, y]);
+          }
+        }
+        if (cand.length >= n * 4 || step <= 2) break;
+        step = Math.max(2, step * 0.75);
+      }
+      // Too small to hold one bead per skill: the type-set numeral stays.
+      if (cand.length < n) return;
+
+      var dist = [], first = 0, i, j;
+      for (i = 0; i < cand.length; i++) {
+        dist.push(Infinity);
+        if (cand[i][0] < cand[first][0]) first = i;
+      }
+      var picked = [], cur = first;
+      for (var k = 0; k < n; k++) {
+        picked.push(cand[cur]);
+        var best = -1, bestD = -1;
+        for (j = 0; j < cand.length; j++) {
+          var dx = cand[j][0] - cand[cur][0], dy = cand[j][1] - cand[cur][1], d = dx * dx + dy * dy;
+          if (d < dist[j]) dist[j] = d;
+          if (dist[j] > bestD) { bestD = dist[j]; best = j; }
+        }
+        cur = best;
+      }
+      // Bead size from the typical gap to the nearest neighbour.
+      var gaps = picked.map(function (p) {
+        var m2 = Infinity;
+        picked.forEach(function (q) {
+          if (q === p) return;
+          var ex = q[0] - p[0], ey = q[1] - p[1], e = ex * ex + ey * ey;
+          if (e < m2) m2 = e;
+        });
+        return Math.sqrt(m2);
+      }).sort(function (a, b) { return a - b; });
+      radius = Math.max(2, gaps[gaps.length >> 1] * 0.4);
+
+      picked.sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+      left = picked[0][0]; right = picked[picked.length - 1][0];
+      beads = picked.map(function (p, idx) {
+        return {
+          x: p[0], y: p[1], slug: skills[idx][0], family: skills[idx][1],
+          delay: 0.35 + idx * (2.4 / n), phase: Math.random() * TAU
+        };
+      });
+    }
+
+    function resize() {
+      var r = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = r.width; H = r.height;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      if (begun) { layout(); setHovered(null); }
+    }
+
+    function colourOf(b) { return colours[b.family % colours.length]; }
+
+    function draw(now) {
+      var t = (now - t0) / 1000;
+      var age = born < 0 ? 99 : (now - born) / 1000;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      if (!beads.length) return;
+
+      var focus = hovered ? hovered.family : -1;
+      // A slow shimmer crosses left to right, once every few seconds, after
+      // the count is in.
+      var phase = (t - 4) % 8;
+      var sweep = reduced || age < 3 || phase < 0 || phase > 1.8 ? -1 : left - 80 + phase / 1.8 * (right - left + 160);
+
+      beads.forEach(function (b) {
+        var since = age - b.delay;
+        if (since < 0) return;
+        var c = colourOf(b);
+        var on = reduced ? 1 : Math.min(1, since / 0.25);
+        var pop = reduced ? 1 : 1 + 0.45 * Math.sin(Math.min(1, since / 0.35) * Math.PI);
+        var shine = sweep < 0 ? 0 : Math.exp(-(b.x - sweep) * (b.x - sweep) / 1400);
+        var level = focus >= 0 && b.family !== focus ? 0.26 : 1;
+        var r = radius * pop * (b === hovered ? 1.55 : focus === b.family ? 1.12 : 1);
+        var twinkle = reduced ? 0 : 0.07 * Math.sin(t * 1.6 + b.phase);
+        var a = on * level;
+
+        if (dark) {
+          var halo = r * (2.7 + shine * 1.3);
+          var grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, halo);
+          grad.addColorStop(0, rgba(c, Math.max(0, (0.34 + shine * 0.3 + twinkle) * a)));
+          grad.addColorStop(1, rgba(c, 0));
+          ctx.fillStyle = grad;
+          ctx.fillRect(b.x - halo, b.y - halo, halo * 2, halo * 2);
+        }
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, r, 0, TAU);
+        ctx.fillStyle = rgba(dark ? mix(c, [255, 255, 255], 0.1 + shine * 0.35) : mix(c, [255, 255, 255], shine * 0.3), a);
+        ctx.fill();
+        if (!dark) {
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = rgba(mix(c, [0, 0, 0], 0.35), 0.55 * a);
+          ctx.stroke();
+        }
+        ctx.beginPath();
+        ctx.arc(b.x - r * 0.3, b.y - r * 0.32, r * 0.32, 0, TAU);
+        ctx.fillStyle = rgba([255, 255, 255], (dark ? 0.3 : 0.4) * a * (0.7 + shine));
+        ctx.fill();
+      });
+
+      if (hovered) {
+        ctx.beginPath();
+        ctx.arc(hovered.x, hovered.y, radius * 1.55 + 3.5, 0, TAU);
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = rgba(colourOf(hovered), 0.9);
+        ctx.stroke();
+      }
+    }
+
+    function loop(now) {
+      raf = 0;
+      if (!visible || document.hidden) return;
+      draw(now);
+      if (!reduced) raf = requestAnimationFrame(loop);
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(loop); }
+
+    function showTip(b) {
+      if (!tip) return;
+      if (!b) { tip.hidden = true; return; }
+      tip.textContent = '';
+      var name = document.createElement('span');
+      name.textContent = b.slug;
+      var family = document.createElement('span');
+      family.className = 'century-banner__tip-family';
+      family.textContent = families[b.family] || '';
+      tip.appendChild(name);
+      tip.appendChild(family);
+      tip.style.setProperty('--tip-colour', rgba(colourOf(b), 1));
+      tip.hidden = false;
+      var w = tip.offsetWidth, h = tip.offsetHeight;
+      var x = Math.min(Math.max(b.x - w / 2, 6), Math.max(6, W - w - 6));
+      var y = b.y - radius * 2 - h - 4;
+      if (y < 6) y = b.y + radius * 2 + 4;
+      tip.style.transform = 'translate(' + Math.round(x) + 'px,' + Math.round(y) + 'px)';
+    }
+
+    function setHovered(b) {
+      if (b === hovered) return;
+      hovered = b;
+      canvas.style.cursor = b ? 'pointer' : '';
+      showTip(b);
+      kick();
+    }
+
+    function hit(e) {
+      var r = canvas.getBoundingClientRect();
+      var x = e.clientX - r.left, y = e.clientY - r.top;
+      var best = null, bestD = radius * radius * 6;
+      beads.forEach(function (b) {
+        var dx = b.x - x, dy = b.y - y, d = dx * dx + dy * dy;
+        if (d < bestD) { bestD = d; best = b; }
+      });
+      return best;
+    }
+
+    canvas.addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'touch') setHovered(hit(e));
+    });
+    canvas.addEventListener('pointerleave', function (e) {
+      if (e.pointerType !== 'touch') setHovered(null);
+    });
+    canvas.addEventListener('pointerdown', function (e) {
+      lastType = e.pointerType;
+      if (e.pointerType !== 'touch') return;
+      var b = hit(e);
+      // A second tap on the bead already named opens it; any other names it.
+      armed = b && b === hovered ? b : null;
+      setHovered(b);
+    });
+    canvas.addEventListener('click', function (e) {
+      var b = hit(e);
+      if (!b || !href) return;
+      if (lastType === 'touch' && armed !== b) return;
+      window.location.href = href.replace('{slug}', encodeURIComponent(b.slug));
+    });
+
+    function begin() {
+      if (begun) return;
+      begun = true;
+      palette();
+      resize();
+      if (!beads.length) return;
+      born = reduced ? -1 : performance.now();
+      banner.classList.add('is-drawn');
+      kick();
+    }
+
+    resize();
+    if (window.ResizeObserver) new ResizeObserver(function () { resize(); kick(); }).observe(canvas);
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; kick(); }).observe(banner);
+    }
+    new MutationObserver(function () { palette(); kick(); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    document.addEventListener('visibilitychange', kick);
+    // Laid out once the display face has loaded, never from its fallback.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(begin);
+    else begin();
+  }
+
   function initScrollRestore() {
     var saved;
     try {
@@ -1800,5 +2117,6 @@
   initGraphMagnet();
   initGraphBanner();
   initReleaseBanner();
+  initCenturyBanner();
   initVersionCheck();
 })();
