@@ -1,6 +1,6 @@
 ---
 name: deleting-code
-description: Use when removing code, a feature, an endpoint, a config key, a column, or a dependency that appears unused, when deciding whether something is genuinely dead, when a deprecation needs a removal path and a deadline, when code has been commented out or kept "just in case", or when the callers of something cannot all be seen from inside the repository. Covers proving deadness, deprecation sequences, and removing tests and config alongside.
+description: Use when removing code, a feature, an endpoint, a config key, a column, or a dependency that appears unused, when deciding whether something is genuinely dead, when a deprecation needs a removal path and a deadline, when code has been commented out or kept "just in case", when the callers of something cannot all be seen from inside the repository, or when a confirmation, consent, or approval step is being removed because people find it tedious. Covers proving deadness, deprecation sequences, and removing tests and config alongside.
 ---
 
 # Deleting code
@@ -13,6 +13,7 @@ Deletion is the highest-leverage change available and the one people make on the
 
 - Removing a feature, endpoint, flag, module, table column, or dependency
 - Something looks unused and you are about to trust a search that found nothing
+- A confirmation, consent, or approval step is being removed because it is tedious, not because it is unused
 - A deprecation has been in place for a while with no removal date attached
 - Code was commented out rather than removed, or kept because it "might be useful"
 - Not for: removing an old implementation as the final phase of a replacement — see `incremental-migration`. Not for judging whether historical code is load-bearing — see `code-archaeology`.
@@ -36,6 +37,12 @@ Each layer below hides from the layer above it. A search for the symbol name fin
 Then instrument. This is the one case where `instrumenting-for-observability`'s rule inverts: normally you emit what changed, here you need to emit that nothing did, and a counter that only increments is the only shape that can prove absence. Add a counter or a sampled log at the entry of the suspected-dead path, ship it, and wait longer than the longest business cycle that could reach it — 30 days as an absolute floor, and one full billing or fiscal cycle for anything customer-facing. Delete when the counter is zero **and you can explain why it is zero**. Zero from a build that never reached two regions is not evidence; confirm the instrumented version is actually running everywhere before you start the clock.
 
 Search the non-code artifacts too, because they fail silently rather than loudly: dashboards, alert rules, saved queries, runbooks, support macros, CI configuration, infrastructure definitions, and translation catalogs. Deleting a log line or a metric name blanks a dashboard nobody notices until an incident.
+
+## A live control removed for friction
+
+Everything above is about proving that nothing uses a thing. A confirmation prompt, a consent screen, or an approval step removed because people find it tedious is the opposite case: it is used every time someone goes through the flow, and the complaint about it names only its most visible job. Controls like these gather second jobs quietly — the consent that is also the stated basis for a second use of the same data, the prompt that also satisfies an app store's rule, the approval that an audit report cites as its evidence.
+
+Before removing one, list everything that cites it as its justification: policies, other features, platform requirements, compliance documents, and anything downstream that assumes it ran. Relieving the friction is the goal; each second job either moves somewhere else first or narrows the removal, and deciding which is part of the change. `code-archaeology` finds the reason a thing was built; this finds the reasons it is now kept, which is a different list.
 
 ## Deprecation is a schedule, not a label
 
