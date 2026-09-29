@@ -1,6 +1,6 @@
 ---
 name: threat-modeling
-description: Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration, or a change to authentication or authorization, when a design review needs a security section, when asked what could go wrong with a system or feature, or when reasoning about attackers, attack surface, blast radius, and which risks to fix first. Also use when a limit, quota, entitlement, or uniqueness rule is enforced at the one write path whoever wrote it had in mind, while import, sync, restore, bulk seeding, or admin tooling can reach the same state, or when such a rule is checked only at creation and nothing re-checks it afterwards. Also use when a component is sandboxed, jailed, or otherwise confined, and the audit of what it can reach came back clean. Covers STRIDE, trust boundaries, data flow, attacker capability tiers, risk ranking, and enumerating every path that can produce a guarded state.
+description: Use when a design introduces a new trust boundary, a new class of sensitive data, a new external integration, or a change to authentication or authorization, when a design review needs a security section, when asked what could go wrong with a system or feature, or when reasoning about attackers, attack surface, blast radius, and which risks to fix first. Also use when a limit, quota, entitlement, or uniqueness rule is enforced at the one write path whoever wrote it had in mind, while import, sync, restore, bulk seeding, or admin tooling can reach the same state, or when such a rule is checked only at creation and nothing re-checks it afterwards. Also use when a component is sandboxed, jailed, or otherwise confined, and the audit of what it can reach came back clean, or when a local listener is called safe because it binds only to loopback. Covers STRIDE, trust boundaries, data flow, attacker capability tiers, risk ranking, and enumerating every path that can produce a guarded state.
 ---
 
 # Threat Modeling
@@ -39,6 +39,10 @@ A trust boundary is any place where the trustworthiness of the caller changes. E
 | Supply | a dependency's install hook, which runs at your privilege |
 
 For each boundary write three lines: what crosses it, what authority the far side holds, and what happens if the far side lies. **If you cannot state what happens when the far side lies, that boundary is not modeled** — and shared caches, log pipelines, and message queues are the ones consistently missed.
+
+**Loopback is a network boundary, not a trust boundary.** A listener bound to a loopback address (`127.0.0.1`, `::1`) is off the network, and the threat model tends to record that as *reaching it requires running code as this user*. Two callers break that without coming from the network. The first is the browser, which runs code from every page it has open, as this user, and will send a request or open a WebSocket to a local port a page names. Browsers have begun restricting that, but partially and differently by browser and version, so do not count on it. Cross-origin rules stop a page reading the *response*: a simple request, such as a form post, still arrives and the handler still runs, and a WebSocket handshake is not subject to those rules at all. With DNS rebinding a page can also point its own hostname at the loopback address, after which the browser treats the listener as part of that page's origin. This is `least-privilege-design`'s confused deputy seen from the target's side: the browser is the deputy, and whoever owns the listener can defend only the target. The second caller is every other account on the same machine, because they all share the loopback interface.
+
+So a local control surface is two boundaries: the web, through the browser, and the other accounts on the machine. A secret only the owning account can read closes both, because a web page cannot read local files and another account cannot read that one: a token in an owner-only file, which the client presents on every connection, never as a cookie the browser would attach on a page's behalf. Check two headers as well, which turns a page away before it reaches authentication. A browser sends `Origin` on every WebSocket handshake and on cross-origin writes, so refuse any `Origin` not on your list; some native client libraries send one too, so list theirs rather than refusing every value. And require `Host` to be the loopback name you serve, which is what defeats rebinding. Where the platform offers a channel the browser cannot address at all, such as a Unix domain socket or a named pipe, it removes the first boundary outright and hands the second to the file's own permissions.
 
 ## STRIDE as a prompt list, not a ritual
 
@@ -109,6 +113,7 @@ List them at the top of the model. Each one, if false, invalidates everything be
 | Assumption | Cheap verification |
 |---|---|
 | "This port is not reachable from the internet" | scan it from outside |
+| "Only code running as this user can reach this loopback port" | open it from a page on another origin in a browser, and connect to it from a second account on the same machine |
 | "Only our own code calls this" — service, queue, or storage path | list who can actually call, publish, or write, from access logs rather than memory |
 | "The input was sanitized upstream" | find the line that does it |
 | "Only admins hold this role" | list current role assignments |
@@ -134,6 +139,7 @@ Re-run the model when any assumption changes. That change list is the trigger fo
 - A containment claim supported by a list of what the thing can call, with no list of what it can write.
 - "That's an edge case, no real user would do that" — the attacker is not a user.
 - "It's internal-only," asserted without a check that it is.
+- "It only listens on localhost," offered as the access control rather than as the network placement.
 - "We authenticate the caller, so we're covered" — authentication answers *who*, not *what on whose behalf*.
 - "We'll do security after the MVP" — trust boundaries are architecture; they are not retrofitted, and the session that ends with zero design changes has already conceded this.
 - Nobody in the room can say which single credential could delete all customer data.

@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-29 — Switches nobody can reach
+## 2026-09-29 — A switch nobody can reach, and a local port anybody can
 
 - `configuration-management`: a feature that stays off until someone opts in
   can pass every test and still be off for everyone. Tests turn the switch on
@@ -33,6 +33,13 @@ Everything above the first `##` is preamble and is never rendered.
   and the logs count each of them as having said no. The skill now says to
   find the setting a user would actually use in the build you ship, and its
   `description:` sends that case to it.
+- `threat-modeling`: a service that only listens on `localhost` is off the
+  network, but not out of reach. Any web page open in your browser can send it
+  requests or open a WebSocket to it, and every other account on the machine
+  can connect as well. The skill now treats a local control port as two
+  boundaries and says what closes each: a secret only your account can read,
+  plus `Origin` and `Host` checks, or a socket the browser cannot address at
+  all.
 
 ## 2026-09-29 — Checking where a result was pointed before trusting it
 
