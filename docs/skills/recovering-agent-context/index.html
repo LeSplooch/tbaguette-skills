@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.0.4</span>
+      <span class="wordmark-version" dir="ltr">v2.1.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T15:18:12+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T15:18:12Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-29T17:55:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T17:55:17Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">recovering-agent-context</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T17:55:17.613894+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Reading code</span>
@@ -109,7 +109,7 @@ sqlite3 state.vscdb &quot;select key from ItemTable where key like '%chat%'&quot
 <h2 id="what-you-are-extracting">What you are extracting</h2>
 <p>Not a summary of the sessions. Five things; anything fitting none of them stays out of the brief:</p>
 <ol><li><strong>Where it stopped</strong> — the last thing actually completed, verified against the tree, and the first thing that was not.</li><li><strong>Decided, with the reason</strong> — choices already made and still standing in the code. Re-opening one of these without new information is pure waste.</li><li><strong>Already paid for</strong> — approaches tried and abandoned, and what went wrong. The single highest-value category, and the only one that exists nowhere else.</li><li><strong>Standing corrections</strong> — what the human told a previous agent to do or stop doing. These outlive the session and apply to you now.</li><li><strong>Open</strong> — questions raised and never answered. Carry them forward as questions, not as assumptions.</li></ol>
-<p>Then write it into the repo's own instruction file, so the next session inherits the brief instead of repeating the dig. A recovery you keep to yourself is one you will pay for again — and you are, right now, generating exactly the residue the next agent will be looking for.</p>
+<p>Then leave it where the next session will find it, filed by how long each part stays true. Where it stopped and what is still open go in a handoff note beside the work (<a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a>), since both are stale within a session or two. Standing corrections, and decisions the code cannot show, are candidates for the repo's own instruction file — but only the ones that pass <a class="skill-link" href="/tbaguette-skills/skills/writing-agent-instructions/"><code>writing-agent-instructions</code></a>' test for a line that earns its place, because that file is read on every turn of every future session, and a history poured into it charges all of them to save one. A recovery you keep to yourself is one you will pay for again — and you are, right now, generating exactly the residue the next agent will be looking for.</p>
 <h2 id="boundaries">Boundaries</h2>
 <p>These stores are the human's private conversations, most of them about other projects, other clients, other employers.</p>
 <ul><li>Search scoped to this repo's path. Sessions matched to other directories are not yours to read, however easy the grep would be.</li><li>Assume secrets are in there verbatim — pasted keys, tokens, <code>.env</code> dumps, customer data. Do not echo transcript content into a commit message, PR, issue, log, or any outbound message.</li><li>Committed agent artifacts in a shared repo carry a colleague's half of a conversation. Use what they establish about the code; do not read their side of it back to them.</li><li>Say which store each finding came from. &quot;A prior Codex session decided X&quot; and &quot;the repo's AGENTS.md says X&quot; carry very different weight.</li></ul>

@@ -18,6 +18,7 @@ Test each behavior at the highest layer that can fail for exactly one reason. Hi
 - Tests break during a refactor that changed no observable behavior.
 - Someone is proposing a coverage percentage or a pyramid ratio as a target.
 - Not for: how to make a chosen layer deterministic — that is `testing-the-untestable`.
+- Not for: output from a language model, whose correctness is a rate rather than a verdict — that is `evaluating-llm-output`.
 
 ## What each layer alone can catch
 

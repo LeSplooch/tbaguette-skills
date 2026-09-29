@@ -31,6 +31,8 @@ Ask in order and stop at the first disqualifier.
 | Escape cost | How many files would import it; whether its types would enter your domain model | Its types spread past one adapter — removal becomes a rewrite |
 | Provenance and license | Does the repository linked from the registry correspond to the published artifact; is there signing or build attestation; do the terms fit how you distribute | No source link, a repository that does not match the artifact, or unclear licensing |
 
+**An attestation says where a package was built, not that what was built was safe.** Signed build provenance proves the artifact came out of the project's own repository and release workflow, and that is all it proves. A worm that poisoned a cache the release job restores, or that lifted the job's publishing token from memory, publishes through that very workflow — so its releases carry valid attestations, and in 2026 more than one did. Treat provenance as a check against an artifact nobody's pipeline produced, never as a verdict on one it did; a release that appeared outside the project's usual rhythm, or minutes after an unrelated merge, is still worth the look you would give an unattested one.
+
 When a dependency lands in the "may need replacing" tier — one maintainer, pre-1.0, vendor-specific, or unmaintained — put it behind a single adapter file. That turns removal from a quarter into a day.
 
 ## Lockfiles and reproducible resolution
@@ -87,6 +89,7 @@ Suppressions are per-advisory with an expiry date. A blanket ignore is how the n
 Typosquatting and its harder variants: a hyphen or underscore swap, a scoped versus unscoped pair, the same name in a different registry, a plausible "successor" name, and **dependency confusion** — a public package matching the name of an internal one that was never published.
 
 - Copy package names from the project's own documentation — never from a search result, a chat message, a blog post, or a generated suggestion — and confirm the namespace, repository, and download signals match the package you meant.
+- A name a model suggests is the most dangerous of those, for a reason beyond being unverified: a model invents the *same* plausible name again and again, so the invention is predictable enough to register in advance. That is the whole of the attack — publish under the names models make up, then wait. A package that exists but is weeks old, with no history before the day it was needed, under a name nobody on the project typed, is the signature.
 - Dependency confusion is fixed by configuration, not vigilance: bind your internal namespace to your internal registry and never configure a public registry as a fallback for internal names. It is the one attack in this list that succeeds with nobody making a mistake at the keyboard. Reserve your internal names publicly where the ecosystem allows it.
 - This check does not exist at runtime. Once installed, a squatted package is indistinguishable from the real one.
 
@@ -112,7 +115,7 @@ thousand lines you will never open. A skill is a page of English. The review tha
 is impossible everywhere else is merely tedious here, which removes the usual
 excuse.
 
-So read it, all of it, and ask three questions the code-shaped checks do not:
+So read it, all of it, and ask four questions the code-shaped checks do not:
 
 - **Does every instruction serve the stated purpose?** The tell is a directive
   that has nothing to do with the job: appending a value to an outbound URL,
@@ -123,6 +126,14 @@ So read it, all of it, and ask three questions the code-shaped checks do not:
   documented case — which survive visual review perfectly and reach the model
   intact. Pipe the file through something that shows non-ASCII and zero-width
   characters rather than trusting a rendered view of it.
+- **Does every name it hands the agent resolve to the thing it means?** A skill
+  written with a model's help can carry a package, command, or URL the model
+  invented, and every agent that follows the skill will then install or fetch
+  that name — which is exactly the list a squatter registers from. One such
+  invented package, run on the fly by a pair of skills, had been copied into
+  more than two hundred repositories when a researcher registered the name
+  and watched the downloads arrive. Look each name up before adopting the
+  skill, and before publishing one.
 - **Does it write into anything that outlives it?** The instruction that matters
   most is the one telling the agent to add a line to a repository's own
   instruction file or memory. That converts a removable dependency into a

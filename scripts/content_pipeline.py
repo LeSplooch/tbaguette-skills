@@ -1,6 +1,6 @@
 """Content-extraction pipeline for the TBaguette skills showcase site.
 
-Reads the 98 skill directories under ``~/.claude/skills/TBaguette/skills/``
+Reads the 101 skill directories under ``~/.claude/skills/TBaguette/skills/``
 (each a ``SKILL.md`` with YAML frontmatter and a markdown body; one skill,
 ``formidable``, additionally carries a ``reference/`` tree of stack and
 command reference files) and produces a single JSON-serializable dict that
@@ -121,6 +121,7 @@ CATEGORIES: list[dict] = [
             "choosing-test-scope",
             "grounding-test-doubles",
             "writing-the-failing-test-first",
+            "evaluating-llm-output",
         ],
     },
     {
@@ -156,6 +157,7 @@ CATEGORIES: list[dict] = [
             "rate-limiting-and-backpressure",
             "tracking-data-provenance",
             "keeping-copies-in-sync",
+            "building-llm-features",
         ],
     },
     {
@@ -197,6 +199,7 @@ CATEGORIES: list[dict] = [
         "title": "Communicating",
         "skill_slugs": [
             "writing-durable-docs",
+            "writing-agent-instructions",
             "writing-adrs",
             "writing-release-notes",
             "writing-postmortems",

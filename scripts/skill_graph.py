@@ -273,7 +273,7 @@ def build_graph(content: dict, *, skill_url_template: str) -> dict:
     """The whole graph document for one locale's content dict.
 
     skill_url_template holds a literal "{slug}" -- the browser fills it in,
-    so the JSON carries one URL pattern instead of ninety-eight URLs."""
+    so the JSON carries one URL pattern instead of one hundred and one URLs."""
     categories = [
         {"slug": c["slug"], "title": c["title"], "skill_slugs": list(c["skill_slugs"])}
         for c in content["categories"]

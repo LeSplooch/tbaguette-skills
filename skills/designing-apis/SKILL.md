@@ -1,6 +1,6 @@
 ---
 name: designing-apis
-description: Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint, an IPC or wire message, a plugin contract, or an exported module boundary. Also use when a design keeps per-client state on the serving instance, or when session affinity is what makes it scale. Covers naming and granularity, required versus optional parameters, statelessness and per-request identity, defaults, pagination and ordering, growing an enum, opaque tokens, separating write paths by data provenance, deprecation and sunset, versioning, and judging whether a proposed change is breaking.
+description: Use when defining an interface other code will call — a public function or library entry point, an HTTP or RPC endpoint, an IPC or wire message, a plugin contract, an exported module boundary, or a tool, command, or server an agent will call. Also use when a design keeps per-client state on the serving instance, or when session affinity is what makes it scale. Covers naming and granularity, required versus optional parameters, statelessness and per-request identity, defaults, pagination and ordering, growing an enum, opaque tokens, separating write paths by data provenance, deprecation and sunset, versioning, and judging whether a proposed change is breaking.
 ---
 
 # Designing APIs
@@ -78,6 +78,20 @@ that has to stay open. Give it a resource the client can create, poll, and
 cancel — long-lived connections then become an optimisation over polling rather
 than the mechanism the design depends on.
 
+## When the caller is a model
+
+A tool an agent calls, a command-line program it drives, a test runner or linter it iterates against, a server that exposes operations to one — each is an API whose caller reads every byte you return, pays for every byte in the working memory it reasons with, and picks among operations by their names and descriptions alone. Everything above still holds. What changes is which mistakes are expensive.
+
+- **The name and description are the contract the caller actually reads.** It never sees the code, so the description says what the operation is for, when to use it rather than its neighbour, and what each parameter means in the caller's terms. Operations whose names share a prefix by resource are chosen correctly more often than a flat list of verbs.
+- **One operation per task, not per stored entity.** The rule from *Shape and granularity* bites harder here: a caller that must list everything and filter it has spent its context on rows it discards. Offer the search, not the dump.
+- **Bound every response by default.** A limit, a truncation that says how to get the rest, a summary first with detail written to a file or behind a follow-up call. A test runner that prints ten thousand lines of passing tests has hidden its one failure from the reader that has to fix it.
+- **Identifiers the caller can carry.** A model copies a long random string between calls less reliably than a name or a short id, and a wrong copy looks like a missing record. Keep cursors opaque; make the entities it has to refer back to legible.
+- **An error message is the caller's retry logic.** It acts on the text, so say what to do next — the valid values, the call to make first, the closest match — alongside the stable code `modeling-errors` requires. A stack trace tells a model nothing it can use. A check it iterates against should say how to fix what it flags, not only that it is wrong.
+- **Give it a fast mode, because it cannot feel time passing.** A default that runs a sample in seconds, with the full run on request, keeps a caller from spending an hour on a loop it would have stopped a human from starting.
+- **A check an agent iterates against must be close to exact.** It will satisfy the check rather than the intent, so every gap in the check becomes a behavior; `confirming-before-claiming-done` lists what that looks like from the other side.
+
+Test it the way it will be used: give a model real tasks and read the transcripts. Wrong operation chosen, parameters misfilled, the same call repeated — each is a finding about the name, the description, or the shape of the response, and fixes to those are measured the way any model-facing change is (`evaluating-llm-output`).
+
 ## Versioning and the compatibility contract
 
 The menu of versioning strategies and their real costs is the same whether you're picking one now or dealing with a contract that's already shipped — see `schema-evolution`'s versioning table rather than a second copy here. What belongs at design time instead: state three things explicitly before shipping v1 — which surface is covered, how long an obsolete thing keeps working (in absolute time or releases), and how a break is signaled. **Deprecation without a runtime signal is not deprecation** — nobody reads changelogs; things that emit warnings get fixed. "Experimental" is only real when it is mechanically unpleasant to use (opt-in flag, `unstable_` prefix); a documentation note does not stop anyone from depending on it.
@@ -95,6 +109,7 @@ The menu of versioning strategies and their real costs is the same whether you'r
 | Callers keep getting the call order wrong | Sequencing is a real constraint and belongs inside one call or an explicit state machine |
 | Support asks callers to "check the error text" | No stable error code in the contract |
 | A caller broke when you changed a cursor's format | Token documented as opaque but never made opaque |
+| An agent keeps calling the wrong tool, or retries the same failing call | The name and description never said when to use it, and the error said what failed but not what to do instead |
 | An outside recommendation trips a threshold meant for first-party evidence | One write path served two provenances, so the row records the value and forgets where it came from |
 
 ## Red flags

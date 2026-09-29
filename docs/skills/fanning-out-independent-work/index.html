@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.0.4</span>
+      <span class="wordmark-version" dir="ltr">v2.1.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T15:18:12+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T15:18:12Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-29T17:55:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T17:55:17Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">fanning-out-independent-work</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T17:55:17.613894+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Planning and delegation</span>
@@ -98,9 +98,10 @@
 <h2 id="reconciling-what-comes-back">Reconciling what comes back</h2>
 <p>Results land independently; integration happens once, together — not piecemeal as each agent finishes.</p>
 <ul><li>Check for the collisions the dispatch was supposed to prevent: did two agents touch the same file, the same config key, the same exported name?</li><li>Run the full verification pass across the combined result, not per agent — each slice can be internally correct and still break once merged.</li><li>An agent's own summary of what it did is a claim, not a diff; verify the merged result the same way any other completion claim gets verified (see <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a>).</li></ul>
+<p><strong>The width of a fan-out is set by the review, not by the dispatch.</strong> Starting another agent costs one line; reading what it produced costs whatever reading a diff that size costs, and it is the one step that does not parallelise. Fan out wider than someone can actually review and the extra agents do not finish sooner — their output queues, gets skimmed, or gets merged on its own summary, which is the failure the bullets above exist to prevent. Size the batch to what will be read properly before the next batch lands; generated changes tend to arrive larger, and in the studies so far with more issues per change, than hand-written ones, so that number is smaller than it feels.</p>
 <p>An agent that quietly did more than its assignment — fixed something adjacent, renamed a neighbor while it was in there — is scope drift wearing a parallel-agent costume (see <a class="skill-link" href="/tbaguette-skills/skills/managing-scope-drift/"><code>managing-scope-drift</code></a>). Catch it the same way: does the report account for everything asked, and nothing extra?</p>
 <h2 id="common-mistakes">Common mistakes</h2>
-<table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Parallel agents all made the same wrong assumption</td><td>They were forked from one session rather than started cold, so they inherited one set of assumptions instead of testing the prompt against none</td></tr><tr><td>Two agents' diffs conflict on the same file</td><td>Write-sets were assumed disjoint, never actually checked</td></tr><tr><td>A &quot;fixed&quot; task breaks a sibling task</td><td>The two shared a root cause and needed one investigation, not two</td></tr><tr><td>Integration trusted a summary that said &quot;done&quot;</td><td>The combined result was never re-verified</td></tr><tr><td>An agent changed far more than the task named</td><td>The prompt stated a goal but never a scope boundary</td></tr><tr><td>Parallel dispatch took as long as doing it serially</td><td>The tasks were sequential underneath a flat list; one agent sat waiting on another's output</td></tr><tr><td>A shared file breaks right after every agent reports success</td><td>Every agent tried to update it independently instead of once, after, sequentially</td></tr><tr><td>A batch of &quot;identical&quot; sibling prompts costs noticeably more than the same work done once</td><td>Siblings varied in a dimension the cache keys on — model, tool set, working directory — for no reason the task required</td></tr></tbody></table>
+<table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Parallel agents all made the same wrong assumption</td><td>They were forked from one session rather than started cold, so they inherited one set of assumptions instead of testing the prompt against none</td></tr><tr><td>Two agents' diffs conflict on the same file</td><td>Write-sets were assumed disjoint, never actually checked</td></tr><tr><td>A &quot;fixed&quot; task breaks a sibling task</td><td>The two shared a root cause and needed one investigation, not two</td></tr><tr><td>Integration trusted a summary that said &quot;done&quot;</td><td>The combined result was never re-verified</td></tr><tr><td>Several agents' work merged on the strength of their summaries</td><td>More agents were dispatched than anyone could review before the results landed</td></tr><tr><td>An agent changed far more than the task named</td><td>The prompt stated a goal but never a scope boundary</td></tr><tr><td>Parallel dispatch took as long as doing it serially</td><td>The tasks were sequential underneath a flat list; one agent sat waiting on another's output</td></tr><tr><td>A shared file breaks right after every agent reports success</td><td>Every agent tried to update it independently instead of once, after, sequentially</td></tr><tr><td>A batch of &quot;identical&quot; sibling prompts costs noticeably more than the same work done once</td><td>Siblings varied in a dimension the cache keys on — model, tool set, working directory — for no reason the task required</td></tr></tbody></table>
 <h2 id="red-flags">Red flags</h2>
 <ul><li>&quot;These are basically the same kind of task&quot; standing in for an actual independence check.</li><li>One prompt template copy-pasted per agent with only the filename swapped.</li><li>No stated output shape, on the assumption the agent will report something useful.</li><li>Treating &quot;all tests pass&quot; in a summary as true without re-running it.</li><li>A task list whose order turns out to matter, discovered only after two agents are already running.</li><li>Reaching for a forked agent because it is cheaper, on work whose whole point was that it starts cold.</li></ul></div></article>
 <nav class="container prevnext" aria-label="Skill navigation"><a class="prevnext__link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/">

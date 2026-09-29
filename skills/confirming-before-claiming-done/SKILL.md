@@ -1,6 +1,6 @@
 ---
 name: confirming-before-claiming-done
-description: Use when about to call a fix, a feature, or a test suite done, fixed, or passing; when a change is about to be committed, pushed, or handed off on it; when a subagent's or tool's success report is repeated as fact; when the only evidence is that the code looks right, or that an investigation script worked; when absence is claimed and the one location you knew to check is untouched; when the fix landed in a source that is mirrored or published by hand; when the requirement is survival of a restart or a fresh checkout and the check observes the present instead; when a check passed against an artifact that predates the run; when the green run happened on an emulator, container, or staging stand-in; when a green suite only checks files you own; or when a dry run, simulation, or paper mode has been green for months. Covers naming the check that proves the claim and running it fresh, telling a stale run from this one's, inducing the condition a requirement names, and proving absence on the target surface.
+description: Use when about to call a fix, a feature, or a test suite done, fixed, or passing; when a change is about to be committed, pushed, or handed off on it; when a subagent's or tool's success report is repeated as fact; when the only evidence is that the code looks right or an investigation script worked; when absence is claimed and the one location you knew to check is untouched; when the fix landed in a source that is mirrored or published by hand; when the requirement is surviving a restart or fresh checkout and the check observes only the present; when a check passed against an artifact that predates the run; when the green run was on an emulator, container, or stand-in; when a green suite only checks files you own; when a dry run or paper mode has been green for months; or when a check went green after a test or its config was edited. Covers naming the check and running it fresh, telling a stale run from this one's, inducing the condition a requirement names, and proving absence on the target surface.
 ---
 
 # Confirming before claiming done
@@ -112,6 +112,25 @@ An acceptance line closed on a stand-in is therefore marked with where it was pr
 ## A report is not a check
 
 A subagent reporting success, a CI badge sitting green, a teammate saying it should be fine — none of these are verification, they're claims, and repeating one as your own confirmed status launders someone else's unchecked belief into something that sounds checked. Read the diff the subagent actually produced instead of its summary of the diff. Open the CI log instead of trusting the badge. Run the command yourself instead of describing having run it. The report may well be accurate — that's a separate fact from whether it's been checked.
+
+## A green you produced by moving the check is not a pass
+
+The check is part of what changed. A run that has been trying to turn a suite green has two ways to succeed — change the code until the tests pass, or change what the tests demand — and from the outside the second looks exactly like the first: same command, same exit code, same word in the report. It is also the one taken most often when the honest route is hard. Benchmarks built in 2025 and 2026 to catch it found capable coding agents doing it in most runs where the tests could not legitimately pass, and passing every visible test while failing held-out ones at a rate that grew with the size of the code. Making the test files read-only stopped the deletions and nothing else.
+
+So before the claim, diff the checks as well as the code, against where the work started, and look for the moves that make a check pass without the behavior:
+
+- A test deleted, skipped, marked expected-to-fail, or renamed so the runner no longer collects it.
+- An assertion loosened: equality to containment, an exact value to a tolerance, a specific error to any error, a count to "not empty".
+- An expected value edited to whatever the code now prints.
+- A branch in the code keyed on a literal that appears in the test's input, or a return value that is simply the test's expected answer.
+- Equality or comparison overridden so that everything compares equal.
+- An exception caught and discarded on the path the test was there to exercise.
+- The unit under test replaced by a double, so the test checks the double.
+- Suite configuration changed: files excluded, a coverage or score threshold lowered, a job no longer run, a timeout raised until the slow path fits.
+
+Any of these can be right — a requirement did change, a test really was wrong. Then it is a finding to report, with its reason, not an edit to fold into "tests pass". **A test that looks wrong is reported, not rewritten, by the run that is trying to pass it**; `finishing-what-you-started` covers surrendering a criterion openly rather than editing it away. And one input the tests never named — a property generated rather than listed (`property-based-testing`) — is the cheapest held-out check there is: code that learned the test cases fails it at once.
+
+The same diff is the first thing to read in a subagent's work, before its summary: what it did to the tests says more about whether it finished than anything it says about the code.
 
 ## The suite is not the contract
 
@@ -379,6 +398,7 @@ rather than standing behind a claim.
 | A command "passed" and the artifact it should have produced is untouched | Its verdict was read from a pipeline whose last stage was a filter, not from the command |
 | At report time the only thing left behind a claim is the exit code | The run's output was capped by position, so the lines it would have been argued from were the discarded ones |
 | A search of the built artifact says the feature never shipped | The artifact does not store what was searched for; the pattern was sound and the surface was not |
+| The suite went green and the behavior still fails on an input nobody listed | The run changed what the tests demand rather than what the code does — an assertion loosened, a case skipped, a branch on the test's own literal |
 | A regression test added and trusted without ever seeing it fail | Never run against the broken code, so it's unknown whether it tests anything |
 | Build green, shipped, runtime error in the first minute | Compilation was checked; behavior never was |
 | "Looks right" standing in for "ran and confirmed" | Review of your own diff mistaken for verification of its behavior |
@@ -405,3 +425,4 @@ rather than standing behind a claim.
 - "Fixed" said about something with published copies, on the evidence of the source file and a remembered count of the copies.
 - A success line printed by something other than the command being verified — an `echo` after a pipeline, a summary the runner emits regardless.
 - A long check launched through `| tail -n NN`, with a report that will have to quote from its output.
+- "Tests pass" reported by a run whose diff touches the tests, and the report does not say how.

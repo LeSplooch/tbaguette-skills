@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.0.4</span>
+      <span class="wordmark-version" dir="ltr">v2.1.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T15:18:12+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T15:18:12Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-29T17:55:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T17:55:17Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">choosing-test-scope</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T17:55:17.613894+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Testing</span>
@@ -75,7 +75,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Test each behavior at the highest layer that can fail for exactly one reason. Higher than that and a red test names no cause; lower than that and a green test proves nothing about the shipped system.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Adding coverage and unsure whether it belongs in a unit, integration, contract, or end-to-end test.</li><li>The end-to-end suite takes long enough that people rerun it instead of reading it.</li><li>A defect reached production while every layer of tests was green.</li><li>A double has grown enough conditional logic that it is a second implementation of a dependency.</li><li>Tests break during a refactor that changed no observable behavior.</li><li>Someone is proposing a coverage percentage or a pyramid ratio as a target.</li><li>Not for: how to make a chosen layer deterministic — that is <a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a>.</li></ul>
+<ul><li>Adding coverage and unsure whether it belongs in a unit, integration, contract, or end-to-end test.</li><li>The end-to-end suite takes long enough that people rerun it instead of reading it.</li><li>A defect reached production while every layer of tests was green.</li><li>A double has grown enough conditional logic that it is a second implementation of a dependency.</li><li>Tests break during a refactor that changed no observable behavior.</li><li>Someone is proposing a coverage percentage or a pyramid ratio as a target.</li><li>Not for: how to make a chosen layer deterministic — that is <a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a>.</li><li>Not for: output from a language model, whose correctness is a rate rather than a verdict — that is <a class="skill-link" href="/tbaguette-skills/skills/evaluating-llm-output/"><code>evaluating-llm-output</code></a>.</li></ul>
 <h2 id="what-each-layer-alone-can-catch">What each layer alone can catch</h2>
 <table><thead><tr><th>Layer</th><th>Only it catches</th><th>Typical cost</th><th>When red, it points at</th><th>Survives internal refactor</th></tr></thead><tbody><tr><td>Unit (in process, no I/O)</td><td>Branch logic, edge cases, arithmetic, error paths hard to trigger from outside</td><td>&lt;10ms</td><td>One function</td><td>Only if it tests the module's boundary, not its internals</td></tr><tr><td>Integration (your code plus one real dependency)</td><td>Query dialect, migrations, transaction and isolation behavior, serialization, driver semantics, index and collation effects</td><td>10ms–2s</td><td>One seam</td><td>Yes</td></tr><tr><td>Contract (consumer expectations verified against the provider)</td><td>Schema drift and breaking changes between independently deployed parties</td><td>&lt;1s per pair</td><td>One party</td><td>Yes</td></tr><tr><td>End-to-end (whole stack, real transport)</td><td>Wiring, configuration, authentication, deployment topology, cross-service ordering</td><td>5s–minutes</td><td>Nothing specific — diagnosis is the dominant cost</td><td>Yes</td></tr><tr><td>Manual and exploratory</td><td>Qualities nobody can specify: comprehensibility, aesthetics, surprise</td><td>Human time</td><td>A conversation</td><td>n/a</td></tr></tbody></table>
 <p>The &quot;cost&quot; column is the smallest part of the real cost. Maintenance and diagnosis time dominate: an end-to-end failure typically consumes a person's afternoon before anyone knows which component moved, and that cost recurs on every flake.</p>
@@ -177,6 +177,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/writing-the-failing-test-first/">
       <span class="see-also__name">writing-the-failing-test-first</span>
       <span class="see-also__summary">Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written.</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/evaluating-llm-output/">
+      <span class="see-also__name">evaluating-llm-output</span>
+      <span class="see-also__summary">Use when a feature&#x27;s correctness depends on text, a label, a decision…</span>
     </a></li>
   </ul>
 </div>

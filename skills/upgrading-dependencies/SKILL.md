@@ -1,6 +1,6 @@
 ---
 name: upgrading-dependencies
-description: Use when dependency versions have fallen behind, when a security advisory names a package in use, when planning a major version bump or a runtime upgrade, when a lockfile diff brings transitive changes nobody asked for, when an upgrade breaks something the test suite did not catch, when deciding whether to batch bumps or take them one at a time, or when a library has become unmaintained and replacing it is on the table.
+description: Use when dependency versions have fallen behind, when a security advisory names a package in use, when planning a major version bump or a runtime upgrade, when a lockfile diff brings transitive changes nobody asked for, when an upgrade breaks something the test suite did not catch, when deciding whether to batch bumps or take them one at a time, when a library has become unmaintained and replacing it is on the table, or when the model a feature calls is being changed or retired.
 ---
 
 # Upgrading dependencies
@@ -39,6 +39,12 @@ Work in this order: release notes, then the deprecation and removal sections spe
 - Before running anything, search your own code for each removed symbol, renamed export, changed config key, and changed default.
 - Semantic versioning promises API compatibility and says nothing about behavior. The genuinely dangerous release is a minor that changes a default: timeout, retry count, pool size, certificate verification, encoding, precision, sort stability.
 - A changelog that is just a list of commit subjects is itself a finding. The maintainer is not tracking what they broke, so budget more verification, not less.
+
+## A model identifier is a dependency with a date on it
+
+Code that calls a hosted language model depends on the string naming the model, and that string behaves like no other version pin. It has no lockfile and no registry to mirror from: providers retire models on a published schedule, and after the date every request fails, so the "stay on the old version" option that every other row in the table above assumes simply expires. And every change of it is behavioral by definition — the API shape stays put while the output, the refusals, the tokenizer, the defaults, and which parameters are still accepted all move at once.
+
+So pin the exact dated identifier rather than an alias that moves under you, keep the retirement date beside each pinned identifier where the team's other upgrade deadlines live, and start the move while the old model still answers, because the evaluation needs both side by side. Treat it as a major in the table above: its own change, never with a prompt edit in the same deploy, gated on the feature's evals rather than its unit tests (`evaluating-llm-output`), and rolled out in the canary steps below. `building-llm-features` covers the rest of what calling a model at runtime involves.
 
 ## Mechanical versus behavioral
 

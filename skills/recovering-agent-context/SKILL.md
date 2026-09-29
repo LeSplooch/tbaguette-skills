@@ -108,7 +108,7 @@ Not a summary of the sessions. Five things; anything fitting none of them stays 
 4. **Standing corrections** — what the human told a previous agent to do or stop doing. These outlive the session and apply to you now.
 5. **Open** — questions raised and never answered. Carry them forward as questions, not as assumptions.
 
-Then write it into the repo's own instruction file, so the next session inherits the brief instead of repeating the dig. A recovery you keep to yourself is one you will pay for again — and you are, right now, generating exactly the residue the next agent will be looking for.
+Then leave it where the next session will find it, filed by how long each part stays true. Where it stopped and what is still open go in a handoff note beside the work (`checkpointing-long-runs`), since both are stale within a session or two. Standing corrections, and decisions the code cannot show, are candidates for the repo's own instruction file — but only the ones that pass `writing-agent-instructions`' test for a line that earns its place, because that file is read on every turn of every future session, and a history poured into it charges all of them to save one. A recovery you keep to yourself is one you will pay for again — and you are, right now, generating exactly the residue the next agent will be looking for.
 
 ## Boundaries
 

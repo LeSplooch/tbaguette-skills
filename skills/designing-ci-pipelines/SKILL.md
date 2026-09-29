@@ -1,6 +1,6 @@
 ---
 name: designing-ci-pipelines
-description: Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI, when a stale cache produces a wrong result, when deciding which checks block a merge, when retries are proposed to make a build green, when a pull request from a fork needs access it must not have, when a scheduled, nightly, or cron job is added, when a slow-cycle job keeps failing on one missing secret, credential, or tool after another, or when one that was supposed to be running turns out never to have run. Covers stage ordering, enumerating a job's prerequisites in one preflight step rather than one failure per cycle, feedback budgets, cache keys, required versus advisory checks, runner permissions, forcing a scheduled job's first run before trusting it, and reporting age of last success rather than status of last run.
+description: Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI, when a stale cache produces a wrong result, when deciding which checks block a merge, when retries are proposed to make a build green, when a pull request from a fork needs access it must not have, when a job runs an agent over an issue, comment, or pull request someone else wrote, when a scheduled, nightly, or cron job is added, when a slow-cycle job keeps failing on one missing secret, credential, or tool after another, or when one that was supposed to be running turns out never to have run. Covers stage ordering, enumerating a job's prerequisites in one preflight step rather than one failure per cycle, feedback budgets, cache keys, required versus advisory checks, runner permissions, forcing a scheduled job's first run before trusting it, and reporting age of last success rather than status of last run.
 ---
 
 # Designing CI pipelines
@@ -70,6 +70,8 @@ Give every failure enough to act on: the exact command, the resolved tool versio
 - Default the job token to read-only and grant additional scopes per job, never per pipeline.
 - A pull request from a fork is attacker-controlled code. It gets no secrets, no write-scoped token, no self-hosted runner, and no elevated run of a pipeline definition it authored.
 - Split the flow: an untrusted job builds and tests with no credentials and uploads an artifact; a trusted job triggered on that run holds the secrets, consumes the artifact, and never executes code from it.
+- **A job that runs a model over text someone else wrote is running their instructions.** An issue, a comment, a pull request's title or body, a commit message, a fetched page — to a job whose agent reads it, that text is code the author supplied, and the fork rule applies in full whatever event triggered the job. It gets no secret it could print, no write-scoped token, no cache that a publishing job later restores, and no output a stranger can read — a public comment, a public log — while it holds anything worth reading. Do not lean on a filter over the output: filters have been talked past with a single connecting word. In 2026 this path leaked tokens into public logs, posted a private repository's contents as a public comment, and, through an issue title and a shared cache, put a malicious release onto a package registry.
+- **Agent and editor configuration in the checkout is a pipeline definition the pull request authored.** A project-level list of tool servers, an agent settings file with hooks, an editor task that runs when the folder opens — each is code a tool executes on opening the tree, before any model reads a word. A job that points an agent at an untrusted checkout runs whatever that checkout configured, and the interactive "trust this folder?" prompt that would have stopped it does not exist in headless mode. Run such jobs with project-level agent configuration disabled, and review diffs to those files as pipeline changes.
 - Pin third-party actions, plugins, and images by digest or commit hash. A floating tag is remote code execution with a changelog.
 - Pass secrets through the environment, not command lines — process listings and traces leak them — and treat every log line as public. Prefer short-lived federated credentials to long-lived static ones, and gate production deploys behind an approval.
 - Review pipeline definitions like production code, and require the change that edits a pipeline to be exercised by that same change, or it lands untested on the default branch by construction.
@@ -110,6 +112,7 @@ So give any job with an expensive cycle a first step that enumerates every prere
 | 40-minute pull-request pipeline | stages ordered by history rather than cost-to-signal |
 | More runners did not help | the critical path is serial, or the cache misses every run |
 | A secret leaked through a pull request | a fork's PR ran with the same permissions as a branch PR |
+| An agent job posted a token, or private content, where anyone could read it | the job's model read text a stranger wrote while it held a secret and a public output; the fork rule was applied to code and not to prose |
 | The same failure gets debugged twice | logs omitted the command and the resolved versions |
 | A scheduled job's dashboard is green and the thing it maintains is months stale | Last-run status reported where age of last success was the question |
 | A nightly job has failed for weeks, each time on a different missing secret | No preflight, so each run discovers exactly one prerequisite and the cycle is a night |
@@ -123,6 +126,7 @@ So give any job with an expensive cycle a first step that enumerates every prere
 - Logic accumulating in pipeline configuration that exists nowhere a developer can run
 - A check that has been advisory for more than a month
 - Any job holding secrets that executes code from a fork
+- Any job holding secrets whose agent reads an issue, comment, or pull request body a stranger can write
 - "The build is red, but it's unrelated" said more than once in a week — trust is already gone, and a real failure will be rerun rather than read
 - A scheduled job merged and never once run by hand — its first real execution will be unattended, at whatever hour it fires
 - Job health shown as pass/fail, with no way to see a job that has never executed

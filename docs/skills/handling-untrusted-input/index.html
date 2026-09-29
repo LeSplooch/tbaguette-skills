@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.0.4</span>
+      <span class="wordmark-version" dir="ltr">v2.1.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T15:18:12+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T15:18:12Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-29T17:55:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T17:55:17Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">handling-untrusted-input</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T17:55:17.613894+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Security (defensive)</span>
@@ -77,7 +77,7 @@
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Parsing anything from a request, file, upload, header, filename, queue message, environment, or config.</li><li>Assembling a query, shell command, filesystem path, URL, template, or markup that contains a variable.</li><li>Reviewing code where a function is named <code>sanitize</code>, <code>clean</code>, <code>escape</code>, or <code>isValid</code>, or accepting nested structures, archives, images, or any format with a third-party parser behind it.</li><li>Not for: deciding what privilege the parsing process runs with (<a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a>); deciding whether the boundary should exist (<a class="skill-link" href="/tbaguette-skills/skills/threat-modeling/"><code>threat-modeling</code></a>).</li></ul>
 <h2 id="what-is-untrusted-the-surprising-entries">What is untrusted (the surprising entries)</h2>
-<p>Your database — earlier writes passed an older, buggier validator, which is the entire mechanism of stored XSS. Another internal service — its identity is authenticated, its <em>caller's intent</em> is not. Config and environment, because deploy templates interpolate. Queue payloads. Filenames, headers, cookies, and declared content types. Data you produced yourself that round-tripped through a client. Error strings from downstream systems, the moment they are logged or reflected.</p>
+<p>Your database — earlier writes passed an older, buggier validator, which is the entire mechanism of stored XSS. Another internal service — its identity is authenticated, its <em>caller's intent</em> is not. Config and environment, because deploy templates interpolate. Queue payloads. Filenames, headers, cookies, and declared content types. Data you produced yourself that round-tripped through a client. Error strings from downstream systems, the moment they are logged or reflected. And a language model's output, your own feature's included: anything that reached its context can steer what it writes, so its text is exactly as trusted as the least trusted thing it read, and it reaches a query, a page, a shell, or a fetched URL only through the same encoders as a request field. A schema on the output makes it parse; it does not make it safe or true (<a class="skill-link" href="/tbaguette-skills/skills/building-llm-features/"><code>building-llm-features</code></a>).</p>
 <p>The trusted set is short and enumerable: values this process constructed, from constants, since the last boundary crossing.</p>
 <h2 id="parse-dont-validate">Parse, don't validate</h2>
 <p>At the boundary, convert bytes into a value whose type makes invalid states unrepresentable, then pass the typed value inward. Never pass the raw string onward next to a boolean asserting it was checked.</p>

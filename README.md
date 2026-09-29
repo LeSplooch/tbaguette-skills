@@ -1,6 +1,6 @@
 # TBaguette's Atelier
 
-98 skills for [Claude Code](https://claude.com/claude-code) — judgment calls, code
+101 skills for [Claude Code](https://claude.com/claude-code) — judgment calls, code
 comprehension, change discipline, testing, debugging, systems design, defensive
 security, communication, and tooling. Every one is project-agnostic, stack-agnostic,
 and language-agnostic, so the same skill works whether you're in a Rust firmware repo
@@ -87,7 +87,7 @@ prompt is written to discover the rest instead of asserting them.
   when to stop, and `karen-and-the-manager`, a persona-forced pass that refuses to be
   satisfied until it's found everything.
 - **Reading code, landing changes, testing, debugging, designing systems, defensive
-  security, communicating, environment and tooling** — 8 more categories, 75 more
+  security, communicating, environment and tooling** — 8 more categories, 76 more
   skills. Full breakdown in [`CATALOG.md`](CATALOG.md) or, better, on the site above.
 
 ## What it runs

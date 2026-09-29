@@ -1,6 +1,6 @@
 # TBaguette's Atelier
 
-98 skills, shipped as the `tbaguette-atelier@skills-dir` plugin. Invoke any of them as
+101 skills, shipped as the `tbaguette-atelier@skills-dir` plugin. Invoke any of them as
 `tbaguette-atelier:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -89,6 +89,7 @@ Atelier skill hands off to a neighbour.
 | `choosing-test-scope` | Unit, integration, contract, end-to-end — and what only each catches |
 | `grounding-test-doubles` | Fixture provenance; capture over compose; one live test per integration; unrecognized shapes must raise |
 | `writing-the-failing-test-first` | The red-green-refactor cycle itself — failing test first, minimal code, refactor on green |
+| `evaluating-llm-output` | Output a model produced: reading real outputs before choosing a metric, one pass/fail check per failure, measuring a model judge against human labels, a pass rate reported with its uncertainty |
 
 ## Debugging and performance
 
@@ -122,6 +123,7 @@ Atelier skill hands off to a neighbour.
 | `rate-limiting-and-backpressure` | Shedding vs queueing vs slowing down; retry storms |
 | `tracking-data-provenance` | Observed vs imported vs inferred vs defaulted; confidence laundering; one write path per provenance |
 | `keeping-copies-in-sync` | A fact recorded in more than one place; generate over copy, and check over trust |
+| `building-llm-features` | Code that calls a model at runtime: a pinned model with a retirement date, prompts as versioned code, refusal and truncation as outcomes, output as untrusted input, budgets, and a fallback that must pass the same evals |
 
 ## Security (defensive)
 
@@ -151,6 +153,7 @@ Atelier skill hands off to a neighbour.
 | Skill | For |
 |---|---|
 | `writing-durable-docs` | The four doc types; documenting why; deleting stale docs |
+| `writing-agent-instructions` | AGENTS.md, CLAUDE.md, rules files and skills: the test a line must pass, rules moved into tools that enforce them, a map rather than an encyclopedia, descriptions as triggers, testing against a run without it |
 | `writing-adrs` | Recording a decision so a future reader can tell if it still applies |
 | `writing-release-notes` | Written for the person deciding whether to upgrade |
 | `writing-postmortems` | Blameless in mechanism; contributing factors over root cause |

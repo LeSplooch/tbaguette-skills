@@ -31,6 +31,70 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-09-29 — Three new skills for software that talks to a model, and what this year's agent incidents changed
+
+- `secrets-hygiene` has an exception to "revoke first". If a credential was
+  stolen by something still running on a machine that held it, such as a
+  poisoned package or a worm, revoking it can set that thing off. Malware
+  that wipes the home directory the moment its stolen token stops working has
+  shipped more than once. Take the machine off the network and remove what it
+  installed to keep itself running first, then revoke from a different
+  machine. For any other leak, revoke first as before.
+- `designing-ci-pipelines`: a CI job that runs an agent over an issue, a
+  comment, or a pull request someone else wrote now gets the same rules as a
+  pull request from a fork. That means no secrets, no write token, no cache a
+  publishing job reuses, and no public output while it holds anything worth
+  stealing. Agent and editor settings inside a checkout count as pipeline
+  code that the pull request wrote.
+- `deciding-reversibility` and `bounding-autonomous-work`: before a write,
+  read the target out of the credential or connection string it will
+  actually use, not out of the task's description of the environment. A
+  credential the run found in some file, rather than one it was given, is a
+  stop. So is a credential mismatch, which is a refusal and not a puzzle to
+  solve with a different token.
+- New skill: `building-llm-features`, for code that calls a language model
+  while it runs. It covers pinning the exact model and noting when it will be
+  retired, and keeping prompts in the repository as reviewed code. It treats
+  a refusal or a cut-off answer as its own outcome, not an answer. The
+  model's output is handled as untrusted input wherever it goes, with limits
+  on tokens, time and spend, and a fallback model has to pass the same checks
+  as the main one.
+- New skill: `evaluating-llm-output`, for measuring how often that output is
+  right. Read real outputs before choosing what to measure, then write one
+  pass/fail check per failure you actually saw. A model used as a judge has to
+  be checked against a person's verdicts before anyone trusts it, and every
+  pass rate is reported with how uncertain it is.
+- New skill: `writing-agent-instructions`, for AGENTS.md, CLAUDE.md, rules
+  files and skills. A line earns its place only if the agent could not find it
+  in the repository and nothing already enforces it. A rule that must always
+  hold goes in a linter, a hook or a test. A generated file is a draft to
+  delete from, and the file is checked by running tasks with it and without
+  it.
+- `confirming-before-claiming-done` and `reviewing-code-deeply`: before
+  calling a suite green, look at what happened to the tests as well as the
+  code. Watch for deleted or skipped cases, loosened assertions, expected
+  values edited to match, and branches keyed on a test's own input. A test
+  that looks wrong is reported, not quietly rewritten.
+- `auditing-dependencies`: a signed build attestation says where a package
+  was built, not that it is safe. Poisoned releases in 2026 carried valid
+  ones. A skill or rules file that tells the agent to install something must
+  name a package that exists and is the one intended, because attackers
+  register the names models make up.
+- `designing-apis` has a new section for tools, commands and test runners
+  that an agent calls. It covers keeping each response bounded, putting the
+  summary first, and error messages that say what to do next.
+- `handing-off-for-review`: before sending a change to a project you don't
+  work on, read its contributing guide and any policy on AI-assisted
+  contributions. Many now require disclosure or a named human who stands
+  behind the change.
+- Smaller changes: `fanning-out-independent-work` sizes a batch of parallel
+  agents to what someone can actually review. `testing-the-untestable` says a
+  hosted model cannot be made repeatable with a seed. `upgrading-dependencies`
+  treats a model identifier as a dependency with an expiry date.
+  `handling-untrusted-input` lists model output among the untrusted sources.
+  `recovering-agent-context` no longer tells you to copy recovered history
+  into the instruction file.
+
 ## 2026-09-29 — Locked doors: a switch nobody can reach, a port anybody can, an update nobody hears
 
 - `configuration-management`: a feature that stays off until someone opts in

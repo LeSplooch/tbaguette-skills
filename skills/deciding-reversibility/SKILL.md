@@ -1,6 +1,6 @@
 ---
 name: deciding-reversibility
-description: Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, overwrite a setting or a configuration file, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it.
+description: Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, overwrite a setting or a configuration file, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it, or when a write is about to run with a credential or connection string nobody has read the target out of.
 ---
 
 # Deciding reversibility
@@ -30,6 +30,8 @@ Not importance, and not how permanent it feels. These predictors:
 Two-way despite feeling permanent: internal module boundaries, most naming, directory layout, any dependency reachable only through your own wrapper, algorithm choice behind a stable interface, defaults with no data written against them yet.
 
 The rule that catches most misclassification: **reversibility is the cost to undo after the work built on top of it, not the cost to undo today.** A choice that is trivial to change now and gets built on for two weeks was a one-way door the day it was made. The clock closes doors, not the choice.
+
+**The door is wherever the credential opens, not wherever the task said.** A command's reach is decided by the credential and the connection string it runs with, and the task's description of the environment — "the staging bug", "the local database", "a scratch copy" — is only a belief about them. Before any write, delete, or migration, read the target back out of what will actually be used: the host in the connection string, the project or account the token belongs to, the cluster the current context names, a row count that tells scratch from production. Two failures in 2026 had the same shape: an agent fixing a staging problem used an API token it found in an unrelated file, and deleted a production volume along with the backups stored on it; a migration-planning command, pointed through a secondary setting at the production database, emptied every table there. A credential the work *found* rather than was *given* is the plainest sign — its reach is whatever its owner could do, which the task never scoped — and using one is a question for a human, not a convenience (`bounding-autonomous-work`).
 
 **Looking can be the write.** Classify the act of acquiring the thing, not only what you meant to do with it. Opening a datastore can run its schema migrations; attaching to a service can take a lease or replay a journal; mounting or loading a file can rewrite a lock or an index. A "read-only" preview, dry run, or inspection therefore may already have changed the thing it exists to inspect, and a safety copy taken after the handle is open preserves the state the open already altered. Copy before anything opens it, on every path including the read-only one.
 
@@ -100,11 +102,13 @@ Record every fast decision in one line: the choice, the runner-up, and the obser
 | Waiting on information that is not coming | No named evidence that would change the answer |
 | A once-reversible choice is now load-bearing | Weeks of work compounded on it while it was still provisional |
 | Both options built to avoid choosing | Two implementations to maintain, and the decision still pending |
+| A fix aimed at a test environment changed production | The target was taken from the task's description, not read back out of the credential or connection string the command ran with |
 | The rollback plan was gone at the moment it was needed | The undo lived inside the blast radius — same volume, same credential, or same lifecycle as the thing it was meant to undo |
 
 ## Red flags
 
 - "It's reversible, we have backups." — said without naming where they live and what can reach them.
+- A write about to run on a token or connection string found in a file, rather than one issued for this task
 - "Let us make sure we get this right the first time" about something internal and wrapped
 - A decision thread whose last two rounds introduced no new information
 - Reaching for a migration, a deletion, or an external send at the same speed as an internal rename

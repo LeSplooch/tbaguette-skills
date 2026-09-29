@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.0.4</span>
+      <span class="wordmark-version" dir="ltr">v2.1.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T15:18:12+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T15:18:12Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-29T17:55:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T17:55:17Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">flaky-test-triage</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T17:55:17.613894+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Testing</span>
@@ -75,7 +75,7 @@
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A flaky test is a defect report whose owner has not been determined yet. The defect is in the test roughly half the time and in the product the other half — and the half that lives in the product is a race that users are already hitting at the same rate the test fails.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>A test failed, was rerun, and passed, with no code change in between.</li><li>A test passes alone and fails in the suite, or passes in the suite and fails alone.</li><li>Failures cluster on CI, on one worker, at a time of day, or after a DST change.</li><li>Someone is about to add a retry, a skip marker, or a larger timeout.</li><li>The suite is rerun as a matter of routine, and nobody reads the first result.</li><li>Not for: a test that fails every time — that is a deterministic bug, owned by <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a>.</li></ul>
+<ul><li>A test failed, was rerun, and passed, with no code change in between.</li><li>A test passes alone and fails in the suite, or passes in the suite and fails alone.</li><li>Failures cluster on CI, on one worker, at a time of day, or after a DST change.</li><li>Someone is about to add a retry, a skip marker, or a larger timeout.</li><li>The suite is rerun as a matter of routine, and nobody reads the first result.</li><li>Not for: a test that fails every time — that is a deterministic bug, owned by <a class="skill-link" href="/tbaguette-skills/skills/diagnosing-before-fixing/"><code>diagnosing-before-fixing</code></a>.</li><li>Not for: a check on a language model's output, which varies by design; its failure rate is the measurement, owned by <a class="skill-link" href="/tbaguette-skills/skills/evaluating-llm-output/"><code>evaluating-llm-output</code></a>.</li></ul>
 <h2 id="the-arithmetic-that-forces-the-issue">The arithmetic that forces the issue</h2>
 <p>Independent per-test reliability compounds. At 99.9% per test, a 500-test suite is green 61% of the time; a 2,000-test suite, 13%. To keep a 2,000-test suite green on 95% of runs, each test must be 99.997% reliable. There is no per-test flake rate that is acceptable at scale, which is why &quot;it only fails 1 in 50&quot; is not a defense.</p>
 <h2 id="cause-taxonomy">Cause taxonomy</h2>
@@ -144,6 +144,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/writing-the-failing-test-first/">
       <span class="see-also__name">writing-the-failing-test-first</span>
       <span class="see-also__summary">Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written.</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/evaluating-llm-output/">
+      <span class="see-also__name">evaluating-llm-output</span>
+      <span class="see-also__summary">Use when a feature&#x27;s correctness depends on text, a label, a decision…</span>
     </a></li>
   </ul>
 </div>

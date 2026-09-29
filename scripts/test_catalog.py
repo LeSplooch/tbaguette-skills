@@ -107,13 +107,28 @@ class TestCatalogMatchesCategories(unittest.TestCase):
         skills on disk, unnoticed, because every other check in this suite
         validates that file's name, version and JSON well-formedness and none
         of them reads its description."""
-        words = {60: "Sixty", 70: "Seventy", 80: "Eighty", 90: "Ninety"}
-        ones = ["", "-one", "-two", "-three", "-four", "-five",
-                "-six", "-seven", "-eight", "-nine"]
+        # Manifests open with the count spelled out: "Ninety-eight ...",
+        # then "One hundred and one ..." once the library passed a hundred.
+        units = ["", "one", "two", "three", "four", "five", "six", "seven",
+                 "eight", "nine", "ten", "eleven", "twelve", "thirteen",
+                 "fourteen", "fifteen", "sixteen", "seventeen", "eighteen",
+                 "nineteen"]
+        tens_words = {20: "twenty", 30: "thirty", 40: "forty", 50: "fifty",
+                      60: "sixty", 70: "seventy", 80: "eighty", 90: "ninety"}
+
+        def spell(n: int) -> str:
+            if n >= 200:
+                self.fail(f"spell-out needs extending for {n}")
+            if n >= 100:
+                rest = n - 100
+                return "One hundred" + (f" and {spell(rest).lower()}" if rest else "")
+            if n < 20:
+                return units[n].capitalize()
+            tens, unit = (n // 10) * 10, n % 10
+            return (tens_words[tens] + (f"-{units[unit]}" if unit else "")).capitalize()
+
         on_disk = len([p for p in SKILLS_DIR.iterdir() if p.is_dir()])
-        tens, unit = (on_disk // 10) * 10, on_disk % 10
-        self.assertIn(tens, words, f"spell-out table needs extending for {on_disk}")
-        spelled, digits = words[tens] + ones[unit], str(on_disk)
+        spelled, digits = spell(on_disk), str(on_disk)
 
         # Every file carrying the count in prose, and the form it uses.
         for rel, form in [
@@ -133,11 +148,15 @@ class TestCatalogMatchesCategories(unittest.TestCase):
                     form, text,
                     f"{rel} does not contain {form!r}; {on_disk} skills are on disk",
                 )
-                # A stale count must not also still be present.
+                # A stale count must not also still be present. "One
+                # hundred" is a prefix of "One hundred and one", so a stale
+                # form only counts when it is not continued by "and" or a
+                # hyphenated unit.
                 for stale in (on_disk - 1, on_disk + 1):
-                    st, su = (stale // 10) * 10, stale % 10
-                    if st in words:
-                        self.assertNotIn(words[st] + ones[su] + " ", text)
+                    self.assertIsNone(
+                        re.search(re.escape(spell(stale)) + r" (?!and )", text),
+                        f"{rel} still carries the stale count {spell(stale)!r}",
+                    )
 
     def test_stated_skill_count_matches_reality(self):
         """CATALOG.md opens with 'N skills'. N is written by hand."""

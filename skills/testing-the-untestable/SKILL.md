@@ -1,6 +1,6 @@
 ---
 name: testing-the-untestable
-description: Use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables, generates UUIDs or random values, or depends on thread scheduling; when a test only fails at month boundaries, in another timezone, or on a slow machine; or when choosing between a fake, stub, mock, spy, and a real dependency in a container. Covers dependency injection at boundaries and seeding.
+description: Use when a test calls the wall clock, sleeps, hits the network, writes to the real filesystem, reads environment variables, generates UUIDs or random values, calls a hosted language model, or depends on thread scheduling; when a test only fails at month boundaries, in another timezone, or on a slow machine; or when choosing between a fake, stub, mock, spy, and a real dependency in a container. Covers dependency injection at boundaries and seeding.
 ---
 
 # Testing the untestable
@@ -29,6 +29,7 @@ Nothing is untestable; some things are un-injected. Every source of nondetermini
 | Randomness | A seeded generator passed in | Failures that cannot be reproduced |
 | Identifiers | An id source with a counter in tests | Assertions weakened to a regex, hiding real id bugs |
 | Network | A client interface at your adapter, or a real server on a loopback port | Suites that fail when the office wifi does |
+| A hosted language model | A client interface at your adapter, replayed from recorded responses that include refusals, truncations and tool calls | Suites asserting exact wording, which break on the provider's next update, and a belief that a seed or zero temperature made output repeatable — on a hosted model neither does, and some reject the parameters outright. What varies is measured, not seeded (`evaluating-llm-output`) |
 | Filesystem | A root directory passed in; a unique temp dir per test | Tests that pass only in the directory the author ran them from |
 | Environment / config | Read once at startup into an injected value object | Process-global mutation that breaks under parallelism |
 | Concurrency | An injected executor the test can run inline or step deterministically | Races that only appear on a machine you do not own |

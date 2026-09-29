@@ -91,6 +91,8 @@ Results land independently; integration happens once, together — not piecemeal
 - Run the full verification pass across the combined result, not per agent — each slice can be internally correct and still break once merged.
 - An agent's own summary of what it did is a claim, not a diff; verify the merged result the same way any other completion claim gets verified (see `confirming-before-claiming-done`).
 
+**The width of a fan-out is set by the review, not by the dispatch.** Starting another agent costs one line; reading what it produced costs whatever reading a diff that size costs, and it is the one step that does not parallelise. Fan out wider than someone can actually review and the extra agents do not finish sooner — their output queues, gets skimmed, or gets merged on its own summary, which is the failure the bullets above exist to prevent. Size the batch to what will be read properly before the next batch lands; generated changes tend to arrive larger, and in the studies so far with more issues per change, than hand-written ones, so that number is smaller than it feels.
+
 An agent that quietly did more than its assignment — fixed something adjacent, renamed a neighbor while it was in there — is scope drift wearing a parallel-agent costume (see `managing-scope-drift`). Catch it the same way: does the report account for everything asked, and nothing extra?
 
 ## Common mistakes
@@ -101,6 +103,7 @@ An agent that quietly did more than its assignment — fixed something adjacent,
 | Two agents' diffs conflict on the same file | Write-sets were assumed disjoint, never actually checked |
 | A "fixed" task breaks a sibling task | The two shared a root cause and needed one investigation, not two |
 | Integration trusted a summary that said "done" | The combined result was never re-verified |
+| Several agents' work merged on the strength of their summaries | More agents were dispatched than anyone could review before the results landed |
 | An agent changed far more than the task named | The prompt stated a goal but never a scope boundary |
 | Parallel dispatch took as long as doing it serially | The tasks were sequential underneath a flat list; one agent sat waiting on another's output |
 | A shared file breaks right after every agent reports success | Every agent tried to update it independently instead of once, after, sequentially |

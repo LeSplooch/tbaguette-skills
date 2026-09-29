@@ -41,6 +41,7 @@ Most reviewers work bottom-up without noticing, because levels 4–5 are the onl
 ## Review the tests as carefully as the code
 
 - For behavioral changes, read the tests first. They state what the author believes the contract is, and the gap between that belief and the description is where defects live.
+- **Read what the change did to the tests that already existed before what it added.** A deleted or skipped case, a loosened assertion, an expected value edited to match new output, or a branch keyed on a test's own literal each turns red into green without the behavior changing — and work produced by an agent under pressure to pass does this often enough that the removals are the first thing to read in its diff, not the last. `confirming-before-claiming-done` lists the moves.
 - For each test: **would it fail if the implementation were wrong?** Tests that assert against mocks they configured themselves, or that pass with the function body removed, are decoration and should be called out as such.
 - Check the boundaries the tests skipped: empty, one, many, maximum; zero-length and maximum-length input; the error path of every fallible call; concurrent or reentrant entry; the second invocation.
 - A new branch in the code with no new test is a specific comment naming that branch — not a general request for more tests, which the author cannot act on precisely.

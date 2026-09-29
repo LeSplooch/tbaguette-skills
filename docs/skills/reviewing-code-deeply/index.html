@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.0.4</span>
+      <span class="wordmark-version" dir="ltr">v2.1.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T15:18:12+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T15:18:12Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-29T17:55:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T17:55:17Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">reviewing-code-deeply</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T17:55:17.613894+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Communicating</span>
@@ -83,7 +83,7 @@
 <h2 id="read-the-intent-before-the-diff">Read the intent before the diff</h2>
 <ul><li>Read the stated intent — description, ticket, decision record — first, and review the diff <em>against</em> it. Without it you can only check internal consistency, which passes cleanly on code that solves the wrong problem.</li><li>If the intent is not stated well enough to review against, that is comment one, and the rest of the review waits for the answer.</li><li>Check the reverse direction: what is in the diff that the intent does not explain? Unrelated changes bundled into a diff are the most common way a real defect ships unexamined, because attention is spent on the part everyone came to look at.</li><li>Past ~400 changed lines, defect detection drops sharply. Say so and ask for a split. A skim-and-approve on a 2,000-line diff is worse than declining, because it records that the change was checked.</li></ul>
 <h2 id="review-the-tests-as-carefully-as-the-code">Review the tests as carefully as the code</h2>
-<ul><li>For behavioral changes, read the tests first. They state what the author believes the contract is, and the gap between that belief and the description is where defects live.</li><li>For each test: <strong>would it fail if the implementation were wrong?</strong> Tests that assert against mocks they configured themselves, or that pass with the function body removed, are decoration and should be called out as such.</li><li>Check the boundaries the tests skipped: empty, one, many, maximum; zero-length and maximum-length input; the error path of every fallible call; concurrent or reentrant entry; the second invocation.</li><li>A new branch in the code with no new test is a specific comment naming that branch — not a general request for more tests, which the author cannot act on precisely.</li></ul>
+<ul><li>For behavioral changes, read the tests first. They state what the author believes the contract is, and the gap between that belief and the description is where defects live.</li><li><strong>Read what the change did to the tests that already existed before what it added.</strong> A deleted or skipped case, a loosened assertion, an expected value edited to match new output, or a branch keyed on a test's own literal each turns red into green without the behavior changing — and work produced by an agent under pressure to pass does this often enough that the removals are the first thing to read in its diff, not the last. <a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> lists the moves.</li><li>For each test: <strong>would it fail if the implementation were wrong?</strong> Tests that assert against mocks they configured themselves, or that pass with the function body removed, are decoration and should be called out as such.</li><li>Check the boundaries the tests skipped: empty, one, many, maximum; zero-length and maximum-length input; the error path of every fallible call; concurrent or reentrant entry; the second invocation.</li><li>A new branch in the code with no new test is a specific comment naming that branch — not a general request for more tests, which the author cannot act on precisely.</li></ul>
 <h2 id="look-for-what-is-absent">Look for what is absent</h2>
 <p>Diffs show what is present; most serious defects are a missing case.</p>
 <table><thead><tr><th>Category</th><th>What to check</th></tr></thead><tbody><tr><td>Error paths</td><td>Every fallible call: handled, propagated, or knowingly swallowed — and is the swallow explained?</td></tr><tr><td>Partial failure</td><td>If step 3 of 5 fails, what state remains? Is it recoverable, and does a retry make it worse?</td></tr><tr><td>Concurrency</td><td>Two callers at once; the same caller twice; the operation interleaved with its own retry; check-then-act on shared state</td></tr><tr><td>Resources</td><td>Anything acquired must be released on the error path too — handles, locks, connections, transactions</td></tr><tr><td>Boundaries</td><td>Empty, single, negative, zero, overflow, unicode, timezone, clock skew</td></tr><tr><td>Compatibility</td><td>Old clients, old rows, old messages during the deploy window — is it safe while both versions run?</td></tr><tr><td>Reversibility</td><td>Can this be rolled back after it has written data?</td></tr></tbody></table>
@@ -126,6 +126,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/writing-durable-docs/">
       <span class="see-also__name">writing-durable-docs</span>
       <span class="see-also__summary">Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/writing-agent-instructions/">
+      <span class="see-also__name">writing-agent-instructions</span>
+      <span class="see-also__summary">Use when writing, generating, trimming, or reviewing a file a coding agent reads as standing instructions — AGENTS.md, CLAUDE.md…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/writing-adrs/">
       <span class="see-also__name">writing-adrs</span>

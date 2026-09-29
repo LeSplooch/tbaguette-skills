@@ -16,7 +16,7 @@ Documentation rots because it duplicates what the code already states, and the c
 - Deciding where a doc should live, or whether to delete it
 - A page has grown four unrelated sections and nobody reads past the first
 - Someone asks a question the docs "answer" but nobody could find
-- **Not for:** why a decision was made and what lost → `writing-adrs`. What changed between versions → `writing-release-notes`. Explaining one piece of work to one person → `explaining-technical-work`. Keeping a duplicated fact (a version, a constant, a mirrored non-prose artifact) from drifting once memory is no longer the plan → `keeping-copies-in-sync`.
+- **Not for:** why a decision was made and what lost → `writing-adrs`. What changed between versions → `writing-release-notes`. Explaining one piece of work to one person → `explaining-technical-work`. Keeping a duplicated fact (a version, a constant, a mirrored non-prose artifact) from drifting once memory is no longer the plan → `keeping-copies-in-sync`. What belongs in an agent instruction file or a skill at all, as opposed to where in it a rule has to sit → `writing-agent-instructions`.
 
 ## Four types, never two on one page
 

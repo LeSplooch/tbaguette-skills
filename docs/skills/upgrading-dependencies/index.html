@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.0.4</span>
+      <span class="wordmark-version" dir="ltr">v2.1.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T15:18:12+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T15:18:12Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-29T17:55:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T17:55:17Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,13 +65,13 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">upgrading-dependencies</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T17:55:17.613894+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Environment and tooling</span>
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=upgrading-dependencies"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
-  <p class="lede">Use when dependency versions have fallen behind, when a security advisory names a package in use, when planning a major version bump or a runtime upgrade, when a lockfile diff brings transitive changes nobody asked for, when an upgrade breaks something the test suite did not catch, when deciding whether to batch bumps or take them one at a time, or when a library has become unmaintained and replacing it is on the table.</p>
+  <p class="lede">Use when dependency versions have fallen behind, when a security advisory names a package in use, when planning a major version bump or a runtime upgrade, when a lockfile diff brings transitive changes nobody asked for, when an upgrade breaks something the test suite did not catch, when deciding whether to batch bumps or take them one at a time, when a library has become unmaintained and replacing it is on the table, or when the model a feature calls is being changed or retired.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>Staying current is either a cheap routine or one enormous forced upgrade during an incident; there is no third option, and the choice is made by default every week nobody upgrades. Batch what is boring, isolate what is risky, and know the rollback before the merge.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -83,6 +83,9 @@
 <h2 id="read-before-you-diff">Read before you diff</h2>
 <p>Work in this order: release notes, then the deprecation and removal sections specifically, then the migration guide, then the issue tracker filtered for regressions filed since that release. Only then look at the code.</p>
 <ul><li>Skipping versions means reading every intermediate release's removals, not just the target's. The warning you never saw was printed by the version you skipped.</li><li>Before running anything, search your own code for each removed symbol, renamed export, changed config key, and changed default.</li><li>Semantic versioning promises API compatibility and says nothing about behavior. The genuinely dangerous release is a minor that changes a default: timeout, retry count, pool size, certificate verification, encoding, precision, sort stability.</li><li>A changelog that is just a list of commit subjects is itself a finding. The maintainer is not tracking what they broke, so budget more verification, not less.</li></ul>
+<h2 id="a-model-identifier-is-a-dependency-with-a-date-on-it">A model identifier is a dependency with a date on it</h2>
+<p>Code that calls a hosted language model depends on the string naming the model, and that string behaves like no other version pin. It has no lockfile and no registry to mirror from: providers retire models on a published schedule, and after the date every request fails, so the &quot;stay on the old version&quot; option that every other row in the table above assumes simply expires. And every change of it is behavioral by definition — the API shape stays put while the output, the refusals, the tokenizer, the defaults, and which parameters are still accepted all move at once.</p>
+<p>So pin the exact dated identifier rather than an alias that moves under you, keep the retirement date beside each pinned identifier where the team's other upgrade deadlines live, and start the move while the old model still answers, because the evaluation needs both side by side. Treat it as a major in the table above: its own change, never with a prompt edit in the same deploy, gated on the feature's evals rather than its unit tests (<a class="skill-link" href="/tbaguette-skills/skills/evaluating-llm-output/"><code>evaluating-llm-output</code></a>), and rolled out in the canary steps below. <a class="skill-link" href="/tbaguette-skills/skills/building-llm-features/"><code>building-llm-features</code></a> covers the rest of what calling a model at runtime involves.</p>
 <h2 id="mechanical-versus-behavioral">Mechanical versus behavioral</h2>
 <p>Classify the upgrade before starting. Failure to classify means the changelog has not been read.</p>
 <table><thead><tr><th></th><th>Mechanical</th><th>Behavioral</th></tr></thead><tbody><tr><td>Looks like</td><td>renamed symbol, moved import path, changed signature, removed option, stricter types</td><td>changed default, changed ordering, new serialization, different error type, altered concurrency or precision</td></tr><tr><td>Found by</td><td>compiler, type checker, linter, immediately failing tests</td><td>nothing you own; production finds it</td></tr><tr><td>Effort scales with</td><td>number of call sites; often codemod-able</td><td>how deeply the behavior is relied on</td></tr><tr><td>Failure mode</td><td>loud and immediate</td><td>silent and delayed</td></tr><tr><td>Rollout</td><td>merge on green</td><td>canary with a named metric to watch</td></tr></tbody></table>

@@ -18,7 +18,7 @@ Untrusted means "did not originate inside this trust boundary" — which include
 
 ## What is untrusted (the surprising entries)
 
-Your database — earlier writes passed an older, buggier validator, which is the entire mechanism of stored XSS. Another internal service — its identity is authenticated, its *caller's intent* is not. Config and environment, because deploy templates interpolate. Queue payloads. Filenames, headers, cookies, and declared content types. Data you produced yourself that round-tripped through a client. Error strings from downstream systems, the moment they are logged or reflected.
+Your database — earlier writes passed an older, buggier validator, which is the entire mechanism of stored XSS. Another internal service — its identity is authenticated, its *caller's intent* is not. Config and environment, because deploy templates interpolate. Queue payloads. Filenames, headers, cookies, and declared content types. Data you produced yourself that round-tripped through a client. Error strings from downstream systems, the moment they are logged or reflected. And a language model's output, your own feature's included: anything that reached its context can steer what it writes, so its text is exactly as trusted as the least trusted thing it read, and it reaches a query, a page, a shell, or a fetched URL only through the same encoders as a request field. A schema on the output makes it parse; it does not make it safe or true (`building-llm-features`).
 
 The trusted set is short and enumerable: values this process constructed, from constants, since the last boundary crossing.
 

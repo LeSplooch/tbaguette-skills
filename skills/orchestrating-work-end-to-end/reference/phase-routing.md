@@ -114,6 +114,7 @@ not once the run is already in trouble.
 | `configuration-management` | Deciding what is config, what is code, and what is a secret |
 | `instrumenting-for-observability` | Choosing what to emit — done at design time or not at all |
 | `tracking-data-provenance` | Values arrive observed, imported, inferred, or defaulted, and downstream will not be able to tell |
+| `building-llm-features` | The design calls a language model at runtime — the model pin, the outcomes beyond success and error, what its output may reach, and the budget are all decided here |
 
 **Security, decided here or not at all**
 
@@ -168,6 +169,7 @@ not once the run is already in trouble.
 | `grounding-test-doubles` | A test double stands in for something real and could drift from it |
 | `testing-the-untestable` | Time, randomness, network, filesystem, identifiers, or concurrency are in the way |
 | `property-based-testing` | The behavior has invariants worth generating cases against |
+| `evaluating-llm-output` | The task changes a prompt, a model, a retrieval step, or a tool definition, and the failing eval case gets written before the change |
 | `characterization-testing` | Existing behavior has to be pinned before it can safely change |
 | `auditing-new-input-categories` | The change teaches the system a new *category* of input, not another instance of an old one |
 | `validating-numeric-input` | Numbers cross a boundary — NaN, infinity, overflow, and locale all defeat naive comparison |
@@ -228,6 +230,7 @@ not once the run is already in trouble.
 | `finishing-what-you-started` | Always — every ledger line re-measured now, surrenders marked, nothing quietly narrowed |
 | `regression-test-from-bug` | The work fixed a defect; the test that failed before it must pass after it |
 | `choosing-test-scope` | The proof runs at a level that cannot actually observe the claim |
+| `evaluating-llm-output` | The claim is about output a model produces — proven as a rate on the feature's evals, with its uncertainty, not by one green run |
 | `flaky-test-triage` | The suite is green only sometimes, and that is being read as green |
 | `red-teaming-your-own-work` | A last adversarial pass before anyone acts on this |
 | `karen-and-the-manager` | The finishing pass, right before `knowing-when-to-stop` bounds it |
@@ -245,6 +248,7 @@ not once the run is already in trouble.
 | `writing-release-notes` | Someone downstream has to decide whether to take this |
 | `writing-adrs` | A decision made during the run should outlive the branch |
 | `writing-durable-docs` | Behavior changed in a way the existing docs now describe wrongly |
+| `writing-agent-instructions` | A lesson from the run is about to be added to the repository's instruction file — only if it passes that file's test, and only if no tool could enforce it instead |
 | `explaining-technical-work` | Reporting the run to whoever asked for it |
 | `crouton` | The report has to fit somewhere small without losing what decides things |
 | `deleting-code` | The old path a migration replaced is now genuinely dead |
@@ -327,6 +331,7 @@ the memory of it.
 | `writing-durable-docs` | Always — it decides what will still be true in a year and what should never have been written down |
 | `explaining-technical-work` | Always — the altitude is set by what the reader will do next |
 | `writing-adrs` | The document is one decision, its forces, and what would reopen it |
+| `writing-agent-instructions` | The reader is an agent — an instruction file, a rules file, a skill — and every line is paid for on every turn |
 | `writing-release-notes` | Someone downstream has to decide whether to take this |
 | `writing-postmortems` | The document is about a failure, and blame would make it useless |
 | `crouton` | The document has a length budget it is about to lose to completeness |

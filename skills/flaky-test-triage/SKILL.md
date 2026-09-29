@@ -17,6 +17,7 @@ A flaky test is a defect report whose owner has not been determined yet. The def
 - Someone is about to add a retry, a skip marker, or a larger timeout.
 - The suite is rerun as a matter of routine, and nobody reads the first result.
 - Not for: a test that fails every time — that is a deterministic bug, owned by `diagnosing-before-fixing`.
+- Not for: a check on a language model's output, which varies by design; its failure rate is the measurement, owned by `evaluating-llm-output`.
 
 ## The arithmetic that forces the issue
 

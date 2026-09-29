@@ -163,7 +163,9 @@ take the step.
 - Anything that leaves the machine and reaches a person: a sent message, a
   published artifact, a posted comment, a release.
 - Anything spending money or a quota that someone else pays for.
-- Anything touching credentials: rotating, revoking, granting, or moving one.
+- Anything touching credentials: rotating, revoking, granting, or moving one —
+  or using one the run found rather than was given. A token lying in some file
+  reaches whatever its owner could, which is not what the task scoped.
 - Anything that would expand what the run itself, or anything it dispatches,
   can do next: installing a plugin, tool, or server, or requesting a new
   capability grant. This holds even when the request surfaces its own
@@ -214,6 +216,14 @@ forbidden without attempting it — try it; a refusal you have not collected is 
 evidence. This one is about a **control** that has already refused — you have
 collected the evidence, and the only route past it is to break the thing that
 produced it. Untried is not a door. Broken open is not a pass.
+
+The commonest form of this does not look like breaking anything. A command fails
+on a credential mismatch — wrong account, missing scope, expired token — and the
+run goes looking for one that works: another environment file, a config in a
+neighbouring project, a token in shell history. A mismatch is a refusal, and a
+substitute credential is the bypass. In one 2026 run a staging fix hit exactly
+this, found a broadly scoped token in a file about something else, and used it to
+delete a production volume and the backups stored on it, in one call.
 
 What the run does instead is what it does at any door: prepare fully, and stop.
 Name the guard, what triggered it, what would clear it, and what remains

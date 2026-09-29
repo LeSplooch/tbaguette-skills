@@ -1,6 +1,6 @@
 ---
 name: handing-off-for-review
-description: Use when completing a task or feature and about to hand it off before merging, when stuck and a fresh perspective would help, before a risky refactor to establish a baseline, or after fixing a complex or subtle bug. Covers what context a reviewer — human or subagent — needs up front, what to flag before they have to find it, when a request is premature, and what shape to ask the response back in.
+description: Use when completing a task or feature and about to hand it off before merging, when stuck and a fresh perspective would help, before a risky refactor to establish a baseline, after fixing a complex or subtle bug, or before sending a change to a project whose maintainers you do not work with. Covers what context a reviewer — human or subagent — needs up front, what to flag before they have to find it, when a request is premature, and what shape to ask the response back in.
 ---
 
 # Handing off for review
@@ -45,6 +45,10 @@ A reviewer who discovers a known issue on their own stops trusting the parts of 
 - What you didn't test, and why — a gap you name is a note; a gap the reviewer finds unannounced reads as one you missed.
 - Anywhere you're genuinely unsure — the line you'd bet against if pressed. Reviewers spend their first pass on what looks confident; tell them where the shaky part actually is instead of letting it read as confident by default.
 
+## Someone else's project decides what an agent may send it
+
+Everything above assumes a reviewer who agreed to review. A pull request or patch to a project you do not belong to lands in front of maintainers who agreed to nothing, and many of them have now written down what they will accept from an agent: a study of a few hundred open-source projects' published policies in 2026 found about two thirds requiring substantial human involvement in a contribution and about half requiring AI assistance to be disclosed, with some refusing it outright. Before opening anything upstream, read the contributing guide, the pull request template, and any policy on generated contributions, and follow what they say — disclose the assistance where they ask, name the human who has read and stands behind the change, and keep to the size they will review. A change sent against a stated policy costs a maintainer the same read as any other and gets closed on sight; the next contribution from the same account inherits that.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -55,6 +59,7 @@ A reviewer who discovers a known issue on their own stops trusting the parts of 
 | The reviewer surfaces an edge case the requester already knew was untested | The gap was left to be discovered instead of disclosed up front |
 | Review skipped because the change is "too small to matter" | Size substituted for readiness as the criterion — small changes fail for free too |
 | Findings come back for a diff that's already changed underneath them | Dispatched before the edit reached a stable boundary |
+| An upstream pull request closed without a review | The project's contributing guide or its policy on generated contributions was never read, and the change broke it |
 
 ## Red flags
 
