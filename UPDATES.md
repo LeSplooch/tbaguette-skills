@@ -31,6 +31,23 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-09-30 — Four quiet failures: a frozen reading, an "off" that isn't, a fence with two jobs, a plan nobody ran
+
+- `diagnosing-before-fixing` now names a culprit behind "nothing changed":
+  a tool that writes to a fixed path can fail, exit 0 and leave the last
+  run's file behind, so every reading is the first one replayed. Clear the
+  output before each run, or check its timestamp.
+- `designing-apis` covers the calling side of defaults: leaving a parameter
+  out asks for the provider's default, which may be on. To turn something
+  off, send the explicit off value and check the provider's usage figures,
+  not just the absence of an error.
+- `deleting-code` has a section for removing a confirmation, consent or
+  approval step because it is tedious: list everything that cites it as its
+  justification first, since it often carries a second job.
+- `structuring-an-implementation-plan` adds a self-review check: when a plan
+  carries both code and the tests it must pass, run them together in a
+  scratch directory before handing the plan over.
+
 ## 2026-09-29 — The Atelier in Claude Desktop, claude.ai and Cowork
 
 - Those apps install plugins on your Claude account, not from a folder, so the

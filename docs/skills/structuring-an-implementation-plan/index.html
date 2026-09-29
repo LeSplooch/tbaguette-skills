@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.1</span>
+      <span class="wordmark-version" dir="ltr">v2.1.2</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T19:00:46+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T19:00:46Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-29T22:15:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T22:15:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">structuring-an-implementation-plan</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-30T00:15:28+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Planning and delegation</span>
@@ -145,7 +145,7 @@ include this section.]
 <p>A plan with a placeholder in it isn't a draft of a finished plan — it's a to-do list wearing a plan's formatting.</p>
 <h2 id="self-review">Self-review</h2>
 <p>Before calling the plan finished, check it against the spec with fresh eyes — genuinely fresh, not the eyes that just finished writing it. Run this yourself first. For a plan whose blast radius justifies the extra confidence, the same checklist is also what to hand a second reviewer — human or a freshly dispatched subagent with no sunk cost in the plan's current shape — since writing it and reviewing it are different acts even when done back to back by the same author.</p>
-<table><thead><tr><th>Check</th><th>Question</th></tr></thead><tbody><tr><td>Spec coverage</td><td>For every section or requirement in the spec, which task implements it? List the gaps.</td></tr><tr><td>Placeholder scan</td><td>Does anything match the &quot;No placeholders&quot; table above?</td></tr><tr><td>Type consistency</td><td>Do the names, signatures, and types a later task's Interfaces block relies on match what the producing task actually defines?</td></tr><tr><td>Parallel safety</td><td>Within each phase, do any two tasks share a path in their write sets, or does any task consume something produced inside its own phase?</td></tr><tr><td>Task decomposition</td><td>Does every task have a clear boundary, with steps concrete enough to act on without guessing?</td></tr><tr><td>Buildability</td><td>Could an implementer with zero context on this codebase follow the plan start to finish without getting stuck?</td></tr></tbody></table>
+<table><thead><tr><th>Check</th><th>Question</th></tr></thead><tbody><tr><td>Spec coverage</td><td>For every section or requirement in the spec, which task implements it? List the gaps.</td></tr><tr><td>Placeholder scan</td><td>Does anything match the &quot;No placeholders&quot; table above?</td></tr><tr><td>Type consistency</td><td>Do the names, signatures, and types a later task's Interfaces block relies on match what the producing task actually defines?</td></tr><tr><td>Executable check</td><td>Where the plan carries both runnable code and the test or fixture it must satisfy, have they been run together in a scratch directory? Type consistency cannot see a logic contradiction between the two, and one command settles what an hour of hand-tracing may not. Discard the scratch afterwards.</td></tr><tr><td>Parallel safety</td><td>Within each phase, do any two tasks share a path in their write sets, or does any task consume something produced inside its own phase?</td></tr><tr><td>Task decomposition</td><td>Does every task have a clear boundary, with steps concrete enough to act on without guessing?</td></tr><tr><td>Buildability</td><td>Could an implementer with zero context on this codebase follow the plan start to finish without getting stuck?</td></tr></tbody></table>
 <p>Fix what you find inline, immediately — no separate re-review pass required. A spec requirement with no task gets a new task, on the spot.</p>
 <p>Calibrate what's worth flagging: an issue that would cause an implementer to build the wrong thing, stall, or guess is real. A wording preference or a &quot;nicer&quot; phrasing isn't, and it doesn't block the plan. When a second reviewer runs this same list, the output is a status — approved, or issues found — with each issue naming its exact task and step and why it would derail implementation, and any recommendations kept separate and explicitly non-blocking: a plan doesn't fail review over advice.</p>
 <h2 id="when-execution-reveals-the-plan-was-wrong">When execution reveals the plan was wrong</h2>
