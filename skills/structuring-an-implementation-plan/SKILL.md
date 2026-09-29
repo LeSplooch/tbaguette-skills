@@ -142,6 +142,7 @@ Before calling the plan finished, check it against the spec with fresh eyes — 
 | Spec coverage | For every section or requirement in the spec, which task implements it? List the gaps. |
 | Placeholder scan | Does anything match the "No placeholders" table above? |
 | Type consistency | Do the names, signatures, and types a later task's Interfaces block relies on match what the producing task actually defines? |
+| Executable check | Where the plan carries both runnable code and the test or fixture it must satisfy, have they been run together in a scratch directory? Type consistency cannot see a logic contradiction between the two, and one command settles what an hour of hand-tracing may not. Discard the scratch afterwards. |
 | Parallel safety | Within each phase, do any two tasks share a path in their write sets, or does any task consume something produced inside its own phase? |
 | Task decomposition | Does every task have a clear boundary, with steps concrete enough to act on without guessing? |
 | Buildability | Could an implementer with zero context on this codebase follow the plan start to finish without getting stuck? |
