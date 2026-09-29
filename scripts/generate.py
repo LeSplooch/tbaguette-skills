@@ -58,6 +58,7 @@ from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import archive_updates
 import content_pipeline
 import githooks
 import locales
@@ -338,6 +339,17 @@ def _update_notes(project_root: Path,
     path = project_root / UPDATE_NOTES_FILENAME
     if not path.is_file():
         return []
+    # UPDATES.md ships in the plugin, and Anthropic's plugin directory holds
+    # any text file over 256 KiB. Stopping at half that, with the fix in the
+    # message, means the file never gets near it and nobody has to remember.
+    size = path.stat().st_size
+    if size > archive_updates.MAX_BYTES:
+        raise SystemExit(
+            f"{path}: {size // 1024} KiB, past the {archive_updates.MAX_BYTES // 1024} KiB "
+            "this file is kept under. Run `python3 scripts/archive_updates.py` to move "
+            f"everything past the newest {archive_updates.KEEP} entries into "
+            f"{archive_updates.ARCHIVE_DIR}/, then build again."
+        )
     try:
         return content_pipeline.parse_update_notes(
             path.read_text(encoding="utf-8"), resolve_skill_link=resolve_mention

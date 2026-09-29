@@ -4,7 +4,9 @@
 
 Every change that ships from this repo adds an entry to `UPDATES.md` at the
 root, before `scripts/generate.py` runs. The landing page renders the newest
-few below the "Fresh from the oven" rail; that file is the whole record.
+few below the "Fresh from the oven" rail. The file keeps the newest thirty and
+`updates-archive/` holds the rest, one file per month; when the build says
+UPDATES.md is too big, run `python3 scripts/archive_updates.py` and build again.
 
 Write it for someone who has TBaguette installed, not for someone reading the
 diff — the observable difference, not which files moved. `writing-release-notes`

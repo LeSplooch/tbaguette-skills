@@ -48,6 +48,8 @@ SUITES = [
      [sys.executable, "-m", "unittest", "test_crumb_check", "-v"]),
     ("skill frontmatter limits",
      [sys.executable, "-m", "unittest", "test_skill_frontmatter", "-v"]),
+    ("update notes archive",
+     [sys.executable, "-m", "unittest", "test_archive_updates", "-v"]),
     # The only suite that hits the network (clones the real, published repo
     # from GitHub several times against throwaway HOME directories) — a
     # flaky connection can fail this one without meaning anything else is
