@@ -24,7 +24,7 @@ CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newes
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
-## 2026-09-29 — A switch nobody can reach, and a local port anybody can
+## 2026-09-29 — Locked doors: a switch nobody can reach, a port anybody can, an update nobody hears
 
 - `configuration-management`: a feature that stays off until someone opts in
   can pass every test and still be off for everyone. Tests turn the switch on
@@ -40,6 +40,13 @@ Everything above the first `##` is preamble and is never rendered.
   boundaries and says what closes each: a secret only your account can read,
   plus `Origin` and `Host` checks, or a socket the browser cannot address at
   all.
+- `schema-evolution`: adding a login or token to a connection that
+  already-running copies of your app use breaks them like any new required
+  field. It is worse when that connection is also how an old copy hears it
+  needs to update, because then it never hears it. The skill now says to keep a
+  small, read-only answer for callers with no token (enough to see they are out
+  of date), to refuse a wrong token outright so the caller re-reads it, and to
+  have new clients check the version before logging in.
 
 ## 2026-09-29 — Checking where a result was pointed before trusting it
 

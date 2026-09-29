@@ -1,6 +1,6 @@
 ---
 name: schema-evolution
-description: Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema, serialized format, stored document, API payload, or queue message. Also when a rolling deploy breaks deserialization, when old consumers cannot read new data, when a rollback fails on data the newer version wrote, when adding an enum value, when planning a version bump, or when a field goes missing after some component read a record and wrote the whole thing back. Also use when writing or reviewing the check that decides which stored versions a reader may accept.
+description: Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema, serialized format, stored document, API payload, or queue message. Also when a rolling deploy breaks deserialization, when old consumers cannot read new data, when a rollback fails on data the newer version wrote, when adding an enum value, when planning a version bump, or when a field goes missing after some component read a record and wrote the whole thing back. Also use when writing or reviewing the check that decides which stored versions a reader may accept, or when adding authentication to a channel that already-running clients depend on, especially one that tells them to update.
 ---
 
 # Schema evolution
@@ -74,6 +74,14 @@ Three different things, routinely conflated, and the confusion is the source of 
 
 A reader-side default hides the difference between old data and a real value, which means you can never later ask "which rows predate this field." When that question matters, use optional and keep the absence. Writer-side defaults freeze at write time and are safe against later default changes; reader-side defaults change retroactively for all historical data the moment someone edits the constant.
 
+## A new credential is a required field, and can cut off the update notice
+
+Adding authentication to a channel that already has clients is the *Add a required field* row above, and it is an easy row to skip, because refusing clients without the credential is the whole point of the change. Every client already running sends nothing for it, so a server that refuses them breaks compatibility exactly as a required column would.
+
+The break is worse than an outage when the same channel is how an old client finds out it is old: a version field, a relaunch instruction, an update notice. The client learns it must upgrade only by being told, and it is told over the channel just closed to it. It never upgrades, and the wait before the contract step never ends, because the clients it waits on can no longer be moved. The same holds for any tightening of that channel, such as a required handshake field, a new transport or a stricter parser, not only for a credential. So before tightening a channel, list what an old client learns over it that it cannot learn any other way. For clients built from now on, have them ask for the version before they authenticate, so the next tightening cannot strand them the same way.
+
+The expand step is what the table already prescribes for a required field: optional, with a defined absent-case. A client that presents *no* credential gets a reduced, read-only answer: the least it needs to discover it is stale, such as the current version and the relaunch instruction, with every sensitive field blanked. Anything can now ask for that answer, not only old clients, so it has to be safe to hand to anyone. A client that presents a *wrong* credential is refused. An honest client with a wrong credential is usually holding a secret that has since been rotated away, and a refusal is what sends it back to re-read the secret, where a reduced answer would leave it believing it had connected. That is *keep the absence* from the section above, applied to a credential: absent and wrong are different states and get different answers. The reduced answer is itself an old field now, and it is contracted like one, on a runtime count of the clients still using it rather than on a date.
+
 ## Renaming and versioning
 
 A rename is add, dual-write, backfill, switch reads, stop writing, remove — the same six steps, with the old and new name both live for the middle four. There is no atomic rename of a contract that has more than one deploy unit.
@@ -117,6 +125,7 @@ Where a column can be written by more than one kind of source, the provenance is
 | The change cannot be applied to the existing store at all | The field was added as required with no default, over records that predate it |
 | A version guard passes and the value it admitted is corrupt anyway | The guard was an inequality over a counter that moves when meanings change, so it waved old rows through |
 | A version check has never rejected anything | The version field is reader-defaulted, so every unversioned row reports the current build's number |
+| Clients from before a security change never update, and nothing tells them why | Authentication was added to the same channel that tells them they are out of date, so the notice is refused along with everything else |
 
 ## Red flags
 
