@@ -4632,6 +4632,20 @@ a.skill-link--bare:focus-visible {
   .page-graph.graph-live .site-header__inner { padding-block: var(--space-3); }
 }
 
+/* A phone on its side gets the sheet layout at the height of a toolbar. The
+   30rem floor above then scrolled the page, pushing the legend and the sheet
+   handle off the bottom, and header and bar took 244 of 390px. Here the page
+   fits the screen, the header gives back its build time and padding, and the
+   search joins the view tabs on one row. A short window wider than 60rem keeps
+   the floor: its legend stands up the left edge and needs the height. */
+@media (max-height: 30rem) and (max-width: 60rem) {
+  .page-graph.graph-live { height: 100dvh; }
+  .page-graph.graph-live .site-header__updated { display: none; }
+  .page-graph.graph-live .site-header__inner { padding-block: var(--space-2); }
+  .page-graph.graph-live .crumb__search { order: 2; flex: 1 1 12rem; }
+  .page-graph.graph-live .crumb [data-crumb-trace] { order: 3; margin-inline-start: 0; }
+}
+
 /* --- the app ---------------------------------------------------------------------- */
 
 .crumb {
