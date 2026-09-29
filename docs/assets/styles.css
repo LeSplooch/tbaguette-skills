@@ -4215,16 +4215,19 @@ a.skill-link--bare:focus-visible {
 }
 
 /* The hundred. Across the whole row, above the release and the graph, in
-   their shell -- hairline, fade, title, lede, stat tiles, button -- so the
-   three read as one set. Its picture is the library: a type-set "100" that
-   site.js measures and redraws from one bead per skill, in the families'
-   colours, lit one at a time in catalog order. The type-set numeral is what
-   anyone without the canvas sees, finished in the release numeral's foil. */
+   their shell -- hairline, fade, title, lede, button -- so the three read as
+   one set. What is its own is an event rather than a figure: the numeral is
+   set in type as a plate with a tally under it, and site.js redraws it from
+   one bead per skill, streaming each family up from its own point and
+   counting them in on the tally. At the hundredth the numeral flares and
+   the tally turns gold; the one after it lands a beat later. The type-set
+   plate is what anyone without the canvas sees, and it is finished work: the
+   foil numeral, and the true count under it. */
 
 .hero__banners--lead { margin-bottom: var(--space-5); }
 
 .century-banner {
-  min-height: 19rem;
+  min-height: 20rem;
   background:
     radial-gradient(ellipse 42% 95% at 73% 52%,
       color-mix(in oklch, var(--accent-solid) 10%, var(--bg)) 0%,
@@ -4236,7 +4239,7 @@ a.skill-link--bare:focus-visible {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 26% 62% at 73% 56%,
+    radial-gradient(ellipse 26% 62% at 73% 50%,
       color-mix(in oklch, var(--accent-solid) 15%, transparent),
       transparent 70%);
 }
@@ -4248,17 +4251,25 @@ a.skill-link--bare:focus-visible {
   height: 100%;
 }
 
-.century-banner__numeral {
+/* The numeral and its tally, centred together where the picture goes. */
+.century-banner__plate {
   position: absolute;
   top: 50%;
   left: 73%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.century-banner__numeral {
   font-family: var(--font-display);
   /* Left at auto, as a canvas sets it too: the glyph site.js lays the beads
      on has to be the glyph drawn here under them. */
   font-optical-sizing: auto;
   font-weight: 700;
-  font-size: min(15rem, 21cqi);
+  font-size: min(14rem, 20cqi);
   line-height: 1;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -4277,6 +4288,37 @@ a.skill-link--bare:focus-visible {
   filter: drop-shadow(0 6px 18px color-mix(in oklch, var(--gold-700) 30%, transparent));
 }
 
+/* The count under the hundred. Ticks as the beads land (site.js), and says
+   the true number at rest: the numeral is the milestone, this is the fact. */
+.century-banner__tally {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.55em;
+  margin-top: -0.35em;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.century-banner__tally-count {
+  display: inline-block;
+  min-width: 3ch;
+  font-family: var(--font-display);
+  font-size: var(--text-6);
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-align: end;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--text-primary);
+  transition: color var(--duration-view) var(--ease-out);
+}
+
+.century-banner__tally.is-past .century-banner__tally-count { color: var(--text-accent); }
+
 /* site.js sets this once the beads are on the canvas, and only then is the
    sentence telling a reader to point at them true. The numeral stays, dimmed,
    as the dough the beads are set in: a hundred beads alone do not hold the
@@ -4287,6 +4329,74 @@ a.skill-link--bare:focus-visible {
 .century-banner.is-drawn .century-banner__hint { display: inline; }
 
 .century-banner__body { width: min(38rem, 52%); }
+
+/* The fade the copy reads against stops short of the numeral, which starts
+   close to it: at the shared width it dims the "1" and leaves the zeros
+   bright, and the number reads as "00". */
+.century-banner__body::before { inset: 0 -8% 0 0; }
+
+/* What took it past a hundred: the skills themselves, as links. Hovering or
+   focusing one lights its bead in the picture. */
+.century-banner__crossers { margin-top: var(--space-4); }
+
+.century-banner__crossers-label {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-2);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Stacked on one left edge: three names this long wrap two-and-one in the
+   column's width, which reads as an accident rather than a list. */
+.century-banner__crosser-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.century-banner__crosser {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  max-width: 100%;
+  padding: 0.4em 0.8em;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  line-height: 1.3;
+  color: var(--text-primary);
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  transition: border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out),
+              transform var(--duration-micro) var(--ease-out);
+}
+
+.century-banner__crosser-name { overflow-wrap: anywhere; }
+
+.century-banner__crosser-dot {
+  flex: none;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 50%;
+  background: var(--dot, var(--accent));
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--dot, var(--accent)) 30%, transparent);
+}
+
+.century-banner__crosser:hover,
+.century-banner__crosser:focus-visible {
+  background: color-mix(in oklch, var(--dot, var(--accent)) 14%, var(--surface));
+  border-color: color-mix(in oklch, var(--dot, var(--accent)) 70%, var(--border-subtle));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .century-banner__crosser:hover { transform: translateY(-1px); }
+}
 
 /* The name of the bead under the pointer, placed by site.js above it. A child
    of the banner rather than of the stage, so it rides over the copy's fade
@@ -4325,20 +4435,51 @@ a.skill-link--bare:focus-visible {
 
 .century-banner__tip-family { color: var(--text-secondary); }
 
-/* Narrow slot: the numeral takes a band of its own above the copy, at the
-   height the pair below gives their pictures. */
+/* The one authored moment: the hundredth bead lands. The numeral's foil
+   flashes full and settles back into the dough; the tally's figure gives a
+   single beat. Opacity and transform only, once, and never under reduced
+   motion (site.js does not set the class then). */
+@media (prefers-reduced-motion: no-preference) {
+  .century-banner.is-crossing .century-banner__numeral {
+    animation: century-flare 1600ms var(--ease-out);
+  }
+  .century-banner.is-crossing .century-banner__tally-count {
+    animation: century-beat 560ms var(--ease-out);
+  }
+}
+
+@keyframes century-flare {
+  0%   { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+@keyframes century-beat {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+
+/* Narrow slot: the plate takes a band of its own above the copy, and the
+   beads stream up into it from the band's floor. */
 @container banner (max-width: 44rem) {
-  .century-banner { min-height: 0; background: var(--bg); }
+  .century-banner {
+    min-height: 0;
+    padding-top: 12rem;
+    background: var(--bg);
+  }
   .century-banner__stage {
-    height: 12rem;
+    height: 12.5rem;
     background:
-      radial-gradient(ellipse 45% 60% at 50% 60%,
+      radial-gradient(ellipse 45% 60% at 50% 48%,
         color-mix(in oklch, var(--accent-solid) 16%, transparent),
         transparent 72%);
   }
-  .century-banner__numeral { left: 50%; font-size: 9.5rem; }
+  .century-banner__body::before { inset: 0; }
+  .century-banner__plate { top: 50%; left: 50%; }
+  .century-banner__numeral { font-size: min(8.5rem, 34cqi); }
+  .century-banner__tally-count { font-size: var(--text-5); }
   .century-banner__body { width: auto; }
-  .century-banner__stats { margin-bottom: var(--space-5); }
+  .century-banner__crossers { margin-bottom: var(--space-5); }
 }
 
 @media (forced-colors: active) {
@@ -4353,6 +4494,8 @@ a.skill-link--bare:focus-visible {
     -webkit-text-fill-color: CanvasText;
     color: CanvasText;
   }
+  .century-banner__crosser { border: 1px solid ButtonText; }
+  .century-banner__crosser-dot { forced-color-adjust: none; }
   .century-banner__cta { border: 1px solid ButtonText; }
 }
 

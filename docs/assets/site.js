@@ -1771,44 +1771,62 @@
 
   // --- The hundred-skill milestone -----------------------------------------
   //
-  // The numeral, redrawn from the library itself: one bead per skill, exactly
-  // as many as the page says there are, each in its family's colour from the
-  // graph's palette. The stylesheet sets "100" in type; this measures it,
-  // samples its strokes, and spreads the beads over them as evenly as their
+  // The milestone as an event rather than a figure. The stylesheet sets "100"
+  // in type with a tally under it; this measures the numeral, samples its
+  // strokes, and spreads one bead per skill over them as evenly as their
   // number allows -- each next bead goes wherever it is farthest from every
-  // bead already placed -- then hands them out left to right in catalog
-  // order, so the families read as bands across the digits. They light one
-  // at a time, like being counted out, and a slow shimmer crosses them now
-  // and then. Pointing at a bead names its skill and lights its family;
-  // clicking opens it. On touch the first tap names it and a second opens
-  // it. Reduced motion gets every bead lit at once and nothing moving;
-  // forced colours keep the type-set numeral.
+  // bead already placed -- then hands the places out left to right in
+  // catalog order, so the families read as bands across the digits.
+  //
+  // Then it counts them in. Each family streams up from its own point on the
+  // floor and arcs into place, the count quickening as it goes, and the tally
+  // ticks with every landing. The skills that took the library past a hundred
+  // come last, so the hundredth bead is one of them: when it lands the whole
+  // numeral flashes, a ring goes out, sparks fly in the families' colours,
+  // and the tally turns gold. The one after it lands a beat later -- past a
+  // hundred, not at it. After that it is quiet: a slow shimmer now and then,
+  // and the beads the reader points at.
+  //
+  // Pointing at a bead names its skill and lights its family; clicking opens
+  // it; on touch the first tap names and the second opens. Hovering or
+  // focusing one of the links under "What took it past a hundred" lights its
+  // bead, which is the keyboard's way into the picture. Reduced motion gets
+  // every bead in place and the true count at once, and nothing that moves;
+  // forced colours keep the type-set plate.
   function initCenturyBanner() {
     var banner = document.querySelector('[data-century-banner]');
     if (!banner) return;
     var canvas = banner.querySelector('.century-banner__canvas');
     var numeral = banner.querySelector('.century-banner__numeral');
     var tip = banner.querySelector('.century-banner__tip');
+    var tally = banner.querySelector('.century-banner__tally');
+    var tallyCount = banner.querySelector('.century-banner__tally-count');
     if (!canvas || !canvas.getContext || !numeral) return;
     if (window.matchMedia && window.matchMedia('(forced-colors: active)').matches) return;
-    var skills, families;
+    var skills, families, crossers;
     try {
       skills = JSON.parse(banner.getAttribute('data-beads') || '[]');
       families = JSON.parse(banner.getAttribute('data-family-titles') || '[]');
+      crossers = JSON.parse(banner.getAttribute('data-crossers') || '[]');
     } catch (error) {
       return;
     }
     if (!skills.length) return;
     var href = banner.getAttribute('data-href') || '';
     var text = banner.getAttribute('data-numeral') || numeral.textContent;
+    var mark = parseInt(text, 10) || 100;
+    var total = skills.length;
 
     var ctx = canvas.getContext('2d');
     var reduced = prefersReducedMotion();
     var TAU = Math.PI * 2;
+    var FLIGHT = 0.62;
     var W = 0, H = 0, dpr = 1, dark = true, begun = false;
-    var beads = [], colours = [], radius = 4, left = 0, right = 0, glyph = null;
+    var beads = [], bySlug = {}, colours = [], sprites = [], gold = [221, 162, 92];
+    var radius = 4, left = 0, right = 0, top = 0, bottom = 0, glyph = null;
+    var sparks = [], rings = [], crossedAt = -1, landed = -1;
     var hovered = null, armed = null, lastType = '';
-    var visible = true, raf = 0, t0 = performance.now(), born = -1;
+    var visible = true, raf = 0, t0 = performance.now(), last = t0, born = -1;
     var probe = document.createElement('canvas').getContext('2d');
 
     function parse(value, fallback) {
@@ -1823,14 +1841,32 @@
     function mix(a, b, k) {
       return [Math.round(a[0] + (b[0] - a[0]) * k), Math.round(a[1] + (b[1] - a[1]) * k), Math.round(a[2] + (b[2] - a[2]) * k)];
     }
+    function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+    // One soft glow per family, drawn once and stamped under every bead of
+    // that colour, rather than a fresh gradient per bead per frame.
+    function sprite(c) {
+      var s = document.createElement('canvas');
+      s.width = s.height = 64;
+      var g = s.getContext('2d');
+      var grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grad.addColorStop(0, rgba(c, 0.55));
+      grad.addColorStop(0.4, rgba(c, 0.18));
+      grad.addColorStop(1, rgba(c, 0));
+      g.fillStyle = grad;
+      g.fillRect(0, 0, 64, 64);
+      return s;
+    }
 
     function palette() {
       var cs = getComputedStyle(banner);
       dark = document.documentElement.getAttribute('data-theme') !== 'flour';
       colours = families.map(function (_, i) {
-        return parse(cs.getPropertyValue('--graph-cat-' + (i + 1)), '#dda25c');
+        return parse(cs.getPropertyValue('--graph-cat-' + (i % 12 + 1)), '#dda25c');
       });
       if (!colours.length) colours = [parse(cs.getPropertyValue('--gold-500'), '#dda25c')];
+      gold = parse(cs.getPropertyValue(dark ? '--gold-400' : '--gold-700'), dark ? '#e8b876' : '#a86f34');
+      sprites = colours.map(sprite);
     }
 
     function setType(c) {
@@ -1859,8 +1895,15 @@
         : nr.top - cr.top + nr.height * 0.78;
     }
 
+    // When the k-th bead of the count takes off. The count quickens towards
+    // the mark, then each bead past it waits a beat of its own.
+    function launch(k) {
+      if (k < mark) return 0.35 + 2.0 * Math.pow(k / Math.max(1, mark - 1), 0.62);
+      return launch(mark - 1) + 0.55 * (k - mark + 1);
+    }
+
     function layout() {
-      beads = [];
+      beads = []; bySlug = {};
       if (W < 2 || H < 2) return;
       measure();
       var off = document.createElement('canvas');
@@ -1870,10 +1913,9 @@
       o.fillStyle = '#fff';
       o.fillText(text, glyph.x, glyph.y);
       var img = o.getImageData(0, 0, off.width, off.height).data;
-      var n = skills.length;
       // Candidates on a grid over the strokes, fine enough that the spreading
-      // below has real choices to make: a few times as many as there are beads.
-      var step = Math.max(2, glyph.size / 14), cand = [];
+      // below has real choices: a few times as many as there are beads.
+      var step = Math.max(2, glyph.size / 14), cand = [], i, j;
       for (var tries = 0; tries < 10; tries++) {
         cand = [];
         for (var y = step / 2; y < off.height; y += step) {
@@ -1881,19 +1923,19 @@
             if (img[((y | 0) * off.width + (x | 0)) * 4 + 3] >= 140) cand.push([x, y]);
           }
         }
-        if (cand.length >= n * 4 || step <= 2) break;
+        if (cand.length >= total * 4 || step <= 2) break;
         step = Math.max(2, step * 0.75);
       }
-      // Too small to hold one bead per skill: the type-set numeral stays.
-      if (cand.length < n) return;
+      // Too small to hold one bead per skill: the type-set plate stays.
+      if (cand.length < total) return;
 
-      var dist = [], first = 0, i, j;
+      var dist = [], first = 0;
       for (i = 0; i < cand.length; i++) {
         dist.push(Infinity);
         if (cand[i][0] < cand[first][0]) first = i;
       }
       var picked = [], cur = first;
-      for (var k = 0; k < n; k++) {
+      for (var k = 0; k < total; k++) {
         picked.push(cand[cur]);
         var best = -1, bestD = -1;
         for (j = 0; j < cand.length; j++) {
@@ -1903,7 +1945,6 @@
         }
         cur = best;
       }
-      // Bead size from the typical gap to the nearest neighbour.
       var gaps = picked.map(function (p) {
         var m2 = Infinity;
         picked.forEach(function (q) {
@@ -1916,13 +1957,34 @@
       radius = Math.max(2, gaps[gaps.length >> 1] * 0.4);
 
       picked.sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
-      left = picked[0][0]; right = picked[picked.length - 1][0];
-      beads = picked.map(function (p, idx) {
-        return {
-          x: p[0], y: p[1], slug: skills[idx][0], family: skills[idx][1],
-          delay: 0.35 + idx * (2.4 / n), phase: Math.random() * TAU
-        };
+      left = Infinity; right = -Infinity; top = Infinity; bottom = -Infinity;
+      picked.forEach(function (p) {
+        if (p[0] < left) left = p[0];
+        if (p[0] > right) right = p[0];
+        if (p[1] < top) top = p[1];
+        if (p[1] > bottom) bottom = p[1];
       });
+      var nf = Math.max(1, colours.length);
+      beads = picked.map(function (p, idx) {
+        var slug = skills[idx][0], family = skills[idx][1];
+        // Each family's stream starts from its own point on the floor.
+        var ox = left + (family % nf + 0.5) / nf * (right - left) + (Math.random() - 0.5) * radius * 3;
+        var oy = H + radius * 4;
+        var b = {
+          x: p[0], y: p[1], slug: slug, family: family,
+          ox: ox, oy: oy,
+          cx: (ox + p[0]) / 2 + (Math.random() - 0.5) * (right - left) * 0.18,
+          cy: Math.min(p[1], oy) - (oy - p[1]) * 0.35,
+          crosser: crossers.indexOf(slug) >= 0, rank: 0, delay: 0,
+          phase: Math.random() * TAU
+        };
+        bySlug[slug] = b;
+        return b;
+      });
+      // The count: catalog order, with the crossers held back to the end.
+      var order = beads.filter(function (b) { return !b.crosser; })
+        .concat(crossers.map(function (s) { return bySlug[s]; }).filter(Boolean));
+      order.forEach(function (b, k) { b.rank = k + 1; b.delay = launch(k); });
     }
 
     function resize() {
@@ -1935,59 +1997,166 @@
 
     function colourOf(b) { return colours[b.family % colours.length]; }
 
+    function where(b, age) {
+      var p = reduced || born < 0 ? 1 : clamp01((age - b.delay) / FLIGHT);
+      if (p >= 1) return { x: b.x, y: b.y, p: 1 };
+      var e = 1 - Math.pow(1 - p, 3), u = 1 - e;
+      return {
+        x: u * u * b.ox + 2 * u * e * b.cx + e * e * b.x,
+        y: u * u * b.oy + 2 * u * e * b.cy + e * e * b.y,
+        p: p, e: e
+      };
+    }
+
+    function setTally(n) {
+      if (!tallyCount) return;
+      tallyCount.textContent = n >= total ? String(total) : ('00' + n).slice(-3);
+    }
+
+    function cross(now) {
+      crossedAt = now;
+      if (tally) tally.classList.add('is-past');
+      if (reduced) return;
+      banner.classList.remove('is-crossing');
+      void banner.offsetWidth;
+      banner.classList.add('is-crossing');
+      window.setTimeout(function () { banner.classList.remove('is-crossing'); }, 1700);
+      var cx = (left + right) / 2, cy = (top + bottom) / 2, span = right - left;
+      rings.push({ at: now, x: cx, y: cy, span: span });
+      rings.push({ at: now + 140, x: cx, y: cy, span: span * 0.8 });
+      for (var i = 0; i < 110; i++) {
+        var a = Math.random() * TAU, speed = 160 + Math.random() * 340;
+        var from = beads[(Math.random() * beads.length) | 0];
+        sparks.push({
+          x: from.x, y: from.y,
+          vx: Math.cos(a) * speed, vy: Math.sin(a) * speed - 120,
+          life: 0, max: 0.9 + Math.random() * 0.9,
+          size: 1 + Math.random() * 1.6,
+          c: Math.random() < 0.35 ? gold : colourOf(from)
+        });
+      }
+    }
+
+    function count(age, now) {
+      if (born < 0) return;
+      var n = 0;
+      beads.forEach(function (b) { if (age >= b.delay + FLIGHT) n++; });
+      if (n === landed) return;
+      landed = n;
+      setTally(n);
+      if (n >= mark && crossedAt < 0) cross(now);
+    }
+
     function draw(now) {
       var t = (now - t0) / 1000;
+      var dt = Math.min(0.033, Math.max(0.001, (now - last) / 1000));
+      last = now;
       var age = born < 0 ? 99 : (now - born) / 1000;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
       if (!beads.length) return;
+      count(age, now);
 
       var focus = hovered ? hovered.family : -1;
-      // A slow shimmer crosses left to right, once every few seconds, after
-      // the count is in.
-      var phase = (t - 4) % 8;
-      var sweep = reduced || age < 3 || phase < 0 || phase > 1.8 ? -1 : left - 80 + phase / 1.8 * (right - left + 160);
+      var sinceCross = crossedAt < 0 ? 99 : (now - crossedAt) / 1000;
+      var flash = reduced ? 0 : Math.exp(-sinceCross * 3.2);
+      // A slow shimmer crosses left to right every few seconds, once the
+      // count is in and the burst has settled.
+      var phase = (t - 7) % 9;
+      var sweep = reduced || sinceCross < 3 || phase < 0 || phase > 1.8 ? -1 : left - 80 + phase / 1.8 * (right - left + 160);
 
+      if (dark) ctx.globalCompositeOperation = 'lighter';
       beads.forEach(function (b) {
-        var since = age - b.delay;
-        if (since < 0) return;
+        // Nothing is drawn until the count starts, and a bead only once it
+        // has taken off.
+        if (!reduced && (born < 0 || age < b.delay)) return;
+        var pos = where(b, age);
         var c = colourOf(b);
-        var on = reduced ? 1 : Math.min(1, since / 0.25);
-        var pop = reduced ? 1 : 1 + 0.45 * Math.sin(Math.min(1, since / 0.35) * Math.PI);
-        var shine = sweep < 0 ? 0 : Math.exp(-(b.x - sweep) * (b.x - sweep) / 1400);
         var level = focus >= 0 && b.family !== focus ? 0.26 : 1;
-        var r = radius * pop * (b === hovered ? 1.55 : focus === b.family ? 1.12 : 1);
-        var twinkle = reduced ? 0 : 0.07 * Math.sin(t * 1.6 + b.phase);
-        var a = on * level;
+        var shine = sweep < 0 ? 0 : Math.exp(-(b.x - sweep) * (b.x - sweep) / 1400);
+        var twinkle = reduced ? 0 : 0.06 * Math.sin(t * 1.6 + b.phase);
+        var landedFor = reduced || born < 0 ? 9 : age - b.delay - FLIGHT;
+        var pop = landedFor >= 0 && landedFor < 0.3 ? 1 + 0.55 * Math.sin(landedFor / 0.3 * Math.PI) : 1;
+        var grow = pos.p < 1 ? 0.55 + 0.45 * pos.e : 1;
+        var r = radius * grow * pop * (b === hovered ? 1.55 : focus === b.family ? 1.12 : 1);
+        var glow = level * (0.9 + twinkle + shine * 0.8 + flash * 1.2);
 
+        if (pos.p < 1) {
+          // The trail it leaves on the way up.
+          var back = where(b, age - 0.07);
+          ctx.lineCap = 'round';
+          ctx.lineWidth = r * 1.1;
+          ctx.strokeStyle = rgba(c, 0.3 * level);
+          ctx.beginPath(); ctx.moveTo(back.x, back.y); ctx.lineTo(pos.x, pos.y); ctx.stroke();
+        }
         if (dark) {
-          var halo = r * (2.7 + shine * 1.3);
-          var grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, halo);
-          grad.addColorStop(0, rgba(c, Math.max(0, (0.34 + shine * 0.3 + twinkle) * a)));
-          grad.addColorStop(1, rgba(c, 0));
-          ctx.fillStyle = grad;
-          ctx.fillRect(b.x - halo, b.y - halo, halo * 2, halo * 2);
+          var hs = r * (5.2 + shine * 2 + flash * 3);
+          ctx.globalAlpha = Math.min(1, glow);
+          ctx.drawImage(sprites[b.family % sprites.length], pos.x - hs / 2, pos.y - hs / 2, hs, hs);
+          ctx.globalAlpha = 1;
+        }
+        if (landedFor >= 0 && landedFor < 0.45 && !reduced) {
+          // A ripple where it lands.
+          var k = landedFor / 0.45;
+          ctx.lineWidth = 1.2;
+          ctx.strokeStyle = rgba(c, 0.5 * (1 - k) * level);
+          ctx.beginPath(); ctx.arc(pos.x, pos.y, r * (1.2 + k * 2.6), 0, TAU); ctx.stroke();
         }
         ctx.beginPath();
-        ctx.arc(b.x, b.y, r, 0, TAU);
-        ctx.fillStyle = rgba(dark ? mix(c, [255, 255, 255], 0.1 + shine * 0.35) : mix(c, [255, 255, 255], shine * 0.3), a);
+        ctx.arc(pos.x, pos.y, r, 0, TAU);
+        var body = dark ? mix(c, [255, 255, 255], 0.08 + shine * 0.35 + flash * 0.5) : mix(c, [255, 255, 255], shine * 0.3 + flash * 0.35);
+        ctx.fillStyle = rgba(body, level);
         ctx.fill();
         if (!dark) {
           ctx.lineWidth = 1;
-          ctx.strokeStyle = rgba(mix(c, [0, 0, 0], 0.35), 0.55 * a);
+          ctx.strokeStyle = rgba(mix(c, [0, 0, 0], 0.35), 0.55 * level);
           ctx.stroke();
         }
         ctx.beginPath();
-        ctx.arc(b.x - r * 0.3, b.y - r * 0.32, r * 0.32, 0, TAU);
-        ctx.fillStyle = rgba([255, 255, 255], (dark ? 0.3 : 0.4) * a * (0.7 + shine));
+        ctx.arc(pos.x - r * 0.3, pos.y - r * 0.32, r * 0.32, 0, TAU);
+        ctx.fillStyle = rgba([255, 255, 255], (dark ? 0.28 : 0.4) * level * (0.7 + shine));
         ctx.fill();
+        if (b.crosser && pos.p >= 1) {
+          // The skills that took it past a hundred keep a ring of gold.
+          ctx.lineWidth = 1.4;
+          ctx.strokeStyle = rgba(gold, 0.85 * level);
+          ctx.beginPath(); ctx.arc(pos.x, pos.y, r + 3.5, 0, TAU); ctx.stroke();
+        }
       });
 
-      if (hovered) {
+      // The crossing: rings going out, and sparks under gravity.
+      for (var i = rings.length - 1; i >= 0; i--) {
+        var ring = rings[i], rt = (now - ring.at) / 1000;
+        if (rt < 0) continue;
+        if (rt > 1.1) { rings.splice(i, 1); continue; }
+        var ke = 1 - Math.pow(1 - rt / 1.1, 3);
+        ctx.lineWidth = 2.4 * (1 - ke) + 0.4;
+        ctx.strokeStyle = rgba(gold, 0.7 * (1 - ke));
         ctx.beginPath();
-        ctx.arc(hovered.x, hovered.y, radius * 1.55 + 3.5, 0, TAU);
+        ctx.ellipse(ring.x, ring.y, ring.span * (0.25 + ke * 0.75), ring.span * (0.18 + ke * 0.5), 0, 0, TAU);
+        ctx.stroke();
+      }
+      ctx.lineCap = 'round';
+      for (var s = sparks.length - 1; s >= 0; s--) {
+        var p = sparks[s];
+        p.life += dt;
+        if (p.life > p.max) { sparks.splice(s, 1); continue; }
+        p.vy += 420 * dt;
+        p.vx *= 1 - 1.6 * dt; p.vy *= 1 - 1.6 * dt;
+        p.x += p.vx * dt; p.y += p.vy * dt;
+        var fade = 1 - p.life / p.max;
+        ctx.lineWidth = p.size;
+        ctx.strokeStyle = rgba(p.c, 0.95 * fade);
+        ctx.beginPath(); ctx.moveTo(p.x - p.vx * 0.035, p.y - p.vy * 0.035); ctx.lineTo(p.x, p.y); ctx.stroke();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+
+      if (hovered) {
+        var hp = where(hovered, age);
+        ctx.beginPath();
+        ctx.arc(hp.x, hp.y, radius * 1.55 + 4.5, 0, TAU);
         ctx.lineWidth = 1.5;
-        ctx.strokeStyle = rgba(colourOf(hovered), 0.9);
+        ctx.strokeStyle = rgba(colourOf(hovered), 0.95);
         ctx.stroke();
       }
     }
@@ -2015,8 +2184,8 @@
       tip.hidden = false;
       var w = tip.offsetWidth, h = tip.offsetHeight;
       var x = Math.min(Math.max(b.x - w / 2, 6), Math.max(6, W - w - 6));
-      var y = b.y - radius * 2 - h - 4;
-      if (y < 6) y = b.y + radius * 2 + 4;
+      var y = b.y - radius * 2 - h - 6;
+      if (y < 6) y = b.y + radius * 2 + 6;
       tip.style.transform = 'translate(' + Math.round(x) + 'px,' + Math.round(y) + 'px)';
     }
 
@@ -2060,21 +2229,42 @@
       window.location.href = href.replace('{slug}', encodeURIComponent(b.slug));
     });
 
+    // The links under "What took it past a hundred" point at their beads.
+    toArray(banner.querySelectorAll('[data-bead]')).forEach(function (link) {
+      function on() { setHovered(bySlug[link.getAttribute('data-bead')] || null); }
+      function off() { setHovered(null); }
+      link.addEventListener('mouseenter', on);
+      link.addEventListener('focus', on);
+      link.addEventListener('mouseleave', off);
+      link.addEventListener('blur', off);
+    });
+
+    function start() {
+      if (born >= 0 || !begun || !beads.length) return;
+      if (reduced) { setTally(total); cross(performance.now()); return; }
+      born = performance.now();
+      setTally(0);
+    }
+
     function begin() {
       if (begun) return;
       begun = true;
       palette();
       resize();
       if (!beads.length) return;
-      born = reduced ? -1 : performance.now();
       banner.classList.add('is-drawn');
+      if (visible) start();
       kick();
     }
 
     resize();
     if (window.ResizeObserver) new ResizeObserver(function () { resize(); kick(); }).observe(canvas);
     if (window.IntersectionObserver) {
-      new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; kick(); }).observe(banner);
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        if (visible) start();
+        kick();
+      }).observe(banner);
     }
     new MutationObserver(function () { palette(); kick(); })
       .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });

@@ -685,14 +685,48 @@ def check_century_banner() -> None:
     check("the numeral is set in type under the canvas, for anyone without it",
           '<span class="century-banner__numeral">100</span>' in banner
           and '<canvas class="century-banner__canvas"></canvas>' in banner)
+    check("...with the true count on the tally under it, at rest, before any script runs",
+          '<span class="century-banner__tally-count">101</span>' in banner)
     check("every number comes from the arguments",
-          "holds 101 skills in 2 families" in banner and "<dd>101</dd>" in banner
-          and "<dd>2</dd>" in banner and "Browse all 101" in banner)
+          "crossed a hundred: 101 skills in 2 families" in banner and "Browse all 101" in banner)
+    check("the milestone is told in a sentence, not as a row of stat tiles",
+          "graph-banner__stat" not in banner and "<dl" not in banner)
     check("the sentence about beads is hidden from assistive tech, and the stylesheet "
           "shows it only once they are drawn",
           '<span class="century-banner__hint" aria-hidden="true">' in banner)
     check("its button goes to the skills on this page",
           'class="century-banner__cta" href="#skills"' in banner)
+    check("with none of the crossers in the library, no list of them and no data for them",
+          "century-banner__crossers" not in banner and 'data-crossers="[]"' in banner)
+
+    # The real crossers, placed into the synthetic library.
+    crossing = dict(many)
+    for slug in templates.CENTURY_CROSSERS:
+        crossing[slug] = {"slug": slug, "name": slug}
+    crossing_categories = [
+        {"slug": "first", "title": "First family", "skill_slugs": slugs[:40]},
+        {"slug": "second", "title": "Second family",
+         "skill_slugs": slugs[40:] + list(templates.CENTURY_CROSSERS)},
+    ]
+    crossed = render_index(crossing_categories, crossing, plugin_version="2.1.0")
+    cbanner = crossed.split('<aside class="century-banner"', 1)[1].split("</aside>", 1)[0]
+    check("the skills that took it past a hundred are listed as links to their pages",
+          all(f'href="/skills/{slug}/" data-bead="{slug}"' in cbanner
+              for slug in templates.CENTURY_CROSSERS))
+    check("...each naming its bead, so hovering or focusing it lights the bead",
+          cbanner.count('data-bead="') == len(templates.CENTURY_CROSSERS))
+    check("...each dot in its family's colour, and the name beside it carrying the meaning",
+          'style="--dot: var(--graph-cat-2)"' in cbanner
+          and '<span class="century-banner__crosser-name">writing-agent-instructions</span>' in cbanner)
+    check("...under a label the list is named by",
+          '<ul class="century-banner__crosser-list" aria-labelledby="century-crossers">' in cbanner
+          and 'id="century-crossers">What took it past a hundred</p>' in cbanner)
+    check("...and the picture is told which beads to count in last",
+          'data-crossers="[&quot;evaluating-llm-output&quot;,&quot;building-llm-features&quot;,'
+          '&quot;writing-agent-instructions&quot;]"' in cbanner)
+    real_skills = Path(__file__).resolve().parent.parent / "skills"
+    check("every crosser the banner names is a skill in this library",
+          all((real_skills / slug / "SKILL.md").is_file() for slug in templates.CENTURY_CROSSERS))
 
     check("a hundred is the mark, and ninety-nine is short of it",
           templates.century_is_new(100, "") and not templates.century_is_new(99, ""))

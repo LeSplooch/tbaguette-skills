@@ -182,20 +182,21 @@ class Strings:
     # is filled in, never written: it is maintained by hand in enough places.
     century_banner_label: str = "Milestone: past a hundred skills"
     century_banner_badge: str = "Milestone"
-    century_banner_title: str = "Past a hundred skills"
+    # "And counting" is literal: the tally under the numeral counts the
+    # skills in as they land, and ends past the hundred it celebrates.
+    century_banner_title: str = "A hundred skills, and counting"
     century_banner_lede_template: str = (
-        "The Atelier now holds {skill_count} skills in {category_count} "
-        "families, and every one of them still assumes nothing about your "
-        "stack, your language or your project."
+        "The Atelier has crossed a hundred: {skill_count} skills in "
+        "{category_count} families, and not one of them assumes your stack, "
+        "your language or your project."
     )
     # Only true once site.js has drawn the beads, so it is shown only then.
     century_banner_hint: str = (
-        "The hundred is made of them: one bead for each skill, in its "
-        "family’s colour. Point at a bead to see which, or click to open it."
+        "Every bead in the hundred is one of them, in its family’s colour. "
+        "Point at a bead to name it, and click to open it."
     )
-    century_banner_stat_skills: str = "skills"
-    century_banner_stat_families: str = "families"
-    century_banner_stat_assumed: str = "stacks or languages assumed"
+    century_banner_crossers_label: str = "What took it past a hundred"
+    century_banner_tally_label: str = "skills"
     century_banner_cta_template: str = "Browse all {skill_count}"
 
 
@@ -952,6 +953,14 @@ RELEASE_NEW_UNTIL = "2026-10-12"
 CENTURY = 100
 CENTURY_NEW_UNTIL = "2026-10-13"
 
+# The skills that took the library from ninety-eight past a hundred, in
+# catalog order. A fact about one day's history rather than a live count, so
+# it is written down once; test_templates checks every one still exists, so
+# a rename breaks the build instead of the banner. The picture counts these
+# in last, which puts the hundredth bead on the second of them.
+CENTURY_CROSSERS = ("evaluating-llm-output", "building-llm-features",
+                    "writing-agent-instructions")
+
 # The listing's address in Anthropic's plugin directory, once there is one.
 # Empty means not listed yet, and the banner says only what is true without
 # it: ready for the directory, on Claude Code today, on the other surfaces
@@ -1694,51 +1703,75 @@ def _render_century_banner(categories: list[dict], skills: dict, base_path: str 
     the release and the graph: an <aside> with a label, on the same terms as
     theirs (century_is_new), sharing their shell.
 
-    The picture is the library itself. The numeral is set in type, and
-    site.js redraws it from exactly as many beads as there are skills, one
-    per skill, in its family's colour from the graph's palette, laid left to
-    right in catalog order so the families read as bands across the digits.
-    Pointing at a bead names its skill and lights its family; clicking opens
-    it. The beads ride in the page as data -- a slug and a family index per
-    skill -- and the copy that describes them is shown only once they are
-    drawn, so a reader without the canvas is never told to point at
-    something that is not there.
+    The picture is the library itself, and it tells the milestone as an
+    event rather than a figure. The numeral is set in type; site.js redraws
+    it from exactly as many beads as there are skills, one per skill, in its
+    family's colour from the graph's palette, placed left to right in
+    catalog order so the families read as bands across the digits. Each
+    family streams up from its own point and arcs into place while the tally
+    under the numeral counts them in, the skills that crossed the line
+    (CENTURY_CROSSERS) last. At the hundredth the numeral flares and throws
+    sparks, and the one after it lands a beat later: past a hundred, not at
+    it.
+
+    Everything the picture shows is also in the markup a reader without it
+    gets: the count in the lede and on the tally, and the skills that
+    crossed the line as links. Hovering or focusing one of those links
+    lights its bead, which is the keyboard's way into the picture. The
+    sentence telling a reader to point at beads is shown only once there
+    are beads to point at.
 
     Every number comes from the arguments, never from the copy."""
     skill_count = len(skills)
     if not century_is_new(skill_count, last_updated_utc):
         return ""
-    beads = [
-        [slug, family]
+    family_of = {
+        slug: family
         for family, category in enumerate(categories)
         for slug in category["skill_slugs"]
-        if slug in skills
-    ]
+    }
+    beads = [[slug, family_of[slug]]
+             for category in categories for slug in category["skill_slugs"]
+             if slug in skills]
+    crossers = [slug for slug in CENTURY_CROSSERS if slug in skills and slug in family_of]
     beads_json = json.dumps(beads, separators=(",", ":"))
+    crossers_json = json.dumps(crossers, separators=(",", ":"))
     titles_json = json.dumps([c["title"] for c in categories], ensure_ascii=False,
                              separators=(",", ":"))
     href = skill_url("{slug}", base_path, locale)
     category_count = len(categories)
     lede = strings.century_banner_lede_template.format(
         skill_count=skill_count, category_count=category_count)
-    stats = [(skill_count, strings.century_banner_stat_skills),
-             (category_count, strings.century_banner_stat_families),
-             (0, strings.century_banner_stat_assumed)]
-    stats_html = "".join(
-        f'<div class="graph-banner__stat"><dt>{escape_html(label)}</dt><dd>{value}</dd></div>'
-        for value, label in stats
-    )
+    crossers_html = ""
+    if crossers:
+        # The dot takes its family's colour from the same palette the beads
+        # use; the name beside it is what carries the meaning.
+        items = "".join(
+            f'<li><a class="century-banner__crosser" href="{skill_url(slug, base_path, locale)}" '
+            f'data-bead="{escape_html(slug)}" style="--dot: var(--graph-cat-{family_of[slug] % 12 + 1})">'
+            f'<span class="century-banner__crosser-dot" aria-hidden="true"></span>'
+            f'<span class="century-banner__crosser-name">{escape_html(slug)}</span></a></li>'
+            for slug in crossers
+        )
+        crossers_html = (
+            f'<div class="century-banner__crossers">'
+            f'<p class="century-banner__crossers-label" id="century-crossers">{escape_html(strings.century_banner_crossers_label)}</p>'
+            f'<ul class="century-banner__crosser-list" aria-labelledby="century-crossers">{items}</ul></div>'
+        )
     cta = strings.century_banner_cta_template.format(skill_count=skill_count)
     wheat = _icon("icon-wheat", css_class="icon century-banner__cta-icon", base_path=base_path)
-    return f"""<aside class="century-banner" aria-label="{escape_html(strings.century_banner_label)}" data-century-banner data-century-new-until="{CENTURY_NEW_UNTIL}" data-numeral="{CENTURY}" data-beads="{escape_html(beads_json)}" data-family-titles="{escape_html(titles_json)}" data-href="{escape_html(href)}">
+    return f"""<aside class="century-banner" aria-label="{escape_html(strings.century_banner_label)}" data-century-banner data-century-new-until="{CENTURY_NEW_UNTIL}" data-numeral="{CENTURY}" data-beads="{escape_html(beads_json)}" data-crossers="{escape_html(crossers_json)}" data-family-titles="{escape_html(titles_json)}" data-href="{escape_html(href)}">
       <div class="century-banner__stage" aria-hidden="true">
-        <span class="century-banner__numeral">{CENTURY}</span>
+        <div class="century-banner__plate">
+          <span class="century-banner__numeral">{CENTURY}</span>
+          <span class="century-banner__tally"><span class="century-banner__tally-count">{skill_count}</span><span class="century-banner__tally-label">{escape_html(strings.century_banner_tally_label)}</span></span>
+        </div>
         <canvas class="century-banner__canvas"></canvas>
       </div>
       <div class="century-banner__body">
         <p class="century-banner__title"><span class="change-badge change-badge--new">{escape_html(strings.century_banner_badge)}</span><span>{escape_html(strings.century_banner_title)}</span></p>
         <p class="century-banner__lede">{escape_html(lede)} <span class="century-banner__hint" aria-hidden="true">{escape_html(strings.century_banner_hint)}</span></p>
-        <dl class="graph-banner__stats century-banner__stats">{stats_html}</dl>
+        {crossers_html}
         <a class="century-banner__cta" href="#skills">{wheat}<span>{escape_html(cta)}</span></a>
       </div>
       <span class="century-banner__tip" aria-hidden="true" hidden></span>
