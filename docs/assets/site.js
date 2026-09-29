@@ -1180,10 +1180,12 @@
   }
 
   // The magnet. Only the link's inner face is transformed, never the link,
-  // so however large it gets it never covers a neighbour's click target.
-  // Springs, under-damped, so it overshoots and wobbles like something made
-  // of dough: it grows as the pointer nears — faster the nearer it gets —
-  // leans toward it, drifts a little after it, and boings on contact.
+  // so it never covers a neighbour's click target. As the pointer nears it
+  // lifts a little, leans toward it and drifts a few pixels after it, with a
+  // small give on contact and on a press. It used to swell to 2.7x from
+  // 300px away and wobble like dough; that read as a joke on every pass of
+  // the mouse across the header, so it is now a nudge: at most 1.1x, a
+  // couple of degrees, springs damped enough to settle without ringing.
   function initGraphMagnet() {
     var link = document.querySelector('[data-graph-magnet]');
     if (!link || prefersReducedMotion()) return;
@@ -1192,8 +1194,8 @@
     // should still get the joke.
     var face = link.querySelector('.site-header__graph-face');
     if (!face) return;
-    var REACH = 300;      // px from the pill's edge at which it starts to care
-    var GROWTH = 1.7;     // extra scale when the pointer is on it: 2.7x
+    var REACH = 120;      // px from the pill's edge at which it starts to care
+    var GROWTH = 0.1;     // extra scale when the pointer is on it: 1.1x
     var rect = null;
     var s = 1, sv = 0, sT = 1;          // scale
     var w = 0, wv = 0;                  // squash-and-stretch wobble
@@ -1214,13 +1216,13 @@
       var ey = Math.max(0, Math.abs(oy) - rect.height / 2);
       var t = Math.max(0, 1 - Math.sqrt(ex * ex + ey * ey) / REACH);
       var now = ex === 0 && ey === 0;
-      if (now && !inside) { sv += 9; wv += 14; }   // boing
-      if (!now && inside) { wv -= 8; }
+      if (now && !inside) { sv += 0.8; wv += 1.5; }   // a small give
+      if (!now && inside) { wv -= 1; }
       inside = now;
       sT = 1 + GROWTH * Math.pow(t, 2.4);
-      tiltT = Math.max(-1, Math.min(1, ox / 90)) * 9 * t;
-      dxT = Math.max(-14, Math.min(14, ox * 0.09)) * t;
-      dyT = Math.max(-8, Math.min(8, oy * 0.09)) * t;
+      tiltT = Math.max(-1, Math.min(1, ox / 90)) * 2.5 * t;
+      dxT = Math.max(-4, Math.min(4, ox * 0.04)) * t;
+      dyT = Math.max(-2, Math.min(2, oy * 0.04)) * t;
       link.classList.toggle('site-header__nav-link--near', t > 0.35);
       start();
     }
@@ -1234,11 +1236,13 @@
     function frame(time) {
       var dt = Math.min(0.033, (time - (last || time)) / 1000);
       last = time;
-      var r = spring(s, sv, sT, 170, 11, dt); s = r[0]; sv = r[1];
-      r = spring(w, wv, -sv * 0.012, 260, 9, dt); w = r[0]; wv = r[1];
-      r = spring(tilt, tiltV, tiltT, 120, 12, dt); tilt = r[0]; tiltV = r[1];
-      r = spring(dx, dxV, dxT, 120, 14, dt); dx = r[0]; dxV = r[1];
-      r = spring(dy, dyV, dyT, 120, 14, dt); dy = r[0]; dyV = r[1];
+      // Near critical damping (c = 2*sqrt(k) is critical): a hint of
+      // overshoot at most, never a wobble.
+      var r = spring(s, sv, sT, 170, 22, dt); s = r[0]; sv = r[1];
+      r = spring(w, wv, -sv * 0.012, 260, 28, dt); w = r[0]; wv = r[1];
+      r = spring(tilt, tiltV, tiltT, 120, 20, dt); tilt = r[0]; tiltV = r[1];
+      r = spring(dx, dxV, dxT, 120, 20, dt); dx = r[0]; dxV = r[1];
+      r = spring(dy, dyV, dyT, 120, 20, dt); dy = r[0]; dyV = r[1];
       var sx = s * (1 - w), sy = s * (1 + w);
       face.style.transform = 'translate(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px) rotate(' +
         tilt.toFixed(2) + 'deg) scale(' + sx.toFixed(4) + ',' + sy.toFixed(4) + ')';
@@ -1259,8 +1263,8 @@
       link.classList.remove('site-header__nav-link--near');
       start();
     });
-    // A press squashes it, a release springs it back.
-    link.addEventListener('pointerdown', function () { sv -= 14; wv -= 10; start(); });
+    // A press dips it slightly, and it comes straight back.
+    link.addEventListener('pointerdown', function () { sv -= 1.2; wv -= 1; start(); });
   }
 
   function initGraphBanner() {
