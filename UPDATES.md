@@ -37,9 +37,10 @@ holds any text file over 256 KiB for a reviewer.
   stolen by something still running on a machine that held it, such as a
   poisoned package or a worm, revoking it can set that thing off. Malware
   that wipes the home directory the moment its stolen token stops working has
-  shipped more than once. Take the machine off the network and remove what it
-  installed to keep itself running first, then revoke from a different
-  machine. For any other leak, revoke first as before.
+  shipped more than once. Take the machine off the network first, so it
+  cannot see the token start failing, then revoke from a different machine,
+  then clean or reimage the infected one before it reconnects. For any other
+  leak, revoke first as before.
 - `designing-ci-pipelines`: a CI job that runs an agent over an issue, a
   comment, or a pull request someone else wrote now gets the same rules as a
   pull request from a fork. That means no secrets, no write token, no cache a

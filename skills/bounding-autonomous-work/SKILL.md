@@ -221,9 +221,8 @@ The commonest form of this does not look like breaking anything. A command fails
 on a credential mismatch — wrong account, missing scope, expired token — and the
 run goes looking for one that works: another environment file, a config in a
 neighbouring project, a token in shell history. A mismatch is a refusal, and a
-substitute credential is the bypass. In one 2026 run a staging fix hit exactly
-this, found a broadly scoped token in a file about something else, and used it to
-delete a production volume and the backups stored on it, in one call.
+substitute credential is the bypass; `deciding-reversibility` has the 2026 run
+that took one and deleted a production volume along with its backups.
 
 What the run does instead is what it does at any door: prepare fully, and stop.
 Name the guard, what triggered it, what would clear it, and what remains

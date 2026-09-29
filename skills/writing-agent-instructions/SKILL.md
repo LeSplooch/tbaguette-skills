@@ -33,13 +33,13 @@ One test, applied to every line: **could the agent find this out from the reposi
 | Rationale the code cannot show — "no ORM here, because…", "this looks dead and is loaded by name" | Session history, progress notes, what was tried last week |
 | Where something lives when the layout misleads | Procedures used in one kind of task, loaded into every task |
 
-A study of instruction files in a hundred popular repositories in 2026 found the failing column everywhere: rules a linter already enforced in about three files in five, bloat in two in five, and procedures that belonged somewhere loaded on demand in a third — usually together, and usually alongside instructions contradicting each other.
+A study of instruction files in a hundred popular repositories in 2026 found rules a linter already enforced in about three files in five, bloat in two in five, and procedures that belonged somewhere loaded on demand in a third — and those often came together, alongside instructions that contradicted each other.
 
 History has a home, and it is not here. What happened and where work stopped goes in a handoff note beside the work (`checkpointing-long-runs`); a decision and its reasons go in a decision record (`writing-adrs`). The instruction file may point at either in one line.
 
 ## A rule that must hold goes in a tool
 
-Prose is probabilistic. It is followed most of the time, less often late in a long session than early, and never in the one run where it mattered and the context had drifted. So every rule that *must* hold gets moved out of the file and into something that runs: a formatter, a linter rule, a test, a pre-commit hook, a permission the agent does not have. The file keeps at most the reason, in one line, so the agent understands the refusal when it meets it.
+Prose is probabilistic. It is followed most of the time, and less often late in a long session than early. So every rule that *must* hold gets moved out of the file and into something that runs: a formatter, a linter rule, a test, a pre-commit hook, a permission the agent does not have. The file keeps at most the reason, in one line, so the agent understands the refusal when it meets it.
 
 The tool then becomes the best-timed instruction there is. A linter message that says how to fix what it flagged is read at the exact moment it applies, by a reader who is looking at the offending line — no standing file can do that. Write enforcement messages as instructions: what is wrong, what to do instead, where the rule's reason lives.
 
@@ -58,14 +58,14 @@ The same goes for a correction that feels like it should become permanent. Most 
 ## Write for a literal reader
 
 - **Say what to do.** "Run the fast suite with `-k unit` before committing" is followable; "don't forget the tests" is a mood. Where a prohibition is the point, pair it with the thing to do instead.
-- **Attach the reason at the point of the rule.** A rule with its reason generalizes to the cases the rule did not list; a bare rule is applied to its letter, including where the letter is wrong. When one skill library cut its explanations to save tokens and tested the result, compliance with its central rule under pressure fell from eight runs in ten to five, so the arguments went back in — as short rows placed where the reader meets the temptation, rather than as an essay at the top.
+- **Attach the reason at the point of the rule.** A rule with its reason generalizes to the cases the rule did not list; a bare rule is applied to its letter, including where the letter is wrong. When one skill library cut its explanations to save tokens and ran a small test of the result, compliance with its central rule under pressure dropped far enough that the arguments went back in — as short rows placed where the reader meets the temptation, rather than as an essay at the top.
 - **Use words the reader already knows.** A private vocabulary costs a definition every time it appears, and the definition is the line that gets dropped.
-- **Do not shout.** Capitals and "CRITICAL" on every rule make none of them critical, and current models over-apply emphasized rules to cases they were never meant for. Keep emphasis for the one rule where a violation cannot be undone, and put that one first.
+- **Do not shout.** Capitals and "CRITICAL" on every rule make none of them critical, and models tuned to follow instructions closely over-apply emphasized rules to cases they were never meant for. Keep emphasis for the one rule where a violation cannot be undone, and put that one first.
 - **Split by sequence when order matters.** A later step visible too early invites the reader to skip to it; a procedure whose phases must not be merged is safer as separate documents loaded in turn.
 
 ## A description is a trigger, not a summary
 
-For a skill, a tool, or anything else chosen from a listing, the description decides whether the body is ever read — and the listing is budgeted, so descriptions are truncated, and the least-used are dropped first. Write it as the situations, symptoms, and phrasings in which the thing applies, most common first. Do not summarize the procedure in it: a reader that finds the procedure in the description follows the summary and skips the body, which is how a skill with a two-stage check gets run with one stage. State what it covers in a closing clause, as nouns, so a reader scanning the listing can tell neighbours apart.
+For a skill, a tool, or anything else chosen from a listing, the description decides whether the body is ever read — and in some harnesses the listing is budgeted, so descriptions are truncated or the least-used dropped first. Write it as the situations, symptoms, and phrasings in which the thing applies, most common first. Do not summarize the procedure in it: a reader that finds the procedure in the description follows the summary and skips the body, which is how a skill with a two-stage check gets run with one stage. State what it covers in a closing clause, as nouns, so a reader scanning the listing can tell neighbours apart.
 
 ## Test it against a run without it
 
@@ -93,7 +93,7 @@ An instruction file is executed, not read: whatever it says, an agent does with 
 
 ## Red flags
 
-- "Let me add that to CLAUDE.md so it doesn't happen again" — said about something a tool could enforce, or about this task only.
+- "Let me add that to the instruction file so it doesn't happen again" — said about something a tool could enforce, or about this task only.
 - A generated instruction file committed without a single line removed.
 - An instruction file longer than the last time anyone read it end to end.
 - "IMPORTANT" or "MUST" appearing more often than once a screen.

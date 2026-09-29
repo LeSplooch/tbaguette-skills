@@ -7,7 +7,7 @@ description: Use when a feature's correctness depends on text, a label, a decisi
 
 ## Overview
 
-A feature built on a language model is not correct or incorrect. It is correct at a rate, on a distribution of inputs, and both move — the rate when a prompt, a model, or a retrieval step changes, the distribution when users do something new. An eval is the test suite for that rate. The common failure is not having no evals; it is having a dashboard of generic scores, chosen before anyone looked at what the feature actually gets wrong, that moves a little on every change and decides nothing.
+A feature built on a language model is not correct or incorrect. It is correct at a rate, on a distribution of inputs, and both move — the rate when a prompt, a model, or a retrieval step changes, the distribution when users do something new. An eval is the test suite for that rate. The common failure is a dashboard of generic scores, chosen before anyone looked at what the feature actually gets wrong, that moves a little on every change and decides nothing.
 
 So the order matters more than the tooling: look at real outputs, name the failures you see, write one pass/fail check per failure, measure the checks themselves, and report every number with the uncertainty it actually has.
 
@@ -65,7 +65,7 @@ A **capability** suite holds what the feature cannot yet do reliably. Its pass r
 
 Deterministic checks can block a merge like any test. A suite that calls a live model is slower, costs money, and varies, so run it as its own gate — on changes to the prompt, model, retrieval, or tools, compared against the last accepted baseline with a threshold rather than per-case red and green (`designing-ci-pipelines`). And write the failing case before changing the prompt to fix it (`writing-the-failing-test-first`); a prompt edit made without one is a guess you cannot tell apart from a fix.
 
-After release, route a sample of production traffic through the same checks. Users' inputs drift, the provider's model is updated in place more often than its name changes, and a regression that only shows on this month's inputs is invisible offline (`observing-production-safely`).
+After release, route a sample of production traffic through the same checks. Users' inputs drift, even a pinned model's serving stack can change under its name, and a regression that only shows on this month's inputs is invisible offline (`observing-production-safely`).
 
 ## When the answer depends on retrieval, find which half failed
 
@@ -91,5 +91,5 @@ A retrieval-backed answer has two stages, and they fail differently. First ask w
 - A model judge in the pipeline with no measured agreement against a human.
 - "It passed" about a check on model output that ran once.
 - A comparison of two prompts reported without the number of cases or the uncertainty.
-- The prompt and the model changed in the same commit, and one eval run is meant to account for both.
+- The prompt and the model changed together, and one eval run is meant to account for both.
 - An eval set nobody has added a case to since launch.

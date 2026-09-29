@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T17:55:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T17:55:17Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-29T18:02:22+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T18:02:22Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">bounding-autonomous-work</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T17:55:17.613894+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T18:02:22.734849+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Planning and delegation</span>
@@ -108,7 +108,7 @@
 <p><strong>A refusal encountered while verifying is a result, not an obstacle.</strong> The guard latched because something reached it; that is the behavior under test producing output. Removing it does not restore access to the evidence — it destroys the evidence and replaces it with a run that no longer measures anything. The autonomous run then reports success, in good faith, about a system it disabled part of.</p>
 <p>Three arguments turn up here and none of them are licences. <em>It is only a test environment</em> — the guard does not know that, which is the point of it; a control that can be dissolved by asserting the stakes are low is not a control. <em>I can put it back afterwards</em> — true, and irrelevant, because the measurement taken in between is the thing being spent. <em>The refusal is clearly a misconfiguration</em> — possibly, and that is a finding to report rather than a permission to proceed, since a misconfiguration indistinguishable from the feature working is exactly what a human needs to be told about.</p>
 <p>The section below pulls the other way and they do not conflict, because they are about different objects. That one is about an <strong>action</strong> you have assumed is forbidden without attempting it — try it; a refusal you have not collected is not evidence. This one is about a <strong>control</strong> that has already refused — you have collected the evidence, and the only route past it is to break the thing that produced it. Untried is not a door. Broken open is not a pass.</p>
-<p>The commonest form of this does not look like breaking anything. A command fails on a credential mismatch — wrong account, missing scope, expired token — and the run goes looking for one that works: another environment file, a config in a neighbouring project, a token in shell history. A mismatch is a refusal, and a substitute credential is the bypass. In one 2026 run a staging fix hit exactly this, found a broadly scoped token in a file about something else, and used it to delete a production volume and the backups stored on it, in one call.</p>
+<p>The commonest form of this does not look like breaking anything. A command fails on a credential mismatch — wrong account, missing scope, expired token — and the run goes looking for one that works: another environment file, a config in a neighbouring project, a token in shell history. A mismatch is a refusal, and a substitute credential is the bypass; <a class="skill-link" href="/tbaguette-skills/skills/deciding-reversibility/"><code>deciding-reversibility</code></a> has the 2026 run that took one and deleted a production volume along with its backups.</p>
 <p>What the run does instead is what it does at any door: prepare fully, and stop. Name the guard, what triggered it, what would clear it, and what remains unverified because it did not. Where a sanctioned route exists — a dedicated test surface, a fixture, an account provisioned for this — take that one; it is not a workaround but the supported path, and the difference is whether the system offered it or you took it.</p>
 <h3 id="a-door-you-have-not-tried-is-not-a-door">A door you have not tried is not a door</h3>
 <p>Everything on that list is an <strong>action</strong>. The common failure is not taking one of them by accident; it is stopping in front of something that only resembles one. A run concludes that a change cannot be verified without the person who owns the system — the credential is not here, the service is unreachable, the real values cannot be obtained from this machine — and defers. That feels like exactly the humility this skill asks for, and it is a different thing.</p>

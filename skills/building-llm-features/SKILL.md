@@ -29,7 +29,7 @@ Most of what goes wrong in these features is ordinary engineering applied too la
 - **Pin the exact dated identifier**, not an alias that follows the latest release. An alias upgrades you on the provider's schedule, silently, with no diff to review and no change to roll back.
 - **Keep it in one place**, with the parameters that go with it, not repeated at each call site. The day it has to change, it changes in one reviewed line.
 - **Know when it expires.** Providers retire models on published schedules and requests fail afterwards; record the date beside the identifier and start the move while both models still answer. `upgrading-dependencies` treats that move as the behavioral major it is.
-- **Never change the model and the prompt in the same change.** When the eval moves, you need to know which one moved it.
+- **Measure a model change and a prompt change separately.** A new model often needs its prompt adjusted, so they may well ship together — but run the model swap on the old prompt first, then each prompt edit, so every movement in the evals has one cause.
 
 ## Prompts are code
 
@@ -56,7 +56,7 @@ Branch on the stop reason the provider reports, not on whether the text looks fi
 Anything that reached the model's context can steer its output: a user's message, a retrieved page, a tool result, a document a user uploaded. So the output is exactly as trusted as the least trusted thing it read, and it reaches a query, a page, a shell, a URL fetch, or a file path only through the same encoding and validation as a request field. Rendering it as HTML is an injection sink; letting it pick a URL to fetch is a request forgery; letting it name a file is path traversal.
 
 - **Scope what it can do, not what it is told.** A feature whose model can call tools gets the narrowest set that serves the feature, each with the narrowest credential (`least-privilege-design`). Instructions in the prompt are a request to the model, never a control.
-- **Never let one request hold all three legs.** Untrusted content in the context, access to data the requester should not see, and a channel out — a link it renders, a message it sends, a tool that writes — together are how injected text exfiltrates. Remove one leg for the whole request; `handling-untrusted-input` has the general rule.
+- **Never let one request hold all three legs.** Untrusted content in the context, access to data the requester should not see, and a channel out — a link it renders, a message it sends, a tool that writes — together are how injected text exfiltrates. Remove one leg for the whole request; `handling-untrusted-input` has the general rule. That stops exfiltration only: a tool that deletes, pays, or writes does its harm with no channel out, so its reach is set by the bullet above.
 - **Assume the system prompt will be read by a user.** No credentials, no internal hostnames, no authorization logic that works only while it stays secret (`threat-modeling`).
 
 ## Budgets, before the bill
@@ -73,7 +73,7 @@ Falling back to another model on failure or overload is a reasonable design, and
 
 ## Telemetry, and what stays out of it
 
-For every call, record the model requested and the model that answered, the prompt version, input and output token counts, the stop reason, latency, and cost. OpenTelemetry publishes semantic conventions for generative-AI calls; use its attribute names so tools can read them, and pin the convention version, because it is still marked as in development and names have moved (`instrumenting-for-observability`).
+For every call, record the model requested and the model that answered, the prompt version, input and output token counts, the stop reason, latency, and cost. Where an open telemetry standard publishes conventions for model calls, use its attribute names so tools can read them, and pin the convention version, since those conventions are young and names have moved (`instrumenting-for-observability`).
 
 The prompt and completion text are different in kind. They routinely contain personal data and whatever users pasted in, the conventions themselves make capturing them opt-in, and a trace backend is rarely where that data is allowed to live. Store content, if at all, in a separate place with its own retention and access, referenced from the span rather than inside it (`redacting-sensitive-output`). A value a model produced and you stored is inferred, not observed; record it as such, or it will later be read as fact (`tracking-data-provenance`).
 
@@ -103,7 +103,7 @@ The prompt and completion text are different in kind. They routinely contain per
 
 - A model identifier that ends in "latest", or no identifier at all because the SDK picks a default.
 - A prompt assembled by concatenating user text into the instruction string.
-- `json.loads` on model output with nothing between it and the rest of the program.
+- A bare JSON parse of model output with nothing between it and the rest of the program.
 - A retry loop around a model call with no cap on attempts or on spend.
 - "The prompt tells it not to do that" offered as the control.
 - A new model or a new prompt shipped with no eval run between the change and the release.
