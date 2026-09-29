@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.0</span>
+      <span class="wordmark-version" dir="ltr">v2.1.1</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T18:46:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T18:46:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-29T19:00:46+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T19:00:46Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -139,7 +139,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <h2 id="reload">Reload — and know that the conversation you installed from won’t</h2>
     <p>A running agent holds the skill list it started with. Restart it — in Claude Code, <code>/reload-plugins</code> does it without a restart — and every new conversation picks the library up.</p>
     <p>The conversation you ran the install from is the exception worth naming, because it’s the one you’re most likely to test in. It started before the install, so it still has the old list, and nothing you just did changes that. Open a new conversation, or invoke <code>tbaguette-atelier:using-tbaguette</code> in the old one to load the entry point by hand.</p>
-    <p>One more place this bites, on Claude specifically: this is Claude <em>Code</em>. The Claude Desktop app and claude.ai chat don’t read <code>~/.claude/skills/</code> at all — they load whatever is enabled on your account, synced separately — so cloning here will never make these show up there. Enable them from <strong>Customize</strong> in the Desktop sidebar or the skills settings on claude.ai instead.</p>
+    <p>One more place this bites, on Claude specifically: this is Claude <em>Code</em>. The Claude Desktop app, claude.ai and Cowork don’t read <code>~/.claude/skills/</code> at all — they install plugins on your account, from Anthropic’s plugin directory — so cloning here will never make these show up there. The Atelier isn’t listed in the directory yet; until it is, those apps also take a marketplace you add yourself from GitHub, and this repository is one: <code>LeSplooch/tbaguette-skills</code>.</p>
 
     <h2 id="confirm">Confirm it landed</h2>
     <p>Ask your agent to invoke <code>tbaguette-atelier:using-tbaguette</code>. If the install worked, it comes back with a short notice about checking skills before every response — that notice is the library’s entry point, and seeing it is proof the whole thing is loaded and callable, not just present on disk. If you get “no such skill” instead, the clone isn’t where your agent reads from, and the install prompt’s own verification steps will say which case you’re in.</p>
@@ -184,7 +184,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <p>Roughly in the order worth checking, cheapest first:</p>
     <ul>
       <li><strong>The conversation predates the install</strong> — including the one you installed from. Open a new one, or invoke <code>tbaguette-atelier:using-tbaguette</code> to load the entry point by hand.</li>
-      <li><strong>You are in Claude Desktop or claude.ai chat, not Claude Code.</strong> Those load skills from your account rather than from <code>~/.claude/skills/</code>, so nothing you cloned is visible to them.</li>
+      <li><strong>You are in Claude Desktop or claude.ai chat, not Claude Code.</strong> Those load plugins from your account rather than from <code>~/.claude/skills/</code>, so nothing you cloned is visible to them.</li>
       <li><strong>Your agent has them and simply is not reaching for them.</strong> Invoke one by name. If that works, the install is fine and what you are watching is trigger matching — say what you are doing in plainer terms, or name the skill yourself.</li>
       <li><strong>The clone is not where your agent reads from.</strong> Check that <code>~/.claude/skills/TBaguette/CATALOG.md</code> exists. If that directory is there but has no <code>.git</code> inside it, what you have is a previous install that lost its own history rather than a fresh one — the install prompt recognizes that case and asks before moving anything aside.</li>
     </ul>

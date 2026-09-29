@@ -96,6 +96,7 @@ class Strings:
     install_note_see_how: str
     install_note_new_here_html_template: str
     install_note_restart_html_template: str
+    install_note_restart_listed_html_template: str
     install_note_session_html_template: str
     install_tab_posix_label: str
     install_tab_windows_label: str
@@ -261,6 +262,13 @@ ENGLISH_STRINGS = Strings(
         "Claude Code specifically — the Claude Desktop app and claude.ai chat "
         "load skills from your account instead of this folder, so cloning here "
         "won’t make them appear there."
+    ),
+    install_note_restart_listed_html_template=(
+        "Restart your agent (in Claude Code, <code>/reload-plugins</code>), then "
+        "invoke a skill as <code>{plugin}:skill-name</code>. On Claude that means "
+        "Claude Code specifically — the Claude Desktop app and claude.ai chat "
+        "load skills from your account instead of this folder, so add it there "
+        "from <a href=\"{url}\">Anthropic’s plugin directory</a>."
     ),
     install_note_session_html_template=(
         "A conversation that was already open when you installed or updated — "
@@ -538,6 +546,7 @@ class GettingStartedStrings:
     reload_html: str
     reload_session_html_template: str
     reload_desktop_html: str
+    reload_desktop_listed_html_template: str
     confirm_heading: str
     confirm_html_template: str
     how_they_fire_heading: str
@@ -571,6 +580,7 @@ class GettingStartedStrings:
     troubleshooting_intro: str
     troubleshooting_session_html_template: str
     troubleshooting_desktop_html: str
+    troubleshooting_desktop_listed_html_template: str
     troubleshooting_triggers_html: str
     troubleshooting_path_html: str
     next_heading: str
@@ -616,11 +626,23 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
     ),
     reload_desktop_html=(
         "One more place this bites, on Claude specifically: this is Claude "
-        "<em>Code</em>. The Claude Desktop app and claude.ai chat don\u2019t read "
-        "<code>~/.claude/skills/</code> at all \u2014 they load whatever is enabled on "
-        "your account, synced separately \u2014 so cloning here will never make these "
-        "show up there. Enable them from <strong>Customize</strong> in the Desktop "
-        "sidebar or the skills settings on claude.ai instead."
+        "<em>Code</em>. The Claude Desktop app, claude.ai and Cowork don\u2019t read "
+        "<code>~/.claude/skills/</code> at all \u2014 they install plugins on your "
+        "account, from Anthropic\u2019s plugin directory \u2014 so cloning here will "
+        "never make these show up there. The Atelier isn\u2019t listed in the "
+        "directory yet; until it is, those apps also take a marketplace you add "
+        "yourself from GitHub, and this repository is one: "
+        "<code>LeSplooch/tbaguette-skills</code>."
+    ),
+    reload_desktop_listed_html_template=(
+        "One more place this bites, on Claude specifically: this is Claude "
+        "<em>Code</em>. The Claude Desktop app, claude.ai and Cowork don\u2019t read "
+        "<code>~/.claude/skills/</code> at all \u2014 they install plugins on your "
+        "account, from Anthropic\u2019s plugin directory. Add the Atelier there "
+        "instead: open <strong>Customize \u203a Plugins \u203a Discover</strong> in "
+        "the Desktop app or on claude.ai, or go straight to "
+        "<a href=\"{url}\">its listing</a>. A plugin added on your account also "
+        "turns up in Claude Code at its next session."
     ),
     confirm_heading="Confirm it landed",
     confirm_html_template=(
@@ -795,8 +817,14 @@ ENGLISH_GETTING_STARTED_STRINGS = GettingStartedStrings(
     ),
     troubleshooting_desktop_html=(
         "<strong>You are in Claude Desktop or claude.ai chat, not Claude Code.</strong> "
-        "Those load skills from your account rather than from "
+        "Those load plugins from your account rather than from "
         "<code>~/.claude/skills/</code>, so nothing you cloned is visible to them."
+    ),
+    troubleshooting_desktop_listed_html_template=(
+        "<strong>You are in Claude Desktop or claude.ai chat, not Claude Code.</strong> "
+        "Those load plugins from your account rather than from "
+        "<code>~/.claude/skills/</code>, so nothing you cloned is visible to them. "
+        "Add the Atelier from <a href=\"{url}\">its directory listing</a> instead."
     ),
     troubleshooting_triggers_html=(
         "<strong>Your agent has them and simply is not reaching for them.</strong> "
@@ -1480,7 +1508,13 @@ def _render_install(base_path: str = "", *,
     itself that is a link to the page you are already reading."""
     escaped_prompt = escape_html(INSTALL_PROMPT)
     frame_label = strings.install_frame_label_template.format(brand_atelier=BRAND_ATELIER_TEXT)
-    restart_note_html = strings.install_note_restart_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
+    # The directory listing is the one switch: once it exists, the note says
+    # where the Claude apps get the plugin instead of only where they don't.
+    if CLAUDE_DIRECTORY_URL:
+        restart_note_html = strings.install_note_restart_listed_html_template.format(
+            brand=BRAND_NAME, plugin=PLUGIN_NAME, url=escape_html(CLAUDE_DIRECTORY_URL))
+    else:
+        restart_note_html = strings.install_note_restart_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
     session_note_html = strings.install_note_session_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
     pointer_html = ""
     if show_getting_started_pointer:
@@ -2760,6 +2794,13 @@ def render_getting_started_page(categories: list[dict], base_path: str = "",
         brand_atelier=BRAND_ATELIER, porting_url=PORTING_GITHUB_URL
     )
     troubleshooting_session_html = g.troubleshooting_session_html_template.format(brand=BRAND_NAME, plugin=PLUGIN_NAME)
+    if CLAUDE_DIRECTORY_URL:
+        listing = escape_html(CLAUDE_DIRECTORY_URL)
+        reload_desktop_html = g.reload_desktop_listed_html_template.format(url=listing)
+        troubleshooting_desktop_html = g.troubleshooting_desktop_listed_html_template.format(url=listing)
+    else:
+        reload_desktop_html = g.reload_desktop_html
+        troubleshooting_desktop_html = g.troubleshooting_desktop_html
     next_html = g.next_html_template.format(home_url=home_url, catalog_url=CATALOG_GITHUB_URL)
     meta_description = g.meta_description_template.format(brand_atelier=BRAND_ATELIER_TEXT)
 
@@ -2781,7 +2822,7 @@ def render_getting_started_page(categories: list[dict], base_path: str = "",
     <h2 id="reload">{escape_html(g.reload_heading)}</h2>
     <p>{g.reload_html}</p>
     <p>{reload_session_html}</p>
-    <p>{g.reload_desktop_html}</p>
+    <p>{reload_desktop_html}</p>
 
     <h2 id="confirm">{escape_html(g.confirm_heading)}</h2>
     <p>{confirm_html}</p>
@@ -2821,7 +2862,7 @@ def render_getting_started_page(categories: list[dict], base_path: str = "",
     <p>{escape_html(g.troubleshooting_intro)}</p>
     <ul>
       <li>{troubleshooting_session_html}</li>
-      <li>{g.troubleshooting_desktop_html}</li>
+      <li>{troubleshooting_desktop_html}</li>
       <li>{g.troubleshooting_triggers_html}</li>
       <li>{g.troubleshooting_path_html}</li>
     </ul>

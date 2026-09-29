@@ -91,6 +91,7 @@ never loaded.
 | Harness | Entry point | Bootstrap mechanism | Tool mapping |
 |---|---|---|---|
 | Claude Code | `.claude-plugin/plugin.json` + `hooks/hooks.json` | shell hook → `hooks/session-start`, plus per-turn `hooks/user-prompt-submit` | native `Skill` tool; no adapter needed |
+| Claude apps — Desktop, claude.ai, Cowork | the same `.claude-plugin/plugin.json`, read by Anthropic's plugin directory from `master` and added on the user's account from **Customize → Plugins → Discover** once listed; until then, as a marketplace they add themselves, `LeSplooch/tbaguette-skills` (see below) | Cowork runs `hooks/hooks.json` as Claude Code does; chat ignores hooks, so chat gets the skills without the bootstrap | native; no adapter needed |
 | Codex | `.codex-plugin/plugin.json` + `hooks/hooks-codex.json` (installed with `codex plugin marketplace add LeSplooch/tbaguette-skills`, reusing `.agents/plugins/marketplace.json`) | shell hook → `hooks/session-start`, plus per-turn `hooks/user-prompt-submit` — Codex's hook config, stdout shape and `CLAUDE_PLUGIN_ROOT` are all Claude Code's | none needed |
 | Cursor | `.cursor-plugin/plugin.json` + `hooks/hooks-cursor.json` | shell hook → `hooks/session-start cursor`, plus a throttled re-assertion on `postToolUse` → `hooks/user-prompt-submit cursor` | none needed (Claude Code–compatible tool surface) |
 | GitHub Copilot CLI | root `plugin.json` + `hooks/hooks-copilot.json` (installed with `copilot plugin marketplace add LeSplooch/tbaguette-skills` then `copilot plugin install tbaguette-atelier@tbaguette-dev`, reusing `.claude-plugin/marketplace.json` — the CLI reads that location too) | shell hook → `hooks/session-start copilot`, plus per-turn `hooks/user-prompt-submit copilot` | `skills/using-tbaguette/references/copilot-tools.md` |
@@ -131,6 +132,63 @@ That goes in the target repository's `.github/copilot/settings.json`. This repo
 deliberately does not ship one of its own: a settings file here would enable the
 plugin for anyone whose coding agent touches *this* repository, which is a
 decision for them to make in theirs.
+
+### Listing in Anthropic's plugin directory
+
+The Claude Desktop app, claude.ai and Cowork install plugins on the user's
+account, not from a folder, and the public way onto an account is Anthropic's
+plugin directory. A listing reaches chat on the web, desktop and mobile, and
+Cowork, and a plugin added there also syncs into Claude Code. Sources, read
+2026-09-29: https://claude.com/docs/directory/publish,
+https://claude.com/docs/plugins/submit,
+https://claude.com/docs/plugins/pre-submission-checklist and
+https://claude.com/docs/plugins/platform-support.
+
+**Only the maintainer can submit.** Submission happens in the developer
+portal at https://claude.ai/directory/manage, from a paid claude.ai account
+(Pro, Max, Team or Enterprise) whose connected GitHub account can push to
+this repository: **Submit new → Plugin bundle**, repository
+`LeSplooch/tbaguette-skills`, plugin path empty (the plugin is the repository
+root), tracked branch `master`. **Validate**, then the listing details (read
+from `plugin.json` and this repo's README), the data-handling questions, the
+compliance acknowledgements, and **Submit for review**. A person reviews the
+first listing. After that, every push to `master` is a new version the
+directory scans on its own, so `version` goes up with every release, as it
+already does here, and a push that breaks a directory rule stops updates
+from reaching anyone who has the plugin without breaking anything visible.
+
+**Answers to the data-handling questions**, from what the plugin actually
+does (README, *What it runs*): it reads and stores no personal data; the only
+network access in its own code is a `git fetch` from this repository, which
+downloads and sends nothing, and which runs only when the plugin folder is a
+git clone, never for a directory install; `tending-tbaguette` pushes a branch
+and opens a pull request here only after the user approves that specific
+contribution, using the user's own git credentials; nothing is retained
+anywhere but two notes files in the user's own harness folder; and it is a
+developer tool, not intended for people under 18.
+
+**What the checks say today.** `claude plugin validate` passes on the plugin
+with one warning (`CLAUDE.md` at the root is not loaded as context, which is
+correct: it is this repository's own instructions, not the plugin's). Every
+file rule in the checklist that a repository can check is mirrored by
+`scripts/test_directory_readiness.py`, which runs with the rest of the suite,
+separating the rules that block a version from those that hold every later
+version for a reviewer: 350 files against a hold at 512, no text file near
+256 KiB, no binaries but fonts, a 2.4 MB archive against a 50 MiB stop. The
+one standing finding is a warning: `AGENTS.md` is a symbolic link, which is
+allowed where the plugin does not load the file.
+
+**What loads where.** Skills load in chat, Cowork and Claude Code. The hooks
+load in Cowork and Claude Code and are ignored in chat, so chat has no
+`using-tbaguette` bootstrap and no per-turn reminder; the skills there fire
+on their descriptions alone. The update check in `hooks/session-start` says
+it is not a git clone and stops, because the directory does the updating.
+
+**The day it goes live**, set `CLAUDE_DIRECTORY_URL` in `scripts/templates.py`
+to the listing's address. That one value turns the release banner's surfaces
+live, points its button at the listing, and switches the install box and the
+getting-started page from "not listed yet" to where to add it. Then remove
+the README's paragraph offering the marketplace route in the meantime.
 
 ### What a docs-only audit of every row turned up
 

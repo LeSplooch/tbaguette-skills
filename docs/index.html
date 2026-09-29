@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.0</span>
+      <span class="wordmark-version" dir="ltr">v2.1.1</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T18:46:04+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T18:46:04Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-29T19:00:46+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T19:00:46Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -333,20 +333,12 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-29">29 Sep 2026</time>
-    <span class="notes__entry-title">Three new skills for software that talks to a model, and what this year's agent incidents changed</span>
+    <span class="notes__entry-title">The Atelier in Claude Desktop, claude.ai and Cowork</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/secrets-hygiene/"><code>secrets-hygiene</code></a> has an exception to &quot;revoke first&quot;. If a credential was stolen by something still running on a machine that held it, such as a poisoned package or a worm, revoking it can set that thing off. Malware that wipes the home directory the moment its stolen token stops working has shipped more than once. Take the machine off the network first, so it cannot see the token start failing, then revoke from a different machine, then clean or reimage the infected one before it reconnects. For any other leak, revoke first as before.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/designing-ci-pipelines/"><code>designing-ci-pipelines</code></a>: a CI job that runs an agent over an issue, a comment, or a pull request someone else wrote now gets the same rules as a pull request from a fork. That means no secrets, no write token, no cache a publishing job reuses, and no public output while it holds anything worth stealing. Agent and editor settings inside a checkout count as pipeline code that the pull request wrote.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/deciding-reversibility/"><code>deciding-reversibility</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a>: before a write, read the target out of the credential or connection string it will actually use, not out of the task's description of the environment. A credential the run found in some file, rather than one it was given, is a stop. So is a credential mismatch, which is a refusal and not a puzzle to solve with a different token.</li>
-    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/building-llm-features/"><code>building-llm-features</code></a>, for code that calls a language model while it runs. It covers pinning the exact model and noting when it will be retired, and keeping prompts in the repository as reviewed code. It treats a refusal or a cut-off answer as its own outcome, not an answer. The model's output is handled as untrusted input wherever it goes, with limits on tokens, time and spend, and a fallback model has to pass the same checks as the main one.</li>
-    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/evaluating-llm-output/"><code>evaluating-llm-output</code></a>, for measuring how often that output is right. Read real outputs before choosing what to measure, then write one pass/fail check per failure you actually saw. A model used as a judge has to be checked against a person's verdicts before anyone trusts it, and every pass rate is reported with how uncertain it is.</li>
-    <li>New skill: <a class="skill-link" href="/tbaguette-skills/skills/writing-agent-instructions/"><code>writing-agent-instructions</code></a>, for AGENTS.md, CLAUDE.md, rules files and skills. A line earns its place only if the agent could not find it in the repository and nothing already enforces it. A rule that must always hold goes in a linter, a hook or a test. A generated file is a draft to delete from, and the file is checked by running tasks with it and without it.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/confirming-before-claiming-done/"><code>confirming-before-claiming-done</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/reviewing-code-deeply/"><code>reviewing-code-deeply</code></a>: before calling a suite green, look at what happened to the tests as well as the code. Watch for deleted or skipped cases, loosened assertions, expected values edited to match, and branches keyed on a test's own input. A test that looks wrong is reported, not quietly rewritten.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/auditing-dependencies/"><code>auditing-dependencies</code></a>: a signed build attestation says where a package was built, not that it is safe. Poisoned releases in 2026 carried valid ones. A skill or rules file that tells the agent to install something must name a package that exists and is the one intended, because attackers register the names models make up.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/designing-apis/"><code>designing-apis</code></a> has a new section for tools, commands and test runners that an agent calls. It covers keeping each response bounded, putting the summary first, and error messages that say what to do next.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/handing-off-for-review/"><code>handing-off-for-review</code></a>: before sending a change to a project you don't work on, read its contributing guide and any policy on AI-assisted contributions. Many now require disclosure or a named human who stands behind the change.</li>
-    <li>Smaller changes: <a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a> sizes a batch of parallel agents to what someone can actually review. <a class="skill-link" href="/tbaguette-skills/skills/testing-the-untestable/"><code>testing-the-untestable</code></a> says a hosted model cannot be made repeatable with a seed. <a class="skill-link" href="/tbaguette-skills/skills/upgrading-dependencies/"><code>upgrading-dependencies</code></a> treats a model identifier as a dependency with an expiry date. <a class="skill-link" href="/tbaguette-skills/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a> lists model output among the untrusted sources. <a class="skill-link" href="/tbaguette-skills/skills/recovering-agent-context/"><code>recovering-agent-context</code></a> no longer tells you to copy recovered history into the instruction file.</li>
+    <li>Those apps install plugins on your Claude account, not from a folder, so the clone command never reached them. They can take the Atelier today as a marketplace you add yourself from GitHub: <code>LeSplooch/tbaguette-skills</code>, from <strong>Customize → Plugins</strong> in the Desktop app or on claude.ai. A plugin added there also shows up in Claude Code at its next session.</li>
+    <li>The Atelier is being prepared for Anthropic's plugin directory. Once the listing is live you will find it under <strong>Customize → Plugins → Discover</strong>, and the directory will keep it updated.</li>
+    <li>In chat the skills load but plugin hooks do not, so the check for a relevant skill before every reply happens in Cowork and Claude Code only. In chat a skill fires when your request matches its description.</li>
   </ul>
 </li>
   </ol>
@@ -359,6 +351,17 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-09-29">29 Sep 2026</time>
+    <span class="notes__entry-title">The Atelier in Claude Desktop, claude.ai and Cowork</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li>Those apps install plugins on your Claude account, not from a folder, so the clone command never reached them. They can take the Atelier today as a marketplace you add yourself from GitHub: <code>LeSplooch/tbaguette-skills</code>, from <strong>Customize → Plugins</strong> in the Desktop app or on claude.ai. A plugin added there also shows up in Claude Code at its next session.</li>
+    <li>The Atelier is being prepared for Anthropic's plugin directory. Once the listing is live you will find it under <strong>Customize → Plugins → Discover</strong>, and the directory will keep it updated.</li>
+    <li>In chat the skills load but plugin hooks do not, so the check for a relevant skill before every reply happens in Cowork and Claude Code only. In chat a skill fires when your request matches its description.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-09-29">29 Sep 2026</time>
@@ -586,15 +589,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   </h3>
   <ul class="notes__bullets">
     <li><strong><a class="skill-link" href="/tbaguette-skills/skills/deciding-reversibility/"><code>deciding-reversibility</code></a> adds read-before-write to its list of ways to turn a one-way door into a two-way one.</strong> A configuration write is only irreversible because the value it replaces is gone, so the skill now asks for the prior value to be read and kept in the same command as the write — and says plainly that believing the new value is safer is no reason to skip it, since that belief is exactly what let a &quot;safe&quot; value silently downgrade an environment that was already more permissive. The description now triggers on overwriting a setting or a configuration file.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-16">16 Sep 2026</time>
-    <span class="notes__entry-title">A spec you remember is not a spec you have read</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><strong><a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> names the document the work is measured against as a source to re-open, not recall.</strong> Its after-a-boundary rule already puts the repository and the record ahead of recollection; it now says that a specification, design, contract or reference rendering is the artefact a compaction most readily replaces with a summary of itself — and a summary cannot be diffed against an implementation. Re-open the source end to end before measuring anything against it, and ask whether the run before the boundary had ever read it at all: a document that was only grepped for identifiers was never read. The description gains the trigger, and <a class="skill-link" href="/tbaguette-skills/skills/reading-specifications/"><code>reading-specifications</code></a> points here for that case.</li>
   </ul>
 </li>
       </ol>

@@ -31,6 +31,20 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-09-29 — The Atelier in Claude Desktop, claude.ai and Cowork
+
+- Those apps install plugins on your Claude account, not from a folder, so the
+  clone command never reached them. They can take the Atelier today as a
+  marketplace you add yourself from GitHub: `LeSplooch/tbaguette-skills`,
+  from **Customize → Plugins** in the Desktop app or on claude.ai. A plugin
+  added there also shows up in Claude Code at its next session.
+- The Atelier is being prepared for Anthropic's plugin directory. Once the
+  listing is live you will find it under **Customize → Plugins → Discover**,
+  and the directory will keep it updated.
+- In chat the skills load but plugin hooks do not, so the check for a
+  relevant skill before every reply happens in Cowork and Claude Code only.
+  In chat a skill fires when your request matches its description.
+
 ## 2026-09-29 — Three new skills for software that talks to a model, and what this year's agent incidents changed
 
 - `secrets-hygiene` has an exception to "revoke first". If a credential was

@@ -744,6 +744,38 @@ def check_century_banner() -> None:
           and '<div class="hero__banners hero__banners--lead">' in alone)
 
 
+def check_directory_listing_switch() -> None:
+    """The Claude apps get the plugin only from Anthropic's directory, and
+    CLAUDE_DIRECTORY_URL is the one switch that says the listing exists.
+    Unset, no page tells a Desktop or claude.ai reader there is something to
+    enable; set, every place that talks about those apps points at it."""
+    print("directory listing switch check")
+    check("the listing is not live yet, so the build carries no URL for it",
+          templates.CLAUDE_DIRECTORY_URL == "")
+    guide = render_getting_started_page(FIXTURE["categories"])
+    index = render_index(FIXTURE["categories"], FIXTURE["skills"])
+    check("unlisted: the guide says the apps have no way in yet, and asks nobody to enable anything",
+          "isn’t listed in the directory yet" in guide and "Enable them from" not in guide)
+    check("unlisted: nothing links to a listing that does not exist",
+          "Customize › Plugins › Discover" not in guide
+          and "Anthropic’s plugin directory</a>" not in index)
+
+    url = "https://claude.ai/directory/example"
+    templates.CLAUDE_DIRECTORY_URL = url
+    try:
+        guide_listed = render_getting_started_page(FIXTURE["categories"])
+        index_listed = render_index(FIXTURE["categories"], FIXTURE["skills"])
+    finally:
+        templates.CLAUDE_DIRECTORY_URL = ""
+    check("listed: the guide's reload section says where the apps add it, and links the listing",
+          "Customize › Plugins › Discover" in guide_listed
+          and f'<a href="{url}">its listing</a>' in guide_listed)
+    check("listed: the troubleshooting entry for Desktop points at the listing too",
+          f'<a href="{url}">its directory listing</a>' in guide_listed)
+    check("listed: the install box's restart note sends Claude app readers to the directory",
+          f'<a href="{url}">Anthropic’s plugin directory</a>' in index_listed)
+
+
 def check_i18n_getting_started_page() -> None:
     """Same synthetic-locale approach as check_i18n_verify_install_page — the
     registry is English-only, the locale-aware rendering is not."""
@@ -1983,6 +2015,7 @@ def main() -> None:
     check_graph_banner()
     check_release_banner()
     check_century_banner()
+    check_directory_listing_switch()
     check_header_and_badges()
     check_fresh_section()
     check_dialog_ua_defaults()

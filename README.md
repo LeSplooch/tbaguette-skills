@@ -13,6 +13,23 @@ category, every skill readable in full.
 
 ## Install
 
+### Claude Desktop, claude.ai, and Cowork
+
+These apps don't install from a folder. They install plugins on your Claude account, from
+Anthropic's plugin directory: open **Customize → Plugins → Discover**, in the Desktop app or
+on claude.ai, and search for **TBaguette's Atelier**. A plugin added there also turns up in
+Claude Code at its next session, and the directory keeps it updated.
+
+Until the Atelier's directory listing is live, those apps also take a marketplace you add
+yourself from a GitHub repository ([Anthropic's platform-support table](https://claude.com/docs/plugins/platform-support)
+covers where each works), and this repository is one: `LeSplooch/tbaguette-skills`.
+
+What loads where: the skills load everywhere. The two hooks under
+[What it runs](#what-it-runs) run in Cowork and Claude Code, and chat ignores them, so in
+chat the skills fire when a task matches rather than being checked before every reply.
+
+### Claude Code
+
 macOS, Linux, or Windows in WSL / Git Bash (bash, zsh, and fish all verified — see below):
 
 ```bash
@@ -35,11 +52,9 @@ is the first session in the order you actually hit it: the reload, why the conve
 installed from is the one that won't pick it up, how to prove it landed, six skills worth
 trying on purpose, and what to check when nothing seems to be happening.
 
-This installs for **Claude Code** specifically. The general Claude Desktop app and claude.ai
-chat don't read `~/.claude/skills/` at all — they load whatever skills are enabled on your
-claude.ai account instead, synced separately. Cloning this repo won't make these skills show
-up there; enable them from **Customize** in the Desktop app sidebar or the skills settings on
-claude.ai instead.
+These commands install for **Claude Code** specifically. The Claude Desktop app, claude.ai
+and Cowork don't read `~/.claude/skills/` at all, so cloning this repo won't make these
+skills show up there; they come from the directory, as above.
 
 Both commands only ever touch `~/.claude/skills/TBaguette` — neither can alter, merge into,
 or overwrite any other skill or plugin you already have. `git clone` refuses outright if that
@@ -100,8 +115,8 @@ parts that go further are listed here, so nothing about them is a surprise.
   commands above create, it also runs `git fetch origin master` against this
   repository and tells the model whether an update is waiting. That fetch is the
   only network call in the plugin's own code, and it downloads without sending
-  anything. When the plugin folder isn't a git clone, the check says so and
-  stops.
+  anything. When the plugin folder isn't a git clone, which is the case for a
+  plugin added from Anthropic's directory, the check says so and stops.
 - **On each prompt**, `hooks/user-prompt-submit` adds a one-sentence reminder to
   check the skills before replying. On Copilot CLI, which only lets a hook rewrite
   the prompt, the reminder is prepended to what you typed.
@@ -114,7 +129,9 @@ parts that go further are listed here, so nothing about them is a surprise.
   against this repository only after you say yes to that specific contribution.
 
 Where a harness doesn't run plugin hooks, the first two items don't happen and the
-skills are just text.
+skills are just text. Claude chat, on claude.ai and in the Desktop app, is one of those.
+A plugin added from the directory is updated by the directory, not by
+`keeping-tbaguette-current`.
 
 ## This repo is also the site's source
 
