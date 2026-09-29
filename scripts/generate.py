@@ -414,8 +414,11 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
     )
     graph_dir = output_dir / templates.GRAPH_PATH
     graph_dir.mkdir(parents=True, exist_ok=True)
+    # Packed (skill_graph.pack_graph): the same graph in well under the
+    # 256 KiB a file can be before Anthropic's plugin directory holds it.
     (graph_dir / templates.GRAPH_DATA_FILENAME).write_text(
-        json.dumps(graph, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
+        json.dumps(skill_graph.pack_graph(graph), ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8",
     )
     _write(
         graph_dir / "index.html",

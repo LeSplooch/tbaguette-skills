@@ -730,6 +730,69 @@
     this.bindShell();
   };
 
+  // graph.json arrives packed (skill_graph.pack_graph, schema 2): the same
+  // graph with its repeated keys, empty fields and slugs taken out, so the
+  // file stays under the 256 KiB Anthropic's plugin directory accepts
+  // without a hold. This turns it back into exactly what build_graph made --
+  // a mirror of skill_graph.unpack_graph, held to it by the test suite on
+  // the real library. A schema-1 file passes through untouched.
+  var PACKED_SCHEMA = 2;
+  var KINDS = ['body', 'reference'];
+
+  function slugifyHeading(title) {
+    var slug = title.toLowerCase().replace(/['’]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    return slug || 'section';
+  }
+
+  function unpackGraph(data) {
+    if (!data || data.schema !== PACKED_SCHEMA) { return data; }
+    var slugs = data.skills.map(function (s) { return s[0]; });
+    var families = data.categories.map(function (c) { return c[0]; });
+    function field(fields, i, fallback) { return i < fields.length ? fields[i] : fallback; }
+    function citations(packed) {
+      var refs = {}, quotes = {};
+      packed.forEach(function (entry) {
+        refs[slugs[entry[0]]] = entry[1];
+        if (entry.length > 2) { quotes[slugs[entry[0]]] = entry[2]; }
+      });
+      return { refs: refs, quotes: quotes };
+    }
+    function headingId(fields, i, title) {
+      var explicit = field(fields, i, null);
+      return explicit === null ? slugifyHeading(title) : explicit;
+    }
+    return {
+      schema: 1,
+      skill_url_template: data.skill_url_template,
+      categories: data.categories.map(function (c) {
+        return { slug: c[0], title: c[1], skill_slugs: c[2].map(function (i) { return slugs[i]; }) };
+      }),
+      skills: data.skills.map(function (s) {
+        var trigger = citations(s[4]);
+        var name = field(s, 9, null);
+        return {
+          slug: s[0], name: name === null ? s[0] : name,
+          category: families[s[1]], summary: s[2], words: s[3],
+          always_on: field(s, 6, false), change_status: field(s, 7, null),
+          change_at: field(s, 8, null),
+          trigger: { refs: trigger.refs, quotes: trigger.quotes },
+          sections: s[5].map(function (sec) {
+            var cited = citations(field(sec, 3, []));
+            return {
+              id: headingId(sec, 5, sec[0]), title: sec[0], kind: KINDS[sec[1]],
+              words: sec[2], refs: cited.refs, quotes: cited.quotes,
+              subs: field(sec, 4, []).map(function (sub) {
+                return { id: headingId(sub, 3, sub[0]), title: sub[0], words: sub[1],
+                         refs: citations(field(sub, 2, [])).refs };
+              })
+            };
+          })
+        };
+      })
+    };
+  }
+
   App.prototype.load = function () {
     var self = this;
     fetch(this.opts.dataUrl, { credentials: 'same-origin' }).then(function (r) {
@@ -737,7 +800,7 @@
       return r.json();
     }).then(function (data) {
       clearTimeout(self.loadingTimer);
-      self.model = buildModel(data);
+      self.model = buildModel(unpackGraph(data));
       self.ready();
     }).catch(function () {
       clearTimeout(self.loadingTimer);

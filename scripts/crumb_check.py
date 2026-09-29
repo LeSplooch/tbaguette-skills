@@ -53,6 +53,10 @@ import tempfile
 import urllib.request
 from pathlib import Path
 
+# Only for reading graph.json back: the file is packed, the check compares
+# graphs. Building one still happens in the revision's own scripts/.
+import skill_graph
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 # The base path of the build GitHub Pages serves -- the same literal
@@ -169,7 +173,7 @@ def _names(items: list[str], limit: int = 8) -> str:
 def compare_graphs(fresh: dict, published: dict, *, label: str = GRAPH_JSON) -> list[str]:
     """Every way published differs from fresh, ignoring the clock fields.
     An empty list means they are the same graph."""
-    a, b = without_clock(fresh), without_clock(published)
+    a, b = without_clock(fresh), without_clock(skill_graph.unpack_graph(published))
     if a == b:
         return []
     problems = []

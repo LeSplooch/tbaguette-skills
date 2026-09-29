@@ -497,7 +497,12 @@ def main() -> None:
         graph_json = docs / "graph" / "graph.json"
         check("docs/graph/ holds the graph's page and its data after a real build",
               graph_page.exists() and graph_json.exists())
-        graph = json.loads(graph_json.read_text(encoding="utf-8")) if graph_json.exists() else {}
+        graph = (skill_graph.unpack_graph(json.loads(graph_json.read_text(encoding="utf-8")))
+                 if graph_json.exists() else {})
+        check("graph.json ships packed, under the 256 KiB Anthropic's plugin directory "
+              "accepts without holding it",
+              graph_json.exists() and graph_json.stat().st_size < 256 * 1024
+              and '"schema":2' in graph_json.read_text(encoding="utf-8")[:20])
         check("graph.json lists every skill the build shipped",
               len(graph.get("skills", [])) == generate.EXPECTED_SKILL_COUNT)
         check("...and builds skill URLs with the base path, as the pages do",

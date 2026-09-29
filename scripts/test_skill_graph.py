@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -22,6 +24,7 @@ import templates
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SKILLS_DIR = REPO_ROOT / "skills"
+GRAPH_JS = REPO_ROOT / "docs" / "assets" / "graph.js"
 
 
 def _link(slug: str, base: str = "", code: bool = True) -> str:
@@ -231,12 +234,81 @@ class RealLibraryTests(unittest.TestCase):
         self.assertFalse(summary["reachable"])
         self.assertEqual(summary["max_steps"], 1)
 
-    def test_the_document_stays_small_enough_to_fetch_on_a_click(self):
-        # The dialog fetches this the first time Graph is clicked. Well past
-        # this and the fetch is noticeable; the likeliest way to get there is
-        # quoting far more than one sentence per citation.
-        size = len(json.dumps(self.graph, ensure_ascii=False, separators=(",", ":")).encode())
-        self.assertLess(size, 900_000)
+    def test_the_file_stays_under_the_plugin_directorys_limit(self):
+        # graph.json ships in the plugin folder, and Anthropic's plugin
+        # directory holds any text file over 256 KiB for a reviewer. The file
+        # is the packed form; the likeliest way past the limit is quoting far
+        # more than one sentence per citation, or a library twice the size.
+        size = len(json.dumps(skill_graph.pack_graph(self.graph), ensure_ascii=False,
+                              separators=(",", ":")).encode())
+        self.assertLess(size, 256 * 1024)
+
+    def test_packing_loses_nothing(self):
+        # Equal as data and as text, key order included: the file is the
+        # graph, not an approximation of it.
+        packed = json.loads(json.dumps(skill_graph.pack_graph(self.graph), ensure_ascii=False))
+        unpacked = skill_graph.unpack_graph(packed)
+        self.assertEqual(unpacked, self.graph)
+        self.assertEqual(json.dumps(unpacked, ensure_ascii=False),
+                         json.dumps(self.graph, ensure_ascii=False))
+
+    def test_the_browsers_decoder_reads_back_the_same_graph(self):
+        # graph.js carries its own copy of unpack_graph. Run that copy, as
+        # shipped, on the real packed library and hold it to build_graph's
+        # output -- including every heading id it re-derives from a title.
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("node is not installed; graph.js's decoder is checked where it is")
+        source = GRAPH_JS.read_text(encoding="utf-8")
+        start, end = source.index("  var PACKED_SCHEMA"), source.index("  App.prototype.load")
+        packed = json.dumps(skill_graph.pack_graph(self.graph), ensure_ascii=False)
+        script = (source[start:end]
+                  + "\nvar input = require('fs').readFileSync(0, 'utf8');"
+                  + "\nprocess.stdout.write(JSON.stringify(unpackGraph(JSON.parse(input))));\n")
+        result = subprocess.run([node, "-e", script], input=packed, capture_output=True,
+                                text=True, encoding="utf-8", check=True)
+        self.assertEqual(json.loads(result.stdout), self.graph)
+
+    def test_a_heading_id_is_written_only_when_it_cannot_be_derived(self):
+        explicit = sum(
+            len(sec) > 5 for s in skill_graph.pack_graph(self.graph)["skills"] for sec in s[5])
+        derived = sum(
+            section["id"] == skill_graph.slugify_heading(section["title"])
+            for s in self.graph["skills"] for section in s["sections"])
+        self.assertEqual(explicit + derived, sum(len(s["sections"]) for s in self.graph["skills"]))
+        # And the derivation is content_pipeline's own, not a lookalike.
+        for s in self.graph["skills"]:
+            for section in s["sections"]:
+                self.assertEqual(skill_graph.slugify_heading(section["title"]),
+                                 content_pipeline.slugify(section["title"]))
+
+
+class PackTests(unittest.TestCase):
+    def _graph(self, **section):
+        base = {"id": "", "title": "Opening", "kind": "body", "words": 3,
+                "refs": {"b": 2}, "quotes": {"b": "see b"}, "subs": []}
+        base.update(section)
+        skill = lambda slug, sections: {
+            "slug": slug, "name": slug, "category": "c", "summary": "s", "words": 3,
+            "always_on": False, "change_status": None, "change_at": None,
+            "trigger": {"refs": {}, "quotes": {}}, "sections": sections}
+        return {"schema": 1, "skill_url_template": "/s/{slug}/",
+                "categories": [{"slug": "c", "title": "C", "skill_slugs": ["a", "b"]}],
+                "skills": [skill("a", [base]), skill("b", [])]}
+
+    def test_an_empty_id_is_kept_rather_than_derived(self):
+        # "" is the opening's id and slugify("Opening") is not "": the packed
+        # form has to say so rather than leave it to the default.
+        graph = self._graph()
+        self.assertEqual(skill_graph.unpack_graph(skill_graph.pack_graph(graph)), graph)
+
+    def test_a_quote_without_its_citation_is_refused_not_dropped(self):
+        with self.assertRaises(ValueError):
+            skill_graph.pack_graph(self._graph(refs={}, quotes={"b": "see b"}))
+
+    def test_a_schema_1_file_reads_as_it_is(self):
+        graph = self._graph()
+        self.assertIs(skill_graph.unpack_graph(graph), graph)
 
 
 if __name__ == "__main__":

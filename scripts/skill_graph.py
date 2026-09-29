@@ -288,6 +288,153 @@ def build_graph(content: dict, *, skill_url_template: str) -> dict:
     }
 
 
+# ---------------------------------------------------------------------------
+# The file on disk: the same graph, packed
+# ---------------------------------------------------------------------------
+#
+# graph.json ships inside the plugin folder, and Anthropic's plugin directory
+# holds any text file over 256 KiB for a reviewer. Written out as build_graph
+# returns it, the graph was 344 KiB -- nearly all of it the same seven keys
+# spelled out on 1,127 sections, 3,000 empty {} and [], and a skill's slug
+# written out every time another skill cited it. Schema 2 is the same data
+# with those taken out, and nothing else:
+#
+#   - a skill, a section and a subsection are arrays in a fixed field order,
+#     with trailing fields that hold their default left off;
+#   - a citation is [skill index, count] or [skill index, count, quote] --
+#     the quote rides on its citation, since a section only ever quotes a
+#     skill it also cites (pack refuses a graph where that stops holding);
+#   - a heading's id is written only when it is not slugify(title), which is
+#     how content_pipeline makes nearly all of them;
+#   - a family is its index; a skill's name only when it is not its slug.
+#
+# unpack_graph turns it back into exactly what build_graph made, and the
+# tests hold both it and graph.js's own decoder to that on the real library.
+# Every other reader -- the build, crumb_check, the tests -- works on the
+# unpacked graph; only the file and the browser see this form.
+
+PACKED_SCHEMA = 2
+
+_KINDS = ("body", "reference")
+
+
+def slugify_heading(title: str) -> str:
+    """content_pipeline.slugify, restated here so this module stays free of
+    it and graph.js can mirror it line for line."""
+    normalized = title.lower().replace("'", "").replace("’", "")
+    slug = re.sub(r"[^a-z0-9]+", "-", normalized).strip("-")
+    return slug or "section"
+
+
+def _trim(fields: list, defaults: list) -> list:
+    """Drop trailing fields that equal their default. The defaults line up
+    with the *end* of fields."""
+    fields = list(fields)
+    offset = len(fields) - len(defaults)
+    while len(fields) > offset and fields[-1] == defaults[len(fields) - 1 - offset]:
+        fields.pop()
+    return fields
+
+
+def pack_graph(graph: dict) -> dict:
+    """build_graph's graph in the compact form graph.json is written in."""
+    slugs = [skill["slug"] for skill in graph["skills"]]
+    index = {slug: i for i, slug in enumerate(slugs)}
+    families = [c["slug"] for c in graph["categories"]]
+
+    def citations(refs: dict, quotes: dict, where: str) -> list:
+        stray = set(quotes) - set(refs)
+        if stray:
+            raise ValueError(f"{where} quotes {sorted(stray)} without citing them; "
+                             "schema 2 carries a quote on its citation")
+        return [[index[slug], count] + ([quotes[slug]] if slug in quotes else [])
+                for slug, count in refs.items()]
+
+    def heading_id(node: dict):
+        return None if node["id"] == slugify_heading(node["title"]) else node["id"]
+
+    skills = []
+    for skill in graph["skills"]:
+        where = skill["slug"]
+        sections = []
+        for section in skill["sections"]:
+            subs = [_trim([sub["title"], sub["words"],
+                           citations(sub["refs"], {}, where), heading_id(sub)],
+                          [[], None])
+                    for sub in section["subs"]]
+            sections.append(_trim(
+                [section["title"], _KINDS.index(section["kind"]), section["words"],
+                 citations(section["refs"], section["quotes"], where), subs, heading_id(section)],
+                [[], [], None]))
+        skills.append(_trim(
+            [skill["slug"], families.index(skill["category"]), skill["summary"], skill["words"],
+             citations(skill["trigger"]["refs"], skill["trigger"]["quotes"], where), sections,
+             skill["always_on"], skill["change_status"], skill["change_at"],
+             None if skill["name"] == skill["slug"] else skill["name"]],
+            [False, None, None, None]))
+    return {
+        "schema": PACKED_SCHEMA,
+        "skill_url_template": graph["skill_url_template"],
+        "categories": [[c["slug"], c["title"], [index[s] for s in c["skill_slugs"]]]
+                       for c in graph["categories"]],
+        "skills": skills,
+    }
+
+
+def unpack_graph(data: dict) -> dict:
+    """graph.json as read back from disk, in build_graph's form. A schema-1
+    file (every commit before the packed form) is already in it."""
+    if data.get("schema") != PACKED_SCHEMA:
+        return data
+    slugs = [skill[0] for skill in data["skills"]]
+    families = [c[0] for c in data["categories"]]
+
+    def field(fields: list, i: int, default):
+        return fields[i] if i < len(fields) else default
+
+    def citations(packed: list) -> tuple[dict, dict]:
+        refs, quotes = {}, {}
+        for entry in packed:
+            refs[slugs[entry[0]]] = entry[1]
+            if len(entry) > 2:
+                quotes[slugs[entry[0]]] = entry[2]
+        return refs, quotes
+
+    def heading_id(fields: list, i: int, title: str) -> str:
+        explicit = field(fields, i, None)
+        return slugify_heading(title) if explicit is None else explicit
+
+    skills = []
+    for s in data["skills"]:
+        trigger_refs, trigger_quotes = citations(s[4])
+        sections = []
+        for sec in s[5]:
+            refs, quotes = citations(field(sec, 3, []))
+            sections.append({
+                "id": heading_id(sec, 5, sec[0]), "title": sec[0], "kind": _KINDS[sec[1]],
+                "words": sec[2], "refs": refs, "quotes": quotes,
+                "subs": [{"id": heading_id(sub, 3, sub[0]), "title": sub[0], "words": sub[1],
+                          "refs": citations(field(sub, 2, []))[0]}
+                         for sub in field(sec, 4, [])],
+            })
+        name = field(s, 9, None)
+        skills.append({
+            "slug": s[0], "name": s[0] if name is None else name,
+            "category": families[s[1]], "summary": s[2], "words": s[3],
+            "always_on": field(s, 6, False), "change_status": field(s, 7, None),
+            "change_at": field(s, 8, None),
+            "trigger": {"refs": trigger_refs, "quotes": trigger_quotes},
+            "sections": sections,
+        })
+    return {
+        "schema": 1,
+        "skill_url_template": data["skill_url_template"],
+        "categories": [{"slug": c[0], "title": c[1], "skill_slugs": [slugs[i] for i in c[2]]}
+                       for c in data["categories"]],
+        "skills": skills,
+    }
+
+
 def edge_weights(graph: dict) -> dict[tuple[str, str], int]:
     """(citing slug, cited slug) -> number of mentions, trigger included. The
     browser derives the same thing; this copy exists for the tests and for
