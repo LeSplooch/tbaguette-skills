@@ -109,7 +109,7 @@
     listIntro: 'Every skill, what it cites, and what cites it.',
     listOpen: 'Open in the graph',
     matrixCaption: 'Citations between families. Rows cite, columns are cited.',
-    matrixIntro: 'How the families lean on each other. Read a row across for what that family cites, a column down for who cites it. Each number counts pairs of skills, so the whole grid adds up to the {pairs} cross-references; the outlined diagonal is each family citing itself. Choose a number to see those citations in the graph.',
+    matrixIntro: 'How the families lean on each other. Read a row across for what that family cites, a column down for who cites it. Each number counts pairs of skills, so the whole grid adds up to the {pairs} cross-references; the outlined diagonal is each family citing itself. Choose a number to see those citations in the graph, or a family to mark its row and column.',
     matrixCorner: ['Cites ↓', 'Cited →'],
     matrixStrongest: 'Across families, the strongest pull is {a} citing {b}, {n} times; the family most cited from outside itself is {c}.',
     matrixFamilyOut: '{a} cites {b} most, {n} times',
@@ -120,6 +120,8 @@
     matrixCellSelf: '{a} cites itself: {n}',
     matrixNone: '{a} never cites {b}',
     matrixShown: '{a} citing {b}: {n}, shown in the graph.',
+    matrixRowOn: '{a} marked in the matrix.',
+    matrixRowOff: '{a} no longer marked.',
     announceNode: '{name}, {family}. {role}. Cited by {in}, cites {out}.',
     announceSection: 'Section {n}: {title}. {words} words. Cites {cites}.',
     notes: {
@@ -2794,6 +2796,15 @@
     this.kick();
   };
 
+  // The legend's chips say which families are chosen, wherever the choice was made.
+  App.prototype.syncFamilyChips = function () {
+    var self = this;
+    this.root.querySelectorAll('[data-crumb-act="family"]').forEach(function (b) {
+      var on = !!(self.families && self.families[b.getAttribute('data-crumb-family')]);
+      b.classList.toggle('crumb-family--on', on); b.setAttribute('aria-pressed', String(on));
+    });
+  };
+
   App.prototype.act = function (btn) {
     var type = btn.getAttribute('data-crumb-act'), model = this.model;
     if (type === 'note') {
@@ -2818,11 +2829,32 @@
       this.spot = null; this.trace = null;
       if (fam[slug]) { delete fam[slug]; } else { fam[slug] = 1; }
       this.families = Object.keys(fam).length ? fam : null;
-      var self = this;
-      this.root.querySelectorAll('[data-crumb-act="family"]').forEach(function (b) {
-        var on = !!(self.families && self.families[b.getAttribute('data-crumb-family')]);
-        b.classList.toggle('crumb-family--on', on); b.setAttribute('aria-pressed', String(on));
-      });
+      this.syncFamilyChips();
+      this.kick();
+    } else if (type === 'row') {
+      // A family chosen from the matrix's own row header: the same choice as
+      // its chip in the legend, made without leaving the matrix, so a reader
+      // can mark two families and compare their rows side by side.
+      var rslug = btn.getAttribute('data-crumb-row'), rcat = model.categories.filter(function (c) { return c.slug === rslug; })[0];
+      var rfam = this.familiesPreview ? {} : (this.families || {});
+      this.familiesPreview = false;
+      this.spot = null; this.trace = null;
+      var added = !rfam[rslug];
+      if (added) { rfam[rslug] = 1; } else { delete rfam[rslug]; }
+      this.families = Object.keys(rfam).length ? rfam : null;
+      this.syncFamilyChips();
+      this.matrixAt = null;
+      // Marking a family adds its sentence above the grid, which would push
+      // every row down under the pointer and send a second click to the
+      // family below. Scroll by the same amount, so the row stays put.
+      var box = this.$('[data-crumb-matrix]'), was = btn.getBoundingClientRect().top;
+      this.renderMatrix();
+      var again = this.root.querySelector('[data-crumb-row="' + rslug + '"]');
+      if (again) {
+        box.scrollTop += again.getBoundingClientRect().top - was;
+        again.focus({ preventScroll: true });
+      }
+      this.say(fmt(added ? STR.matrixRowOn : STR.matrixRowOff, { a: rcat ? rcat.title : rslug }));
       this.kick();
     } else if (type === 'flow') {
       var from = model.categories[+btn.getAttribute('data-crumb-from')], to = model.categories[+btn.getAttribute('data-crumb-to')];
@@ -3092,8 +3124,9 @@
       });
     });
     var sink = cats[inside.indexOf(Math.max.apply(null, inside))];
-    // Families chosen in the legend carry in: their row and column are marked,
-    // and a sentence says where each one pulls hardest, out and in.
+    // Families chosen in the legend, or here by their row header, carry in:
+    // their row and column are marked, and a sentence says where each one
+    // pulls hardest, out and in.
     var fams = this.families || {}, on = cats.map(function (c) { return !!fams[c.slug]; });
     this.matrixFrom = null;
     var picked = cats.filter(function (c) { return on[c.index]; }).map(function (f) {
@@ -3114,7 +3147,7 @@
       return '<th scope="col" class="crumb-matrix__col' + (on[c.index] ? ' crumb-matrix__col--on' : '') + '"><abbr title="' + escapeHtml(c.title) + '">' + swatch(c) + '<span class="crumb-matrix__num">' + (c.index + 1) + '</span></abbr><span class="visually-hidden">' + escapeHtml(c.title) + '</span></th>';
     }).join('') + '</tr>';
     var body = cats.map(function (a, i) {
-      return '<tr><th scope="row" class="crumb-matrix__row' + (on[i] ? ' crumb-matrix__row--on' : '') + '">' + swatch(a) + '<span class="crumb-matrix__num" aria-hidden="true">' + (i + 1) + '</span><span class="crumb-matrix__name">' + escapeHtml(a.title) + '</span></th>' + cats.map(function (b, j) {
+      return '<tr><th scope="row" class="crumb-matrix__row' + (on[i] ? ' crumb-matrix__row--on' : '') + '"><button type="button" class="crumb-matrix__pick" data-crumb-act="row" data-crumb-row="' + escapeHtml(a.slug) + '" aria-pressed="' + on[i] + '" title="' + escapeHtml(a.title) + '">' + swatch(a) + '<span class="crumb-matrix__num" aria-hidden="true">' + (i + 1) + '</span><span class="crumb-matrix__name">' + escapeHtml(a.title) + '</span></button></th>' + cats.map(function (b, j) {
         var n = m[i][j], cls = 'crumb-matrix__cell' + (i === j ? ' crumb-matrix__cell--self' : '') + (on[i] || on[j] ? ' crumb-matrix__cell--on' : '');
         if (!n) { return '<td class="' + cls + '"><span class="visually-hidden">' + escapeHtml(fmt(STR.matrixNone, { a: a.title, b: b.title })) + '</span></td>'; }
         var label = fmt(i === j ? STR.matrixCellSelf : STR.matrixCell, { a: a.title, b: b.title, n: n });

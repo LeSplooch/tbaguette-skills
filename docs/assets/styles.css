@@ -5632,6 +5632,24 @@ a.crumb-chip:hover,
 .crumb-matrix__row .crumb-swatch { margin-inline-end: 0.5em; vertical-align: 0.05em; }
 .crumb-matrix__row .crumb-matrix__num { display: inline-block; min-width: 1.6em; color: var(--text-secondary); }
 .crumb-matrix__name { font-family: var(--font-body); color: var(--text-primary); }
+/* The row header is the family's own switch: it looks like the header it is,
+   and answers the pointer and the keyboard like the chips in the legend. */
+.crumb-matrix__pick {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0 var(--space-2) 0 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.crumb-matrix__pick:hover .crumb-matrix__name { text-decoration: underline; text-underline-offset: 0.2em; }
+.crumb-matrix__pick:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
 
 .crumb-matrix__cell { width: 2.75rem; height: 2.75rem; padding: 0; }
 .crumb-matrix__cell--self { box-shadow: inset 0 0 0 1px var(--text-secondary); border-radius: var(--radius-sm); }
@@ -5640,6 +5658,7 @@ a.crumb-chip:hover,
 .crumb-matrix__cell--on { background: color-mix(in oklch, var(--text-accent) 12%, transparent); }
 .crumb-matrix__row--on,
 .crumb-matrix__row--on .crumb-matrix__name,
+.crumb-matrix__row--on .crumb-matrix__num,
 .crumb-matrix__col--on .crumb-matrix__num { font-weight: 700; color: var(--text-accent); }
 .crumb-matrix__lede--family { font-weight: 500; }
 .crumb-matrix__cell--self button { box-shadow: inset 0 0 0 1px var(--text-secondary); }
@@ -5663,6 +5682,7 @@ a.crumb-chip:hover,
 @container (width < 40rem) {
   .crumb-matrix__name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .crumb-matrix__cell { width: 2.25rem; height: 2.25rem; }
+  .crumb-matrix__pick { min-height: 2.25rem; }
   .crumb-matrix__corner span { display: block; }
 }
 
