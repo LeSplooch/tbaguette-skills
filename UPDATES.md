@@ -31,6 +31,24 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-01 — Code a new branch wakes up, a queue that never serves the patient, a label that flaps, a count of what isn't shown
+
+- `red-teaming-your-own-work` widens its adjacent-breakage attack: when a
+  change loosens an early return, `continue` or guard, the unchanged lines
+  below it now run in a state they never saw. The diff doesn't show them, so
+  read the rest of that block as if it were new.
+- `rate-limiting-and-backpressure` has a section on deadline-first
+  scheduling: with a steady stream of urgent work, anything with a distant
+  deadline is never picked at all. Count items served per class to see it,
+  and give the patient class its own small worker instead of a share.
+- `instrumenting-for-observability` warns that a label or alert comparing a
+  noisy reading to a hard threshold flaps whenever the reading sits near the
+  line. Add hysteresis or a dwell time, and check the first live readings.
+- `formidable`'s hardening guide adds a rule: a badge, count or "next"
+  button that describes the screen must count what the screen actually
+  shows, not the whole data model, and its test must go through the
+  rendered screen.
+
 ## 2026-09-30 — Five quiet failures: a frozen reading, an "off" that isn't, a fence with two jobs, a plan nobody ran, a history cut short
 
 - `diagnosing-before-fixing` now names a culprit behind "nothing changed":

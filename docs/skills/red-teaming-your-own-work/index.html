@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.3</span>
+      <span class="wordmark-version" dir="ltr">v2.1.4</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-30T00:34:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-30T00:34:20Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-30T22:17:26+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-30T22:17:26Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">red-teaming-your-own-work</h1>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-29T00:13:49+02:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-01T00:16:08+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Finishing and proving</span>
@@ -80,7 +80,7 @@
 <p>&quot;Is this right?&quot; is answered by the same reasoning that produced the work, and it returns yes. &quot;If this is wrong, where is it wrong?&quot; forces the generation of candidate locations, which is a different task with a different output. Commit to finding at least one real defect; a pass that ends with none, and with no surprise about that, was a reread.</p>
 <h2 id="the-attack-list">The attack list</h2>
 <p>Run all seven. Each costs a minute or two and lands somewhere predictable.</p>
-<table><thead><tr><th>Attack</th><th>The question</th><th>Where it usually lands</th></tr></thead><tbody><tr><td>Wrong assumption</td><td>What did I take as given without checking?</td><td>The shape of an input, the behaviour of an external call, what one word in the request meant</td></tr><tr><td>Unhandled input</td><td>Empty, zero, one, maximum, absent, duplicate, out of order, concurrent, hostile, wrong type</td><td>Boundaries between components, not inside them</td></tr><tr><td>Misread requirement</td><td>Reread the original request verbatim, not your restatement of it</td><td>A qualifier in the request that never made it into the work</td></tr><tr><td>Silent failure</td><td>Where can this fail with nothing raised, logged, or returned?</td><td>Swallowed errors, defaults substituting for missing data, retries that give up quietly</td></tr><tr><td>Wrong altitude</td><td>Too specific — one case hardcoded; or too general — extension points with one caller</td><td>Abstraction and configuration added on speculation</td></tr><tr><td>Adjacent breakage</td><td>Who else calls this, parses this shape, relies on this ordering or this timing?</td><td>Callers you never opened, and anything depending on the old behaviour</td></tr><tr><td>Unverified reference</td><td>Which statements here are about a document I did not reopen?</td><td>Cross-references, cited requirements, &quot;as X already says&quot;, recalled API or spec behaviour</td></tr></tbody></table>
+<table><thead><tr><th>Attack</th><th>The question</th><th>Where it usually lands</th></tr></thead><tbody><tr><td>Wrong assumption</td><td>What did I take as given without checking?</td><td>The shape of an input, the behaviour of an external call, what one word in the request meant</td></tr><tr><td>Unhandled input</td><td>Empty, zero, one, maximum, absent, duplicate, out of order, concurrent, hostile, wrong type</td><td>Boundaries between components, not inside them</td></tr><tr><td>Misread requirement</td><td>Reread the original request verbatim, not your restatement of it</td><td>A qualifier in the request that never made it into the work</td></tr><tr><td>Silent failure</td><td>Where can this fail with nothing raised, logged, or returned?</td><td>Swallowed errors, defaults substituting for missing data, retries that give up quietly</td></tr><tr><td>Wrong altitude</td><td>Too specific — one case hardcoded; or too general — extension points with one caller</td><td>Abstraction and configuration added on speculation</td></tr><tr><td>Adjacent breakage</td><td>Who else calls this, parses this shape, relies on this ordering or this timing? Which unchanged lines below an early return, <code>continue</code> or guard I loosened now run in a state they never saw?</td><td>Callers you never opened, anything depending on the old behaviour, and old code a loosened guard just made reachable — the diff never shows it, so read the rest of that block as if it were new</td></tr><tr><td>Unverified reference</td><td>Which statements here are about a document I did not reopen?</td><td>Cross-references, cited requirements, &quot;as X already says&quot;, recalled API or spec behaviour</td></tr></tbody></table>
 <p>An eighth when the work is an addition: delete it mentally and ask what breaks. If nothing does, it is unjustified rather than wrong.</p>
 <h2 id="attack-the-strongest-part">Attack the strongest part</h2>
 <p>The weak part is already flagged in your own head — you know the rough edge and the TODO, and reviewing it returns what you already knew. Defects concentrate where attention stopped early: the obviously-correct core, the part you would skip in someone else's review, the piece written fastest because it was familiar.</p>

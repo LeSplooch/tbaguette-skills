@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.3</span>
+      <span class="wordmark-version" dir="ltr">v2.1.4</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-30T00:34:20+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-30T00:34:20Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-30T22:17:26+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-30T22:17:26Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">formidable</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-01T00:16:08+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">UI and design</span>
@@ -270,7 +270,7 @@
 <p>Every error answers three questions in this order: what happened, what it means for me, what to do now. Then optionally: how to get help, with an identifier that support can use.</p>
 <ul><li>Name the specific thing that failed, not the layer that reported it.</li><li>Never blame the user. &quot;That email is already registered&quot; not &quot;Invalid input.&quot;</li><li>Recovery must be reachable from the error itself — a button, a retry, a link, a suggested value.</li><li>Distinguish transient (retry helps) from permanent (retry is cruel).</li><li>Preserve what the user typed. Losing a filled form to a validation error is the most expensive error-handling failure there is.</li></ul>
 <h2 id="cmd-harden-rules">Rules</h2>
-<ul><li><strong>Every state you cannot reach in the UI, force in code</strong> and screenshot it. Untested states are undesigned states.</li><li><strong>Truncation is a decision.</strong> Which end, with what indicator, and with the full value available how. Middle-truncate paths and IDs; end-truncate prose; never truncate a number.</li><li><strong>Do not fix by shrinking text.</strong> Auto-shrinking to fit is a failure of layout, and it fails at the next locale.</li><li><strong>Silencing a control's default focus ring is a debt payable in high contrast.</strong> Forced-color and high-contrast modes drop shadows entirely and override border colors, so a wrapper's focus treatment built from those simply disappears — and the control you silenced now has no indicator at all, for exactly the users who most depend on one. Restore a real outline under those settings, and check it there rather than assuming.</li></ul></div><div class="tabs__panel" role="tabpanel" id="cmd-motion" aria-labelledby="tab-cmd-motion" tabindex="0" hidden><p>Motion exists to explain change: where something came from, what belongs to what, what is happening now. Motion that explains nothing is a cost paid in attention, battery, and frames.</p>
+<ul><li><strong>Every state you cannot reach in the UI, force in code</strong> and screenshot it. Untested states are undesigned states.</li><li><strong>A number the surface shows about itself counts what it renders.</strong> A badge, a &quot;3 need attention&quot; footer, a &quot;next&quot; walker computed from the data model is wrong the moment the surface conditionally hides part of that model: the count runs high and the walk scrolls to nothing. Count over the rendered set, or exclude hidden members with the same predicate that hides them — and test it through the rendered surface, because a model-level test is green either way.</li><li><strong>Truncation is a decision.</strong> Which end, with what indicator, and with the full value available how. Middle-truncate paths and IDs; end-truncate prose; never truncate a number.</li><li><strong>Do not fix by shrinking text.</strong> Auto-shrinking to fit is a failure of layout, and it fails at the next locale.</li><li><strong>Silencing a control's default focus ring is a debt payable in high contrast.</strong> Forced-color and high-contrast modes drop shadows entirely and override border colors, so a wrapper's focus treatment built from those simply disappears — and the control you silenced now has no indicator at all, for exactly the users who most depend on one. Restore a real outline under those settings, and check it there rather than assuming.</li></ul></div><div class="tabs__panel" role="tabpanel" id="cmd-motion" aria-labelledby="tab-cmd-motion" tabindex="0" hidden><p>Motion exists to explain change: where something came from, what belongs to what, what is happening now. Motion that explains nothing is a cost paid in attention, battery, and frames.</p>
 <h2 id="cmd-motion-the-four-legitimate-jobs">The four legitimate jobs</h2>
 <ol><li><strong>Continuity</strong> — the element that was there is the element that is here. Transform it; do not cross-fade unrelated things.</li><li><strong>Causality</strong> — the thing you touched produced the thing that appeared. Origin matters: a menu grows from its trigger.</li><li><strong>Status</strong> — something is happening that you did not initiate. Loading, receiving, syncing.</li><li><strong>Attention</strong> — exactly one thing, rarely, when the consequence justifies it.</li></ol>
 <p>Anything else — entrance animations on static content, hover flourishes on every card, staggered reveals of a list the user is trying to read — is decoration and belongs to Persuade and Experience modes only.</p>
