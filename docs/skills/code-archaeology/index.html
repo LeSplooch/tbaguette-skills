@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.2</span>
+      <span class="wordmark-version" dir="ltr">v2.1.3</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-09-29T22:39:21+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-29T22:39:21Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-09-30T00:34:19+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-09-30T00:34:19Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">code-archaeology</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-09-30T00:34:19.255065+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Reading code</span>
@@ -96,7 +96,7 @@
 <p>Finding the rationale is not the end of the dig. A record fuses a stable <strong>principle</strong> with a <strong>premise</strong> about the world, and premises held by a vendor, platform, dependency, or protocol expire without any commit touching this repo — so nothing in this skill will show you one moved. Presence of a recorded reason is not evidence it still holds.</p>
 <p><a class="skill-link" href="/tbaguette-skills/skills/revalidating-decisions/"><code>revalidating-decisions</code></a> covers the split and the re-check.</p>
 <h2 id="when-history-is-worthless">When history is worthless</h2>
-<table><thead><tr><th>History shape</th><th>Signal</th><th>Fall back to</th></tr></thead><tbody><tr><td>One &quot;initial commit&quot; with thousands of files</td><td>Imported from another repo</td><td>The old repo; failing that, released versions in a package registry, release notes, the issue tracker</td></tr><tr><td>Squash-merge only</td><td>Intent lives in the forge, not the repo</td><td>The pull request number in the commit trailer, then its discussion</td></tr><tr><td>Vendored or third-party tree</td><td>History belongs upstream</td><td>Diff the vendored copy against the matching upstream tag; the local patches <em>are</em> the intent</td></tr><tr><td>A rewrite (<code>v2</code>, <code>next</code>, a parallel package)</td><td>Pre-rewrite history describes a system that no longer exists</td><td>Tests carried across from the old version — those are the surviving requirements</td></tr><tr><td>Generated files</td><td>The churn belongs to the generator</td><td>The schema or template's history</td></tr></tbody></table>
+<table><thead><tr><th>History shape</th><th>Signal</th><th>Fall back to</th></tr></thead><tbody><tr><td>The oldest reachable commit adds the whole tree, and blame pins every older line on it</td><td>A shallow clone, the default in many CI runners and agent sandboxes; log, blame and pickaxe answer from what was fetched, without a warning</td><td><code>git rev-parse --is-shallow-repository</code>, or <code>grafted</code> in <code>git log --decorate</code>; if so, <code>git fetch --unshallow</code> (or <code>--shallow-since=&lt;date&gt;</code> for one window) and ask again, before concluding anything was imported</td></tr><tr><td>One &quot;initial commit&quot; with thousands of files</td><td>Imported from another repo</td><td>The old repo; failing that, released versions in a package registry, release notes, the issue tracker</td></tr><tr><td>Squash-merge only</td><td>Intent lives in the forge, not the repo</td><td>The pull request number in the commit trailer, then its discussion</td></tr><tr><td>Vendored or third-party tree</td><td>History belongs upstream</td><td>Diff the vendored copy against the matching upstream tag; the local patches <em>are</em> the intent</td></tr><tr><td>A rewrite (<code>v2</code>, <code>next</code>, a parallel package)</td><td>Pre-rewrite history describes a system that no longer exists</td><td>Tests carried across from the old version — those are the surviving requirements</td></tr><tr><td>Generated files</td><td>The churn belongs to the generator</td><td>The schema or template's history</td></tr></tbody></table>
 <p>The universal fallback when history is silent: the test that shipped with the code. A commit adding a strange condition alongside a test named for an empty batch from a legacy producer has already told you the reason. When even that is missing, the next fallback is the log, metric, or alert the code emits — someone added it because something happened.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>Blame points at a formatting commit</td><td>Ran bare <code>blame</code>; needed <code>-w -C -C -M</code>, or the parent</td></tr><tr><td>&quot;This file has no history&quot;</td><td>Renamed or moved; needed <code>--follow</code> or <code>-C -C</code></td></tr><tr><td>Read thirty commits hunting a behavior change</td><td>Should have written a one-line test and bisected</td></tr><tr><td>Every message says &quot;fix&quot; or &quot;wip&quot;</td><td>Intent is in the pull request and issue, not the repo</td></tr><tr><td>Deleted a workaround; it broke again</td><td>Never searched for a prior revert of the same deletion</td></tr><tr><td>Found the commit, still no reason</td><td>Stopped at the message; the rationale was in the review thread</td></tr><tr><td>Concluded &quot;no reason, it's safe&quot;</td><td>Absence of a recorded reason is not evidence of absence</td></tr><tr><td>Found a documented reason and closed the question</td><td>Presence of a recorded reason is not evidence it still holds</td></tr></tbody></table>

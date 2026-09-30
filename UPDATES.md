@@ -31,7 +31,7 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-09-30 — Four quiet failures: a frozen reading, an "off" that isn't, a fence with two jobs, a plan nobody ran
+## 2026-09-30 — Five quiet failures: a frozen reading, an "off" that isn't, a fence with two jobs, a plan nobody ran, a history cut short
 
 - `diagnosing-before-fixing` now names a culprit behind "nothing changed":
   a tool that writes to a fixed path can fail, exit 0 and leave the last
@@ -47,6 +47,12 @@ holds any text file over 256 KiB for a reviewer.
 - `structuring-an-implementation-plan` adds a self-review check: when a plan
   carries both code and the tests it must pass, run them together in a
   scratch directory before handing the plan over.
+- `code-archaeology` now checks whether a clone is shallow before trusting
+  its history. CI runners and agent sandboxes often fetch only recent
+  commits, and in such a clone the oldest commit looks like an import of the
+  whole tree while blame pins every older line on it. Check with
+  `git rev-parse --is-shallow-repository` (or look for `grafted` in
+  `git log --decorate`) and fetch the rest before concluding anything.
 
 ## 2026-09-29 — The Atelier in Claude Desktop, claude.ai and Cowork
 

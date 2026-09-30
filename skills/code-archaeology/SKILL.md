@@ -76,6 +76,7 @@ Finding the rationale is not the end of the dig. A record fuses a stable **princ
 
 | History shape | Signal | Fall back to |
 |---|---|---|
+| The oldest reachable commit adds the whole tree, and blame pins every older line on it | A shallow clone, the default in many CI runners and agent sandboxes; log, blame and pickaxe answer from what was fetched, without a warning | `git rev-parse --is-shallow-repository`, or `grafted` in `git log --decorate`; if so, `git fetch --unshallow` (or `--shallow-since=<date>` for one window) and ask again, before concluding anything was imported |
 | One "initial commit" with thousands of files | Imported from another repo | The old repo; failing that, released versions in a package registry, release notes, the issue tracker |
 | Squash-merge only | Intent lives in the forge, not the repo | The pull request number in the commit trailer, then its discussion |
 | Vendored or third-party tree | History belongs upstream | Diff the vendored copy against the matching upstream tag; the local patches *are* the intent |
