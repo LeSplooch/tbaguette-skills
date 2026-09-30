@@ -21,6 +21,7 @@ import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import donations
 import generate
 import skill_graph
 import templates
@@ -559,6 +560,15 @@ def main() -> None:
             formidable_dt_match is not None and version_txt_content == formidable_dt_match.group(1),
         )
 
+        check(
+            "a project root with no donations.json builds a site with no "
+            "Support button and no QR sprite -- nowhere to send money is not "
+            "a build failure, and a button that opens onto nothing is worse "
+            "than none",
+            "data-support" not in index_html
+            and not (docs / templates.SUPPORT_PATH / templates.SUPPORT_QR_FILENAME).exists(),
+        )
+
         # A second run proves the atomic-swap machinery is safe to repeat,
         # not just safe to run once — this is the exact property that
         # protects a real "edit a skill, rerun generate.py" workflow.
@@ -568,6 +578,11 @@ def main() -> None:
         real_updates = real_project_root / generate.UPDATE_NOTES_FILENAME
         expected_notes = generate._update_notes(real_project_root)
         shutil.copyfile(real_updates, tmp_root / generate.UPDATE_NOTES_FILENAME)
+        # ...and the run that proves donations.json reaches every page. Filler
+        # addresses that only match the formats: no key produces them.
+        fixture_addresses = {"BTC": "bc1q" + "q" * 38, "ETH": "0x" + "1" * 40, "SOL": "1" * 40}
+        (tmp_root / donations.DONATIONS_FILENAME).write_text(
+            json.dumps({"kofi": "tbaguette", "addresses": fixture_addresses}), encoding="utf-8")
         content2 = generate.generate(tmp_root, real_skills_root, base_path="/tbaguette-skills")
 
         index_html2 = (docs / "index.html").read_text(encoding="utf-8")
@@ -591,6 +606,33 @@ def main() -> None:
             "the notes land between the fresh rail and the search field, "
             "under real data and not just in the template's own fixtures",
             index_html2.index("data-update-notes") < index_html2.index("data-search-root"),
+        )
+
+        sprite_path = docs / templates.SUPPORT_PATH / templates.SUPPORT_QR_FILENAME
+        check("donations.json with addresses writes the QR sprite", sprite_path.is_file())
+        sprite = sprite_path.read_text(encoding="utf-8") if sprite_path.is_file() else ""
+        sprite_version = hashlib.sha256(sprite.encode()).hexdigest()[:10]
+        check(
+            "the sprite holds one QR code per address",
+            sorted(re.findall(r'<symbol id="qr-([a-z]+)"', sprite)) == ["btc", "eth", "sol"],
+        )
+        every_page = list(docs.rglob("index.html"))
+        check(
+            "every page's header carries the Support button, with Ko-fi and each address",
+            all(
+                "data-support" in text and "https://ko-fi.com/tbaguette" in text
+                and all(a in text for a in fixture_addresses.values())
+                for text in (p.read_text(encoding="utf-8") for p in every_page)
+            ),
+        )
+        check(
+            "every page points its QR codes at the sprite by its content "
+            "fingerprint, so a cached sprite can never pair an old code with a "
+            "new address",
+            all(
+                f"/tbaguette-skills/support/qr.svg?v={sprite_version}#qr-btc" in p.read_text(encoding="utf-8")
+                for p in every_page
+            ),
         )
 
         # Deferred to here rather than run after the first build: half of what

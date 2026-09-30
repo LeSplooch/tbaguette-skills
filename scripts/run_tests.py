@@ -52,6 +52,9 @@ SUITES = [
      [sys.executable, "-m", "unittest", "test_archive_updates", "-v"]),
     ("Anthropic's plugin directory rules",
      [sys.executable, "-m", "unittest", "test_directory_readiness", "-v"]),
+    ("QR codes", [sys.executable, "-m", "unittest", "test_qr", "-v"]),
+    ("where donations go",
+     [sys.executable, "-m", "unittest", "test_donations", "-v"]),
     # The only suite that hits the network (clones the real, published repo
     # from GitHub several times against throwaway HOME directories) — a
     # flaky connection can fail this one without meaning anything else is

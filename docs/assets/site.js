@@ -7,6 +7,7 @@
  *   - tabs           (formidable's skill page's Stacks/Commands; the
  *                      landing page's install-command platform picker)
  *   - copy install command (landing page only; one button per platform tab)
+ *                           and the Support dialog's crypto addresses
  *   - header "Updated" time (every page — formats the baked-in UTC instant
  *                             as the visitor's local time)
  *   - freshness      (every page — re-checks each New/Updated badge's
@@ -23,6 +24,9 @@
  *   - post-reload scroll restore (every page — companion to the update
  *                                  check; restores scroll position after
  *                                  the reload it triggered)
+ *   - support dialog (every page — promotes the header's Support
+ *                      <details> to a modal dialog; without it the
+ *                      disclosure still works as a panel)
  *   - graph announcement (every page's Graph link swells toward the
  *                          pointer; the landing page's banner draws a live
  *                          constellation of the families; both retire the
@@ -1143,6 +1147,111 @@
     // event does arrive, this releases the lock in the same frame rather than
     // on the observer's microtask. Both are idempotent, so running both is
     // free. Native <dialog> returns focus to the trigger on its own.
+    dialog.addEventListener('close', function () {
+      document.documentElement.classList.remove('has-notes-dialog');
+    });
+  }
+
+  // -------------------------------------------------------------------
+  // Support — the header's Ko-fi and crypto panel, promoted from a <details>
+  // to a modal dialog exactly as the update-notes archive is above, and for
+  // the same reason: with no script, or no showModal(), the disclosure opens
+  // as a panel under the button and every address in it is still readable
+  // and selectable. The dialog borrows the archive's .notes-dialog chrome so
+  // the site has one dialog, not two that almost match.
+  // -------------------------------------------------------------------
+
+  function initSupport() {
+    var details = document.querySelector('[data-support]');
+    if (!details) return;
+
+    var panel = details.querySelector('[data-support-panel]');
+    var summary = details.querySelector('summary');
+    if (!panel || !summary) return;
+
+    if (typeof window.HTMLDialogElement !== 'function' ||
+        typeof document.createElement('dialog').showModal !== 'function') return;
+
+    var dialog = document.createElement('dialog');
+    dialog.className = 'notes-dialog support-dialog';
+    dialog.setAttribute('aria-labelledby', 'support-dialog-title');
+
+    var head = document.createElement('div');
+    head.className = 'notes-dialog__head';
+
+    var iconHtml = iconMarkup('icon-heart');
+    if (iconHtml) {
+      var iconWrap = document.createElement('span');
+      // This file's own hardcoded sprite id, as in initNotesArchive().
+      iconWrap.innerHTML = iconHtml;
+      var iconEl = iconWrap.firstChild;
+      iconEl.setAttribute('class', 'icon notes-dialog__icon');
+      head.appendChild(iconEl);
+    }
+
+    var title = document.createElement('h2');
+    title.className = 'notes-dialog__title';
+    title.id = 'support-dialog-title';
+    title.textContent = details.getAttribute('data-support-title') || 'Support';
+    head.appendChild(title);
+
+    var close = document.createElement('button');
+    close.className = 'notes-dialog__close';
+    close.type = 'button';
+    close.setAttribute('aria-label', details.getAttribute('data-support-close') || 'Close');
+    head.appendChild(close);
+
+    var body = document.createElement('div');
+    body.className = 'notes-dialog__body support-dialog__body';
+    body.tabIndex = 0;
+    body.appendChild(panel);
+
+    dialog.appendChild(head);
+    dialog.appendChild(body);
+
+    // The button takes the summary's own children -- the heart and the
+    // label -- rather than rebuilding them, so the header looks the same
+    // before and after this runs. Moved, not copied: nothing is re-parsed.
+    var trigger = document.createElement('button');
+    trigger.className = 'support__button';
+    trigger.type = 'button';
+    trigger.setAttribute('aria-haspopup', 'dialog');
+    if (summary.title) trigger.title = summary.title;
+    while (summary.firstChild) trigger.appendChild(summary.firstChild);
+
+    details.parentNode.insertBefore(trigger, details);
+    details.parentNode.removeChild(details);
+    document.body.appendChild(dialog);
+
+    // Scroll lock follows the `open` attribute, for the reasons
+    // initNotesArchive() gives; the class is shared with that dialog because
+    // only one of the two can be open at a time.
+    var openState = new MutationObserver(function () {
+      document.documentElement.classList.toggle('has-notes-dialog', dialog.open);
+    });
+    openState.observe(dialog, { attributes: true, attributeFilter: ['open'] });
+
+    trigger.addEventListener('click', function () {
+      dialog.showModal();
+      document.documentElement.classList.add('has-notes-dialog');
+      body.focus();
+      body.scrollTop = 0;
+    });
+
+    close.addEventListener('click', function () { dialog.close(); });
+
+    dialog.addEventListener('click', function (event) {
+      if (event.target === dialog) dialog.close();
+    });
+
+    // This dialog is on every page, the graph's included, and graph.js
+    // listens for Escape on the document to step the graph back -- calling
+    // preventDefault() when it does, which cancels the dialog's own close.
+    // Escape pressed inside the dialog is the dialog's business alone.
+    dialog.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') event.stopPropagation();
+    });
+
     dialog.addEventListener('close', function () {
       document.documentElement.classList.remove('has-notes-dialog');
     });
@@ -2303,6 +2412,7 @@
   initLanguageSwitcher();
   initScrollRestore();
   initNotesArchive();
+  initSupport();
   initGraphNews();
   initGraphMagnet();
   initGraphBanner();

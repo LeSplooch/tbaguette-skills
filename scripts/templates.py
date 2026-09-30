@@ -42,7 +42,9 @@ generator.
 import json
 from html import escape as _escape_html_impl
 
+import donations
 import locales
+import qr
 from dataclasses import dataclass
 
 
@@ -1257,9 +1259,153 @@ def _render_header(base_path: str = "", last_updated_utc: str = "",
         {_icon("icon-sun", css_class="icon theme-toggle__icon theme-toggle__icon--sun", base_path=base_path)}
         {_icon("icon-moon", css_class="icon theme-toggle__icon theme-toggle__icon--moon", base_path=base_path)}
       </button>
-    </div>
+    </div>{_render_support(base_path)}
   </div>
 </header>"""
+
+
+# ---------------------------------------------------------------------------
+# Support: the header's Ko-fi and crypto donations
+# ---------------------------------------------------------------------------
+
+# What the Support button offers, filled in by generate.py from donations.json
+# before it renders a page -- the same arrangement as ASSET_VERSIONS, and for
+# the same reason: every page's header carries it, and none of the page
+# renderers has any other business knowing about it. None, as in a fixture or
+# a fork without the file, renders no button at all.
+SUPPORT: "donations.Support | None" = None
+
+# The QR codes are one generated sprite beside the pages rather than inline
+# markup, because every page carries the dialog and twenty QR codes would
+# add more to each page than the rest of its header. Its URL carries a
+# fingerprint of its contents, set alongside SUPPORT, for the reason
+# asset_url() gives -- and here the stakes are money, not markup: a sprite
+# cached from before the addresses changed would show a QR code for an
+# address the text beside it no longer names.
+SUPPORT_PATH = "support/"
+SUPPORT_QR_FILENAME = "qr.svg"
+SUPPORT_QR_VERSION = ""
+
+# The QR codes are drawn in fixed ink on fixed paper in both themes. Scanners
+# expect dark modules on a light field, and an inverted code is the one thing
+# the dark theme must not do to them.
+_QR_PAPER = "#ffffff"
+_QR_INK = "#1a130f"
+
+
+def render_support_qr_sprite(support: "donations.Support") -> str:
+    """One <symbol> per coin, id "qr-<symbol>", each carrying its quiet zone.
+    Written by generate.py to SUPPORT_PATH + SUPPORT_QR_FILENAME."""
+    symbols = []
+    for coin, address in support.addresses:
+        modules = qr.matrix(address)
+        side = len(modules) + 2 * qr.QUIET_ZONE
+        symbols.append(
+            f'<symbol id="qr-{escape_html(coin.symbol.lower())}" viewBox="0 0 {side} {side}">'
+            f'<rect width="{side}" height="{side}" fill="{_QR_PAPER}"/>'
+            f'<path fill="{_QR_INK}" shape-rendering="crispEdges" d="{qr.svg_path(modules)}"/>'
+            f"</symbol>"
+        )
+    return '<svg xmlns="http://www.w3.org/2000/svg">\n' + "\n".join(symbols) + "\n</svg>\n"
+
+
+def _support_qr_href(symbol: str, base_path: str) -> str:
+    version = f"?v={SUPPORT_QR_VERSION}" if SUPPORT_QR_VERSION else ""
+    return f"{base_path}/{SUPPORT_PATH}{SUPPORT_QR_FILENAME}{version}#qr-{escape_html(symbol.lower())}"
+
+
+def _render_support_coin(coin: "donations.Coin", address: str, base_path: str) -> str:
+    """One coin: a chip that opens onto its QR code, network and address.
+
+    The network is stated on every coin, including the five that share the
+    Ethereum address, because it is the whole difference between them and
+    the thing a donor gets wrong: the same address on the wrong chain is a
+    gift the wallet shows nowhere. The copy button reuses the install
+    command's [data-copy-target] wiring in site.js."""
+    slug = escape_html(coin.symbol.lower())
+    name = escape_html(coin.name)
+    address_id = f"support-address-{slug}"
+    note_html = f'\n            <p class="support__note">{escape_html(coin.note)}</p>' if coin.note else ""
+    return f"""<details class="support__coin" name="support-coin">
+        <summary class="support__coin-summary"><span class="support__coin-symbol">{escape_html(coin.symbol)}</span><span class="support__coin-name">{name}</span></summary>
+        <div class="support__coin-body">
+          <svg class="support__qr" role="img" aria-label="QR code of the {name} address"><use href="{_support_qr_href(coin.symbol, base_path)}"></use></svg>
+          <div class="support__coin-info">
+            <p class="support__network">Send on <strong>{escape_html(coin.network)}</strong></p>
+            <code class="support__address" id="{address_id}">{escape_html(address)}</code>
+            <button class="support__copy" type="button" data-copy-target="{address_id}" aria-label="Copy the {name} address">
+              <span class="support__copy-icons">{_icon("icon-copy", css_class="icon support__copy-icon support__copy-icon--copy", base_path=base_path)}{_icon("icon-check", css_class="icon support__copy-icon support__copy-icon--check", base_path=base_path)}</span><span data-copy-label>Copy address</span>
+            </button>{note_html}
+          </div>
+        </div>
+      </details>"""
+
+
+def _render_support(base_path: str = "") -> str:
+    """The header's Support button: Ko-fi first, then crypto.
+
+    Its own child of the header row rather than one of the actions, so the
+    stylesheet can seat it at the top-right corner whichever way the header
+    wraps: last on the one-row header, and on the wordmark's row once the
+    actions have wrapped under it, where there is room to spare. It is last
+    in source order either way, after the theme toggle, which is where a
+    screen reader and the Tab key find it.
+
+    Ships as a <details> and site.js promotes it to a modal dialog, the same
+    way it promotes the update-notes archive: with no script the disclosure
+    still opens as a panel under the button, and every address is still
+    there to read and select. Renders nothing when there is nowhere to send
+    money -- a button that opens onto nothing would be worse than none."""
+    support = SUPPORT
+    if support is None or not (support.kofi_url or support.addresses):
+        return ""
+
+    kofi_html = ""
+    if support.kofi_url:
+        shown_url = support.kofi_url.removeprefix("https://")
+        kofi_html = f"""
+    <a class="support__kofi" href="{escape_html(support.kofi_url)}" target="_blank" rel="noopener">
+      {_icon("icon-cup", css_class="icon support__kofi-icon", base_path=base_path)}
+      <span class="support__kofi-text">
+        <span class="support__kofi-title">Buy the baker a coffee</span>
+        <span class="support__kofi-meta">on Ko-fi &middot; {escape_html(shown_url)}</span>
+      </span>
+    </a>"""
+
+    crypto_html = ""
+    if support.addresses:
+        heading = "Or send crypto" if support.kofi_url else "Send crypto"
+        coins = "\n      ".join(
+            _render_support_coin(coin, address, base_path) for coin, address in support.addresses
+        )
+        hosts = [coin.name for coin in support.stablecoin_hosts]
+        stablecoin_html = ""
+        if hosts:
+            listed = hosts[0] if len(hosts) == 1 else ", ".join(hosts[:-1]) + " or " + hosts[-1]
+            stablecoin_html = (
+                f'\n    <p class="support__foot">USDT and USDC are welcome too, at the {escape_html(listed)} '
+                "address, sent on that same network.</p>"
+            )
+        crypto_html = f"""
+    <section class="support__crypto" aria-labelledby="support-crypto-title">
+      <h3 class="support__heading" id="support-crypto-title">{heading}</h3>
+      <p class="support__hint">Pick a coin for its address. Send only that coin, on the network it names.</p>
+      <div class="support__coins">
+      {coins}
+      </div>{stablecoin_html}
+    </section>"""
+
+    return f"""
+    <div class="site-header__support">
+      <details class="support" data-support
+               data-support-title="Support TBaguette"
+               data-support-close="Close">
+        <summary class="support__button" title="Support TBaguette">{_icon("icon-heart", css_class="icon support__button-icon", base_path=base_path)}<span class="support__button-label">Support</span></summary>
+        <div class="support__panel" data-support-panel>
+    <p class="support__lede">Every skill here is free, and stays free. If one saved you an afternoon, you can help keep the oven warm.</p>{kofi_html}{crypto_html}
+        </div>
+      </details>
+    </div>"""
 
 
 def _render_footer(categories: list[dict], base_path: str = "",

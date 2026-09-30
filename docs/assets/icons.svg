@@ -24,6 +24,9 @@
       icon-list, icon-route               — the graph's list view and
         its trace-a-path tool.
       icon-plus, icon-minus, icon-fit     — the graph's zoom controls.
+      icon-heart                          — the header's Support button.
+      icon-cup                            — the Support dialog's Ko-fi link:
+        a coffee, which is what Ko-fi calls a donation.
     All symbols share a 0 0 24 24 viewBox so they drop in at a consistent
     optical size wherever used.
   -->
@@ -62,6 +65,17 @@
   <symbol id="icon-search" viewBox="0 0 24 24">
     <circle cx="10.5" cy="10.5" r="6.5" />
     <path d="M15.3 15.3 L20.5 20.5" />
+  </symbol>
+
+  <symbol id="icon-heart" viewBox="0 0 24 24">
+    <path d="M12 19.5 C7 16 3.75 12.75 3.75 9.25 C3.75 6.75 5.6 5 7.9 5 C9.6 5 11 5.9 12 7.4 C13 5.9 14.4 5 16.1 5 C18.4 5 20.25 6.75 20.25 9.25 C20.25 12.75 17 16 12 19.5 Z" />
+  </symbol>
+
+  <symbol id="icon-cup" viewBox="0 0 24 24">
+    <path d="M4.75 9.5 H16.25 V13.75 A4.75 4.75 0 0 1 11.5 18.5 H9.5 A4.75 4.75 0 0 1 4.75 13.75 Z" />
+    <path d="M16.25 10.75 H17.5 A2.25 2.25 0 0 1 17.5 15.25 H16" />
+    <path d="M8.5 3.5 Q9.5 5 8.5 6.5 M12.5 3.5 Q13.5 5 12.5 6.5" />
+    <path d="M3.75 21 H17.25" />
   </symbol>
 
   <symbol id="icon-copy" viewBox="0 0 24 24">

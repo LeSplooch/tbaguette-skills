@@ -11,7 +11,9 @@ generation time — see python_highlight.py), docs/getting-started/index.html
 (the first session with the library: reload, how skills fire unasked, what to
 try, what to check when nothing happens), and docs/graph/ (the skill graph's
 page plus the graph.json it and the header's Graph dialog fetch — see
-skill_graph.py) from the skill files embedded in this repo at skills/. That embedded copy is the single source of truth for a
+skill_graph.py), and docs/support/qr.svg (the QR codes of the header's Support
+dialog, drawn from donations.json at the repository root — see donations.py)
+from the skill files embedded in this repo at skills/. That embedded copy is the single source of truth for a
 build. All four generated paths should never be hand-edited, since the next
 run overwrites them; docs/assets/ is the one thing under docs/ this script
 never touches — it's hand-authored CSS/JS/fonts/icons, not generated, and
@@ -60,6 +62,7 @@ from pathlib import Path
 
 import archive_updates
 import content_pipeline
+import donations
 import githooks
 import locales
 import python_highlight
@@ -155,6 +158,21 @@ def _load_getting_started_strings(locale: locales.Locale, i18n_root: Path) -> te
             f"— refusing to generate a site with a malformed getting-started catalog "
             f"for locale {locale.code!r}: {error}"
         ) from error
+
+
+def _support(project_root: Path) -> "donations.Support | None":
+    """The header's Support dialog, from donations.json at the project root.
+
+    Missing is fine and silent, as with UPDATES.md: a scratch project root in a
+    test has none, and the header simply carries no button. Present but
+    refused -- an address in the wrong format, or one from a public test seed
+    -- stops the build, because the alternative is publishing a place to send
+    money that loses it."""
+    path = project_root / donations.DONATIONS_FILENAME
+    try:
+        return donations.load(path)
+    except donations.DonationsError as error:
+        raise SystemExit(f"{path}: {error}") from error
 
 
 def _changed_skill_slugs(project_root: Path) -> dict[str, str]:
@@ -506,6 +524,10 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
     now = datetime.now(timezone.utc)
     plugin_version = _plugin_version()
     templates.ASSET_VERSIONS = asset_versions(project_root / "docs" / "assets")
+    support = _support(project_root)
+    templates.SUPPORT = support
+    qr_sprite = templates.render_support_qr_sprite(support) if support and support.addresses else ""
+    templates.SUPPORT_QR_VERSION = hashlib.sha256(qr_sprite.encode()).hexdigest()[:10] if qr_sprite else ""
     fresh = _fresh_skills(project_root, now=now)
     last_updated_utc = now.isoformat(timespec="seconds")
 
@@ -523,7 +545,7 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
 
     english_content: dict | None = None
     swapped_names = ["index.html", "skills", "verify-install", "getting-started", "graph",
-                     "version.txt"]
+                     templates.SUPPORT_PATH.rstrip("/"), "version.txt"]
 
     try:
         for locale in build_locales:
@@ -579,6 +601,12 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
             if not locale.default:
                 swapped_names.append(locale.code)
 
+        # Always created, empty when there are no addresses, so the swap below
+        # also retires a sprite whose addresses have since been removed.
+        support_dir = staging_dir / templates.SUPPORT_PATH
+        support_dir.mkdir()
+        if qr_sprite:
+            (support_dir / templates.SUPPORT_QR_FILENAME).write_text(qr_sprite, encoding="utf-8")
         (staging_dir / "version.txt").write_text(last_updated_utc, encoding="utf-8")
     except Exception:
         shutil.rmtree(staging_dir, ignore_errors=True)
