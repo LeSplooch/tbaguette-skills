@@ -32,7 +32,7 @@ Run all seven. Each costs a minute or two and lands somewhere predictable.
 | Misread requirement | Reread the original request verbatim, not your restatement of it | A qualifier in the request that never made it into the work |
 | Silent failure | Where can this fail with nothing raised, logged, or returned? | Swallowed errors, defaults substituting for missing data, retries that give up quietly |
 | Wrong altitude | Too specific — one case hardcoded; or too general — extension points with one caller | Abstraction and configuration added on speculation |
-| Adjacent breakage | Who else calls this, parses this shape, relies on this ordering or this timing? | Callers you never opened, and anything depending on the old behaviour |
+| Adjacent breakage | Who else calls this, parses this shape, relies on this ordering or this timing? Which unchanged lines below an early return, `continue` or guard I loosened now run in a state they never saw? | Callers you never opened, anything depending on the old behaviour, and old code a loosened guard just made reachable — the diff never shows it, so read the rest of that block as if it were new |
 | Unverified reference | Which statements here are about a document I did not reopen? | Cross-references, cited requirements, "as X already says", recalled API or spec behaviour |
 
 An eighth when the work is an addition: delete it mentally and ask what breaks. If nothing does, it is unjustified rather than wrong.
