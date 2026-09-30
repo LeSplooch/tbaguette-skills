@@ -1294,9 +1294,27 @@
     this.dirty = true;
     if (this.running || !this.model) { return; }
     this.running = true;
+    this.frameCost = this.frameCost || 0;
+    this.drewLast = false;
     var self = this;
     this.last = performance.now();
     requestAnimationFrame(function loop(now) {
+      // Once nothing has been stirred for a moment, only the ambient drift is
+      // left moving, and it reads just as alive at a lower frame rate: thirty
+      // a second, or, on a machine that cannot draw a frame inside one
+      // refresh, a pace that leaves it half its time free, so a phone stays
+      // cool and quick to answer. A kick, a settling layout or an easing
+      // camera is back at full rate at once. The time from one drawn frame to
+      // the next callback is what a frame really costs, painting included.
+      if (self.drewLast) { self.frameCost += (now - self.drawnAt - self.frameCost) * 0.2; }
+      self.drewLast = false;
+      var calm = self.frameCost > 25 ? 2 * self.frameCost : 30;
+      if (!self.dirty && now - self.stirredAt > 1500 && now - self.drawnAt < calm) {
+        if (document.hidden) { self.running = false; } else { requestAnimationFrame(loop); }
+        return;
+      }
+      self.drawnAt = now;
+      self.drewLast = true;
       var busy = self.frame(now);
       if (busy && !document.hidden) { requestAnimationFrame(loop); }
       else { self.running = false; }
@@ -1341,6 +1359,7 @@
       try { this.draw(now); } catch (err) {
         if (!this.drawError) { this.drawError = err; if (window.console) { console.error(err); } }
       }
+      if (busy || this.dirty) { this.stirredAt = now; }
       if (!this.reduced) { busy = true; }
     }
     this.dirty = false;
