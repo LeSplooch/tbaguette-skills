@@ -132,7 +132,9 @@
       bond: '{a} and {b} cite each other <b>{n} times</b> — the strongest bond here.',
       family: '{a} keeps <b>{p}%</b> of its citations in the family; {b} sends <b>{q}%</b> of its outward.',
       mutual: '<b>{n} pairs</b> of skills cite each other.',
-      quiet: '{a} keeps to itself: cited by {i}, cites {o}.'
+      quiet: '{a} keeps to itself: cited by {i}, cites {o}.',
+      quietPair: '{a} and {b} keep to themselves: each is cited by {i} and cites {o}.',
+      quietMany: '{a} and <b>{k} others</b> keep to themselves: each is cited by {i} and cites {o}.'
     }
   };
 
@@ -405,8 +407,16 @@
     var mutual = model.edges.filter(function (e) { return e.mutual; }).length / 2;
     notes.push({ html: fmt(STR.notes.mutual, { n: mutual }), action: { type: 'mutual' } });
 
+    // The quietest skill can share its numbers exactly with others. Naming
+    // one of them alone would pass catalog order off as a finding, so the
+    // note says how many share them, and lighting it up shows them all.
     var quiet = nodes.slice().sort(function (a, b) { return (a.inDeg + a.outDeg) - (b.inDeg + b.outDeg) || b.index - a.index; })[0];
-    notes.push({ html: fmt(STR.notes.quiet, { a: chip(quiet), i: quiet.inDeg, o: quiet.outDeg }), action: { type: 'spot', nodes: [quiet.slug], dir: 'both' } });
+    var alike = nodes.filter(function (n) { return n !== quiet && n.inDeg === quiet.inDeg && n.outDeg === quiet.outDeg; });
+    var quietCopy = alike.length === 0 ? STR.notes.quiet : alike.length === 1 ? STR.notes.quietPair : STR.notes.quietMany;
+    notes.push({
+      html: fmt(quietCopy, { a: chip(quiet), b: alike.length ? chip(alike[0]) : '', k: alike.length, i: quiet.inDeg, o: quiet.outDeg }),
+      action: { type: 'spot', nodes: [quiet.slug].concat(alike.map(function (n) { return n.slug; })), dir: 'both' }
+    });
     return notes;
   }
 
