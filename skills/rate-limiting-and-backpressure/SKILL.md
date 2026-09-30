@@ -1,6 +1,6 @@
 ---
 name: rate-limiting-and-backpressure
-description: Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses, when a queue keeps growing or drains hours late, when retries amplify a partial failure into a full outage, when a connection or thread pool is exhausted, when latency climbs instead of requests failing, when every item in a fan-out times out while the same item on its own finishes comfortably, or when choosing between shedding load, queueing it, and slowing the producer down, or when a fixed shared capacity is split across several unrelated content types and one of them can grow enough to crowd out the rest. Covers deadlines that start while the item is still queued, bounding the resource rather than the batch, and reserving a floor per type in a shared, non-fungible budget.
+description: Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses, when a queue keeps growing or drains hours late, when one class of queued work is never served while another keeps flowing, when retries amplify a partial failure into a full outage, when a connection or thread pool is exhausted, when latency climbs instead of requests failing, when every item in a fan-out times out while the same item on its own finishes comfortably, or when choosing between shedding load, queueing it, and slowing the producer down, or when a fixed shared capacity is split across several unrelated content types and one of them can grow enough to crowd out the rest. Covers deadline-first scheduling that starves patient work, deadlines that start while the item is still queued, bounding the resource rather than the batch, and reserving a floor per type in a shared, non-fungible budget.
 ---
 
 # Rate limiting and backpressure
@@ -65,6 +65,12 @@ Backpressure means the constraint reaches the producer, not that the consumer bu
 The unbounded queue is how load becomes latency instead of visible failure. It absorbs exactly the signal you needed, and it keeps absorbing until every item in it is already past the deadline of whoever submitted it — at which point the system spends 100% of its capacity producing results nobody is waiting for. Two defenses: propagate a deadline with every request, and **discard work whose deadline has passed before starting it**. Dropping dead work at the head of the queue is often the single change that recovers an overloaded system.
 
 Sizing is arithmetic, not intuition. By Little's Law, wait time equals queue length divided by service rate, so pick the maximum acceptable wait and set the bound to service rate × that wait. A queue of 10,000 in front of a consumer serving 100 per second is a 100-second wait, which is a decision someone should have made on purpose.
+
+## Deadline-first starves whatever can wait
+
+Serving whatever expires soonest is the natural way to drain a queue with deadlines, and it has one failure that no queue-length panel shows. When the urgent stream never stops — a steady arrival of short-deadline items, each holding a worker for a while — the pool is always busy with the next urgent item, and work whose deadline is far enough away is never picked at all. The patient class does not run slowly; it does not run. A batch that is joined in full before the next pick makes it worse, because every round is chosen by the same rule against the same stream.
+
+The diagnostic is a count of items *served* per class over a window, not queue depth and not a fairness quota — a quota attached to a pick path the hot loop does not take reports fairness while nothing patient is served. When the two classes differ a lot in service time, give the patient class its own small bounded worker rather than a share of the urgent pool: a share of one pool is what the urgent stream takes, every round.
 
 ## Start the clock when the work does
 
