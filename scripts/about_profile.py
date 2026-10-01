@@ -46,6 +46,15 @@ TITLE_ROLE = "Boulanger"
 TITLE_OF = "of"
 TITLE_FIELD = "Autonomous Software"
 
+# What a stranger can open today, without asking: the work that is public.
+# Most of the record is in private repositories, so a reader cannot check it;
+# this is the part they can, and the page says so first.
+OPEN_TODAY = (
+    ("the Atelier’s site", "https://lesplooch.github.io/tbaguette-skills/"),
+    ("its source", "https://github.com/LeSplooch/tbaguette-skills"),
+    ("Deckhand’s launch page", "https://daydreamcorp.github.io/deckhand-site/"),
+)
+
 TAGLINE = (
     "I make software that keeps working while nobody is looking: bots, "
     "agents, watchers, phone apps, and the tools that bake them."

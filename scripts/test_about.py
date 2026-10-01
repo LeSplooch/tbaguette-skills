@@ -62,6 +62,16 @@ def _profile_strings():
             yield from _strings(getattr(profile, name))
 
 
+def _keyframes(css: str, name: str) -> str:
+    """The body of one @keyframes block, braces balanced."""
+    start = css.index(f"@keyframes {name} {{") + len(f"@keyframes {name} {{")
+    depth, i = 1, start
+    while depth:
+        depth += {"{": 1, "}": -1}.get(css[i], 0)
+        i += 1
+    return css[start:i - 1]
+
+
 def _page(base_path: str = "") -> str:
     return about_page.render_about_page(CATEGORIES, base_path, skill_count=101)
 
@@ -205,22 +215,38 @@ class TestThePageIsAWholeResumeWithoutScript(unittest.TestCase):
         self.html = _page()
         self.main = _main_of(self.html)
 
+    def _entry(self, slug):
+        return re.search(rf'<article class="entry" id="project={re.escape(slug)}".*?</article>', self.main, re.S).group(0)
+
     def test_it_is_a_document_with_its_own_title_and_description(self):
         self.assertIn("<title>About TBaguette — ", self.html)
         self.assertRegex(self.html, r'<meta name="description" content="[^"]*26 projects')
 
-    def test_the_name_is_one_accessible_heading(self):
+    def test_the_name_is_one_accessible_heading_and_the_headings_nest(self):
         self.assertEqual(self.main.count("<h1"), 1)
         self.assertIn('aria-label="TBaguette"', self.main)
-        for ch in re.findall(r'<span class="about-hero__ch"[^>]*>', self.main):
+        for ch in re.findall(r'<span class="open__ch"[^>]*>', self.main):
             self.assertIn('aria-hidden="true"', ch)
+        levels = [int(m) for m in re.findall(r"<h([1-4])[ >]", self.main)]
+        self.assertEqual(levels[0], 1)
+        for before, after in zip(levels, levels[1:]):
+            self.assertLessEqual(after - before, 1, "a heading level was skipped")
+
+    def test_nothing_sits_above_a_heading_as_a_kicker(self):
+        # Formidable bans the eyebrow: the heading carries itself. No heading
+        # in the page is directly preceded by a label-sized paragraph or span.
+        for heading in re.finditer(r"<h[234][^>]*>", self.main):
+            before = self.main[:heading.start()].rstrip()
+            self.assertNotRegex(before, r"<(p|span)[^>]*class=\"[^\"]*(eyebrow|kicker|stage|__label|__domain|__when|__k)[^\"]*\"[^>]*>[^<]*</(p|span)>$")
+        for banned in ("eyebrow", "kicker", "about-chapter__stage", "about-chapter__num"):
+            self.assertNotIn(banned, self.main)
 
     def test_every_project_is_on_the_page_with_its_method(self):
         for p in profile.PROJECTS:
             with self.subTest(project=p["slug"]):
-                self.assertIn(f'data-project="{p["slug"]}"', self.main)
+                entry = self._entry(p["slug"])
                 for step in p["method"]:
-                    self.assertIn(templates.escape_html(step), self.main)
+                    self.assertIn(templates.escape_html(step), entry)
 
     def test_text_is_escaped(self):
         self.assertIn("Deckhand site &amp; feeds", self.main)
@@ -228,30 +254,65 @@ class TestThePageIsAWholeResumeWithoutScript(unittest.TestCase):
 
     def test_every_private_project_says_so_and_links_nowhere(self):
         for p in profile.PROJECTS:
-            card = re.search(rf'<article class="loaf" id="loaf-{p["slug"]}".*?</article>', self.main, re.S).group(0)
+            entry = self._entry(p["slug"])
             if p["vis"] == "private":
-                self.assertIn("Private repository", card)
-                self.assertNotIn("<a ", card)
+                self.assertIn("Private repository", entry)
+                self.assertNotIn("<a ", entry)
             else:
-                self.assertIn(f'href="{p["url"]}"', card)
+                self.assertIn(f'href="{p["url"]}"', entry)
 
     def test_the_cuts_on_each_loaf_are_its_scale(self):
         for p in profile.PROJECTS:
-            card = re.search(rf'<article class="loaf" id="loaf-{p["slug"]}".*?</article>', self.main, re.S).group(0)
-            self.assertEqual(card.count('class="crown__cut"'), p["scale"], p["slug"])
+            self.assertEqual(self._entry(p["slug"]).count('class="crown__cut"'), p["scale"], p["slug"])
 
-    def test_the_title_anatomy_shows_all_three_claims_with_no_script(self):
-        self.assertEqual(self.main.count('class="anatomy__panel"'), 3)
-        self.assertNotRegex(self.main, r'class="anatomy__panel"[^>]*\bhidden\b')
+    def test_the_family_is_said_in_words_as_well_as_colour(self):
+        domains = profile.domain_by_slug()
+        for p in profile.PROJECTS:
+            self.assertIn(f'<span class="entry__family">{templates.escape_html(domains[p["domain"]][1])}</span>',
+                          self._entry(p["slug"]))
+
+    def test_every_project_appears_once_and_in_exactly_one_era(self):
+        self.assertEqual(self.main.count('<article class="entry"'), len(profile.PROJECTS))
+        for era in re.findall(r'<section class="era".*?</section>', self.main, re.S):
+            self.assertGreaterEqual(era.count('<article class="entry"'), 1)
+        self.assertEqual(self.main.count('class="era"'), len(profile.ERAS))
+
+    def test_eras_run_newest_first(self):
+        years = re.findall(r'<span class="era__years">(\d{4})', self.main)
+        self.assertEqual(years, sorted(years, reverse=True))
+
+    def test_the_method_is_a_native_disclosure_not_a_dialog(self):
+        self.assertEqual(self.main.count("<details class=\"entry__more\""), len(profile.PROJECTS))
+        self.assertNotIn("<dialog", self.html)
+        self.assertNotIn("aria-haspopup", self.html)
+
+    def test_a_link_to_a_project_works_with_no_script_because_its_id_is_the_fragment(self):
+        for slug in re.findall(r'href="#project=([a-z0-9-]+)"', self.main):
+            self.assertIn(f'id="project={slug}"', self.main)
+
+    def test_the_title_and_the_rules_cite_projects_by_link(self):
+        for _, _, evidence in list(profile.TITLE_CLAIMS) + list(profile.HOUSE_RULES):
+            for slug in evidence:
+                self.assertIn(f'href="#project={slug}"', self.main)
+
+    def test_what_a_stranger_can_open_is_said_first(self):
+        opening = self.main.split('id="title"', 1)[0]
+        self.assertIn("Open today:", opening)
+        for _, url in profile.OPEN_TODAY:
+            self.assertIn(f'href="{url}"', opening)
+
+    def test_no_stat_strip_and_no_modal_survive_the_rework(self):
+        for gone in ("about-stats", "data-count", "recipe", "pantry", "anatomy", "about-seal", "about-hero__dust"):
+            self.assertNotIn(gone, self.html)
 
     def test_it_goes_live_before_first_paint_and_can_take_it_back(self):
         script = re.search(r"<script>(\(function\(\)\{var r=document.*?)</script>", self.html).group(1)
         self.assertIn("classList.add('about-live')", script)
         self.assertIn("classList.remove('about-live')", script)
         self.assertIn("window.TBaguetteAbout", script)
-        self.assertLess(self.html.index(script), self.html.index('class="about-progress"'))
+        self.assertLess(self.html.index(script), self.html.index('class="open"'))
 
-    def test_the_cut_marks_are_sized_for_the_library(self):
+    def test_the_counter_names_the_librarys_size_or_says_nothing_false(self):
         self.assertIn("101 skills for AI agents", self.main)
         self.assertIn("Skills for AI agents", about_page.render_about_page(CATEGORIES, "", skill_count=0))
 
@@ -270,7 +331,7 @@ class TestEveryAddressCarriesTheBasePath(unittest.TestCase):
 
     def test_every_sprite_icon_is_prefixed(self):
         uses = re.findall(r'<use href="([^"#]*)#', self.html)
-        self.assertGreaterEqual(len(uses), 4)  # wordmark, theme toggle x2, seal, search
+        self.assertGreaterEqual(len(uses), 4)  # wordmark, theme toggle x2, search
         self.assertEqual([u for u in uses if not u.startswith(BASE + "/assets/icons.svg")], [])
 
     def test_the_page_loads_its_own_files_and_nobody_else_does(self):
@@ -359,10 +420,11 @@ class TestTheTimeline(unittest.TestCase):
     def test_the_stack_stays_short_enough_to_read(self):
         self.assertLessEqual(max(lane for _, _, lane in self.placed) + 1, 4)
 
-    def test_every_project_has_a_dot_and_every_era_a_card(self):
+    def test_every_project_has_a_dot_and_every_dot_is_a_link_to_its_entry(self):
         html = _page()
         self.assertEqual(html.count("data-rise-slot"), len(profile.PROJECTS))
-        self.assertEqual(html.count("data-era "), len(profile.ERAS))
+        for p in profile.PROJECTS:
+            self.assertIn(f'<a class="rise__dot" href="#project={p["slug"]}">', html)
 
     def test_an_open_era_does_not_promise_a_year_that_has_not_happened(self):
         last_year = max(p["last"] for p in profile.PROJECTS)[:4]
@@ -392,7 +454,7 @@ class TestTheThreeFilesAgree(unittest.TestCase):
 
     def test_every_hook_the_script_looks_for_exists_in_the_markup(self):
         selectors = self._selectors_in_js()
-        self.assertGreater(len(selectors), 30)
+        self.assertGreater(len(selectors), 20)
         for selector in selectors:
             for attr in re.findall(r"\[data-([a-z-]+)", selector):
                 self.assertIn(f"data-{attr}", self.main + self.html, f"{selector!r} finds nothing")
@@ -410,33 +472,38 @@ class TestTheThreeFilesAgree(unittest.TestCase):
         self.assertEqual(unstyled, [], "written by about_page.py and styled nowhere")
 
     def test_every_state_class_the_script_sets_has_a_rule(self):
-        for state in ("about-live", "about-no-dialog", "is-ready", "loaf-seen", "is-past-hero", "is-set",
-                      "is-entered", "is-physical", "is-in", "is-closing", "is-poked", "is-unborn",
-                      "is-born", "is-now", "is-past", "is-here", "is-done", "about-modal-open"):
+        for state in ("about-live", "loaf-seen", "is-unborn", "is-born", "is-target"):
             self.assertIn(state, self.js, f"{state} is no longer set by about.js")
-            self.assertIn(state, self.css + self.shared_css, f"{state} is set by about.js and styled nowhere")
+            self.assertIn(state, self.css, f"{state} is set by about.js and styled nowhere")
 
-    def test_every_reveal_is_a_known_hook(self):
-        self.assertIn("[data-reveal]", self.js)
-        self.assertIn("data-reveal", self.main)
+    def test_every_entrance_degrades_to_appearing_not_to_absence(self):
+        # motion.md: put the visible state in the base rule and let the
+        # animation supply only the from-state. Written the other way round it
+        # looks identical while the motion runs and inverts the failure: skip
+        # the animation and the element is left at a hidden resting style.
+        entrances = ("about-letter", "about-rise", "about-bake", "about-score", "about-loaf-in")
+        uses = re.findall(r"animation:\s*([^;]+);", self.css)
+        used = [u for u in uses if any(name in u for name in entrances)]
+        self.assertGreaterEqual(len(used), 7)
+        for value in used:
+            self.assertIn("backwards", value, f"{value!r} fills forwards: the end state would be the animation's, not the page's")
+            self.assertNotRegex(value, r"\b(both|forwards)\b")
+        for name in entrances:
+            body = _keyframes(self.css, name)
+            self.assertIn("from", body)
+            self.assertNotRegex(body, r"\bto\s*\{", f"{name} defines a to-frame: the resting style should be the end")
+        # and nothing in the base rules starts the page hidden
+        for match in re.finditer(r"\.about-live[^{,]*\{[^}]*opacity:\s*0[;\s]", self.css):
+            self.assertNotRegex(match.group(0), r"open__|loaf-art|about-stats", "an entrance starts hidden at rest")
 
     def test_the_stylesheet_never_hides_anything_outside_the_live_layer(self):
-        # Without script, every starting state must be the finished one. The
-        # hidden states hang off .about-live, which only the script (or its
-        # inline starter) sets, and sit inside a screen-only motion query.
         for match in re.finditer(r"[^{}]+\{[^{}]*opacity:\s*0[;\s][^{}]*\}", self.css):
             rule = match.group(0)
             selector = rule.split("{", 1)[0].strip()
             if re.fullmatch(r"(from|to|\d+%(\s*,\s*\d+%)*)", selector):
                 continue  # a keyframe's frame, not a rule that applies to anything
-            if "::" in selector or "__steam" in selector or ".about-progress" in selector or "::backdrop" in selector:
-                continue
-            if any(k in selector for k in (".about-live", ".about-rail", ".rise__tip", ".about-hero__steam i",
-                                           ".rise__dot-slot", ".loaf::after", ".loaf-art__dough",
-                                           ".about-btn", "@keyframes", ".about-seal")):
-                continue
-            # Anything else that starts at opacity 0 must be a keyframe frame
-            # or a state that something else turns on.
+            if ".rise__tip" in selector:
+                continue  # a tooltip: shown on hover and focus, and its name is in the dot's own label
             self.fail(f"hidden outside the live layer: {selector}")
 
     def test_motion_is_screen_only_and_respects_the_readers_preference(self):
