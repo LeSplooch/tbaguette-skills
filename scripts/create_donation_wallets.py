@@ -214,7 +214,21 @@ def clear_screen() -> None:
     sys.stdout.flush()
 
 
+def drop_type_ahead() -> None:
+    """Discards anything already typed or pasted at the terminal. Without
+    this, a line that arrived early -- the rest of a script pasted into a
+    shell, say -- answers the next prompt by itself, and "press Enter once
+    the words are written down" clears the seed off the screen before
+    anyone has read it."""
+    try:
+        import termios
+        termios.tcflush(sys.stdin, termios.TCIFLUSH)
+    except (ImportError, OSError, ValueError):
+        pass  # not a POSIX terminal: nothing buffered to drop, or no way to
+
+
 def ask_words(prompt: str) -> str:
+    drop_type_ahead()
     return normalise(getpass.getpass(prompt))
 
 
@@ -276,6 +290,7 @@ def create(replace: bool) -> None:
         "without them, nobody -- you included -- can get a donation back out.\n"
         "Nothing is saved until you type them back."
     )
+    drop_type_ahead()
     input("\nPress Enter once they are written down. The screen will clear. ")
     clear_screen()
     confirm_backup(mnemonic)
