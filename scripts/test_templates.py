@@ -524,6 +524,31 @@ def check_graph_entry_points() -> None:
           and f'data-graph-data="{base}/graph/graph.json"' in prefixed_graph)
 
 
+def check_about_entry_point() -> None:
+    """The About button sits in the header of every page, after Graph, and
+    leads to /about/ -- which is built and tested in test_about.py. Checked
+    here on the two kinds of page this fixture builds."""
+    print("about entry point check")
+    index_html = render_index(FIXTURE["categories"], FIXTURE["skills"])
+    skill_html = render_skill_page(
+        FIXTURE["skills"]["formidable"], prev_skill=None, next_skill=None,
+        siblings=[], categories=FIXTURE["categories"],
+    )
+    for name, html in (("landing page", index_html), ("skill page", skill_html)):
+        header = html.split("<main", 1)[0]
+        link = re.search(r'<a class="site-header__nav-link site-header__nav-link--about" href="([^"]*)"', header)
+        check(f"the {name}'s header carries an About TBaguette link to /about/",
+              link is not None and link.group(1) == "/about/" and "About TBaguette</span>" in header)
+        check(f"...after Graph on the {name}, and not marked current",
+              header.index(">Graph<") < header.index("About TBaguette")
+              and 'href="/about/" aria-current' not in header)
+    base = "/tbaguette-skills"
+    check("the button carries the base path",
+          f'href="{base}/about/"' in render_index(FIXTURE["categories"], FIXTURE["skills"], base_path=base))
+    check("no page but the About page loads its stylesheet or script",
+          "about.css" not in index_html and "about.js" not in index_html)
+
+
 def check_graph_banner() -> None:
     """The landing page announces the graph while it is new: an aside at the
     top of the hero, carrying its own small picture as data and every number
@@ -2012,6 +2037,7 @@ def main() -> None:
     check_milestone_plaque()
     check_getting_started_is_reachable()
     check_graph_entry_points()
+    check_about_entry_point()
     check_graph_banner()
     check_release_banner()
     check_century_banner()

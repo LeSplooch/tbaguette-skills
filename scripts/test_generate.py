@@ -507,6 +507,18 @@ def main() -> None:
               len(graph.get("skills", [])) == generate.EXPECTED_SKILL_COUNT)
         check("...and builds skill URLs with the base path, as the pages do",
               graph.get("skill_url_template") == "/tbaguette-skills/skills/{slug}/")
+        about_page_path = docs / "about" / "index.html"
+        about_html = about_page_path.read_text(encoding="utf-8") if about_page_path.exists() else ""
+        check("docs/about/ holds the About page after a real build, with the generated-file header",
+              about_page_path.exists() and about_html.startswith(generate.GENERATED_HEADER))
+        check("...which loads its own stylesheet and script under the base path, fingerprinted "
+              "so a reader never meets the page with an older file",
+              re.search(r'href="/tbaguette-skills/assets/about\.css\?v=[0-9a-f]{10}"', about_html) is not None
+              and re.search(r'src="/tbaguette-skills/assets/about\.js\?v=[0-9a-f]{10}"', about_html) is not None)
+        check("...and every sprite icon on it, as on every page, resolves under the base path",
+              'href="/assets/icons.svg' not in about_html and "/tbaguette-skills/assets/icons.svg" in about_html)
+        check("the landing page's header opens it",
+              'href="/tbaguette-skills/about/"' in index_html)
         graph_html = graph_page.read_text(encoding="utf-8") if graph_page.exists() else ""
         pair_count = len(skill_graph.edge_weights(graph)) if graph else -1
         check("the page's own count of cross-references is the data's, not a guess",

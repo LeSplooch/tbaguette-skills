@@ -44,6 +44,8 @@ SUITES = [
     ("git hooks", [sys.executable, "test_githooks.py"]),
     ("skill cross-references", [sys.executable, "test_skill_references.py"]),
     ("skill graph", [sys.executable, "-m", "unittest", "test_skill_graph", "-v"]),
+    ("About page: content, markup and the hooks between its three files",
+     [sys.executable, "-m", "unittest", "test_about", "-v"]),
     ("the Crumb matches its skills",
      [sys.executable, "-m", "unittest", "test_crumb_check", "-v"]),
     ("skill frontmatter limits",

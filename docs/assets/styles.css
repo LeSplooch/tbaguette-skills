@@ -3539,7 +3539,8 @@ a.skill-link--bare:focus-visible {
 
 .crumb,
 .graph-banner,
-.century-banner {
+.century-banner,
+.about {
   --graph-cat-1: #c8635d;
   --graph-cat-2: #009bab;
   --graph-cat-3: #ed9658;
@@ -3554,7 +3555,7 @@ a.skill-link--bare:focus-visible {
   --graph-cat-12: #5f83d4;
 }
 
-[data-theme='flour'] :is(.crumb, .graph-banner, .century-banner) {
+[data-theme='flour'] :is(.crumb, .graph-banner, .century-banner, .about) {
   --graph-cat-1: #90302e;
   --graph-cat-2: #006777;
   --graph-cat-3: #ad5c15;
@@ -3728,6 +3729,55 @@ a.skill-link--bare:focus-visible {
 @media (forced-colors: active) {
   .site-header__graph-face { border-color: ButtonText; }
   .site-header__new { border: 1px solid ButtonText; }
+}
+
+/* About TBaguette: the plain pill (it is the page's own nav-link, hit target
+   and face in one, because nothing here swells toward the pointer) with a
+   loaf beside the words. The loaf is the page's own subject in miniature —
+   the About page opens on a baguette being scored — so the two read as one
+   idea. At rest the scores are cut; under the pointer they are cut again,
+   one after another. */
+.site-header__nav-link--about {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.about-mark__loaf {
+  fill: color-mix(in oklch, var(--accent) 24%, transparent);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.about-mark__score {
+  fill: none;
+  stroke: var(--accent-hover);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-dasharray: 10;
+  stroke-dashoffset: 0;
+}
+
+.site-header__nav-link--about:hover .about-mark__loaf,
+.site-header__nav-link--about[aria-current="page"] .about-mark__loaf {
+  fill: color-mix(in oklch, var(--accent) 38%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-header__nav-link--about:hover .about-mark__score {
+    animation: about-mark-score 0.55s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 0.13s);
+  }
+}
+
+@keyframes about-mark-score {
+  from { stroke-dashoffset: 10; }
+  to { stroke-dashoffset: 0; }
+}
+
+@media (forced-colors: active) {
+  .about-mark__loaf, .about-mark__score { stroke: ButtonText; }
+  .about-mark__loaf { fill: none; }
 }
 
 /* --- the announcement banner ------------------------------------------------ */

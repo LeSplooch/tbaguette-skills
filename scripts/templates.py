@@ -132,6 +132,9 @@ class Strings:
     reference_heading: str = "Reference"
     # The skill graph's two entry points, defaulted for the same reason.
     nav_graph: str = "Graph"
+    # The About page's entry point in the header, and the page's own title.
+    nav_about: str = "About TBaguette"
+    about_page_title: str = "About TBaguette"
     skill_graph_link: str = "See its place in the graph"
     graph_page_title: str = "The crumb"
     graph_page_lede_template: str = (
@@ -949,6 +952,11 @@ GETTING_STARTED_PATH = "getting-started/"
 GRAPH_PATH = "graph/"
 GRAPH_DATA_FILENAME = "graph.json"
 
+# The About page: who made the library, laid out as a résumé. A page of its
+# own, like the graph, with its own stylesheet and script so neither the
+# shared stylesheet nor the shared script grows for a page most visits skip.
+ABOUT_PATH = "about/"
+
 # The graph is announced -- a "New" tag on the header's Graph link and a
 # banner at the top of the landing page -- until this date, inclusive. A date
 # rather than a flag for the milestone plaque's reason: an announcement left
@@ -1121,9 +1129,16 @@ def _locale_url(locale: "locales.Locale", base_path: str, path_suffix: str) -> s
 
 
 def _render_head(*, title: str, meta_description: str, base_path: str = "",
-                  locale: "locales.Locale" = locales.DEFAULT_LOCALE, path_suffix: str = "") -> str:
+                  locale: "locales.Locale" = locales.DEFAULT_LOCALE, path_suffix: str = "",
+                  stylesheets: tuple[str, ...] = ()) -> str:
     desc = escape_html(meta_description)
     canonical = _locale_url(locale, base_path, path_suffix)
+    # After the shared sheet, so a page's own rules win a tie without a
+    # specificity fight, and before the theme bootstrap, so nothing paints
+    # between the two.
+    extra = "".join(
+        f'\n<link rel="stylesheet" href="{asset_url(name, base_path)}">' for name in stylesheets
+    )
     return f"""<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{escape_html(title)}</title>
@@ -1135,7 +1150,7 @@ def _render_head(*, title: str, meta_description: str, base_path: str = "",
 <link rel="icon" type="image/svg+xml" href="{base_path}/assets/favicon.svg">
 <link rel="preload" href="{base_path}/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{base_path}/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{asset_url("styles.css", base_path)}">
+<link rel="stylesheet" href="{asset_url("styles.css", base_path)}">{extra}
 <script>{_THEME_BOOTSTRAP_JS}</script>"""
 
 
@@ -1194,13 +1209,32 @@ def _render_graph_mark() -> str:
             f'aria-hidden="true">{ties}{nodes}</svg>')
 
 
+# The About button's mark: a baguette, lying on the diagonal, with the three
+# scores a boulanger cuts before it goes in. At rest it is the plain loaf; the
+# scores draw themselves one after another under the pointer, the way they
+# open in the oven. Inline for the same reason the graph's mark is: its parts
+# move.
+_ABOUT_MARK_SCORES = ("M6.5 14.75 L10.6 16.25", "M10 11.25 L14.1 12.75", "M13.5 7.75 L17.6 9.25")
+
+
+def _render_about_mark() -> str:
+    scores = "".join(
+        f'<path class="about-mark__score" d="{d}" pathLength="10" style="--i:{i}"/>'
+        for i, d in enumerate(_ABOUT_MARK_SCORES)
+    )
+    return ('<svg class="icon site-header__nav-icon about-mark" viewBox="0 0 24 24" aria-hidden="true">'
+            '<rect class="about-mark__loaf" x="2.6" y="8.3" width="18.8" height="7.4" rx="3.7" '
+            'transform="rotate(-45 12 12)"/>'
+            f'{scores}</svg>')
+
+
 def _render_header_nav(base_path: str, locale: "locales.Locale", path_suffix: str,
                         strings: Strings, *, graph_new: bool = False) -> str:
-    """The header's navigation: Getting started, then Graph. aria-current
-    marks whichever page the reader is on rather than leaving a link that
-    appears to go somewhere and does not -- the same page this nav points at
-    is the one a first-time visitor is most likely to already be standing on
-    when they look for it.
+    """The header's navigation: Getting started, Graph, then About TBaguette.
+    aria-current marks whichever page the reader is on rather than leaving a
+    link that appears to go somewhere and does not -- the same page this nav
+    points at is the one a first-time visitor is most likely to already be
+    standing on when they look for it.
 
     Graph is the second seat because it is the other thing no skill page can
     show: the library as a whole, and what holds it together. It carries an
@@ -1211,7 +1245,11 @@ def _render_header_nav(base_path: str, locale: "locales.Locale", path_suffix: st
     face can swell toward an approaching pointer (site.js) while the link --
     the hit target -- keeps its resting size and never covers a neighbour's.
     While the graph is new the face also carries a "New" tag, which site.js
-    retires against the reader's clock."""
+    retires against the reader's clock.
+
+    About TBaguette takes the third seat: it is the one place that says who
+    made the library, which no skill page can. It is the plain pill with the
+    loaf's mark beside the words, and no tag -- it is not news."""
     current = ' aria-current="page"' if path_suffix == GETTING_STARTED_PATH else ""
     href = _locale_url(locale, base_path, GETTING_STARTED_PATH)
     graph_current = ' aria-current="page"' if path_suffix == GRAPH_PATH else ""
@@ -1223,9 +1261,12 @@ def _render_header_nav(base_path: str, locale: "locales.Locale", path_suffix: st
     graph_class = "site-header__nav-link site-header__nav-link--graph"
     if graph_new:
         graph_class += " site-header__nav-link--new"
+    about_current = ' aria-current="page"' if path_suffix == ABOUT_PATH else ""
+    about_href = _locale_url(locale, base_path, ABOUT_PATH)
     return f"""<nav class="site-header__nav" aria-label="{escape_html(strings.nav_aria_label)}">
         <a class="site-header__nav-link" href="{href}"{current}>{escape_html(strings.nav_getting_started)}</a>
         <a class="{graph_class}" href="{graph_href}"{graph_current} data-graph-magnet><span class="site-header__graph-face">{_render_graph_mark()}<span>{escape_html(strings.nav_graph)}</span>{new_tag}</span></a>
+        <a class="site-header__nav-link site-header__nav-link--about" href="{about_href}"{about_current}>{_render_about_mark()}<span>{escape_html(strings.nav_about)}</span></a>
       </nav>"""
 
 
@@ -1301,11 +1342,12 @@ def _render_document(*, title: str, meta_description: str, body_class: str,
                       base_path: str = "", last_updated_utc: str = "",
                       locale: "locales.Locale" = locales.DEFAULT_LOCALE,
                       path_suffix: str = "", strings: Strings = ENGLISH_STRINGS,
-                      plugin_version: str = "") -> str:
+                      plugin_version: str = "",
+                      stylesheets: tuple[str, ...] = ()) -> str:
     return f"""<!doctype html>
 <html lang="{escape_html(locale.hreflang)}" dir="{escape_html(locale.dir)}">
 <head>
-{_render_head(title=title, meta_description=meta_description, base_path=base_path, locale=locale, path_suffix=path_suffix)}
+{_render_head(title=title, meta_description=meta_description, base_path=base_path, locale=locale, path_suffix=path_suffix, stylesheets=stylesheets)}
 </head>
 <body class="{body_class}"
       data-i18n-copied="{escape_html(strings.install_copy_copied)}"

@@ -9,10 +9,11 @@ docs/verify-install/index.html (the install command's explanation +
 syntax-highlighted source, built from scripts/test_install_command.py at
 generation time — see python_highlight.py), docs/getting-started/index.html
 (the first session with the library: reload, how skills fire unasked, what to
-try, what to check when nothing happens), and docs/graph/ (the skill graph's
-page plus the graph.json it and the header's Graph dialog fetch — see
-skill_graph.py) from the skill files embedded in this repo at skills/. That embedded copy is the single source of truth for a
-build. All four generated paths should never be hand-edited, since the next
+try, what to check when nothing happens), docs/about/ (who made it, as an
+animated résumé — see about_page.py and about_profile.py), and docs/graph/
+(the skill graph's page plus the graph.json it and the header's Graph dialog
+fetch — see skill_graph.py) from the skill files embedded in this repo at skills/. That embedded copy is the single source of truth for a
+build. No generated path should be hand-edited, since the next
 run overwrites them; docs/assets/ is the one thing under docs/ this script
 never touches — it's hand-authored CSS/JS/fonts/icons, not generated, and
 lives under docs/ only because GitHub Pages serves everything from one
@@ -23,7 +24,7 @@ native source folders (the other being the branch root) — no separate
 gh-pages branch or Actions workflow needed to publish it.
 
 The write is atomic: the site is built into a fresh temporary directory
-first, and the four generated paths are only swapped into place — each as
+first, and the generated paths are only swapped into place — each as
 its own independent rename, preceded by moving the previous version aside
 rather than deleting it first — after every page has been written
 successfully. A process killed mid-run (Ctrl-C, OOM, disk full, a CI timeout)
@@ -58,6 +59,7 @@ from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import about_page
 import archive_updates
 import content_pipeline
 import githooks
@@ -478,6 +480,15 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
     )
     _write(output_dir / templates.GETTING_STARTED_PATH / "index.html", getting_started_html)
 
+    _write(
+        output_dir / templates.ABOUT_PATH / "index.html",
+        about_page.render_about_page(
+            categories, base_path, last_updated_utc=last_updated_utc,
+            skill_count=len(skills), locale=locale, strings=strings,
+            plugin_version=plugin_version,
+        ),
+    )
+
 
 
 def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
@@ -523,7 +534,7 @@ def generate(project_root: Path, skills_root: Path, *, base_path: str = "",
 
     english_content: dict | None = None
     swapped_names = ["index.html", "skills", "verify-install", "getting-started", "graph",
-                     "version.txt"]
+                     "about", "version.txt"]
 
     try:
         for locale in build_locales:
@@ -609,7 +620,7 @@ def _default_project_root() -> Path:
 
 # The hand-written files under docs/assets/ that pages link to, and so the
 # ones whose URLs carry a fingerprint of their contents (templates.asset_url).
-VERSIONED_ASSETS = ("styles.css", "site.js", "graph.js", "icons.svg")
+VERSIONED_ASSETS = ("styles.css", "site.js", "graph.js", "about.css", "about.js", "icons.svg")
 
 
 def asset_versions(assets_dir: Path) -> dict[str, str]:
