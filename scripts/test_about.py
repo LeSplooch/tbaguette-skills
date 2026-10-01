@@ -200,6 +200,13 @@ class TestWhatThePageSays(unittest.TestCase):
             for word in banned:
                 self.assertNotIn(word, s.lower(), s)
 
+    def test_no_project_claims_a_working_relationship_nobody_observed(self):
+        # "Built for X" says a client exists. What the record shows is where a
+        # thing is published and whose name is on its policy; say that.
+        for s in _profile_strings():
+            for phrase in ("built for", "commissioned", "on behalf of", "client of", "employer"):
+                self.assertNotIn(phrase, s.lower(), s)
+
     def test_no_third_party_work_is_listed_as_this_persons(self):
         # Repositories that are copies of other people's projects or stock
         # templates, found while reading the account. Their names would be an
@@ -311,6 +318,16 @@ class TestThePageIsAWholeResumeWithoutScript(unittest.TestCase):
         self.assertIn("classList.remove('about-live')", script)
         self.assertIn("window.TBaguetteAbout", script)
         self.assertLess(self.html.index(script), self.html.index('class="open"'))
+
+    def test_it_says_what_was_left_off_the_shelf(self):
+        # A reader who asked for "all the projects" and counts 26 should be told
+        # what the rule for leaving one out is, not left to wonder.
+        self.assertIn("Forks and unmodified templates are not listed", self.main)
+
+    def test_the_colophon_does_not_call_a_page_made_in_a_session_hand_baked(self):
+        colophon = re.search(r'<p class="counter__colophon">(.*?)</p>', self.main, re.S).group(1)
+        self.assertIn("Claude Code", colophon)
+        self.assertNotIn("by hand", colophon)
 
     def test_the_counter_names_the_librarys_size_or_says_nothing_false(self):
         self.assertIn("101 skills for AI agents", self.main)
@@ -451,6 +468,12 @@ class TestTheThreeFilesAgree(unittest.TestCase):
         for match in re.finditer(r"""(?:\$\$?|querySelector(?:All)?)\(\s*(['"])(.+?)\1""", self.js):
             out.append(match.group(2))
         return out
+
+    def test_search_reads_the_ingredient_names_as_well_as_the_prose(self):
+        # "wasm" is the ingredient's name but appears nowhere in its label,
+        # "WebAssembly": a search built from the prose alone finds nothing.
+        haystack = re.search(r"hay:\s*(.+?),\n", self.js).group(1)
+        self.assertIn("data-tags", haystack)
 
     def test_every_hook_the_script_looks_for_exists_in_the_markup(self):
         selectors = self._selectors_in_js()

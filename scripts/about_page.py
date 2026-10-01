@@ -476,8 +476,8 @@ def _render_counter(base_path: str, locale: "locales.Locale", skill_count: int) 
       <li><a href="{escape_html(atelier["url"])}" rel="noopener">The source of this site</a></li>
       <li><a href="{home}">Back to the skills</a></li>
     </ul>
-    <p class="counter__note">Most of the projects above live in private repositories, which is why their entries describe the work instead of linking to it. The public ones say so.</p>
-    <p class="counter__colophon">Baked by hand in HTML, CSS and plain JavaScript: no framework, no tracker. Built in a session with Claude Code; the facts come from reading the repositories, not from memory.</p>
+    <p class="counter__note">Most of the projects above live in private repositories, which is why their entries describe the work instead of linking to it. The public ones say so. Forks and unmodified templates are not listed.</p>
+    <p class="counter__colophon">Written in plain HTML, CSS and JavaScript: no framework, no tracker. Built in a session with Claude Code; the facts come from reading the repositories, not from memory.</p>
   </div>
 </section>"""
 

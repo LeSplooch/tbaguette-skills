@@ -631,7 +631,7 @@ PROJECTS = (
         ),
         "first": "2026-08", "last": "2026-09", "scale": 4, "vis": "public",
         "url": "https://daydreamcorp.github.io/deckhand-site/",
-        "lineage": "Built for Day Dream Corp’s Deckhand; the app is in closed testing.",
+        "lineage": "Published under Day Dream Corp’s name; the app is in closed testing.",
         "repos": "the site and its privacy-policy mirror",
     },
     {

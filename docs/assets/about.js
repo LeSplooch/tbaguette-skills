@@ -98,7 +98,7 @@
         slot: slot, el: el, slug: slug,
         domain: el.getAttribute('data-domain'),
         tags: ' ' + el.getAttribute('data-tags') + ' ',
-        hay: (el.textContent || '').toLowerCase().replace(/\s+/g, ' '),
+        hay: ((el.textContent || '') + ' ' + el.getAttribute('data-tags')).toLowerCase().replace(/\s+/g, ' '),
         more: $('[data-more]', el),
         x: dotX[slug] || 0
       };
