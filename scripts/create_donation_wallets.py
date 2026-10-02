@@ -1,7 +1,7 @@
 """Creates the crypto wallets behind the site's Support button, on your own
 machine, and writes their public addresses to donations.json.
 
-    python3 -m venv ~/.venvs/tbaguette-wallets
+    python3.13 -m venv ~/.venvs/tbaguette-wallets
     ~/.venvs/tbaguette-wallets/bin/pip install bip_utils
     ~/.venvs/tbaguette-wallets/bin/python scripts/create_donation_wallets.py
 
@@ -25,6 +25,12 @@ bip_utils is the one dependency, and this script is the only thing in the
 repository that needs it: the site build reads the addresses and stays
 stdlib-only. Run it in a virtualenv, as above, rather than installing crypto
 libraries into the Python your system tools use.
+
+That virtualenv must be Python 3.10 to 3.13. bip_utils needs coincurve, which
+publishes prebuilt wheels up to 3.13 and none for 3.14 (as of coincurve
+21.0.0), so on 3.14 pip compiles it from source and the build fails with
+"Expected exactly one LICENSE file in cffi distribution". `uv venv --python
+3.13` makes such a virtualenv on a machine whose own Python is newer.
 """
 
 from __future__ import annotations
@@ -93,10 +99,14 @@ def _bip_utils():
         import bip_utils
     except ImportError:
         raise SystemExit(
-            "this script needs bip_utils, and only this script does:\n"
-            "  python3 -m venv ~/.venvs/tbaguette-wallets\n"
+            "this script needs bip_utils, and only this script does. It installs on\n"
+            "Python 3.10 to 3.13 (not 3.14: coincurve, one of its dependencies, has no\n"
+            "prebuilt wheel for it yet, and pip's attempt to compile it fails):\n"
+            "  python3.13 -m venv ~/.venvs/tbaguette-wallets\n"
             "  ~/.venvs/tbaguette-wallets/bin/pip install bip_utils\n"
-            "  ~/.venvs/tbaguette-wallets/bin/python scripts/create_donation_wallets.py"
+            "  ~/.venvs/tbaguette-wallets/bin/python scripts/create_donation_wallets.py\n"
+            "On a machine whose Python is newer, this makes the first line's virtualenv:\n"
+            "  uv venv --python 3.13 --seed ~/.venvs/tbaguette-wallets"
         ) from None
     return bip_utils
 
