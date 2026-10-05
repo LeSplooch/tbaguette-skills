@@ -55,6 +55,7 @@ The default is what happens when the flag service is down, the key is misspelled
 
 - New behavior defaults off. Kill switches default to the healthy path, and the disabled path must itself be a valid product state, not a half-configured one.
 - Never make the safe state the one that requires a successful network fetch.
+- **An entitlement's deny is for a principal nothing is known about.** A user the service confirmed recently and cannot reach now is a third case, neither granted nor refused; collapsing it into deny locks out every paying user for the length of an outage. `modeling-errors` has the three-outcome rule and the bound that carries the last confirmation.
 - **A misspelled or unknown key must be loud.** Register keys and fail at startup on an unknown one. A silent false looks exactly like "the feature shipped but does not work", and teams lose days to that specific ambiguity.
 - **Log resolved flag values alongside errors.** Flag state is an input to every bug report; without it you will debug the branch the user was not running.
 

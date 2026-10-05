@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.6</span>
+      <span class="wordmark-version" dir="ltr">v2.1.7</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-05T21:36:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-05T21:36:40Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-05T21:44:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-05T21:44:11Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">feature-flagging</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T21:44:11.928135+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Landing changes</span>
@@ -89,7 +89,7 @@
 <p>Two configurations, not 2^N. To keep that rule valid, keep flags independent by construction. <strong>When two flags interact, they are one flag with three states, not two booleans</strong> — encode it as a mode or enum so the impossible combination cannot be expressed. Cap simultaneously live release flags in one code path at about three; past that, nobody on call can state what the system is currently doing.</p>
 <h2 id="defaults-that-fail-safe">Defaults that fail safe</h2>
 <p>The default is what happens when the flag service is down, the key is misspelled, the config has not loaded yet, or the process is starting. Every one of those paths must land on a defined, safe value — and safe means the code path already running in production today.</p>
-<ul><li>New behavior defaults off. Kill switches default to the healthy path, and the disabled path must itself be a valid product state, not a half-configured one.</li><li>Never make the safe state the one that requires a successful network fetch.</li><li><strong>A misspelled or unknown key must be loud.</strong> Register keys and fail at startup on an unknown one. A silent false looks exactly like &quot;the feature shipped but does not work&quot;, and teams lose days to that specific ambiguity.</li><li><strong>Log resolved flag values alongside errors.</strong> Flag state is an input to every bug report; without it you will debug the branch the user was not running.</li></ul>
+<ul><li>New behavior defaults off. Kill switches default to the healthy path, and the disabled path must itself be a valid product state, not a half-configured one.</li><li>Never make the safe state the one that requires a successful network fetch.</li><li><strong>An entitlement's deny is for a principal nothing is known about.</strong> A user the service confirmed recently and cannot reach now is a third case, neither granted nor refused; collapsing it into deny locks out every paying user for the length of an outage. <a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a> has the three-outcome rule and the bound that carries the last confirmation.</li><li><strong>A misspelled or unknown key must be loud.</strong> Register keys and fail at startup on an unknown one. A silent false looks exactly like &quot;the feature shipped but does not work&quot;, and teams lose days to that specific ambiguity.</li><li><strong>Log resolved flag values alongside errors.</strong> Flag state is an input to every bug report; without it you will debug the branch the user was not running.</li></ul>
 <h2 id="when-a-flag-is-the-wrong-answer">When a flag is the wrong answer</h2>
 <p>Use a branch, a separate build, or a different technique when:</p>
 <ul><li>The two versions cannot coexist in one binary — incompatible dependency versions, conflicting global state, a different data model</li><li>The conditional would appear in more than about 10 places or cross more than two modules; that is a seam problem, solved by polymorphism or an adapter, not by scattered branches</li><li>The work is a spike likely to be discarded — a flag makes throwaway code permanent by making it cheap to leave in</li><li>The gate is a security boundary; flags are configuration, and configuration is mutable by more people, with less review, than code</li><li>The change alters a persisted format on the write side without the read side handling both — that is a migration, and a flag on it only controls how fast you corrupt data</li></ul>

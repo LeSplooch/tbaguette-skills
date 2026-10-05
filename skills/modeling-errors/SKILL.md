@@ -1,6 +1,6 @@
 ---
 name: modeling-errors
-description: Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, a placeholder value that slips past the guard meant to stop it, undiagnosable production incidents, duplicated log noise, a retry whose reported error hides the failure that started it, and callers parsing error strings. Also use from the other side, when your own code must detect a state in a system you do not own and the only anchor on offer is a printed status word, a window title, or a generated class name, or when two different upstream failure causes render identically with no stable code to tell them apart.
+description: Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes, panics, and supervisors; writing a catch, rescue, or recover block; designing an error type or an error contract; deciding whether to wrap, log, rethrow, retry, or swallow. Also for silent failures, swallowed exceptions, a placeholder value that slips past the guard meant to stop it, undiagnosable production incidents, duplicated log noise, a retry whose reported error hides the failure that started it, and callers parsing error strings. Also use from the other side, when your own code must detect a state in a system you do not own and the only anchor on offer is a printed status word, a window title, or a generated class name, or when two different upstream failure causes render identically with no stable code to tell them apart, or when an eligibility, entitlement or block check against a remote service must decide what its own failed lookup means.
 ---
 
 # Modeling errors
@@ -76,6 +76,19 @@ So choose the anchor by asking which layer treats the value as *identity or stat
 
 The section above is about detecting *state* with no stable signal. The same gap shows up one level over, in *classifying a failure* rather than a state: an upstream API or CLI that gives no stable, structured code for either case can make "you have been throttled" and "the service is actually broken" arrive as the identical shape — an error, then silence. Both are class 4 by the definition above (retrying might succeed), but they are not the same failure, and folding them into one generic "degraded" verdict is the specific hazard, because whatever consumes that verdict downstream — a health check, a dashboard, an escalation — can no longer tell which one happened once the merge has occurred. Trust an explicit signal when the upstream provides one (a `Retry-After`-equivalent); fall back to matching the error's own text only when nothing structured exists; and once a quota condition is confirmed, treat it as its own outcome that pauses the surrounding batch or session, rather than retrying call-by-call or reporting it through the same channel a real outage reports through.
 
+### A gate's lookup has three answers, not two
+
+An eligibility or block check against a remote service — is this account in good standing, is this installation allowed, is this user blocked — tends to be written as a boolean, and then the lookup's failure has to land in one of the boolean's two values. Either landing is a defect, and they are opposite ones. Count failure as refusal, and a short outage of the backing service locks out every confirmed user — so does simply being offline, in an app whose point is working offline — while the authors, testing on a good connection, never see it. Count failure as approval, and the one party the gate exists to stop only has to make the lookup fail. They need opposite handling because they are different kinds of fact: a refusal is information the service gave, and silence is the absence of any.
+
+So model three outcomes, allowed, refused and unknown, and give each its own rule:
+
+- **A definitive answer acts at once and clears what it contradicts.** That includes the service's refusal status codes, not only a well-formed "no" in a body. A refusal that was actually delivered disconnects now and discards any stored confirmation; nothing about outages softens it, and nothing retries it into a different verdict.
+- **Silence is neutral, and what carries it is a confirmation, not an identity.** While the service cannot be reached, the gate keeps its last state for a named bound, earned by a positive confirmation, stamped by the server rather than the device, and younger than that bound. The cached identity, name or token never carries it: those say who the user was, not that anyone has checked them lately, and a gate that carries on a stored name never closes. Past the bound silence stops being neutral and the gate fails closed, so a block cannot be outrun by staying offline.
+- **The bound is measured on a clock the test can set, and a rewound clock fails closed.** Inject the clock so both sides of the bound get tested, and read a confirmation stamped later than now — the device clock moved backwards — as expired, not as fresh forever.
+- **A re-check leaves the confirmed state alone while it runs.** If checking again moves the state to "checking" and the screen behind the gate is built from that state, every resume or periodic re-check tears the screen down for a user nothing has changed for. Re-check silently and move state only on an answer.
+
+The test double has to be able to say all three. A fake that returns true or false cannot express silence, and a suite written against it passes with the defect inside; give it timeout, server-error and refusal modes and assert each separately. `caching-strategy`'s rule against caching a timeout is the same distinction applied to storage, and `feature-flagging`'s default of deny for an entitlement is what a principal nothing is known about receives, not the verdict for one the service confirmed recently and cannot reach now.
+
 ## Wrap, swallow, rethrow, boundary
 
 | Action | Correct when | How it goes wrong |
@@ -107,6 +120,7 @@ The section above is about detecting *state* with no stable signal. The same gap
 | A detector works for the author and reports the wrong state on every other machine | It matched a rendered string — a localized status word, a title, a generated class name — instead of something the target uses as identity |
 | A fallback ladder's first rung has never been seen to succeed on its own | Every rung was tested with the ones below it live, so the sturdy fallback silently rescued the fragile probe |
 | A health/quality verdict looked broken during what was actually a rate-limit window | Quota exhaustion and a genuine outage rendered identically upstream and were folded into one "degraded" signal |
+| Every confirmed user was disconnected during a short outage of the service that backs an eligibility check | The lookup's failure was counted as a refusal, so silence and "no" shared one verdict |
 
 ## Red flags
 
@@ -118,6 +132,7 @@ The section above is about detecting *state* with no stable signal. The same gap
 - A state check that matches a word a human was meant to read.
 - An unanchored substring match that would also match your own program.
 - Two upstream failure causes that render identically, folded into one verdict because nothing structured tells them apart.
+- An access check whose lookup returns a boolean, so a failed lookup has to be one of true or false.
 - "Add a retry" as the first response to a flake, before classifying it.
 - A catch block whose body is empty, or contains only a log statement.
 - An error type with one variant and a string.

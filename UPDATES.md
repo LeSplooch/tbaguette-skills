@@ -31,7 +31,7 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-05 — Memory written under an injection is read back as trusted, a check only the careful caller switches on
+## 2026-10-05 — Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal
 
 - `handling-untrusted-input` says what happens to a memory store, notes file
   or instruction file that a run writes while untrusted text is in its
@@ -44,6 +44,13 @@ holds any text file over 256 KiB for a reviewer.
   proof the failure with a message that names the sanctioned entry point,
   route every automated caller through that entry point, and test both
   branches against a real build, not the wrapper script.
+- `modeling-errors` says what an eligibility or block check should do when
+  its own lookup fails: unreachable is not refused. A refusal the service
+  actually delivers acts at once; silence carries the last state only on a
+  server-stamped confirmation younger than a named bound, and past it the
+  gate closes. Re-checks run silently, so a resume does not tear the screen
+  down. `feature-flagging` now points at it, because its deny default for an
+  entitlement would otherwise lock out every confirmed user during an outage.
 
 ## 2026-10-01 — Code a new branch wakes up, a queue that never serves the patient, a label that flaps, a count of what isn't shown
 
