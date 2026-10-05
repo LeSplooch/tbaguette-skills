@@ -2738,6 +2738,9 @@
     this.renderPanel();
     this.dismissHint();
     this.announce(node);
+    // Opening a skill from the list or the matrix hides the page that held
+    // focus; leave it on the stage rather than on nothing.
+    if (!opts.fromOutside && (!document.activeElement || document.activeElement === document.body)) { this.stage.focus({ preventScroll: true }); }
     // The address always names the skill on screen, so it can be kept or
     // sent on. Replaced rather than pushed: the trail is the way back
     // through a walk, and Back leaves the graph the way it arrived.
@@ -2952,10 +2955,24 @@
     else { html = this.panelOverview(); label.textContent = STR.notesTitle; }
     var key = this.view + ':' + (this.focus ? this.focus.slug : '') + ':' + (this.trace ? 't' : '');
     var keep = key === this.panelKey ? body.scrollTop : 0;
+    // Redrawing the panel destroys the button that was just pressed, and a
+    // keyboard visitor's focus falls to the page. Put it back on the same
+    // control, or on the panel itself when that control is gone.
+    var held = document.activeElement, sel = null;
+    if (held && held !== body && body.contains(held)) {
+      sel = Array.prototype.map.call(held.attributes, function (a) {
+        return /^data-crumb-/.test(a.name) ? '[' + a.name + '="' + String(a.value).replace(/["\\]/g, '\\$&') + '"]' : '';
+      }).join('');
+    }
     body.innerHTML = html;
     body.scrollTop = keep;
     this.panelKey = key;
     this.bindPanel();
+    if (held && body.contains(held) === false && sel !== null) {
+      var back = sel ? body.querySelector(held.tagName.toLowerCase() + sel) : null;
+      if (back) { back.focus({ preventScroll: true }); }
+      else { body.setAttribute('tabindex', '-1'); body.focus({ preventScroll: true }); }
+    }
   };
 
   App.prototype.panelOverview = function () {
