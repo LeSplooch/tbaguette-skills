@@ -31,7 +31,7 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-05 — Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal, a block list that never matches
+## 2026-10-05 — Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal, a block list that never matches, a policy published ahead of its build
 
 - `handling-untrusted-input` says what happens to a memory store, notes file
   or instruction file that a run writes while untrusted text is in its
@@ -56,6 +56,11 @@ holds any text file over 256 KiB for a reviewer.
   that identifier by hand and still never match real traffic, because the
   real callers send a different one. Trace the key from the check back to the
   production code that sets it, and test that caller sends it.
+- `keeping-copies-in-sync` has a section on copies that describe behavior: a
+  policy or store listing is true of a build, not of a commit, so write the
+  new text with the code and publish it with the release, naming who does it.
+  A push is not a deploy either, because the host's own build can lag or
+  fail silently; fetch what is actually served and diff it against the source.
 
 ## 2026-10-01 — Code a new branch wakes up, a queue that never serves the patient, a label that flaps, a count of what isn't shown
 
