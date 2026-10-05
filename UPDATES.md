@@ -31,6 +31,14 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-05 — Memory written under an injection is read back as trusted
+
+- `handling-untrusted-input` says what happens to a memory store, notes file
+  or instruction file that a run writes while untrusted text is in its
+  context: the next session reads it as its own earlier judgment. Treat it as
+  untrusted input at the next read, keep writer and reader apart, make
+  reference stores read-only, and keep history so a bad write can be undone.
+
 ## 2026-10-01 — Code a new branch wakes up, a queue that never serves the patient, a label that flaps, a count of what isn't shown
 
 - `red-teaming-your-own-work` widens its adjacent-breakage attack: when a
