@@ -31,13 +31,19 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-05 — Memory written under an injection is read back as trusted
+## 2026-10-05 — Memory written under an injection is read back as trusted, a check only the careful caller switches on
 
 - `handling-untrusted-input` says what happens to a memory store, notes file
   or instruction file that a run writes while untrusted text is in its
   context: the next session reads it as its own earlier judgment. Treat it as
   untrusted input at the next read, keep writer and reader apart, make
   reference stores read-only, and keep history so a bad write can be undone.
+- `designing-ci-pipelines` has a section on a release-time check that runs
+  only when the caller sets a flag or variable. The scheduled rebuild nobody
+  reads never sets it, so it ships unchecked and says nothing. Make missing
+  proof the failure with a message that names the sanctioned entry point,
+  route every automated caller through that entry point, and test both
+  branches against a real build, not the wrapper script.
 
 ## 2026-10-01 — Code a new branch wakes up, a queue that never serves the patient, a label that flaps, a count of what isn't shown
 

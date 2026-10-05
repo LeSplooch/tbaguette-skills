@@ -1,6 +1,6 @@
 ---
 name: designing-ci-pipelines
-description: Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI, when a stale cache produces a wrong result, when deciding which checks block a merge, when retries are proposed to make a build green, when a pull request from a fork needs access it must not have, when a job runs an agent over an issue, comment, or pull request someone else wrote, when a scheduled, nightly, or cron job is added, when a slow-cycle job keeps failing on one missing secret, credential, or tool after another, or when one that was supposed to be running turns out never to have run. Covers stage ordering, enumerating a job's prerequisites in one preflight step rather than one failure per cycle, feedback budgets, cache keys, required versus advisory checks, runner permissions, forcing a scheduled job's first run before trusting it, and reporting age of last success rather than status of last run.
+description: Use when building or reworking a CI pipeline, when the build is too slow or nobody trusts its result, when a check fails only in CI, when a stale cache produces a wrong result, when deciding which checks block a merge, when retries are proposed to make a build green, when a pull request from a fork needs access it must not have, when a job runs an agent over an issue, comment, or pull request someone else wrote, when a scheduled, nightly, or cron job is added, when a slow-cycle job keeps failing on one missing secret, credential, or tool after another, when one that was supposed to be running turns out never to have run, or when a release-time check runs only if the caller sets a flag. Covers stage ordering, enumerating a job's prerequisites in one preflight step rather than one failure per cycle, feedback budgets, cache keys, required versus advisory checks, runner permissions, forcing a scheduled job's first run, making missing proof the failure, and age of last success rather than status of last run.
 ---
 
 # Designing CI pipelines
@@ -16,6 +16,7 @@ A pipeline is a product whose user is a person waiting, and its budget is their 
 - People rerun a red build before reading it, or merge with a failing check
 - A failure reproduces only on the runner
 - Deciding whether a new check blocks merges, and what a fork's pull request is allowed to touch
+- A release-time check that runs only when the caller sets a flag or passes the value to verify against
 
 Not for: diagnosing one specific intermittent test (`flaky-test-triage`), deciding which tests should exist (`choosing-test-scope`), or making the build itself deterministic (`reproducible-environments`).
 
@@ -100,6 +101,16 @@ So give any job with an expensive cycle a first step that enumerates every prere
 - **An expired credential fails identically to one that was never set.** Both surface as an authorization error from whatever tried to use it, at whatever hour the job fires, with nobody reading. Only a preflight that separates *absent*, *present and rejected*, and *present and accepted* distinguishes them, and that is the difference between a fix and an investigation.
 - **Test the preflight against every state it claims to distinguish**, including the ones you expect never to see. A check that has only ever printed *ok* is indistinguishable from a check incapable of printing anything else — `writing-the-failing-test-first`'s rule, and it applies to the instrument you just built exactly as much as to the code it guards.
 
+## A check the caller must switch on protects only the careful caller
+
+A release-time verification — that the credential inside the build is the production one, that the config being shipped is not a cached copy, that the artifact is signed — usually gets added to the script a person runs by hand, and gets added as conditional: it runs when an environment variable is set, or when the caller passes in the value to check against. That reads as caution, and for the caller who wrote it, it works. It has also put the gate's trigger in the hands of the party the gate was meant to constrain, so it protects exactly the callers who were already being careful. A scheduled rebuild, a pipeline step, or a colleague's alias calls the build directly, never sets the variable, and ships whatever a cache happened to hold — with no failure, no log line, and nothing in the output to tell it from a verified run. The unattended caller is the one nobody reads, which makes it the one that needed the check.
+
+Three moves close it:
+
+- **Key the check on the condition that makes it necessary, and make absence the failure.** If this build can reach users in the state the check guards against, then missing proof fails the build, and the message names the sanctioned entry point and what to supply through it. A check that can be turned off by omission is a request, not a gate. Where an off-switch is genuinely needed, it is a separate, named setting that says so in the output — `configuration-management`'s rule that verification is on by default and disabling it is explicit.
+- **Route every automated path through that entry point, found from the build's side.** Enumerate what calls the build — schedulers, pipeline files, hooks, wrapper scripts, other people's aliases — rather than recalling the one caller the gate was written for. Once absence fails, a path that bypasses the entry point stops passing quietly and starts failing where someone reads it, which is also how you find the ones you forgot.
+- **Test both branches against a real build, not against the wrapper.** Missing proof must fail with the named message; proof present must pass. A test that only drives the wrapper has run the careful caller's path a second time and said nothing about the other, and the scheduled job's own path is the one to force once by hand, as the scheduled-job section above prescribes.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -117,6 +128,7 @@ So give any job with an expensive cycle a first step that enumerates every prere
 | A scheduled job's dashboard is green and the thing it maintains is months stale | Last-run status reported where age of last success was the question |
 | A nightly job has failed for weeks, each time on a different missing secret | No preflight, so each run discovers exactly one prerequisite and the cycle is a night |
 | A credential that worked last month now fails and nobody can tell if it was revoked | Absent and rejected produce the same error from the step that used it |
+| A scheduled rebuild shipped whatever a cache held, and nothing complained | The release check ran only when the manual wrapper set a variable; the scheduled caller never set it, and absence of proof was treated as nothing to check |
 
 ## Red flags
 
@@ -132,3 +144,4 @@ So give any job with an expensive cycle a first step that enumerates every prere
 - Job health shown as pass/fail, with no way to see a job that has never executed
 - A job on a slow cycle whose required secrets and tools are written down nowhere the job itself checks
 - A preflight or health check that has printed the same word on every run it has ever had
+- A verification that runs only when the caller sets a flag, variable, or argument — the caller most worth checking is the one that will not
