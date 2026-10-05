@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.7</span>
+      <span class="wordmark-version" dir="ltr">v2.1.8</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-05T21:44:11+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-05T21:44:11Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-05T21:47:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-05T21:47:07Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -189,11 +189,22 @@ Flag one more thing, because it applies to this very conversation: this session 
     <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/feature-flagging/" data-fresh-at="2026-10-05T21:44:11.928135+00:00" draggable="false" style="--cf-offset: 0">
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/choosing-test-scope/" data-fresh-at="2026-10-05T21:47:07.775491+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">choosing-test-scope</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T21:47:07.775491+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test…</p>
+  <span class="card__foot">
+    <span class="tag">Testing</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/feature-flagging/" data-fresh-at="2026-10-05T23:44:11+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">feature-flagging</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T21:44:11.928135+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T23:44:11+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when hiding unfinished work behind a toggle, when planning a gradual rollout, a kill switch, or a dark launch…</p>
   <span class="card__foot">
@@ -201,10 +212,10 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/modeling-errors/" data-fresh-at="2026-10-05T21:44:11.928135+00:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/modeling-errors/" data-fresh-at="2026-10-05T23:44:11+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">modeling-errors</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T21:44:11.928135+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T23:44:11+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…</p>
   <span class="card__foot">
@@ -212,7 +223,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-ci-pipelines/" data-fresh-at="2026-10-05T23:36:40+02:00" draggable="false" style="--cf-offset: 2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-ci-pipelines/" data-fresh-at="2026-10-05T23:36:40+02:00" draggable="false" style="--cf-offset: -2">
   <span class="card__name-row">
     <span class="card__name">designing-ci-pipelines</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T23:36:40+02:00">Updated</span>
@@ -245,12 +256,13 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-05">5 Oct 2026</time>
-    <span class="notes__entry-title">Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal</span>
+    <span class="notes__entry-title">Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal, a block list that never matches</span>
   </h3>
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a> says what happens to a memory store, notes file or instruction file that a run writes while untrusted text is in its context: the next session reads it as its own earlier judgment. Treat it as untrusted input at the next read, keep writer and reader apart, make reference stores read-only, and keep history so a bad write can be undone.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/designing-ci-pipelines/"><code>designing-ci-pipelines</code></a> has a section on a release-time check that runs only when the caller sets a flag or variable. The scheduled rebuild nobody reads never sets it, so it ships unchecked and says nothing. Make missing proof the failure with a message that names the sanctioned entry point, route every automated caller through that entry point, and test both branches against a real build, not the wrapper script.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a> says what an eligibility or block check should do when its own lookup fails: unreachable is not refused. A refusal the service actually delivers acts at once; silence carries the last state only on a server-stamped confirmation younger than a named bound, and past it the gate closes. Re-checks run silently, so a resume does not tear the screen down. <a class="skill-link" href="/tbaguette-skills/skills/feature-flagging/"><code>feature-flagging</code></a> now points at it, because its deny default for an entitlement would otherwise lock out every confirmed user during an outage.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/choosing-test-scope/"><code>choosing-test-scope</code></a> adds a case to its section on guards: a block list, quota or limit that keys on an identifier can pass every test that sets that identifier by hand and still never match real traffic, because the real callers send a different one. Trace the key from the check back to the production code that sets it, and test that caller sends it.</li>
   </ul>
 </li>
   </ol>
@@ -266,12 +278,13 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-05">5 Oct 2026</time>
-    <span class="notes__entry-title">Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal</span>
+    <span class="notes__entry-title">Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal, a block list that never matches</span>
   </h3>
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a> says what happens to a memory store, notes file or instruction file that a run writes while untrusted text is in its context: the next session reads it as its own earlier judgment. Treat it as untrusted input at the next read, keep writer and reader apart, make reference stores read-only, and keep history so a bad write can be undone.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/designing-ci-pipelines/"><code>designing-ci-pipelines</code></a> has a section on a release-time check that runs only when the caller sets a flag or variable. The scheduled rebuild nobody reads never sets it, so it ships unchecked and says nothing. Make missing proof the failure with a message that names the sanctioned entry point, route every automated caller through that entry point, and test both branches against a real build, not the wrapper script.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a> says what an eligibility or block check should do when its own lookup fails: unreachable is not refused. A refusal the service actually delivers acts at once; silence carries the last state only on a server-stamped confirmation younger than a named bound, and past it the gate closes. Re-checks run silently, so a resume does not tear the screen down. <a class="skill-link" href="/tbaguette-skills/skills/feature-flagging/"><code>feature-flagging</code></a> now points at it, because its deny default for an entitlement would otherwise lock out every confirmed user during an outage.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/choosing-test-scope/"><code>choosing-test-scope</code></a> adds a case to its section on guards: a block list, quota or limit that keys on an identifier can pass every test that sets that identifier by hand and still never match real traffic, because the real callers send a different one. Trace the key from the check back to the production code that sets it, and test that caller sends it.</li>
   </ul>
 </li>
 <li class="notes__entry">
@@ -956,7 +969,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/feature-flagging/" data-search-card data-search-terms="feature-flagging use when hiding unfinished work behind a toggle, when planning a gradual rollout, a kill switch, or a dark launch… landing changes">
   <span class="card__name-row">
     <span class="card__name">feature-flagging</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T21:44:11.928135+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T23:44:11+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when hiding unfinished work behind a toggle, when planning a gradual rollout, a kill switch, or a dark launch…</p>
   <span class="card__foot">
@@ -1090,7 +1103,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/choosing-test-scope/" data-search-card data-search-terms="choosing-test-scope use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test… testing">
   <span class="card__name-row">
     <span class="card__name">choosing-test-scope</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T21:47:07.775491+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when deciding whether a behavior belongs in a unit, integration, contract, or end-to-end test…</p>
   <span class="card__foot">
@@ -1270,7 +1283,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/modeling-errors/" data-search-card data-search-terms="modeling-errors use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes… designing systems">
   <span class="card__name-row">
     <span class="card__name">modeling-errors</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T21:44:11.928135+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-05T23:44:11+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when deciding how a failure should be represented or handled — choosing between exceptions, result or either types, error codes…</p>
   <span class="card__foot">

@@ -88,6 +88,10 @@ Two consequences worth making explicit:
 - The test that carries the weight feeds a real input the guard should act on through the real call path, and asserts on what the pipeline actually emitted. The unit tests stay; they stop being the evidence.
 - When auditing a safety property, deliberately check whether it is too strong as well as whether it is too weak. Both are defects. Only one of them will ever come to find you.
 
+A guard that matches on a value has one more place to be silently inert. A block list, a quota, a tenant rule or a per-user limit keys on an identifier — a header, a token claim, a field — and the test that drives it sets that identifier by hand. The hand-set value is the one step production does not take. The real callers may send something else under that name, or something else entirely: their own installation's key where the guard holds the end user's, a proxy's address where it expects the client's, an internal id where the list holds the public one. The test goes green and the guard matches nothing real, failing in the permissive direction, which looks exactly like an empty list. The call-path test above does not catch it, because the path it drives starts at the guard's door, after the step that decides what the key is.
+
+So trace the key backwards from the check to the code that sets it in production, and name that code. If the test supplies the value itself, add a test of that caller proving it sends this key under this name — or have the guard's test consume what the caller's test captured, so one artifact crosses both. Each end of the join needs its own evidence, and neither proves the two meet.
+
 ## A setup too small to show the difference has not tested for it
 
 Layer is one half of scope. The other is whether the setup you run the check in
@@ -240,6 +244,7 @@ This is cheap and it is normally one test per accumulator — money, inventory, 
 | Coverage is 90% and bugs still escape | Coverage measures execution, not assertion; branches are run, not checked |
 | Every figure in a report is individually plausible and the total is wrong | Each expectation came from the same understanding of the rules the code did; nothing computed the answer by a second route |
 | A well-tested guard function that nothing calls | Coverage of the callee cannot answer a question about its callers, and a guard that never runs produces no symptom to notice |
+| A block list or limit passes every test and never matches real traffic | The test set the key by hand; the real callers send a different identifier from the one the check reads |
 | Integration suite has thousands of cases | Business-rule permutations tested through the database instead of in the domain |
 | Dependency upgrade needs a week of manual testing | No pinned-assumption tests; the boundary's behavior was never written down |
 | The team reruns CI as a first response | A suite past its wall-clock budget; rerunning is now cheaper than reading |
@@ -252,6 +257,7 @@ This is cheap and it is normally one test per accumulator — money, inventory, 
 - "We need 100% coverage."
 - "Every line item has a test" — said about a total that nothing recomputes independently.
 - "The redaction/permission/validation function is thoroughly tested" — said without having checked that the pipeline calls it.
+- A guard's test sets the header, claim or id the guard keys on, and nobody has named the production code that sets it.
 - "The pyramid says we need more unit tests" — stated with no failing behavior in mind.
 - Writing a test at a given layer because the harness there was already set up.
 - "I built the mocks from their reference implementation, so they're accurate."
