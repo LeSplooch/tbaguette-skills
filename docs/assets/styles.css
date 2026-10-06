@@ -5424,6 +5424,14 @@ a.crumb-chip:hover,
 }
 
 .crumb-link:hover { color: var(--accent-hover); }
+.crumb-link--button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
 
 .crumb-inbound {
   display: grid;

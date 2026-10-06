@@ -83,6 +83,10 @@
     citedByCount: 'cited by {n}',
     openSkill: 'Open the skill page',
     traceFrom: 'Trace a path from here',
+    reach: 'Two steps of citations take it to <b>{n} skills</b> in {f}.',
+    reachFamilies: ['{k} family', '{k} families'],
+    reachLight: 'Light them up',
+    reachShown: '{name} and the {n} skills within two citations, shown in the graph.',
     readSection: 'Read this section',
     trigger: 'When to use',
     triggerNote: 'Named in its trigger description, the part an agent always has loaded.',
@@ -295,6 +299,18 @@
       }
     }
     return { dist: dist, prev: prev };
+  }
+
+  // Who a skill can get to by following its own citations for two steps.
+  function reachTwo(model, node) {
+    var r = bfs(model, node, true), slugs = [], fams = {}, nf = 0;
+    Object.keys(r.dist).forEach(function (slug) {
+      if (r.dist[slug] < 1 || r.dist[slug] > 2) { return; }
+      slugs.push(slug);
+      var c = model.bySlug[slug].cat.slug;
+      if (!fams[c]) { fams[c] = 1; nf += 1; }
+    });
+    return { slugs: slugs, families: nf };
   }
 
   function shortestPath(model, a, b) {
@@ -2884,6 +2900,16 @@
     } else if (type === 'section') {
       var si = +btn.getAttribute('data-crumb-section');
       this.pinSectionAt(si === this.pinSection ? -1 : si);
+    } else if (type === 'reach') {
+      var rsrc = this.focus, rr = rsrc ? reachTwo(model, rsrc) : null;
+      if (rr) {
+        this.setView(this.overview);
+        this.clearEmphasis(true);
+        this.spot = { type: 'spot', nodes: [rsrc.slug].concat(rr.slugs), dir: 'pair' };
+        this.focusEmphasis();
+        this.say(fmt(STR.reachShown, { name: rsrc.name, n: rr.slugs.length }));
+        this.kick();
+      }
     } else if (type === 'trace-from') {
       this.openTrace(this.focus);
     } else if (type === 'back') {
@@ -2995,7 +3021,7 @@
   App.prototype.panelSkill = function () {
     var f = this.focus, model = this.model, self = this;
     var url = model.skillUrl(f.slug);
-    var fresh = freshStatus(f);
+    var fresh = freshStatus(f), reach = reachTwo(model, f);
     var sections = f.sections.map(function (s, i) {
       var cites = Object.keys(s.refs);
       var on = i === self.pinSection;
@@ -3028,6 +3054,7 @@
       (fresh ? '<p class="crumb-skill__flag crumb-skill__flag--fresh">' + escapeHtml(STR.fresh[fresh] || '') + '</p>' : '') +
       '<p class="crumb-panel__text">' + escapeHtml(f.summary) + '</p>' +
       '<dl class="crumb-stats"><div><dt>' + escapeHtml(STR.sections) + '</dt><dd>' + f.sections.length + '</dd></div><div><dt>' + escapeHtml(STR.words) + '</dt><dd>' + f.words.toLocaleString('en') + '</dd></div><div><dt>' + escapeHtml(STR.cites) + '</dt><dd>' + f.outDeg + '</dd></div><div><dt>' + escapeHtml(STR.citedBy) + '</dt><dd>' + f.inDeg + '</dd></div></dl>' +
+      (reach.slugs.length ? '<p class="crumb-panel__text crumb-skill__reach">' + fmt(STR.reach, { n: reach.slugs.length, f: fmt(STR.reachFamilies[reach.families === 1 ? 0 : 1], { k: reach.families }) }) + ' <button type="button" class="crumb-link crumb-link--button" data-crumb-act="reach">' + escapeHtml(STR.reachLight) + '</button></p>' : '') +
       '<div class="crumb-actions"><a class="crumb__btn crumb__btn--solid" href="' + escapeHtml(url) + '">' + escapeHtml(STR.openSkill) + '</a><button type="button" class="crumb__btn" data-crumb-act="trace-from">' + icon('icon-route') + '<span>' + escapeHtml(STR.traceFrom) + '</span></button></div>' +
       '<p class="crumb-panel__hint">' + escapeHtml(STR.anatomyHint) + '</p></section>' +
       (Object.keys(f.trigger.refs).length ? '<section class="crumb-panel__section"><h3 class="crumb-panel__title">' + escapeHtml(STR.trigger) + '</h3><p class="crumb-panel__text">' + escapeHtml(STR.triggerNote) + '</p>' +
