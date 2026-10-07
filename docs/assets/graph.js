@@ -875,17 +875,25 @@
     this.introAt = performance.now();
     var self2 = this;
     setTimeout(function () { self2.dismissHint(); }, 9000);
-    var m = /skill=([a-z0-9-]+)/.exec(location.hash);
-    var start = m && model.bySlug[m[1]];
+    // An old bookmark or a hand-typed slug may be capitalised, renamed or gone;
+    // say so rather than landing on the bare constellation with a dead address.
+    var m = /skill=([A-Za-z0-9_-]+)/.exec(location.hash);
+    var asked = m && m[1].toLowerCase();
+    var start = asked && model.bySlug[asked];
+    this.baseTitle = document.title;
     if (start) { this.openSkill(start, { fromOutside: true }); }
-    else if (hashView()) { this.setView(hashView()); }
+    else {
+      if (asked) { this.missingSkill(asked); }
+      else if (hashView()) { this.setView(hashView()); }
+    }
     // A #skill= or #view= link followed from inside the page (or typed into
     // the bar) moves the graph rather than doing nothing.
     var self2 = this;
     window.addEventListener('hashchange', function () {
-      var h = /skill=([a-z0-9-]+)/.exec(location.hash);
-      var n = h && self2.model.bySlug[h[1]];
+      var h = /skill=([A-Za-z0-9_-]+)/.exec(location.hash);
+      var n = h && self2.model.bySlug[h[1].toLowerCase()];
       if (n && n !== self2.focus) { self2.openSkill(n); return; }
+      if (h && !n) { self2.missingSkill(h[1].toLowerCase()); return; }
       var v = hashView();
       if (v && v !== self2.view) { self2.setView(v); }
     });
@@ -2754,6 +2762,7 @@
     this.renderPanel();
     this.dismissHint();
     this.announce(node);
+    this.setTitle(node.name);
     // Opening a skill from the list or the matrix hides the page that held
     // focus; leave it on the stage rather than on nothing.
     if (!opts.fromOutside && (!document.activeElement || document.activeElement === document.body)) { this.stage.focus({ preventScroll: true }); }
@@ -2764,7 +2773,41 @@
     this.kick();
   };
 
+  // The tab, the history list and a bookmark all read document.title, so it
+  // names the skill on screen the way the address does.
+  App.prototype.setTitle = function (part) {
+    if (!this.baseTitle) { return; }
+    document.title = part ? part + ' \u2014 ' + this.baseTitle : this.baseTitle;
+  };
+
+  App.prototype.missingSkill = function (asked) {
+    var best = null, bestD = 4;
+    this.model.nodes.forEach(function (n) {
+      var d = editDistance(asked, n.slug);
+      if (d < bestD) { bestD = d; best = n; }
+    });
+    var msg = 'There is no skill called \u201c' + asked + '\u201d.' + (best ? ' Did you mean ' + best.name + '?' : '');
+    var hint = this.$('[data-crumb-hint]');
+    if (hint) { hint.textContent = msg; hint.classList.remove('crumb__hint--gone'); }
+    this.say(msg);
+    if (history.replaceState) { history.replaceState(null, '', location.pathname + location.search); }
+  };
+
+  function editDistance(a, b) {
+    var prev = [], i, j;
+    for (j = 0; j <= b.length; j++) { prev.push(j); }
+    for (i = 1; i <= a.length; i++) {
+      var cur = [i];
+      for (j = 1; j <= b.length; j++) {
+        cur.push(Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1)));
+      }
+      prev = cur;
+    }
+    return prev[b.length];
+  }
+
   App.prototype.leaveAnatomy = function () {
+    this.setTitle('');
     this.focus = null;
     this.trail = [];
     this.pinSection = -1;
