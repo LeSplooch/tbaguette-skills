@@ -274,7 +274,7 @@ Two consequences. **An empty sweep is one line, not a paragraph explaining what 
 
 ## Commands
 
-Invoked directly, this skill takes a verb. With none it runs `sweep`, which is the whole method: size by amplitude, select by tell, route everything it finds.
+Invoked directly, this skill takes a verb. With none it runs `sweep`, which is the whole method: size by amplitude, select by tell, route everything it finds. A `sweep` with no target sweeps the run itself — the tree as it stands, the last report, and the next action they imply — not the whole project, which is an `orbit`.
 
 | Command | Does |
 |---|---|

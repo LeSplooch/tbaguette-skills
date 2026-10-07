@@ -158,6 +158,13 @@ known detectable effect genuinely rules out the large effects, and ruling out a
 large effect is a real finding. It is the unbounded null — the one quietly
 claiming to have ruled out everything — that was never evidence.
 
+Absence from a *listing* is the same null with the instrument hidden. A catalogue
+page, a search index or a directory is a filtered view — by type, modality, region,
+tier, who is asking — and "not in the list" bounds nothing until you know the
+filter admits that category. Name what the listing leaves out, then make one
+direct lookup by the exact identifier before reporting the thing absent; the
+identifier you guessed may also be one suffix short of the real one.
+
 ## Distance, obtained cheaply
 
 Reviewing immediately after writing re-executes the same reasoning path and reproduces the same blind spot; you read what you meant rather than what you wrote. A break works because the memory of intent decays faster than the artifact does. When no break is available, substitute:

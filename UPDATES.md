@@ -31,6 +31,17 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-08 — A bare sweep has a target, and "not in the list" is a null with a hidden filter
+
+- `clairvoyance` now says what `sweep` does with no target: it sweeps the run
+  itself — the tree as it stands, the last report and the next action they
+  imply. It no longer drifts into surveying the whole project, which is what
+  `orbit` is for.
+- `red-teaming-your-own-work` covers reporting something absent because it
+  was missing from a catalogue, index or directory. A listing is a filtered
+  view, so name what it leaves out and make one direct lookup by the exact
+  identifier before saying it does not exist.
+
 ## 2026-10-05 — Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal, a block list that never matches, a policy published ahead of its build
 
 - `handling-untrusted-input` says what happens to a memory store, notes file
