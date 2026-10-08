@@ -116,6 +116,24 @@ class ExtractSectionsTests(unittest.TestCase):
         self.assertEqual(section["refs"]["naming-things"], 2)
         self.assertEqual(section["quotes"]["naming-things"], "First naming-things here.")
 
+    def test_a_short_label_before_a_colon_stays_in_the_quote(self):
+        html = f'<h2 id="a">A</h2><ul><li>Not for: authoring the plan (see {_link("naming-things")})</li></ul>'
+        quote = skill_graph.extract_sections(html)[0]["quotes"]["naming-things"]
+        self.assertEqual(quote, "Not for: authoring the plan (see naming-things)")
+
+    def test_a_trimmed_quote_puts_its_label_back(self):
+        filler = " ".join(["word"] * 120)
+        html = f'<h2 id="a">A</h2><ul><li>Not for: {filler} {_link("naming-things")} {filler}.</li></ul>'
+        quote = skill_graph.extract_sections(html)[0]["quotes"]["naming-things"]
+        self.assertTrue(quote.startswith("Not for: …"), quote)
+        self.assertIn("naming-things", quote)
+        self.assertLessEqual(len(quote), skill_graph.QUOTE_MAX_LENGTH + 2)
+
+    def test_a_colon_after_a_long_clause_still_starts_the_quote(self):
+        html = f'<h2 id="a">A</h2><p>Several words come before this colon: use {_link("naming-things")} here.</p>'
+        quote = skill_graph.extract_sections(html)[0]["quotes"]["naming-things"]
+        self.assertEqual(quote, "use naming-things here.")
+
     def test_a_list_item_is_its_own_sentence(self):
         html = f'<h2 id="a">A</h2><ul><li>alpha {_link("naming-things")}</li><li>beta</li></ul>'
         quote = skill_graph.extract_sections(html)[0]["quotes"]["naming-things"]

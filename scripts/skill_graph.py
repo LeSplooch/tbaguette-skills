@@ -48,12 +48,16 @@ _BLOCK_TAGS = frozenset({"p", "li", "td", "th", "h2", "h3", "h4", "pre", "blockq
 # tooltip holding one never needs to scroll.
 QUOTE_MAX_LENGTH = 240
 
+# A clause this short before a colon is a label that the quote keeps.
+LABEL_MAX_WORDS = 3
+
 # The trigger descriptions that make a skill run in every conversation rather
 # than when a situation calls for it. Matched on the description's opening,
 # which is where every such skill states it.
 _ALWAYS_ON_RE = re.compile(r"^Use at the start of every (?:single )?conversation", re.IGNORECASE)
 
 _WORD_RE = re.compile(r"[^\W_]+(?:['’-][^\W_]+)*")
+_LABEL_RE = re.compile(r"((?:[^\W_]+(?:['’-][^\W_]+)*)(?:\s+[^\W_]+(?:['’-][^\W_]+)*){0,%d}):\s" % (LABEL_MAX_WORDS - 1))
 
 
 def skill_slug_from_href(href: str) -> str | None:
@@ -71,9 +75,15 @@ def _quote_around(text: str, offset: int, length: int, max_length: int = QUOTE_M
     ``max_length`` around that span with an ellipsis on whichever side lost
     words. Sentence ends are ". ", "? ", "! " and "; " -- a semicolon joins
     two claims often enough in this corpus that stopping there keeps the
-    quote about the one that holds the citation."""
+    quote about the one that holds the citation. A colon cuts the quote only
+    after a clause longer than ``LABEL_MAX_WORDS``; a short label stays."""
     start = 0
     for match in re.finditer(r"[.?!;:](?=\s)", text[:offset]):
+        # A colon after a short label ("Not for:", "Use when:") is part of the
+        # claim, not its start: cutting there turns a redirect away from a
+        # skill into what reads as an endorsement of it.
+        if match.group() == ":" and _count_words(text[start:match.start()]) <= LABEL_MAX_WORDS:
+            continue
         start = match.end()
     end_match = re.search(r"[.?!;](?=\s|$)", text[offset + length:])
     end = offset + length + end_match.end() if end_match else len(text)
@@ -84,6 +94,12 @@ def _quote_around(text: str, offset: int, length: int, max_length: int = QUOTE_M
     sentence = raw.strip().rstrip(";:,")
     if len(sentence) <= max_length:
         return sentence
+    # A kept label ("Not for:") is spent from the budget up front so a trim
+    # that drops it can put it back, rather than opening on "…for:".
+    label_match = _LABEL_RE.match(sentence)
+    label = label_match.group(1) + ":" if label_match and label_match.end() < offset - start else ""
+    if label:
+        max_length -= len(label) + 2
     # Centre the window on the mention, then snap both edges to word breaks.
     half = (max_length - length) // 2
     lo = max(0, mention_at - half)
@@ -95,7 +111,10 @@ def _quote_around(text: str, offset: int, length: int, max_length: int = QUOTE_M
     if hi < len(sentence):
         space = sentence.rfind(" ", mention_at + length, hi)
         hi = space if space > 0 else hi
-    return ("…" if lo > 0 else "") + sentence[lo:hi].strip() + ("…" if hi < len(sentence) else "")
+    lead = ""
+    if lo > 0:
+        lead = label + " …" if label and lo > len(label) else "…"
+    return lead + sentence[lo:hi].strip() + ("…" if hi < len(sentence) else "")
 
 
 class _Block:
