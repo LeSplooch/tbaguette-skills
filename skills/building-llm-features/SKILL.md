@@ -1,6 +1,6 @@
 ---
 name: building-llm-features
-description: Use when code calls a language model at runtime — adding the first call, choosing or changing the model identifier, moving a prompt out of a string literal, parsing structured output or tool calls, handling a refusal, a truncated response, or a rate limit, or a provider announcing a model's retirement; when token spend or latency is higher than expected; when deciding what of a prompt and its completion to log; when model output flows into a query, a page, a shell, a file path, or a tool with side effects; or when a test hits a hosted model or asserts on its exact wording. Covers the model as a pinned behavioral dependency, prompts as versioned code, the outcomes a call can have beyond success and error, output as untrusted input, token and time budgets, fallbacks that must pass the same evals, telemetry that keeps content out of spans, and where the test seam goes.
+description: Use when code calls a language model at runtime — adding the first call, choosing or changing the model identifier, moving a prompt out of a string literal, parsing structured output or tool calls, handling a refusal, a truncated response, or a rate limit, or a provider announcing a model's retirement; when token spend or latency is higher than expected; when deciding what of a prompt and its completion to log; when model output flows into a query, a page, a shell, a file path, or a tool with side effects; when a model edits records it was shown only a redacted, truncated, or summarized view of; or when a test hits a hosted model or asserts on its exact wording. Covers the model as a pinned behavioral dependency, prompts as versioned code, the outcomes a call can have beyond success and error, output as untrusted input, token and time budgets, fallbacks that must pass the same evals, telemetry that keeps content out of spans, and where the test seam goes.
 ---
 
 # Building LLM features
@@ -17,6 +17,7 @@ Most of what goes wrong in these features is ordinary engineering applied too la
 - Choosing, changing, or being forced off a model identifier.
 - A prompt lives in a string literal next to the code that sends it.
 - Output is parsed as structured data or as tool calls.
+- A model is asked to edit or rewrite data its context held only part of — redacted, truncated, or summarized.
 - A response came back refused, cut off, or rate-limited, and the code treated it as an answer.
 - Spend or latency is higher than anyone predicted.
 - Deciding what of a prompt and completion to log, trace, or keep.
@@ -50,6 +51,10 @@ Keep instructions and data in separate places inside the request. Instructions g
 Branch on the stop reason the provider reports, not on whether the text looks finished. Retry only the transient class, and keep the retry budget small (`modeling-errors`). When a call can trigger a tool with side effects, the retry is a second invocation of that tool unless the tool is idempotent (`designing-for-idempotency`).
 
 **Structured output guarantees shape, not truth.** Constrained decoding produces output that parses against a schema; it does not enforce every bound a schema can express, it does not hold on a refusal or a truncation, and it has no opinion on whether the values are right. Parse the output into a type at the boundary and reject what the type cannot hold (`handling-untrusted-input`). The schema is a contract with the model and with everything downstream, so changing it is `schema-evolution`, not an edit.
+
+**A model can only give back what it was shown.** When the context holds a lossy view of the data — redacted for privacy, truncated to fit, summarized to save tokens — never ask for the whole record back. A model asked to restate a field it never saw does not reliably leave it alone: it writes a plausible value, or copies the redaction placeholder, and either one parses, validates against the schema, and replaces the real value. Ask for a whole collection back and every record in it is rewritten that way, including the ones nobody asked to change, and any record cut off by the truncation comes back missing.
+
+Ask for a list of changes instead. Name each record by a short, stable id the caller issued (`designing-apis`' *Identifiers the caller can carry*), never by its position or by a name the model might paraphrase. A new record comes back marked as new and gets its id from the caller; removing one is its own explicit operation, never inferred from an id missing from the reply. Treat a field the model sends as "set this" and a field it leaves out as "keep this", and reject a change to a field it was never shown. If clearing a field must be possible, give clearing its own explicit value, because one null cannot mean both (`designing-apis`' *Required, optional, and absence*). Do the merge on the side that holds the full record, and reject any id the caller did not issue. This is `schema-evolution`'s writer that builds its payload from the subset it rendered, with invention in place of deletion, and invention is the harder of the two to catch, because an invented value does not look missing. Test it that way: run an edit aimed at one field of one record, and assert that every other record, and every other field of that one, is byte-identical after the merge.
 
 ## Its output is untrusted input to every sink
 
@@ -91,6 +96,7 @@ The prompt and completion text are different in kind. They routinely contain per
 | Behavior changed overnight with no deploy | The code named an alias, and the provider moved it |
 | Requests started failing on a date nobody had in a calendar | A pinned model was retired and its date was never recorded |
 | A half-sentence or half an object was shown to a user as an answer | The output-limit stop reason was never checked |
+| After a model edit, fields nobody touched changed, on records nobody mentioned | The model saw a redacted or summarized view, was asked to return whole records, and the caller stored them as they came back |
 | A refused request was retried until it "worked" | Refusal handled as a transient failure |
 | Model output rendered as markup ran script in someone's browser | Output treated as the application's own text rather than as untrusted input |
 | An injected instruction in a document made the feature send data out | One request held untrusted content, private data, and a channel out |
@@ -104,6 +110,7 @@ The prompt and completion text are different in kind. They routinely contain per
 - A model identifier that ends in "latest", or no identifier at all because the SDK picks a default.
 - A prompt assembled by concatenating user text into the instruction string.
 - A bare JSON parse of model output with nothing between it and the rest of the program.
+- A model asked to return a whole record or a whole list when its context held only a redacted, truncated, or summarized view of it.
 - A retry loop around a model call with no cap on attempts or on spend.
 - "The prompt tells it not to do that" offered as the control.
 - A new model or a new prompt shipped with no eval run between the change and the release.

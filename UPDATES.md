@@ -31,7 +31,7 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-08 — A bare sweep has a target, "not in the list" is a null with a hidden filter, and "you can now" is checked against what is switched on
+## 2026-10-08 — A bare sweep has a target, "not in the list" is a null with a hidden filter, "you can now" is checked against what is switched on, and a model edits only what it saw
 
 - `clairvoyance` now says what `sweep` does with no target: it sweeps the run
   itself — the tree as it stands, the last report and the next action they
@@ -46,6 +46,11 @@ holds any text file over 256 KiB for a reviewer.
   server deploy or the store setup the feature may also need, so before
   publishing read each of those where it is set, and announce what you cannot
   see working as "coming" or not at all.
+- `building-llm-features` covers a model editing data it saw only a
+  redacted, truncated or summarized view of. Asked to return whole records, it
+  fills the fields it never saw with plausible guesses, on records nobody asked
+  to change. Ask for changes keyed by ids the caller issued, where a field left
+  out means keep, and merge them on the side that holds the full record.
 
 ## 2026-10-05 — Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal, a block list that never matches, a policy published ahead of its build
 
