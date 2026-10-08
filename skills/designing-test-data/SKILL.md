@@ -1,6 +1,6 @@
 ---
 name: designing-test-data
-description: Use when a test's setup is longer than its assertions, when fixtures are shared across files, when it is unclear which setup value causes a test to fail, when tests pass alone but fail in suite order, or when building factories, builders, object mothers, seed data, or bulk volume data for pagination and load tests. Also use when the fixtures for a rule that selects — a matcher, router, filter, alert condition, or suppression — were all written from the side that should match, or when such a rule fired on an input it should have ignored. Covers defaults, realistic versus minimal values, near-miss and negative corpora, and unicode and locale inputs.
+description: Use when a test's setup is longer than its assertions, when fixtures are shared across files, when it is unclear which setup value causes a test to fail, when tests pass alone but fail in suite order, or when building factories, builders, object mothers, seed data, or bulk volume data for pagination and load tests. Also use when the fixtures for a rule that selects — a matcher, router, filter, alert condition, or suppression — were all written from the side that should match, or when such a rule fired on an input it should have ignored. Also use when a one-time step — a migration, a first-launch routine, a once-per-release notice — is made to run again by clearing the marker that says it ran, or when an anomaly appears after state was set by hand. Covers defaults, realistic versus minimal values, near-miss and negative corpora, re-running a guarded step from a reachable state, and unicode and locale inputs.
 ---
 
 # Designing test data
@@ -15,6 +15,7 @@ The setup is the other half of a test's statement. If a reader cannot tell from 
 - A test fails and it is not obvious which of the twelve fields in the setup caused it.
 - Tests pass in isolation and fail in suite order, or fail only under parallel execution.
 - Seeding a store, queue, or file tree before exercising behavior.
+- Making a one-time step run again — a migration, a first-launch routine, a notice shown once per release — by resetting the marker that says it already ran.
 - Needing hundreds or millions of records for pagination, sort stability, or load shape.
 - Not for: the red-green-refactor loop itself, owned by `writing-the-failing-test-first`.
 - Not for: a system taking on an entire new *category* of input for the first time — a new script, file format, or protocol version — where the risk lives in shared code no prior category ever exercised. Realistic values inside a category you already handle are this skill's job; auditing a category you don't yet handle is `auditing-new-input-categories`.
@@ -107,6 +108,14 @@ The table above assumes the script, format, or locale itself is one the system a
 
 All of the above assumes you own the shape you are building. For a double standing in for something you do not control, the governing question is where its content came from — see `grounding-test-doubles`.
 
+## A re-run must start from a state the system can reach
+
+A one-time step — a migration, a first-launch routine, a notice shown once per release — is guarded by a marker recording that it ran: a flag, a stored version number, a list of ids already shown. The guard rests on an assumption: the step writes the marker along with its effect, a user may later remove the effect, but nothing removes the marker alone — so no install should ever hold the effect without the marker. To make the step run again for a test, the quick move is to delete the marker. That leaves the effect in place and builds the one combination the guard was never written for: *not done* according to the marker, *done* according to the data. The next run does its work a second time — a second copy of the seeded record, a second welcome item — and it reads exactly like a duplicate-insert bug.
+
+**Reset the pair, not the marker.** Remove the effect along with the marker, or reach the earlier state by a path that cannot split them — a fresh install, a new account, a snapshot taken before the first run. The same trap waits in any setup that writes state directly rather than through the code that normally writes it, the native-path bulk inserts recommended above included; a guard's marker is only its sharpest case.
+
+When an anomaly turns up after state was set by hand, ask first whether production can reach that state — whether the guard's assumption actually holds — and read the answer off how the pair is written, not off the anomaly. If the marker and the effect are committed in one transaction or one atomic write, the state is unreachable and the anomaly belongs to the setup. The costly outcome then is not the hour lost but a "fix": a dedupe check written for a state no user holds, which ships new behavior to everyone and makes the half-reset look like a valid way to re-run the step next time. If they are written separately — two stores, two steps a crash can land between, one half covered by a backup restore or a clear-data action and the other not — the state is reachable and the bug is real, just not by the path you took to it. Find that path — it is the reproduction — before writing the fix.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -120,6 +129,7 @@ All of the above assumes you own the shape you are building. For a double standi
 | Test data reaches a real inbox or a live endpoint | Plausible-looking defaults instead of reserved-range ones |
 | One test fails around the end of each month | Data derived from the current date crossing a month, quarter, or DST boundary |
 | Generated-data failure cannot be reproduced | No seed recorded, or the seed was time-derived |
+| A one-time step duplicates its effect when re-run for a test | Only its done-marker was reset; the effect it records was left in place, a state the guard was never written for |
 
 ## Red flags
 
@@ -130,3 +140,4 @@ All of the above assumes you own the shape you are building. For a double standi
 - Loading a production dump as test data.
 - An expected value computed by the same expression as the code under test.
 - A setup block you scroll past to reach the assertion.
+- Deleting a done-marker to make a step run again, and leaving what the step wrote.

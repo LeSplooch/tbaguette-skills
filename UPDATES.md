@@ -31,7 +31,7 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-08 — A bare sweep has a target, "not in the list" is a null with a hidden filter, "you can now" is checked against what is switched on, and a model edits only what it saw
+## 2026-10-08 — A bare sweep has a target, "not in the list" is a null with a hidden filter, "you can now" is checked against what is switched on, a model edits only what it saw, and a re-run resets the effect with the marker
 
 - `clairvoyance` now says what `sweep` does with no target: it sweeps the run
   itself — the tree as it stands, the last report and the next action they
@@ -51,6 +51,14 @@ holds any text file over 256 KiB for a reviewer.
   fills the fields it never saw with plausible guesses, on records nobody asked
   to change. Ask for changes keyed by ids the caller issued, where a field left
   out means keep, and merge them on the side that holds the full record.
+- `designing-test-data` covers re-running a one-time step for a test — a
+  migration, a first-launch routine, a once-per-release notice. Deleting only
+  the marker that says it ran leaves its effect behind, a state a real install
+  usually cannot reach, and then the duplicate the next run makes is the test's
+  doing, not the code's.
+  Reset both, or start from a fresh install; and when something odd follows
+  state set by hand, check whether production can reach that state before
+  fixing anything.
 
 ## 2026-10-05 — Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal, a block list that never matches, a policy published ahead of its build
 
