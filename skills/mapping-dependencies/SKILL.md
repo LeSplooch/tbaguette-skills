@@ -1,6 +1,6 @@
 ---
 name: mapping-dependencies
-description: Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles, finding modules with too many dependents, checking whether layering or architecture rules still hold, planning to split, extract, or delete a module, or after a small local change caused a failure in something that never referenced it.
+description: Use when assessing what a change will break, estimating blast radius, chasing circular imports or build cycles, finding modules with too many dependents, checking whether layering or architecture rules still hold, planning to split, extract, or delete a module, or after a small local change caused a failure in something that never referenced it. Also use before adding a member to an enum, sealed type, or tagged union that other code switches on, lists, or parses — especially from another language — or when a new member compiled clean and still misbehaved. Covers the compile, runtime, and data graphs, blast radius by kind of change, and sorting a type's enumeration sites into the ones the compiler checks and the ones it cannot see.
 ---
 
 # Mapping dependencies
@@ -12,6 +12,7 @@ The dependency graph in the import statements is one of three graphs, and it is 
 ## When to use
 
 - Before a signature, schema, or shared-behavior change, to enumerate who notices.
+- Before adding a member to an enum, sealed type, or tagged union, to find every place that enumerates it — including the ones no compiler will flag.
 - A cycle blocks a build, a test, an extraction, or a deletion.
 - Deciding module boundaries, or whether a proposed split is even possible.
 - An incident traced to a component that had no visible link to the change.
@@ -63,6 +64,10 @@ Three different sets, computed three different ways:
 
 Blast radius is not the number of files a diff touches. It is the number of things that can be observed behaving differently — those numbers are frequently inverted, which is why a one-line change causes an outage and a 600-line one does not.
 
+**Adding a member to an enum, sealed type, or tagged union is where "the compiler finds what you missed" stops being true.** Every place that enumerates the type is one of two kinds. An *exhaustive* site — a match or switch the checker requires to cover every member, with no default arm to absorb a new one — becomes a compile error the moment the member exists (or a warning, which counts only if the build fails on it). A *silent* site compiles unchanged and handles the new member by accident: an `else`, `default`, or `_` arm; a hand-written list of members, such as a picker's options, an allowlist, or a table of which kinds need a permission check; a parser in another language or process that maps a tag it does not recognize to some default kind. "It compiles" proves the first kind and says nothing about the second, and the second is where the damage lands — the default arm that writes the wrong shape back onto the new member, the permission table that never lists it and so never checks it.
+
+So sort the sites before writing the member. Search for the names of the existing members — the closest sibling of the new one first, since a site that handles it is the likeliest to need the new one too — rather than for the type's name, which misses string tags, other languages, and lists that never mention the type. Mark each hit exhaustive or silent. The silent sites across a language or process boundary carry the most risk, because no compiler or find-usages connects them to the change at all. Where you can, convert a silent site to exhaustive — remove the default arm, replace a hand-written list with a property every member must declare — rather than adding one more case to it, so the next member is caught by the compiler instead of by this search. A reader of stored or transmitted data still needs its unknown branch for versions you do not control (`schema-evolution`); there, make that branch keep the raw value or refuse it, never turn it into one of the real members.
+
 ## Why "everything imports it" is a constraint
 
 A module with 200 dependents no longer has an interface you can change; you can only add to it, and each addition makes the next change harder. Treat any widely-imported utility as a frozen public API that no single owner reviews. Two consequences: additions to it deserve the scrutiny of a public API change, and the correct fix for "this shared helper needs a new behavior" is usually a new module the callers that want it depend on, not a wider helper.
@@ -78,6 +83,7 @@ A module with 200 dependents no longer has an interface you can change; you can 
 | Deleted an unreferenced module; it broke later | Runtime-only edge via reflection, config, or a plugin registry |
 | Refactor stalled on a module that will not extract | A cycle, discovered at extraction time rather than before planning |
 | "Only a new field, fully backward compatible" | Old readers, queued messages, and stored rows are also readers |
+| A new enum member compiled clean and misbehaved | It fell into a default arm, was missing from a hand-written list, or was mapped to another kind by a parser in another language; the compiler only saw the exhaustive matches |
 
 ## Red flags
 
@@ -85,4 +91,4 @@ A module with 200 dependents no longer has an interface you can change; you can 
 - "Nothing else uses this" — asserted without extracting the graph, including runtime and data edges.
 - "It's only an additive change."
 - "The diagram in the wiki shows…"
-- "The compiler will catch it" — true only for the compile graph, which is the graph least likely to hurt you.
+- "The compiler will catch it" — true only for the compile graph, which is the graph least likely to hurt you, and within it only for exhaustive matches.

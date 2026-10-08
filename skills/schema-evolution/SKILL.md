@@ -13,7 +13,7 @@ Once a contract is in production you no longer own both sides of it. Every chang
 
 - Adding, removing, renaming, retyping, or re-scoping a field in anything persisted or transmitted
 - A rolling deploy produces deserialization errors, unknown-field rejections, or missing-column failures
-- Adding a value to an enum, status, or any other closed set
+- Adding a value to an enum, status, or any other closed set — this skill covers readers running other versions; finding every site in this version that must handle it, including the ones the compiler cannot flag, is `mapping-dependencies`
 - Old messages sit in a queue or a log and will be read by new code, possibly weeks later
 - Planning an API or payload version bump, or being asked whether one is needed
 - Not for: moving or rewriting the data that already exists — that is `data-migrations`, a separate discipline with its own failure modes that follows the order this skill sets
