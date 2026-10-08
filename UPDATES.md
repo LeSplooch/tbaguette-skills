@@ -31,7 +31,7 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-08 — A bare sweep has a target, and "not in the list" is a null with a hidden filter
+## 2026-10-08 — A bare sweep has a target, "not in the list" is a null with a hidden filter, and "you can now" is checked against what is switched on
 
 - `clairvoyance` now says what `sweep` does with no target: it sweeps the run
   itself — the tree as it stands, the last report and the next action they
@@ -41,6 +41,11 @@ holds any text file over 256 KiB for a reviewer.
   was missing from a catalogue, index or directory. A listing is a filtered
   view, so name what it leaves out and make one direct lookup by the exact
   identifier before saying it does not exist.
+- `writing-release-notes` now treats a new-feature line as a claim that the
+  reader can use it today. A commit describes code, not the remote flag, the
+  server deploy or the store setup the feature may also need, so before
+  publishing read each of those where it is set, and announce what you cannot
+  see working as "coming" or not at all.
 
 ## 2026-10-05 — Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal, a block list that never matches, a policy published ahead of its build
 

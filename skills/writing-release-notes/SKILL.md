@@ -1,6 +1,6 @@
 ---
 name: writing-release-notes
-description: Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes, deprecations, removals, or anything a consumer must act on; when turning commit subjects into user-facing text; or when consumers keep asking what they must change to upgrade. Covers ordering by reader impact, per-audience tagging, migration steps, deprecation timelines, and what to leave out.
+description: Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes, deprecations, removals, or anything a consumer must act on; when turning commit subjects into user-facing text; when an announced feature also depends on a remote flag, a server deploy, or app-store setup; or when consumers keep asking what they must change to upgrade. Covers ordering by reader impact, per-audience tagging, migration steps, deprecation timelines, checking each announced feature is live for its reader, and what to leave out.
 ---
 
 # Writing Release Notes
@@ -14,6 +14,7 @@ Release notes are read by one person with one question: what must I do, and what
 - Cutting a release of anything another team, customer, or process consumes
 - The release contains a breaking change, a removal, a deprecation, or a required migration
 - Turning a generated commit log into something a human can act on
+- An entry announces something that also needs a flag turned on, a server deployed, or a store product configured outside the release
 - Consumers are asking in support channels what an upgrade requires
 - **Not for:** why the change was made → `writing-adrs`. How to use the new feature → `writing-durable-docs`. Notes link to both; they do not contain them.
 
@@ -59,6 +60,20 @@ Two kinds of entry fail that test while looking like real fixes in the diff.
 The cheap tell for the first: **does the entry reference a feature this audience has never had?** If the fix only makes sense to someone who ran a build between two of yours, it is not news to them.
 
 Keeping such a line anyway is a legitimate call — some projects want the record complete, and a fix with no symptom can still be worth stating where a reader is auditing rather than upgrading. Running the check is what makes that a decision instead of an accident.
+
+## A capability line claims the reader can use it
+
+"You can now X" has a premise of its own: that this reader, on the build they are getting, can do X today. The commit cannot settle this one either. A commit message describes the code, written by whoever had just watched it work, often in a development build where everything it needs is enabled by default. Whether the reader can use it may also depend on things outside the release: a remote flag or config value, a server component that has to be deployed before it accepts the new request, an app-store or billing product that has to be set up and approved, a staged rollout, a plan or region the feature is limited to. Any of them can still be off on publication day while every commit that names the feature reads as finished.
+
+The translation table below says to omit a flagged feature until it is on, and that rule assumes you know the flag is there. The case it misses is a commit that mentions no dependency at all: the flag lives in another system, someone added it later, or the server that must accept the new request has not been upgraded.
+
+So on the day you publish, not the day you drafted, for each new-capability entry:
+
+1. **Name what it needs outside this release** — the flag, the server version, the store or billing setup, the rollout, the entitlement.
+2. **Read each one's current state where it is set**: the flag service, the version the deployed server reports, the store's own console. Not the default in the repository, and not your own build. The record that says "still off" often exists already, written by whoever does the deploys, in a handoff note, a deploy log, or a rollout dashboard; one read of it is cheaper than the support thread.
+3. **Where you can, use it from the reader's seat**: the build they will install, an account on their plan, no debug or test override.
+
+An entry you cannot observe working goes out as "coming", with a date only if you can keep it, or it does not go out. One that is on for some readers says so — "rolling out over the next two weeks", "on the paid plans". A reader who tries what the notes announced and is refused learns that the notes are not to be trusted, and every later release pays for it. A release note is a copy that describes behavior, so `keeping-copies-in-sync`'s *A copy that describes behavior is true of a build, not of a commit* covers publishing it with the release; this section covers what shipping the release does not switch on by itself.
 
 ## Breaking changes carry the step, not the difference
 
@@ -109,6 +124,7 @@ Omission is not concealment — the changelog has all of it. Padding the notes w
 | Notes assembled at tag time from memory | The user-facing line was not captured when the change was made |
 | Readers on one platform read four screens that do not apply | No audience tagging |
 | A fix entry nobody recognises, for a bug nobody reported | The bug was introduced and fixed between two of this audience's builds, so the log had it in range and the reader never met it |
+| Readers try a feature the notes announced and are refused, or cannot find it | The entry was written from a commit describing working code, while a flag it also needed was off, its server was not yet deployed, or its store product was not set up |
 
 ## Red flags
 
@@ -120,3 +136,4 @@ Omission is not concealment — the changelog has all of it. Padding the notes w
 - Announcing a deprecation with no removal date because the team has not agreed on one
 - Writing the notes after the tag is already published
 - A "Fixed:" line for a bug that never had a symptom, kept because the commit was real
+- A new-capability entry whose only evidence that it works is the commit message or the author's own build
