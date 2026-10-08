@@ -31,7 +31,7 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-08 — A bare sweep has a target, "not in the list" is a null with a hidden filter, "you can now" is checked against what is switched on, a model edits only what it saw, a re-run resets the effect with the marker, and a new enum member is checked where the compiler cannot see
+## 2026-10-08 — A bare sweep has a target, "not in the list" is a null with a hidden filter, "you can now" is checked against what is switched on, a model edits only what it saw, a re-run resets the effect with the marker, a new enum member is checked where the compiler cannot see, and a pre-approved command keeps its approved spelling
 
 - `clairvoyance` now says what `sweep` does with no target: it sweeps the run
   itself — the tree as it stands, the last report and the next action they
@@ -65,6 +65,12 @@ holds any text file over 256 KiB for a reviewer.
   another language takes the new member silently. Find every site by searching
   for the existing members' names, sort them into checked and silent, and turn
   silent ones exhaustive where you can. `schema-evolution` points there.
+- `routing-around-capability-gaps` covers a command that a standing
+  permission rule allows. The rule matches the command's text, so the same
+  command behind `cd dir &&`, an environment prefix or a pipe matches nothing
+  and can be refused. Write it in the exact form the rule names, using the
+  tool's own option (`git -C`, `--repo`) to aim it; if the wrapped line is
+  refused, report it and ask rather than re-issuing it bare.
 
 ## 2026-10-05 — Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal, a block list that never matches, a policy published ahead of its build
 

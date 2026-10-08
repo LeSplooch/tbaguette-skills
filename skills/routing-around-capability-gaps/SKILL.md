@@ -1,6 +1,6 @@
 ---
 name: routing-around-capability-gaps
-description: Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output, a context larger than this window, a real browser, GPU or offline inference, a cheap pass over thousands of items — or when a file type will not open, a tool answers "unsupported", no tool in the harness's list appears to do it, or the next sentence is about to describe something that was never actually read. Also use when a system under investigation has stopped reporting its state and no direct channel reads it, or when a call was refused by the harness rather than failing, or a refusal is about to be retried, reworded, or split. Covers telling a refusal from a capability gap, surveying what else is installed, telling installed from credentialed from reachable, preferring a deterministic local tool over a second model, the consent a provider boundary needs, driving another harness non-interactively, proving the delegate got the prompt, and a capability spec with an expiry.
+description: Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output, a context larger than this window, a real browser, GPU or offline inference, a cheap pass over thousands of items — or when a file type will not open, a tool answers "unsupported", no tool in the harness's list appears to do it, or the next sentence is about to describe something that was never actually read. Also use when a system under investigation has stopped reporting its state and no direct channel reads it, when a call was refused by the harness rather than failing or a refusal is about to be retried, reworded, or split, or a command relies on a standing permission rule. Covers telling a refusal from a capability gap, surveying what is installed, telling installed from credentialed from reachable, preferring a deterministic tool over a second model, consent at a provider boundary, driving another harness headless, proving the delegate got the prompt, and a capability spec's expiry.
 ---
 
 # Routing around capability gaps
@@ -175,6 +175,8 @@ A *refusal* is different again, and it is the one case on this page where the an
 
 The fix is upstream, and it changes how the *next* command is written rather than what to do with this one. Issue one call per effect — the discipline `atomic-commits` asks of a commit, for the reason it gives in the revert test: a unit bundling two independent things cannot be accepted or rejected as either one. Then a refusal names its own subject, and the effects nobody objected to were never bundled with the one they did. None of that is licence to re-issue a refused call in pieces. A bundled call that was declined is reported as declined, whole, and is not retried.
 
+**A standing permission covers a spelling, and a wrapper is a different spelling.** A rule that pre-approves a command matches the command's text — or, in a layer that splits compound lines, each unit's text — so the same command issued as `cd dir && cmd`, behind an environment assignment, or with a pipe or a redirect on the end is a line, or carries a unit, that no rule names. It falls to whatever decides unmatched calls — a prompt for a person, an automatic classifier — and that may decline what the rule would have let through, or wait for someone who is not there. So write any command that depends on a standing rule in exactly the form the rule names, and aim it with the tool's own targeting option (`git -C dir`, `--repo`, a path argument) rather than a shell wrapper; `portable-shell-scripting` prefers that form too, because a `cd` outlives the command that ran it. If a wrapped line has already been refused, the refusal does not say whether the wrapper or the act was declined, so re-issuing it bare is the rewording past the check that this section already rules out, not a correction of it. Report the refused line, say that the rule names the bare form, and ask whether to run that.
+
 What that leaves is a report rather than a workaround, and it is worth more than it sounds. Name the call that was refused, what it would have done, and what the run did instead — which is everything that did not depend on it. In an unattended run that is a blocked step rather than a failed one, and `bounding-autonomous-work` governs its shape: prepare the work completely, and leave the step for whoever can authorize it.
 
 Three cases genuinely belong to the user, and they are recognizable by what
@@ -191,6 +193,7 @@ of at the work.
 |---|---|
 | A control the user installed was worked around | A refusal was read as a capability gap; in the error they look alike, and they ask for opposite things |
 | A refusal that nobody can act on, because nobody can say what was refused | Several effects were bundled into one call, so the decline named the line and not the effect |
+| A command a standing rule allows was refused | It was issued inside a wrapper — `cd dir &&`, an environment prefix, a pipe — so the line matched no rule and went to a check that declined it |
 | An investigation proceeded blind because the subject stopped reporting | The gap was in seeing, not doing; nothing enumerated what else in the environment was already watching |
 | A confident description of a file that was never opened | The gap was never named, so substitution filled it |
 | "Nothing else is installed" after checking one remembered command | Recollection used as an inventory instead of a sweep |
@@ -213,6 +216,7 @@ of at the work.
 - Piping the working directory into another vendor's CLI without asking.
 - Reading a delegate's stdout and repeating it as your own finding.
 - Trusting a remembered flag over the `--help` the installed version actually prints.
+- Prefixing a pre-approved command with `cd dir &&`, or re-issuing it bare after that line was refused.
 - "It returned something, so it worked."
 - Building a coordinate map or a fixture against an environment you stood up, before checking what it lacks.
 - A block of commands printed for the user to paste, from a session that has a shell.
