@@ -1,6 +1,6 @@
 ---
 name: routing-around-capability-gaps
-description: Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output, a context larger than this window, a real browser, GPU or offline inference, a cheap pass over thousands of items — or when a file type will not open, a tool answers "unsupported", no tool in the harness's list appears to do it, or the next sentence is about to describe something that was never actually read. Also use when a system under investigation has stopped reporting its state and no direct channel reads it, when a call was refused by the harness rather than failing or a refusal is about to be retried, reworded, or split, or a command relies on a standing permission rule. Covers telling a refusal from a capability gap, surveying what is installed, telling installed from credentialed from reachable, preferring a deterministic tool over a second model, consent at a provider boundary, driving another harness headless, proving the delegate got the prompt, and a capability spec's expiry.
+description: Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output, a context larger than this window, a real browser, GPU or offline inference, a cheap pass over thousands of items — or when a file type will not open, a tool answers "unsupported", or the next sentence is about to describe something never actually read. Also use when a system under investigation has stopped reporting its state, when a call was refused by the harness or a refusal is about to be retried, reworded, or split, a command relies on a standing permission rule, or a script is about to send injected keystrokes or taps that carry a secret or cannot be undone. Covers telling a refusal from a capability gap, surveying what is installed and credentialed, a deterministic tool over a second model, consent at a provider boundary, driving another harness headless, proving the delegate got the prompt, re-reading the target's state before consequential input, and a capability spec's expiry.
 ---
 
 # Routing around capability gaps
@@ -93,6 +93,14 @@ The third layer asks whether a real call returns a real answer. That is the righ
 Nothing about the working parts warns you. On a bare virtual display, clicks land, navigation works and screenshots come back correct, because none of those need a window manager; keyboard input silently does nothing, because setting input focus does. Nothing errors and nothing is logged, so the natural reading of a keystroke with no effect is that the application ignored it, and the attempts that follow go into the application. **A capability you exercised says nothing about one you did not, and a missing service rarely errors — it no-ops.**
 
 So enumerate the interactions the work actually needs — click, type, focus, drag, copy, drop a file, print, play sound — and prove each one against something whose correct response is already known, before anything is built on top. There is a second reason to do that first: completing one of these environments is not additive. Starting a window manager to get focus working also gives every window a titlebar, which moves every screen coordinate down by its height and invalidates a click map that was working a minute earlier. Finding out what is missing is cheapest while nothing yet depends on the geometry.
+
+## Input is addressed to a place, not to a state
+
+An environment proven to take input is not a target proven to be where your script believes it is. Injected keystrokes, taps and clicks are addressed to coordinates, a focus, a mode: they go to whatever occupies that place when they arrive, and nothing in the delivery says whether that is what you meant. The tool reports the input sent; the target may be something else by then. Two sightings from unrelated work had the same shape. In one, a key sequence typed into a shared console assumed a mode was open; it was not, and part of a credential-bearing string landed in a public channel, found only by reading the scrollback. In the other, two back presses meant to return to the previous screen closed the application instead, and the next taps, aimed at where its buttons had been, landed in the operating system's settings and opened a pairing dialog.
+
+So derive the target's state from something it shows, never from a count of the steps taken. Before each consequential send, read the observable signal — which window or package has focus, what the screen says, which mode the prompt is in — and send only if it matches. A sequence that was right three inputs ago is not evidence about the next one, and **navigation keys are the usual way the target changes underneath a script**: back, escape, tab-away and their kin do different things depending on where you are, so a script cannot know their effect without looking. For the same reason close a dialog with its own control, found by its label, rather than with a key whose effect depends on the screen. When the state is not the expected one, stop and report where you are; do not send a correction blind.
+
+Scale the check to what the input carries. A secret, an irreversible command or a state-changing action gets the check every single time; a read-only look can get it less often. The same holds without a screen: a deploy step that always ends by starting a service is a consequential send. Read the service's current status first: if someone left it stopped on purpose, whether to bring it back is the owner's decision, and the step must not make it by default. The neighbouring failure, input delivered and silently discarded by a target that wanted another form, is in `grounding-test-doubles`.
 
 ## Discovery is a sweep, never a recollection
 
@@ -206,6 +214,7 @@ of at the work.
 | Another vendor's agent edits files nobody asked it to touch | The delegate was run in the repo instead of a staged scratch directory |
 | The user discovers afterward that their code went to a third party | Data crossing a provider boundary treated as an implementation detail |
 | A cached capability spec sends work to a harness that no longer works | The spec was stored without expiry and then trusted like a fact |
+| A secret or a destructive command typed into the wrong place, or taps landing in another application | Input was addressed to where the target had been; its state was inferred from a step count, not re-read before the send |
 | Several fixes aimed at the application and the symptom never moves | The environment was stood up by whoever is debugging, so it never became a suspect |
 
 ## Red flags
@@ -219,6 +228,7 @@ of at the work.
 - Prefixing a pre-approved command with `cd dir &&`, or re-issuing it bare after that line was refused.
 - "It returned something, so it worked."
 - Building a coordinate map or a fixture against an environment you stood up, before checking what it lacks.
+- "Two back presses, then tap" — a scripted sequence whose later steps assume the earlier ones did what they did last time.
 - A block of commands printed for the user to paste, from a session that has a shell.
 - "I cannot see what it is doing, so I need you" — with no list of what else already can
 - A refused tool call retried with different wording, or replaced by a different tool that does the same thing

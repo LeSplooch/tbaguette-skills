@@ -31,6 +31,20 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-10 — Scripted input is addressed to a place, not a state
+
+- `routing-around-capability-gaps` has a new section on injected keystrokes
+  and taps: they go to whatever occupies the coordinates or focus when they
+  arrive, so a sequence that was right three inputs ago is no evidence for the
+  next one. Before each send that carries a secret or cannot be undone, read
+  the target's state from what it shows (focused window, what the screen says)
+  rather than from a step count. Navigation keys such as `Back` and `Escape` are
+  the usual way the target changes underneath a script, so close dialogs with
+  their own labelled controls, and stop and report when the state is not the
+  expected one. The same check applies to a deploy step that always ends by
+  starting a service someone left stopped on purpose. Its description now
+  routes to it.
+
 ## 2026-10-08 — A bare sweep has a target, "not in the list" is a null with a hidden filter, "you can now" is checked against what is switched on, a model edits only what it saw, a re-run resets the effect with the marker, a new enum member is checked where the compiler cannot see, and a pre-approved command keeps its approved spelling
 
 - `clairvoyance` now says what `sweep` does with no target: it sweeps the run

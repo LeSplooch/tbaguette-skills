@@ -11,7 +11,7 @@
       "displayName": "TBaguette's Atelier",
       "license": "GPL-2.0-only",
       "description": "One hundred and one project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling — plus formidable, design craft for every UI stack.",
-      "version": "2.1.15",
+      "version": "2.1.16",
       "source": "./",
       "author": {
         "name": "TBaguette",
