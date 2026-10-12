@@ -2432,7 +2432,19 @@
       return;
     }
     var hit = this.pick(p[0], p[1]);
-    if (hit && hit.node && this.view === 'constellation') {
+    if (hit && hit.node && this.view === 'constellation' && e.pointerType === 'touch') {
+      // A finger lands on a dot far more often by accident than to pull it:
+      // the swipe pans, and the dot comes loose only after a short hold.
+      var self = this, held = hit.node;
+      this.drag = { pan: true, cx: this.camT.x, cy: this.camT.y, moved: false, hit: hit };
+      clearTimeout(this.holdTimer);
+      this.holdTimer = setTimeout(function () {
+        if (self.drag && self.drag.pan && !self.drag.moved && self.pointers[e.pointerId]) {
+          self.hideTip();
+          self.drag = { node: held, moved: false };
+        }
+      }, 350);
+    } else if (hit && hit.node && this.view === 'constellation') {
       this.drag = { node: hit.node, moved: false };
     } else {
       this.drag = { pan: true, cx: this.camT.x, cy: this.camT.y, moved: false, hit: hit };
@@ -2488,6 +2500,7 @@
     delete this.pointers[e.pointerId];
     if (Object.keys(this.pointers).length < 2) { this.pinch = null; }
     this.stage.classList.remove('crumb__stage--grabbing');
+    clearTimeout(this.holdTimer);
     var drag = this.drag;
     this.drag = null;
     if (!drag || !ptr || cancelled) { return; }
