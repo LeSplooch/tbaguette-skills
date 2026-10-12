@@ -58,7 +58,7 @@
     failed: 'The graph could not load.',
     retry: 'Try again',
     hint: 'Drag to pan · scroll or pinch to zoom · click a skill to open it',
-    hintTouch: 'Drag to pan · pinch to zoom · tap a skill, then tap again to open it',
+    hintTouch: 'Dot = skill · line = citation · bigger = cited more. Drag to pan, pinch to zoom, tap a skill, then tap again to open it',
     anatomyHint: 'Each arc is a section, sized by its length. Click a skill around it to walk there.',
     introTitle: 'How the library holds together',
     intro: 'Each dot is a skill and each line a citation, drawn from the skill that makes it toward the one it names. Skills gather by family; size shows how often a skill is cited.',
