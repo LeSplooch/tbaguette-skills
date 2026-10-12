@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.16</span>
+      <span class="wordmark-version" dir="ltr">v2.1.17</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-10T03:43:09+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-10T03:43:09Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-12T16:48:30+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-12T16:48:30Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">fanning-out-independent-work</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-12T16:48:30.672947+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Planning and delegation</span>
@@ -91,7 +91,7 @@
 <p>Fanning out is cheap only where the siblings are identical in the ways a cache keys on — model, tool set, working directory, and output shape. Varying any of those across siblings for no reason multiplies the run's real cost, and the variation is usually incidental — one sibling's prompt drifted a little from the template, one got a slightly different tool list — rather than a choice anyone made deliberately. Before dispatching a batch, ask whether the siblings differ in any dimension that was not required by the task itself, and collapse it back to the template if not.</p>
 <h2 id="avoiding-collisions">Avoiding collisions</h2>
 <p>Independence in the problem doesn't guarantee independence in the solution — two agents can have unrelated goals and still collide if what they write overlaps. Partition by write-set, not by topic:</p>
-<ul><li>Read overlap is fine. Two agents reading the same file, schema, or doc is not a conflict. Write overlap is the only kind that matters.</li><li>A shared registry, index, changelog, or catalog that every task would naturally want to update is a collision even when the underlying work is independent. Pull it out of the parallel batch and update it once, sequentially, after every agent has landed.</li><li>State each agent's write scope as a hard constraint in its prompt — which paths are its to touch, plus an explicit &quot;nothing outside this&quot; — not as something the task description implies.</li><li>When a clean partition isn't possible and two agents genuinely need the same file, isolate them into separate workspaces instead (see <a class="skill-link" href="/tbaguette-skills/skills/isolating-work-with-worktrees/"><code>isolating-work-with-worktrees</code></a>) rather than dispatching anyway and hoping the merge goes fine.</li></ul>
+<ul><li>Read overlap is fine. Two agents reading the same file, schema, or doc is not a conflict. Write overlap is the only kind that matters.</li><li>A shared registry, index, changelog, or catalog that every task would naturally want to update is a collision even when the underlying work is independent. Pull it out of the parallel batch and update it once, sequentially, after every agent has landed.</li><li>State each agent's write scope as a hard constraint in its prompt — which paths are its to touch, plus an explicit &quot;nothing outside this&quot; — not as something the task description implies.</li><li>Files are not the only shared surface. Workers on one machine also share the process table, the temp filesystem, ports, and long-lived daemons, and a cleanup that selects by something every worker has in common — a command-line substring, a binary name, &quot;the big folders under /tmp&quot; — hits other workers' live runs. Act only on what the instance itself owns: record the PID at launch and kill from that list, give each worker its own data directory or port, and when a build reports &quot;no space left&quot;, run <code>df</code> on the temp filesystem rather than the project disk, redirect temp for your pipeline (a JVM ignores <code>TMPDIR</code> and needs its own property, and a running daemon keeps the temp dir it started with), and free only your own scratch.</li><li>When a clean partition isn't possible and two agents genuinely need the same file, isolate them into separate workspaces instead (see <a class="skill-link" href="/tbaguette-skills/skills/isolating-work-with-worktrees/"><code>isolating-work-with-worktrees</code></a>) rather than dispatching anyway and hoping the merge goes fine.</li></ul>
 <h2 id="prompts-that-stand-alone">Prompts that stand alone</h2>
 <p>Each agent starts cold: no access to your reasoning, your conversation, or what the other agents were told. A prompt that leaves anything to inference gets an inference back, and an inference that collides with another agent's inference is how two well-scoped tasks produce conflicting edits to the same line. Include, every time:</p>
 <ul><li><strong>The specific problem</strong> — the file, the failure, the deliverable — not the general category. &quot;Fix agent-tool-abort.test.ts&quot; beats &quot;fix the failing tests.&quot;</li><li><strong>The scope boundary</strong>, stated as a constraint: which files and directories belong to this agent, spelled out even when it seems obvious from context the agent doesn't have.</li><li><strong>The output contract</strong>: what shape the report back should take, so it can be integrated without a second round of investigation to reconstruct what the agent actually did.</li></ul>

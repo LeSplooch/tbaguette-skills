@@ -31,6 +31,17 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-12 — Parallel workers share a machine, not only files
+
+- `fanning-out-independent-work` now says that workers on one machine also
+  collide on the process table, the temp filesystem, ports and long-lived
+  daemons. A cleanup that picks processes by a path fragment every worker's
+  build shares kills the others' test runs; kill from the PIDs recorded at
+  launch and give each worker its own data directory or port instead. When a
+  build fails with "no space left", check the temp filesystem rather than the
+  project disk, redirect temp for your own pipeline, and free only your own
+  scratch rather than other sessions' folders.
+
 ## 2026-10-10 — Scripted input is addressed to a place, not a state
 
 - `routing-around-capability-gaps` has a new section on injected keystrokes
