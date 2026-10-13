@@ -1,6 +1,6 @@
 ---
 name: keeping-copies-in-sync
-description: Use when the same fact — a version number, a constant, a policy document, a generated file, a lockfile entry, a manifest field — has to be recorded in more than one place; when a change updates one copy and a sibling copy is easy to forget; when two files that describe the same thing are found to disagree, weeks or releases apart, and someone catches it by hand; when a change introduces a second location for a value that used to live in exactly one; when the plan for keeping copies aligned is "remember to update both" rather than something that runs, or when a public statement of what the software does — a policy, a store listing — is updated before the build that does it has reached anyone. Covers why the number of places to update is the number of ways to disagree, replacing memory with a comparison that fails loud, preferring to generate a copy over hand-maintaining it, where the check belongs in the pipeline, and publishing a behavior-describing copy with the release.
+description: Use when the same fact — a version number, a constant, a policy document, a lockfile entry, a manifest field — has to be recorded in more than one place; when a change updates one copy and a sibling is easy to forget; when two files that describe the same thing are found to disagree and someone catches it by hand; when a change adds a second location for a value that had one; when the plan for keeping copies aligned is "remember to update both" rather than a check that runs, when a public statement of what the software does — a policy, a store listing — is updated before the build that does it has reached anyone, or when a build is about to replace a running service that someone may have deployed from an uncommitted tree. Covers why the number of places is the number of ways to disagree, a comparison that fails loud, generating instead of maintaining, where the check belongs, publishing a behavior-describing copy with the release, and probing the live artifact before overwriting it.
 ---
 
 # Keeping copies in sync
@@ -127,6 +127,12 @@ So write the new text in the same change as the code, where the check can compar
 
 A push is not a deploy, either. A host that builds the public copy from the source has its own build, which can trail the push by minutes and can fail without the push noticing, so a green push, a clean hook and a failed host build produce the same silence. Verify after the host reports it finished: fetch what is actually served, from outside and with no cache, and compare it with the source, as a diff rather than a glance. `confirming-before-claiming-done`'s *The push is not the reach* has the general rule.
 
+## The running copy can be ahead of the source
+
+Everything above treats the source as the truth and the deployed artifact as the copy that lags. That holds only while every deploy came from committed source. Whenever someone has built and shipped from a dirty checkout, a branch that never merged, or a laptop, the running service is the only place their work exists, and "deploy from the main branch" is no longer a release: it is a rollback of that work, performed silently, by a build that passes every check because the checks read the repository.
+
+So before any build-and-deploy over something already running, compare the live artifact with the source in both directions. Probe for features the repository claims to have, and for ones it does not: strings and symbols in the binary, tables, columns and migrations in the live database, routes the running service answers that the router file never mentions. Do the same for the files that run alongside it, supervisor unit files, scheduler entries and environment files, which drift the same way and are the ones nobody thinks to diff. If the live artifact is ahead, stop and land that work first: get it committed, combined with your change and tested as one tree, then deploy. If you cannot find out who owns it, that is a question for a person before the deploy. Either way, keep a copy of the running artifact and a backup of its data first: replacing a binary is undoable only if the old one still exists, and a migration that drops what the live schema has and the source lacks is not undoable at all.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -139,6 +145,7 @@ A push is not a deploy, either. A host that builds the public copy from the sour
 | The check exists but only runs on release day | The copies can change between releases, so the check's cadence is slower than the drift it exists to catch |
 | Grepping for a stale value found a third copy nobody remembered | The search for copies stopped at the two the incident surfaced instead of enumerating every occurrence |
 | A public policy described behavior that no user's build had yet | The copy was published with the commit, not with the release that delivered the behavior |
+| A deploy from the main branch removed features nobody on the team had merged | The running service had been built from an uncommitted tree, and the live artifact was never compared with the source before it was replaced |
 | The push succeeded and the live page still showed the old text, or never changed | A push is not a deploy: the host's own build lagged or failed silently, and nobody fetched what was served |
 
 ## Red flags
@@ -155,3 +162,4 @@ A push is not a deploy, either. A host that builds the public copy from the sour
   checking can change on.
 - A public statement of behavior merged, and published, the same day as the code that changes it, before any build with that code has reached anyone.
 - "Pushed" reported as the last step for a copy that a separate host builds.
+- A deploy that begins with a build and no look at what the running service contains.

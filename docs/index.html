@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.19</span>
+      <span class="wordmark-version" dir="ltr">v2.1.20</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-13T18:13:54+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T18:13:54Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-13T18:19:23+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T18:19:23Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -160,11 +160,22 @@ Flag one more thing, because it applies to this very conversation: this session 
     <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/schema-evolution/" data-fresh-at="2026-10-13T18:13:54.038682+00:00" draggable="false" style="--cf-offset: 0">
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/keeping-copies-in-sync/" data-fresh-at="2026-10-13T18:19:23.931416+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">keeping-copies-in-sync</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:19:23.931416+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when the same fact — a version number, a constant, a policy document, a lockfile entry…</p>
+  <span class="card__foot">
+    <span class="tag">Designing systems</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/schema-evolution/" data-fresh-at="2026-10-13T20:13:53+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">schema-evolution</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:13:54.038682+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T20:13:53+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema…</p>
   <span class="card__foot">
@@ -172,7 +183,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/isolating-work-with-worktrees/" data-fresh-at="2026-10-13T20:09:17+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/isolating-work-with-worktrees/" data-fresh-at="2026-10-13T20:09:17+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">isolating-work-with-worktrees</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T20:09:17+02:00">Updated</span>
@@ -205,10 +216,10 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-13">13 Oct 2026</time>
-    <span class="notes__entry-title">A client that asks for an extra behavior has to be told it happened</span>
+    <span class="notes__entry-title">&quot;Deploy from main&quot; can be a rollback of work nobody committed</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/schema-evolution/"><code>schema-evolution</code></a> now covers the sender's side of an additive change. An old server ignores a new optional request field or header, stores the payload and answers plain success, so a client released first can announce an effect that never occurred. The skill asks for an acknowledgment only an updated server can produce, derived from the outcome rather than echoed from the request, required on the client's success path, and for testing the new-client-against-old-server pair before the rollout.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/keeping-copies-in-sync/"><code>keeping-copies-in-sync</code></a> now has a section on the case where the running copy is ahead of the source. A service deployed from a dirty checkout holds features that exist nowhere in version control, and building from the main branch over it quietly removes them. Before a build-and-deploy the skill says to probe the live artifact and its supervisor and scheduler files in both directions, land anything ahead first, and keep the old artifact and a data backup until the combined tree is tested.</li>
   </ul>
 </li>
   </ol>
@@ -221,6 +232,15 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-10-13">13 Oct 2026</time>
+    <span class="notes__entry-title">&quot;Deploy from main&quot; can be a rollback of work nobody committed</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/keeping-copies-in-sync/"><code>keeping-copies-in-sync</code></a> now has a section on the case where the running copy is ahead of the source. A service deployed from a dirty checkout holds features that exist nowhere in version control, and building from the main branch over it quietly removes them. Before a build-and-deploy the skill says to probe the live artifact and its supervisor and scheduler files in both directions, land anything ahead first, and keep the old artifact and a data backup until the combined tree is tested.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-13">13 Oct 2026</time>
@@ -448,15 +468,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> now tells a contributor who can't run this repo's pre-commit hook exactly how to rebuild the site by hand. Skipping the one flag that rebuild needs makes every stylesheet, font, and script link point at the domain root instead of where the site actually lives — a mistake the test suite has no way to catch, since it checks the files are well-formed, not where they think they're served from.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a> now says what a retry should report. A loop that keeps only its last attempt's error names the wrong failure whenever an attempt leaves something behind, such as a lock or a half-started process. The next attempt fails on that leftover, and every report after it describes the consequence while the real cause is recorded nowhere. The boundary that owns the retry should keep every distinct reason, the first one leading, and the skill's <code>description:</code> now routes that symptom to the skill.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-22">22 Sep 2026</time>
-    <span class="notes__entry-title">One shout instead of two at session start</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li>The text TBaguette injects into every new session used to wrap itself in two nested &quot;EXTREMELY_IMPORTANT&quot; tags — one around the whole notice, a second one inside it around the actual rule. Only the outer one is gone now: doubled emphasis was reading as more suspicious to a fresh model than a single one does, without doing any extra work. Nothing about when or how often TBaguette checks its own skills changed — same trigger, same persistence across the whole conversation, same behavior across <code>/clear</code> and <code>/compact</code>.</li>
   </ul>
 </li>
       </ol>
@@ -1283,7 +1294,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/schema-evolution/" data-search-card data-search-terms="schema-evolution use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema… designing systems">
   <span class="card__name-row">
     <span class="card__name">schema-evolution</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:13:54.038682+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T20:13:53+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema…</p>
   <span class="card__foot">
@@ -1346,12 +1357,12 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card" href="/tbaguette-skills/skills/keeping-copies-in-sync/" data-search-card data-search-terms="keeping-copies-in-sync use when the same fact — a version number, a constant, a policy document, a generated file, a lockfile entry… designing systems">
+<a class="card" href="/tbaguette-skills/skills/keeping-copies-in-sync/" data-search-card data-search-terms="keeping-copies-in-sync use when the same fact — a version number, a constant, a policy document, a lockfile entry… designing systems">
   <span class="card__name-row">
     <span class="card__name">keeping-copies-in-sync</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:19:23.931416+00:00">Updated</span>
   </span>
-  <p class="card__summary">Use when the same fact — a version number, a constant, a policy document, a generated file, a lockfile entry…</p>
+  <p class="card__summary">Use when the same fact — a version number, a constant, a policy document, a lockfile entry…</p>
   <span class="card__foot">
     <span class="tag">Designing systems</span>
     <span class="card__arrow" aria-hidden="true">→</span>

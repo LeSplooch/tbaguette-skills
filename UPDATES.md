@@ -31,6 +31,16 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-13 — "Deploy from main" can be a rollback of work nobody committed
+
+- `keeping-copies-in-sync` now has a section on the case where the running copy
+  is ahead of the source. A service deployed from a dirty checkout holds features
+  that exist nowhere in version control, and building from the main branch over
+  it quietly removes them. Before a build-and-deploy the skill says to probe the
+  live artifact and its supervisor and scheduler files in both directions, land
+  anything ahead first, and keep the old artifact and a data backup until the
+  combined tree is tested.
+
 ## 2026-10-13 — A client that asks for an extra behavior has to be told it happened
 
 - `schema-evolution` now covers the sender's side of an additive change. An old
