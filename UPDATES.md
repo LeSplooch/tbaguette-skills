@@ -31,6 +31,16 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-13 — A failed worktree create no longer carries on in the wrong tree
+
+- `isolating-work-with-worktrees` now covers what happens when `git worktree add`
+  fails in a repository other sessions share. The chain stops, but the next
+  separate command runs from the old directory and writes into a checkout that
+  was never meant to change. The skill says to pick a path no one else would,
+  address the new tree by absolute path for every write, and snapshot a tree
+  you do not own before touching it, since a printed error does not prove
+  nothing changed.
+
 ## 2026-10-12 — Parallel workers share a machine, not only files
 
 - `fanning-out-independent-work` now says that workers on one machine also
