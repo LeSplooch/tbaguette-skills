@@ -506,6 +506,10 @@ def check_graph_entry_points() -> None:
     check("the page holds a host for graph.js and loads it",
           'data-graph-host data-graph-data="/graph/graph.json"' in graph_html
           and '<script src="/assets/graph.js" defer></script>' in graph_html)
+    check("...and asks for graph.json at once, in the credentials mode graph.js fetches it with, "
+          "so the data is in flight while the script downloads",
+          '<link rel="preload" as="fetch" href="/graph/graph.json" crossorigin="anonymous">' in graph_html
+          and graph_html.index('rel="preload"') < graph_html.index('graph.js'))
     check("...under a real <h1>, which stays the page's heading once the app has the screen",
           '<h1 class="graph-page__title" id="graph-page-title">The crumb</h1>' in graph_html)
     check("...says what the graph shows in plain text, before any script runs",
@@ -521,7 +525,8 @@ def check_graph_entry_points() -> None:
     check("every graph URL carries the base path",
           f'href="{base}/graph/"' in prefixed
           and f'<script src="{base}/assets/graph.js" defer></script>' in prefixed_graph
-          and f'data-graph-data="{base}/graph/graph.json"' in prefixed_graph)
+          and f'data-graph-data="{base}/graph/graph.json"' in prefixed_graph
+          and f'href="{base}/graph/graph.json" crossorigin' in prefixed_graph)
 
 
 def check_graph_banner() -> None:

@@ -2924,6 +2924,7 @@ def render_graph_page(categories: list[dict], base_path: str = "",
     <noscript><p class="graph-host__noscript">{escape_html(strings.graph_noscript)}</p></noscript>
   </div>
 </section>
+<link rel="preload" as="fetch" href="{graph_dir}{GRAPH_DATA_FILENAME}" crossorigin="anonymous">
 <script src="{asset_url("graph.js", base_path)}" defer></script>"""
     return _render_document(
         title=f"{strings.graph_page_title} — {BRAND_ATELIER_TEXT}",
