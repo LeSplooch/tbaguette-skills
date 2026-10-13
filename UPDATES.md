@@ -31,6 +31,15 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-14 — A fix checked only by looking now needs a before-build
+
+- `reproducing-bugs` now covers the defect whose only check is a look (a visual
+  fault, behaviour on one device): the commit before the fix is the control. Keep
+  it buildable in a throwaway tree, run identical steps on the same device and data
+  against the unfixed build and then the fixed one, and compare the captures. A
+  symptom that vanished alongside an unrelated change of setup would otherwise be
+  credited to the fix.
+
 ## 2026-10-14 — Defects only a real screen shows now get a guard
 
 - `regression-test-from-bug` now says what to do when no test at any layer can

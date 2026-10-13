@@ -86,6 +86,12 @@ Capture, do not guess. The instinct to theorize about production is the instinct
 - Run it against the unfixed build and watch it fail. A test never seen failing tests nothing, and this is the most common way a regression test ships broken.
 - Keep the reduced version as the permanent regression test. Keep the original end-to-end scenario only if the reduction dropped a layer that turned out to matter.
 
+**When the only check available is a look** (a visual defect, a behaviour on a particular device, anything no automated test can assert), the unfixed build is still the control, and the look has to be made twice. "It looks right now" is an after-state with nothing to compare against: a fix can coincide with an unrelated change of setup (the data, a setting, the theme, the account) that made the symptom disappear on its own, and the fix then takes credit.
+
+- Keep the commit just before the fix buildable in a separate tree (a throwaway worktree) so the broken build can be produced on demand, and remove the tree afterwards.
+- Run the same steps, on the same device, with the same data and settings, against that build first and the fixed build second. Install the unfixed one over the fixed one, or the reverse, rather than comparing against a screenshot from a different day.
+- Compare the two captures at the screen that showed the defect. The result you want is both halves: the bug visible in the control, gone in the fix. If the control does not show it, the reproduction was incomplete and the fix is unproven, whatever the after-state looks like.
+
 ## Common mistakes
 
 | Symptom | Real cause |
@@ -100,6 +106,7 @@ Capture, do not guess. The instinct to theorize about production is the instinct
 | Fix verified by one passing run | at a 5% rate, one pass is 95% likely regardless of the fix |
 | Probe returns plausible values that are all defaults | the thing being measured never loaded; the read succeeded and measured nothing |
 | A fix that did land reports as missing | the check read a cached or stale copy instead of the current artifact |
+| A visual fix was confirmed by looking at the fixed build only | no control: the unfixed build was never run on the same device and data, so the fix may not be why the symptom went |
 
 ## Red flags
 
