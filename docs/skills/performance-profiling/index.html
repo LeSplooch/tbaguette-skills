@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.21</span>
+      <span class="wordmark-version" dir="ltr">v2.1.22</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-13T18:22:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T18:22:06Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-13T22:14:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T22:14:39Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">performance-profiling</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T22:14:39.951671+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Debugging and performance</span>
@@ -91,6 +91,8 @@
 <p>Where flame graphs mislead: they average over a mix of operation types (profile one operation at a time); they miss work shorter than the sampling interval; inlined frames are attributed to their caller; sampling can be biased toward points where the runtime can safely interrupt; and off-CPU time is absent entirely unless it was explicitly requested.</p>
 <h2 id="amdahls-check">Amdahl's check</h2>
 <p>Before optimizing anything, measure the fraction <em>f</em> of total time it occupies. Maximum possible speedup is 1/(1−f). At f = 0.20, eliminating it completely yields 1.25× — so if the target is 2×, this work cannot reach it no matter how well it is done. One line of arithmetic, done first, kills roughly half of all proposed optimizations, including most of the ones that feel most satisfying to write.</p>
+<h2 id="size-is-a-cost-too-measure-it-where-it-ships">Size is a cost too: measure it where it ships</h2>
+<p>A part's share of a size measured before the optimizer, minifier or compressor says little about its share of what users download, because those stages deduplicate and strip unevenly. In one case, removing a section cut the pre-optimizer artifact by about 168 KB and cost about 6 KB after the real pipeline, which would have paid for almost none of the proposed rewrite. Attribute size by rebuilding through the full shipping pipeline with the part removed and comparing the artifact that ships.</p>
 <h2 id="benchmark-traps">Benchmark traps</h2>
 <table><thead><tr><th>Trap</th><th>Signature</th><th>Fix</th></tr></thead><tbody><tr><td>No warm-up</td><td>first iterations 10–100× slower than later ones</td><td>discard warm-up iterations, report steady state, and report cold-start separately if it matters</td></tr><tr><td>Dead-code elimination</td><td>impossible numbers: 0 ns, billions of ops/sec, time independent of input size</td><td>consume the result through a sink the optimizer cannot see through</td></tr><tr><td>Constant folding</td><td>inputs known at compile time</td><td>generate inputs outside the timed region</td></tr><tr><td>Caching between iterations</td><td>run 2 is 100× faster than run 1</td><td>clear caches, or measure the cached case deliberately and label it as such</td></tr><tr><td>Debug build, assertions, coverage, or a debugger attached</td><td>uniform 2–20× slowdown</td><td>measure optimized builds with production flags</td></tr><tr><td>Unrepresentative data</td><td>uniform keys where production is skewed; a dataset that fits in cache</td><td>match size, skew, and cardinality</td></tr><tr><td>Timer resolution</td><td>measuring below the clock tick</td><td>loop and divide</td></tr><tr><td>Machine noise</td><td>frequency scaling, thermal throttling, noisy neighbors, background indexing</td><td>pin frequency, isolate cores, and interleave A/B runs rather than all-A then all-B</td></tr><tr><td>Who served it</td><td>a router, pool, gateway, or provider layer choosing a non-identical backend per call</td><td>record which one served each observation and pin it; interleaving does not fix a composition difference</td></tr><tr><td>Single-threaded micro-benchmark for a contended path</td><td>measures the uncontended case only</td><td>benchmark at production concurrency</td></tr></tbody></table>
 <p>Interleaving A and B runs is the cheapest defense available and almost nobody does it: it converts a slow machine drift into noise instead of a fake win.</p>

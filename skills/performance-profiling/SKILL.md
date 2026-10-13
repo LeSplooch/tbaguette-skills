@@ -60,6 +60,10 @@ Where flame graphs mislead: they average over a mix of operation types (profile 
 
 Before optimizing anything, measure the fraction *f* of total time it occupies. Maximum possible speedup is 1/(1−f). At f = 0.20, eliminating it completely yields 1.25× — so if the target is 2×, this work cannot reach it no matter how well it is done. One line of arithmetic, done first, kills roughly half of all proposed optimizations, including most of the ones that feel most satisfying to write.
 
+## Size is a cost too: measure it where it ships
+
+A part's share of a size measured before the optimizer, minifier or compressor says little about its share of what users download, because those stages deduplicate and strip unevenly. In one case, removing a section cut the pre-optimizer artifact by about 168 KB and cost about 6 KB after the real pipeline, which would have paid for almost none of the proposed rewrite. Attribute size by rebuilding through the full shipping pipeline with the part removed and comparing the artifact that ships.
+
 ## Benchmark traps
 
 | Trap | Signature | Fix |

@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.21</span>
+      <span class="wordmark-version" dir="ltr">v2.1.22</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-13T18:22:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T18:22:06Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-13T22:14:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T22:14:39Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">formidable</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T22:14:39.951671+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">UI and design</span>
@@ -341,7 +341,8 @@
 <h2 id="cmd-craft-floor-the-reflexes-no-detector-catches">The reflexes no detector catches</h2>
 <ul><li><strong>Hierarchy is a decision, not an accident.</strong> Exactly one thing is most important on a surface. If two things compete, you did not decide. Rank the elements before styling them.</li><li><strong>Contrast of size beats contrast of color.</strong> When a design reads flat, the fix is usually a bigger size ratio or a heavier weight, not a brighter accent.</li><li><strong>Space is the cheapest tool and the first one you forget.</strong> Most &quot;cluttered&quot; is a spacing problem, not a content problem.</li><li><strong>Alignment edges should be few.</strong> Every additional left edge is a new axis the eye has to track. Three columns of differently-indented text is three designs.</li><li><strong>Repetition creates system.</strong> The same idea should look the same everywhere; the second variant needs a reason.</li><li><strong>Borders are the weakest separator.</strong> Prefer space, then background shift, then a border. A grid full of boxes is usually a grid that needed gaps.</li><li><strong>Optical size beats nominal size.</strong> A 16px glyph and 16px text are not the same weight on screen. Trust the render.</li><li><strong>Density is a target, not a leftover.</strong> Decide how much should be visible at once before you decide how it looks.</li><li><strong>The default state is the design.</strong> Most users see the empty, the one-item, and the truncated cases far more than your populated mock.</li></ul>
 <h2 id="cmd-craft-floor-finishing">Finishing</h2>
-<p>Every deliverable ships with: real content (not lorem, not placeholder names), working interactive states, the full theme set the stack supports, and behavior at the smallest and largest size the surface can take. Anything missing is called out explicitly, never quietly left.</p></div>
+<p>Every deliverable ships with: real content (not lorem, not placeholder names), working interactive states, the full theme set the stack supports, and behavior at the smallest and largest size the surface can take. Anything missing is called out explicitly, never quietly left.</p>
+<p>Two places the smallest-and-largest check does not reach. <strong>The widths in between:</strong> a row that gains an item fails first at the width where it stops fitting, usually a tablet width neither end shows, so find that width (or sweep) whenever an item joins a single-line layout. <strong>A control that grows for emphasis</strong> (hover scale, dock or magnetic effects, pressed pops) grows its hit target with it when it is scaled by a transform, so it can swallow clicks meant for a neighbour; keep the hit target at a fixed size, transform only an inner face, and hit-test at the neighbour's edge in the grown state rather than judging by eye.</p></div>
 </section></div></article>
 </main>
 <footer class="site-footer">

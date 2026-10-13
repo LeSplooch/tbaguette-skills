@@ -31,6 +31,21 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-14 — Four skills get a rule they were missing
+
+- `formidable`'s craft floor now covers the widths between phone and desktop
+  (a row that gains an item breaks first at the width where it stops fitting) and
+  controls that grow for emphasis: a transform enlarges the click target too, so
+  it can swallow a neighbour's clicks. Keep the hit target fixed and test at the
+  neighbour's edge.
+- `performance-profiling` says to measure size on the artifact that ships. A
+  part's share before the optimizer and compressor can be many times its share
+  after them.
+- `caching-strategy` asks you to cost the miss rate against the capacity the
+  cache protects before settling a TTL, not only to ask how fast the data moves.
+- `rate-limiting-and-backpressure` warns that removing a retry at one layer does
+  not lower the rate if the layer above re-drives the failure on its own tick.
+
 ## 2026-10-13 — A flaky red from a scripted driver may be the driver's fault
 
 - `flaky-test-triage` has a new row and a short section for runs driven by an

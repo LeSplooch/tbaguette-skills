@@ -45,6 +45,8 @@ Write it next to the cache, in seconds, with the consequence of exceeding it.
 
 Two clocks matter and they differ: how stale the data may be for anyone, and how long an actor may fail to see their own change. The second is always shorter and is the one users report.
 
+A TTL has two constraints, and choosing it from the first alone only looks conservative: how fast the truth moves, and what a miss costs against the capacity the cache exists to protect. A 30-minute TTL that was honest on freshness still sent misses that would have used about 80% of the shared worker pool; four hours was equally honest on freshness at about an eighth of the misses. Cost the miss rate against that capacity before settling the number, and say which constraint set it.
+
 ## Let the response say how fresh it is
 
 A TTL chosen by the caller is a guess about data the caller does not own. The

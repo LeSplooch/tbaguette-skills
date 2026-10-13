@@ -37,3 +37,5 @@ Checks on what rendered, not on what you intended. Run them together in one batc
 ## Finishing
 
 Every deliverable ships with: real content (not lorem, not placeholder names), working interactive states, the full theme set the stack supports, and behavior at the smallest and largest size the surface can take. Anything missing is called out explicitly, never quietly left.
+
+Two places the smallest-and-largest check does not reach. **The widths in between:** a row that gains an item fails first at the width where it stops fitting, usually a tablet width neither end shows, so find that width (or sweep) whenever an item joins a single-line layout. **A control that grows for emphasis** (hover scale, dock or magnetic effects, pressed pops) grows its hit target with it when it is scaled by a transform, so it can swallow clicks meant for a neighbour; keep the hit target at a fixed size, transform only an inner face, and hit-test at the neighbour's edge in the grown state rather than judging by eye.

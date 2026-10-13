@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.21</span>
+      <span class="wordmark-version" dir="ltr">v2.1.22</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-13T18:22:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T18:22:06Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-13T22:14:39+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T22:14:39Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">rate-limiting-and-backpressure</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T22:14:39.951671+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Designing systems</span>
@@ -105,6 +105,7 @@
 <p>Queue depth alone is ambiguous — 10,000 items is healthy at 5,000 per second and an outage at 5 per second. Alert on <strong>age of the oldest unstarted item</strong>, which is directly comparable to the latency objective. It is also a signal that has to be emitted deliberately: depth is what a queue reports about itself for free, and age is what <a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a> calls the measurement you have to decide to take before the incident, not during it. Supporting indicators, all leading rather than lagging: in-use concurrency versus the limit, time spent waiting for a slot, rejections broken down by reason, and the ratio of arrival rate to service rate — sustained above 1.0, everything else is a countdown.</p>
 <h2 id="retries">Retries</h2>
 <ul><li><strong>Exponential backoff with full jitter:</strong> <code>delay = random(0, min(cap, base × 2^attempt))</code>. Backoff without jitter re-synchronizes every client that failed together, so they all return at the same instant and rebuild the herd that caused the failure. Jitter is not a refinement of backoff; without it, backoff schedules the next outage.</li><li><strong>Cap attempts and total elapsed time.</strong> Three attempts within a bounded budget is a reasonable default. The deadline matters more than the count: a retry issued after the caller has given up is pure load.</li><li><strong>Retry budgets:</strong> permit retries only up to a fraction of successful traffic — 10% is a common ceiling — and fail fast beyond it. This is the control that stops a partial outage from becoming total, because when the dependency is failing, retries triple the offered load precisely when capacity has fallen.</li><li><strong>Retry only what is safe:</strong> idempotent operations, on retryable classes only — timeouts, connection failures, explicit 429 or 503 with a retry hint. Never retry a rejection caused by the request itself. &quot;Idempotent&quot; here is a property someone had to build, not one to assume from the verb — <a class="skill-link" href="/tbaguette-skills/skills/designing-for-idempotency/"><code>designing-for-idempotency</code></a> covers the keys and dedup windows that make a retried write safe, and a retry policy laid over an operation that never got them is an amplifier for duplicates rather than a recovery mechanism.</li><li><strong>Retry at one layer.</strong> Three layers retrying three times each is 27x amplification, and each layer looks reasonable in isolation. Choose the layer that owns the deadline and make the others propagate.</li></ul>
+<p>Removing retries at one layer does not lower the rate if the layer above re-drives the failure on its own tick: that layer is now the retry loop, and it needs a verdict it reads (or state every caller shares) to stop. Count per-attempt side effects before and after, because anything accounted per unit of the outer loop fires more often when the inner loop gets shorter.</p>
 <h2 id="breakers-and-shedding">Breakers and shedding</h2>
 <p>A circuit breaker trips on error <em>ratio</em> over a rolling window with a minimum sample count — tripping on one failure out of one is a self-inflicted outage — stays open for a cooldown, then half-opens to a limited probe before restoring. Its purpose is to stop spending capacity and latency on calls that are already known to fail, and to give the dependency room to recover.</p>
 <p>Shed by value, not uniformly. Rank traffic and reject in ascending order of worth: bulk and batch work first, then retries, then anonymous and free-tier traffic, then interactive user work; never health checks, authentication refresh, or the control plane that lets you fix the incident. Shed at the edge, before a connection, thread, or transaction has been claimed — rejection after the expensive resource is held provides no relief at all. Uniform shedding is how a background job crowds out the paying user, because that job retries harder and cares less.</p>

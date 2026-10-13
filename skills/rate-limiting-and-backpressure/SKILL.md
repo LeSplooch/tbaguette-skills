@@ -96,6 +96,8 @@ Queue depth alone is ambiguous — 10,000 items is healthy at 5,000 per second a
 - **Retry only what is safe:** idempotent operations, on retryable classes only — timeouts, connection failures, explicit 429 or 503 with a retry hint. Never retry a rejection caused by the request itself. "Idempotent" here is a property someone had to build, not one to assume from the verb — `designing-for-idempotency` covers the keys and dedup windows that make a retried write safe, and a retry policy laid over an operation that never got them is an amplifier for duplicates rather than a recovery mechanism.
 - **Retry at one layer.** Three layers retrying three times each is 27x amplification, and each layer looks reasonable in isolation. Choose the layer that owns the deadline and make the others propagate.
 
+  Removing retries at one layer does not lower the rate if the layer above re-drives the failure on its own tick: that layer is now the retry loop, and it needs a verdict it reads (or state every caller shares) to stop. Count per-attempt side effects before and after, because anything accounted per unit of the outer loop fires more often when the inner loop gets shorter.
+
 ## Breakers and shedding
 
 A circuit breaker trips on error *ratio* over a rolling window with a minimum sample count — tripping on one failure out of one is a self-inflicted outage — stays open for a cooldown, then half-opens to a limited probe before restoring. Its purpose is to stop spending capacity and latency on calls that are already known to fail, and to give the dependency room to recover.
