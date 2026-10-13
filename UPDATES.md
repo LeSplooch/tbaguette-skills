@@ -31,6 +31,17 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-14 — A capture on someone else's device is output you cannot take back
+
+- `redacting-sensitive-output` now covers the agent as the emitter: a screenshot
+  of a surface that aggregates unrelated content (a notification shade, a
+  launcher, an inbox, a tab strip, terminal scrollback) records the owner's
+  private data beside the one item the task wanted, and the model that loads the
+  image has seen it. The rule is to prefer a structural query filtered to the
+  subject, assert the foreground context before capturing, and, if a stray
+  capture happens anyway, delete it at once and say so. The skill's `description:`
+  routes to it for screenshots and recordings.
+
 ## 2026-10-14 — Four skills get a rule they were missing
 
 - `formidable`'s craft floor now covers the widths between phone and desktop

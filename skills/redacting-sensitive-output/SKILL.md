@@ -1,6 +1,6 @@
 ---
 name: redacting-sensitive-output
-description: Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, a value rendered by its type's own default formatter, crash dump, metric label, trace span, analytics event, support bundle, or a recorded test fixture. Covers what a redactor must not do with the match it found, allowlisting fields rather than denylisting patterns, partial reveals and re-identification, encoded and nested payloads, and testing by asserting the input is absent rather than the marker present.
+description: Use when secrets, credentials, tokens, or personal data could reach a log line, error message, stack trace, a value rendered by its type's own default formatter, a screenshot or recording of a surface that shows more than the task needs, crash dump, metric label, trace span, analytics event, support bundle, or a recorded test fixture. Covers what a redactor must not do with the match it found, allowlisting fields rather than denylisting patterns, scoping what an agent captures on someone else's device or session, partial reveals and re-identification, encoded and nested payloads, and testing by asserting the input is absent rather than the marker present.
 ---
 
 # Redacting sensitive output
@@ -60,6 +60,17 @@ Redaction is usually applied to the obvious log call and nowhere else. The gaps,
 - **Crash dumps and heap snapshots**, which contain everything by definition.
 - **Support bundles and diagnostic exports**, assembled by a different code path with its own idea of what is safe.
 - **Third-party SDKs** — error reporters and APM agents that capture request context automatically, with their own scrubbing config you have not reviewed.
+- **Captures taken by an agent or tester on someone else's device or session**, of a surface that shows more than the task needs. These are output the moment they are viewed.
+
+## A capture is output too, and you cannot redact it afterwards
+
+Everything above treats redaction as something a program does to its own output. An agent or tester driving a *real* person's phone, browser profile, mailbox or terminal is a second emitter: every screenshot, recording and full-screen dump it takes is output, and the reader is whoever looks at the pixels, including the model that loads the image. Nothing downstream can redact that, because the exposure happens on viewing.
+
+A surface that **aggregates unrelated contexts** is the dangerous one: a notification shade, a launcher, an inbox list, a tab strip, terminal scrollback, a window switcher. Asking it for one entry returns every other entry beside it, and nothing about the request says so. The task needed one line of it; the capture holds the owner's private messages, mail and account alerts.
+
+- **Choose the narrowest observation that answers the question.** A structural query (an accessibility-tree or DOM lookup filtered to the one app, window or element under test) returns the fields asked for and nothing beside them. That is the allowlist rule applied to observation: take chosen fields, let the rest be unreadable by default. Reach for a picture only when the question is visual, and then capture the subject's own window, not the whole screen.
+- **Assert the context before capturing, not after.** Read which app, window or tab is in front and capture only when it is the subject; a stray navigation key can drop the target onto the launcher or the shade without announcing it (`routing-around-capability-gaps`, "Input is addressed to a place", owns the input side; `formidable`'s audit reference owns addressing a capture to its subject, which is the same check made for correctness rather than privacy).
+- **An accidental capture is an incident, small and immediate.** Delete the file the moment it is noticed, do not quote or summarise what it held, switch to the narrower method for the rest of the run, and say in the report that it happened. Silence is the failure: the owner cannot judge an exposure nobody mentioned.
 
 ## Testing it
 
@@ -84,6 +95,7 @@ The marker is trivially satisfiable while the removal fails, so a test that only
 | A new field started leaking silently | Denylist by pattern, which fails open on anything unanticipated — or a derived whole-value formatter, which consulted no list at all |
 | Redacted logs still identify individuals | Partial reveals correlate across records |
 | Marker length varies with the input | The redaction leaks the value's length |
+| A screenshot taken to find one item held the owner's private messages | The surface aggregates unrelated contexts and the capture was whole-screen instead of scoped to the subject |
 
 ## Red flags
 
@@ -94,3 +106,4 @@ The marker is trivially satisfiable while the removal fails, so a test that only
 - "It's just in the URL."
 - "Let me log the whole request object to debug this."
 - A redaction test whose only assertion is that the marker appears.
+- "I'll just screenshot the whole thing and find it in the image," on a device or session that belongs to someone else.
