@@ -1,6 +1,6 @@
 ---
 name: schema-evolution
-description: Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema, serialized format, stored document, API payload, or queue message. Also when a rolling deploy breaks deserialization, when old consumers cannot read new data, when a rollback fails on data the newer version wrote, when adding an enum value, when planning a version bump, or when a field goes missing after some component read a record and wrote the whole thing back. Also use when writing or reviewing the check that decides which stored versions a reader may accept, or when adding authentication to a channel that already-running clients depend on, especially one that tells them to update.
+description: Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema, serialized format, stored document, API payload, or queue message. Also when a rolling deploy breaks deserialization, when old consumers cannot read new data, when a rollback fails on data the newer version wrote, when adding an enum value, when planning a version bump, or when a field goes missing after some component read a record and wrote the whole thing back. Also use when writing or reviewing the check that decides which stored versions a reader may accept, or when adding authentication to a channel that already-running clients depend on, especially one that tells them to update, or when a client starts asking an existing endpoint for an extra behavior that servers not yet updated will silently ignore.
 ---
 
 # Schema evolution
@@ -51,7 +51,7 @@ Steps 5 and 6 belong to a later release than step 4 — always. Compressing them
 
 | Change | Safe? | Condition |
 |---|---|---|
-| Add an optional field | Yes | Readers ignore unknowns; absent must be meaningful |
+| Add an optional field | Yes | Readers ignore unknowns; absent must be meaningful. If the field asks the receiver to *act*, see the paragraph below the table |
 | Add a required field | No | Old data has no value for it; make it optional with a defined absent-case |
 | Add an enum value | Only if | Every reader had an explicit unknown branch before you shipped it |
 | Widen a type (int32→int64, add a union arm) | Usually | Old readers may still truncate or reject; verify the reader, not the schema |
@@ -61,6 +61,8 @@ Steps 5 and 6 belong to a later release than step 4 — always. Compressing them
 | Rename | No | It is add plus dual-write plus backfill plus remove |
 
 A field's meaning is part of its contract. Changing seconds to milliseconds, local time to UTC, gross to net, or "empty means all" to "empty means none" is a breaking change that no type checker, schema validator, or test of the schema itself will catch. When meaning changes, add a new field with a new name and evolve to it — never redefine a name in place.
+
+**An addition that asks the other side to do something is only safe for the side that receives it.** An optional request header, a new flag in a request body, a new option on a message: an old receiver ignores it, stores the payload and answers the ordinary success reply, by exactly the tolerance this skill tells you to build. The receiver is safe. The sender is not, because its success path cannot tell "done" from "ignored", and the next thing it does is tell a person the extra thing happened. So an addition that requests behavior needs an acknowledgment that only a receiver implementing it can produce: a response field describing what was done, derived from the outcome rather than echoed from the request, or a version the response carries. The sender's success path requires it, and success without it is reported as "accepted, extra not applied", never as done. Deploy order then decides what the user is told, not whether it is true, and a client released ahead of its server degrades honestly instead of overclaiming. Test the pair that will exist mid-rollout, the new sender against the old receiver, and look at what the user would be told.
 
 ## Optional, defaulted, nullable
 
@@ -125,6 +127,7 @@ Where a column can be written by more than one kind of source, the provenance is
 | The change cannot be applied to the existing store at all | The field was added as required with no default, over records that predate it |
 | A version guard passes and the value it admitted is corrupt anyway | The guard was an inequality over a counter that moves when meanings change, so it waved old rows through |
 | A version check has never rejected anything | The version field is reader-defaulted, so every unversioned row reports the current build's number |
+| A client reports a new behavior as done against a server that never had it | The request was an additive field the old server ignored, and success without an acknowledgment was read as success of the extra |
 | Clients from before a security change never update, and nothing tells them why | Authentication was added to the same channel that tells them they are out of date, so the notice is refused along with everything else |
 
 ## Red flags
@@ -138,4 +141,5 @@ Where a column can be written by more than one kind of source, the provenance is
 - Treating the strictness of a validator as a substitute for reader tolerance
 - A `<=` against a version constant whose documented rule is that it moves when a field's meaning changes
 - A version field that inherits a whole-record default instead of being absent when it was never written
+- A client that treats a plain success reply as proof that an optional behavior it requested took place
 - A save path that rebuilds the whole record out of the fields the caller happens to know about

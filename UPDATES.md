@@ -31,6 +31,16 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-13 — A client that asks for an extra behavior has to be told it happened
+
+- `schema-evolution` now covers the sender's side of an additive change. An old
+  server ignores a new optional request field or header, stores the payload and
+  answers plain success, so a client released first can announce an effect that
+  never occurred. The skill asks for an acknowledgment only an updated server can
+  produce, derived from the outcome rather than echoed from the request, required
+  on the client's success path, and for testing the new-client-against-old-server
+  pair before the rollout.
+
 ## 2026-10-13 — A failed worktree create no longer carries on in the wrong tree
 
 - `isolating-work-with-worktrees` now covers what happens when `git worktree add`

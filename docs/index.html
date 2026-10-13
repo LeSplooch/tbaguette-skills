@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.18</span>
+      <span class="wordmark-version" dir="ltr">v2.1.19</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-13T18:09:17+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T18:09:17Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-13T18:13:54+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T18:13:54Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -160,11 +160,22 @@ Flag one more thing, because it applies to this very conversation: this session 
     <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/isolating-work-with-worktrees/" data-fresh-at="2026-10-13T18:09:17.580480+00:00" draggable="false" style="--cf-offset: 0">
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/schema-evolution/" data-fresh-at="2026-10-13T18:13:54.038682+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">schema-evolution</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:13:54.038682+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema…</p>
+  <span class="card__foot">
+    <span class="tag">Designing systems</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/isolating-work-with-worktrees/" data-fresh-at="2026-10-13T20:09:17+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">isolating-work-with-worktrees</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:09:17.580480+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T20:09:17+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when starting work that shouldn&#x27;t touch the current checkout, before running a multi-step plan you might need to abandon cleanly…</p>
   <span class="card__foot">
@@ -172,7 +183,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/fanning-out-independent-work/" data-fresh-at="2026-10-12T18:48:30+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/fanning-out-independent-work/" data-fresh-at="2026-10-12T18:48:30+02:00" draggable="false" style="--cf-offset: -1">
   <span class="card__name-row">
     <span class="card__name">fanning-out-independent-work</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-10-12T18:48:30+02:00">Updated</span>
@@ -194,10 +205,10 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-13">13 Oct 2026</time>
-    <span class="notes__entry-title">A failed worktree create no longer carries on in the wrong tree</span>
+    <span class="notes__entry-title">A client that asks for an extra behavior has to be told it happened</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/isolating-work-with-worktrees/"><code>isolating-work-with-worktrees</code></a> now covers what happens when <code>git worktree add</code> fails in a repository other sessions share. The chain stops, but the next separate command runs from the old directory and writes into a checkout that was never meant to change. The skill says to pick a path no one else would, address the new tree by absolute path for every write, and snapshot a tree you do not own before touching it, since a printed error does not prove nothing changed.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/schema-evolution/"><code>schema-evolution</code></a> now covers the sender's side of an additive change. An old server ignores a new optional request field or header, stores the payload and answers plain success, so a client released first can announce an effect that never occurred. The skill asks for an acknowledgment only an updated server can produce, derived from the outcome rather than echoed from the request, required on the client's success path, and for testing the new-client-against-old-server pair before the rollout.</li>
   </ul>
 </li>
   </ol>
@@ -210,6 +221,15 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-10-13">13 Oct 2026</time>
+    <span class="notes__entry-title">A client that asks for an extra behavior has to be told it happened</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/schema-evolution/"><code>schema-evolution</code></a> now covers the sender's side of an additive change. An old server ignores a new optional request field or header, stores the payload and answers plain success, so a client released first can announce an effect that never occurred. The skill asks for an acknowledgment only an updated server can produce, derived from the outcome rather than echoed from the request, required on the client's success path, and for testing the new-client-against-old-server pair before the rollout.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-13">13 Oct 2026</time>
@@ -437,16 +457,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   </h3>
   <ul class="notes__bullets">
     <li>The text TBaguette injects into every new session used to wrap itself in two nested &quot;EXTREMELY_IMPORTANT&quot; tags — one around the whole notice, a second one inside it around the actual rule. Only the outer one is gone now: doubled emphasis was reading as more suspicious to a fresh model than a single one does, without doing any extra work. Nothing about when or how often TBaguette checks its own skills changed — same trigger, same persistence across the whole conversation, same behavior across <code>/clear</code> and <code>/compact</code>.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-21">21 Sep 2026</time>
-    <span class="notes__entry-title">A report describing itself, and a permission checked on the wrong machine</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a> now covers a generated report whose own description of itself — which data fed it, what setting was in effect, what window it covers — was written once and never recomputed, so the report goes on describing an earlier configuration long after the real one changed even while its actual numbers stay correct.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a> now covers a permission check validated against the wrong machine's environment: where the component that decides a permission and the component that enforces it are different machines, a check that passes cleanly against the first can mean nothing on the second.</li>
   </ul>
 </li>
       </ol>
@@ -915,7 +925,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/isolating-work-with-worktrees/" data-search-card data-search-terms="isolating-work-with-worktrees use when starting work that shouldn&#x27;t touch the current checkout, before running a multi-step plan you might need to abandon cleanly… landing changes">
   <span class="card__name-row">
     <span class="card__name">isolating-work-with-worktrees</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:09:17.580480+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T20:09:17+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when starting work that shouldn&#x27;t touch the current checkout, before running a multi-step plan you might need to abandon cleanly…</p>
   <span class="card__foot">
@@ -1273,7 +1283,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/schema-evolution/" data-search-card data-search-terms="schema-evolution use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema… designing systems">
   <span class="card__name-row">
     <span class="card__name">schema-evolution</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:13:54.038682+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when changing a contract that is already in production — adding, removing, renaming, or retyping a field in a database schema…</p>
   <span class="card__foot">
