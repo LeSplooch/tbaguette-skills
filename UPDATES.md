@@ -31,6 +31,16 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-14 — A trigger from outside meets the state that exists when it arrives
+
+- `modeling-state-machines` now covers deep links, push actions, widget taps and
+  scheduled jobs that fire while the thing they act on is still starting up: the
+  handler's first chance to run is a moment inside start-up, not the state the
+  person is looking at. Gate on an explicit ready state where the machine has one;
+  otherwise act on a settled read (unchanged for a short quiet period, within a hard
+  cap that degrades on purpose), built as a small pure function and tested with
+  a changing, a constant and a never-settling sequence.
+
 ## 2026-10-14 — A capture on someone else's device is output you cannot take back
 
 - `redacting-sensitive-output` now covers the agent as the emitter: a screenshot

@@ -1,6 +1,6 @@
 ---
 name: modeling-state-machines
-description: Use when something has a lifecycle — order, job, connection, upload, session, subscription, device, workflow step — or when several booleans and flags describe one thing. Also for status fields, impossible flag combinations, records stuck in a status forever, unexplained state changes, a crash partway through a transition, timeouts and cancellation, and adding or renaming a state that is already persisted. Also use when a protective or latching state — a tripped breaker, a lockout, a pairing or a binding — has no exit reachable by the party it is holding.
+description: Use when something has a lifecycle — order, job, connection, upload, session, subscription, device, workflow step — or when several booleans and flags describe one thing. Also for status fields, impossible flag combinations, records stuck in a status forever, unexplained state changes, a crash partway through a transition, timeouts and cancellation, and adding or renaming a state that is already persisted. Also use when a trigger from outside — a deep link, a push action, a widget tap, a scheduled job — fires while the thing it acts on is still starting up. Also use when a protective or latching state — a tripped breaker, a lockout, a pairing or a binding — has no exit reachable by the party it is holding.
 ---
 
 # Modeling state machines
@@ -49,6 +49,16 @@ Three booleans encode eight combinations; if only five are real, you shipped thr
 - Persisted states are data, not code. Never reuse a removed state's name. Renaming a state is a breaking data change even though it looks like a refactor: it needs a migration or a documented mapping, not a find-and-replace. If the per-state payload shape changes, carry a version alongside.
 - Log every transition as `(entity, from, to, event, actor, at)`. This one table answers "how did it get like this" and removes the most expensive category of support investigation that exists.
 
+## An outside trigger meets the state that exists when it arrives
+
+A deep link, a push-notification action, a widget tap, a scheduled job: each fires on its own clock and acts on whatever state exists at that instant. It does not act on the state the person is looking at, and during startup, reconnection or restore those are different things, because the machine passes through intermediate states (loading, restoring, pairing, signing in, migrating) on the way to the one it settles in. "The first moment the handler can run" is a moment inside that transit. A handler that reads the state then captures, previews, navigates or writes against a screen that is gone a second later, and it does so reliably on a cold start and almost never on a warm one, which is why it survives testing.
+
+- **Name the transit states, and mark which ones are not a place to act.** If the machine has an explicit ready state, gate the trigger on it and queue the trigger until then. That is the first choice, because the machine says when it has settled and nobody has to infer it.
+- **When the state is not yours to extend** (a platform's lifecycle, a navigation stack owned by a framework), act on a *settled* read: the observed value unchanged for a short quiet period, within a hard cap. Waiting a fixed number of frames or milliseconds is a guess about start-up speed, and a single successful read proves only that the value existed once. "Unchanged for N ms" is a condition; `diagnosing-before-fixing`'s condition-based waiting covers polling for one, and this is the condition that applies when there is no ready flag to poll.
+- **Decide what the cap does.** If the value never settles within the cap, the trigger must degrade deliberately (act on the last read, or tell the person it could not run) and not hang or pick silently.
+- **Keep the wait a small pure function**: the source of reads, the quiet period, the cap and a clock go in, a value or a timeout comes out. Test it with a sequence that keeps changing and then stops, a constant one that returns after exactly the quiet period, and one that never settles and returns at the cap. The clock is injected (`testing-the-untestable`), so none of the three sleeps.
+- A trigger can arrive twice, or after the screen it targeted was replaced. Each action still needs a decided answer for the duplicate (`designing-for-idempotency`).
+
 ## Testing
 
 - Test every cell, including all forbidden ones. A forbidden transition must be **rejected and observable**, not silently ignored — a silent no-op is indistinguishable from success to the caller that just lost its work.
@@ -72,6 +82,7 @@ Three booleans encode eight combinations; if only five are real, you shipped thr
 | UI shows a state the backend does not have | State duplicated instead of projected |
 | Expiry never triggers its side effects | Timeout modeled as a read-time computation |
 | A user is stuck in a state the transition table says is escapable | The exit exists, and the only actor who can take it is not the one being held |
+| A notification or link action works warm and acts on the wrong screen on a cold start | It read the state at first availability, an intermediate state of start-up, not the settled one |
 
 ## Red flags
 
