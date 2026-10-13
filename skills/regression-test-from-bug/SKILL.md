@@ -1,6 +1,6 @@
 ---
 name: regression-test-from-bug
-description: Use when a defect has been reported, reproduced, or patched, when writing a test for a production incident or hotfix, when a bug that was fixed before has come back, or when deciding what to assert so the same defect cannot return. Covers choosing the layer, naming the test after the defect, scoping the assertion, and whether to keep the test once the fix lands.
+description: Use when a defect has been reported, reproduced, or patched, when writing a test for a production incident or hotfix, when a bug that was fixed before has come back, or when deciding what to assert so the same defect cannot return, including a defect that shows only on the real screen or device (clipped text, overflow) and that no test can render. Covers choosing the layer, pinning a measured proxy when no layer can see the failure, naming the test after the defect, scoping the assertion, and whether to keep the test once the fix lands.
 ---
 
 # Regression test from a bug
@@ -13,6 +13,7 @@ A test that has never failed for the reason it claims to guard is decoration. Th
 
 - A defect has been reproduced and is about to be fixed.
 - A hotfix shipped without a test and needs one added behind it.
+- The defect only shows on the real target (a screen, a font, a device, a locale) and no test at any layer can render it.
 - A bug that was fixed before has reappeared, meaning the previous guard was absent, deleted, or scoped wrong.
 - A production incident is being written up and needs a permanent guard, not an action item.
 - Not for: turning a vague report into an on-demand failure — that is `reproducing-bugs`.
@@ -42,6 +43,17 @@ Asserting the absence of a specific error type is the most common miss: the fix 
 
 **Cover the class, not the instance.** Before closing, check whether the same mistake exists at sibling call sites — the same unguarded parse, the same unit conversion, the same missing lock. If there are N of them, parameterize the test over all N. Fixing one instance of a class and testing only that instance is why the same bug returns wearing a different ticket number.
 
+## When the suite cannot see the failure, pin a measured proxy
+
+Some defects exist only on the real target: text clipped by a container, an element pushed off a small screen, a layout that breaks at one font size or in one language. Wrapping, density and font metrics are not modelled by unit tests, so step 2's "write the test at the layer where you observed it" has no such layer to offer, and the usual outcome is a fix, a look at the device, and no guard at all. The next edit that makes the content longer reopens the bug unseen.
+
+The first sighting is the cheap moment to do something about it:
+
+1. **Reproduce and verify on the real target**, once, and write down what you measured: how much did it overflow, by how much does the fix clear it?
+2. **Pin a conservative proxy for the cause in the content's own test.** Not the rendering, which cannot be asserted, but the quantity that drove it: a ceiling on a title's or body's length, a cap on the number of lines or items, a minimum contrast ratio, a maximum payload size. Set the ceiling from the measurement with margin on the safe side, and put the number and what it stands for in the assertion message, so a failure explains itself and the next person lengthens the limit on purpose after re-checking the target.
+3. **Say plainly that it is a proxy.** It will reject some content that would have fit, and miss a case where fit depends on something else (a larger font setting, a longer translation). The test cannot prove the layout is right. It makes the known cause fail in CI, which is all it claims, so keep the real-target check as the final word whenever the content changes materially.
+4. **Watch the proxy fail** against the pre-fix content, as for any regression test, before trusting it.
+
 ## Naming and locating
 
 - Name after the defect condition and the expected behavior, in the domain's words: `refund_of_partially_shipped_order_credits_shipped_lines_only`. Not `test_calculate_refund_3`, not `test_bug_4471`.
@@ -67,6 +79,7 @@ A good regression test looks redundant to everyone who did not debug the inciden
 | Test is slow and end-to-end for a pure logic bug | Step 3 skipped; it was left at the layer where it was first observed |
 | Test deleted during a refactor | It sat in a separate folder with a name nobody could connect to a behavior |
 | Test passes against both the buggy and fixed code | The setup does not reach the defective path — usually a default that avoids the edge case |
+| A clipped-text or overflow bug was fixed, looked at once, and came back with the next copy edit | No test could render it and none pinned the cause; a measured length or count ceiling was never added |
 | A parallel bug ships in the sibling module | Only the reported instance was fixed; the class was never enumerated |
 | Regression suite grows and nobody trusts it | Tests named after tickets; a red one carries no meaning without the tracker |
 

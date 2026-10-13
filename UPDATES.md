@@ -31,6 +31,14 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-14 — Defects only a real screen shows now get a guard
+
+- `regression-test-from-bug` now says what to do when no test at any layer can
+  render the failure (text clipped by its container, an element pushed off a small
+  screen): verify once on the real target, then pin a conservative proxy for the
+  cause in the content's own test, such as a length or line-count ceiling set from
+  the measurement with margin, and say plainly that it is a proxy.
+
 ## 2026-10-14 — A trigger from outside meets the state that exists when it arrives
 
 - `modeling-state-machines` now covers deep links, push actions, widget taps and
