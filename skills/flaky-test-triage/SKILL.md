@@ -1,6 +1,6 @@
 ---
 name: flaky-test-triage
-description: Use when a test passes on rerun, fails only in CI, fails only when the whole suite runs, fails after midnight or across a DST change, fails under parallel execution, fails on a loaded machine, or intermittently times out waiting for a message or event; or when someone proposes a retry, a skip, or a longer timeout to make the build green, or declares a flaky test fixed because it stopped failing after a change. Covers intermittent failures, order dependence, shared state, races, and quarantine.
+description: Use when a test passes on rerun, fails only in CI, fails only when the whole suite runs, fails after midnight or across a DST change, fails under parallel execution, fails on a loaded machine, or intermittently times out waiting for a message or event, or a scripted UI run fails half the time while the feature works by hand; or when someone proposes a retry, a skip, or a longer timeout to make the build green, or declares a flaky test fixed because it stopped failing after a change. Covers intermittent failures, order dependence, shared state, races, and quarantine.
 ---
 
 # Flaky test triage
@@ -36,9 +36,12 @@ Independent per-test reliability compounds. At 99.9% per test, a 500-test suite 
 | Fails only on the first run of the day or in a clean environment | Test depends on a warm cache, existing data, or a previously-created account | Run against a freshly provisioned environment |
 | Order-dependent assertion on a callback-built list | The callback only preserves delivery order under a real dispatcher/event-loop context; without one — the normal case in a test harness — the guarantee disappears, whether the runtime falls back to unordered dispatch, throws, or no-ops | Check whether the code normally runs under a real dispatcher or event loop that the test doesn't supply |
 | Fails at a stable rate, always on a wait's timeout; passing runs are fast, and a longer timeout only makes the failures slower | An earlier wait read the message and threw it away: where reading takes a message off the stream (a socket, queue, channel, or a child process's output), a helper that skips what it is not waiting for deletes it for every later wait, and two messages with no guaranteed order sometimes arrive the other way round | Log every message each wait reads, including the ones it skips; ask whether the first wait skips the kind the next one waits for, and whether anything guarantees their order |
+| An automated driver reports a step failing about half the time; done by hand the feature always works | The driver, not the feature: its own calls have side effects and timing (an input sent right after a state dump is lost; a "back" pressed with nothing open leaves the app) | Do the failing step by hand, then again with the driver's instrumentation removed or spaced out |
 | A different assertion fails each time | A real race in the product, not in the test | Stop triaging the test; treat it as a production incident |
 
 The last row is the one that gets misfiled most often, and it is the one that matters most.
+
+The driver row is the case where the test is wrong in the least visible way. A scripted UI run, a debugger, a tracer, a screenshot or state-dump call all act on the system they observe, with timing and side effects of their own, so a red from one is evidence about the pair (driver, system), not about the system. Settle which half failed before debugging the feature: repeat the failing step by hand, then through the driver with the instrumentation removed or spaced out. If it passes both ways, the fault is in the harness. Then make every step idempotent against the state it finds: press "back" only if the thing it closes is open, wait for the control to exist before acting on it, and assert the state each step expects before the next one runs. A step that assumes the previous one worked turns one lost event into a run of unrelated-looking failures, because everything after it ran against the wrong screen.
 
 The order-dependent-callback row has the opposite prescription: the fix is asserting an order-independent invariant — max value reached, set membership, monotonic non-decrease — instead of position, or giving the test a synchronous stand-in for the missing dispatcher context, never a retry.
 
@@ -88,6 +91,7 @@ Retrying at the whole-suite level is worse than at the test level: it hides whic
 | A skipped test's feature breaks in production | Quarantine without expiry silently removed coverage |
 | Flakes only appeared after enabling parallelism | Pre-existing shared state that serial execution was accidentally hiding |
 | Failure moves to a different test after a fix | The polluter was never found; only the victim was patched |
+| A scripted UI or end-to-end run fails half the time and the feature works every time by hand | The driver's own calls lost an event or left the app in the wrong state, and later steps assumed otherwise |
 | Test asserting the last item of a callback-built list is intermittently flaky | Looks like a product race, but it's the test harness missing the dispatcher context the callback needs to stay ordered |
 
 ## Red flags
@@ -100,4 +104,5 @@ Retrying at the whole-suite level is worse than at the test level: it hides whic
 - "It only fails in CI, so it's a CI problem."
 - Marking a test flaky without ever having reproduced it.
 - A test file with more skip markers than assertions.
+- Debugging the feature when a driver's red has never been repeated by hand.
 - Asserting a specific position — especially "the last item" — in a collection built by an async callback, with no real dispatcher or event loop under test.

@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.20</span>
+      <span class="wordmark-version" dir="ltr">v2.1.21</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-13T18:19:23+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T18:19:23Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-13T18:22:06+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-13T18:22:06Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -160,11 +160,22 @@ Flag one more thing, because it applies to this very conversation: this session 
     <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/keeping-copies-in-sync/" data-fresh-at="2026-10-13T18:19:23.931416+00:00" draggable="false" style="--cf-offset: 0">
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/flaky-test-triage/" data-fresh-at="2026-10-13T18:22:06.274234+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">flaky-test-triage</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:22:06.274234+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a test passes on rerun, fails only in CI, fails only when the whole suite runs, fails after midnight or across a DST change…</p>
+  <span class="card__foot">
+    <span class="tag">Testing</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/keeping-copies-in-sync/" data-fresh-at="2026-10-13T20:19:23+02:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">keeping-copies-in-sync</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:19:23.931416+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T20:19:23+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when the same fact — a version number, a constant, a policy document, a lockfile entry…</p>
   <span class="card__foot">
@@ -172,7 +183,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/schema-evolution/" data-fresh-at="2026-10-13T20:13:53+02:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/schema-evolution/" data-fresh-at="2026-10-13T20:13:53+02:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">schema-evolution</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T20:13:53+02:00">Updated</span>
@@ -183,7 +194,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/isolating-work-with-worktrees/" data-fresh-at="2026-10-13T20:09:17+02:00" draggable="false" style="--cf-offset: 2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/isolating-work-with-worktrees/" data-fresh-at="2026-10-13T20:09:17+02:00" draggable="false" style="--cf-offset: -2">
   <span class="card__name-row">
     <span class="card__name">isolating-work-with-worktrees</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T20:09:17+02:00">Updated</span>
@@ -216,10 +227,10 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-13">13 Oct 2026</time>
-    <span class="notes__entry-title">&quot;Deploy from main&quot; can be a rollback of work nobody committed</span>
+    <span class="notes__entry-title">A flaky red from a scripted driver may be the driver's fault</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/keeping-copies-in-sync/"><code>keeping-copies-in-sync</code></a> now has a section on the case where the running copy is ahead of the source. A service deployed from a dirty checkout holds features that exist nowhere in version control, and building from the main branch over it quietly removes them. Before a build-and-deploy the skill says to probe the live artifact and its supervisor and scheduler files in both directions, land anything ahead first, and keep the old artifact and a data backup until the combined tree is tested.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/flaky-test-triage/"><code>flaky-test-triage</code></a> has a new row and a short section for runs driven by an automated UI or end-to-end script. The driver's own calls have timing and side effects: an input sent right after a state dump can be lost, and a &quot;back&quot; key pressed with nothing open leaves the app. The skill says to repeat the failing step by hand, and again with the instrumentation removed or spaced out, before debugging the feature, and to make each step check the state it expects.</li>
   </ul>
 </li>
   </ol>
@@ -232,6 +243,15 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-10-13">13 Oct 2026</time>
+    <span class="notes__entry-title">A flaky red from a scripted driver may be the driver's fault</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/flaky-test-triage/"><code>flaky-test-triage</code></a> has a new row and a short section for runs driven by an automated UI or end-to-end script. The driver's own calls have timing and side effects: an input sent right after a state dump can be lost, and a &quot;back&quot; key pressed with nothing open leaves the app. The skill says to repeat the failing step by hand, and again with the instrumentation removed or spaced out, before debugging the feature, and to make each step check the state it expects.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-13">13 Oct 2026</time>
@@ -458,16 +478,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a>'s approval gate (nothing is pushed, forked, or opened as a pull request without an explicit yes for that one contribution) now has a heading of its own. It used to sit under the heading about reopening settled questions, where anyone scanning the headings could miss it and a reorganization of that section could carry it off unnoticed. The paragraph on re-reading a staged pull request body or review comment just before sending it now lives in the contribution procedure, at the step where an unattended run stops to wait for the yes.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/flaky-test-triage/"><code>flaky-test-triage</code></a> now names a cause for a test that times out waiting for a message at a steady rate while its passing runs are fast: an earlier wait in the same test read that message off the socket or queue and threw it away as noise, which happens whenever two messages with no guaranteed order arrive the other way round. A longer timeout cannot bring the message back; the fix is one wait for the whole set, in any order.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/flaky-test-triage/"><code>flaky-test-triage</code></a> now says a clean run count after a race fix is evidence only if the race still happened. A fix can shift the timing so the bad interleaving stops occurring, and the count comes back clean for the wrong reason. Count the interleaving itself on the fixed build: the fix is verified when it still occurs at about the old failure rate and every run that saw it passed.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-09-23">23 Sep 2026</time>
-    <span class="notes__entry-title">A contributor's site build aimed at the wrong address, and a retry that forgot its first failure</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/tending-tbaguette/"><code>tending-tbaguette</code></a> now tells a contributor who can't run this repo's pre-commit hook exactly how to rebuild the site by hand. Skipping the one flag that rebuild needs makes every stylesheet, font, and script link point at the domain root instead of where the site actually lives — a mistake the test suite has no way to catch, since it checks the files are well-formed, not where they think they're served from.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a> now says what a retry should report. A loop that keeps only its last attempt's error names the wrong failure whenever an attempt leaves something behind, such as a lock or a half-started process. The next attempt fails on that leftover, and every report after it describes the consequence while the real cause is recorded nowhere. The boundary that owns the retry should keep every distinct reason, the first one leading, and the skill's <code>description:</code> now routes that symptom to the skill.</li>
   </ul>
 </li>
       </ol>
@@ -1015,7 +1025,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/flaky-test-triage/" data-search-card data-search-terms="flaky-test-triage use when a test passes on rerun, fails only in ci, fails only when the whole suite runs, fails after midnight or across a dst change… testing">
   <span class="card__name-row">
     <span class="card__name">flaky-test-triage</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:22:06.274234+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when a test passes on rerun, fails only in CI, fails only when the whole suite runs, fails after midnight or across a DST change…</p>
   <span class="card__foot">
@@ -1360,7 +1370,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/keeping-copies-in-sync/" data-search-card data-search-terms="keeping-copies-in-sync use when the same fact — a version number, a constant, a policy document, a lockfile entry… designing systems">
   <span class="card__name-row">
     <span class="card__name">keeping-copies-in-sync</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T18:19:23.931416+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-13T20:19:23+02:00">Updated</span>
   </span>
   <p class="card__summary">Use when the same fact — a version number, a constant, a policy document, a lockfile entry…</p>
   <span class="card__foot">

@@ -31,6 +31,15 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-13 — A flaky red from a scripted driver may be the driver's fault
+
+- `flaky-test-triage` has a new row and a short section for runs driven by an
+  automated UI or end-to-end script. The driver's own calls have timing and side
+  effects: an input sent right after a state dump can be lost, and a "back" key
+  pressed with nothing open leaves the app. The skill says to repeat the failing
+  step by hand, and again with the instrumentation removed or spaced out, before
+  debugging the feature, and to make each step check the state it expects.
+
 ## 2026-10-13 — "Deploy from main" can be a rollback of work nobody committed
 
 - `keeping-copies-in-sync` now has a section on the case where the running copy
