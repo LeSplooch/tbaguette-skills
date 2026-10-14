@@ -31,6 +31,16 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-14 — A rule over a closed list is now tested by walking the list
+
+- `property-based-testing` now says what to do when a property ranges over a small
+  catalogue the code already lists (themes, locales, roles, enum members): iterate
+  that list instead of sampling it, cross it with the other dimension, check the list
+  is not empty, and name the failing member in the report. It also asks for one more
+  case that reconstructs the originally reported input and asserts it measured badly,
+  so the sweep is shown capable of failing. The skill's `description:` now routes
+  closed-catalogue questions to it.
+
 ## 2026-10-14 — Correcting a page for a changed behaviour now means searching it for the old one
 
 - `writing-durable-docs` now covers the second half of updating a document when

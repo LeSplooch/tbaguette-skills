@@ -1,6 +1,6 @@
 ---
 name: property-based-testing
-description: Use when example tests only cover the cases someone thought of, when testing parsers, serializers, encoders, sorting, comparators, arithmetic, caches, or data structures, when a bug arrives from input nobody anticipated, when replacing one implementation with another that must agree, or when reaching for fuzzing, generators, shrinking, invariants, or round-trip checks. Not for behavior specified only as a table of cases.
+description: Use when example tests only cover the cases someone thought of, when testing parsers, serializers, encoders, sorting, comparators, arithmetic, caches, or data structures, when a bug arrives from input nobody anticipated, when replacing one implementation with another that must agree, when a rule must hold for every member of a closed catalogue the code already lists — themes, locales, roles, enum values — or when reaching for fuzzing, generators, shrinking, invariants, or round-trip checks. Not for behavior specified only as a table of cases.
 ---
 
 # Property-based testing
@@ -52,6 +52,18 @@ A failure on a 400-element list of random records teaches nothing. Shrinking red
 - The framework must re-run the shrunk case and confirm it still fails. A "minimal counterexample" that passes on replay means the failure was nondeterministic — you found a flaky test, not a bug in the function.
 - If shrunk output is still large, the generator built an opaque type the shrinker cannot decompose. Build inputs from primitives the library knows how to shrink rather than from a hand-rolled constructor.
 
+## When the domain is a closed catalogue, enumerate it
+
+A generator earns its keep on a space too large to walk. Some properties range over a space that is small and already written down: the themes an app ships, the locales it translates, the roles, permission sets, enum members, supported file formats, registered routes. Sampling that list at random is strictly worse than reading all of it. A hundred random draws can miss the one bad member, and a run that passes by luck looks the same as one that passes by construction.
+
+- **Iterate the list the code itself exposes**, not a copy of it in the test. Then a member added next month is checked the day it lands, by a test nobody edited. A hand-typed list in the test is the second copy that goes stale.
+- **Cross it with the other dimension** the property depends on (every theme under each base theme, every locale at each text length), and state the property once. This is still a property, a rule over a domain, not the table of cases excluded above: the catalogue supplies the inputs, never the expected outputs.
+- **Assert the catalogue is non-empty, and at least as large as it is known to be.** A loop over an empty or filtered-away list passes for any implementation.
+- **Make a failure name its member**, so the report is "variant 31 under the dark base fails the threshold", not an index into a cross product.
+- **Prefer a measured bound to equality** when the property is a quality, such as contrast, size or latency: assert the number clears a threshold, and print the number.
+
+Then pin the case that was reported as a number. Reconstruct the original failing input, measure it the way the property measures, and assert the measurement was bad under the old rule. That guard is the proof the property can fail, and without it a green sweep says nothing about whether the sweep could ever have caught the report. `regression-test-from-bug`'s step 5 (revert the fix, watch the test go red) proves the same thing once, by hand; the pinned number is the form of that proof that stays in the suite, which matters for a sweep, because one that cannot fail on the known bad case is silently measuring the wrong thing.
+
 ## Working the failure
 
 1. Record the seed and the shrunk counterexample from the failure output. A property failure without a printed seed is unactionable.
@@ -73,6 +85,7 @@ Run counts: the default (usually 100 cases) is a smoke test that catches gross e
 | Suite is slow and gets its case count lowered | Property does I/O or database work per case; properties belong on pure logic, integration on examples |
 | Round-trip green, real consumers break | Both directions share the same wrong assumption; no external-format example test exists |
 | Rewrite matches old behavior including its bugs | Oracle property treated as a specification instead of a change-detector |
+| A sweep over a closed list stays green after the list grows | The test carries its own copy of the catalogue, or samples it instead of enumerating the one the code exposes |
 | Property is skipped after intermittent failures | A genuine nondeterminism in the code under test was misfiled as generator noise |
 
 ## Red flags
@@ -82,4 +95,5 @@ Run counts: the default (usually 100 cases) is a smoke test that catches gross e
 - Narrowing the generator's range after a failure, instead of fixing the code.
 - Reducing the case count to make CI faster while keeping the property as evidence.
 - Deleting the shrunk example test because "the property covers it".
+- Sampling a closed catalogue at random, or typing its members into the test, when the code already lists them
 - Treating a nondeterministic property failure as flakiness rather than a discovered race.
