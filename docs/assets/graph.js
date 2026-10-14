@@ -126,6 +126,9 @@
     matrixShown: '{a} citing {b}: {n}, shown in the graph.',
     matrixRowOn: '{a} marked in the matrix.',
     matrixRowOff: '{a} no longer marked.',
+    announceView: '{view} view, {n} skills in {f} families.',
+    announceTrace: 'Path from {a} to {b}, {n} steps: {names}.',
+    announceNoTrace: 'No path from {a} to {b}.',
     announceNode: '{name}, {family}. {role}. Cited by {in}, cites {out}.',
     announceSection: 'Section {n}: {title}. {words} words. Cites {cites}.',
     notes: {
@@ -2611,7 +2614,12 @@
   };
   App.prototype.say = function (text) {
     var live = this.$('[data-crumb-live]');
-    if (live) { live.textContent = text; }
+    if (!live) { return; }
+    // Clearing first and setting a frame later is what makes a repeat of the
+    // same sentence announce again.
+    live.textContent = '';
+    clearTimeout(this.sayTimer);
+    this.sayTimer = setTimeout(function () { live.textContent = text; }, 60);
   };
 
   App.prototype.dismissHint = function () {
@@ -2715,6 +2723,7 @@
   App.prototype.setView = function (view) {
     if (!this.model) { return; }
     var root = this.root;
+    if (this.view && this.view !== view) { this.say(fmt(STR.announceView, { view: STR.views[view], n: this.model.nodes.length, f: this.model.categories.length })); }
     root.querySelectorAll('[data-crumb-view]').forEach(function (b) { b.setAttribute('aria-selected', String(b.getAttribute('data-crumb-view') === view)); });
     var list = this.$('[data-crumb-list]'), matrix = this.$('[data-crumb-matrix]');
     list.hidden = view !== 'list';
@@ -2998,6 +3007,9 @@
     var path = shortestPath(this.model, a, b);
     this.trace = { from: a, to: b, path: path, at: (performance.now() - this.t0) / 1000 };
     if (path) { this.userCam = true; this.fitCamera(false, path.nodes); }
+    this.say(path ?
+      fmt(STR.announceTrace, { a: a.name, b: b.name, n: path.nodes.length - 1, names: path.nodes.map(function (n) { return n.name; }).join(', ') }) :
+      fmt(STR.announceNoTrace, { a: a.name, b: b.name }));
     this.renderPanel();
     this.kick();
   };
