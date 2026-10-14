@@ -1,6 +1,6 @@
 ---
 name: writing-durable-docs
-description: Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material, architecture notes — when existing docs have gone stale or contradict the code, when deciding where a doc belongs or whether to delete one, when a doc is about to state that a platform or dependency cannot do something, when a single page is trying to be a tutorial and a reference at once, or when the same document exists in two places — a repo and a site, two repos, a wiki and a README — and nothing generates or diffs one against the other. Also use when writing a document a harness will carry across a compaction or handoff — a skill body, an agent instruction file, a plan a resumed session picks up — where anything past the opening may not survive the crossing. Covers doc types, rationale over mechanics, colocation, executable examples, stale-doc removal, and ordering rules so that what must hold longest comes first.
+description: Use when writing or restructuring documentation — READMEs, guides, API references, onboarding material, architecture notes — when existing docs have gone stale or contradict the code, when a page is being corrected for a behaviour that changed, when deciding where a doc belongs or whether to delete one, when a doc is about to state that a platform or dependency cannot do something, when a single page is trying to be a tutorial and a reference at once, or when the same document exists in two places — a repo and a site, two repos, a wiki and a README — and nothing generates or diffs one against the other. Also use when writing a document a harness will carry across a compaction or handoff — a skill body, an agent instruction file, a plan a resumed session picks up — where anything past the opening may not survive the crossing. Covers doc types, rationale over mechanics, colocation, executable examples, stale-doc removal, and ordering rules so that what must hold longest comes first.
 ---
 
 # Writing Durable Docs
@@ -66,6 +66,12 @@ There is a second kind of negative claim, and it is worse, because it is about a
 
 So a negative claim about a dependency carries its evidence or admits it has none: the specification section, the API version, the command that was run and what it printed — or the words *not checked*. That phrasing is honest, and it invites the next reader to check; *not possible* invites nobody. `revalidating-decisions` owns what a reader does with such a claim once it is recorded; the writer's half is to make it a claim with a date and a source, or to make it visibly a guess.
 
+## A changed behaviour is not documented until no mention of the old one is left
+
+Correcting a document for a changed behaviour fails in one predictable way. You write or fix the section you were thinking about, and it is right; the same behaviour is still described elsewhere in that document, as a table row, an FAQ answer, a summary line, a store or marketing copy of it, each written at another time, in its own words, by someone not thinking about this change. Now the page contradicts itself, and a reader who lands on the row instead of the section believes the row. Nothing in the diff points at those places, because the diff is the part you edited, and a read-through tends not to find them either, since your attention is already on the new text. The call-site rule above applies inside a single document too: each of these is a place the document states the behaviour.
+
+Find them by searching for the thing, not for the sentence: the name of the feature or entry point, its nouns and the other names it goes by, and the verbs of the old behaviour ("sends", "uploads", "directly", "automatically"). Do not search for the wording of your new text; the stale mentions, by construction, do not share it. Run the search over the document and over every copy of it, the mirror, the listing, the other-language versions. Read each hit, then edit it or keep it with a stated reason (still true for older versions, say). Put the search terms in the change description so a reviewer can repeat the search instead of trusting the claim that it was done. `keeping-copies-in-sync` covers the copies themselves and when the new text may be published.
+
 ## Position is a reliability property
 
 A document a person reads has one order, the one they read it in, and the only cost of putting a rule near the end is that fewer people get there. A document a harness reads on your behalf — a skill body, an agent instruction file, a system prompt fragment, a plan a resumed session re-reads — has a second reader, and that reader does not get to the end. Every mechanism that carries context across a boundary shortens the document, and the ones you did not choose shorten it **from the end**: a compaction keeps the opening of each file it re-attaches, a summarised handoff keeps the opening and paraphrases the rest, a capped listing keeps the entries that came first, a truncated tool result keeps its head. None of those mechanisms is told which sentence was load-bearing. They keep whatever came first.
@@ -107,6 +113,7 @@ The same document in two locations is two documents. They drift from the system 
 | "We'll document it after the refactor" | Docs treated as a separate artifact instead of part of the change |
 | Team writes docs, then answers the same questions in chat anyway | Doc answers the question the author had, not the one readers arrive with |
 | A published doc denies a feature the software shipped weeks ago | A negative claim, which no example or generated reference can ever check |
+| A page updated for a changed behaviour still states the old one in a table row or an FAQ answer | The section being edited was fixed; the other mentions were never searched for, by the feature's name and the old behaviour's verbs |
 | Two copies of one document disagree | Mirrored by hand, so there is no generation step and no diff to fail |
 | A capability the design doc says the platform lacks turns out to exist, and the implementation was never attempted | A negative claim about a dependency written from memory, with no source, read by every later reader as a reason not to try |
 | An instruction file was obeyed for an hour and ignored for the rest of the run | The rule sat at the end of a document that gets truncated from the end each time context is carried forward |
@@ -121,6 +128,7 @@ The same document in two locations is two documents. They drift from the system 
 - Keeping a stale page "for reference"
 - Documenting a workaround instead of deleting the reason for it
 - A document promising the absence of something, with no test that fails when it appears
+- A behaviour change documented in one section, with no search for the other places the document describes it
 - "The platform does not support X" with no version, spec section, or command beside it
 - The same guide living at two paths, neither generated from the other
 - A hard constraint below the explanation that motivates it, in a file a harness will re-read after compaction

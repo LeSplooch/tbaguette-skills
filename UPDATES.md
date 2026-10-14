@@ -31,6 +31,16 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-14 — Correcting a page for a changed behaviour now means searching it for the old one
+
+- `writing-durable-docs` now covers the second half of updating a document when
+  behaviour changes. The section you rewrote is right, but the same behaviour is
+  often still described in a table row, an FAQ answer or a store copy, in other
+  words, and the page now contradicts itself. The skill says to search the document
+  and every copy of it for the feature's name and the old behaviour's verbs (not
+  for your new wording), read each hit, and edit it or keep it with a reason. The
+  `description:` field now routes a page-being-corrected request to it.
+
 ## 2026-10-14 — A fix checked only by looking now needs a before-build
 
 - `reproducing-bugs` now covers the defect whose only check is a look (a visual
