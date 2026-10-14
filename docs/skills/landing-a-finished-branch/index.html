@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.28</span>
+      <span class="wordmark-version" dir="ltr">v2.1.29</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-14T05:59:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-14T05:59:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-14T22:20:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-14T22:20:56Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,13 +65,13 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">landing-a-finished-branch</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-15T00:20:32+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Landing changes</span>
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=landing-a-finished-branch"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
-  <p class="lede">Use when implementation is done and its tests are green and it's time to decide how the branch lands, when choosing between a local merge, a pushed pull request, or leaving a branch alone, or when a worktree and its branch need to be torn down after the work has actually landed. Also use when what is about to land carries work by another agent or colleague who has not said it is ready. Covers verifying the tree that's really about to ship, confirming the base branch, the merge/rebase/squash decision and what each does to history, and cleanup ownership for worktrees and branches.</p>
+  <p class="lede">Use when implementation is done and its tests are green and it's time to decide how the branch lands, when choosing between a local merge, a pushed pull request, or leaving a branch alone, or when a worktree and its branch need to be torn down after the work has actually landed. Also use when what is about to land carries work by another agent or colleague who has not said it is ready, or when a push on a shared branch would also publish another session's unpushed commits. Covers verifying the tree that's really about to ship, confirming the base branch, the merge/rebase/squash decision and what each does to history, and cleanup ownership for worktrees and branches.</p>
 </div><div class="prose"><h2 id="overview">Overview</h2>
 <p>A branch is finished when its tests are green on the tree that's actually about to ship — not the tree from earlier in the session, and not a guess that the user is probably done with it. Verifying that is the only part of this you get to decide alone. What happens next — merge, rebase, squash, push a pull request, or leave it alone — is one choice with consequences for the branch's history, the branch itself, and the workspace it lived in, and that choice belongs to whoever owns the branch.</p>
 <h2 id="when-to-use">When to use</h2>
@@ -85,6 +85,7 @@
 <p>Version control cannot answer it. A commit means the work was <em>committed</em>, which is a much weaker claim than ready — people commit to hand off and to stop losing work, not only to declare something done. The gap is widest exactly where it matters: code that compiles, passes its suite, and has never once been executed on the platform it targets looks identical in the log to code that has been running in production for a week.</p>
 <p>So ask them. Where a harness can enumerate and message its peers, that is one exchange; where it cannot, a message to the person is still cheaper than the alternative. What comes back is routinely absent from any diff — work that is committed but unverified, a version they had already claimed for their own release, user-facing text in the shared tooling that describes their change rather than yours, and the parts of their work that ship anyway despite the flag you were relying on to exclude them.</p>
 <p><strong>Asking is worth it even when you are confident of the answer</strong>, and not only for what you learn. An author re-reading their own work under <em>is this safe to release</em> finds things that reading it under <em>is this correct</em> did not — the question is a different filter, and it is one they cannot easily apply to themselves unprompted.</p>
+<p><strong>A push publishes the branch tip, not your change.</strong> On a branch another session also commits to, the commits ahead of the remote include theirs, and pushing sends them too. Before the push, list what is ahead (<code>git log @{u}..HEAD</code>) and attribute each commit; anything not yours is surfaced or left out — push from a clean worktree holding only your commits — rather than published by default.</p>
 <p><strong>Their answer authorizes their code being included, never your release.</strong> Two agents agreeing that something is fine is not approval; each answers to a different person, and whoever owns the consequences of the publish you are about to make has not been asked. Where the landing is outward-facing and hard to reverse, their decision is a separate gate and a peer's confidence is an input to it. When that person is unreachable, <a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a> covers what substitutes for the gate.</p>
 <h2 id="whats-on-the-menu">What's on the menu</h2>
 <p>Where the branch lives decides what you're even allowed to offer:</p>
