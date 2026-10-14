@@ -1,6 +1,6 @@
 ---
 name: landing-a-finished-branch
-description: Use when implementation is done and its tests are green and it's time to decide how the branch lands, when choosing between a local merge, a pushed pull request, or leaving a branch alone, or when a worktree and its branch need to be torn down after the work has actually landed. Also use when what is about to land carries work by another agent or colleague who has not said it is ready. Covers verifying the tree that's really about to ship, confirming the base branch, the merge/rebase/squash decision and what each does to history, and cleanup ownership for worktrees and branches.
+description: Use when implementation is done and its tests are green and it's time to decide how the branch lands, when choosing between a local merge, a pushed pull request, or leaving a branch alone, or when a worktree and its branch need to be torn down after the work has actually landed. Also use when what is about to land carries work by another agent or colleague who has not said it is ready, or when a push on a shared branch would also publish another session's unpushed commits. Covers verifying the tree that's really about to ship, confirming the base branch, the merge/rebase/squash decision and what each does to history, and cleanup ownership for worktrees and branches.
 ---
 
 # Landing a finished branch
@@ -35,6 +35,8 @@ Version control cannot answer it. A commit means the work was *committed*, which
 So ask them. Where a harness can enumerate and message its peers, that is one exchange; where it cannot, a message to the person is still cheaper than the alternative. What comes back is routinely absent from any diff — work that is committed but unverified, a version they had already claimed for their own release, user-facing text in the shared tooling that describes their change rather than yours, and the parts of their work that ship anyway despite the flag you were relying on to exclude them.
 
 **Asking is worth it even when you are confident of the answer**, and not only for what you learn. An author re-reading their own work under *is this safe to release* finds things that reading it under *is this correct* did not — the question is a different filter, and it is one they cannot easily apply to themselves unprompted.
+
+**A push publishes the branch tip, not your change.** On a branch another session also commits to, the commits ahead of the remote include theirs, and pushing sends them too. Before the push, list what is ahead (`git log @{u}..HEAD`) and attribute each commit; anything not yours is surfaced or left out — push from a clean worktree holding only your commits — rather than published by default.
 
 **Their answer authorizes their code being included, never your release.** Two agents agreeing that something is fine is not approval; each answers to a different person, and whoever owns the consequences of the publish you are about to make has not been asked. Where the landing is outward-facing and hard to reverse, their decision is a separate gate and a peer's confidence is an input to it. When that person is unreachable, `bounding-autonomous-work` covers what substitutes for the gate.
 

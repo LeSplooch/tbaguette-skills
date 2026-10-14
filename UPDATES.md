@@ -31,6 +31,15 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-15 — Pushing a shared branch now means checking whose commits go with it
+
+- `landing-a-finished-branch` now says that a push publishes the branch tip, not just
+  your change: on a branch another session also commits to, everything ahead of the
+  remote goes out with it. Before pushing it asks you to list those commits
+  (`git log @{u}..HEAD`), attribute each, and leave out or hold back anything that is
+  not yours, for example by pushing from a clean worktree. The `description:` now
+  routes this case to the skill.
+
 ## 2026-10-14 — A rule over a closed list is now tested by walking the list
 
 - `property-based-testing` now says what to do when a property ranges over a small
