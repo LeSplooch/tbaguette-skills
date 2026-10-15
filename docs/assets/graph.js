@@ -45,6 +45,10 @@
     viewsLabel: 'View',
     searchLabel: 'Find a skill',
     searchPlaceholder: 'Find a skill…',
+    askHitsOne: '1 skill mentions “{q}”: {names}.',
+    askHits: '{n} skills mention “{q}”: {names}.',
+    askHitsMore: '{n} skills mention “{q}”: {names} and more.',
+    askMiss: 'No skill mentions “{q}”.',
     trace: 'Trace a path',
     library: 'Library',
     back: 'Back',
@@ -709,7 +713,7 @@
       '<label class="visually-hidden" for="crumb-search-' + (App.count = (App.count || 0) + 1) + '">' + escapeHtml(STR.searchLabel) + '</label>' +
       icon('icon-search') +
       '<input id="crumb-search-' + App.count + '" type="search" autocomplete="off" spellcheck="false" placeholder="' + escapeHtml(STR.searchPlaceholder) + '" list="crumb-skills-' + App.count + '">' +
-      '<datalist id="crumb-skills-' + App.count + '"></datalist></form>' +
+      '<datalist id="crumb-skills-' + App.count + '"></datalist><span class="crumb__searchnote" data-crumb-searchnote hidden></span></form>' +
       '<button type="button" class="crumb__btn" data-crumb-trace>' + icon('icon-route') + '<span>' + escapeHtml(STR.trace) + '</span></button>';
     root.appendChild(bar);
 
@@ -2364,9 +2368,11 @@
       e.preventDefault();
       var input = e.target.querySelector('input');
       var n = self.findSkill(input.value);
-      if (n) { input.value = ''; input.blur(); self.openSkill(n); }
+      if (n) { input.value = ''; input.blur(); self.openSkill(n); return; }
+      self.askLibrary(input.value);
     });
     this.$('[data-crumb-search] input').addEventListener('input', function (e) {
+      self.askNote('');
       var n = self.model && self.model.bySlug[e.target.value.trim()];
       // Picking from the suggestions is a decision already made.
       if (n) { e.target.value = ''; self.openSkill(n); }
@@ -2404,7 +2410,7 @@
     // field it clears the field first, as a search box should.
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape' || e.defaultPrevented) { return; }
-      if (/input/i.test(e.target.tagName) && e.target.value) { e.target.value = ''; e.preventDefault(); return; }
+      if (/input/i.test(e.target.tagName) && e.target.value) { e.target.value = ''; self.askNote(''); e.preventDefault(); return; }
       if (self.back()) { e.preventDefault(); }
     });
   };
@@ -2415,6 +2421,36 @@
     if (this.model.bySlug[q]) { return this.model.bySlug[q]; }
     var hits = this.model.nodes.filter(function (n) { return n.name.indexOf(q) >= 0; });
     return hits.sort(function (a, b) { return a.name.indexOf(q) - b.name.indexOf(q) || b.inDeg - a.inDeg; })[0] || null;
+  };
+
+  // A word that is no skill's name is still a question. Skills whose name,
+  // summary or section titles carry it light up as one spotlight, best match
+  // first, instead of the field sitting full and silent.
+  App.prototype.askLibrary = function (text) {
+    var q = String(text || '').trim().toLowerCase();
+    if (!q || !this.model) { return; }
+    var hits = this.model.nodes.map(function (n) {
+      var score = (n.name.indexOf(q) >= 0 ? 4 : 0) + ((n.summary || '').toLowerCase().indexOf(q) >= 0 ? 2 : 0) +
+        (n.sections.some(function (x) { return String(x.title || '').toLowerCase().indexOf(q) >= 0; }) ? 1 : 0);
+      return { n: n, score: score };
+    }).filter(function (h) { return h.score; }).sort(function (a, b) { return b.score - a.score || b.n.inDeg - a.n.inDeg; });
+    var shown = hits.slice(0, 12).map(function (h) { return h.n; });
+    if (!shown.length) { this.askNote(fmt(STR.askMiss, { q: escapeHtml(text.trim()) }), true); return; }
+    if (this.view !== 'constellation' && this.view !== 'wheel') { this.setView(this.overview); }
+    this.clearEmphasis(true);
+    this.spot = { type: 'spot', nodes: shown.map(function (n) { return n.slug; }), dir: 'pair' };
+    this.focusEmphasis();
+    this.kick();
+    var names = shown.slice(0, 5).map(function (n) { return n.name; }).join(', ');
+    this.askNote(fmt(hits.length === 1 ? STR.askHitsOne : hits.length > 5 ? STR.askHitsMore : STR.askHits, { n: hits.length, q: escapeHtml(text.trim()), names: names }), false);
+  };
+
+  App.prototype.askNote = function (html, miss) {
+    var note = this.$('[data-crumb-searchnote]');
+    if (!note) { return; }
+    note.innerHTML = html;
+    note.hidden = !html;
+    if (html) { this.say(note.textContent); }
   };
 
   App.prototype.localPoint = function (e) {
