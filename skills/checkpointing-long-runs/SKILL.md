@@ -167,6 +167,13 @@ reconstruct:
   in the file.
 - **Before dispatching anything in parallel**, so that a partial fan-out is
   legible rather than a mystery.
+- **A deliberate pause.** Stopping on purpose is a boundary like any other, and
+  the one most often crossed with nothing written. Stop dispatching, then record
+  the resume point, the branch or worktree holding unfinished work, and
+  everything still running or awaiting a human, each with how you would tell it
+  has landed. A "where are we" or "what is still running" from a person mid-run
+  is answered from that record, not from the last notification, since a late
+  completion for a task already handled would otherwise read as live work.
 - **When the context is visibly filling.** Not after — the checkpoint written
   under compaction pressure is written from a memory already degrading.
 

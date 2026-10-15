@@ -40,6 +40,10 @@ holds any text file over 256 KiB for a reviewer.
   in the report which part was checked by hand. The harness is offered as a choice with
   its cost rather than added or skipped silently. The `description:` now routes this case
   to the skill.
+- `checkpointing-long-runs` now lists a deliberate pause as a checkpoint seam: before
+  stopping, write down the resume point, where the unfinished work lives, and what is
+  still running or waiting on a person, so a "where are we?" mid-run is answered from
+  the record and not from the last notification.
 
 ## 2026-10-15 — Pushing a shared branch now means checking whose commits go with it
 
