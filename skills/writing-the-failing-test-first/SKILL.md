@@ -1,6 +1,6 @@
 ---
 name: writing-the-failing-test-first
-description: Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written. Also use when the change is meant to alter a cost rather than a behavior — an optimization, a cache, a batch, a cheaper backend — so every behavioral test passes both before and after it and the loop looks inapplicable. Also use when a suite is green feature by feature and the features have never been exercised together, or when a fix-rerun loop has run long enough to be finding hacks rather than structure. Covers writing one failing test first, confirming it fails for the right reason, writing the minimal code that makes it pass, and refactoring only once the suite is green again.
+description: Use when implementing any new feature, fixing a bug, or changing existing behavior — before any production code gets written. Also use when the change is meant to alter a cost rather than a behavior — an optimization, a cache, a batch, a cheaper backend — so every behavioral test passes both before and after it and the loop looks inapplicable. Also use when the layer being changed has no test runner at all, or when a suite is green feature by feature and the features have never been exercised together, or when a fix-rerun loop has run long enough to be finding hacks rather than structure. Covers writing one failing test first, confirming it fails for the right reason, writing the minimal code that makes it pass, and refactoring only once the suite is green again.
 ---
 
 # Writing the failing test first
@@ -49,6 +49,10 @@ That conclusion is wrong, and the diagnosis is one section up: a test that passe
 Skipping it is how a change ships having achieved nothing while its suite stays green. A slow lookup replaced by a fast path returned the right value and passed; an assertion on elapsed time failed immediately, because the fast path internally called a helper that still went through the rate limiter the change existed to escape. Nothing in the diff of the new path looked slow — the cost was reached one call further down, in code the change never touched. Only an assertion on the cost could tell a change that worked from one that did not.
 
 Two things make such an assertion usable rather than flaky. Give it a **wide threshold**: it exists to catch a regression to the old order of magnitude, not to police a 5% drift. And make it exercise the **state the cost is actually paid in** — for anything cached, pooled, or lazily built, that is the cold one, and a test that reuses a warm fixture measures the half of the behavior that was never in question. `performance-profiling` owns choosing the number and defending it against noise; the loop only requires that something was red first.
+
+## When the layer has no harness at all
+
+Sometimes the code that has to change sits where no test can run: a UI layer with no component runner, a deploy script, a rendering path only a browser exercises. The loop does not stop applying; the untested surface is what you shrink, and what remains is what you name. Pull each rule out of that layer into something a plain test can reach (a pure function, a reducer, a parser) and drive that red-first. The wiring left behind gets exercised some way you can watch (run it, open it, call it), and the report says which part was checked by hand and which has nothing under it. Offer the harness as a choice with its cost (setup, dependencies, upkeep) rather than adding one unasked or skipping it silently. A hand check is never reported as a test, and the gap is never left unmentioned.
 
 ## An assertion over the result cannot see what the result is missing
 

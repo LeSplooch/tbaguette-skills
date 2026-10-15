@@ -31,6 +31,16 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-16 — Changing a layer with no test runner now has a shape
+
+- `writing-the-failing-test-first` now covers code that sits where no test can run: a UI
+  layer with no component runner, a deploy script, a rendering path only a browser
+  exercises. It asks you to pull each rule out into something a plain test can reach and
+  drive that red-first, to check the remaining wiring some way you can watch, and to say
+  in the report which part was checked by hand. The harness is offered as a choice with
+  its cost rather than added or skipped silently. The `description:` now routes this case
+  to the skill.
+
 ## 2026-10-15 — Pushing a shared branch now means checking whose commits go with it
 
 - `landing-a-finished-branch` now says that a push publishes the branch tip, not just
