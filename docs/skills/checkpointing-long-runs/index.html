@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=4f4b8ea691">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=2a90af8fd7">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.29</span>
+      <span class="wordmark-version" dir="ltr">v2.1.31</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-14T22:20:56+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-14T22:20:56Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-15T22:23:01+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-15T22:23:01Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">checkpointing-long-runs</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-16T00:13:51+02:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Planning and delegation</span>
@@ -107,7 +107,7 @@ Rests on:    how many trials, against what base rate — or &quot;not measured&q
 <ul><li><strong>Append, never rewrite.</strong> A rewritten log agrees with whatever you now believe, which makes it useless for the one job it has.</li><li><strong>Anchored to something outside the conversation.</strong> A commit hash, a file path, a test command and its output. &quot;Task 3 done&quot; is a claim; &quot;task 3 done, a1b2c3d, 48/48&quot; is a checkpoint.</li><li><strong>Readable by someone with no context at all.</strong> Names spelled out, paths absolute enough to find, no pronouns pointing at things only this conversation saw.</li></ul>
 <h2 id="the-seams-worth-a-checkpoint">The seams worth a checkpoint</h2>
 <p>Not every N minutes. Checkpoint at the places where state becomes expensive to reconstruct:</p>
-<ul><li><strong>After anything irreversible or externally visible</strong> — a commit, a push, a deploy, a sent message. Before it, the world and the record agree by default; after it, only the record says so.</li><li><strong>At every phase or task boundary</strong>, including one that failed.</li><li><strong>The moment a dead end is confirmed dead.</strong> This is the one people skip, because a dead end feels like nothing happened. It is the most valuable line in the file.</li><li><strong>Before dispatching anything in parallel</strong>, so that a partial fan-out is legible rather than a mystery.</li><li><strong>When the context is visibly filling.</strong> Not after — the checkpoint written under compaction pressure is written from a memory already degrading.</li></ul>
+<ul><li><strong>After anything irreversible or externally visible</strong> — a commit, a push, a deploy, a sent message. Before it, the world and the record agree by default; after it, only the record says so.</li><li><strong>At every phase or task boundary</strong>, including one that failed.</li><li><strong>The moment a dead end is confirmed dead.</strong> This is the one people skip, because a dead end feels like nothing happened. It is the most valuable line in the file.</li><li><strong>Before dispatching anything in parallel</strong>, so that a partial fan-out is legible rather than a mystery.</li><li><strong>A deliberate pause.</strong> Stopping on purpose is a boundary like any other, and the one most often crossed with nothing written. Stop dispatching, then record the resume point, the branch or worktree holding unfinished work, and everything still running or awaiting a human, each with how you would tell it has landed. A &quot;where are we&quot; or &quot;what is still running&quot; from a person mid-run is answered from that record, not from the last notification, since a late completion for a task already handled would otherwise read as live work.</li><li><strong>When the context is visibly filling.</strong> Not after — the checkpoint written under compaction pressure is written from a memory already degrading.</li></ul>
 <p>That last one is a discipline, which makes it the weakest entry on the list: it asks the part of the run least able to judge its own state to notice its own state. Where the harness exposes the boundary as an event — a hook that fires before compaction, at session end, when a subagent returns, when a worktree is removed — wire the checkpoint to it and the discipline becomes a mechanism. Harnesses have accumulated a lot of these, and pre-compaction in particular is the exact moment this section is asking you to remember, offered as a callback that cannot forget. <a class="skill-link" href="/tbaguette-skills/skills/automating-repetition/"><code>automating-repetition</code></a> owns the general judgment about when a habit is worth turning into machinery; a checkpoint whose entire purpose is surviving an event the harness already announces is near the top of that list.</p>
 <h2 id="after-a-boundary-read-do-not-recall">After a boundary, read; do not recall</h2>
 <p>At the far side of a compaction, a session restart, or a handoff, the order of trust is fixed and it is not close:</p>
