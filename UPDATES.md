@@ -31,6 +31,15 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-16 — A shell loop that quietly stops after its first line is now a named failure
+
+- `portable-shell-scripting` now warns that a command inside a `while read` loop shares
+  the loop's stdin and can eat the lines not yet read: `ssh`, `cat`, an installer's
+  prompt or a nested `read` is enough, and the loop ends with status 0 having handled
+  one or two lines. It says to give such commands `</dev/null` or feed the loop from
+  another descriptor, and to test with at least two input lines. The `description:` now
+  routes this case to the skill.
+
 ## 2026-10-16 — Changing a layer with no test runner now has a shape
 
 - `writing-the-failing-test-first` now covers code that sits where no test can run: a UI

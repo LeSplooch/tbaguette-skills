@@ -1,6 +1,6 @@
 ---
 name: portable-shell-scripting
-description: Use when writing or reviewing a shell script, when a script works in one shell but fails in another, when it breaks on filenames with spaces or newlines, when a failing command does not stop the script, when a `cd` fails or persists and later relative paths resolve against a directory nobody meant, or when a command — inline or scripted — kills a process by matching its command line, loops waiting for one to disappear, or asks once whether one is still running. Also use when a long-running command that changes state is about to be piped into `head`, `tail`, a pager, or any reader that stops early. Covers quoting and word splitting, set -e exemptions, lost variable assignments after a pipeline, exit codes and pipeline status, the working directory as state that outlives one command, relative reads and writes that land in the wrong tree, cleanup traps, matching processes by pattern for kills and wait loops, POSIX sh versus bash-isms, GNU versus BSD tool differences, and outgrowing shell.
+description: Use when writing or reviewing a shell script, when a script works in one shell but fails in another, when it breaks on filenames with spaces or newlines, when a failing command does not stop the script, when a `cd` fails or persists and later relative paths resolve against a directory nobody meant, or when a command — inline or scripted — kills a process by matching its command line, loops waiting for one to disappear, or asks once whether one is still running. Also use when a long-running command that changes state is about to be piped into `head`, `tail`, a pager, or any reader that stops early. Covers quoting and word splitting, set -e exemptions, lost variable assignments after a pipeline, a loop body eating the loop's own input, exit codes and pipeline status, the working directory as state that outlives one command, relative reads and writes that land in the wrong tree, cleanup traps, matching processes by pattern, POSIX sh versus bash-isms, GNU versus BSD tool differences, and outgrowing shell.
 ---
 
 # Portable shell scripting
@@ -79,6 +79,8 @@ Only `/` and NUL cannot appear in a filename. Newlines, leading dashes, quotes, 
 
 Pipeline stages run in subshells, so assignments inside `cmd | while read …; do n=$((n+1)); done` are discarded at `done`. Redirect instead — `while …; done < file` — or use a here-document, or bash's `lastpipe`. ksh and zsh run the last stage in the current shell, so this code works for its author and loses data in CI.
 
+The loop's own input is a second thing the body can lose. In `while read -r line; do …; done < file` (or fed by a pipe), every command in the body inherits that same stdin, so any child that reads it — `ssh`, `cat`, an installer's prompt, an interpreter falling back to a REPL, a nested `read` — consumes the lines the loop has not reached yet. The loop then ends cleanly having handled the first line or two, with no error anywhere, and a test fed a single line never notices. Give each such command `</dev/null`, or feed the loop from another descriptor (`while read -r line <&3; do …; done 3< file`) so nothing in the body shares it. Test with at least two input lines and assert that every one was handled.
+
 `$(…)` runs in a subshell and strips *all* trailing newlines, so a `cd` inside it does not escape and a captured file loses its final blank lines. Capture status immediately with `rc=$?`, because `$?` is overwritten by the very next command, including `[` and `echo`.
 
 Exit codes are 0–255 and `exit 256` becomes 0. 126 means not executable, 127 not found, 128+N a fatal signal N. Per-stage pipeline status exists only as bash `PIPESTATUS` and zsh `pipestatus`; under POSIX sh, restructure so you do not need it.
@@ -149,6 +151,7 @@ Choose the POSIX subset first. Where an extension is genuinely needed, probe the
 | Works locally, `bad substitution` in CI | bash syntax under a `#!/bin/sh` shebang; CI's `sh` is dash |
 | Script continues past an obvious failure | an errexit exemption — the failure sat in a function called from `if`, or upstream of a pipe |
 | Counter is 0 after a `while read` loop | the loop body ran in a subshell on the right-hand side of a pipe |
+| A `while read` loop handled its first line, then ended with exit status 0 | a command in the body read the loop's stdin and ate the remaining lines; give it `</dev/null` |
 | Loop runs once with a literal `*.txt` | the glob matched nothing and POSIX left the pattern unexpanded |
 | `[: too many arguments` | an unquoted variable that was empty or contained spaces inside `[ ]` |
 | Cleanup deleted the wrong tree | unquoted path, or an unset variable expanding to nothing with no `set -u` |
