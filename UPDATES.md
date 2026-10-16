@@ -31,13 +31,19 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-16 — A shell loop that quietly stops after its first line is now a named failure
+## 2026-10-16 — A shell loop that quietly stops, and generated output that drifts after it is committed
 
 - `portable-shell-scripting` now warns that a command inside a `while read` loop shares
   the loop's stdin and can eat the lines not yet read: `ssh`, `cat`, an installer's
   prompt or a nested `read` is enough, and the loop ends with status 0 having handled
   one or two lines. It says to give such commands `</dev/null` or feed the loop from
   another descriptor, and to test with at least two input lines. The `description:` now
+  routes this case to the skill.
+- `keeping-copies-in-sync` now says that generated output stops being safe from drift the
+  moment it is committed: a served site or checked-in client is a second copy again, and
+  commits made with hooks off, merges and hooks that regenerate from unstaged edits all
+  publish it stale. It asks for the check where the output becomes public, on the pushed
+  revision built by its own generator, and not on the working tree. The `description:` now
   routes this case to the skill.
 
 ## 2026-10-16 — Changing a layer with no test runner now has a shape

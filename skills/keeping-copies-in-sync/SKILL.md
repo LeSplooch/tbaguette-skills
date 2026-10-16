@@ -1,6 +1,6 @@
 ---
 name: keeping-copies-in-sync
-description: Use when the same fact — a version number, a constant, a policy document, a lockfile entry, a manifest field — has to be recorded in more than one place; when a change updates one copy and a sibling is easy to forget; when two files that describe the same thing are found to disagree and someone catches it by hand; when a change adds a second location for a value that had one; when the plan for keeping copies aligned is "remember to update both" rather than a check that runs, when a public statement of what the software does — a policy, a store listing — is updated before the build that does it has reached anyone, or when a build is about to replace a running service that someone may have deployed from an uncommitted tree. Covers why the number of places is the number of ways to disagree, a comparison that fails loud, generating instead of maintaining, where the check belongs, publishing a behavior-describing copy with the release, and probing the live artifact before overwriting it.
+description: Use when the same fact — a version number, a policy document, a lockfile entry, a manifest field — has to be recorded in more than one place; when a change updates one copy and a sibling is easy to forget; when two files that describe the same thing are found to disagree; when a change adds a second location for a value that had one; when the plan for keeping copies aligned is "remember to update both"; when generated output is committed and published as-is; when a public statement of what the software does — a policy, a store listing — is updated before the build that does it has reached anyone, or when a build is about to replace a running service that someone may have deployed from an uncommitted tree. Covers the number of places as the number of ways to disagree, a comparison that fails loud, generating instead of maintaining, committed generated output as a copy again, where the check belongs, publishing a behavior-describing copy with the release, and probing the live artifact before overwriting it.
 ---
 
 # Keeping copies in sync
@@ -92,7 +92,7 @@ Two remedies, in order of strength:
    client from a schema, a rendered page from its source — do that instead
    of hand-maintaining both. A generated copy cannot drift from its source
    because it has no independent existence; regenerating it is the only way
-   it changes at all. This is the strongest fix because it removes the
+   it changes at all (unless the output is committed; see *A generated copy that is committed can drift again*). This is the strongest fix because it removes the
    comparison rather than automating it.
 2. **Where a second copy has to genuinely exist** — a value required by two
    unrelated integrations that cannot share a generation step, a fact that
@@ -119,6 +119,12 @@ Grep for the value itself across the repository and any sibling repository
 it is known to be mirrored into, rather than trusting the two locations the
 incident that prompted the search happened to surface.
 
+## A generated copy that is committed can drift again
+
+Remedy 1 above holds while the generated file exists only as a build product. Once the output is committed — a site served straight from the repository, a checked-in client, a lockfile, a compiled asset — it has an independent existence again, and it can be published describing an older source. The commit-time hook that regenerates it is the usual comfort, and it has holes: commits made with hooks off, merges (git runs `pre-merge-commit`, not `pre-commit`), and a hook that regenerates from a working tree holding edits nobody staged, so the output matches the tree and not the commit. In one real run three of four consecutive commits carried stale output with every hook in place, and only the closing commit was right.
+
+Check it where it becomes public, not where it is made: at the push to the served branch or the cut of the release tag, on the revision being published, built by *that revision's own* generator rather than the working tree's. Both neighbouring placements fail in a way worth knowing. A check on the working tree fails every flow that runs the tests before it regenerates; a check on every commit fails intermediate commits that are stale by design. Exclude fields stamped from the build clock from the comparison, or it can never pass.
+
 ## A copy that describes behavior is true of a build, not of a commit
 
 A number is true the moment it is written. A copy that records behavior — what the software collects, where it sends it, what it stores, what it does for the person using it — is true of a *build*, and the build reaches the people the copy addresses well after the commit that describes it: cut, uploaded, reviewed, rolled out, installed. A public policy updated in the same hour as the commit tells every reader something false for as long as the shipped build still does the old thing, and the false statement is about them. The rest of this skill treats the source as the truth and the copy as the thing that lags; for a statement of behavior, the truth is what has actually been released, so the copy lags the release, not the branch.
@@ -144,6 +150,7 @@ So before any build-and-deploy over something already running, compare the live 
 | A comment says "keep this in sync with X" and nothing does | A comment is read by whoever already has the file open, not by whoever edits the other one |
 | The check exists but only runs on release day | The copies can change between releases, so the check's cadence is slower than the drift it exists to catch |
 | Grepping for a stale value found a third copy nobody remembered | The search for copies stopped at the two the incident surfaced instead of enumerating every occurrence |
+| The published site or client described an older source, with every commit hook in place | The generated output is committed, so it is a second copy; hooks-off commits, merges and a hook run over unstaged edits all bypass the regeneration, and nothing checked the published revision |
 | A public policy described behavior that no user's build had yet | The copy was published with the commit, not with the release that delivered the behavior |
 | A deploy from the main branch removed features nobody on the team had merged | The running service had been built from an uncommitted tree, and the live artifact was never compared with the source before it was replaced |
 | The push succeeded and the live page still showed the old text, or never changed | A push is not a deploy: the host's own build lagged or failed silently, and nobody fetched what was served |
