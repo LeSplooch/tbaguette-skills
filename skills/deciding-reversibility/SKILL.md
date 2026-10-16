@@ -1,6 +1,6 @@
 ---
 name: deciding-reversibility
-description: Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, overwrite a setting or a configuration file, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it, or when a write is about to run with a credential or connection string nobody has read the target out of.
+description: Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, overwrite a setting or a configuration file, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it, or when a retention rule is about to delete by age or count from a folder that holds more than one kind of file, or when a write is about to run with a credential or connection string nobody has read the target out of.
 ---
 
 # Deciding reversibility
@@ -75,6 +75,8 @@ The wrapper generally costs less than the analysis it removes. When it does not,
 
 The check is one question at design time, and it is cheap enough to ask about every reversible-looking action: **name the thing that would perform the undo, then ask whether the action you are contemplating can reach it.** Different volume, different credential, different account, different lifecycle — any one of those separations is usually enough, and none of them is the default.
 
+**A rotation is the same hazard wearing a schedule.** "Keep the newest N" and "delete anything older than D" are rules that name a place and a clock, and they cannot tell a rolling copy from a record. Put one deliberate archive in the folder the rule sweeps — the pre-migration snapshot, the last known-good build, the copy kept because something is about to change — and it is the oldest file there by construction, so the rule takes it first, on schedule, with no error. Another writer filling the folder past the limit is enough to defer the pruning to a later run that then prunes harder than anyone expected, and the loss is recoverable only by luck. Two moves close it: have the rule name what it rotates by a pattern that only the rotating kind carries, never by the directory, and keep anything that must survive where no rotation reaches. And before any rule is armed that deletes by age or count, list the oldest file it would take on its next run and say why that one is allowed to go.
+
 This is a different question from whether the undo *works*, and passing one says nothing about the other: `confirming-before-claiming-done` requires a restore actually performed from the backup, and a backup can be verified restorable and still sit inside the blast radius of the thing it protects. Separation is about identity as much as location — if one credential opens both the store and its backup, both are in the radius regardless of where the bytes sit.
 
 ## Decide at the right altitude
@@ -103,6 +105,7 @@ Record every fast decision in one line: the choice, the runner-up, and the obser
 | A once-reversible choice is now load-bearing | Weeks of work compounded on it while it was still provisional |
 | Both options built to avoid choosing | Two implementations to maintain, and the decision still pending |
 | A fix aimed at a test environment changed production | The target was taken from the task's description, not read back out of the credential or connection string the command ran with |
+| A "keep the newest N" job deleted the one archive kept on purpose | The rule swept a folder instead of a kind of file; the archive was the oldest file in it, so it went first |
 | The rollback plan was gone at the moment it was needed | The undo lived inside the blast radius — same volume, same credential, or same lifecycle as the thing it was meant to undo |
 
 ## Red flags

@@ -31,7 +31,7 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-16 — A shell loop that quietly stops, and generated output that drifts after it is committed
+## 2026-10-16 — Three quiet failures named: a shell loop that stops early, committed output that drifts, a retention rule that eats the archive
 
 - `portable-shell-scripting` now warns that a command inside a `while read` loop shares
   the loop's stdin and can eat the lines not yet read: `ssh`, `cat`, an installer's
@@ -45,6 +45,12 @@ holds any text file over 256 KiB for a reviewer.
   publish it stale. It asks for the check where the output becomes public, on the pushed
   revision built by its own generator, and not on the working tree. The `description:` now
   routes this case to the skill.
+- `deciding-reversibility` now treats a retention rule as a way a safety net gets cut: a
+  "keep the newest N" or "older than D" job names a folder and a clock, so a deliberate
+  archive sitting beside rolling copies is the oldest file there and is deleted first,
+  silently. It asks you to match the rotating kind of file by pattern, keep what must
+  survive where no rotation reaches, and name the oldest file a rule would take before
+  arming it. The `description:` now routes this case to the skill.
 
 ## 2026-10-16 — Changing a layer with no test runner now has a shape
 
