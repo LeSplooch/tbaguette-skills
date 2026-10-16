@@ -1,6 +1,6 @@
 ---
 name: reviewing-code-deeply
-description: Use when reviewing someone else's change — a pull request, patch, diff, or commit series — deciding what deserves a comment, whether to block or approve, or how to phrase a concern. Also when a review is generating dozens of comments, when a diff is too large to review carefully, or when reviews keep passing code that later breaks. Also use when a diff applies a guard to every case but one. Also use when the author is something that will revise on command, when a review round has produced instructions but no verdict, or when several rounds have gone by without the change being judged. Covers review priority order, reviewing tests, finding absent cases, and blocking versus non-blocking.
+description: Use when reviewing someone else's change — a pull request, patch, diff, or commit series — deciding what deserves a comment, whether to block or approve, or how to phrase a concern. Also when a review is generating dozens of comments, when a diff is too large to review carefully, or when reviews keep passing code that later breaks. Also use when a diff applies a guard to every case but one, or when a rule lightens review for changes under a path such as generated output or docs. Also use when the author is something that will revise on command, when a review round has produced instructions but no verdict, or when several rounds have gone by without the change being judged. Covers review priority order, reviewing tests, finding absent cases, and blocking versus non-blocking.
 ---
 
 # Reviewing Code Deeply
@@ -74,6 +74,8 @@ So when a diff adds a timeout, a retry, a size cap, a validation, a lock, or a n
 
 An exemption that saves nothing measurable has nothing to weigh against the failure it exposes. Either the guard is redundant here for a reason the change should state — the type already proves it, the call cannot block — or the exemption should go. A change that states neither number has not made the case for it at all.
 
+A path-shaped exemption is the commonest form, and it fails without any single decision being wrong. A review or merge rule that waves through "docs only" or "generated output" changes is usually written as a pathspec excluding a directory, and the directory is a belief about its contents. Publishing layouts mix kinds on purpose: a docs root served straight from the repository holds the generated pages beside the hand-written scripts and styles the host insists live there, and a `dist/`, `static/` or `vendor/` folder carries hand-edited files next to built ones. A change touching only the executable files in such a directory is classed as prose and skips the one review that would have read it. Exclude what the generator writes, by its own list of outputs or a marker it stamps, never the directory it writes into; then run the filter on a real change that touches both kinds of file and confirm it lands on the stricter side.
+
 ## Mark every comment blocking or not
 
 Unmarked comments make the author guess, and they guess "blocking" — which is why reviews with thirty unmarked nits take a week.
@@ -126,6 +128,7 @@ Three checks, all cheap. Before sending, look at how many of your comments could
 | The reviewer rewrites the change in comments | Reviewing against their own solution rather than the stated intent |
 | The same style debate recurs on every change | No formatter in CI; a human is doing a tool's job |
 | A guard on every case but one, approved without comment | The exemption was read as a fact about that case rather than as an unargued belief |
+| A change to executable site code was classed "prose only" and merged unread | The rule excluded the generated-output directory, which also holds the hand-written scripts and styles the host forces into it |
 | Several review rounds, none of which ever said yes or no | Steering the next revision displaced judging this one; both produce comments at the same rate |
 
 ## Red flags

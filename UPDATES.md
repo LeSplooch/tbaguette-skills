@@ -31,7 +31,7 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-16 — Three quiet failures named: a shell loop that stops early, committed output that drifts, a retention rule that eats the archive
+## 2026-10-16 — Four quiet failures named: a shell loop that stops early, committed output that drifts, a retention rule that eats the archive, a path rule that waves code through
 
 - `portable-shell-scripting` now warns that a command inside a `while read` loop shares
   the loop's stdin and can eat the lines not yet read: `ssh`, `cat`, an installer's
@@ -51,6 +51,12 @@ holds any text file over 256 KiB for a reviewer.
   silently. It asks you to match the rotating kind of file by pattern, keep what must
   survive where no rotation reaches, and name the oldest file a rule would take before
   arming it. The `description:` now routes this case to the skill.
+- `reviewing-code-deeply` now covers the path-shaped exemption: a rule that lightens review
+  for "docs only" or "generated" changes by excluding a directory also exempts the
+  hand-written scripts and styles that publishing layouts put in the same directory, so
+  a change to executable code gets classed as prose. It asks you to exclude what the
+  generator writes by its own list of outputs and to test the filter on a change touching
+  both kinds. The `description:` now routes this case to the skill.
 
 ## 2026-10-16 — Changing a layer with no test runner now has a shape
 
