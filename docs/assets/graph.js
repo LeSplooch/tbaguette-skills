@@ -2824,6 +2824,19 @@
     // Opening a skill from the list or the matrix hides the page that held
     // focus; leave it on the stage rather than on nothing.
     if (!opts.fromOutside && (!document.activeElement || document.activeElement === document.body)) { this.stage.focus({ preventScroll: true }); }
+    // Arriving from a link, focus would otherwise sit on the page's first
+    // stop; put it on the skill's name so a keyboard or screen-reader visitor
+    // starts where the announcement points.
+    if (opts.fromOutside) {
+      var nameEl = this.root.querySelector('[data-crumb-panel] .crumb-skill__name');
+      if (nameEl) { nameEl.setAttribute('tabindex', '-1'); nameEl.focus({ preventScroll: true }); }
+      // On a phone the panel is a closed sheet whose heading cannot take
+      // focus; its handle carries the skill's name and can.
+      if (document.activeElement === document.body || document.activeElement === document.documentElement) {
+        var handle = this.$('[data-crumb-sheet]');
+        if (handle) { handle.focus({ preventScroll: true }); }
+      }
+    }
     // The address always names the skill on screen, so it can be kept or
     // sent on. Replaced rather than pushed: the trail is the way back
     // through a walk, and Back leaves the graph the way it arrived.
