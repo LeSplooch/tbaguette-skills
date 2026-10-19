@@ -31,6 +31,19 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-19 — A dedupe key per route lets a second route re-send what the first already handled
+
+- `designing-for-idempotency` now separates the retries of one operation from two
+  operations aimed at one target. Where the rule is "once per target" and two routes
+  can do it — a single reply and a bulk reply command, a webhook and a nightly sweep —
+  a key minted per operation or scoped per route only dedupes each route against
+  itself, so the second one re-sends what the first handled, every key correct and no
+  retention window long enough to help. It says to check the target's own state on
+  every route (reserved atomically), or key on the target in one shared store, and to
+  read every line of a bulk send's dry run until then. The scope rule now says
+  operation type names the effect, never the code path, and the `description:` and a
+  symptom row carry the new case.
+
 ## 2026-10-16 — Four quiet failures named: a shell loop that stops early, committed output that drifts, a retention rule that eats the archive, a path rule that waves code through
 
 - `portable-shell-scripting` now warns that a command inside a `while read` loop shares
