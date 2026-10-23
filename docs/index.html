@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.36</span>
+      <span class="wordmark-version" dir="ltr">v2.1.37</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-19T22:24:16+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-19T22:24:16Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-23T05:27:47+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-23T05:27:47Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -139,14 +139,14 @@ Flag one more thing, because it applies to this very conversation: this session 
     
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-for-idempotency/" data-fresh-at="2026-10-19T19:39:32+02:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/atomic-commits/" data-fresh-at="2026-10-23T05:27:47.035295+00:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
-    <span class="card__name">designing-for-idempotency</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-19T19:39:32+02:00">Updated</span>
+    <span class="card__name">atomic-commits</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-23T05:27:47.035295+00:00">Updated</span>
   </span>
-  <p class="card__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</p>
+  <p class="card__summary">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit…</p>
   <span class="card__foot">
-    <span class="tag">Designing systems</span>
+    <span class="tag">Landing changes</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -160,11 +160,11 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ol class="notes__list">
 <li class="notes__entry">
   <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-10-19">19 Oct 2026</time>
-    <span class="notes__entry-title">A dedupe key per route lets a second route re-send what the first already handled</span>
+    <time class="notes__date" datetime="2026-10-23">23 Oct 2026</time>
+    <span class="notes__entry-title">Files you staged in a shared checkout are the next writer's to commit</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/designing-for-idempotency/"><code>designing-for-idempotency</code></a> now separates the retries of one operation from two operations aimed at one target. Where the rule is &quot;once per target&quot; and two routes can do it — a single reply and a bulk reply command, a webhook and a nightly sweep — a key minted per operation or scoped per route only dedupes each route against itself, so the second one re-sends what the first handled, every key correct and no retention window long enough to help. It says to check the target's own state on every route (reserved atomically), or key on the target in one shared store, and to read every line of a bulk send's dry run until then. The scope rule now says operation type names the effect, never the code path, and the <code>description:</code> and a symptom row carry the new case.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/atomic-commits/"><code>atomic-commits</code></a> now covers the other direction of a sweep. Its shared-tree section warned against staging someone else's files; it now says that files you stage and leave between commands are committed by whoever next runs a <code>git commit</code> that names no paths, under their message, however carefully you named your own paths. The rule is to commit with the paths repeated on the commit (<code>git commit -m &quot;&lt;message&gt;&quot; -- &lt;paths&gt;</code>), which also keeps another writer's staged files out of yours, and to leave nothing staged when a command ends. It notes the two cases that form does not reach — a new file, which needs its <code>add</code> in the same command, and a hunk-level split, which would commit the whole file — and how to undo a sweep that has not been pushed. A symptom row carries it.</li>
   </ul>
 </li>
   </ol>
@@ -177,6 +177,15 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-10-23">23 Oct 2026</time>
+    <span class="notes__entry-title">Files you staged in a shared checkout are the next writer's to commit</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/atomic-commits/"><code>atomic-commits</code></a> now covers the other direction of a sweep. Its shared-tree section warned against staging someone else's files; it now says that files you stage and leave between commands are committed by whoever next runs a <code>git commit</code> that names no paths, under their message, however carefully you named your own paths. The rule is to commit with the paths repeated on the commit (<code>git commit -m &quot;&lt;message&gt;&quot; -- &lt;paths&gt;</code>), which also keeps another writer's staged files out of yours, and to leave nothing staged when a command ends. It notes the two cases that form does not reach — a new file, which needs its <code>add</code> in the same command, and a hunk-level split, which would commit the whole file — and how to undo a sweep that has not been pushed. A symptom row carries it.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-19">19 Oct 2026</time>
@@ -363,18 +372,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a> says what an eligibility or block check should do when its own lookup fails: unreachable is not refused. A refusal the service actually delivers acts at once; silence carries the last state only on a server-stamped confirmation younger than a named bound, and past it the gate closes. Re-checks run silently, so a resume does not tear the screen down. <a class="skill-link" href="/tbaguette-skills/skills/feature-flagging/"><code>feature-flagging</code></a> now points at it, because its deny default for an entitlement would otherwise lock out every confirmed user during an outage.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/choosing-test-scope/"><code>choosing-test-scope</code></a> adds a case to its section on guards: a block list, quota or limit that keys on an identifier can pass every test that sets that identifier by hand and still never match real traffic, because the real callers send a different one. Trace the key from the check back to the production code that sets it, and test that caller sends it.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/keeping-copies-in-sync/"><code>keeping-copies-in-sync</code></a> has a section on copies that describe behavior: a policy or store listing is true of a build, not of a commit, so write the new text with the code and publish it with the release, naming who does it. A push is not a deploy either, because the host's own build can lag or fail silently; fetch what is actually served and diff it against the source.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-10-01">1 Oct 2026</time>
-    <span class="notes__entry-title">Code a new branch wakes up, a queue that never serves the patient, a label that flaps, a count of what isn't shown</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/red-teaming-your-own-work/"><code>red-teaming-your-own-work</code></a> widens its adjacent-breakage attack: when a change loosens an early return, <code>continue</code> or guard, the unchanged lines below it now run in a state they never saw. The diff doesn't show them, so read the rest of that block as if it were new.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/"><code>rate-limiting-and-backpressure</code></a> has a section on deadline-first scheduling: with a steady stream of urgent work, anything with a distant deadline is never picked at all. Count items served per class to see it, and give the patient class its own small worker instead of a share.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/instrumenting-for-observability/"><code>instrumenting-for-observability</code></a> warns that a label or alert comparing a noisy reading to a hard threshold flaps whenever the reading sits near the line. Add hysteresis or a dwell time, and check the first live readings.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>'s hardening guide adds a rule: a badge, count or &quot;next&quot; button that describes the screen must count what the screen actually shows, not the whole data model, and its test must go through the rendered screen.</li>
   </ul>
 </li>
       </ol>
@@ -755,7 +752,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/atomic-commits/" data-search-card data-search-terms="atomic-commits use when a working tree has grown several unrelated changes, when deciding what belongs in one commit… landing changes">
   <span class="card__name-row">
     <span class="card__name">atomic-commits</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-23T05:27:47.035295+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit…</p>
   <span class="card__foot">
@@ -1146,7 +1143,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/designing-for-idempotency/" data-search-card data-search-terms="designing-for-idempotency use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues… designing systems">
   <span class="card__name-row">
     <span class="card__name">designing-for-idempotency</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-19T19:39:32+02:00">Updated</span>
+    
   </span>
   <p class="card__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</p>
   <span class="card__foot">

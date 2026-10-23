@@ -31,6 +31,19 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-23 — Files you staged in a shared checkout are the next writer's to commit
+
+- `atomic-commits` now covers the other direction of a sweep. Its shared-tree section
+  warned against staging someone else's files; it now says that files you stage and
+  leave between commands are committed by whoever next runs a `git commit` that names no
+  paths, under their message, however carefully you named your own paths. The rule is to
+  commit with the paths repeated on the commit (`git commit -m "<message>" -- <paths>`),
+  which also keeps another writer's staged files out of yours, and to leave nothing
+  staged when a command ends. It notes the two cases that form does not reach — a new
+  file, which needs its `add` in the same command, and a hunk-level split, which would
+  commit the whole file — and how to undo a sweep that has not been pushed. A symptom
+  row carries it.
+
 ## 2026-10-19 — A dedupe key per route lets a second route re-send what the first already handled
 
 - `designing-for-idempotency` now separates the retries of one operation from two
