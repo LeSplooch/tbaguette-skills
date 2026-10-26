@@ -136,8 +136,8 @@
     announceNode: '{name}, {family}. {role}. Cited by {in}, cites {out}.',
     announceSection: 'Section {n}: {title}. {words} words. Cites {cites}.',
     notes: {
-      reach: '<b>Every skill reaches every other</b> by following citations — never more than {d} steps. The longest walk runs from {a} to {b}.',
-      reachPartial: 'Following citations, {pct}% of all pairs of skills are connected. The longest walk runs from {a} to {b}, {d} steps.',
+      reach: '<b>Every skill reaches every other</b> by following citations — never more than {d} steps. The longest walk runs from {a} to {b}.{ties}',
+      reachPartial: 'Following citations, {pct}% of all pairs of skills are connected. The longest walk runs from {a} to {b}, {d} steps.{ties}',
       mostCited: '{a} is cited by <b>{n} skills</b>, more than any other.',
       widest: '{a} points to <b>{n} of the other {total}</b>.',
       widestAll: '{a} points to <b>every other skill</b>, all {total} of them.',
@@ -369,7 +369,7 @@
     var chip = function (n) { return '<span class="crumb-chip" style="--chip:var(--graph-cat-' + (n.cat.index + 1) + ')">' + escapeHtml(n.name) + '</span>'; };
 
     // Reach: the longest of the shortest walks.
-    var far = { d: -1 }, reachable = 0, pairs = 0;
+    var far = { d: -1 }, reachable = 0, pairs = 0, atFar = 0;
     nodes.forEach(function (a) {
       var r = bfs(model, a, true);
       nodes.forEach(function (b) {
@@ -378,15 +378,17 @@
         var d = r.dist[b.slug];
         if (d !== undefined) {
           reachable++;
-          if (d > far.d) { far = { d: d, a: a, b: b }; }
+          if (d > far.d) { far = { d: d, a: a, b: b }; atFar = 0; }
+          if (d === far.d) { atFar++; }
         }
       });
     });
     if (far.a) {
+      var tiesNote = atFar > 1 ? ' It is the first of {n} ordered pairs that far apart.'.replace('{n}', atFar) : '';
       notes.push({
         html: reachable === pairs
-          ? fmt(STR.notes.reach, { d: far.d, a: chip(far.a), b: chip(far.b) })
-          : fmt(STR.notes.reachPartial, { pct: Math.round(100 * reachable / pairs), d: far.d, a: chip(far.a), b: chip(far.b) }),
+          ? fmt(STR.notes.reach, { ties: tiesNote, d: far.d, a: chip(far.a), b: chip(far.b) })
+          : fmt(STR.notes.reachPartial, { ties: tiesNote, pct: Math.round(100 * reachable / pairs), d: far.d, a: chip(far.a), b: chip(far.b) }),
         action: { type: 'trace', from: far.a.slug, to: far.b.slug }
       });
     }
