@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.37</span>
+      <span class="wordmark-version" dir="ltr">v2.1.38</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-23T05:27:47+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-23T05:27:47Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-26T09:57:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-26T09:57:53Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -139,14 +139,14 @@ Flag one more thing, because it applies to this very conversation: this session 
     
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/atomic-commits/" data-fresh-at="2026-10-23T05:27:47.035295+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-10-26T09:57:53.726684+00:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
-    <span class="card__name">atomic-commits</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-23T05:27:47.035295+00:00">Updated</span>
+    <span class="card__name">orchestrating-work-end-to-end</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T09:57:53.726684+00:00">Updated</span>
   </span>
-  <p class="card__summary">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit…</p>
+  <p class="card__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</p>
   <span class="card__foot">
-    <span class="tag">Landing changes</span>
+    <span class="tag">Judgment and meta</span>
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
@@ -160,11 +160,11 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ol class="notes__list">
 <li class="notes__entry">
   <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-10-23">23 Oct 2026</time>
-    <span class="notes__entry-title">Files you staged in a shared checkout are the next writer's to commit</span>
+    <time class="notes__date" datetime="2026-10-26">26 Oct 2026</time>
+    <span class="notes__entry-title">A peer handed the same request is crew, even in a checkout of its own</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/atomic-commits/"><code>atomic-commits</code></a> now covers the other direction of a sweep. Its shared-tree section warned against staging someone else's files; it now says that files you stage and leave between commands are committed by whoever next runs a <code>git commit</code> that names no paths, under their message, however carefully you named your own paths. The rule is to commit with the paths repeated on the commit (<code>git commit -m &quot;&lt;message&gt;&quot; -- &lt;paths&gt;</code>), which also keeps another writer's staged files out of yours, and to leave nothing staged when a command ends. It notes the two cases that form does not reach — a new file, which needs its <code>add</code> in the same command, and a hunk-level split, which would commit the whole file — and how to undo a sweep that has not been pushed. A symptom row carries it.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> now reads the Crew dial past the checkout. A requester can give one request to two sessions without saying so; each works in a quiet tree of its own and reads <code>solo</code>, the two builds diverge wherever the request left a choice open (the storage shape, the names on the wire), and they first meet at the live target both deploy to. The envelope reference now says to read what peer sessions are working on when the run is routed and again before the first live step, and to settle one owner by message before design, while the other build is still a plan; when peers cannot be listed, to ask the requester. It reads as <code>shared tree</code>, and the dial table, the mid-run table and a failure row carry it.</li>
   </ul>
 </li>
   </ol>
@@ -177,6 +177,15 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-10-26">26 Oct 2026</time>
+    <span class="notes__entry-title">A peer handed the same request is crew, even in a checkout of its own</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> now reads the Crew dial past the checkout. A requester can give one request to two sessions without saying so; each works in a quiet tree of its own and reads <code>solo</code>, the two builds diverge wherever the request left a choice open (the storage shape, the names on the wire), and they first meet at the live target both deploy to. The envelope reference now says to read what peer sessions are working on when the run is routed and again before the first live step, and to settle one owner by message before design, while the other build is still a plan; when peers cannot be listed, to ask the requester. It reads as <code>shared tree</code>, and the dial table, the mid-run table and a failure row carry it.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-23">23 Oct 2026</time>
@@ -361,19 +370,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> covers a command that a standing permission rule allows. The rule matches the command's text, so the same command behind <code>cd dir &amp;&amp;</code>, an environment prefix or a pipe matches nothing and can be refused. Write it in the exact form the rule names, using the tool's own option (<code>git -C</code>, <code>--repo</code>) to aim it; if the wrapped line is refused, report it and ask rather than re-issuing it bare.</li>
   </ul>
 </li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-10-05">5 Oct 2026</time>
-    <span class="notes__entry-title">Memory written under an injection is read back as trusted, a check only the careful caller switches on, a failed lookup that is not a refusal, a block list that never matches, a policy published ahead of its build</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/handling-untrusted-input/"><code>handling-untrusted-input</code></a> says what happens to a memory store, notes file or instruction file that a run writes while untrusted text is in its context: the next session reads it as its own earlier judgment. Treat it as untrusted input at the next read, keep writer and reader apart, make reference stores read-only, and keep history so a bad write can be undone.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/designing-ci-pipelines/"><code>designing-ci-pipelines</code></a> has a section on a release-time check that runs only when the caller sets a flag or variable. The scheduled rebuild nobody reads never sets it, so it ships unchecked and says nothing. Make missing proof the failure with a message that names the sanctioned entry point, route every automated caller through that entry point, and test both branches against a real build, not the wrapper script.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a> says what an eligibility or block check should do when its own lookup fails: unreachable is not refused. A refusal the service actually delivers acts at once; silence carries the last state only on a server-stamped confirmation younger than a named bound, and past it the gate closes. Re-checks run silently, so a resume does not tear the screen down. <a class="skill-link" href="/tbaguette-skills/skills/feature-flagging/"><code>feature-flagging</code></a> now points at it, because its deny default for an entitlement would otherwise lock out every confirmed user during an outage.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/choosing-test-scope/"><code>choosing-test-scope</code></a> adds a case to its section on guards: a block list, quota or limit that keys on an identifier can pass every test that sets that identifier by hand and still never match real traffic, because the real callers send a different one. Trace the key from the check back to the production code that sets it, and test that caller sends it.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/keeping-copies-in-sync/"><code>keeping-copies-in-sync</code></a> has a section on copies that describe behavior: a policy or store listing is true of a build, not of a commit, so write the new text with the code and publish it with the release, naming who does it. A push is not a deploy either, because the host's own build can lag or fail silently; fetch what is actually served and diff it against the source.</li>
-  </ul>
-</li>
       </ol>
       <p class="notes__archive-foot">
         Older than these, the whole record lives in
@@ -449,7 +445,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-search-card data-search-terms="orchestrating-work-end-to-end use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">orchestrating-work-end-to-end</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T09:57:53.726684+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</p>
   <span class="card__foot">
@@ -752,7 +748,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/atomic-commits/" data-search-card data-search-terms="atomic-commits use when a working tree has grown several unrelated changes, when deciding what belongs in one commit… landing changes">
   <span class="card__name-row">
     <span class="card__name">atomic-commits</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-23T05:27:47.035295+00:00">Updated</span>
+    
   </span>
   <p class="card__summary">Use when a working tree has grown several unrelated changes, when deciding what belongs in one commit…</p>
   <span class="card__foot">

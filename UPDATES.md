@@ -31,6 +31,18 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-26 — A peer handed the same request is crew, even in a checkout of its own
+
+- `orchestrating-work-end-to-end` now reads the Crew dial past the checkout. A
+  requester can give one request to two sessions without saying so; each works in a
+  quiet tree of its own and reads `solo`, the two builds diverge wherever the request
+  left a choice open (the storage shape, the names on the wire), and they first meet at
+  the live target both deploy to. The envelope reference now says to read what peer
+  sessions are working on when the run is routed and again before the first live step,
+  and to settle one owner by message before design, while the other build is still a
+  plan; when peers cannot be listed, to ask the requester. It reads as `shared tree`,
+  and the dial table, the mid-run table and a failure row carry it.
+
 ## 2026-10-23 — Files you staged in a shared checkout are the next writer's to commit
 
 - `atomic-commits` now covers the other direction of a sweep. Its shared-tree section

@@ -102,6 +102,26 @@ evidence and say so on the deliverable, and ask for the instrument when the
 run actually needs it. For a UI surface, `formidable`'s elevate reference
 names the rungs — running it, a recording, a still, a description.
 
+Read `shared tree` for a peer holding **the same request**, too, even when no
+file is shared. A requester can hand one request to two sessions without
+saying so — sent twice, retried in a fresh window, given to a second agent to
+compare. When each works in a checkout of its own, both read `solo`, and two
+whole builds of one request diverge wherever it left a choice open: the
+storage shape, the names on the wire. Nothing in either tree shows the other,
+so the first place they meet is often the live target both were told to
+deploy to, where whichever deploys second strands the first's data and
+clients, at the step that is hardest to take back. Where the harness can list
+peer sessions, read what each is working on at the route, and again before
+the first live step, since a peer can start after you did. Settle a match by
+message, to the peer or the requester, before design: one owner, and the
+other session reviews or stands down while its work is still a plan. If the
+requester wanted both builds to compare, the same message settles that
+neither deploys until one is chosen. This is the exchange
+`landing-a-finished-branch` has before landing, made hours earlier, when it
+saves a build instead of choosing which one to throw away. Where peers cannot
+be listed and someone can answer, ask the requester whether anyone else has
+this request: one line, and owed whenever the radius is `live`.
+
 ## Register — what the run spends
 
 Set once, at the route, and held for the whole run. `crouton` owns it; this
@@ -147,6 +167,7 @@ Some combinations carry a rule that neither dial carries alone.
 | The run was careful for hours and reckless in its last command | Blast radius read once at the start instead of before the irreversible step |
 | Two agents' work landed and one of them silently lost | Crew read as `solo` because the tree looked quiet at the moment it was read |
 | A scripted pass drove another session's app off a shared device | Crew read from permission — connected, unlocked — instead of from occupancy: what was in front, and whether it moved between two looks |
+| Two complete builds of one request, with incompatible schemas, met for the first time at the deploy | Crew read from the checkout alone; a peer holding the same request in a tree of its own never shows in yours |
 | Every phase re-read a file the run already had | Register never read, so only the closing prose was ever tightened and the reads — the larger spend — were not |
 | An express run that ran for a day | Promotion refused because the work was "nearly done" — which it was, four times |
 | A perfect report nobody could act on | `unattended` treated as `autonomous`: written for a reader who could ask a follow-up question, to a channel where nobody can |
