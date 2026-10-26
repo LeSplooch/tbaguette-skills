@@ -31,6 +31,18 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-26 — A limit the owner changes mid-run is a ruling, and a pause ends when they say so
+
+- `orchestrating-work-end-to-end` now has a row, in its table of envelope changes, for
+  the moment an owner sets, tightens, lifts or replaces a bound on a running job: a pause
+  until told to continue, a cap on parallel agents, a spending ceiling. Each change goes
+  into the `Rulings` log with its value, who set it, when and what lifts it; older lines
+  stay as written and the new one names what it replaces, so the newest is the whole bound.
+  The run also says which of its work it touches and, if the owner meant it for other
+  sessions too, tells them in the same message. A new paragraph under the table covers the
+  pause that matters most: it is lifted by what it names, not by the clock, so a run that
+  resumes because a quota reset has swapped its own condition for the owner's.
+
 ## 2026-10-26 — An approved release note is approved wording, not checked facts
 
 - `writing-release-notes` now says that approving a note does not check the details in

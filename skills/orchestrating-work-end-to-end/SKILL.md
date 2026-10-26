@@ -336,7 +336,10 @@ The track rarely moves. The envelope moves constantly, usually without anyone no
 | The diff shows files you never opened | crew: solo → shared tree | Nothing destructive, nothing stashed, nothing reset. Stage by hunk and re-read before writing |
 | A device, profile, or box the run needs has a foreground you did not start | crew: solo → shared tree | Do not take it. Use the next-best evidence and name it on the deliverable; ask for the instrument when you actually need it |
 | A peer session is working the same request | crew: solo → shared tree | Settle one owner by message before building further; the other reviews or stands down, and only one build reaches the target |
+| The owner sets, tightens, lifts, or replaces a run-wide bound — a pause until told to continue, a cap on parallel agents, a spending ceiling | none of the five: a bound set from outside that all five now run inside | Append it to the rulings: the value, who set it, when, and what lifts it. Older lines stay as written; the new one names which it replaces. Say which running work it touches. If the owner meant it for sibling sessions too, tell each of them in the message that acknowledges it |
 | Users started being affected while you investigated | track: diagnose → respond | The only upward track move that is urgent rather than procedural. Declare it out loud, then `responding-to-incidents` |
+
+**A pause is lifted by what it names, not by the clock.** A pause set while a quota is exhausted ends when the owner says so, unless the ruling names another condition; the quota resetting is a fact about the quota, and a run that resumes at the reset has swapped its own condition for the owner's. The first line written on resuming says which ruling it resumed under. The newest ruling is the whole bound: a run still honouring a replaced one, or missing the newest, is working to a rule nobody holds.
 
 ## Commands
 
