@@ -1515,6 +1515,9 @@
       // their lines get quieter the more of them there are.
       alpha /= Math.sqrt(Math.max(1, Math.min(e.s.outDeg, 40) / 8));
       alpha *= Math.min(e.s.pa, e.t.pa) * 0.6 + 0.4;
+      // On the dark ground the same alpha reads as haze: lift the resting
+      // lines so a first visit sees a network, not 101 loose dots.
+      if (!emph && pal.dark) { alpha *= 1.6; }
       if (alpha < 0.004) { continue; }
       this.edgeCurve(e, curve);
       ctx.beginPath();
