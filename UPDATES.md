@@ -31,6 +31,18 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-26 — An approved release note is approved wording, not checked facts
+
+- `writing-release-notes` now says that approving a note does not check the details in
+  it. An approver usually reads for tone, for what is in and what is left out, and takes
+  every count, name, default and limit on trust from whoever drafted it, so a detail
+  written from memory and then approved has been checked by no one. Re-derive each one
+  from the code, configuration or data it describes, at the latest after the approval
+  and before the note goes out; correct a slip without asking again and say so, and go
+  back to the approver only when a correction changes what the line means. Its
+  `description:` now covers a note someone approved that is about to be published, and
+  a symptom row carries it.
+
 ## 2026-10-26 — A retry refused by a check its own first attempt passed
 
 - `designing-for-idempotency` now says where the key lookup goes: after authentication

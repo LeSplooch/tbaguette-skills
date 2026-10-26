@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.39</span>
+      <span class="wordmark-version" dir="ltr">v2.1.40</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-26T10:03:48+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-26T10:03:48Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-26T10:08:18+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-26T10:08:18Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -141,11 +141,22 @@ Flag one more thing, because it applies to this very conversation: this session 
     <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-for-idempotency/" data-fresh-at="2026-10-26T10:03:48.487190+00:00" draggable="false" style="--cf-offset: 0">
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/writing-release-notes/" data-fresh-at="2026-10-26T10:08:18.945217+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">writing-release-notes</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T10:08:18.945217+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes…</p>
+  <span class="card__foot">
+    <span class="tag">Communicating</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-for-idempotency/" data-fresh-at="2026-10-26T11:03:47+01:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">designing-for-idempotency</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T10:03:48.487190+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T11:03:47+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</p>
   <span class="card__foot">
@@ -153,7 +164,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-10-26T10:57:53+01:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-10-26T10:57:53+01:00" draggable="false" style="--cf-offset: -1">
   <span class="card__name-row">
     <span class="card__name">orchestrating-work-end-to-end</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T10:57:53+01:00">Updated</span>
@@ -175,10 +186,10 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-26">26 Oct 2026</time>
-    <span class="notes__entry-title">A retry refused by a check its own first attempt passed</span>
+    <span class="notes__entry-title">An approved release note is approved wording, not checked facts</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/designing-for-idempotency/"><code>designing-for-idempotency</code></a> now says where the key lookup goes: after authentication and before any precondition on state. A first attempt that succeeded changed the state its own checks read (the balance it debited, the stock it reserved, the name it claimed), so a retry that validates first is refused, and the caller who lost the first response hears <em>insufficient balance</em> about an operation that went through. On a hit the handler answers from the key's record without re-validating. It also warns that a failure path which undoes &quot;the record for this key&quot; deletes the first attempt's success when this attempt is a retry, and says to undo only what this attempt wrote. A symptom row carries it.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/writing-release-notes/"><code>writing-release-notes</code></a> now says that approving a note does not check the details in it. An approver usually reads for tone, for what is in and what is left out, and takes every count, name, default and limit on trust from whoever drafted it, so a detail written from memory and then approved has been checked by no one. Re-derive each one from the code, configuration or data it describes, at the latest after the approval and before the note goes out; correct a slip without asking again and say so, and go back to the approver only when a correction changes what the line means. Its <code>description:</code> now covers a note someone approved that is about to be published, and a symptom row carries it.</li>
   </ul>
 </li>
   </ol>
@@ -191,6 +202,15 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-10-26">26 Oct 2026</time>
+    <span class="notes__entry-title">An approved release note is approved wording, not checked facts</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/writing-release-notes/"><code>writing-release-notes</code></a> now says that approving a note does not check the details in it. An approver usually reads for tone, for what is in and what is left out, and takes every count, name, default and limit on trust from whoever drafted it, so a detail written from memory and then approved has been checked by no one. Re-derive each one from the code, configuration or data it describes, at the latest after the approval and before the note goes out; correct a slip without asking again and say so, and go back to the approver only when a correction changes what the line means. Its <code>description:</code> now covers a note someone approved that is about to be published, and a symptom row carries it.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-26">26 Oct 2026</time>
@@ -367,15 +387,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   </h3>
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a> now says that workers on one machine also collide on the process table, the temp filesystem, ports and long-lived daemons. A cleanup that picks processes by a path fragment every worker's build shares kills the others' test runs; kill from the PIDs recorded at launch and give each worker its own data directory or port instead. When a build fails with &quot;no space left&quot;, check the temp filesystem rather than the project disk, redirect temp for your own pipeline, and free only your own scratch rather than other sessions' folders.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-10-10">10 Oct 2026</time>
-    <span class="notes__entry-title">Scripted input is addressed to a place, not a state</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> has a new section on injected keystrokes and taps: they go to whatever occupies the coordinates or focus when they arrive, so a sequence that was right three inputs ago is no evidence for the next one. Before each send that carries a secret or cannot be undone, read the target's state from what it shows (focused window, what the screen says) rather than from a step count. Navigation keys such as <code>Back</code> and <code>Escape</code> are the usual way the target changes underneath a script, so close dialogs with their own labelled controls, and stop and report when the state is not the expected one. The same check applies to a deploy step that always ends by starting a service someone left stopped on purpose. Its description now routes to it.</li>
   </ul>
 </li>
       </ol>
@@ -1147,7 +1158,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/designing-for-idempotency/" data-search-card data-search-terms="designing-for-idempotency use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues… designing systems">
   <span class="card__name-row">
     <span class="card__name">designing-for-idempotency</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T10:03:48.487190+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T11:03:47+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</p>
   <span class="card__foot">
@@ -1505,7 +1516,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/writing-release-notes/" data-search-card data-search-terms="writing-release-notes use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes… communicating">
   <span class="card__name-row">
     <span class="card__name">writing-release-notes</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T10:08:18.945217+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes…</p>
   <span class="card__foot">

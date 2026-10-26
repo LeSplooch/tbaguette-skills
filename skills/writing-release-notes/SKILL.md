@@ -1,6 +1,6 @@
 ---
 name: writing-release-notes
-description: Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes, deprecations, removals, or anything a consumer must act on; when turning commit subjects into user-facing text; when an announced feature also depends on a remote flag, a server deploy, or app-store setup; or when consumers keep asking what they must change to upgrade. Covers ordering by reader impact, per-audience tagging, migration steps, deprecation timelines, checking each announced feature is live for its reader, and what to leave out.
+description: Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes, deprecations, removals, or anything a consumer must act on; when turning commit subjects into user-facing text; when an announced feature also depends on a remote flag, a server deploy, or app-store setup; or when consumers keep asking what they must change to upgrade. Also use when a note someone approved is about to be published. Covers ordering by reader impact, per-audience tagging, migration steps, deprecation timelines, checking each announced feature is live for its reader, re-checking the facts in an approved note, and what to leave out.
 ---
 
 # Writing Release Notes
@@ -105,6 +105,8 @@ Include, in order: the old form, the new form, how to find every affected site, 
 
 Each entry names the observable difference from outside the system, and where the effect is a number, gives the number with a baseline.
 
+Every detail in an entry — the number and its baseline, a name, a default, a limit, a count — is a claim about the build, and **an approval of the note is not a check of it.** An approver usually reads a note for tone, for what is in and what is left out, and for what it promises; the details inside each line they take from whoever drafted it, often with no means to check them. A detail written from memory and then approved has still been checked by no one, and now reads as signed off. So re-derive each one from the code, configuration, or data it describes: before asking, ideally, and in any case after the yes and before the note goes out. Correct a slip without asking again, and say which details changed when you report the release; go back to the approver only when a correction changes what the line means — a feature narrower than announced, a limit that now reads as a restriction. `finishing-what-you-started`'s *Numbers and coverage claims* holds the same rule for the numbers in a report.
+
 ## What to omit
 
 Internal refactors, test and CI changes, formatting, dependency bumps with no observable effect, changes behind an off flag, and fixes to unreleased code. Any entry you cannot finish without naming an internal module the reader has never heard of.
@@ -124,6 +126,7 @@ Omission is not concealment — the changelog has all of it. Padding the notes w
 | Notes assembled at tag time from memory | The user-facing line was not captured when the change was made |
 | Readers on one platform read four screens that do not apply | No audience tagging |
 | A fix entry nobody recognises, for a bug nobody reported | The bug was introduced and fixed between two of this audience's builds, so the log had it in range and the reader never met it |
+| A published note gets a count, a name, or a limit wrong, and it had been approved | The approval was taken as a check of the facts; the approver read the wording and trusted the drafter for every detail in it |
 | Readers try a feature the notes announced and are refused, or cannot find it | The entry was written from a commit describing working code, while a flag it also needed was off, its server was not yet deployed, or its store product was not set up |
 
 ## Red flags
