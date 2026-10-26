@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.38</span>
+      <span class="wordmark-version" dir="ltr">v2.1.39</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-26T09:57:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-26T09:57:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-26T10:03:48+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-26T10:03:48Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -136,13 +136,27 @@ Flag one more thing, because it applies to this very conversation: this session 
     <svg class="icon fresh__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-grain"></use></svg>
     <h2 class="fresh__title" id="fresh-title">Fresh from the oven</h2>
     <span class="tag fresh__tag">Last 48 hours</span>
-    
+    <div class="fresh__nav" data-fresh-nav hidden>
+    <button type="button" class="fresh__nav-btn" data-fresh-prev aria-label="Show previous skill">&lsaquo;</button>
+    <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-10-26T09:57:53.726684+00:00" draggable="false" style="--cf-offset: 0">
+  </div>
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-for-idempotency/" data-fresh-at="2026-10-26T10:03:48.487190+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">designing-for-idempotency</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T10:03:48.487190+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</p>
+  <span class="card__foot">
+    <span class="tag">Designing systems</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-10-26T10:57:53+01:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">orchestrating-work-end-to-end</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T09:57:53.726684+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T10:57:53+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</p>
   <span class="card__foot">
@@ -161,10 +175,10 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-26">26 Oct 2026</time>
-    <span class="notes__entry-title">A peer handed the same request is crew, even in a checkout of its own</span>
+    <span class="notes__entry-title">A retry refused by a check its own first attempt passed</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a> now reads the Crew dial past the checkout. A requester can give one request to two sessions without saying so; each works in a quiet tree of its own and reads <code>solo</code>, the two builds diverge wherever the request left a choice open (the storage shape, the names on the wire), and they first meet at the live target both deploy to. The envelope reference now says to read what peer sessions are working on when the run is routed and again before the first live step, and to settle one owner by message before design, while the other build is still a plan; when peers cannot be listed, to ask the requester. It reads as <code>shared tree</code>, and the dial table, the mid-run table and a failure row carry it.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/designing-for-idempotency/"><code>designing-for-idempotency</code></a> now says where the key lookup goes: after authentication and before any precondition on state. A first attempt that succeeded changed the state its own checks read (the balance it debited, the stock it reserved, the name it claimed), so a retry that validates first is refused, and the caller who lost the first response hears <em>insufficient balance</em> about an operation that went through. On a hit the handler answers from the key's record without re-validating. It also warns that a failure path which undoes &quot;the record for this key&quot; deletes the first attempt's success when this attempt is a retry, and says to undo only what this attempt wrote. A symptom row carries it.</li>
   </ul>
 </li>
   </ol>
@@ -177,6 +191,15 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-10-26">26 Oct 2026</time>
+    <span class="notes__entry-title">A retry refused by a check its own first attempt passed</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/designing-for-idempotency/"><code>designing-for-idempotency</code></a> now says where the key lookup goes: after authentication and before any precondition on state. A first attempt that succeeded changed the state its own checks read (the balance it debited, the stock it reserved, the name it claimed), so a retry that validates first is refused, and the caller who lost the first response hears <em>insufficient balance</em> about an operation that went through. On a hit the handler answers from the key's record without re-validating. It also warns that a failure path which undoes &quot;the record for this key&quot; deletes the first attempt's success when this attempt is a retry, and says to undo only what this attempt wrote. A symptom row carries it.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-26">26 Oct 2026</time>
@@ -355,21 +378,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> has a new section on injected keystrokes and taps: they go to whatever occupies the coordinates or focus when they arrive, so a sequence that was right three inputs ago is no evidence for the next one. Before each send that carries a secret or cannot be undone, read the target's state from what it shows (focused window, what the screen says) rather than from a step count. Navigation keys such as <code>Back</code> and <code>Escape</code> are the usual way the target changes underneath a script, so close dialogs with their own labelled controls, and stop and report when the state is not the expected one. The same check applies to a deploy step that always ends by starting a service someone left stopped on purpose. Its description now routes to it.</li>
   </ul>
 </li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-10-08">8 Oct 2026</time>
-    <span class="notes__entry-title">A bare sweep has a target, &quot;not in the list&quot; is a null with a hidden filter, &quot;you can now&quot; is checked against what is switched on, a model edits only what it saw, a re-run resets the effect with the marker, a new enum member is checked where the compiler cannot see, and a pre-approved command keeps its approved spelling</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/clairvoyance/"><code>clairvoyance</code></a> now says what <code>sweep</code> does with no target: it sweeps the run itself — the tree as it stands, the last report and the next action they imply. It no longer drifts into surveying the whole project, which is what <code>orbit</code> is for.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/red-teaming-your-own-work/"><code>red-teaming-your-own-work</code></a> covers reporting something absent because it was missing from a catalogue, index or directory. A listing is a filtered view, so name what it leaves out and make one direct lookup by the exact identifier before saying it does not exist.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/writing-release-notes/"><code>writing-release-notes</code></a> now treats a new-feature line as a claim that the reader can use it today. A commit describes code, not the remote flag, the server deploy or the store setup the feature may also need, so before publishing read each of those where it is set, and announce what you cannot see working as &quot;coming&quot; or not at all.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/building-llm-features/"><code>building-llm-features</code></a> covers a model editing data it saw only a redacted, truncated or summarized view of. Asked to return whole records, it fills the fields it never saw with plausible guesses, on records nobody asked to change. Ask for changes keyed by ids the caller issued, where a field left out means keep, and merge them on the side that holds the full record.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/designing-test-data/"><code>designing-test-data</code></a> covers re-running a one-time step for a test — a migration, a first-launch routine, a once-per-release notice. Deleting only the marker that says it ran leaves its effect behind, a state a real install usually cannot reach, and then the duplicate the next run makes is the test's doing, not the code's. Reset both, or start from a fresh install; and when something odd follows state set by hand, check whether production can reach that state before fixing anything.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/mapping-dependencies/"><code>mapping-dependencies</code></a> covers adding a member to an enum, sealed type or union. Only the matches the compiler checks for coverage become errors; an <code>else</code>/<code>default</code>/<code>_</code> arm, a hand-written list of members, or a parser in another language takes the new member silently. Find every site by searching for the existing members' names, sort them into checked and silent, and turn silent ones exhaustive where you can. <a class="skill-link" href="/tbaguette-skills/skills/schema-evolution/"><code>schema-evolution</code></a> points there.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> covers a command that a standing permission rule allows. The rule matches the command's text, so the same command behind <code>cd dir &amp;&amp;</code>, an environment prefix or a pipe matches nothing and can be refused. Write it in the exact form the rule names, using the tool's own option (<code>git -C</code>, <code>--repo</code>) to aim it; if the wrapped line is refused, report it and ask rather than re-issuing it bare.</li>
-  </ul>
-</li>
       </ol>
       <p class="notes__archive-foot">
         Older than these, the whole record lives in
@@ -445,7 +453,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-search-card data-search-terms="orchestrating-work-end-to-end use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">orchestrating-work-end-to-end</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T09:57:53.726684+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T10:57:53+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</p>
   <span class="card__foot">
@@ -1139,7 +1147,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/designing-for-idempotency/" data-search-card data-search-terms="designing-for-idempotency use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues… designing systems">
   <span class="card__name-row">
     <span class="card__name">designing-for-idempotency</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T10:03:48.487190+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when an operation can arrive more than once — retries after a timeout with an unknown outcome, at-least-once queues…</p>
   <span class="card__foot">

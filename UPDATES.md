@@ -31,6 +31,18 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-26 — A retry refused by a check its own first attempt passed
+
+- `designing-for-idempotency` now says where the key lookup goes: after authentication
+  and before any precondition on state. A first attempt that succeeded changed the state
+  its own checks read (the balance it debited, the stock it reserved, the name it
+  claimed), so a retry that validates first is refused, and the caller who lost the
+  first response hears *insufficient balance* about an operation that went through. On a
+  hit the handler answers from the key's record without re-validating. It also warns
+  that a failure path which undoes "the record for this key" deletes the first attempt's
+  success when this attempt is a retry, and says to undo only what this attempt wrote. A
+  symptom row carries it.
+
 ## 2026-10-26 — A peer handed the same request is crew, even in a checkout of its own
 
 - `orchestrating-work-end-to-end` now reads the Crew dial past the checkout. A
