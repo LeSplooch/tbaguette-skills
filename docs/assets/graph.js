@@ -2471,7 +2471,8 @@
     this.stage.setPointerCapture(e.pointerId);
     if (ids.length === 2) {
       var a = this.pointers[ids[0]], b = this.pointers[ids[1]];
-      this.pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), k: this.camT.k };
+      this.pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), k: this.camT.k,
+        w: this.toWorld((a.x + b.x) / 2, (a.y + b.y) / 2) };
       this.drag = null;
       return;
     }
@@ -2506,7 +2507,14 @@
       var a = this.pointers[ids[0]], b = this.pointers[ids[1]];
       var d = Math.hypot(a.x - b.x, a.y - b.y);
       var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-      this.zoomAt(mx, my, (this.pinch.k * d / this.pinch.d) / this.camT.k);
+      // The point between the fingers stays between the fingers, so a drift pans as it zooms.
+      var pk = clamp(this.pinch.k * d / this.pinch.d, 0.2, 5);
+      this.camT.k = pk;
+      this.camT.x = this.pinch.w[0] - (mx - this.W / 2) / pk;
+      this.camT.y = this.pinch.w[1] - (my - this.H / 2) / pk;
+      this.userCam = true;
+      if (this.reduced) { this.cam = { x: this.camT.x, y: this.camT.y, k: this.camT.k }; }
+      this.kick();
       return;
     }
     if (this.drag && ptr) {
