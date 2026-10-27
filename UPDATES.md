@@ -31,6 +31,18 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-27 — A change too large for one reviewer is read by several, each on one area
+
+- `handing-off-for-review` now covers the change that cannot be split: a hand-merged
+  result of parallel workers. Give each reviewer one area chosen by where the change can
+  fail, a detached copy of the one commit under review so line references stay true
+  while the authors keep working, and the instruction that the authors' reports and
+  passing tests are not evidence. Ask for defects only, each with a failure scenario, and
+  keep the readers apart until every report is in. Verify each claim in the code, then
+  take the fixes in order of independent agreement: two readers naming the same defect in
+  different words is stronger than one reader's severity label, though a lone report
+  still gets verified rather than dropped. Its `description:` now routes to it.
+
 ## 2026-10-27 — Verify the upload before you publish the pointer, not after
 
 - `deciding-reversibility` now says where the check goes when a release uploads files

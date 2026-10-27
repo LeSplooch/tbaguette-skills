@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.42</span>
+      <span class="wordmark-version" dir="ltr">v2.1.43</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-27T21:42:14+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-27T21:42:14Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-27T21:46:29+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-27T21:46:29Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -141,11 +141,22 @@ Flag one more thing, because it applies to this very conversation: this session 
     <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
   </div>
   </div>
-  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: -70px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/deciding-reversibility/" data-fresh-at="2026-10-27T21:42:14.361560+00:00" draggable="false" style="--cf-offset: 0">
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/handing-off-for-review/" data-fresh-at="2026-10-27T21:46:29.368808+00:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">handing-off-for-review</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-27T21:46:29.368808+00:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when completing a task or feature and about to hand it off before merging, when stuck and a fresh perspective would help…</p>
+  <span class="card__foot">
+    <span class="tag">Communicating</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/deciding-reversibility/" data-fresh-at="2026-10-27T22:42:14+01:00" draggable="false" style="--cf-offset: 1">
   <span class="card__name-row">
     <span class="card__name">deciding-reversibility</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-27T21:42:14.361560+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-27T22:42:14+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library…</p>
   <span class="card__foot">
@@ -153,7 +164,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-10-26T23:11:56+01:00" draggable="false" style="--cf-offset: 1">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-fresh-at="2026-10-26T23:11:56+01:00" draggable="false" style="--cf-offset: 2">
   <span class="card__name-row">
     <span class="card__name">orchestrating-work-end-to-end</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T23:11:56+01:00">Updated</span>
@@ -164,7 +175,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="card__arrow" aria-hidden="true">→</span>
   </span>
 </a>
-<a class="card fresh__tile" href="/tbaguette-skills/skills/writing-release-notes/" data-fresh-at="2026-10-26T11:08:18+01:00" draggable="false" style="--cf-offset: 2">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/writing-release-notes/" data-fresh-at="2026-10-26T11:08:18+01:00" draggable="false" style="--cf-offset: -2">
   <span class="card__name-row">
     <span class="card__name">writing-release-notes</span>
     <span class="change-badge change-badge--updated" data-fresh-at="2026-10-26T11:08:18+01:00">Updated</span>
@@ -197,10 +208,10 @@ Flag one more thing, because it applies to this very conversation: this session 
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-27">27 Oct 2026</time>
-    <span class="notes__entry-title">Verify the upload before you publish the pointer, not after</span>
+    <span class="notes__entry-title">A change too large for one reviewer is read by several, each on one area</span>
   </h3>
   <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/deciding-reversibility/"><code>deciding-reversibility</code></a> now says where the check goes when a release uploads files and then flips one cheap pointer that running clients poll — a manifest, a tag, a DNS record. Fetch each file from its public address, hash the bytes you received and compare with the digest the pointer is about to carry, and make the flip conditional on that comparison; afterwards check only that the pointer is being served. A bad upload then cannot roll out at all, where the same finding after the flip arrives once the first clients have already run it. Its <code>description:</code> now covers the case, and a symptom row and a red flag carry it.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/handing-off-for-review/"><code>handing-off-for-review</code></a> now covers the change that cannot be split: a hand-merged result of parallel workers. Give each reviewer one area chosen by where the change can fail, a detached copy of the one commit under review so line references stay true while the authors keep working, and the instruction that the authors' reports and passing tests are not evidence. Ask for defects only, each with a failure scenario, and keep the readers apart until every report is in. Verify each claim in the code, then take the fixes in order of independent agreement: two readers naming the same defect in different words is stronger than one reader's severity label, though a lone report still gets verified rather than dropped. Its <code>description:</code> now routes to it.</li>
   </ul>
 </li>
   </ol>
@@ -213,6 +224,15 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-10-27">27 Oct 2026</time>
+    <span class="notes__entry-title">A change too large for one reviewer is read by several, each on one area</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li><a class="skill-link" href="/tbaguette-skills/skills/handing-off-for-review/"><code>handing-off-for-review</code></a> now covers the change that cannot be split: a hand-merged result of parallel workers. Give each reviewer one area chosen by where the change can fail, a detached copy of the one commit under review so line references stay true while the authors keep working, and the instruction that the authors' reports and passing tests are not evidence. Ask for defects only, each with a failure scenario, and keep the readers apart until every report is in. Verify each claim in the code, then take the fixes in order of independent agreement: two readers naming the same defect in different words is stronger than one reader's severity label, though a lone report still gets verified rather than dropped. Its <code>description:</code> now routes to it.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-27">27 Oct 2026</time>
@@ -391,15 +411,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/keeping-copies-in-sync/"><code>keeping-copies-in-sync</code></a> now has a section on the case where the running copy is ahead of the source. A service deployed from a dirty checkout holds features that exist nowhere in version control, and building from the main branch over it quietly removes them. Before a build-and-deploy the skill says to probe the live artifact and its supervisor and scheduler files in both directions, land anything ahead first, and keep the old artifact and a data backup until the combined tree is tested.</li>
   </ul>
 </li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-10-13">13 Oct 2026</time>
-    <span class="notes__entry-title">A client that asks for an extra behavior has to be told it happened</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/schema-evolution/"><code>schema-evolution</code></a> now covers the sender's side of an additive change. An old server ignores a new optional request field or header, stores the payload and answers plain success, so a client released first can announce an effect that never occurred. The skill asks for an acknowledgment only an updated server can produce, derived from the outcome rather than echoed from the request, required on the client's success path, and for testing the new-client-against-old-server pair before the rollout.</li>
-  </ul>
-</li>
       </ol>
       <p class="notes__archive-foot">
         Older than these, the whole record lives in
@@ -519,7 +530,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/deciding-reversibility/" data-search-card data-search-terms="deciding-reversibility use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">deciding-reversibility</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-27T21:42:14.361560+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-27T22:42:14+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library…</p>
   <span class="card__foot">
@@ -1582,7 +1593,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/handing-off-for-review/" data-search-card data-search-terms="handing-off-for-review use when completing a task or feature and about to hand it off before merging, when stuck and a fresh perspective would help… communicating">
   <span class="card__name-row">
     <span class="card__name">handing-off-for-review</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-27T21:46:29.368808+00:00">Updated</span>
   </span>
   <p class="card__summary">Use when completing a task or feature and about to hand it off before merging, when stuck and a fresh perspective would help…</p>
   <span class="card__foot">
