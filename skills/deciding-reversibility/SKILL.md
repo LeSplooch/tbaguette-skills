@@ -1,6 +1,6 @@
 ---
 name: deciding-reversibility
-description: Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, overwrite a setting or a configuration file, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it, or when a retention rule is about to delete by age or count from a folder that holds more than one kind of file, or when a write is about to run with a credential or connection string nobody has read the target out of.
+description: Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library, a file layout, a schema, an interface, or a default, when a discussion has gone several rounds without new information entering it, or when an action would write data, publish an interface, delete something, overwrite a setting or a configuration file, or otherwise be expensive to undo. Covers one-way and two-way doors, cost of delay, and decision altitude. Also use when an action is being called reversible because a backup, snapshot, rollback, or kill switch exists, and nothing has checked whether that action can reach it, or when a retention rule is about to delete by age or count from a folder that holds more than one kind of file, or when a write is about to run with a credential or connection string nobody has read the target out of. Also use when artifacts are uploaded and a manifest or pointer that running clients poll is about to be published.
 ---
 
 # Deciding reversibility
@@ -79,6 +79,14 @@ The check is one question at design time, and it is cheap enough to ask about ev
 
 This is a different question from whether the undo *works*, and passing one says nothing about the other: `confirming-before-claiming-done` requires a restore actually performed from the backup, and a backup can be verified restorable and still sit inside the blast radius of the thing it protects. Separation is about identity as much as location — if one credential opens both the store and its backup, both are in the radius regardless of where the bytes sit.
 
+## Verify before a cheap switch that consumers act on, not after it
+
+Rolling a pointer back is a two-way door only for the consumers that have not fetched it yet. A release uploads its artifacts somewhere inert, then one cheap write — a manifest, a pointer, a "latest" tag — makes them what every consumer fetches. The upload is harmless until something names it. The pointer write is the door, and its cheapness is what lets it pass as a formality. Consumers poll that pointer independently, so with a fleet of any size the first fetch lands within seconds of the write whatever the polling interval is, and a check started after the write cannot be sure to finish before it. Verification placed there can only describe the damage, and rolling back does not recall what the first consumers already fetched and ran. The same shape holds for a DNS record, a routing weight, a symlink swap, or any other single write that a population reads on its own clock.
+
+So the order is upload, **verify what a consumer would get**, then flip. Fetch each artifact from the public address the pointer will name, not the path you wrote it to, hash the bytes you received yourself, and compare that with the digest the pointer is about to carry, not with a hash the server reports. It costs seconds and catches the failures an upload actually has: a truncated or half-replicated object, a stale copy served from a cache under the new name, a digest computed over a different file than the one uploaded. Make the flip conditional on the comparison in the same script, so one mismatch means the pointer is never written and a bad upload cannot roll out at all, where the same finding after the flip is an incident. What is left to check afterwards is only that the pointer is being served and says what you wrote, which confirms the flip and nothing about the contents.
+
+The question that places the check, for any activation step: how long until the first consumer acts on it, and how long does the check take? If the first is shorter, after is too late, and since a check that takes seconds costs nothing in front, in front is the default. `automating-repetition`'s preflight covers what can be validated before the first write; this is the check that cannot exist until the upload has happened and still has to come before the step that makes it live. One form of the mistake is a recipe whose verification step is last because it was written to confirm the release, and confirming is not preventing.
+
 ## Decide at the right altitude
 
 The two errors are symmetric. Imposing a project-wide convention to settle one file turns a local choice into a global one and manufactures a default nobody validated. Re-deciding the same thing at twenty call sites produces twenty answers and no convention.
@@ -107,11 +115,13 @@ Record every fast decision in one line: the choice, the runner-up, and the obser
 | A fix aimed at a test environment changed production | The target was taken from the task's description, not read back out of the credential or connection string the command ran with |
 | A "keep the newest N" job deleted the one archive kept on purpose | The rule swept a folder instead of a kind of file; the archive was the oldest file in it, so it went first |
 | The rollback plan was gone at the moment it was needed | The undo lived inside the blast radius — same volume, same credential, or same lifecycle as the thing it was meant to undo |
+| A bad upload reached running clients before anyone noticed | The artifacts were checked after the pointer was published, when consumers polling it had already acted |
 
 ## Red flags
 
 - "It's reversible, we have backups." — said without naming where they live and what can reach them.
 - A write about to run on a token or connection string found in a file, rather than one issued for this task
+- A release recipe whose "verify" step comes after the pointer clients poll has been published
 - "Let us make sure we get this right the first time" about something internal and wrapped
 - A decision thread whose last two rounds introduced no new information
 - Reaching for a migration, a deletion, or an external send at the same speed as an internal rename

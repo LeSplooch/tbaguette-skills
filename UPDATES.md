@@ -31,6 +31,17 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-27 — Verify the upload before you publish the pointer, not after
+
+- `deciding-reversibility` now says where the check goes when a release uploads files
+  and then flips one cheap pointer that running clients poll — a manifest, a tag, a DNS
+  record. Fetch each file from its public address, hash the bytes you received and
+  compare with the digest the pointer is about to carry, and make the flip conditional on
+  that comparison; afterwards check only that the pointer is being served. A bad upload
+  then cannot roll out at all, where the same finding after the flip arrives once the
+  first clients have already run it. Its `description:` now covers the case, and a
+  symptom row and a red flag carry it.
+
 ## 2026-10-26 — A limit the owner changes mid-run is a ruling, and a pause ends when they say so
 
 - `orchestrating-work-end-to-end` now has a row, in its table of envelope changes, for
