@@ -31,6 +31,17 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-28 — Parallel workers share the machine's memory, not only its files
+
+- `fanning-out-independent-work` now treats memory and cores as a shared surface, next
+  to ports and temp space. When several workers each run a heavy build or test suite on
+  one machine, their footprints add up, and the out-of-memory killer can take the
+  assistant's own process along with its background agents. Before dispatching, measure
+  one heavy step's peak, multiply it by how many workers will hit it at once, and compare
+  that with free memory. If it does not fit, queue the heavy step and keep the rest
+  parallel. Commit work in progress as soon as it compiles. The skill now also triggers
+  when several workers will build or test on one machine.
+
 ## 2026-10-27 — A change too large for one reviewer is read by several, each on one area
 
 - `handing-off-for-review` now covers the change that cannot be split: a hand-merged
