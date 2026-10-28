@@ -31,8 +31,19 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-29 — Claude Code can dispatch TBaguette's implementer, reviewer and investigator by name
+## 2026-10-29 — A climb mod, and Claude Code can dispatch TBaguette's implementer, reviewer and investigator by name
 
+- New, and separate from the skills: `climb`, a Claude Code mod in the same marketplace
+  (`/plugin install climb --marketplace LeSplooch/tbaguette-skills`). Start it with
+  `/climb 20 npm test`: the mod queues the first iteration, then after every iteration it
+  runs the check itself, so the model's own account of how it did never counts. It logs
+  exit code, score (from a `score: N` line), check time and turn time to `.climb-log.tsv`,
+  refuses edit-tool changes to paths you protect, and queues the next iteration until the
+  check passes, the budget runs out, the score stops improving, the check hangs, or you
+  stop it. A prompt you send yourself mid-climb is answered normally and does not count.
+  A band above the prompt shows the trail. It
+  is the tool half of `designing-verifiable-goals`, which now points to it. The mod API is
+  early access, and nothing in the skills depends on the mod.
 - The three delegation roles that Copilot CLI already had are now Claude Code agent types
   too: `tbaguette-atelier:implementer`, `tbaguette-atelier:reviewer` and
   `tbaguette-atelier:investigator`, shipped in the plugin's `agents/` folder. Each carries

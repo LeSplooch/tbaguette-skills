@@ -11,7 +11,7 @@
       "displayName": "TBaguette's Atelier",
       "license": "GPL-2.0-only",
       "description": "One hundred and two project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling — plus formidable, design craft for every UI stack.",
-      "version": "2.3.0",
+      "version": "2.3.1",
       "source": "./",
       "author": {
         "name": "TBaguette",
@@ -28,6 +28,26 @@
         "security",
         "naming",
         "workflow"
+      ]
+    },
+    {
+      "name": "climb",
+      "displayName": "climb",
+      "license": "GPL-2.0-only",
+      "description": "A Claude Code mod: name a check command and the mod runs it after every turn, logs score and timing, refuses edits to protected paths, and queues the next iteration until the check passes or a stop condition fires.",
+      "version": "0.1.0",
+      "source": "./mods/climb",
+      "author": {
+        "name": "TBaguette",
+        "email": "verderosa2@gmail.com"
+      },
+      "homepage": "https://lesplooch.github.io/tbaguette-skills/skills/designing-verifiable-goals/",
+      "repository": "https://github.com/LeSplooch/tbaguette-skills",
+      "keywords": [
+        "mod",
+        "loop",
+        "verification",
+        "autonomous"
       ]
     }
   ]

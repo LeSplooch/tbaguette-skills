@@ -82,7 +82,7 @@ When the check is a model judging likeness to a reference, the run optimizes the
 
 ## Keep the climb fed
 
-During a long climb the operator's job is not reading each change. It is keeping the run supplied, and what runs short is often not the model. Write this half into the goal too:
+During a long climb the operator's job is not reading each change. It is keeping the run supplied, and what runs short is often not the model. Write this half into the goal too. On Claude Code, the `climb` mod in this plugin's marketplace runs a named check after every turn, logs exit code, score, check time and turn time to a file it guards from the run's edit tools (a shell command is not inspected), and stops at the bar, the budget or a stall:
 
 - **The harness, not the run, appends one line per iteration:** what the run says it changed beside the harness's own summary of the files and regions touched, the score the harness computed, and time spent waiting (for a build slot, a machine, a lock) and working, both timed by the harness. Without the waiting column, a climb starved for compute looks like a climb out of ideas.
 - **The check's latency is the climb's speed limit.** An iteration is a change plus a check. When each check waits hours for a build slot, the run gets a handful of attempts a day however capable it is, and adding workers adds queue. The cuts that work: build once and snapshot the warm environment, so each worker starts from it instead of rebuilding everything; cache the reference's functional outputs once two runs of it have been seen to agree, normalising fields that legitimately vary, but never cache its timings; size compute to the peak the workers reach, not to their average (`fanning-out-independent-work` has how to measure it).

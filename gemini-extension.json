@@ -2,6 +2,6 @@
   "name": "tbaguette-atelier",
   "license": "GPL-2.0-only",
   "description": "One hundred and two project-, stack-, and language-agnostic skills for judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, and tooling.",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "contextFileName": "GEMINI.md"
 }

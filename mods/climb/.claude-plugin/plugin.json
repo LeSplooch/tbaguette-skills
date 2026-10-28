@@ -1,0 +1,13 @@
+{
+  "name": "climb",
+  "version": "0.1.0",
+  "description": "Run a goal as a climb: the mod runs your check after every turn, logs score and timing, protects named files, and queues the next iteration until the check passes or a stop condition fires.",
+  "author": {
+    "name": "TBaguette",
+    "email": "verderosa2@gmail.com"
+  },
+  "homepage": "https://lesplooch.github.io/tbaguette-skills/skills/designing-verifiable-goals/",
+  "repository": "https://github.com/LeSplooch/tbaguette-skills",
+  "license": "GPL-2.0-only",
+  "types": "./types/index.d.ts"
+}

@@ -475,6 +475,11 @@ cannot rewrite a prompt instead of emitting both and hoping.
   decorative, and why there are two Copilot hook files with different event
   casing rather than one. Neither file is reachable from the other's
   surface.
+- **`mods/climb/` is a second plugin in `.claude-plugin/marketplace.json`, for Claude
+  Code only.** It is a hooks module (Claude Code's mod API), which no other harness
+  runs. Copilot CLI reads that marketplace file too and will list it; installing it there
+  gives a plugin with nothing to load. The skills never depend on it, and the
+  `.agents/plugins/marketplace.json` Codex reads does not list it.
 - **Claude Code reads the same three roles from the root `agents/`.** They are
   rendered from the Copilot sources with the tool list translated (`execute` →
   `Bash`, `read` → `Read`, `search` → `Grep`, `Glob`, `edit` → `Edit`, `Write`),
