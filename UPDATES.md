@@ -31,16 +31,35 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-10-28 — Parallel workers share the machine's memory, not only its files
+## 2026-10-28 — Before a long run starts, build the check it will climb
 
+- New skill, `designing-verifiable-goals`, for the moment a goal is about to be handed
+  to a run that will iterate on its own for hours or days: a loop or goal command, an
+  overnight port, "do not stop until it is twice as fast". What such a run actually
+  pursues is the check it is graded against at each iteration, so the skill has you build
+  that check first. Use the strongest kind that exists: a pinned reference, then measured
+  behaviour, then a model judging, with a person only at checkpoints. Make failures part
+  of what must match, keep a slice of cases the run never sees, put a speed target behind
+  correctness rather than trading against it, and write the bar where you want the run to
+  stop, because it will stop there. When the check is a model judging likeness to a
+  reference, the skill treats that judge as something the run will optimize: the
+  reference you pick decides the result, and the judge counts only once it has rejected a
+  deliberately broken copy. It also covers what goal texts usually leave out: a line per
+  iteration, written by the harness rather than the run, logging time spent waiting
+  against time spent working, and a second session asking on a schedule what is blocking
+  the run.
+- `evaluating-llm-output` now says what changes when a judge sits inside a loop that
+  iterates until it approves: each of its leanings becomes the direction the output
+  moves, so re-check it against what the loop produced, not against what existed before.
 - `fanning-out-independent-work` now treats memory and cores as a shared surface, next
   to ports and temp space. When several workers each run a heavy build or test suite on
-  one machine, their footprints add up, and the out-of-memory killer can take the
-  assistant's own process along with its background agents. Before dispatching, measure
-  one heavy step's peak, multiply it by how many workers will hit it at once, and compare
-  that with free memory. If it does not fit, queue the heavy step and keep the rest
-  parallel. Commit work in progress as soon as it compiles. The skill now also triggers
-  when several workers will build or test on one machine.
+  one machine, their footprints add up, and past the edge the operating system can kill
+  the dispatching session itself along with its background agents. Before dispatching,
+  measure one heavy step's peak memory (`/usr/bin/time -v` reports it on Linux), multiply
+  it by how many workers will hit it at once, and compare that with available memory. If
+  it does not fit, queue the heavy step and keep the rest parallel, and commit work in
+  progress as soon as it builds. The skill now also triggers when several workers will
+  build or test on one machine.
 
 ## 2026-10-27 — A change too large for one reviewer is read by several, each on one area
 

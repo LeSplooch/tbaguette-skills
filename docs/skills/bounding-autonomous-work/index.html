@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.44</span>
+      <span class="wordmark-version" dir="ltr">v2.2.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-28T21:59:00+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-28T21:59:00Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-28T22:17:43+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-28T22:17:43Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">bounding-autonomous-work</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-28T22:17:43.170539+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Planning and delegation</span>
@@ -77,7 +77,7 @@
 <p>What replaces that is not more care. Care is what the run already has, and care is exactly what fails here: a careful agent alone in a room will answer its own question, believe the answer, and build six hours of competent work on top of it. The replacement is bounds, written down before the work starts, in a form that fires without anyone reading them.</p>
 <p>The failure this exists to prevent is not a runaway agent doing something alarming. It is the ordinary one — a long unsupervised run that did good work in the wrong direction, because the question that would have caught it in minute three was asked into an empty room and then quietly settled by the only party present.</p>
 <h2 id="when-to-use">When to use</h2>
-<ul><li>Work will finish before anyone reads a word of it.</li><li>A <em>goal</em> was handed over rather than a plan: &quot;get X working&quot;, &quot;clean this up&quot;, &quot;keep going until the suite passes&quot;.</li><li>A subagent is about to be dispatched with a task it cannot ask questions about.</li><li>A hook, a cron, a loop, or a CI step will run this with no reader.</li><li>A job is about to be detached, backgrounded, or left running overnight.</li><li>A question was just asked, nothing answered it, and the run is about to continue anyway. That moment is the trigger, not a reason to skip this.</li><li>Not for: how much deliberation one decision deserves — <a class="skill-link" href="/tbaguette-skills/skills/deciding-reversibility/"><code>deciding-reversibility</code></a>.</li><li>Not for: when a polish loop has stopped paying — <a class="skill-link" href="/tbaguette-skills/skills/knowing-when-to-stop/"><code>knowing-when-to-stop</code></a> covers diminishing returns. Stop conditions here fire whether or not returns are good.</li><li>Not for: work that merely takes a long time with someone watching. That is <a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a>.</li></ul>
+<ul><li>Work will finish before anyone reads a word of it.</li><li>A <em>goal</em> was handed over rather than a plan: &quot;get X working&quot;, &quot;clean this up&quot;, &quot;keep going until the suite passes&quot;.</li><li>A subagent is about to be dispatched with a task it cannot ask questions about.</li><li>A hook, a cron, a loop, or a CI step will run this with no reader.</li><li>A job is about to be detached, backgrounded, or left running overnight.</li><li>A question was just asked, nothing answered it, and the run is about to continue anyway. That moment is the trigger, not a reason to skip this.</li><li>Not for: how much deliberation one decision deserves — <a class="skill-link" href="/tbaguette-skills/skills/deciding-reversibility/"><code>deciding-reversibility</code></a>.</li><li>Not for: when a polish loop has stopped paying — <a class="skill-link" href="/tbaguette-skills/skills/knowing-when-to-stop/"><code>knowing-when-to-stop</code></a> covers diminishing returns. Stop conditions here fire whether or not returns are good.</li><li>Not for: work that merely takes a long time with someone watching. That is <a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a>.</li><li>Not for: deciding what a goal-driven run measures itself against, meaning the check that says whether each iteration got closer — <a class="skill-link" href="/tbaguette-skills/skills/designing-verifiable-goals/"><code>designing-verifiable-goals</code></a>. A run handed a goal needs both. Bounds with no check stop it without saying whether it got closer, and a check with no bounds keeps it spending for as long as the bar stays out of reach.</li></ul>
 <h2 id="three-bounds-all-written-before-the-first-action">Three bounds, all written before the first action</h2>
 <ol><li><strong>The decision bound</strong> — what you may settle alone.</li><li><strong>The stop bound</strong> — what makes you halt and report rather than continue.</li><li><strong>The door bound</strong> — what no confidence level licenses without a human.</li></ol>
 <p>Written <em>before</em> is not a stylistic preference. Each of these has to be decided by a version of you that does not yet want the run to succeed. Written at the moment they would fire, all three are negotiable, and all three get negotiated.</p>
@@ -135,9 +135,9 @@
   <span class="prevnext__label">Previous</span>
   <span class="prevnext__name">← routing-around-capability-gaps</span>
 </a>
-<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/checkpointing-long-runs/">
+<a class="prevnext__link prevnext__link--next" href="/tbaguette-skills/skills/designing-verifiable-goals/">
   <span class="prevnext__label">Next</span>
-  <span class="prevnext__name">checkpointing-long-runs →</span>
+  <span class="prevnext__name">designing-verifiable-goals →</span>
 </a></nav>
 <div class="container see-also">
   <h2 class="see-also__title">More in Planning and delegation</h2>
@@ -161,6 +161,10 @@
 <li><a class="see-also__link" href="/tbaguette-skills/skills/routing-around-capability-gaps/">
       <span class="see-also__name">routing-around-capability-gaps</span>
       <span class="see-also__summary">Use when the work needs something the current model or harness cannot do — audio or video input, image or speech output…</span>
+    </a></li>
+<li><a class="see-also__link" href="/tbaguette-skills/skills/designing-verifiable-goals/">
+      <span class="see-also__name">designing-verifiable-goals</span>
+      <span class="see-also__summary">Use when a run is about to be handed a goal to iterate toward on its own — a loop re-prompting itself until a condition holds…</span>
     </a></li>
 <li><a class="see-also__link" href="/tbaguette-skills/skills/checkpointing-long-runs/">
       <span class="see-also__name">checkpointing-long-runs</span>

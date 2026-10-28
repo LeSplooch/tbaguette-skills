@@ -47,13 +47,14 @@ Ahead of orienting, ahead of framing, ahead of naming the track.
 
 ## Before the run — naming the envelope
 
-The track is half the route. These three are pulled by the *other* half — the
+The track is half the route. These are pulled by the *other* half — the
 dials in `reference/envelopes.md` — and each is read before the first action,
 not once the run is already in trouble.
 
 | Skill | Reach for it when |
 |---|---|
 | `bounding-autonomous-work` | Presence is `autonomous` or `unattended` — nobody will answer a gate before the run ends. Also the moment a question has been asked into a silence and the run is about to continue anyway |
+| `designing-verifiable-goals` | Presence is `autonomous` or `unattended` and the run is handed a goal to iterate toward rather than a plan: a loop, "until it passes", "until it is twice as fast". Build the check it will measure itself against before it starts, beside the stop conditions |
 | `checkpointing-long-runs` | Amplitude is `campaign` — the work will outlive the context holding it. Also the moment a compaction becomes plausible in a run that started as `standard` |
 | `deciding-reversibility` | Blast radius is `live`, or is about to become live at one specific command |
 | `isolating-work-with-worktrees` | Crew is `shared tree`, or the run wants a radius of `sandbox` it does not currently have |

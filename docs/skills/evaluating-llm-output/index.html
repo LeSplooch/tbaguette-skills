@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.1.44</span>
+      <span class="wordmark-version" dir="ltr">v2.2.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-28T21:59:00+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-28T21:59:00Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-28T22:17:43+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-28T22:17:43Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">evaluating-llm-output</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-28T22:17:43.170539+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Testing</span>
@@ -87,6 +87,7 @@
 <p>A model grading output is making a prediction, and its agreement with the person who owns quality is an unknown until you measure it.</p>
 <ol><li>Label a set of outputs by hand for the one criterion the judge will apply — pass or fail, with a sentence of reason. The labeler is whoever would be embarrassed by a wrong answer shipping, not whoever is free.</li><li>Split the labels: some to tune the judge's instructions against, the rest held back and never looked at while tuning.</li><li>Report, on the held-back set, how often the judge passes what the human passed and how often it fails what the human failed — the two separately, not one accuracy figure. When most outputs pass, a judge that passes everything scores high on accuracy and catches nothing.</li></ol>
 <p>Then keep it honest. Labeling changes the labeler: the criteria sharpen as examples are graded, so expect to rewrite the definition after the first batch and relabel. Judges have known leanings — toward whichever option came first in a pairwise comparison, toward longer answers, toward output from their own model family — so swap the order, and prefer a judge from a different family than the model being judged. And the judge's own model changes underneath it, so re-measure agreement on a schedule, not once.</p>
+<p><strong>A judge something optimizes against is a reward, not a measurement.</strong> Everything above assumes a person reads the verdict and decides. Put the same judge inside a loop that iterates until it approves, such as an agent revising until the judge prefers its output to a reference, and each leaning stops being noise and becomes a direction. A judge that favors length grows the answers, and one that favors confident wording strips the hedges. Agreement measured before the loop starts cannot be assumed to survive it, because the loop concentrates on outputs the judge approves, and those include the ones where judge and owner disagree. Re-label a sample of what the loop produced, not of what existed before it, and keep held-out cases the loop never sees. <a class="skill-link" href="/tbaguette-skills/skills/designing-verifiable-goals/"><code>designing-verifiable-goals</code></a> covers the rest of that check.</p>
 <h2 id="build-the-set-from-what-the-feature-actually-receives">Build the set from what the feature actually receives</h2>
 <p>Composed examples describe the inputs someone imagined. Capture real ones — sampled from production or from the people already using the feature — and keep them, with the output and the verdict (<a class="skill-link" href="/tbaguette-skills/skills/grounding-test-doubles/"><code>grounding-test-doubles</code></a> has the general case for capture over composition). Every failure found in production becomes a case, the same way a bug becomes a regression test (<a class="skill-link" href="/tbaguette-skills/skills/regression-test-from-bug/"><code>regression-test-from-bug</code></a>). When users start sending a new kind of input, that is a new category rather than more of the same, and the existing pass rate says nothing about it (<a class="skill-link" href="/tbaguette-skills/skills/auditing-new-input-categories/"><code>auditing-new-input-categories</code></a>).</p>
 <p>Keep the examples you tuned the prompt against apart from the ones you report on. A prompt adjusted until a set passes has learned that set; its score there is a measure of the tuning, not of the feature.</p>

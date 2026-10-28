@@ -1,6 +1,6 @@
 # TBaguette's Atelier
 
-101 skills, shipped as the `tbaguette-atelier@skills-dir` plugin. Invoke any of them as
+102 skills, shipped as the `tbaguette-atelier@skills-dir` plugin. Invoke any of them as
 `tbaguette-atelier:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -46,6 +46,7 @@ Atelier skill hands off to a neighbour.
 | `fanning-out-independent-work` | Telling genuine independence from work that only looks independent; avoiding collisions |
 | `routing-around-capability-gaps` | When this model or harness can't do it: surveying what else is on the machine, deterministic tools before a second model, consent before data crosses a provider |
 | `bounding-autonomous-work` | Work that finishes before anyone reads it: substituting each gate rather than skipping it, four pre-committed stop conditions, the actions no confidence licenses without a human |
+| `designing-verifiable-goals` | A goal handed to a run that iterates on its own: the check it climbs as the real goal, a held-out slice, a second objective stacked as a constraint, what a judged proxy gets optimized into, and keeping the climb fed |
 | `checkpointing-long-runs` | Work that outlives the context holding it: what to write and when, the seams worth a checkpoint, re-reading rather than recalling, the brief a successor can act on |
 
 ## Reading code

@@ -41,6 +41,11 @@ party present.
   diminishing returns. Stop conditions here fire whether or not returns are good.
 - Not for: work that merely takes a long time with someone watching. That is
   `checkpointing-long-runs`.
+- Not for: deciding what a goal-driven run measures itself against, meaning the
+  check that says whether each iteration got closer — `designing-verifiable-goals`.
+  A run handed a goal needs both. Bounds with no check stop it without saying
+  whether it got closer, and a check with no bounds keeps it spending for as
+  long as the bar stays out of reach.
 
 ## Three bounds, all written before the first action
 
