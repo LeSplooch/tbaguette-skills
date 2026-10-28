@@ -1344,6 +1344,10 @@
       if (self.drewLast) { self.frameCost += (now - self.drawnAt - self.frameCost) * 0.2; }
       self.drewLast = false;
       var calm = self.frameCost > 25 ? 2 * self.frameCost : 30;
+      // A tab left open and untouched for twenty seconds has nobody watching
+      // the drift: ten frames a second keeps it breathing and lets a phone
+      // go cool. Any input is a kick, and a kick is back at full rate.
+      if (now - self.stirredAt > 20000) { calm = Math.max(calm, 100); }
       if (!self.dirty && now - self.stirredAt > 1500 && now - self.drawnAt < calm) {
         if (document.hidden) { self.running = false; } else { requestAnimationFrame(loop); }
         return;
