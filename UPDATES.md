@@ -31,6 +31,18 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-10-29 — Claude Code can dispatch TBaguette's implementer, reviewer and investigator by name
+
+- The three delegation roles that Copilot CLI already had are now Claude Code agent types
+  too: `tbaguette-atelier:implementer`, `tbaguette-atelier:reviewer` and
+  `tbaguette-atelier:investigator`, shipped in the plugin's `agents/` folder. Each carries
+  its role's standing rules from `delegating-tasks-with-review-gates`, so a dispatch holds
+  only the task itself instead of the whole pasted template. The reviewer and investigator
+  have no edit or write tool (they keep a shell, so this limits them rather than sealing
+  them). None pins a model: name one per dispatch.
+- `delegating-tasks-with-review-gates` now says to dispatch those types where the harness
+  lists them, rather than a general-purpose agent.
+
 ## 2026-10-28 — Before a long run starts, build the check it will climb
 
 - New skill, `designing-verifiable-goals`, for the moment a goal is about to be handed

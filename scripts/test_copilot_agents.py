@@ -1,5 +1,5 @@
 """Tests for scripts/copilot_agents.py and the agents it commits under
-com.github.copilot/agents/: that the committed files are exactly what the
+com.github.copilot/agents/ and, for Claude Code, agents/: that the committed files are exactly what the
 renderer produces (an agent that drifted from delegating-tasks-with-review-gates'
 templates is a reviewer holding last month's rules), that each one is a
 well-formed Copilot agent profile, that the read-only roles cannot edit, and
@@ -62,6 +62,45 @@ class TestCommittedAgents(unittest.TestCase):
             self.assertIn("Edit those, not this file", text)
             self.assertIsNone(re.search(r"\{\{[A-Z_]+\}\}", text))
 
+
+
+class TestClaudeCodeAgents(unittest.TestCase):
+    # Claude Code namespaces plugin agents as tbaguette-atelier:<name>, from the root agents/.
+    def test_every_role_is_rendered(self):
+        self.assertEqual(sorted(ca.render_claude()), sorted(f"{r}.md" for r in ROLES))
+
+    def test_body_is_the_copilot_body(self):
+        cop = ca.render()
+        for name, text in ca.render_claude().items():
+            self.assertEqual(text.split("\n---\n", 1)[1],
+                             cop[name.replace(".md", ".agent.md")].split("\n---\n", 1)[1], name)
+
+    def test_tools_are_claude_code_names(self):
+        known = {t for ts in ca.CLAUDE_TOOLS.values() for t in ts}
+        for name, text in ca.render_claude().items():
+            tools = [t.strip() for t in frontmatter(text)["tools"].split(",")]
+            self.assertTrue(tools and set(tools) <= known, f"{name}: {tools}")
+
+    def test_read_only_roles_cannot_edit_or_write(self):
+        for role in ("reviewer", "investigator"):
+            tools = frontmatter(ca.render_claude()[f"{role}.md"])["tools"]
+            for t in ("Edit", "Write"):
+                self.assertNotIn(t, tools, f"{role} must not have {t}")
+        self.assertIn("Edit", frontmatter(ca.render_claude()["implementer.md"])["tools"])
+
+    def test_no_role_pins_a_model(self):
+        for name, text in ca.render_claude().items():
+            self.assertNotIn("model", frontmatter(text), name)
+
+    def test_unknown_tool_category_fails_the_render(self):
+        real = ca.render
+
+        def odd():
+            return {k: v.replace('"search"', '"telepathy"') for k, v in real().items()}
+
+        with mock.patch.object(ca, "render", side_effect=odd):
+            with self.assertRaises(ca.TemplateShapeError):
+                ca.render_claude()
 
 class TestTemplateShapeChanges(unittest.TestCase):
     def test_missing_prompt_block_fails_loudly(self):

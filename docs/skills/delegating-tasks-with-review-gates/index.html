@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.2.0</span>
+      <span class="wordmark-version" dir="ltr">v2.3.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-28T22:17:43+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-28T22:17:43Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-28T23:16:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-28T23:16:44Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">delegating-tasks-with-review-gates</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-28T23:16:44.716759+00:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Planning and delegation</span>
@@ -96,6 +96,7 @@
 <p>Dispatch one implementer at a time. Two working the same tree at once is a conflict waiting to resolve itself badly. Invite questions before it starts work and answer them completely — an implementer that guesses instead of asking is a defect in the dispatch, not in the implementer. The implementer never spawns subagents of its own, and especially never a reviewer of its own: the review seat is already scheduled, dispatched by you once the report lands, and a self-spawned second opinion duplicates it at full cost while counting for nothing.</p>
 <p>If several tasks in the plan are the same small edit repeated across files — the same constant, the same one-line fix — compose one dispatch listing every file and its change rather than one subagent per task, and review the batch as a single diff. Save one-dispatch-per-task for work that actually needs its own judgment, its own tests, or its own review.</p>
 <p>Template: <a href="#ref-implementer-prompt">reference/implementer-prompt.md</a></p>
+<p>Where the harness lists this plugin's agent types (Claude Code and Copilot CLI offer <code>tbaguette-atelier:implementer</code>, <code>tbaguette-atelier:reviewer</code> and <code>tbaguette-atelier:investigator</code>), dispatch the role by its type rather than a general-purpose agent. Each type already carries its template's standing discipline, from &quot;You Do Not Dispatch Subagents&quot; on, so the dispatch holds only the task-specific part. The reviewer and investigator have no edit or write tool, but they keep a shell, so that limits their tools rather than guaranteeing they cannot write. None pins a model, so name one in every dispatch, per &quot;Choosing a model for each role&quot; above.</p>
 <h2 id="handle-what-comes-back">Handle what comes back</h2>
 <table><thead><tr><th>Status</th><th>What it means</th><th>What you do</th></tr></thead><tbody><tr><td>DONE</td><td>Work complete, self-reviewed, committed</td><td>Move to review</td></tr><tr><td>DONE_WITH_CONCERNS</td><td>Complete, but the implementer has doubts</td><td>Read the concerns first — resolve anything about correctness or scope before review; note-only observations can wait for review</td></tr><tr><td>NEEDS_CONTEXT</td><td>Missing information blocked progress</td><td>Supply what's missing, re-dispatch</td></tr><tr><td>BLOCKED</td><td>Cannot complete as given</td><td>Diagnose why, then act</td></tr><tr><td><em>no status at all</em></td><td>The run was ended by a ceiling — turns, output size, timeout, crash — before it could report</td><td>Treat as incomplete of unknown extent; re-dispatch for the remainder. Never as DONE</td></tr></tbody></table>
 <p>Four of those rows are statuses a delegate <em>chose</em>. The fifth is the absence of a choice, and it is the one that costs the most, because it is the only outcome the delegate cannot tell you about. Every delegation system has ceilings — a turn limit, an output-size limit, a wall-clock timeout, a cut stream, a crash, a process killed from outside — and a run that hits one ends mid-sentence. What arrives is the work done so far plus whatever prose happened to be in flight, which frequently reads like a summary of a finished task, because the delegate believed it was going to finish.</p>

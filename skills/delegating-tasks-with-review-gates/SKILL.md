@@ -70,6 +70,8 @@ If several tasks in the plan are the same small edit repeated across files — t
 
 Template: [reference/implementer-prompt.md](reference/implementer-prompt.md)
 
+Where the harness lists this plugin's agent types (Claude Code and Copilot CLI offer `tbaguette-atelier:implementer`, `tbaguette-atelier:reviewer` and `tbaguette-atelier:investigator`), dispatch the role by its type rather than a general-purpose agent. Each type already carries its template's standing discipline, from "You Do Not Dispatch Subagents" on, so the dispatch holds only the task-specific part. The reviewer and investigator have no edit or write tool, but they keep a shell, so that limits their tools rather than guaranteeing they cannot write. None pins a model, so name one in every dispatch, per "Choosing a model for each role" above.
+
 ## Handle what comes back
 
 | Status | What it means | What you do |
