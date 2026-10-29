@@ -702,6 +702,17 @@ def check_climb_banner() -> None:
               for slug in (templates.CLIMB_SKILL, templates.CLIMB_DELEGATION_SKILL)))
     real_mod = Path(__file__).resolve().parent.parent / "mods" / "climb" / ".claude-plugin" / "plugin.json"
     check("the mod the banner links to exists in this repository", real_mod.is_file())
+    # The shell's rules are shared by selector list. A rule the climb banner
+    # misses is silent: missing `.climb-banner__body a { pointer-events: auto }`
+    # left every link in it, the button included, unclickable.
+    css = (Path(__file__).resolve().parent.parent / "docs" / "assets" / "styles.css").read_text(encoding="utf-8")
+    shell = css[css.index(".graph-banner,\n.release-banner,\n.century-banner,"):css.index("/* The announcements' row, at the top of the hero")]
+    shared = set(re.findall(r"\.century-banner([\w:-]*(?: a)?)(?=\s*[,{])", shell))
+    missing = sorted(sel for sel in shared if f".climb-banner{sel}" not in shell)
+    check("every shell rule the century banner shares, the climb banner shares too: " + (", ".join(missing) or "none missing"),
+          not missing)
+    check("...including the one that makes its links clickable",
+          ".climb-banner__body a { pointer-events: auto; }" in css)
 
 
 def check_century_banner() -> None:
