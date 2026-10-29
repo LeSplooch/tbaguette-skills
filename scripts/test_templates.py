@@ -647,6 +647,63 @@ def check_release_banner() -> None:
                                               plugin_version="1.1.74").split("<main", 1)[1])
 
 
+def check_climb_banner() -> None:
+    """The climb release is announced above every other banner while its
+    skill is in the library and its date has not passed: an aside with a
+    label, a picture with a finished static form, and the three things that
+    shipped as links."""
+    print("climb banner check")
+    skills = dict(FIXTURE["skills"])
+    for slug in (templates.CLIMB_SKILL, templates.CLIMB_DELEGATION_SKILL):
+        skills[slug] = {"slug": slug, "name": slug}
+    categories = [dict(c) for c in FIXTURE["categories"]]
+    categories[0] = dict(categories[0], skill_slugs=list(categories[0]["skill_slugs"])
+                         + [templates.CLIMB_SKILL, templates.CLIMB_DELEGATION_SKILL])
+    html = render_index(categories, skills, plugin_version="2.3.1")
+    check("with its skill in the library, the landing page carries the climb banner",
+          '<aside class="climb-banner" aria-label="New: built to climb"' in html)
+    check("...in a lead row of its own, above the <h1>",
+          html.index('<div class="hero__banners hero__banners--lead">')
+          < html.index('<aside class="climb-banner"')
+          < html.index('<h1 class="hero__headline">'))
+    banner = html.split('<aside class="climb-banner"', 1)[1].split("</aside>", 1)[0]
+    check("...as an aside with a label, never a heading ahead of the <h1>", "<h2" not in banner)
+    check("the picture has a static drawing under the canvas, hidden from assistive tech",
+          '<div class="climb-banner__stage" aria-hidden="true">' in banner
+          and '<svg class="climb-banner__art"' in banner
+          and '<canvas class="climb-banner__canvas"></canvas>' in banner)
+    check("...ending on the bar: one solid dot, and a ring for every step before it",
+          banner.count('class="climb-banner__dot"') == 1
+          and banner.count('class="climb-banner__ring"') == len(templates._CLIMB_STEPS) - 1)
+    check("the skill, the mod and the agent types are listed as links",
+          f'href="/skills/{templates.CLIMB_SKILL}/"' in banner
+          and f'href="{templates.CLIMB_MOD_URL}"' in banner
+          and f'href="/skills/{templates.CLIMB_DELEGATION_SKILL}/"' in banner)
+    check("...under a label the list is named by",
+          '<ul class="climb-banner__ships" aria-labelledby="climb-ships">' in banner
+          and 'id="climb-ships">What shipped</p>' in banner)
+    check("its button opens the skill",
+          f'class="climb-banner__cta" href="/skills/{templates.CLIMB_SKILL}/"' in banner)
+    check("...and it retires in the reader's browser on its date",
+          f'data-climb-new-until="{templates.CLIMB_NEW_UNTIL}"' in banner)
+    after = render_index(categories, skills, plugin_version="2.3.1",
+                         last_updated_utc="2026-11-13T00:00:00+00:00")
+    check("a build past its date leaves it out", '<aside class="climb-banner"' not in after)
+    check("a library without the skill gets no climb banner",
+          "climb-banner" not in render_index(FIXTURE["categories"], FIXTURE["skills"]).split("<main", 1)[1])
+    no_agents = dict(skills)
+    del no_agents[templates.CLIMB_DELEGATION_SKILL]
+    nbanner = render_index(categories, no_agents, plugin_version="2.3.1")
+    check("without the delegation skill, the agent-types line is left out rather than linking nowhere",
+          "climb-banner__ship--agents" not in nbanner and "climb-banner__ship--mod" in nbanner)
+    real_skills = Path(__file__).resolve().parent.parent / "skills"
+    check("the skills the banner names exist in this library",
+          all((real_skills / slug / "SKILL.md").is_file()
+              for slug in (templates.CLIMB_SKILL, templates.CLIMB_DELEGATION_SKILL)))
+    real_mod = Path(__file__).resolve().parent.parent / "mods" / "climb" / ".claude-plugin" / "plugin.json"
+    check("the mod the banner links to exists in this repository", real_mod.is_file())
+
+
 def check_century_banner() -> None:
     """Passing a hundred skills is announced across the top of the hero,
     above the release and the graph: gated on the count and on a date, its
@@ -2020,6 +2077,7 @@ def main() -> None:
     check_graph_banner()
     check_release_banner()
     check_century_banner()
+    check_climb_banner()
     check_directory_listing_switch()
     check_header_and_badges()
     check_fresh_section()

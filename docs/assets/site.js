@@ -1166,9 +1166,9 @@
   // empty.
   function initGraphNews() {
     var today = new Date().toISOString().slice(0, 10);
-    toArray(document.querySelectorAll('[data-graph-new-until], [data-release-new-until], [data-century-new-until]')).forEach(function (el) {
+    toArray(document.querySelectorAll('[data-graph-new-until], [data-release-new-until], [data-century-new-until], [data-climb-new-until]')).forEach(function (el) {
       var until = el.getAttribute('data-graph-new-until') || el.getAttribute('data-release-new-until') ||
-        el.getAttribute('data-century-new-until');
+        el.getAttribute('data-century-new-until') || el.getAttribute('data-climb-new-until');
       if (today <= until) return;
       var link = el.closest('.site-header__nav-link--new');
       if (link) link.classList.remove('site-header__nav-link--new');
@@ -2274,6 +2274,224 @@
     else begin();
   }
 
+  // The climb release's picture: the loop it is about, replayed. Iteration
+  // markers step up toward a dashed bar, each landing with a small pulse,
+  // hollow while the check fails; the last lands on the bar solid, the bar
+  // flares and throws a few sparks along itself, the run holds, fades, and a
+  // new climb begins with a different path -- sometimes a dip, never the same
+  // number of steps twice running. The SVG under the canvas is the same climb
+  // at rest: reduced motion and forced colours keep it and nothing moves.
+  function initClimbBanner() {
+    var banner = document.querySelector('[data-climb-banner]');
+    if (!banner) return;
+    var canvas = banner.querySelector('.climb-banner__canvas');
+    if (!canvas || !canvas.getContext) return;
+    if (prefersReducedMotion()) return;
+    if (window.matchMedia && window.matchMedia('(forced-colors: active)').matches) return;
+
+    var ctx = canvas.getContext('2d');
+    var TAU = Math.PI * 2;
+    var STEP = 0.72, HOLD = 2.6, FADE = 0.7, LEAD = 0.35;
+    var W = 0, H = 0, dpr = 1;
+    var accent = [221, 162, 92], ink = [200, 190, 180], bg = [20, 16, 14], muted = [150, 140, 130];
+    var run = null, sparks = [], lastSteps = 0;
+    var visible = true, raf = 0, last = performance.now(), drawn = false;
+    var probe = document.createElement('canvas').getContext('2d');
+
+    function parse(value, fallback) {
+      probe.fillStyle = '#000';
+      probe.fillStyle = (value || '').trim() || fallback;
+      var v = probe.fillStyle;
+      if (v.charAt(0) === '#') return [parseInt(v.slice(1, 3), 16), parseInt(v.slice(3, 5), 16), parseInt(v.slice(5, 7), 16)];
+      var m = v.match(/[\d.]+/g) || [0, 0, 0];
+      return [+m[0], +m[1], +m[2]];
+    }
+    function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+    function mix(a, b, k) {
+      return [Math.round(a[0] + (b[0] - a[0]) * k), Math.round(a[1] + (b[1] - a[1]) * k), Math.round(a[2] + (b[2] - a[2]) * k)];
+    }
+    function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+    function easeOut(k) { k = clamp01(k); return 1 - Math.pow(1 - k, 3); }
+
+    function palette() {
+      var css = getComputedStyle(banner);
+      accent = parse(css.getPropertyValue('--accent-solid'), '#dda25c');
+      ink = parse(css.getPropertyValue('--text-accent'), '#e8b878');
+      muted = parse(css.getPropertyValue('--text-secondary'), '#a89c90');
+      bg = parse(css.getPropertyValue('--bg'), '#14100e');
+    }
+
+    function resize() {
+      var r = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = Math.max(1, r.width);
+      H = Math.max(1, r.height);
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    // A climb in the unit box: x left to right, y from the floor (1) to the
+    // bar (0.16). Five to seven steps, never the previous count, rising with
+    // at most one dip, the last on the bar.
+    function newRun(now) {
+      var n;
+      do { n = 5 + Math.floor(Math.random() * 3); } while (n === lastSteps);
+      lastSteps = n;
+      var dip = Math.random() < 0.65 ? 1 + Math.floor(Math.random() * (n - 3)) : -1;
+      var pts = [], y = 0.84 + Math.random() * 0.06;
+      for (var i = 0; i < n; i++) {
+        var x = 0.08 + 0.86 * (i / (n - 1));
+        if (i === n - 1) y = 0.16;
+        else if (i > 0) {
+          var left = n - 1 - i;
+          var rise = (y - 0.24) / (left + 1) * (0.7 + Math.random() * 0.6);
+          y = i === dip ? Math.min(0.9, y + 0.05 + Math.random() * 0.06) : Math.max(0.24, y - rise);
+        }
+        pts.push([x, y]);
+      }
+      run = { pts: pts, born: now, landed: -1 };
+      sparks = [];
+    }
+
+    function px(p) { return [p[0] * W, p[1] * H]; }
+
+    function draw(now) {
+      if (!run) newRun(now);
+      var t = (now - run.born) / 1000;
+      var n = run.pts.length;
+      var end = LEAD + (n - 1) * STEP + STEP * 0.6;
+      if (t > end + HOLD + FADE) { newRun(now); t = 0; }
+      var alpha = t > end + HOLD ? 1 - clamp01((t - end - HOLD) / FADE) : 1;
+      ctx.clearRect(0, 0, W, H);
+      var r = Math.max(4.5, Math.min(7.5, W / 60));
+      var barY = 0.16 * H;
+
+      // Score levels, faint, so the climb reads as height.
+      ctx.lineWidth = 1;
+      for (var g = 1; g <= 3; g++) {
+        var gy = barY + (H * 0.84 - barY) * g / 3.2;
+        ctx.strokeStyle = rgba(muted, 0.08);
+        ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+      }
+
+      // The bar: dashed, and flaring once the last marker lands on it.
+      var flare = run.landed >= 0 ? Math.max(0, 1 - (now - run.landed) / 1600) : 0;
+      var barOn = run.landed >= 0 ? 1 : 0;
+      ctx.save();
+      ctx.setLineDash([6, 6]);
+      ctx.lineDashOffset = -now / 60;
+      ctx.lineWidth = 1.5 + flare * 1.5;
+      // The bar and the levels stay put between runs; only the climb fades.
+      ctx.strokeStyle = rgba(mix(ink, accent, barOn * alpha), 0.55 + 0.45 * barOn * alpha);
+      if (flare > 0) { ctx.shadowColor = rgba(accent, 0.9 * flare); ctx.shadowBlur = 18 * flare; }
+      ctx.beginPath(); ctx.moveTo(r, barY); ctx.lineTo(W - r, barY); ctx.stroke();
+      ctx.restore();
+
+      // The trail, grown to wherever the climb has reached.
+      var reach = (t - LEAD) / STEP;
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = rgba(mix(muted, ink, 0.55), 0.9 * alpha);
+      ctx.beginPath();
+      var p0 = px(run.pts[0]);
+      ctx.moveTo(p0[0], p0[1]);
+      for (var i = 1; i < n; i++) {
+        var k = clamp01(reach - (i - 1));
+        if (k <= 0) break;
+        var a = px(run.pts[i - 1]), b = px(run.pts[i]);
+        var kx = easeOut(k / 0.55), ky = easeOut((k - 0.45) / 0.55);
+        ctx.lineTo(a[0] + (b[0] - a[0]) * kx, a[1]);
+        if (k > 0.45) ctx.lineTo(b[0], a[1] + (b[1] - a[1]) * ky);
+      }
+      ctx.stroke();
+
+      // The markers: each pops in as the trail reaches it.
+      for (var j = 0; j < n; j++) {
+        var since = reach - (j === 0 ? -0.2 : j);
+        if (since < 0) continue;
+        var q = px(run.pts[j]);
+        var pop = easeOut(since / 0.35);
+        var isLast = j === n - 1;
+        if (isLast && run.landed < 0 && since >= 0.05) {
+          run.landed = now;
+          for (var s = 0; s < 26; s++) {
+            var dir = Math.random() < 0.5 ? -1 : 1;
+            sparks.push({ x: q[0], y: q[1], vx: dir * (60 + Math.random() * 220), vy: -20 - Math.random() * 80,
+              life: 0.6 + Math.random() * 0.7, age: 0 });
+          }
+        }
+        var pulse = clamp01(since / 0.8);
+        if (pulse < 1) {
+          ctx.strokeStyle = rgba(isLast ? accent : muted, (1 - pulse) * 0.6 * alpha);
+          ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.arc(q[0], q[1], r + pulse * r * 2.4, 0, TAU); ctx.stroke();
+        }
+        if (isLast) {
+          var halo = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], r * 3.2);
+          halo.addColorStop(0, rgba(accent, 0.45 * alpha));
+          halo.addColorStop(1, rgba(accent, 0));
+          ctx.fillStyle = halo;
+          ctx.beginPath(); ctx.arc(q[0], q[1], r * 3.2 * pop, 0, TAU); ctx.fill();
+          ctx.fillStyle = rgba(accent, alpha);
+          ctx.beginPath(); ctx.arc(q[0], q[1], (r + 1) * pop, 0, TAU); ctx.fill();
+        } else {
+          ctx.fillStyle = rgba(bg, alpha);
+          ctx.strokeStyle = rgba(mix(muted, ink, 0.7), alpha);
+          ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(q[0], q[1], r * pop, 0, TAU); ctx.fill(); ctx.stroke();
+        }
+      }
+
+      // Sparks along the bar.
+      var dt = Math.min(0.05, (now - last) / 1000);
+      for (var z = sparks.length - 1; z >= 0; z--) {
+        var sp = sparks[z];
+        sp.age += dt;
+        if (sp.age > sp.life) { sparks.splice(z, 1); continue; }
+        sp.vy += 260 * dt;
+        sp.x += sp.vx * dt; sp.y += sp.vy * dt;
+        sp.vx *= 0.97;
+        var life = 1 - sp.age / sp.life;
+        ctx.fillStyle = rgba(mix(accent, ink, 0.4), life * alpha);
+        ctx.beginPath(); ctx.arc(sp.x, sp.y, 1.6 * life + 0.4, 0, TAU); ctx.fill();
+      }
+
+      if (!drawn) { drawn = true; banner.classList.add('is-drawn'); }
+    }
+
+    function frame(now) {
+      raf = 0;
+      if (!visible || document.hidden) return;
+      draw(now);
+      last = now;
+      raf = requestAnimationFrame(frame);
+    }
+    function kick() {
+      if (raf || !visible || document.hidden) return;
+      var now = performance.now();
+      // A paused climb resumes where it was drawn, not where the clock went.
+      if (run) {
+        var gap = now - last;
+        run.born += gap;
+        if (run.landed >= 0) run.landed += gap;
+      }
+      last = now;
+      raf = requestAnimationFrame(frame);
+    }
+
+    palette();
+    resize();
+    if (window.ResizeObserver) new ResizeObserver(function () { resize(); kick(); }).observe(canvas);
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; kick(); }).observe(banner);
+    }
+    new MutationObserver(function () { palette(); kick(); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    document.addEventListener('visibilitychange', kick);
+    kick();
+  }
+
   function initScrollRestore() {
     var saved;
     try {
@@ -2308,5 +2526,6 @@
   initGraphBanner();
   initReleaseBanner();
   initCenturyBanner();
+  initClimbBanner();
   initVersionCheck();
 })();

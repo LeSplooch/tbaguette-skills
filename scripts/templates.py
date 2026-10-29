@@ -199,6 +199,22 @@ class Strings:
     century_banner_crossers_label: str = "What took it past a hundred"
     century_banner_tally_label: str = "skills"
     century_banner_cta_template: str = "Browse all {skill_count}"
+    # The climb release: designing-verifiable-goals, the climb mod and the
+    # Claude Code agent types, announced at the top of the hero.
+    climb_banner_label: str = "New: built to climb"
+    climb_banner_badge: str = "New"
+    climb_banner_title: str = "Point it at a check. Let it climb."
+    climb_banner_lede: str = (
+        "A run left on its own climbs whatever it is graded against. This "
+        "release builds that grader first, then runs the loop for you."
+    )
+    climb_banner_ships_label: str = "What shipped"
+    climb_banner_skill_note: str = "new skill: build the check before you hand over the goal"
+    climb_banner_mod_name: str = "/climb"
+    climb_banner_mod_note: str = "a Claude Code mod that runs your check after every turn and stops at the bar"
+    climb_banner_agents_name: str = "implementer · reviewer · investigator"
+    climb_banner_agents_note: str = "the delegation roles, now agent types in Claude Code"
+    climb_banner_cta: str = "Read the skill"
 
 
 ENGLISH_STRINGS = Strings(
@@ -988,6 +1004,24 @@ CENTURY_NEW_UNTIL = "2026-10-13"
 # in last, which puts the hundredth bead on the second of them.
 CENTURY_CROSSERS = ("evaluating-llm-output", "building-llm-features",
                     "writing-agent-instructions")
+
+# The climb release is announced above everything else, on two terms: the
+# skill it is about has to be in the library, and the date has to be inside
+# the window. Two weeks from the day it shipped.
+CLIMB_SKILL = "designing-verifiable-goals"
+CLIMB_DELEGATION_SKILL = "delegating-tasks-with-review-gates"
+CLIMB_NEW_UNTIL = "2026-11-12"
+CLIMB_MOD_URL = "https://github.com/LeSplooch/tbaguette-skills/tree/master/mods/climb"
+
+
+def climb_is_new(skills: dict, last_updated_utc: str) -> bool:
+    """Whether a page built at this instant, for this library, still
+    announces the climb release. No build instant (a fixture) counts as
+    inside the window, as the other announcements do; a library without the
+    skill never does."""
+    if CLIMB_SKILL not in skills:
+        return False
+    return not last_updated_utc or last_updated_utc[:10] <= CLIMB_NEW_UNTIL
 
 # The listing's address in Anthropic's plugin directory, once there is one.
 # Empty means not listed yet, and the banner says only what is true without
@@ -1812,6 +1846,87 @@ def _render_century_banner(categories: list[dict], skills: dict, base_path: str 
     </aside>"""
 
 
+# The climb the banner's picture shows at rest: iteration markers rising in
+# steps toward the bar, one dip on the way, the last one landing on it. The
+# same run site.js replays, so the canvas ends where the drawing stands.
+_CLIMB_STEPS = ((0.13, 0.86), (0.30, 0.70), (0.47, 0.76), (0.64, 0.50), (0.80, 0.34), (0.93, 0.16))
+
+
+def _climb_svg() -> str:
+    """The banner's picture as a static drawing: what a reader without the
+    canvas, with reduced motion before the script runs, or in forced colours
+    sees. Drawn in a 400 x 200 box and scaled to the stage."""
+    w, h = 400, 200
+    pts = [(round(x * w, 1), round(y * h, 1)) for x, y in _CLIMB_STEPS]
+    path = f"M{pts[0][0]},{pts[0][1]}"
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        path += f" H{x1} V{y1}"
+    bar_y = pts[-1][1]
+    rings = "".join(
+        f'<circle class="climb-banner__ring" cx="{x}" cy="{y}" r="6.5"/>' for x, y in pts[:-1])
+    lx, ly = pts[-1]
+    return (
+        f'<svg class="climb-banner__art" viewBox="0 0 {w} {h}" preserveAspectRatio="xMidYMid meet" focusable="false">'
+        f'<line class="climb-banner__bar" x1="12" y1="{bar_y}" x2="{w - 12}" y2="{bar_y}"/>'
+        f'<path class="climb-banner__trail" d="{path}"/>'
+        f'{rings}'
+        f'<circle class="climb-banner__halo" cx="{lx}" cy="{ly}" r="16"/>'
+        f'<circle class="climb-banner__dot" cx="{lx}" cy="{ly}" r="7.5"/>'
+        f'</svg>'
+    )
+
+
+def _render_climb_banner(skills: dict, base_path: str = "", *,
+                         last_updated_utc: str = "",
+                         locale: "locales.Locale" = locales.DEFAULT_LOCALE,
+                         strings: Strings = ENGLISH_STRINGS) -> str:
+    """The climb release, announced across the top of the hero, above every
+    other announcement: an <aside> with a label, on the terms climb_is_new
+    sets, sharing the other banners' shell.
+
+    The picture is the loop the release is about. Iteration markers rise in
+    steps toward a dashed bar, hollow while the check fails and solid when
+    it passes -- the same marks the mod's own band shows -- and at the bar
+    the line flares and the run settles before another begins. The static
+    drawing under the canvas is the same climb at rest, so a reader without
+    the script, or with reduced motion, sees the whole story standing still.
+
+    Everything the picture says is also in the copy: the three things that
+    shipped are links, each with a line saying what it is."""
+    if not climb_is_new(skills, last_updated_utc):
+        return ""
+    skill_href = skill_url(CLIMB_SKILL, base_path, locale)
+    ships = [
+        (skill_href, CLIMB_SKILL, strings.climb_banner_skill_note, "skill"),
+        (CLIMB_MOD_URL, strings.climb_banner_mod_name, strings.climb_banner_mod_note, "mod"),
+    ]
+    if CLIMB_DELEGATION_SKILL in skills:
+        ships.append((skill_url(CLIMB_DELEGATION_SKILL, base_path, locale),
+                      strings.climb_banner_agents_name, strings.climb_banner_agents_note, "agents"))
+    items = "".join(
+        f'<li class="climb-banner__ship climb-banner__ship--{kind}">'
+        f'<a class="climb-banner__ship-link" href="{escape_html(href)}">'
+        f'<span class="climb-banner__ship-mark" aria-hidden="true"></span>'
+        f'<span class="climb-banner__ship-name">{escape_html(name)}</span>'
+        f'<span class="climb-banner__ship-note">{escape_html(note)}</span></a></li>'
+        for href, name, note, kind in ships
+    )
+    route = _icon("icon-route", css_class="icon climb-banner__cta-icon", base_path=base_path)
+    return f"""<aside class="climb-banner" aria-label="{escape_html(strings.climb_banner_label)}" data-climb-banner data-climb-new-until="{CLIMB_NEW_UNTIL}">
+      <div class="climb-banner__stage" aria-hidden="true">
+        {_climb_svg()}
+        <canvas class="climb-banner__canvas"></canvas>
+      </div>
+      <div class="climb-banner__body">
+        <p class="climb-banner__title"><span class="change-badge change-badge--new">{escape_html(strings.climb_banner_badge)}</span><span>{escape_html(strings.climb_banner_title)}</span></p>
+        <p class="climb-banner__lede">{escape_html(strings.climb_banner_lede)}</p>
+        <p class="climb-banner__ships-label" id="climb-ships">{escape_html(strings.climb_banner_ships_label)}</p>
+        <ul class="climb-banner__ships" aria-labelledby="climb-ships">{items}</ul>
+        <a class="climb-banner__cta" href="{escape_html(skill_href)}">{route}<span>{escape_html(strings.climb_banner_cta)}</span></a>
+      </div>
+    </aside>"""
+
+
 def _render_banner_row(*banners: str, lead: bool = False) -> str:
     """The announcements at the top of the hero, side by side in one row --
     the release first, on the left. Each sits in a slot the stylesheet
@@ -2236,6 +2351,12 @@ def render_index(categories: list[dict], skills: dict, base_path: str = "",
                      locale=locale, strings=strings,
                      plugin_version=plugin_version,
                      banner_html=_join(
+                         _render_banner_row(
+                             _render_climb_banner(
+                                 skills, base_path,
+                                 last_updated_utc=last_updated_utc,
+                                 locale=locale, strings=strings),
+                             lead=True),
                          _render_banner_row(
                              _render_century_banner(
                                  categories, skills, base_path,

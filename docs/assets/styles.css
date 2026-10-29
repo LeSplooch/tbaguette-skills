@@ -3742,7 +3742,8 @@ a.skill-link--bare:focus-visible {
 
 .graph-banner,
 .release-banner,
-.century-banner {
+.century-banner,
+.climb-banner {
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -3763,7 +3764,8 @@ a.skill-link--bare:focus-visible {
 
 .graph-banner::before,
 .release-banner::before,
-.century-banner::before {
+.century-banner::before,
+.climb-banner::before {
   content: '';
   position: absolute;
   z-index: 2;
@@ -3786,7 +3788,8 @@ a.skill-link--bare:focus-visible {
 
 .graph-banner__body,
 .release-banner__body,
-.century-banner__body {
+.century-banner__body,
+.climb-banner__body {
   position: relative;
   z-index: 1;
   width: min(36rem, 58%);
@@ -3798,7 +3801,8 @@ a.skill-link--bare:focus-visible {
    run under the whole banner and still never sit behind a letter. */
 .graph-banner__body::before,
 .release-banner__body::before,
-.century-banner__body::before {
+.century-banner__body::before,
+.climb-banner__body::before {
   content: '';
   position: absolute;
   inset: 0 -30% 0 0;
@@ -3813,7 +3817,8 @@ a.skill-link--bare:focus-visible {
 
 .graph-banner__title,
 .release-banner__title,
-.century-banner__title {
+.century-banner__title,
+.climb-banner__title {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -3830,7 +3835,8 @@ a.skill-link--bare:focus-visible {
 
 .graph-banner__lede,
 .release-banner__lede,
-.century-banner__lede {
+.century-banner__lede,
+.climb-banner__lede {
   margin-top: var(--space-3);
   max-width: 46ch;
   color: var(--text-secondary);
@@ -3874,7 +3880,8 @@ a.skill-link--bare:focus-visible {
 
 .graph-banner__cta,
 .release-banner__cta,
-.century-banner__cta {
+.century-banner__cta,
+.climb-banner__cta {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
@@ -3911,7 +3918,8 @@ a.skill-link--bare:focus-visible {
 @container banner (max-width: 44rem) {
   .graph-banner,
   .release-banner,
-  .century-banner {
+  .century-banner,
+  .climb-banner {
     flex-direction: column;
     align-items: stretch;
     min-height: 0;
@@ -3920,7 +3928,8 @@ a.skill-link--bare:focus-visible {
   .graph-banner__canvas { height: 12rem; }
   .graph-banner__body,
   .release-banner__body,
-  .century-banner__body {
+  .century-banner__body,
+  .climb-banner__body {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -3929,7 +3938,8 @@ a.skill-link--bare:focus-visible {
   }
   .graph-banner__body::before,
   .release-banner__body::before,
-  .century-banner__body::before {
+  .century-banner__body::before,
+  .climb-banner__body::before {
     inset: 0;
     background: linear-gradient(to bottom, transparent, var(--bg) 2.5rem);
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
@@ -5827,4 +5837,152 @@ a.crumb-chip:hover,
   .crumb-family[aria-pressed='true'],
   .crumb-note[aria-pressed='true'] { outline: 2px solid Highlight; }
   .crumb-swatch { forced-color-adjust: none; }
+}
+
+/* The climb release. The shell is the other banners', shared above. What is
+   its own is the picture: the loop the release is about, iteration markers
+   rising in steps toward a dashed bar, hollow while the check fails and
+   solid when it passes. The SVG is the climb at rest and is finished work in
+   its own right; site.js lays a canvas over it that replays the climb and
+   hides the drawing once it has drawn its first frame. */
+
+.climb-banner {
+  min-height: 19rem;
+  background:
+    radial-gradient(ellipse 46% 95% at 74% 50%,
+      color-mix(in oklch, var(--accent-solid) 10%, var(--bg)) 0%,
+      var(--bg) 80%);
+}
+
+.climb-banner__stage {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 0;
+  width: 54%;
+  padding: var(--space-6) var(--space-6) var(--space-6) 0;
+  pointer-events: none;
+}
+
+.climb-banner__art,
+.climb-banner__canvas {
+  position: absolute;
+  inset: var(--space-6) var(--space-6) var(--space-6) 0;
+  width: calc(100% - var(--space-6));
+  height: calc(100% - 2 * var(--space-6));
+}
+
+.climb-banner__art { overflow: visible; }
+.climb-banner.is-drawn .climb-banner__art { visibility: hidden; }
+
+.climb-banner__bar {
+  stroke: var(--text-accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 6;
+  opacity: 0.7;
+}
+
+.climb-banner__trail {
+  fill: none;
+  stroke: color-mix(in oklch, var(--text-accent) 55%, var(--text-secondary));
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.climb-banner__ring {
+  fill: var(--bg);
+  stroke: color-mix(in oklch, var(--text-accent) 70%, var(--text-secondary));
+  stroke-width: 2;
+}
+
+.climb-banner__dot { fill: var(--accent-solid); }
+.climb-banner__halo { fill: color-mix(in oklch, var(--accent-solid) 22%, transparent); }
+
+.climb-banner__ships-label {
+  margin-top: var(--space-4);
+  font-size: var(--text-1);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.climb-banner__ships {
+  display: grid;
+  gap: var(--space-1);
+  max-width: 46ch;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.climb-banner__ship-link {
+  display: grid;
+  grid-template-columns: 0.75rem 1fr;
+  column-gap: var(--space-3);
+  align-items: baseline;
+  padding: var(--space-1) var(--space-2);
+  margin-inline: calc(-1 * var(--space-2));
+  border-radius: var(--radius-sm);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color var(--duration-micro) var(--ease-out);
+}
+
+.climb-banner__ship-link:hover { background: color-mix(in oklch, var(--accent-solid) 10%, transparent); }
+.climb-banner__ship-link:focus-visible { outline: 2px solid var(--text-accent); outline-offset: 1px; }
+
+/* The marks are the climb's own: a ring for the work, a solid dot for what
+   passes. Drawn in CSS so they match the picture, never a glyph. */
+.climb-banner__ship-mark {
+  grid-row: span 2;
+  align-self: center;
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 2px solid var(--text-accent);
+  border-radius: 50%;
+}
+.climb-banner__ship--mod .climb-banner__ship-mark { background: var(--accent-solid); border-color: var(--accent-solid); }
+
+.climb-banner__ship-name {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.climb-banner__ship-link:hover .climb-banner__ship-name { color: var(--text-accent); }
+
+.climb-banner__ship-note {
+  grid-column: 2;
+  font-size: var(--text-1);
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+@container banner (max-width: 44rem) {
+  .climb-banner { padding-top: 12rem; }
+  .climb-banner__stage {
+    inset: 0 0 auto 0;
+    width: auto;
+    height: 12rem;
+    padding: 0;
+  }
+  .climb-banner__art,
+  .climb-banner__canvas {
+    inset: var(--space-4) var(--space-5) var(--space-3);
+    width: calc(100% - 2 * var(--space-5));
+    height: calc(100% - var(--space-4) - var(--space-3));
+  }
+  .climb-banner__ships { margin-bottom: var(--space-5); }
+}
+
+@media (forced-colors: active) {
+  .climb-banner { border: 2px solid CanvasText; }
+  .climb-banner::before, .climb-banner__body::before { display: none; }
+  .climb-banner__canvas { display: none; }
+  .climb-banner.is-drawn .climb-banner__art { visibility: visible; }
+  .climb-banner__bar, .climb-banner__trail, .climb-banner__ring { stroke: CanvasText; }
+  .climb-banner__dot { fill: Highlight; }
+  .climb-banner__halo { display: none; }
+  .climb-banner__ship-mark { border-color: CanvasText; }
+  .climb-banner__ship--mod .climb-banner__ship-mark { background: Highlight; }
 }
