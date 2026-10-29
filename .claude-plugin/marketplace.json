@@ -35,7 +35,7 @@
       "displayName": "climb",
       "license": "GPL-2.0-only",
       "description": "A Claude Code mod: name a check command and the mod runs it after every turn, logs score and timing, refuses edits to protected paths, and queues the next iteration until the check passes or a stop condition fires.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "source": "./mods/climb",
       "author": {
         "name": "TBaguette",

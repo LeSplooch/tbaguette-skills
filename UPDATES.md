@@ -41,7 +41,8 @@ holds any text file over 256 KiB for a reviewer.
   refuses edit-tool changes to paths you protect, and queues the next iteration until the
   check passes, the budget runs out, the score stops improving, the check hangs, or you
   stop it. A prompt you send yourself mid-climb is answered normally and does not count.
-  A band above the prompt shows the trail. It
+  `--in <folder>` runs the check, keeps the log and resolves protected paths in another
+  folder. A band above the prompt shows the trail. It
   is the tool half of `designing-verifiable-goals`, which now points to it. The mod API is
   early access, and nothing in the skills depends on the mod.
 - The three delegation roles that Copilot CLI already had are now Claude Code agent types

@@ -17,17 +17,21 @@ type Run = { exitCode: number; stdout: string } | 'hang' | Promise<{ exitCode: n
 function engine(on: On, runs: Run[]) {
   const prompts: string[] = []
   const checks: string[] = []
+  const writes: string[] = []
   const clock = mock.clock(on)
   on('command.register', () => ({ value: { command: 'climb' } }))
   on('session.start', (_, e) => ({ cwd: e.cwd }))
   on('process.run', async (_, e) => {
-    checks.push(String((e as { argv?: unknown }).argv ?? ''))
+    checks.push(JSON.stringify(e))
     const run = runs.shift() ?? { exitCode: 1, stdout: '' }
     if (run === 'hang') throw new Error('timed out')
     const r = await run
     return { value: { ...r, stderr: '', isStdoutTruncated: false, isStderrTruncated: false } }
   })
-  on('fs.write', () => ({ value: undefined }))
+  on('fs.write', (_, e) => {
+    writes.push(String((e as { path?: unknown }).path))
+    return { value: undefined }
+  })
   on('fs.stat', () => {
     throw new Error('no such file')
   })
@@ -40,7 +44,7 @@ function engine(on: On, runs: Run[]) {
   on('tool.call', () => ({ result: {} }))
   on('ui.status', () => ({ value: undefined }))
   on('ui.toast', () => ({ value: undefined }))
-  return { prompts, checks, clock }
+  return { prompts, checks, writes, clock }
 }
 
 async function climb($: any, args: string) {
@@ -66,6 +70,19 @@ test('starting queues the first iteration itself', async ($, on) => {
   expect(started.text).toContain('Climb started')
   expect(seen.prompts.length).toBe(1)
   expect(seen.prompts[0]?.startsWith(MARK)).toBe(true)
+})
+
+test('--in runs the check, writes the log and resolves protected paths in that folder', async ($, on) => {
+  const seen = engine(on, [])
+  await start($, '5 --in ../demo python3 check.py', seen.clock)
+  await climb($, 'protect check.py')
+  await turn($, 1)
+
+  const guarded = await $.tool.call({ tool: 'Edit', file_path: '/demo/check.py', old_string: 'a', new_string: 'b' })
+  expect(guarded.deny).toContain('protected')
+  expect(seen.writes).toContain('/demo/.climb-log.tsv')
+  expect(seen.checks[0]).toContain('"/demo"')
+  expect((await climb($, '')).text).toContain('`python3 check.py`')
 })
 
 test('a failing check queues the next iteration with its output and score', async ($, on) => {
@@ -108,6 +125,17 @@ test('no better score for the stall limit ends the climb', async ($, on) => {
 
   expect(seen.prompts.length).toBe(4)
   expect((await climb($, '')).text).toContain('stalled: 3 iterations without beating the best score (9)')
+})
+
+test('an iteration still counts when the engine wraps the prompt in a header', async ($, on) => {
+  const seen = engine(on, [{ exitCode: 1, stdout: 'score: 4' }])
+  await start($, '5 npm test', seen.clock)
+  await $.turn.start({ text: `The climb plugin sent a message:
+${MARK} go`, turnId: 'w1' })
+  await $.turn.complete({ answer: 'ok', durationMs: 1000, reason: 'answer', isAborted: false, turnId: 'w1' })
+
+  expect(seen.checks.length).toBe(1)
+  expect(seen.prompts.length).toBe(2)
 })
 
 test("a turn the person starts mid-climb is not an iteration", async ($, on) => {

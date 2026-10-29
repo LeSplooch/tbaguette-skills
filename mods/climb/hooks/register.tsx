@@ -14,7 +14,8 @@ export const MARK = '[climb]'
 const WRITE_TOOLS = new Set(['Edit', 'Write', 'NotebookEdit', 'MultiEdit'])
 const USAGE = [
   'Usage:',
-  '  /climb <budget> <check command>   start: run the check after every iteration until it exits 0',
+  '  /climb <budget> [--in <dir>] <check command>   start: run the check after every iteration until it exits 0',
+  '                                    --in runs the check, keeps the log and resolves protected paths in <dir>',
   '  /climb protect <path> [...]       refuse edit-tool changes to these paths (relative to the session folder)',
   '  /climb stall <n>                  stop after n iterations with no better score (default 5)',
   '  /climb stop                       end the climb',
@@ -96,7 +97,7 @@ export const register: Register = on => {
     await $.command.register({
       name: 'climb',
       description: 'Iterate on a goal until a check command passes: the mod runs the check after every iteration',
-      argumentHint: '<budget> <check command> | protect <path> | stall <n> | stop',
+      argumentHint: '<budget> [--in <dir>] <check command> | protect <path> | stall <n> | stop',
       immediate: true,
     })
     return next(e)
@@ -128,17 +129,17 @@ export const register: Register = on => {
       await update($, climb, c => (c === null ? c : { ...c, stall: Number(stall[1] ?? '5') }))
       return { text: `Stall limit set to ${stall[1]} iterations.` }
     }
-    const start = args.match(/^(\d+)\s+(.+)$/)
+    const start = args.match(/^(\d+)\s+(?:--in\s+(\S+)\s+)?(.+)$/)
     if (!start) return { text: USAGE, exitCode: 1 }
 
     const fresh: Climb = {
       isActive: true,
       isPending: true,
-      check: start[2] ?? '',
+      check: start[3] ?? '',
       budget: Math.max(1, Number(start[1] ?? '1')),
       stall: current?.stall ?? 5,
       protect: current?.protect ?? [],
-      cwd,
+      cwd: start[2] === undefined ? cwd : absolute(cwd, start[2]),
       steps: [],
       stopReason: null,
     }
@@ -157,7 +158,7 @@ export const register: Register = on => {
 
   // A climb prompt queued before a stop never reaches the model.
   on('prompt.submit', async ($, e, next) => {
-    if (e.text.startsWith(MARK) && e.origin.kind === 'plugin') {
+    if (e.text.includes(MARK) && e.origin.kind === 'plugin') {
       const c = await read($, climb)
       if (c === null || !c.isActive) return { drop: 'climb: the climb ended before this iteration started' }
     }
@@ -166,7 +167,8 @@ export const register: Register = on => {
 
   on('turn.start', async ($, e, next) => {
     if (e.agentId === undefined) {
-      isOwnTurn = e.text.startsWith(MARK)
+      // The engine may wrap a plugin's prompt in a header, so the mark is looked for anywhere.
+      isOwnTurn = e.text.includes(MARK)
       if (isOwnTurn) await update($, climb, x => (x === null ? x : { ...x, isPending: false }))
     }
     return next(e)

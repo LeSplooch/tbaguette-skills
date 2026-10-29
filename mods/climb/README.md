@@ -24,6 +24,8 @@ with `LeSplooch/tbaguette-skills`, then Add plugin.
 
     /climb 20 npm test          start: up to 20 iterations, the check is `npm test`;
                                 the mod queues the first iteration itself
+    /climb 20 --in ../app make test   run the check in ../app; the log and
+                                protected paths live there too
     /climb protect tests fixtures   refuse edits to these paths while it runs
     /climb stall 5              stop after 5 iterations with no better score
     /climb stop                 end it
@@ -39,7 +41,7 @@ with `LeSplooch/tbaguette-skills`, then Add plugin.
   An iteration prompt already queued when the climb stops is dropped.
 - **Only its own prompts advance it.** A prompt you send yourself mid-climb is
   answered normally and does not count as an iteration or run the check.
-- **Log**: `.climb-log.tsv` in the session folder holds the current climb, one
+- **Log**: `.climb-log.tsv` in the climb's folder (the session folder, or `--in`) holds the current climb, one
   row per iteration: exit code, score, check time and turn time, both measured
   by the mod and the engine rather than reported by the model. A climb whose turns are short
   and whose checks are long is waiting on the check, not short of ideas.
@@ -51,7 +53,7 @@ with `LeSplooch/tbaguette-skills`, then Add plugin.
 - A band above the prompt shows the trail (filled dot for a pass), the last
   exit code, score, check time and turn time.
 
-The check runs with `sh -c` in the session folder, with a ten-minute timeout.
+The check runs with `sh -c` in the climb's folder, with a ten-minute timeout.
 
 ## Limits
 

@@ -1,6 +1,6 @@
 {
   "name": "climb",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Run a goal as a climb: the mod runs your check after every turn, logs score and timing, protects named files, and queues the next iteration until the check passes or a stop condition fires.",
   "author": {
     "name": "TBaguette",

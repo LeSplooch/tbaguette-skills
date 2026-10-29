@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-10-28T23:40:30+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-28T23:40:30Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-10-29T12:58:12+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-10-29T12:58:12Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -142,10 +142,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-verifiable-goals/" data-fresh-at="2026-10-28T23:40:30.161571+00:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-verifiable-goals/" data-fresh-at="2026-10-29T00:40:31+01:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">designing-verifiable-goals</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-28T23:40:30.161571+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-29T00:40:31+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a run is about to be handed a goal to iterate toward on its own — a loop re-prompting itself until a condition holds…</p>
   <span class="card__foot">
@@ -244,7 +244,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="notes__entry-title">A climb mod, and Claude Code can dispatch TBaguette's implementer, reviewer and investigator by name</span>
   </h3>
   <ul class="notes__bullets">
-    <li>New, and separate from the skills: <code>climb</code>, a Claude Code mod in the same marketplace (<code>/plugin install climb --marketplace LeSplooch/tbaguette-skills</code>). Start it with <code>/climb 20 npm test</code>: the mod queues the first iteration, then after every iteration it runs the check itself, so the model's own account of how it did never counts. It logs exit code, score (from a <code>score: N</code> line), check time and turn time to <code>.climb-log.tsv</code>, refuses edit-tool changes to paths you protect, and queues the next iteration until the check passes, the budget runs out, the score stops improving, the check hangs, or you stop it. A prompt you send yourself mid-climb is answered normally and does not count. A band above the prompt shows the trail. It is the tool half of <a class="skill-link" href="/tbaguette-skills/skills/designing-verifiable-goals/"><code>designing-verifiable-goals</code></a>, which now points to it. The mod API is early access, and nothing in the skills depends on the mod.</li>
+    <li>New, and separate from the skills: <code>climb</code>, a Claude Code mod in the same marketplace (<code>/plugin install climb --marketplace LeSplooch/tbaguette-skills</code>). Start it with <code>/climb 20 npm test</code>: the mod queues the first iteration, then after every iteration it runs the check itself, so the model's own account of how it did never counts. It logs exit code, score (from a <code>score: N</code> line), check time and turn time to <code>.climb-log.tsv</code>, refuses edit-tool changes to paths you protect, and queues the next iteration until the check passes, the budget runs out, the score stops improving, the check hangs, or you stop it. A prompt you send yourself mid-climb is answered normally and does not count. <code>--in &lt;folder&gt;</code> runs the check, keeps the log and resolves protected paths in another folder. A band above the prompt shows the trail. It is the tool half of <a class="skill-link" href="/tbaguette-skills/skills/designing-verifiable-goals/"><code>designing-verifiable-goals</code></a>, which now points to it. The mod API is early access, and nothing in the skills depends on the mod.</li>
     <li>The three delegation roles that Copilot CLI already had are now Claude Code agent types too: <code>tbaguette-atelier:implementer</code>, <code>tbaguette-atelier:reviewer</code> and <code>tbaguette-atelier:investigator</code>, shipped in the plugin's <code>agents/</code> folder. Each carries its role's standing rules from <a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a>, so a dispatch holds only the task itself instead of the whole pasted template. The reviewer and investigator have no edit or write tool (they keep a shell, so this limits them rather than sealing them). None pins a model: name one per dispatch.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a> now says to dispatch those types where the harness lists them, rather than a general-purpose agent.</li>
   </ul>
@@ -265,7 +265,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <span class="notes__entry-title">A climb mod, and Claude Code can dispatch TBaguette's implementer, reviewer and investigator by name</span>
   </h3>
   <ul class="notes__bullets">
-    <li>New, and separate from the skills: <code>climb</code>, a Claude Code mod in the same marketplace (<code>/plugin install climb --marketplace LeSplooch/tbaguette-skills</code>). Start it with <code>/climb 20 npm test</code>: the mod queues the first iteration, then after every iteration it runs the check itself, so the model's own account of how it did never counts. It logs exit code, score (from a <code>score: N</code> line), check time and turn time to <code>.climb-log.tsv</code>, refuses edit-tool changes to paths you protect, and queues the next iteration until the check passes, the budget runs out, the score stops improving, the check hangs, or you stop it. A prompt you send yourself mid-climb is answered normally and does not count. A band above the prompt shows the trail. It is the tool half of <a class="skill-link" href="/tbaguette-skills/skills/designing-verifiable-goals/"><code>designing-verifiable-goals</code></a>, which now points to it. The mod API is early access, and nothing in the skills depends on the mod.</li>
+    <li>New, and separate from the skills: <code>climb</code>, a Claude Code mod in the same marketplace (<code>/plugin install climb --marketplace LeSplooch/tbaguette-skills</code>). Start it with <code>/climb 20 npm test</code>: the mod queues the first iteration, then after every iteration it runs the check itself, so the model's own account of how it did never counts. It logs exit code, score (from a <code>score: N</code> line), check time and turn time to <code>.climb-log.tsv</code>, refuses edit-tool changes to paths you protect, and queues the next iteration until the check passes, the budget runs out, the score stops improving, the check hangs, or you stop it. A prompt you send yourself mid-climb is answered normally and does not count. <code>--in &lt;folder&gt;</code> runs the check, keeps the log and resolves protected paths in another folder. A band above the prompt shows the trail. It is the tool half of <a class="skill-link" href="/tbaguette-skills/skills/designing-verifiable-goals/"><code>designing-verifiable-goals</code></a>, which now points to it. The mod API is early access, and nothing in the skills depends on the mod.</li>
     <li>The three delegation roles that Copilot CLI already had are now Claude Code agent types too: <code>tbaguette-atelier:implementer</code>, <code>tbaguette-atelier:reviewer</code> and <code>tbaguette-atelier:investigator</code>, shipped in the plugin's <code>agents/</code> folder. Each carries its role's standing rules from <a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a>, so a dispatch holds only the task itself instead of the whole pasted template. The reviewer and investigator have no edit or write tool (they keep a shell, so this limits them rather than sealing them). None pins a model: name one per dispatch.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a> now says to dispatch those types where the harness lists them, rather than a general-purpose agent.</li>
   </ul>
@@ -714,7 +714,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/designing-verifiable-goals/" data-search-card data-search-terms="designing-verifiable-goals use when a run is about to be handed a goal to iterate toward on its own — a loop re-prompting itself until a condition holds… planning and delegation">
   <span class="card__name-row">
     <span class="card__name">designing-verifiable-goals</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-28T23:40:30.161571+00:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-10-29T00:40:31+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a run is about to be handed a goal to iterate toward on its own — a loop re-prompting itself until a condition holds…</p>
   <span class="card__foot">
