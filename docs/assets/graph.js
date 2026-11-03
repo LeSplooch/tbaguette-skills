@@ -57,11 +57,11 @@
     fit: 'Fit to view',
     sizeBy: 'Size by',
     sizes: { in: 'Cited by', out: 'Cites', words: 'Length' },
-    stageLabel: 'Skill graph. Arrow keys move between skills, Enter opens one, Escape steps back.',
+    stageLabel: 'Skill graph. Arrow keys move between skills, Enter opens one, Escape steps back. The List view has the same graph as text.',
     loading: 'Kneading the crumb…',
     failed: 'The graph could not load.',
     retry: 'Try again',
-    hint: 'Drag to pan · scroll or pinch to zoom · click a skill to open it',
+    hint: 'Drag to pan · scroll or pinch to zoom · click a skill to open it · or use the arrow keys and Enter',
     hintTouch: 'Dot = skill · line = citation · bigger = cited more. Drag to pan, pinch to zoom, tap a skill, then tap again to open it',
     anatomyHint: 'Each arc is a section, sized by its length. Click a skill around it to walk there.',
     introTitle: 'How the library holds together',
@@ -3267,15 +3267,19 @@
         return '<a class="crumb-chip" href="' + escapeHtml(model.skillUrl(slug)) + '" style="--chip:var(--graph-cat-' + (n.cat.index + 1) + ')">' + escapeHtml(slug) + '</a>';
       }).join(' ');
     };
-    list.innerHTML = '<p class="crumb-list__intro">' + escapeHtml(STR.listIntro) + '</p>' + model.categories.map(function (c) {
-      return '<section class="crumb-list__family"><h3 class="crumb-list__title"><span class="crumb-swatch" style="--chip:var(--graph-cat-' + (c.index + 1) + ')"></span>' + escapeHtml(c.title) + '</h3>' +
+    var jump = '<nav class="crumb-list__jump" aria-label="Jump to a family">' + model.categories.map(function (c) {
+      return '<a href="#crumb-family-' + c.index + '">' + escapeHtml(c.title) + '</a>';
+    }).join(' ') + '</nav>';
+    list.innerHTML = '<p class="crumb-list__intro">' + escapeHtml(STR.listIntro) + '</p>' + jump + model.categories.map(function (c) {
+      return '<section class="crumb-list__family"><h3 class="crumb-list__title" id="crumb-family-' + c.index + '" tabindex="-1"><span class="crumb-swatch" style="--chip:var(--graph-cat-' + (c.index + 1) + ')"></span>' + escapeHtml(c.title) + '</h3>' +
         c.nodes.map(function (n) {
           var outs = Object.keys(n.out), ins = Object.keys(n.inn);
           return '<article class="crumb-list__skill"><h4><a href="' + escapeHtml(model.skillUrl(n.slug)) + '">' + escapeHtml(n.name) + '</a>' +
             '<button type="button" class="crumb__btn crumb__btn--quiet crumb__btn--small" data-crumb-act="open" data-crumb-node="' + escapeHtml(n.slug) + '">' + icon('icon-graph') + '<span>' + escapeHtml(STR.listOpen) + '</span></button></h4>' +
             '<p class="crumb-list__role">' + roleSvg(n.role) + escapeHtml(STR.roles[n.role].name) + '</p>' +
+            '<details class="crumb-list__more"><summary>' + escapeHtml(STR.cites) + ' ' + outs.length + ' · ' + escapeHtml(STR.citedBy) + ' ' + ins.length + '</summary>' +
             '<p class="crumb-list__refs"><b>' + escapeHtml(STR.cites) + ' ' + outs.length + '</b> ' + chips(outs) + '</p>' +
-            '<p class="crumb-list__refs"><b>' + escapeHtml(STR.citedBy) + ' ' + ins.length + '</b> ' + chips(ins) + '</p></article>';
+            '<p class="crumb-list__refs"><b>' + escapeHtml(STR.citedBy) + ' ' + ins.length + '</b> ' + chips(ins) + '</p></details></article>';
         }).join('') + '</section>';
     }).join('');
   };

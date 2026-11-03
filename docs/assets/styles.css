@@ -5992,3 +5992,6 @@ a.crumb-chip:hover,
   .climb-banner__ship-mark { border-color: CanvasText; }
   .climb-banner__ship--mod .climb-banner__ship-mark { background: Highlight; }
 }
+
+.crumb-list__jump { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; margin: 0 0 1rem; }
+.crumb-list__more > summary { cursor: pointer; font-size: 0.85em; opacity: 0.8; }
