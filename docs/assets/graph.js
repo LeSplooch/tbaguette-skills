@@ -147,7 +147,8 @@
       mutual: '<b>{n} pairs</b> of skills cite each other.',
       quiet: '{a} keeps to itself: cited by {i}, cites {o}.',
       quietPair: '{a} and {b} keep to themselves: each is cited by {i} and cites {o}.',
-      quietMany: '{a} and <b>{k} others</b> keep to themselves: each is cited by {i} and cites {o}.'
+      quietMany: '{a} and <b>{k} others</b> keep to themselves: each is cited by {i} and cites {o}.',
+      thin: '<b>{n} skills</b> are cited by {k} others or fewer, so a reader rarely arrives at them by following a citation.'
     }
   };
 
@@ -444,6 +445,16 @@
       html: fmt(quietCopy, { a: chip(quiet), b: alike.length ? chip(alike[0]) : '', k: alike.length, i: quiet.inDeg, o: quiet.outDeg }),
       action: { type: 'spot', nodes: [quiet.slug].concat(alike.map(function (n) { return n.slug; })), dir: 'both' }
     });
+
+    // How findable the library is by citation: the skills few others point to.
+    var THIN = 2;
+    var thin = nodes.filter(function (n) { return n.inDeg <= THIN; });
+    if (thin.length) {
+      notes.push({
+        html: fmt(STR.notes.thin, { n: thin.length, k: THIN }),
+        action: { type: 'spot', nodes: thin.map(function (n) { return n.slug; }), dir: 'in' }
+      });
+    }
     return notes;
   }
 
