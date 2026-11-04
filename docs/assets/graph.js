@@ -111,6 +111,8 @@
     traceSteps: '{n} steps',
     traceStep: '1 step',
     traceDone: 'Done',
+    copyLink: 'Copy link to this walk',
+    copiedLink: 'Link copied',
     legendCites: 'it cites',
     legendCitedBy: 'cites it',
     legendBoth: 'both ways',
@@ -901,7 +903,9 @@
     var asked = m && m[1].toLowerCase();
     var start = asked && model.bySlug[asked];
     this.baseTitle = document.title;
+    var walk = hashTrace(), walkA = walk && model.bySlug[walk[0]], walkB = walk && model.bySlug[walk[1]];
     if (start) { this.openSkill(start, { fromOutside: true }); }
+    else if (walkA && walkB && walkA !== walkB) { this.runTrace(walkA, walkB); this.root.classList.add('crumb--sheet-open'); }
     else {
       if (asked) { this.missingSkill(asked); }
       else if (hashView()) { this.setView(hashView()); }
@@ -914,6 +918,11 @@
       var n = h && self2.model.bySlug[h[1].toLowerCase()];
       if (n && n !== self2.focus) { self2.openSkill(n); return; }
       if (h && !n) { self2.missingSkill(h[1].toLowerCase()); return; }
+      var w = hashTrace(), wa = w && self2.model.bySlug[w[0]], wb = w && self2.model.bySlug[w[1]];
+      if (wa && wb && wa !== wb) {
+        if (!self2.trace || self2.trace.from !== wa || self2.trace.to !== wb) { if (self2.view === 'anatomy') { self2.setView(self2.overview); } self2.runTrace(wa, wb); }
+        return;
+      }
       var v = hashView();
       if (v && v !== self2.view) { self2.setView(v); }
     });
@@ -2779,6 +2788,13 @@
     return m && VIEWS.indexOf(m[1]) >= 0 ? m[1] : null;
   }
 
+  // #trace=<from>..<to> names a walk between two skills, so the best thing the
+  // graph can say can be sent on like a skill or a view.
+  function hashTrace() {
+    var m = /trace=([A-Za-z0-9_-]+)\.\.([A-Za-z0-9_-]+)/.exec(location.hash);
+    return m ? [m[1].toLowerCase(), m[2].toLowerCase()] : null;
+  }
+
   function writeViewHash(view) {
     if (!history.replaceState) { return; }
     history.replaceState(null, '', view === 'constellation' ? location.pathname + location.search : '#view=' + view);
@@ -2944,6 +2960,7 @@
   };
 
   App.prototype.clearEmphasis = function (quiet) {
+    if (this.trace && hashTrace() && history.replaceState) { writeViewHash(this.view === 'anatomy' ? 'constellation' : this.view); }
     this.spot = null; this.families = null; this.trace = null;
     this.root.querySelectorAll('.crumb-note--on, .crumb-family--on').forEach(function (b) { b.classList.remove('crumb-note--on', 'crumb-family--on'); b.setAttribute('aria-pressed', 'false'); });
     if (!quiet) { this.userCam = false; this.fitCamera(false); this.renderPanel(); }
@@ -3084,6 +3101,7 @@
     var path = shortestPath(this.model, a, b);
     this.trace = { from: a, to: b, path: path, at: (performance.now() - this.t0) / 1000 };
     if (path) { this.userCam = true; this.fitCamera(false, path.nodes); }
+    if (path && history.replaceState) { history.replaceState(null, '', '#trace=' + a.slug + '..' + b.slug); }
     this.say(path ?
       fmt(STR.announceTrace, { a: a.name, b: b.name, n: path.nodes.length - 1, names: path.nodes.map(function (n) { return n.name; }).join(', ') }) :
       fmt(STR.announceNoTrace, { a: a.name, b: b.name }));
@@ -3222,7 +3240,8 @@
         html += '<section class="crumb-panel__section"><p class="crumb-panel__text">' + escapeHtml(STR.traceNone) + '</p></section>';
       } else {
         var steps = tr.path.edges.length;
-        html += '<section class="crumb-panel__section"><h3 class="crumb-panel__title">' + escapeHtml(steps === 1 ? STR.traceStep : fmt(STR.traceSteps, { n: steps })) + '</h3><ol class="crumb-route">' +
+        html += '<section class="crumb-panel__section"><h3 class="crumb-panel__title">' + escapeHtml(steps === 1 ? STR.traceStep : fmt(STR.traceSteps, { n: steps })) + '</h3>' +
+          '<div class="crumb-actions"><button type="button" class="crumb__btn" data-crumb-trace-copy>' + escapeHtml(STR.copyLink) + '</button></div><ol class="crumb-route">' +
           tr.path.nodes.map(function (n, i) {
             var item = '<li class="crumb-route__stop"><button type="button" class="crumb-chip crumb-chip--button" data-crumb-act="open" data-crumb-node="' + escapeHtml(n.slug) + '" style="--chip:var(--graph-cat-' + (n.cat.index + 1) + ')">' + escapeHtml(n.name) + '</button>';
             var next = tr.path.nodes[i + 1];
@@ -3266,6 +3285,14 @@
       self.runTrace(a, b);
     });
     form.querySelector('[data-crumb-trace-done]').addEventListener('click', function () { self.clearEmphasis(); });
+    var copy = this.panel.querySelector('[data-crumb-trace-copy]');
+    if (copy) {
+      copy.addEventListener('click', function () {
+        var url = location.href;
+        var done = function () { copy.textContent = STR.copiedLink; self.say(STR.copiedLink); };
+        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(url).then(done, function () {}); }
+      });
+    }
   };
 
   // --- list view ---------------------------------------------------------------------------
