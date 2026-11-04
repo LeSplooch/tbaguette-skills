@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=crouton"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when asked for terse, compressed, or token-saving output — &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;keep it short&quot;, &quot;stop explaining&quot;, &quot;fewer tokens&quot;, &quot;save context&quot; — when a long session is running out of context budget, or when replies have bloated into preamble, tool narration, and closing summaries nobody reads. Also use when deciding whether a tool, plugin, hook, or server is worth keeping permanently available. Also use when a long command's output is about to be capped or piped through <code>head</code> or <code>tail</code>. Covers where a run's tokens actually go and why reading is the expensive half, the read rules that follow from it, why adding a tool to save tokens usually costs more than it saves, the words that must survive at any length, registers chosen by who reads the output, where compression has to stop, holding the mode across a long session, compressing in a language other than English, and how to tell whether a change actually saved anything rather than just sounding shorter.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=crouton">Cited by 3</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/checkpointing-long-runs/">checkpointing-long-runs</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/portable-shell-scripting/">portable-shell-scripting</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=crouton">Cites 7</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/calibrating-confidence/">calibrating-confidence</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/writing-commit-messages/">writing-commit-messages</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/handling-untrusted-input/">handling-untrusted-input</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/confirming-before-claiming-done/">confirming-before-claiming-done</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/writing-durable-docs/">writing-durable-docs</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/writing-release-notes/">writing-release-notes</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/explaining-technical-work/">explaining-technical-work</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>A crouton is the same bread with the water driven off — smaller, drier, and it keeps. That is the whole operation: remove what evaporates, keep what was structural. The hard part is never being shorter. It is knowing which words were water.</p>
 <p>And before that, knowing that words were never where most of the water was. Asked to use fewer tokens, almost everyone tightens their prose, because prose is the part they can see themselves writing. In a measured agent session it is a rounding error. What costs is what gets pulled <em>in</em>.</p>
 <p>Two failures sit on either side of this, and the second is the expensive one. Padding costs the reader time. Cutting a negation, a unit, or an &quot;unverified&quot; costs them a wrong decision, and nothing in the shorter text tells them to check.</p>

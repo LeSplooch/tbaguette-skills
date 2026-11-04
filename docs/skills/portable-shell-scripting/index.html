@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=portable-shell-scripting"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when writing or reviewing a shell script, when a script works in one shell but fails in another, when it breaks on filenames with spaces or newlines, when a failing command does not stop the script, when a <code>cd</code> fails or persists and later relative paths resolve against a directory nobody meant, or when a command — inline or scripted — kills a process by matching its command line, loops waiting for one to disappear, or asks once whether one is still running. Also use when a long-running command that changes state is about to be piped into <code>head</code>, <code>tail</code>, a pager, or any reader that stops early. Covers quoting and word splitting, set -e exemptions, lost variable assignments after a pipeline, a loop body eating the loop's own input, exit codes and pipeline status, the working directory as state that outlives one command, relative reads and writes that land in the wrong tree, cleanup traps, matching processes by pattern, POSIX sh versus bash-isms, GNU versus BSD tool differences, and outgrowing shell.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=portable-shell-scripting">Cited by 5</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/routing-around-capability-gaps/">routing-around-capability-gaps</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/isolating-work-with-worktrees/">isolating-work-with-worktrees</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/confirming-before-claiming-done/">confirming-before-claiming-done</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/automating-repetition/">automating-repetition</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=portable-shell-scripting">Cites 5</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/diagnosing-before-fixing/">diagnosing-before-fixing</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/confirming-before-claiming-done/">confirming-before-claiming-done</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/crouton/">crouton</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/reproducible-environments/">reproducible-environments</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/automating-repetition/">automating-repetition</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>Shell expands text and then splits and globs the result; quoting is not politeness, it is the mechanism that turns that off. <code>set -e</code> is a seatbelt with documented holes rather than error handling, and the shell you tested in is rarely the shell that will run the script.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Writing a script that runs somewhere you do not control: a CI runner, a container image, a BSD or Alpine host, a colleague's laptop</li><li>A script fails only in CI, only on macOS, or only for one person</li><li>Symptoms: <code>[: too many arguments</code>, <code>unbound variable</code>, <code>bad substitution</code>, a loop whose variables are unchanged afterwards, <code>rm</code> treating a filename as an option</li><li>Auditing a script that outgrew its one-off origin</li></ul>

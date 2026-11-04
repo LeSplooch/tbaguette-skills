@@ -452,12 +452,14 @@ def _build_into(output_dir: Path, content: dict, base_path: str, last_updated_ut
         ),
     )
 
+    citations = skill_graph.citation_lists(graph)
     for skill in skills.values():
         prev_skill, next_skill, siblings = _prev_next_and_siblings(skill, categories, skills)
         html = templates.render_skill_page(
             skill, prev_skill=prev_skill, next_skill=next_skill, siblings=siblings,
             categories=categories, base_path=base_path, last_updated_utc=last_updated_utc,
             locale=locale, strings=strings, plugin_version=plugin_version,
+            citations=citations,
         )
         _write(output_dir / "skills" / skill["slug"] / "index.html", html)
 

@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=deleting-code"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when removing code, a feature, an endpoint, a config key, a column, or a dependency that appears unused, when deciding whether something is genuinely dead, when a deprecation needs a removal path and a deadline, when code has been commented out or kept &quot;just in case&quot;, when the callers of something cannot all be seen from inside the repository, or when a confirmation, consent, or approval step is being removed because people find it tedious. Covers proving deadness, deprecation sequences, and removing tests and config alongside.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=deleting-code">Cited by 2</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/clairvoyance/">clairvoyance</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=deleting-code">Cites 3</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/code-archaeology/">code-archaeology</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/incremental-migration/">incremental-migration</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/instrumenting-for-observability/">instrumenting-for-observability</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>Deletion is the highest-leverage change available and the one people make on the thinnest evidence. The question is never &quot;does anything call this&quot; — it is &quot;what would constitute proof that nothing does&quot;, and a clean search is not proof.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Removing a feature, endpoint, flag, module, table column, or dependency</li><li>Something looks unused and you are about to trust a search that found nothing</li><li>A confirmation, consent, or approval step is being removed because it is tedious, not because it is unused</li><li>A deprecation has been in place for a while with no removal date attached</li><li>Code was commented out rather than removed, or kept because it &quot;might be useful&quot;</li><li>Not for: removing an old implementation as the final phase of a replacement — see <a class="skill-link" href="/tbaguette-skills/skills/incremental-migration/"><code>incremental-migration</code></a>. Not for judging whether historical code is load-bearing — see <a class="skill-link" href="/tbaguette-skills/skills/code-archaeology/"><code>code-archaeology</code></a>.</li></ul>

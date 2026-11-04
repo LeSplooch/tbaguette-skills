@@ -133,6 +133,8 @@ class Strings:
     # The skill graph's two entry points, defaulted for the same reason.
     nav_graph: str = "Graph"
     skill_graph_link: str = "See its place in the graph"
+    skill_cited_by: str = "Cited by"
+    skill_cites: str = "Cites"
     graph_page_title: str = "The crumb"
     graph_page_lede_template: str = (
         "How {skill_count} skills lean on each other: {pair_count} cross-references, "
@@ -2437,6 +2439,30 @@ def _render_skill_head(skill: dict, strings: Strings = ENGLISH_STRINGS, *,
 </div>"""
 
 
+def _render_citation_strip(slug: str, citations: dict | None, *, base_path: str,
+                            locale: "locales.Locale", strings: Strings) -> str:
+    """Two rows under the lede: who cites this skill, and whom it cites. The
+    counts open the skill in the graph; each chip is the other skill's page."""
+    entry = (citations or {}).get(slug)
+    if not entry or not (entry["cited_by"] or entry["cites"]):
+        return ""
+    rows = []
+    for label, key in ((strings.skill_cited_by, "cited_by"), (strings.skill_cites, "cites")):
+        slugs = entry[key]
+        if not slugs:
+            continue
+        chips = "".join(
+            f'<a class="skill-cites__chip" href="{skill_url(other, base_path, locale)}">{escape_html(other)}</a>'
+            for other in slugs
+        )
+        rows.append(
+            f'<div class="skill-cites__row"><dt class="skill-cites__label">'
+            f'<a href="{_locale_url(locale, base_path, GRAPH_PATH)}#skill={escape_html(slug)}">'
+            f'{escape_html(label)} {len(slugs)}</a></dt><dd class="skill-cites__chips">{chips}</dd></div>'
+        )
+    return f'<dl class="skill-cites">{"".join(rows)}</dl>'
+
+
 def _render_prose(body_html: str, *, lang: str | None = None,
                    text_dir: str | None = None) -> str:
     # body_html is pre-rendered, already-escaped HTML from the content
@@ -2676,7 +2702,8 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
                        base_path: str = "", last_updated_utc: str = "",
                        locale: "locales.Locale" = locales.DEFAULT_LOCALE,
                        strings: Strings = ENGLISH_STRINGS,
-                       plugin_version: str = "") -> str:
+                       plugin_version: str = "",
+                       citations: dict | None = None) -> str:
     """Full HTML document string for one skill's page (siblings = other skills
     in the same category, for a 'see also' list; categories = full category
     list, for nav)."""
@@ -2691,6 +2718,8 @@ def render_skill_page(skill: dict, *, prev_skill: dict | None, next_skill: dict 
     article = (
         '<article class="container skill-article">'
         + _render_skill_head(skill, strings, base_path=base_path, locale=locale)
+        + _render_citation_strip(skill.get("slug", ""), citations, base_path=base_path,
+                                 locale=locale, strings=strings)
         + banner
         + _render_prose(skill.get("body_html", ""), lang=body_lang, text_dir=body_dir)
         + _render_formidable_extras(skill, strings, lang=body_lang, text_dir=body_dir)

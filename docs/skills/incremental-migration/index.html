@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=incremental-migration"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when replacing a system, library, API, storage engine, or data format that is already in use, when a change is too large to land in one release, when planning a cutover from an old path to a new one, when old and new implementations are both live and neither is finished, when a change touches hundreds of call sites, or when a rollback would leave data written by the new path unreadable by the old.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=incremental-migration">Cited by 6</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/finding-the-seam/">finding-the-seam</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/refactoring-safely/">refactoring-safely</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/deleting-code/">deleting-code</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/feature-flagging/">feature-flagging</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/upgrading-dependencies/">upgrading-dependencies</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=incremental-migration">Cites 3</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/feature-flagging/">feature-flagging</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/schema-evolution/">schema-evolution</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/data-migrations/">data-migrations</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>Any large replacement ships as a sequence of individually deployable, individually revertible steps. The big-bang cutover is a plan that assumes you will not be interrupted, that nothing will be discovered mid-flight, and that rollback is a button — and all three assumptions fail together, at the worst moment.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Replacing a subsystem, dependency, protocol, or storage layer that has live traffic</li><li>A change whose full form would touch more code than can be reviewed or reverted at once</li><li>Two implementations are already live and the second one has stopped advancing</li><li>Deciding when it is safe to cut over from an old path to a new one</li><li>Not for: the internals of a data backfill or a schema version sequence — see <a class="skill-link" href="/tbaguette-skills/skills/data-migrations/"><code>data-migrations</code></a> and <a class="skill-link" href="/tbaguette-skills/skills/schema-evolution/"><code>schema-evolution</code></a>. Not for the toggle mechanism itself — see <a class="skill-link" href="/tbaguette-skills/skills/feature-flagging/"><code>feature-flagging</code></a>.</li></ul>

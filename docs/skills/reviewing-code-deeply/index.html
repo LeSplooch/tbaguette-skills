@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=reviewing-code-deeply"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when reviewing someone else's change — a pull request, patch, diff, or commit series — deciding what deserves a comment, whether to block or approve, or how to phrase a concern. Also when a review is generating dozens of comments, when a diff is too large to review carefully, or when reviews keep passing code that later breaks. Also use when a diff applies a guard to every case but one, or when a rule lightens review for changes under a path such as generated output or docs. Also use when the author is something that will revise on command, when a review round has produced instructions but no verdict, or when several rounds have gone by without the change being judged. Covers review priority order, reviewing tests, finding absent cases, and blocking versus non-blocking.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=reviewing-code-deeply">Cited by 5</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/clairvoyance/">clairvoyance</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/karen-and-the-manager/">karen-and-the-manager</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/handing-off-for-review/">handing-off-for-review</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/verifying-review-feedback/">verifying-review-feedback</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=reviewing-code-deeply">Cites 4</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/clairvoyance/">clairvoyance</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/confirming-before-claiming-done/">confirming-before-claiming-done</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/handing-off-for-review/">handing-off-for-review</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/verifying-review-feedback/">verifying-review-feedback</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>Review in strict priority order and stop when your attention is spent. Comments about naming, spent on a diff whose failure handling is wrong, are worse than no review at all — they signal the change was examined when it was not.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Reviewing a pull request, patch series, or diff written by someone else</li><li>Deciding whether a concern blocks a merge</li><li>A review has produced more than a dozen comments and none of them are about behavior</li><li>Reviewed code shipped a defect and the review process needs a look</li><li><strong>Not for:</strong> asking someone else to review your work → <a class="skill-link" href="/tbaguette-skills/skills/handing-off-for-review/"><code>handing-off-for-review</code></a>. Responding to feedback on your own change → <a class="skill-link" href="/tbaguette-skills/skills/verifying-review-feedback/"><code>verifying-review-feedback</code></a>.</li></ul>

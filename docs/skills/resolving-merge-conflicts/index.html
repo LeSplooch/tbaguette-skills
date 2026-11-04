@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=resolving-merge-conflicts"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when a merge or rebase reports conflicts, when a long-lived branch has diverged and integration looks painful, when a merge is textually clean but the build or the behavior breaks afterward, when the same conflict reappears at every commit of a rebase, when one file conflicts on every single integration, when a repository commits generated build output so every branch conflicts in it, or when deciding whether to abort and re-approach rather than push through a resolution.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=resolving-merge-conflicts">Cited by 2</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/tending-tbaguette/">tending-tbaguette</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=resolving-merge-conflicts">Cites 3</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/writing-commit-messages/">writing-commit-messages</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/isolating-work-with-worktrees/">isolating-work-with-worktrees</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/landing-a-finished-branch/">landing-a-finished-branch</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>A conflict is two answers to one question. Resolving it means answering the question, not choosing a hunk — and the result compiling proves nothing at all, because the merged tree is a version of the code that has never existed and has never been run.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A merge or rebase stopped with conflicts</li><li>A clean merge was followed by a broken build, or by behavior nobody intended</li><li>The same region conflicts repeatedly through a rebase</li><li>One file conflicts on every integration, regardless of who is working</li><li>Not for: choosing merge, rebase, or squash as an integration strategy — see <a class="skill-link" href="/tbaguette-skills/skills/landing-a-finished-branch/"><code>landing-a-finished-branch</code></a>. Not for isolating branches so they stop colliding — see <a class="skill-link" href="/tbaguette-skills/skills/isolating-work-with-worktrees/"><code>isolating-work-with-worktrees</code></a>.</li></ul>

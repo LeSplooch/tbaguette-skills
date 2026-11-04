@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=data-migrations"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when backfilling, transforming, re-encoding, or relocating data that already exists at a size too large for one transaction, when a one-off script must sweep millions of records, when a migration was killed partway and must resume without double-applying, when it has to run alongside live traffic, when a backfill causes lock contention or replication lag, or when a data change has no rollback.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=data-migrations">Cited by 5</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/incremental-migration/">incremental-migration</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/modeling-state-machines/">modeling-state-machines</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/schema-evolution/">schema-evolution</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/upgrading-dependencies/">upgrading-dependencies</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=data-migrations">Cites 3</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/deciding-reversibility/">deciding-reversibility</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/designing-for-idempotency/">designing-for-idempotency</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/schema-evolution/">schema-evolution</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>A long-running data migration is a program that will be interrupted — by a timeout, a deploy, an OOM kill, or a human with a keyboard. The half-run state is not an edge case to handle at the end; it is the state you design for from the first line. Everything else in this skill follows from that.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Backfilling a new field, re-encoding values, splitting or merging records, changing units or formats</li><li>Copying or moving data between stores, tables, collections, topics, buckets, or file layouts</li><li>Any sweep large enough that a single transaction would time out, exhaust memory, or hold locks past a few seconds</li><li>A migration that must run while production writes the same data</li><li>A migration that was killed partway and someone is about to re-run it from the top</li><li>Not for: changing the shape of the contract itself — that is <a class="skill-link" href="/tbaguette-skills/skills/schema-evolution/"><code>schema-evolution</code></a>, and it sets the order this skill's own live-traffic steps follow</li></ul>

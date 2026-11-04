@@ -477,6 +477,21 @@ def check_graph_entry_points() -> None:
     check("a skill page links to its own place in the graph",
           'class="skill-article__graph-link" href="/graph/#skill=formidable">' in skill_html)
 
+    cited_html = render_skill_page(
+        FIXTURE["skills"]["formidable"], prev_skill=None, next_skill=None,
+        siblings=[], categories=FIXTURE["categories"],
+        citations={"formidable": {"cited_by": ["a-skill", "b-skill"], "cites": ["c-skill"]}},
+    )
+    check("a skill page lists who cites it and whom it cites, counts opening the graph",
+          'href="/graph/#skill=formidable">Cited by 2</a>' in cited_html
+          and 'href="/skills/a-skill/">a-skill</a>' in cited_html
+          and 'href="/graph/#skill=formidable">Cites 1</a>' in cited_html)
+    check("a skill with no citations gets no empty strip",
+          "skill-cites" not in render_skill_page(
+              FIXTURE["skills"]["formidable"], prev_skill=None, next_skill=None,
+              siblings=[], categories=FIXTURE["categories"],
+              citations={"formidable": {"cited_by": [], "cites": []}}))
+
     check("the link's pill is an inner face, so the magnet can swell what is drawn "
           "without growing what can be clicked",
           '<span class="site-header__graph-face">' in header and "data-graph-magnet" in header)

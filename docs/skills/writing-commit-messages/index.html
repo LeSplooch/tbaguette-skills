@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=writing-commit-messages"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when writing or rewriting a commit message, when drafting a subject line, when a history reads as &quot;fix&quot;, &quot;wip&quot;, or &quot;address review comments&quot;, when someone must judge from the log whether a change is safe to revert or change, when a message contains nothing but a ticket reference, or when squashing several commits into one message. Covers subject lines, body structure, rationale, trailers, and references.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=writing-commit-messages">Cited by 5</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/atomic-commits/">atomic-commits</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/resolving-merge-conflicts/">resolving-merge-conflicts</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/crouton/">crouton</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/tending-tbaguette/">tending-tbaguette</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=writing-commit-messages">Cites 2</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/code-archaeology/">code-archaeology</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/atomic-commits/">atomic-commits</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>The message is written for whoever finds this commit in a blame or a bisect years from now and must decide whether it is safe to touch. The diff already states what changed; only the message can state why, and only the author still knows.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Committing anything a future reader might need to revert, backport, or understand out of context</li><li>Squashing a branch into one commit and composing the message that survives</li><li>Reverting, or fixing an earlier commit</li><li>The history under a file reads as &quot;fix&quot;, &quot;wip&quot;, &quot;update&quot;, &quot;address review comments&quot;</li><li>Not for deciding <em>what belongs in</em> the commit — see <a class="skill-link" href="/tbaguette-skills/skills/atomic-commits/"><code>atomic-commits</code></a>. Not for reconstructing intent from an existing history — see <a class="skill-link" href="/tbaguette-skills/skills/code-archaeology/"><code>code-archaeology</code></a>.</li></ul>

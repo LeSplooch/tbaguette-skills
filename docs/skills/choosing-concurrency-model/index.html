@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=choosing-concurrency-model"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when work must happen at the same time and the approach is undecided — OS threads, async or event loops, actors and message passing, a durable job queue, data parallelism, or sharding by key. Also for thread pool exhaustion, event loop stalls, deadlock, unbounded queue growth, memory blowups under load, tail latency spikes, cancellation that does not stop work, shared mutable state versus message passing, slow startup or initialization with several independent dependencies, and whether to be concurrent at all.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=choosing-concurrency-model">Cited by 2</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/debugging-concurrency/">debugging-concurrency</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=choosing-concurrency-model">Cites 3</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/debugging-concurrency/">debugging-concurrency</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/performance-profiling/">performance-profiling</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">rate-limiting-and-backpressure</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>Pick from workload shape and failure tolerance, never from language fashion. Most concurrency pain is a model-selection error, and no amount of careful locking repairs a model that does not fit the work.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>Starting any component that handles more than one thing at once, or adding a background worker, scheduler, or parallel path.</li><li>A service or process's own startup sequence, when it has several independent dependencies to bring up (config, cache, connection pools, plugins).</li><li>Deciding shared mutable state versus message passing — a design decision, not an implementation detail.</li><li>Symptoms: latency high while CPU sits idle, p99 far above p50, pool exhaustion, memory climbing until OOM, deadlock that only appears under production load.</li><li>Not for: diagnosing a specific existing race or deadlock (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/debugging-concurrency/">debugging-concurrency</a>), or setting queue bounds and shedding policy once the model is chosen (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">rate-limiting-and-backpressure</a>).</li></ul>

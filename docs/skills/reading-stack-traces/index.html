@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=reading-stack-traces"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when a crash, exception, panic, traceback, core dump, or error log must be interpreted, when the top frame sits inside a framework or standard library, when a trace is truncated, async, minified, inlined, or symbol-stripped, or when an error carries a wrapped cause chain or a list of aggregate errors. Covers which frame identifies the defect and what each frame does and does not prove.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=reading-stack-traces">Cited by 2</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/diagnosing-before-fixing/">diagnosing-before-fixing</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=reading-stack-traces">Cites 2</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/bisecting-failures/">bisecting-failures</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/debugging-concurrency/">debugging-concurrency</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>The frame that threw is rarely the frame that is wrong. Read for the boundary where code you control handed a value to code you do not, because that is where the defect almost always lives.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A crash, exception, panic, or error log needs to be turned into a specific line of code</li><li>The top of the trace is inside a standard library, framework, or runtime</li><li>The trace is async, truncated, minified, stripped, or full of generated names</li><li>An error message has a &quot;caused by&quot; tail, a suppressed exception, or a list of sub-errors</li><li>The trace has been read once and produced no candidate</li></ul>

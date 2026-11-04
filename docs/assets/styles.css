@@ -4546,6 +4546,38 @@ a.skill-link--bare:focus-visible {
   text-decoration-color: currentColor;
 }
 
+/* Who cites this skill and whom it cites, under the lede. */
+.skill-cites {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+  font-size: var(--text-2);
+}
+
+.skill-cites__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+}
+
+.skill-cites__label { margin: 0; font-weight: 600; }
+.skill-cites__label a { color: var(--text-accent); }
+.skill-cites__chips { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.skill-cites__chip {
+  padding: 0.1em 0.6em;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--text-secondary, var(--text));
+  text-decoration: none;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.92em;
+}
+
+.skill-cites__chip:hover { border-color: var(--accent); color: var(--text-accent); }
+
 /* --- the page ------------------------------------------------------------------ */
 
 /* Before graph.js runs (and if it never does) this is an ordinary page: a

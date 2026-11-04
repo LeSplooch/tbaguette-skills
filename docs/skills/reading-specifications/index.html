@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=reading-specifications"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when turning a ticket, issue, bug report, RFC, standard, design doc, or a user's request into work; when requirements are vague, contradictory, or silent on edge cases; when unsure whether to ask a clarifying question or proceed on a stated assumption; when interpreting MUST, SHOULD, and MAY; or when acceptance criteria have to be written before any code is built.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=reading-specifications">Cited by 4</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/using-tbaguette/">using-tbaguette</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/managing-scope-drift/">managing-scope-drift</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/scoping-before-building/">scoping-before-building</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=reading-specifications">Cites 4</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/scoping-before-building/">scoping-before-building</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/checkpointing-long-runs/">checkpointing-long-runs</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/finding-the-seam/">finding-the-seam</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/designing-apis/">designing-apis</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>Every specification has three layers: what it states, what it implies, and what it assumed without noticing. The stated layer is the smallest and causes the least rework. Almost all disagreement surfaces in the layer nobody wrote down, and the only way to reach it is to enumerate the silence in writing before building.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A ticket, issue, or request arrives and implementation is about to start.</li><li>Two readings of the same sentence produce different behavior.</li><li>Implementing against a standard, protocol, or third-party contract.</li><li>An estimate is being given for prose nobody has decomposed.</li><li>Not for: an interface you are defining rather than consuming (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/designing-apis/">designing-apis</a>), or deciding where the change lands once the requirement is settled (<a class="skill-link skill-link--bare" href="/tbaguette-skills/skills/finding-the-seam/">finding-the-seam</a>).</li><li>Not for: settling <em>what to build</em> in the first place, before anything is written down — that's <a class="skill-link" href="/tbaguette-skills/skills/scoping-before-building/"><code>scoping-before-building</code></a>, a live conversation this skill's own &quot;ask or assume&quot; table assumes has already happened and produced the document being read here.</li><li>Not for: a document the run only remembers after a compaction or a handoff, or only ever grepped — <a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a> owns re-opening the source before anything is measured against it; every technique below assumes the document is open and read end to end.</li></ul>

@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=fanning-out-independent-work"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems, a batch of scoped deliverables, parallel investigations. Also use when a fan-out costs noticeably more than expected, when several workers will run heavy builds or test suites on one machine, or when deciding how uniform sibling agents' models, tools, or working directories need to be. Covers telling genuine independence from work that only looks independent, avoiding collisions when agents share files or resources, writing prompts that stand alone, and reconciling results once parallel work returns.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=fanning-out-independent-work">Cited by 9</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/structuring-an-implementation-plan/">structuring-an-implementation-plan</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/">delegating-tasks-with-review-gates</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/routing-around-capability-gaps/">routing-around-capability-gaps</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/designing-verifiable-goals/">designing-verifiable-goals</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/isolating-work-with-worktrees/">isolating-work-with-worktrees</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">rate-limiting-and-backpressure</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/finishing-what-you-started/">finishing-what-you-started</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/handing-off-for-review/">handing-off-for-review</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=fanning-out-independent-work">Cites 4</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/managing-scope-drift/">managing-scope-drift</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/">delegating-tasks-with-review-gates</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/isolating-work-with-worktrees/">isolating-work-with-worktrees</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/confirming-before-claiming-done/">confirming-before-claiming-done</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>Independent work parallelizes; related work doesn't, no matter how much it looks like a list. The judgment that matters isn't whether the tasks can be described separately — it's whether either agent's approach would change if it saw the other's output. If not, dispatch both in the same turn: agents issued together run concurrently, agents issued one turn at a time run sequentially no matter how independent the underlying tasks are.</p>
 <p>Each agent gets a context built only for its slice — not your session, not the other agents' assignments. That isolation is what makes the parallelism safe, and it's also what frees your own context for the work only you can do: judging independence, writing the prompts, and reconciling what comes back.</p>
 <h2 id="when-to-use">When to use</h2>

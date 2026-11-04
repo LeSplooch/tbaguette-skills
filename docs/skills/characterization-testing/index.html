@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=characterization-testing"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when changing, refactoring, extracting, porting, or deleting code that has no tests, when the current behavior is unknown or undocumented, when a rewrite must match a legacy component output for output, or when reaching for golden files, approval tests, snapshots, or output diffs. Covers pinning existing behavior, recording known bugs, and retiring the pins. Also use after a change relocates where an effect is produced, when a pinned test is still green and may have quietly stopped observing anything.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=characterization-testing">Cited by 3</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/refactoring-safely/">refactoring-safely</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/writing-the-failing-test-first/">writing-the-failing-test-first</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=characterization-testing">Cites 3</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/regression-test-from-bug/">regression-test-from-bug</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/grounding-test-doubles/">grounding-test-doubles</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/writing-the-failing-test-first/">writing-the-failing-test-first</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>A characterization test asserts what the code <em>does</em>, not what it should do. It is a scaffold that makes a refactor observable, and it is the only kind of test whose correct first run is a pass rather than a failure.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>About to change, extract, port, or delete code with no test coverage and no written specification.</li><li>A rewrite must match a legacy component output for output before it may replace it.</li><li>Behavior is known only through the running system, and the people who wrote it are unavailable.</li><li>A dependency or runtime upgrade needs proof that observable output did not move.</li><li>Not for: behavior somebody can actually specify — write the specification as a test instead, via <a class="skill-link" href="/tbaguette-skills/skills/writing-the-failing-test-first/"><code>writing-the-failing-test-first</code></a>.</li><li>Not for: a known defect — that is <a class="skill-link" href="/tbaguette-skills/skills/regression-test-from-bug/"><code>regression-test-from-bug</code></a>. Characterization pins bugs deliberately; it does not fix them.</li></ul>

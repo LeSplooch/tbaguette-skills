@@ -329,5 +329,16 @@ class PackTests(unittest.TestCase):
         self.assertIs(skill_graph.unpack_graph(graph), graph)
 
 
+class CitationListsTests(unittest.TestCase):
+    def test_both_directions_in_library_order_without_the_skill_itself(self):
+        def node(slug, refs):
+            return {"slug": slug, "trigger": {"refs": {}, "quotes": {}},
+                    "sections": [{"refs": refs}]}
+        graph = {"skills": [node("a", {"b": 1, "a": 2}), node("b", {}), node("c", {"b": 1})]}
+        got = skill_graph.citation_lists(graph)
+        self.assertEqual(got["a"], {"cites": ["b"], "cited_by": []})
+        self.assertEqual(got["b"], {"cites": [], "cited_by": ["a", "c"]})
+
+
 if __name__ == "__main__":
     unittest.main()

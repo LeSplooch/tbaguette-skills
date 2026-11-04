@@ -468,6 +468,18 @@ def edge_weights(graph: dict) -> dict[tuple[str, str], int]:
     return weights
 
 
+def citation_lists(graph: dict) -> dict[str, dict[str, list[str]]]:
+    """slug -> {"cites": [...], "cited_by": [...]}, each in library order and
+    without the skill itself, for the strip under every skill page's lede."""
+    order = [s["slug"] for s in graph["skills"]]
+    out = {slug: {"cites": set(), "cited_by": set()} for slug in order}
+    for (src, dst) in edge_weights(graph):
+        if src != dst and dst in out:
+            out[src]["cites"].add(dst)
+            out[dst]["cited_by"].add(src)
+    return {slug: {k: [o for o in order if o in v[k]] for k in v} for slug, v in out.items()}
+
+
 def banner_summary(graph: dict) -> dict:
     """The few numbers, and the family-level picture, the landing page's
     announcement banner draws -- small enough to ride in the page itself, so

@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=responding-to-incidents"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when something is broken in production right now — an outage, a degradation, a bad deploy, data going wrong in flight, an alert that is real — and there is a clock and an audience. Also use when a debugging session has quietly become an incident because users are affected while you investigate, or when deciding whether to roll back or fix forward. Covers mitigating before diagnosing, holding the three roles when you are the only responder, preserving the evidence your own mitigation would destroy, choosing reversible mitigations over correct fixes, communicating on a cadence, and handing back to an ordinary diagnosis once the bleeding stops.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=responding-to-incidents">Cited by 3</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/clairvoyance/">clairvoyance</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/diagnosing-before-fixing/">diagnosing-before-fixing</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=responding-to-incidents">Cites 5</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/deciding-reversibility/">deciding-reversibility</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/regression-test-from-bug/">regression-test-from-bug</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/observing-production-safely/">observing-production-safely</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/diagnosing-before-fixing/">diagnosing-before-fixing</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/writing-postmortems/">writing-postmortems</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>Ordinary debugging has one correct first move: reproduce the failure so it is available on demand, then find where it actually originates, then fix it. An incident inverts that, and the inversion is the whole skill. While you are reproducing, users are still broken. <strong>Stop the harm first; understand it second.</strong> A response that gets the cause exactly right in forty minutes is worse than one that restores service in four and gets the cause right in an hour.</p>
 <p>This is uncomfortable precisely because the good instincts point the wrong way. Everything that makes someone a careful engineer — do not act without understanding, do not change what you cannot explain, do not guess — is correct in a debugging session and costly in the first ten minutes of an outage.</p>
 <p>That inversion is the famous half of this skill and it is not the half that actually goes missing. Most responders reach for the rollback. What they do not do, under a clock, alone, is <strong>write anything down</strong> — and every artifact an incident owes is produced during the twenty minutes when producing it feels like the least urgent thing available. The timeline nobody kept is the postmortem nobody can write. The cadence nobody set is the escalation that arrives while the fix is already working.</p>

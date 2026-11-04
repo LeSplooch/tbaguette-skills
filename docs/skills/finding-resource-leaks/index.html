@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=finding-resource-leaks"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when memory, file descriptors, sockets, threads, connections, timers, or event subscriptions grow without bound, when a process is killed for running out of memory or hits a too-many-open-files error, when a periodic restart is what keeps a service alive, when a heap snapshot must be read, or when usage climbs under steady load, or when a lock, a global flag, or a document-wide style is released by an event or callback that may never fire. Covers growth detection, retention versus allocation, and error-path leaks.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=finding-resource-leaks">Cited by 4</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/debugging-concurrency/">debugging-concurrency</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/performance-profiling/">performance-profiling</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/diagnosing-before-fixing/">diagnosing-before-fixing</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=finding-resource-leaks">Cites 2</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/performance-profiling/">performance-profiling</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/">rate-limiting-and-backpressure</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>A leak is retention, not allocation. The allocation site is merely where the object was born; the defect is the reference that outlives its purpose — which is why reading the allocating code almost never finds it. Detect leaks by measuring growth under steady load, never by inspecting source.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A process is killed for memory, hits a descriptor limit, or exhausts a connection pool</li><li>A scheduled restart, or a &quot;just restart it weekly&quot; note, is holding the system up</li><li>Resource usage climbs across hours or days without a corresponding rise in traffic</li><li>Latency degrades steadily after deploy and recovers on restart</li><li>Duplicate side effects appear, multiplying with uptime — a subscription leak wearing a logic bug's clothes</li></ul>

@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/tbaguette-skills/assets/fonts/work-sans-variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=caf0fdeb44">
+<link rel="stylesheet" href="/tbaguette-skills/assets/styles.css?v=1d1e813e88">
 <script>(function(){try{if(localStorage.getItem('tbaguette-theme')==='flour'){document.documentElement.setAttribute('data-theme','flour');}}catch(e){}})();</script>
 </head>
 <body class="page-skill"
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-04T23:25:44+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:25:44Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-04T23:29:40+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-04T23:29:40Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -72,7 +72,7 @@
     <a class="skill-article__graph-link" href="/tbaguette-skills/graph/#skill=upgrading-dependencies"><svg class="icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-graph"></use></svg><span>See its place in the graph</span></a>
   </div>
   <p class="lede">Use when dependency versions have fallen behind, when a security advisory names a package in use, when planning a major version bump or a runtime upgrade, when a lockfile diff brings transitive changes nobody asked for, when an upgrade breaks something the test suite did not catch, when deciding whether to batch bumps or take them one at a time, when a library has become unmaintained and replacing it is on the table, or when the model a feature calls is being changed or retired.</p>
-</div><div class="prose"><h2 id="overview">Overview</h2>
+</div><dl class="skill-cites"><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=upgrading-dependencies">Cited by 5</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/">orchestrating-work-end-to-end</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/keeping-copies-in-sync/">keeping-copies-in-sync</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/building-llm-features/">building-llm-features</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/auditing-dependencies/">auditing-dependencies</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/reproducible-environments/">reproducible-environments</a></dd></div><div class="skill-cites__row"><dt class="skill-cites__label"><a href="/tbaguette-skills/graph/#skill=upgrading-dependencies">Cites 5</a></dt><dd class="skill-cites__chips"><a class="skill-cites__chip" href="/tbaguette-skills/skills/incremental-migration/">incremental-migration</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/evaluating-llm-output/">evaluating-llm-output</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/data-migrations/">data-migrations</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/building-llm-features/">building-llm-features</a><a class="skill-cites__chip" href="/tbaguette-skills/skills/auditing-dependencies/">auditing-dependencies</a></dd></div></dl><div class="prose"><h2 id="overview">Overview</h2>
 <p>Staying current is either a cheap routine or one enormous forced upgrade during an incident; there is no third option, and the choice is made by default every week nobody upgrades. Batch what is boring, isolate what is risky, and know the rollback before the merge.</p>
 <h2 id="when-to-use">When to use</h2>
 <ul><li>A routine bump, a scheduled upgrade sweep, or an automated update PR needs review</li><li>An advisory, audit, or end-of-support notice names something in the tree</li><li>A major version, framework, or language runtime bump is being planned</li><li>An upgrade landed and something broke that no test covers</li><li>A library is unmaintained, forked locally, or blocking other upgrades</li></ul>
