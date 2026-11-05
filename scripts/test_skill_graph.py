@@ -168,6 +168,7 @@ class BuildSkillNodeTests(unittest.TestCase):
         skill = self._skill(description_html=f"Use when naming; pairs with {_link('beta')}.")
         node = skill_graph.build_skill_node(skill)
         self.assertEqual(node["trigger"]["refs"], {"beta": 1})
+        self.assertEqual(node["trigger"]["quotes"], {"beta": "pairs with beta."})
         self.assertTrue(all("beta" not in s["refs"] for s in node["sections"]))
 
     def test_always_on_is_read_off_the_description(self):

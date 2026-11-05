@@ -231,7 +231,10 @@ def extract_sections(html: str, *, kind: str = "body", opening_title: str = "Ope
                      opening_id: str = "") -> list[dict]:
     """Every h2 section of one rendered document, in reading order."""
     walker = _SectionWalker(opening_title=opening_title, kind=kind, opening_id=opening_id)
-    walker.feed(html or "")
+    # A frontmatter description renders as bare inline HTML, with no block
+    # tag around it, so a citation in it had no sentence to be quoted from
+    # and reached the tooltip empty.
+    walker.feed(f"<p>{html}</p>" if kind == "trigger" and html else html or "")
     walker.close()
     return walker.sections
 
