@@ -83,6 +83,7 @@ Each agent starts cold: no access to your reasoning, your conversation, or what 
 
 - **The specific problem** — the file, the failure, the deliverable — not the general category. "Fix agent-tool-abort.test.ts" beats "fix the failing tests."
 - **The scope boundary**, stated as a constraint: which files and directories belong to this agent, spelled out even when it seems obvious from context the agent doesn't have.
+- **The command that proves this slice is done**, so each agent is not left to pick its own definition and the first disagreement does not surface at your combined verification.
 - **The output contract**: what shape the report back should take, so it can be integrated without a second round of investigation to reconstruct what the agent actually did.
 
 ## Reconciling what comes back
@@ -90,6 +91,7 @@ Each agent starts cold: no access to your reasoning, your conversation, or what 
 Results land independently; integration happens once, together — not piecemeal as each agent finishes.
 
 - Check for the collisions the dispatch was supposed to prevent: did two agents touch the same file, the same config key, the same exported name?
+- Compare the tree with the union of the write sets you declared. A file no lane owned is out of scope whoever wrote it, and asking whether two agents collided cannot see it.
 - Run the full verification pass across the combined result, not per agent — each slice can be internally correct and still break once merged.
 - An agent's own summary of what it did is a claim, not a diff; verify the merged result the same way any other completion claim gets verified (see `confirming-before-claiming-done`).
 
