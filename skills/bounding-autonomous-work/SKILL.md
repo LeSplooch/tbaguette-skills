@@ -37,6 +37,7 @@ party present.
 - A question was just asked, nothing answered it, and the run is about to
   continue anyway. That moment is the trigger, not a reason to skip this.
 - Not for: how much deliberation one decision deserves — `deciding-reversibility`.
+- Not for: a person who is present and being asked again or handed a step. That is `handing-a-step-to-a-person`.
 - Not for: when a polish loop has stopped paying — `knowing-when-to-stop` covers
   diminishing returns. Stop conditions here fire whether or not returns are good.
 - Not for: work that merely takes a long time with someone watching. That is
@@ -155,6 +156,15 @@ see the fix" is the sentence this whole skill is written against, and it is
 almost always true and almost never worth acting on. If a condition fires and
 turns out to have been badly drawn, that is a finding for the report, not a
 licence to continue under a condition you have just rewritten to permit you.
+
+**A spend ceiling is the owner's dial, and the wind-down is part of the plan.** "Continue until
+42% of the weekly quota" gets raised, lowered and lifted as the work goes on, so read the newest value
+rather than the first, and do not invent a tighter one of your own. Hitting it hard, mid-task, is the
+failure. Say up front what happens near the line: which work in flight may finish, what may no longer
+start, what state things must be left in, and how paused work resumes. When the owner asks whether a
+ceiling is enough, answer with the remaining work as items and what each is likely to cost. Have
+something other than the run watch the number, because each check a run makes on its own spending is
+more spending.
 
 ## 3. The door bound
 
