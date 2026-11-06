@@ -1,0 +1,70 @@
+[package]
+name = "atelier-web"
+version = "0.0.0"
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# Pinned exactly: the installed wasm-bindgen CLI is 0.2.128 and refuses a
+# module built against any other version of the crate.
+wasm-bindgen = "=0.2.128"
+js-sys = "=0.3.105"
+atelier-core = { path = "../atelier-core" }
+web-sys = { version = "=0.3.105", features = [
+    "AddEventListenerOptions",
+    "Attr",
+    "CanvasRenderingContext2d",
+    "console",
+    "CssStyleDeclaration",
+    "Document",
+    "DomRect",
+    "DomTokenList",
+    "Element",
+    "Event",
+    "EventTarget",
+    "FocusEvent",
+    "FocusOptions",
+    "FontFaceSet",
+    "History",
+    "HtmlButtonElement",
+    "HtmlCanvasElement",
+    "HtmlCollection",
+    "HtmlDetailsElement",
+    "HtmlDialogElement",
+    "HtmlDocument",
+    "HtmlElement",
+    "HtmlInputElement",
+    "HtmlSelectElement",
+    "HtmlTextAreaElement",
+    "IntersectionObserver",
+    "IntersectionObserverInit",
+    "KeyboardEvent",
+    "Location",
+    "MediaQueryList",
+    "MouseEvent",
+    "MutationObserver",
+    "MutationObserverInit",
+    "NamedNodeMap",
+    "Navigator",
+    "Node",
+    "NodeList",
+    "Performance",
+    "PointerEvent",
+    "RequestCache",
+    "RequestCredentials",
+    "RequestInit",
+    "ResizeObserver",
+    "Response",
+    "ScrollBehavior",
+    "ScrollIntoViewOptions",
+    "ScrollLogicalPosition",
+    "Storage",
+    "TextMetrics",
+    "UiEvent",
+    "WheelEvent",
+    "Window",
+]}

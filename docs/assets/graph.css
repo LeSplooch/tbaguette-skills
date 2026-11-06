@@ -1,0 +1,1327 @@
+/*
+  TBaguette’s Atelier — /graph/ ("the crumb")
+  =========================================
+  Loaded after styles.css on /graph/ only. The family colours, the header's
+  Graph link and the skill pages' link to the graph are in styles.css
+  (section 19); this is the page that holds the graph and the app's chrome.
+*/
+
+/* --- the page ------------------------------------------------------------------ */
+
+/* Before graph.js runs (and if it never does) this is an ordinary page: a
+   head saying what the graph shows, a host holding the noscript note, the
+   footer. Once the app mounts it adds .graph-live to <body>, and the page
+   becomes the instrument: the body is exactly one viewport tall, the host
+   takes every pixel below the site header, edge to edge, and the head and
+   footer step out of the way. The head is hidden visually only — it is still
+   the page's heading for a screen reader. The footer is removed outright:
+   below a canvas that spends the wheel on zooming it could only be reached
+   by the scrollbar, and everything in it is one click away in the header.
+
+   The height is max(100dvh, 30rem) rather than 100dvh, so a phone held
+   sideways scrolls to a usable graph rather than squeezing it flat. */
+
+.graph-page__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-5);
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-4);
+}
+
+.graph-page__title {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 650;
+  font-size: var(--text-5);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.015em;
+}
+
+.graph-page__lede {
+  max-width: var(--measure-prose);
+  color: var(--text-secondary);
+}
+
+.graph-host {
+  width: min(100% - 2 * var(--space-4), var(--container-wide));
+  margin: 0 auto var(--space-8);
+  background: var(--bg);
+}
+
+.graph-host__noscript {
+  padding: var(--space-5) 0;
+  max-width: var(--measure-prose);
+  color: var(--text-secondary);
+}
+
+/* The same sentence for a browser with scripts and no WASM, where <noscript> stays silent. */
+.graph-host__nowasm { display: none; }
+html[data-nowasm] .graph-host__nowasm { display: block; }
+
+.page-graph.graph-live {
+  display: flex;
+  flex-direction: column;
+  height: max(100dvh, 30rem);
+  min-height: 0;
+}
+
+.page-graph.graph-live > main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.page-graph.graph-live .graph-page {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.page-graph.graph-live .graph-page__head {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.page-graph.graph-live .graph-host {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.page-graph.graph-live .site-footer { display: none; }
+
+/* On a phone the site header wraps to four rows, and every one of them is
+   height the graph does not get. The build time is metadata every other page
+   still shows; here it gives its two rows back, and the nav and the theme
+   toggle close up onto one. */
+@media (max-width: 40rem) {
+  .page-graph.graph-live .site-header__updated { display: none; }
+  .page-graph.graph-live .site-header__inner { padding-block: var(--space-3); }
+}
+
+/* A phone on its side gets the sheet layout at the height of a toolbar. The
+   30rem floor above then scrolled the page, pushing the legend and the sheet
+   handle off the bottom, and header and bar took 244 of 390px. Here the page
+   fits the screen, the header gives back its build time and padding, and the
+   search joins the view tabs on one row. A short window wider than 60rem keeps
+   the floor: its legend stands up the left edge and needs the height. */
+@media (max-height: 30rem) and (max-width: 60rem) {
+  .page-graph.graph-live { height: 100dvh; }
+  .page-graph.graph-live .site-header__updated { display: none; }
+  .page-graph.graph-live .site-header__inner { padding-block: var(--space-2); }
+  .page-graph.graph-live .crumb__search { order: 2; flex: 1 1 12rem; }
+  .page-graph.graph-live .crumb [data-crumb-trace] { order: 3; margin-inline-start: 0; }
+}
+
+/* --- the app ---------------------------------------------------------------------- */
+
+.crumb {
+  container-type: inline-size;
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  font-size: var(--text-2);
+  color: var(--text-primary);
+}
+
+/* The prose rhythm in section 5 — a top margin on every paragraph, 64px
+   above any heading that follows something — is right for an article and
+   wrong for an app's chrome. Zeroed here, at the specificity of one class,
+   so every rule below this one still sets its own spacing. */
+.crumb :where(h2, h3, h4, p, blockquote, ol, ul, dl, dd, li + li) { margin: 0; }
+
+.crumb__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface);
+  position: relative;
+  z-index: 2;
+}
+
+/* The gilded hairline the header and the update modal both end on. */
+.crumb__bar::after {
+  content: '';
+  position: absolute;
+  inset-inline: 8%;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(to right, transparent,
+    color-mix(in oklch, var(--accent) 60%, transparent) 25%,
+    color-mix(in oklch, var(--accent) 60%, transparent) 75%, transparent);
+}
+
+.crumb__heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 var(--space-3);
+  margin-inline-end: auto;
+  /* Its counts arrive with graph.json. Room for them from the start, or the toolbar fits one
+     row until then and wraps under the reader's eyes between 64rem and 72rem wide. */
+  min-width: 24rem;
+}
+
+.crumb__title {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 650;
+  font-size: var(--text-4);
+  letter-spacing: -0.01em;
+}
+
+.crumb__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.crumb__views {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  background: var(--bg);
+}
+
+.crumb__view {
+  padding: 0.35em 0.9em;
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.crumb__view:hover { color: var(--text-accent); }
+
+/* Selected: fill plus weight, never the fill alone. */
+.crumb__view[aria-selected='true'] {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  font-weight: 600;
+}
+
+.crumb__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.crumb__searchnote {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  z-index: 5;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.18);
+}
+.crumb__searchnote[hidden] { display: none; }
+
+.crumb__search .icon {
+  position: absolute;
+  inset-inline-start: 0.7em;
+  width: 1.05em;
+  height: 1.05em;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.crumb__search input {
+  width: 14rem;
+  padding: 0.5em 0.9em 0.5em 2.2em;
+  font-size: var(--text-2);
+  color: var(--text-primary);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+}
+
+.crumb__search input::placeholder { color: var(--text-secondary); opacity: 1; }
+.crumb__search input:focus-visible { border-color: var(--focus-ring); outline-offset: 2px; }
+
+.crumb__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+  min-height: 2.25rem;
+  padding: 0.4em 0.9em;
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.crumb__btn .icon { width: 1.15em; height: 1.15em; }
+.crumb__btn:hover { color: var(--text-accent); border-color: var(--border-strong); }
+
+.crumb__btn--icon { width: 2.25rem; padding: 0; }
+.crumb__btn--icon .icon { width: 1.25em; height: 1.25em; }
+
+.crumb__btn--solid {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border-color: var(--accent-solid);
+  font-weight: 600;
+}
+
+.crumb__btn--solid:hover {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid-hover);
+  border-color: var(--accent-solid-hover);
+}
+
+.crumb__btn--quiet { border-color: transparent; }
+.crumb__btn--small { min-height: 1.9rem; padding: 0.2em 0.6em; font-size: var(--text-1); }
+
+/* The row is pinned to the space the app gives it. Left implicit, it sizes
+   to its tallest child — the panel, once a section's quotes open — and the
+   stage grows with it, which re-lays the canvas out for a height nobody can
+   see. */
+.crumb__body {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22rem;
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+}
+
+/* --- stage -------------------------------------------------------------------------- */
+
+.crumb__stage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  border-radius: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 48%,
+      color-mix(in oklch, var(--accent-solid) 7%, var(--bg)) 0%,
+      var(--bg) 72%);
+}
+
+[data-theme='flour'] .crumb__stage {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 48%,
+      color-mix(in oklch, white 38%, var(--bg)) 0%,
+      var(--bg) 75%);
+}
+
+.crumb__stage:focus-visible { outline-offset: -3px; border-radius: 0; }
+.crumb__stage--grabbing { cursor: grabbing; }
+.crumb--loading .crumb__stage { cursor: progress; }
+
+.crumb__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.crumb__status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.crumb__status:empty { display: none; }
+
+/* Several overlays set their own display; the attribute has to win. */
+.crumb [hidden] { display: none !important; }
+
+.crumb__loading,
+.crumb__failed p {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-4);
+  color: var(--text-secondary);
+}
+
+.crumb__failed {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .crumb__loading { animation: crumb-breathe 1.8s var(--ease-in-out) infinite; }
+}
+
+@keyframes crumb-breathe {
+  50% { opacity: 0.45; }
+}
+
+/* Never under the tools or the legend: graph.js measures both and hands over
+   the room left for the hint (--crumb-hint-l, -r, -b). Centred within that
+   room, it wraps onto balanced lines rather than reach either of them. */
+.crumb__hint {
+  position: absolute;
+  left: var(--crumb-hint-l, var(--space-3));
+  right: var(--crumb-hint-r, var(--space-3));
+  bottom: var(--crumb-hint-b, calc(var(--space-3) + 0.4rem));
+  width: fit-content;
+  margin-inline: auto;
+  padding: 0.35em 0.9em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+  text-align: center;
+  text-wrap: balance;
+  background: color-mix(in oklch, var(--surface) 85%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  transition: opacity var(--duration-view) var(--ease-out);
+}
+
+.crumb__hint--gone { opacity: 0; }
+.crumb[data-view='anatomy'] .crumb__hint,
+.crumb:is([data-view='list'], [data-view='matrix']) .crumb__hint { display: none; }
+
+/* Trail: where you walked from, so a walk can be retraced a step at a time. */
+.crumb__trail {
+  position: absolute;
+  top: var(--space-3);
+  inset-inline-start: var(--space-3);
+  max-width: calc(100% - 2 * var(--space-3));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.25em;
+  background: color-mix(in oklch, var(--surface) 88%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  z-index: 1;
+}
+
+.crumb__crumb {
+  padding: 0.25em 0.65em;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.crumb__crumb:hover { color: var(--text-accent); background: var(--surface-hover); }
+.crumb__crumb--back { display: inline-grid; place-items: center; width: 1.9rem; height: 1.9rem; padding: 0; }
+.crumb__crumb--back .icon { width: 1.1em; height: 1.1em; }
+.crumb__crumb--here { color: var(--text-primary); font-weight: 500; cursor: default; }
+.crumb__crumb--here:hover { color: var(--text-primary); background: none; }
+.crumb__crumb-sep { color: var(--text-secondary); opacity: 0.6; }
+
+.crumb__legend {
+  position: absolute;
+  inset-inline-start: var(--space-3);
+  bottom: var(--space-3);
+  max-width: min(44rem, calc(100% - 18rem));
+  z-index: 1;
+}
+
+.crumb__legend-title {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-accent);
+}
+
+.crumb__legend-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.crumb[data-view='anatomy'] .crumb__legend,
+.crumb:is([data-view='list'], [data-view='matrix']) .crumb__legend { display: none; }
+
+/* A wide stage has width to spare and height to protect: the key stands up
+   along the left edge, the way a map's does, and the graph keeps the full
+   height. graph.js reads which way it stands and fits the camera beside it. */
+@container (min-width: 60rem) {
+  .crumb__legend {
+    top: var(--space-4);
+    bottom: auto;
+    max-width: 15rem;
+  }
+  .crumb-family { white-space: nowrap; }
+  .crumb__legend-list { flex-direction: column; align-items: flex-start; }
+}
+
+.crumb-family {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.2em 0.55em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+  background: color-mix(in oklch, var(--surface) 88%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out);
+}
+
+.crumb-family:hover { color: var(--text-primary); border-color: var(--chip); }
+
+/* Pressed: the family's own colour as the border, plus bolder text — two
+   channels, so a filter that is on never rests on hue. */
+.crumb-family[aria-pressed='true'] {
+  color: var(--text-primary);
+  font-weight: 600;
+  border-color: var(--chip);
+  box-shadow: inset 0 0 0 1px var(--chip);
+}
+
+.crumb-family__count {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.crumb-swatch {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: var(--radius-full);
+  background: var(--chip);
+}
+
+.crumb__anatomy-key {
+  position: absolute;
+  inset-inline-start: var(--space-3);
+  bottom: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  padding: 0.4em 0.9em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+  background: color-mix(in oklch, var(--surface) 88%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  z-index: 1;
+}
+
+.crumb__anatomy-key span { display: inline-flex; align-items: center; gap: 0.4em; }
+.crumb__anatomy-key svg { width: 1em; height: 1em; color: var(--text-accent); }
+
+.crumb__tools {
+  position: absolute;
+  inset-inline-end: var(--space-3);
+  bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem;
+  background: color-mix(in oklch, var(--surface) 88%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  z-index: 1;
+}
+
+.crumb__tools .crumb__btn { border-color: transparent; min-height: 2rem; width: 2rem; }
+.crumb:is([data-view='list'], [data-view='matrix']) .crumb__tools { display: none; }
+
+.crumb__size {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding-inline: 0.6em 0.2em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.crumb__size select {
+  padding: 0.25em 0.4em;
+  font: inherit;
+  color: var(--text-primary);
+  background: var(--bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.crumb[data-view='anatomy'] .crumb__size { display: none; }
+
+/* --- tooltip -------------------------------------------------------------------------- */
+
+.crumb__tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: max-content;
+  max-width: min(22rem, calc(100% - 16px));
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: 0 18px 40px -18px hsl(var(--shadow-ink) / 0.7);
+  pointer-events: none;
+}
+
+.crumb__tip[hidden] { display: none; }
+
+.crumb-tip__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-3);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.crumb-tip__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  margin-block: 0.15em 0.4em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.crumb-tip__body { color: var(--text-secondary); line-height: var(--leading-normal); }
+.crumb-tip__stats { margin-top: 0.4em; font-family: var(--font-mono); font-size: var(--text-1); color: var(--text-accent); }
+
+.crumb-tip__rel {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45em;
+  margin-top: var(--space-2);
+  font-size: var(--text-1);
+  color: var(--text-accent);
+}
+
+.crumb-tip__rel--in { color: var(--text-secondary); }
+
+.crumb-tip__num,
+.crumb-section__num {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  min-width: 1.5em;
+  height: 1.5em;
+  padding-inline: 0.3em;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+}
+
+.crumb-quote {
+  margin: 0.35em 0 0;
+  padding-inline-start: 0.75em;
+  border-inline-start: 2px solid color-mix(in oklch, var(--accent) 55%, transparent);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-2);
+  line-height: 1.45;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.crumb-quote mark {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 0.88em;
+  color: var(--text-accent);
+  background: color-mix(in oklch, var(--accent) 12%, transparent);
+  border-radius: 4px;
+  padding: 0 0.2em;
+}
+
+/* --- panel -------------------------------------------------------------------------------- */
+
+.crumb__panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface);
+  border-inline-start: 1px solid var(--border-subtle);
+}
+
+.crumb__sheet-handle { display: none; }
+
+.crumb__panel-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-4) var(--space-5) var(--space-6);
+}
+
+.crumb-panel__section + .crumb-panel__section {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.crumb-panel__title {
+  margin-bottom: var(--space-3);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--text-1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-accent);
+}
+
+.crumb-panel__count { color: var(--text-secondary); }
+
+.crumb-panel__text {
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.crumb-panel__hint {
+  margin-top: var(--space-3);
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.crumb-notes,
+.crumb-roles,
+.crumb-sections,
+.crumb-inbounds,
+.crumb-route {
+  list-style: none;
+  padding: 0;
+}
+
+.crumb-notes li + li,
+.crumb-inbounds li + li { margin-top: var(--space-2); }
+
+.crumb-note {
+  display: block;
+  width: 100%;
+  padding: var(--space-3);
+  text-align: start;
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.crumb-note b { color: var(--text-primary); font-weight: 600; }
+.crumb-note:hover { border-color: var(--border-strong); background: var(--surface-hover); }
+
+.crumb-note[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: color-mix(in oklch, var(--accent) 9%, var(--surface));
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.crumb-chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 0.05em 0.45em;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--surface-hover);
+  border-inline-start: 3px solid var(--chip);
+  border-radius: 5px;
+  overflow-wrap: anywhere;
+  vertical-align: baseline;
+}
+
+a.crumb-chip:hover,
+.crumb-chip--button:hover { color: var(--text-accent); }
+
+.crumb-chip--button { cursor: pointer; }
+.crumb-chip--family { font-family: var(--font-body); font-size: var(--text-1); }
+
+.crumb-roles li + li { margin-top: var(--space-3); }
+
+.crumb-role {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.crumb-role b { color: var(--text-primary); font-weight: 600; }
+.crumb-role__count { font-family: var(--font-mono); font-size: var(--text-1); color: var(--text-accent); }
+
+.crumb-role-glyph {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--text-accent);
+}
+
+/* --- panel: one skill ------------------------------------------------------------------ */
+
+.crumb-skill__name {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 650;
+  font-size: var(--text-5);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.crumb-skill__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-block: var(--space-3);
+}
+
+.crumb-skill__role {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.crumb-skill__role .crumb-role-glyph { width: 1.15rem; height: 1.15rem; }
+
+.crumb-skill__flag {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  color: var(--text-accent);
+}
+
+.crumb-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-block: var(--space-4);
+}
+
+.crumb-stats div {
+  padding: var(--space-2);
+  text-align: center;
+  background: var(--bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.crumb-stats dt {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.crumb-stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.crumb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.crumb-sections li + li { margin-top: 2px; }
+
+.crumb-section__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 0.45em 0.5em;
+  text-align: start;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.crumb-section__head:hover { color: var(--text-primary); background: var(--surface-hover); }
+.crumb-section__title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+
+.crumb-section__cites {
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  color: var(--text-accent);
+}
+
+.crumb-section__cites::before { content: '→ '; }
+.crumb-section--ref .crumb-section__num { border-style: dashed; }
+
+.crumb-section--on > .crumb-section__head {
+  color: var(--text-primary);
+  background: color-mix(in oklch, var(--accent) 10%, var(--surface));
+}
+
+.crumb-section--on .crumb-section__num {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border-color: var(--accent-solid);
+}
+
+.crumb-section__detail {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-2) var(--space-3) 2.3em;
+}
+
+.crumb-cite { display: grid; gap: 0.2em; justify-items: start; }
+.crumb-cite + .crumb-cite { margin-top: var(--space-2); }
+
+.crumb-link {
+  font-size: var(--text-1);
+  color: var(--text-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.crumb-link:hover { color: var(--accent-hover); }
+.crumb-link--button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.crumb-inbound {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0 0.55em;
+  width: 100%;
+  padding: 0.4em 0.5em;
+  text-align: start;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.crumb-inbound:hover { background: var(--surface-hover); }
+.crumb-inbound__name { font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; }
+.crumb-inbound__from { grid-column: 2; font-size: var(--text-1); color: var(--text-secondary); overflow-wrap: anywhere; }
+
+/* --- panel: trace ----------------------------------------------------------------------- */
+
+.crumb-trace { display: grid; gap: var(--space-3); margin-top: var(--space-3); }
+
+.crumb-trace label { display: grid; gap: 0.3em; font-size: var(--text-1); color: var(--text-secondary); }
+
+.crumb-trace input {
+  padding: 0.5em 0.75em;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.crumb-trace__error:empty { display: none; }
+.crumb-trace__error { font-size: var(--text-1); color: var(--text-accent); }
+
+/* The route: a gilded spine with each skill a stop on it. */
+.crumb-route { position: relative; padding-inline-start: 1.4em; }
+
+.crumb-route::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.8em 0.8em;
+  inset-inline-start: 0.35em;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent-solid), color-mix(in oklch, var(--accent-solid) 30%, transparent));
+  border-radius: 2px;
+}
+
+.crumb-route__stop { position: relative; display: grid; gap: 0.3em; justify-items: start; }
+.crumb-route__stop + .crumb-route__stop { margin-top: var(--space-4); }
+
+.crumb-route__stop::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: -1.35em;
+  top: 0.45em;
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  border: 2px solid var(--accent-solid);
+}
+
+.crumb-route__via { font-size: var(--text-1); color: var(--text-secondary); }
+
+/* --- list view ---------------------------------------------------------------------------- */
+
+.crumb__list {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow-y: auto;
+  padding: var(--space-5) var(--space-6) var(--space-7);
+  background: var(--bg);
+  cursor: auto;
+  touch-action: auto;
+}
+
+.crumb__list[hidden] { display: none; }
+
+.crumb-list__intro { color: var(--text-secondary); margin-bottom: var(--space-5); }
+
+/* A jump bar over the families, and each skill's citations folded behind a
+   count, so the text version of the graph can be walked rather than scrolled. */
+.crumb-list__jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+  margin: 0 0 var(--space-5);
+}
+
+.crumb-list__more > summary {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.crumb-list__family + .crumb-list__family { margin-top: var(--space-6); }
+
+.crumb-list__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: var(--space-3);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-4);
+}
+
+.crumb-list__skill {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.crumb-list__skill h4 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--text-2);
+}
+
+.crumb-list__skill h4 a { color: var(--text-primary); text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 0.2em; }
+.crumb-list__skill h4 a:hover { color: var(--text-accent); }
+
+.crumb-list__role {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  margin-top: 0.3em;
+  font-size: var(--text-1);
+  color: var(--text-secondary);
+}
+
+.crumb-list__role .crumb-role-glyph { width: 1rem; height: 1rem; }
+
+.crumb-list__refs {
+  margin-top: var(--space-2);
+  line-height: 2;
+  color: var(--text-secondary);
+}
+
+.crumb-list__refs b {
+  margin-inline-end: 0.4em;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--text-1);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-accent);
+}
+
+/* --- matrix view -------------------------------------------------------------------------- */
+
+/* One hue, dim to bright, mixed into the page so both themes keep the number
+   legible: at the strongest cell the digits hold 5.2:1 on crust and 6.2:1 on
+   flour, which is why the two themes stop at different strengths. The number
+   is always printed, so the shade is never the only channel. */
+.crumb__matrix {
+  --matrix-hue: var(--gold-500);
+  --matrix-max: 50%;
+}
+[data-theme='flour'] .crumb__matrix {
+  --matrix-hue: var(--gold-700);
+  --matrix-max: 70%;
+}
+
+.crumb-matrix__lede {
+  max-width: 60ch;
+  margin: calc(-1 * var(--space-3)) 0 var(--space-5);
+  color: var(--text-primary);
+}
+
+.crumb-matrix__scroll { overflow-x: auto; padding-bottom: var(--space-2); }
+
+.crumb-matrix {
+  border-collapse: separate;
+  border-spacing: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.crumb-matrix th { font-weight: 500; }
+
+.crumb-matrix__corner,
+.crumb-matrix__row {
+  /* The family column stays put while the grid scrolls under it. */
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  background: var(--bg);
+}
+
+.crumb-matrix__corner {
+  padding: 0 var(--space-2) var(--space-2) 0;
+  vertical-align: bottom;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.crumb-matrix__col { padding-bottom: var(--space-1); vertical-align: bottom; }
+.crumb-matrix__col abbr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25em;
+  text-decoration: none;
+  color: var(--text-secondary);
+  cursor: help;
+}
+
+.crumb-matrix__row {
+  padding-inline-end: var(--space-3);
+  text-align: start;
+  white-space: nowrap;
+}
+.crumb-matrix__row .crumb-swatch { margin-inline-end: 0.5em; vertical-align: 0.05em; }
+.crumb-matrix__row .crumb-matrix__num { display: inline-block; min-width: 1.6em; color: var(--text-secondary); }
+.crumb-matrix__name { font-family: var(--font-body); color: var(--text-primary); }
+/* The row header is the family's own switch: it looks like the header it is,
+   and answers the pointer and the keyboard like the chips in the legend. */
+.crumb-matrix__pick {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0 var(--space-2) 0 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.crumb-matrix__pick:hover .crumb-matrix__name { text-decoration: underline; text-underline-offset: 0.2em; }
+.crumb-matrix__pick:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+
+.crumb-matrix__cell { width: 2.75rem; height: 2.75rem; padding: 0; }
+.crumb-matrix__cell--self { box-shadow: inset 0 0 0 1px var(--text-secondary); border-radius: var(--radius-sm); }
+/* A family chosen in the legend: its cross is tinted, and its name and number
+   are set bold, so the mark does not rest on the tint alone. */
+.crumb-matrix__cell--on { background: color-mix(in oklch, var(--text-accent) 12%, transparent); }
+.crumb-matrix__row--on,
+.crumb-matrix__row--on .crumb-matrix__name,
+.crumb-matrix__row--on .crumb-matrix__num,
+.crumb-matrix__col--on .crumb-matrix__num { font-weight: 700; color: var(--text-accent); }
+.crumb-matrix__lede--family { font-weight: 500; }
+.crumb-matrix__cell--self button { box-shadow: inset 0 0 0 1px var(--text-secondary); }
+
+.crumb-matrix__cell button {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--matrix-hue) calc(6% + var(--m) * (var(--matrix-max) - 6%)), var(--bg));
+  color: var(--text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+.crumb-matrix__cell button:hover { outline: 2px solid var(--text-accent); outline-offset: -2px; }
+.crumb-matrix__cell button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+
+/* On a phone the family names would take the whole width; the numbers in the
+   first column stand for them, as they do along the top. */
+@container (width < 40rem) {
+  .crumb-matrix__name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .crumb-matrix__cell { width: 2.25rem; height: 2.25rem; }
+  .crumb-matrix__pick { min-height: 2.25rem; }
+  .crumb-matrix__corner span { display: block; }
+}
+
+/* --- narrow: the panel becomes a sheet over the stage -------------------------------------- */
+
+/* Below 60rem a side panel leaves the stage too narrow to read — at 50rem it
+   was 440px, and the legend, capped at the width the tools leave, stacked
+   into a column over the graph. So the panel becomes a sheet wherever the
+   legend stops standing up the left edge, and the graph takes the width. */
+@container (width < 60rem) {
+  .crumb__bar { gap: var(--space-2); padding: var(--space-2) var(--space-3); }
+  /* The page's heading names the graph already, and the header's Graph link
+     is marked current; the repeated title is a row the stage can have. */
+  .crumb__heading { display: none; }
+  .crumb__views { order: 1; }
+  .crumb [data-crumb-trace] { order: 2; margin-inline-start: auto; }
+  .crumb__search { order: 3; flex: 1 1 100%; min-width: 9rem; }
+  .crumb__search input { width: 100%; }
+  .crumb [data-crumb-trace] span { display: none; }
+  .crumb [data-crumb-trace] { width: 2.25rem; padding: 0; }
+  .crumb__view { padding: 0.35em 0.7em; }
+
+  .crumb__body { display: block; }
+  .crumb__stage { position: absolute; inset: 0; }
+
+  .crumb__panel {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 3;
+    max-height: 3.25rem;
+    border-inline-start: 0;
+    border-top: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: 0 -18px 40px -24px hsl(var(--shadow-ink) / 0.7);
+    transition: max-height var(--duration-view) var(--ease-out);
+  }
+
+  .crumb--sheet-open .crumb__panel { max-height: 72%; }
+
+  .crumb__sheet-handle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3em;
+    width: 100%;
+    min-height: 3.2rem;
+    padding: 0.45em var(--space-4) 0.6em;
+    font-family: var(--font-mono);
+    font-size: var(--text-1);
+    color: var(--text-accent);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .crumb__sheet-grip {
+    width: 2.5rem;
+    height: 4px;
+    border-radius: var(--radius-full);
+    background: var(--border-strong);
+  }
+
+  .crumb__panel-body { padding-top: 0; }
+  .crumb:not(.crumb--sheet-open) .crumb__panel-body { visibility: hidden; }
+
+  .crumb__legend {
+    inset-inline: var(--space-2);
+    bottom: calc(3.25rem + var(--space-2));
+    max-width: none;
+  }
+
+  .crumb__legend-title { display: none; }
+
+  .crumb__legend-list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .crumb-family { flex-shrink: 0; }
+
+  .crumb__anatomy-key { bottom: calc(3.25rem + var(--space-2)); inset-inline-start: var(--space-2); }
+
+  .crumb__tools {
+    top: var(--space-2);
+    bottom: auto;
+    inset-inline-end: var(--space-2);
+    flex-direction: column;
+  }
+
+  .crumb__size { display: none; }
+  /* The tools have moved to the top and the legend to its own row here, so
+     only the edges bound the hint. */
+  .crumb__hint { left: 5%; right: 5%; bottom: calc(3.25rem + 3.5rem); }
+  .crumb__trail { max-width: calc(100% - 4rem); }
+  .crumb__list { padding: var(--space-4) var(--space-4) calc(3.25rem + var(--space-6)); }
+  .crumb-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crumb__panel,
+  .crumb__hint,
+  .crumb__view,
+  .crumb__btn,
+  .crumb-note,
+  .crumb-family { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .crumb-chip,
+  .crumb-family,
+  .crumb-note,
+  .crumb__btn,
+  .crumb__views { border: 1px solid ButtonText; }
+  .crumb__view[aria-selected='true'],
+  .crumb-family[aria-pressed='true'],
+  .crumb-note[aria-pressed='true'] { outline: 2px solid Highlight; }
+  .crumb-swatch { forced-color-adjust: none; }
+}

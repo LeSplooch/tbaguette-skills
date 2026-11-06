@@ -8,9 +8,9 @@
 #      with a plain, non-shouty name rather than the all-caps urgency tag
 #      this used to reuse. That used to mean two nested "EXTREMELY_IMPORTANT"
 #      tags around the same content (this wrapper, plus SKILL.md's own); now
-#      only SKILL.md's survives, which content_pipeline.py also renders as a
-#      callout on the site -- do not rename that one without updating that
-#      pipeline and its tests to match. A stated-provenance sentence was
+#      only SKILL.md's survives, which the site build also renders as a
+#      callout -- do not rename that one without updating the build
+#      (site/crates/atelier-build) and its tests to match. A stated-provenance sentence was
 #      tried here too (twice) and measured worse against a fresh reader than
 #      saying nothing -- see the comment above session_context below.
 #   2. A deterministic result of keeping-tbaguette-current's step 1 (check

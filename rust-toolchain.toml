@@ -1,0 +1,7 @@
+# The compiler behind the committed WASM modules: the same bytes come out of one rustc only.
+# rustup fetches this version and the target on first use, and `site/atelier check` compares
+# the version with the one recorded beside the modules.
+[toolchain]
+channel = "1.99.1"
+profile = "minimal"
+targets = ["wasm32-unknown-unknown"]

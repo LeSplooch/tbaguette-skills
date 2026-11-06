@@ -1,0 +1,8 @@
+budget	6
+check	python3 check.py
+protected	check.py
+date	2026-10-29
+project	a scratch project whose to_roman lacked the subtractive forms
+checked_by	twelve cases, scored by how many passed
+restarted	once, after a fix to the mod
+carried	CM and CD

@@ -2,7 +2,7 @@
 #
 #   awk -F'\t' -f route-skills.awk skill-routes.tsv skill-index.tsv - < hook-payload.json
 #
-# skill-routes.tsv: hand-written intents. skill-index.tsv: the table scripts/skill_router.py
+# skill-routes.tsv: hand-written intents. skill-index.tsv: the table `site/atelier router`
 # builds. Standard input: the hook's JSON, from which only the prompt field is read, so a
 # path in `cwd` can never match a skill.
 # Prints one `slug<TAB>blurb` line per match, best first, then `STANDING` if the prompt
@@ -19,7 +19,7 @@ function stem(w) {
 }
 
 BEGIN {
-    # STOPWORDS and BOILERPLATE, in that order; test_hooks.py holds this equal to skill_router.py.
+    # STOPWORDS and BOILERPLATE, in that order; plugin_hooks.rs holds this equal to the router.
     n = split("a about above after again all also am an and any are as at be been before being but by can could did do does doing done down each even every few for from further get gets getting had has have having he her here hers him his how i if in into is it its itself just let lets like make makes making may me might more most much must my need needs no nor not now of off on once one only or other our out over own please same she should so some still such than that the their them then there these they this those through to too under until up us use used uses using very was way we were what when where which while who why will with without would yes yet you your covers skill already someone something anything nothing thing things whatever whoever instead rather across another whether because around first second third next last once new old real long short small big good bad right wrong want wanted going back keep look looks show shows give gives take takes", words, " ")
     for (i = 1; i <= n; i++) stop[words[i]] = 1
     MIN_SCORE = 120     # one rare pair in common can be chance: this takes two, or a slug's own words

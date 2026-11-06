@@ -119,7 +119,7 @@ def _spill_budget() -> int:
 # for `skill_view`. This is an explicit list rather than a greedy fill because
 # the three omissions below are omitted for being *wrong here*, not merely for
 # being long — dropping them makes the Hermes bootstrap more accurate, not just
-# smaller. test_hermes_bootstrap.py fails if SKILL.md's section set stops
+# smaller. plugin_hermes.rs (the site workspace's tests) fails if SKILL.md's section set stops
 # matching this one, so a new section forces the choice to be made again
 # instead of silently defaulting either way.
 BOOTSTRAP_SECTIONS = (

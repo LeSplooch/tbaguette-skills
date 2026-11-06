@@ -1,8 +1,8 @@
 #!/bin/sh
 # Pre-commit hook: regenerate the site before every single commit,
 # unconditionally, so nothing generated — the last-updated timestamp in the
-# header above all (see scripts/generate.py's own docstring on why it must
-# always run as the literal last step before commit) — can ever go stale
+# header above all (it must always run as the literal last step before
+# commit) — can ever go stale
 # relative to what actually lands. A CSS-only or skills-only change is still
 # "the site was updated" from a visitor's perspective, and there's no
 # smaller, safe-to-skip category of change worth trying to detect instead of
@@ -17,8 +17,8 @@
 # clone and cannot be committed. That is deliberate on git's part: a repo able
 # to install its own hooks is a repo that runs code on `git clone`.
 #
-# So this is done by scripts/githooks.py, called from run_tests.py, which a
-# contributor runs before anything else. To do it by hand instead:
+# So site/build.sh sets it, and a contributor runs that before anything
+# else. To do it by hand instead:
 #   git config core.hooksPath .githooks
 
 set -e
@@ -26,8 +26,15 @@ set -e
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root"
 
-echo "pre-commit: regenerating the site (scripts/generate.py)..."
-python3 scripts/generate.py --base-path /tbaguette-skills
+# The build below makes the pages and leaves the WASM modules alone, so a
+# change to the crates behind them would otherwise publish the old modules.
+if ! site/atelier wasm-stamp check; then
+    echo "pre-commit: refused -- the WASM modules are older than their sources. Run site/build.sh, then commit again." >&2
+    exit 1
+fi
+
+echo "pre-commit: regenerating the site (site/atelier build)..."
+site/atelier build --base-path /tbaguette-skills
 
 git add docs/
 echo "pre-commit: docs/ staged with this run's regeneration."

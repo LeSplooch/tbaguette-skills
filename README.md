@@ -59,11 +59,11 @@ skills show up there; they come from the directory, as above.
 Both commands only ever touch `~/.claude/skills/TBaguette` — neither can alter, merge into,
 or overwrite any other skill or plugin you already have. `git clone` refuses outright if that
 exact path already exists and isn't empty or a clone of this repo, so a name collision
-fails loudly instead of silently overwriting something. `scripts/test_install_command.py`
+fails loudly instead of silently overwriting something. `verify/test_install_command.py`
 (stdlib-only Python, no bash required to *run* the test) proves this against four scenarios
 (fresh install, re-run, an empty pre-existing directory, and a real collision), then
 cross-checks the literal bash command above against every POSIX-ish shell it finds on the
-build machine — bash, zsh, fish, and sh. All of it is part of `run_tests.py`, not just
+build machine — bash, zsh, fish, and sh. The same scenarios run in `cargo test` too, not just
 asserted here. The PowerShell command isn't machine-tested the same way (no PowerShell
 runtime in this project's build) — it's verified by careful construction against
 documented `Test-Path`/`git` behavior instead, which the verify-install page is upfront
@@ -146,35 +146,50 @@ A plugin added from the directory is updated by the directory, not by
 `skills/` is the actual plugin content. Edit a skill, then:
 
 ```bash
-python3 scripts/generate.py --base-path /tbaguette-skills
+site/build.sh
 ```
 
-regenerates the whole site — stdlib only, no install step. `python3 scripts/run_tests.py`
-runs the full test suite (`python3 -m unittest discover` on its own misses two of the
-three test files). Design rationale — the palette, the content schema, why it looks
-like a bakery — is in
+regenerates the whole site: it builds the WASM front end into `docs/assets/` and then the
+pages. Contributing needs a Rust toolchain ([rustup](https://rustup.rs) reads
+`rust-toolchain.toml` and fetches the version it pins), and rebuilding the front end needs two
+more things, once per machine:
+
+```bash
+rustup target add wasm32-unknown-unknown
+cargo install wasm-bindgen-cli --version 0.2.128 --locked
+```
+
+When the front end did not change, `site/atelier build --base-path /tbaguette-skills` rebuilds
+just the pages with `cargo` alone. `site/atelier check` runs every repository gate (manifests,
+frontmatter, the catalog, cross-references, the plugin directory's file rules, and whether the
+WASM modules still match their sources), and
+`cargo test --manifest-path site/Cargo.toml --workspace` runs the full test suite. Design
+rationale — the palette, the content schema, why it looks like a bakery — is in
 [`superpowers/specs/2026-08-13-tbaguette-showcase-design.md`](superpowers/specs/2026-08-13-tbaguette-showcase-design.md).
 
-No setup step after cloning. `python3 scripts/run_tests.py` wires the git hooks
-itself the first time you run it, and says so when it does.
+No setup step after cloning beyond one build: `site/build.sh` wires the git hooks
+itself, first thing, every time it runs, unless `core.hooksPath` already points
+somewhere you chose.
 
 The hooks live in [`.githooks/`](.githooks/pre-commit). `pre-commit` regenerates the
 site before every commit, unconditionally — including a CSS- or skills-only change,
 which is still "the site was updated." It exists because that got missed manually once:
 a styles-only commit shipped without regenerating, leaving the header's own "Updated"
-timestamp pointing at the previous commit instead of itself. `pre-push` refuses a push
-to `master` whose skill graph (the Crumb) no longer matches the skills in the same commit, which
+timestamp pointing at the previous commit instead of itself. It refuses the commit when the
+WASM modules are older than their sources, and names `site/build.sh`. `pre-push` refuses a push
+to `master` whose skill graph (the Crumb) no longer matches the skills in the same commit, or
+whose modules no longer match their sources, which
 catches the routes around the first hook: a commit made with hooks off, a merge, a
-regeneration from edits nobody staged. `python3 scripts/crumb_check.py [REV] [--live]`
-runs the same check by hand, `--live` against the deployed site.
+regeneration from edits nobody staged. `site/atelier crumb-check REV [--live]` and
+`site/atelier wasm-stamp check REV` run the same checks by hand, `--live` against the deployed site.
 
 It needs wiring because git will not read it otherwise: hooks come from `.git/hooks` by
 default, and `core.hooksPath` — the setting that redirects it — is local to each clone
 and cannot be committed. That is deliberate on git's part, since a repository able to
 install its own hooks is a repository that runs code on `git clone`. Nothing can change
-that; what [`scripts/githooks.py`](scripts/githooks.py) does is make the wiring happen
-the first time you run anything here, rather than the first time somebody remembers.
-It never overwrites a `core.hooksPath` you set yourself, and to do it by hand instead:
+that; what `site/build.sh` does is make the wiring happen
+the first time you build here, rather than the first time somebody remembers. To do it
+by hand instead:
 
 ```bash
 git config core.hooksPath .githooks

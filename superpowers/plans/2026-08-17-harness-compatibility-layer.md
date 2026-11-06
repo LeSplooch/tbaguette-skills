@@ -4,7 +4,7 @@
 
 **Goal:** Make TBaguette discoverable and loadable on every harness the `superpowers` plugin (v6.3.0) supports — Codex, Cursor, Devin, Gemini CLI, Hermes, Kimi, OpenCode, Pi, plus the generic `.agents` marketplace convention — without touching `skills/` content.
 
-**Architecture:** Add one small manifest/adapter per harness at the repo root, adapted from superpowers 6.3.0's own copies (cached at `/home/thisfuck/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0/`): rename `superpowers`→`TBaguette`, point `skills` paths at `./skills/`, point bootstrap references at `using-tbaguette` instead of `using-superpowers`, and drop everything that's superpowers' own dev/release tooling rather than harness discovery.
+**Architecture:** Add one small manifest/adapter per harness at the repo root, adapted from superpowers 6.3.0's own copies (cached at `~/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0/`): rename `superpowers`→`TBaguette`, point `skills` paths at `./skills/`, point bootstrap references at `using-tbaguette` instead of `using-superpowers`, and drop everything that's superpowers' own dev/release tooling rather than harness discovery.
 
 **Tech Stack:** JSON manifests, one Node.js adapter (OpenCode), one TypeScript adapter (Pi), one Python adapter (Hermes), bash (existing hooks, unchanged).
 
@@ -15,7 +15,7 @@
 - Reuse the existing `docs/assets/favicon.svg` for any manifest field wanting a small icon reference. Do not create new raster artwork (no `app-icon.png` equivalent).
 - Do not touch `.claude/worktrees/website-i18n` (branch `fr-using-tbaguette`) — unrelated in-progress work in a sibling worktree.
 - Every new/modified file must leave `python3 scripts/run_tests.py` fully green before any commit.
-- Source reference for every task: superpowers 6.3.0 files under `/home/thisfuck/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0/` (read-only reference — never edit anything under that path).
+- Source reference for every task: superpowers 6.3.0 files under `~/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0/` (read-only reference — never edit anything under that path).
 - Repo's own commit convention: real message explaining *why*, no `--no-verify`, new commits only (never amend), push to `origin/master` only. Before any push, `git fetch origin master` and check for divergence first — this repo has other agents/worktrees pushing to it concurrently (confirmed during the design phase: a `website-i18n` worktree merged 27 commits mid-session). If `origin/master` has moved, `git merge origin/master`, resolve any conflicts confined to the generated `docs/` tree by regenerating from merged source (`git checkout --ours -- docs/ && python3 scripts/generate.py --base-path /tbaguette-skills`), rerun the full test suite, then push.
 
 ---
@@ -226,7 +226,7 @@ Read `.../superpowers/6.3.0/gemini-extension.json` and `.../superpowers/6.3.0/GE
 - [ ] **Step 9: `AGENTS.md` symlink**
 
 ```bash
-cd /home/thisfuck/Code/tbaguette-skills
+cd tbaguette-skills
 ln -s CLAUDE.md AGENTS.md
 ```
 

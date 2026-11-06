@@ -1,0 +1,1175 @@
+/*
+  TBaguette’s Atelier — /mods/ and the mods' pages
+  =========================================
+  Loaded after styles.css on /mods/ and below it only. The climb picture's
+  colours are in styles.css (two pages draw it).
+*/
+
+/* ===========================================================================
+   22. /mods/
+   What a mod is, then the mods themselves: the first one featured across the
+   whole row, the ones after it in a grid that grows a card at a time.
+   ======================================================================== */
+
+/* The footer's own margin is the room before it. */
+.mods-page { padding-top: var(--space-6); }
+
+.mods-intro { max-width: 54rem; }
+
+.mods-intro__title {
+  font-size: var(--text-7);
+  letter-spacing: -0.02em;
+}
+
+.mods-intro__lede {
+  margin-top: var(--space-5);
+  max-width: 46ch;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-size: var(--text-4);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.mods-intro__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--space-4) var(--space-6);
+  margin-top: var(--space-6);
+  padding: 0;
+  list-style: none;
+}
+
+.mods-intro__fact {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin: 0;
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+/* Three facts, not three steps: each marked with the climb's own ring, the
+   mark the 3.0 band uses for what a release brings, rather than a number
+   that would promise an order. */
+.mods-intro__fact-mark {
+  flex-shrink: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 2px solid var(--text-accent);
+  border-radius: 50%;
+  transform: translateY(0.05em);
+}
+
+/* One mod to a row, its picture beside it at width: the list grows a row at
+   a time as mods arrive. */
+.mods-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  margin-top: var(--space-8);
+  padding: 0;
+  list-style: none;
+}
+
+.mod-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  margin: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.mod-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+}
+
+.mod-card--featured {
+  border-color: color-mix(in oklch, var(--accent) 40%, var(--border-subtle));
+  background:
+    radial-gradient(ellipse 60% 90% at 25% 50%,
+      color-mix(in oklch, var(--accent-solid) 10%, var(--bg)) 0%,
+      var(--bg) 80%);
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 10%, transparent),
+    0 30px 60px -34px hsl(var(--shadow-ink) / 0.7);
+}
+
+/* The same gilded hairline the release banners wear along their top. */
+.mod-card--featured::before {
+  content: '';
+  position: absolute;
+  inset-inline: 10%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent,
+    color-mix(in oklch, var(--accent) 75%, transparent) 25%,
+    color-mix(in oklch, var(--accent) 75%, transparent) 75%, transparent);
+}
+
+.mod-card__art { padding: var(--space-6) var(--space-5) var(--space-6) var(--space-7); }
+.mod-card__art .climb-banner__art { position: static; display: block; width: 100%; height: auto; }
+.mod-card__art .watch-art { display: block; width: 100%; height: auto; }
+
+.mod-card__body { padding: var(--space-7) var(--space-7) var(--space-6) var(--space-4); }
+
+.mod-card__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.mod-card__version {
+  font-size: var(--text-1);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--text-secondary);
+}
+
+.mod-card__description {
+  max-width: 48ch;
+  margin-top: var(--space-4);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.mod-install { margin-top: var(--space-5); }
+/* One command on one line: it scrolls sideways on a narrow screen rather
+   than breaking at a hyphen, where `climb --` over `marketplace` reads as
+   two commands. */
+.mod-install__command {
+  padding-block: var(--space-3);
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
+/* Where there is width for the whole command it never scrolls: the box is as
+   wide as its text, and the hero and the cards give it a row of its own. */
+@media (min-width: 64rem) {
+  .mod-install__command { min-width: max-content; overflow-x: visible; }
+}
+
+/* The way to get a mod, under the picture and the words. */
+.mod-card__get {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 0 var(--space-7) var(--space-7);
+}
+/* min-width: 0, so on a phone the command scrolls in its own box rather than
+   pushing the row past a card that clips it. */
+.mod-card__get .mod-install { flex: 1 1 auto; min-width: 0; margin-top: 0; }
+.mod-card__get .mod-card__cta { margin-top: 0; }
+
+.mod-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: var(--space-5);
+  padding: 0.55em 1.1em;
+  font-weight: 600;
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border: 1px solid var(--accent-solid);
+  border-radius: var(--radius-full);
+  box-shadow: 0 10px 26px -14px color-mix(in oklch, var(--accent-solid) 90%, transparent);
+  transition: background-color var(--duration-micro) var(--ease-out),
+              transform var(--duration-micro) var(--ease-out);
+}
+
+.mod-card__cta:hover { background: var(--accent-solid-hover); }
+.mod-card__arrow { transition: transform var(--duration-micro) var(--ease-out); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .mod-card__cta:hover { transform: translateY(-1px); }
+  .mod-card__cta:hover .mod-card__arrow { transform: translateX(3px); }
+}
+
+@media (max-width: 52rem) {
+  .mod-card { grid-template-columns: minmax(0, 1fr); }
+  .mod-card__art { padding: var(--space-5) var(--space-5) 0; }
+  .mod-card__body { padding: var(--space-5); }
+  .mod-card__get { padding: 0 var(--space-5) var(--space-5); }
+  .mod-card__get .mod-install { flex-basis: 100%; }
+}
+
+@media (forced-colors: active) {
+  .mod-card { border: 1px solid CanvasText; }
+  .mod-card--featured::before { display: none; }
+  .mod-card__cta { border: 1px solid ButtonText; }
+}
+
+/* ===========================================================================
+   23. /mods/climb/
+   The hero with the live replay, the loop ring, the commands, what stops it
+   and what it protects, the log from the real run, requirements and limits.
+   ======================================================================== */
+
+.climb-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+  padding-block: var(--space-4) var(--space-7);
+}
+
+/* Two columns only where the first can hold a whole install command, with its
+   Copy under it: a command cut short is no use to copy. Below this the hero is
+   one column, and the command stays in the first screen rather than under the
+   picture. */
+@media (min-width: 80rem) {
+  .climb-hero {
+    grid-template-columns: 37rem minmax(0, 1fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+  .climb-hero .install { flex-direction: column; align-items: flex-start; }
+  .climb-hero .install__command { align-self: stretch; }
+  .climb-hero .install__copy { padding-block: var(--space-2); }
+}
+
+.climb-hero__name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+/* A solid dot: the climb's mark for a check that passes. */
+.climb-hero__mark {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: var(--accent-solid);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent-solid) 22%, transparent);
+}
+
+.climb-hero__version {
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.climb-hero__title {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  font-size: inherit;
+}
+
+.climb-hero__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-5);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-accent);
+}
+
+.climb-hero__headline {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: var(--text-7);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.climb-hero__lede {
+  max-width: 46ch;
+  margin-top: var(--space-5);
+  font-size: var(--text-4);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.climb-hero__where {
+  margin-top: var(--space-6);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+}
+
+.climb-hero__where + .mod-install { margin-top: var(--space-2); }
+
+.climb-hero__more {
+  margin-top: var(--space-3);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+}
+
+.climb-hero__more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--text-accent);
+  cursor: pointer;
+  list-style: none;
+}
+
+.climb-hero__more summary::-webkit-details-marker { display: none; }
+
+/* Drawn, like the notes' disclosure: two borders on a turned box. */
+.climb-hero__more summary::before {
+  content: '';
+  width: 0.45em;
+  height: 0.45em;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--duration-micro) var(--ease-out);
+}
+
+.climb-hero__more[open] summary::before { transform: rotate(45deg); }
+
+/* minmax(0, 1fr): a command that cannot wrap scrolls in its own box rather
+   than stretching the track, and every line beside it, past the screen. */
+.climb-hero__more ul {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.climb-hero__more p { margin: 0; }
+.climb-hero__more .mod-install { margin-top: var(--space-2); }
+
+.climb-hero__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.climb-hero__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 600;
+  color: var(--text-accent);
+  border-radius: var(--radius-sm);
+}
+
+.climb-hero__link:hover { color: var(--accent-hover); text-decoration: underline; text-underline-offset: 0.2em; }
+
+.climb-hero__link--primary {
+  padding: 0.55em 1.1em;
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border: 1px solid var(--accent-solid);
+  border-radius: var(--radius-full);
+  box-shadow: 0 10px 26px -14px color-mix(in oklch, var(--accent-solid) 90%, transparent);
+  transition: background-color var(--duration-micro) var(--ease-out),
+              transform var(--duration-micro) var(--ease-out);
+}
+
+.climb-hero__link--primary:hover {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid-hover);
+  text-decoration: none;
+}
+
+.climb-hero__link-icon { width: 1.15em; height: 1.15em; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .climb-hero__link--primary:hover { transform: translateY(-1px); }
+}
+
+/* --- the replay: a mock of the session that ran the first live climb ---- */
+
+.climb-replay { margin: 0; min-width: 0; }
+
+.climb-replay__window {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  background: var(--bg-deep);
+  border: 1px solid color-mix(in oklch, var(--accent) 35%, var(--border-subtle));
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 8%, transparent),
+    0 30px 60px -34px hsl(var(--shadow-ink) / 0.75),
+    0 0 90px -48px color-mix(in oklch, var(--accent-solid) 55%, transparent);
+}
+
+.climb-replay__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 2.9rem;
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.climb-replay__title {
+  font-family: var(--font-body);
+  font-size: var(--text-1);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.climb-replay__again {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.3em 0.8em;
+  font-family: var(--font-body);
+  font-size: var(--text-1);
+  font-weight: 600;
+  color: var(--text-accent);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  transition: background-color var(--duration-micro) var(--ease-out);
+}
+
+.climb-replay__again[hidden] { display: none; }
+.climb-replay__again:hover { background: color-mix(in oklch, var(--accent-solid) 12%, transparent); }
+.climb-replay__again-icon { width: 1.1em; height: 1.1em; }
+
+.climb-replay__lines {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  list-style: none;
+}
+
+.climb-replay__line {
+  display: grid;
+  grid-template-columns: 3.6rem minmax(0, 1fr) auto;
+  column-gap: var(--space-3);
+  align-items: baseline;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.climb-replay__who {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.climb-replay__line--you .climb-replay__who,
+.climb-replay__line--mod .climb-replay__who { color: var(--text-accent); }
+.climb-replay__line--you .climb-replay__text::before { content: '› '; color: var(--text-accent); }
+.climb-replay__line--mod .climb-replay__text,
+.climb-replay__line--model .climb-replay__text { color: var(--text-secondary); }
+.climb-replay__line[data-met] .climb-replay__text { color: var(--text-accent); font-weight: 600; }
+
+.climb-replay__meta {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.climb-replay__band {
+  margin: 0 var(--space-4);
+  padding: var(--space-2) 0 0;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border-top: 1px dashed var(--border-strong);
+}
+
+.climb-replay__prompt {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: var(--space-2) var(--space-4) 0;
+  padding: var(--space-2) var(--space-3);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.climb-replay__caret { color: var(--text-accent); }
+.climb-replay__prompt-hint { font-family: var(--font-body); font-size: var(--text-1); }
+
+/* The score against the bar: a track, the fill, and the bar itself drawn
+   dashed at the end, as the climb picture draws it. It flares at the bar. */
+.climb-replay__meter {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-4) var(--space-4) 0;
+}
+
+.climb-replay__meter-label {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.climb-replay__meter-track {
+  position: relative;
+  height: 0.4rem;
+  margin-inline-end: 0.4rem;
+  border-radius: var(--radius-full);
+  background: var(--surface-hover);
+}
+
+.climb-replay__meter-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--fill, 0) * 100%);
+  border-radius: inherit;
+  background: linear-gradient(to right,
+    color-mix(in oklch, var(--accent-solid) 55%, transparent), var(--accent-solid));
+  transition: width var(--duration-view) var(--ease-out);
+}
+
+.climb-replay__meter-bar {
+  position: absolute;
+  top: -0.4rem;
+  bottom: -0.4rem;
+  right: -0.15rem;
+  border-left: 1.5px dashed var(--text-accent);
+}
+
+.climb-replay.is-met .climb-replay__meter-track {
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--accent-solid) 60%, transparent),
+              0 0 16px -2px color-mix(in oklch, var(--accent-solid) 80%, transparent);
+}
+
+.climb-replay.is-met .climb-replay__meter-bar { border-left-style: solid; }
+
+.climb-replay__sparks { position: absolute; top: 50%; right: -0.15rem; }
+
+.climb-replay__spark {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  margin: -2px;
+  border-radius: 50%;
+  background: var(--accent-solid);
+  opacity: 0;
+  --a: calc(-150deg + var(--k) * 60deg);
+}
+
+.climb-replay__log {
+  margin: var(--space-4);
+  overflow-x: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.climb-replay__log-name {
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.climb-replay__log-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.climb-replay__log-table th,
+.climb-replay__log-table td {
+  padding: 0.3rem var(--space-3);
+  text-align: end;
+  white-space: nowrap;
+}
+
+.climb-replay__log-table th { font-weight: 500; color: var(--text-secondary); }
+.climb-replay__log-table th:first-child,
+.climb-replay__log-table td:first-child { text-align: start; }
+.climb-replay__log-row.is-pass td { color: var(--text-accent); font-weight: 600; }
+
+@media (max-width: 30rem) {
+  .climb-replay__log-table th,
+  .climb-replay__log-table td { padding-inline: 0.4rem; }
+}
+
+.climb-replay__caption {
+  max-width: 62ch;
+  margin-top: var(--space-3);
+  font-size: var(--text-1);
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+/* Armed by atelier-web: everything not yet played is held back, in place,
+   so the window keeps its height while it fills. */
+.climb-replay [data-step],
+.climb-replay [data-log-row] {
+  transition: opacity var(--duration-enter) var(--ease-out),
+              transform var(--duration-enter) var(--ease-out),
+              visibility 0s;
+}
+
+.climb-replay.is-armed [data-step]:not(.is-shown),
+.climb-replay.is-armed [data-log-row]:not(.is-shown) {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.climb-replay__line.is-working .climb-replay__who::after {
+  content: '';
+  display: inline-block;
+  width: 0.4em;
+  height: 0.4em;
+  margin-inline-start: 0.4em;
+  border-radius: 50%;
+  background: var(--accent-solid);
+  vertical-align: 0.1em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .climb-replay__line.is-working .climb-replay__who::after {
+    animation: climb-working 0.9s var(--ease-in-out) infinite;
+  }
+
+  .climb-replay.is-armed.is-met .climb-replay__spark {
+    animation: climb-spark 700ms var(--ease-out) 1;
+  }
+
+  .climb-replay.is-armed.is-met .climb-replay__meter-track {
+    animation: climb-flare 900ms var(--ease-out) 1;
+  }
+}
+
+@keyframes climb-working {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+
+@keyframes climb-spark {
+  0% { opacity: 1; transform: rotate(var(--a)) translateX(3px) scale(1); }
+  100% { opacity: 0; transform: rotate(var(--a)) translateX(22px) scale(0.4); }
+}
+
+@keyframes climb-flare {
+  0% { box-shadow: 0 0 0 1px var(--accent-solid), 0 0 0 0 color-mix(in oklch, var(--accent-solid) 80%, transparent); }
+  35% { box-shadow: 0 0 0 1px var(--accent-solid), 0 0 28px 4px color-mix(in oklch, var(--accent-solid) 80%, transparent); }
+}
+
+/* --- sections below the hero ------------------------------------------ */
+
+.climb-section { padding-top: var(--space-8); }
+.climb-section > h2:first-child,
+.climb-section h2 { margin-top: 0; }
+
+.climb-how {
+  margin-top: var(--space-6);
+  padding-block: var(--space-8);
+  background: var(--bg-deep);
+  border-block: 1px solid var(--border-subtle);
+}
+
+.climb-how__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+  align-items: center;
+}
+
+@media (min-width: 64rem) {
+  .climb-how__inner { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
+}
+
+.climb-how__copy p {
+  max-width: 52ch;
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.loop-ring {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: center;
+}
+
+@media (min-width: 40rem) {
+  .loop-ring { grid-template-columns: minmax(14rem, 19rem) minmax(0, 1fr); }
+}
+
+.loop-ring__art {
+  display: block;
+  width: 100%;
+  max-width: 19rem;
+  height: auto;
+  margin-inline: auto;
+  overflow: visible;
+}
+
+.loop-ring__track { fill: none; stroke: var(--border-strong); stroke-width: 2; }
+
+.loop-ring__flow {
+  fill: none;
+  stroke: var(--text-accent);
+  stroke-width: 2;
+  stroke-dasharray: 0.6 4.4;
+  stroke-linecap: round;
+  opacity: 0.55;
+  transform-origin: 160px 160px;
+}
+
+.loop-ring__exit {
+  fill: none;
+  stroke: var(--text-accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 5;
+  opacity: 0.8;
+}
+
+.loop-ring__goal {
+  fill: var(--bg-deep);
+  stroke: var(--accent-solid);
+  stroke-width: 2;
+  transition: fill var(--duration-enter) var(--ease-out);
+}
+
+.loop-ring.is-met .loop-ring__goal {
+  fill: var(--accent-solid);
+  filter: drop-shadow(0 0 6px color-mix(in oklch, var(--accent-solid) 80%, transparent));
+}
+
+.loop-ring__station-dot {
+  fill: var(--bg-deep);
+  stroke: color-mix(in oklch, var(--text-accent) 70%, var(--text-secondary));
+  stroke-width: 2;
+  transition: fill var(--duration-micro) var(--ease-out), stroke var(--duration-micro) var(--ease-out);
+}
+
+.loop-ring__station-num {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  text-anchor: middle;
+  fill: var(--text-secondary);
+}
+
+.loop-ring__station.is-active .loop-ring__station-dot { fill: var(--accent-solid); stroke: var(--accent-solid); }
+.loop-ring__station.is-active .loop-ring__station-num { fill: var(--text-on-accent-solid); }
+
+/* The traveller is the animation's; the finished drawing needs none (the
+   goal, filled, says where the climb ended). */
+.loop-ring__traveller {
+  display: none;
+  fill: var(--accent-solid);
+  stroke: var(--bg-deep);
+  stroke-width: 3;
+}
+
+.loop-ring.is-running .loop-ring__traveller { display: inline; }
+
+.loop-ring__centre {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 650;
+  text-anchor: middle;
+  fill: var(--text-primary);
+}
+
+.loop-ring__centre-detail {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-anchor: middle;
+  fill: var(--text-secondary);
+}
+
+.loop-ring__steps {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.loop-ring__step {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  column-gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  transition: background-color var(--duration-enter) var(--ease-out);
+}
+
+.loop-ring__step-num {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  color: var(--text-accent);
+  border: 1.5px solid color-mix(in oklch, var(--text-accent) 70%, var(--text-secondary));
+  border-radius: var(--radius-full);
+  transition: background-color var(--duration-micro) var(--ease-out), color var(--duration-micro) var(--ease-out);
+}
+
+.loop-ring__step-name { font-weight: 600; color: var(--text-primary); }
+
+.loop-ring__step-note {
+  grid-column: 2;
+  font-size: var(--text-2);
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+.loop-ring__step.is-active { background: color-mix(in oklch, var(--accent-solid) 10%, transparent); }
+.loop-ring__step.is-active .loop-ring__step-num {
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border-color: var(--accent-solid);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .loop-ring.is-running .loop-ring__flow { animation: loop-flow 14s linear infinite; }
+}
+
+@keyframes loop-flow {
+  to { transform: rotate(360deg); }
+}
+
+/* --- tables, guards, log, requirements ----------------------------------- */
+
+.climb-table-wrap {
+  margin-top: var(--space-5);
+  overflow-x: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.climb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.climb-table th,
+.climb-table td {
+  padding: var(--space-3) var(--space-4);
+  text-align: start;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.climb-table thead th {
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--surface);
+  border-bottom-color: var(--border-strong);
+  white-space: nowrap;
+}
+
+.climb-table tbody th { font-weight: 400; white-space: nowrap; }
+.climb-table tbody td { color: var(--text-secondary); line-height: var(--leading-normal); }
+.climb-table tbody tr:last-child > * { border-bottom: none; }
+
+.climb-table--log { font-family: var(--font-mono); }
+.climb-table--log th,
+.climb-table--log td { text-align: end; }
+.climb-table--log th:first-child,
+.climb-table--log td:first-child { text-align: start; }
+.climb-table--log thead code { background: none; padding: 0; }
+.climb-table--log tbody td { color: var(--text-primary); }
+.climb-table--log tr.is-pass td { color: var(--text-accent); font-weight: 600; }
+
+/* A command never breaks inside itself: `/climb 20 --` over `in ../app`
+   reads as two commands. */
+.climb-table tbody th code { white-space: nowrap; }
+
+/* A narrow screen: the commands stack, each command above what it does, so
+   the longest one has the whole width instead of a column of it, and scrolls
+   by itself when even that is too short; what it does wraps to the screen. */
+@media (max-width: 48rem) {
+  .climb-commands .climb-table,
+  .climb-commands .climb-table tbody { display: block; }
+  .climb-commands .climb-table tbody th code {
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+    vertical-align: top;
+  }
+  .climb-commands .climb-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .climb-commands .climb-table tr { display: block; border-bottom: 1px solid var(--border-subtle); }
+  .climb-commands .climb-table tbody tr:last-child { border-bottom: none; }
+  .climb-commands .climb-table tbody th,
+  .climb-commands .climb-table tbody td { display: block; border-bottom: none; }
+  .climb-commands .climb-table tbody th { padding-bottom: var(--space-1); }
+  .climb-commands .climb-table tbody td { padding-top: 0; }
+}
+
+/* The log's five columns fit a phone: tighter cells and the small step, so
+   turn_ms is on screen rather than one sideways scroll away. */
+@media (max-width: 40rem) {
+  .climb-table--log { font-size: var(--text-1); }
+  .climb-table--log th,
+  .climb-table--log td { padding: var(--space-2) var(--space-2); }
+  .climb-table--log th:first-child,
+  .climb-table--log td:first-child { padding-inline-start: var(--space-3); }
+  .climb-table--log th:last-child,
+  .climb-table--log td:last-child { padding-inline-end: var(--space-3); }
+}
+
+/* The narrowest phones: five columns in 290px of table. */
+@media (max-width: 23.75rem) {
+  .climb-table--log { font-size: 0.72rem; }
+  .climb-table--log th,
+  .climb-table--log td { padding-inline: 0.3rem; }
+  .climb-table--log th:first-child,
+  .climb-table--log td:first-child { padding-inline-start: var(--space-2); }
+  .climb-table--log th:last-child,
+  .climb-table--log td:last-child { padding-inline-end: var(--space-2); }
+}
+
+.climb-guards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-7);
+}
+
+@media (min-width: 56rem) {
+  .climb-guards { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); }
+}
+
+.climb-guards__col > p,
+.climb-guards__list { max-width: 60ch; line-height: var(--leading-relaxed); color: var(--text-secondary); }
+
+.climb-guards__list {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The climb's own marks again: rings for the ways it goes on, a solid dot
+   for the one way it ends well (the first item is the bar). */
+.climb-guards__list li {
+  position: relative;
+  margin: 0;
+  padding-inline-start: 1.6rem;
+}
+
+.climb-guards__list li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0.1rem;
+  top: 0.5em;
+  width: 0.65rem;
+  height: 0.65rem;
+  border: 2px solid var(--text-accent);
+  border-radius: 50%;
+}
+
+.climb-guards__list li:first-child::before { background: var(--accent-solid); border-color: var(--accent-solid); }
+
+.climb-limit {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border: 1.5px dashed color-mix(in oklch, var(--text-accent) 60%, var(--border-strong));
+  border-radius: var(--radius-md);
+  background: color-mix(in oklch, var(--accent-solid) 6%, transparent);
+}
+
+.climb-limit__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-accent);
+}
+
+.climb-limit__text { color: var(--text-primary); line-height: var(--leading-relaxed); }
+
+.climb-log__about { max-width: 66ch; line-height: var(--leading-relaxed); color: var(--text-secondary); }
+.climb-log__figure { max-width: 46rem; margin: var(--space-5) 0 0; }
+.climb-log__figure .climb-table-wrap { margin-top: 0; }
+
+.climb-log__caption {
+  max-width: 66ch;
+  margin-top: var(--space-3);
+  font-size: var(--text-2);
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+.climb-requirements__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: var(--space-3);
+  margin: var(--space-5) 0 0;
+}
+
+.climb-requirements__facts > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.climb-requirements__facts dt { font-size: var(--text-1); color: var(--text-secondary); }
+.climb-requirements__facts dd { margin: 0; font-weight: 600; color: var(--text-primary); overflow-wrap: anywhere; }
+.climb-requirements__facts dd a { color: var(--text-accent); border-radius: var(--radius-sm); }
+.climb-requirements__facts dd a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+
+.climb-requirements__limits p { max-width: 66ch; line-height: var(--leading-relaxed); color: var(--text-secondary); }
+
+@media (forced-colors: active) {
+  .climb-replay__window,
+  .climb-replay__log,
+  .climb-table-wrap,
+  .climb-limit,
+  .climb-requirements__facts > div { border: 1px solid CanvasText; }
+  .climb-replay__meter-fill { background: Highlight; }
+  .climb-replay__meter-bar { border-color: CanvasText; }
+  .climb-replay__spark { display: none; }
+  .loop-ring__track,
+  .loop-ring__exit,
+  .loop-ring__station-dot,
+  .loop-ring__goal { stroke: CanvasText; }
+  .loop-ring__flow { display: none; }
+  .loop-ring.is-met .loop-ring__goal,
+  .loop-ring__station.is-active .loop-ring__station-dot,
+  .loop-ring__traveller { fill: Highlight; }
+  .loop-ring__station-num,
+  .loop-ring__centre,
+  .loop-ring__centre-detail { fill: CanvasText; }
+  .loop-ring__step.is-active { outline: 2px solid Highlight; }
+  .climb-guards__list li::before { border-color: CanvasText; }
+  .climb-guards__list li:first-child::before { background: Highlight; }
+}
+
+/* ==========================================================================
+   /mods/watch/: the shared mod page's pieces above, then what is its own.
+   ======================================================================== */
+
+/* The picture: checks that say nothing, then the one that does. Under motion
+   each check lights in turn and the last one answers; at rest it is this same
+   picture, finished. */
+.watch-figure {
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.watch-art { display: block; width: 100%; height: auto; }
+
+.watch-art__line {
+  stroke: var(--border-strong);
+  stroke-width: 2;
+  stroke-dasharray: 2 7;
+  stroke-linecap: round;
+}
+
+.watch-art__tick {
+  fill: var(--bg);
+  stroke: var(--text-secondary);
+  stroke-width: 2;
+}
+
+.watch-art__wake { fill: var(--accent-solid); }
+
+.watch-art__ring {
+  fill: none;
+  stroke: var(--text-accent);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .watch-art__tick { animation: watch-tick 6.6s var(--ease-in-out) infinite; animation-delay: calc(var(--i) * 0.4s); }
+  .watch-art__ring { animation: watch-ring 6.6s var(--ease-out) infinite; }
+}
+
+@keyframes watch-tick {
+  0%, 8%, 100% { stroke: var(--text-secondary); }
+  4% { stroke: var(--text-accent); }
+}
+
+@keyframes watch-ring {
+  0%, 66% { opacity: 0; transform: scale(0.5); }
+  74% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.35; transform: scale(1.12); }
+}
+
+/* An option or a tool name never breaks inside itself. */
+.watch-who code,
+.watch-behaves__item code { white-space: nowrap; }
+
+.watch-who p {
+  max-width: 68ch;
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.watch-behaves__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: var(--space-4);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.watch-behaves__item {
+  margin: 0;
+  padding: var(--space-5);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.watch-behaves__item strong { color: var(--text-primary); }
+
+@media (forced-colors: active) {
+  .watch-figure,
+  .watch-behaves__item { border-color: CanvasText; }
+  .watch-art__tick,
+  .watch-art__ring { stroke: CanvasText; }
+  .watch-art__wake { fill: Highlight; }
+}

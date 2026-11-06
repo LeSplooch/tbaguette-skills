@@ -1,0 +1,15 @@
+#!/bin/sh
+# Run atelier-build, building it first when the binary is missing or older
+# than any of its sources. Used by the git hooks and by people: one entry
+# point, so nobody has to remember whether the binary is current.
+#
+#   site/atelier build --base-path /tbaguette-skills
+#   site/atelier check
+set -e
+site_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+bin="$site_dir/target/release/atelier-build"
+if [ ! -x "$bin" ] || [ -n "$(find "$site_dir/crates" "$site_dir/Cargo.toml" "$site_dir/Cargo.lock" -newer "$bin" -type f 2>/dev/null | head -1)" ]; then
+    echo "atelier: building atelier-build (release)..." >&2
+    cargo build --quiet --release --manifest-path "$site_dir/Cargo.toml" -p atelier-build >&2
+fi
+exec "$bin" "$@"

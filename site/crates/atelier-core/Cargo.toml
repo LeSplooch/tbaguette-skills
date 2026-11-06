@@ -1,0 +1,16 @@
+[package]
+name = "atelier-core"
+version = "0.0.0"
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+regex = "1.12"
+serde.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+# load_skills lives in atelier-build; the model and graph tests build from
+# the real skills. Cargo allows a dev-dependency cycle.
+atelier-build = { path = "../atelier-build" }

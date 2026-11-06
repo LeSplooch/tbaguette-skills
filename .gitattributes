@@ -18,3 +18,5 @@ hooks/subagent-start -text
 hooks/user-prompt-submit -text
 hooks/run-hook.cmd -text
 .githooks/* -text
+site/atelier -text
+site/build.sh -text

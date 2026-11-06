@@ -1,0 +1,2299 @@
+/*
+  TBaguette’s Atelier — the landing page
+  =========================================
+  Loaded after styles.css on the landing page only. Tokens, type, the header,
+  the install box, tags and change badges come from there; everything here is
+  the landing page's own.
+*/
+
+/* ---------------------------------------------------------------------------
+   8. Hero + search
+   ------------------------------------------------------------------------- */
+
+/* The hero's layout, the counter strip beside it and the sizes that changed
+   with the revamp are in section 24, at the end of this file. What stays
+   here is the entrance the headline and lede make. */
+.hero__headline {
+  margin-top: 0;
+  opacity: 0;
+  animation: hero-rise var(--duration-view) var(--ease-out) forwards;
+}
+
+.hero__lede {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  opacity: 0;
+  animation: hero-rise var(--duration-view) var(--ease-out) 80ms forwards;
+}
+
+/* Smooth only where the visitor has not asked for less motion; a jump from
+   the counter or the family index lands in exactly the same place either
+   way. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+.search {
+  margin-top: var(--space-6);
+  max-width: 34rem;
+}
+
+.search__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: border-color var(--duration-micro) var(--ease-out),
+              box-shadow var(--duration-micro) var(--ease-out);
+}
+
+.search__field:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 30%, transparent);
+}
+
+.search__icon {
+  margin-inline-start: var(--space-4);
+  color: var(--text-secondary);
+}
+
+.search__input {
+  flex: 1;
+  padding: var(--space-4);
+  font-size: var(--text-3);
+  color: var(--text-primary);
+}
+
+.search__input::placeholder { color: var(--text-secondary); }
+
+/* The field wrapper is this input's focus indicator — :focus-within above
+   lights its border and glow — so the input opts out of the global
+   :focus-visible outline. Left in, that outline draws a whole second ring:
+   the input is the flex child *after* the icon, so its box starts inset from
+   the field's left edge, and outline-offset then pushes the ring back out
+   over the field's own border. Two mismatched rounded rectangles, where the
+   design asks for one border getting brighter. Opting out is safe here
+   because the wrapper treatment clears the 3:1 an indicator needs (--accent
+   sits at 8.2:1 on --bg) — except under a forced palette, which drops
+   box-shadow and overrides border-color outright, leaving :focus-within
+   nothing to show. There, put a real outline back on the wrapper. */
+.search__input:focus-visible { outline: none; }
+
+@media (forced-colors: active) {
+  .search__field:focus-within {
+    outline: 2px solid;
+    outline-offset: 2px;
+  }
+}
+
+.search__clear {
+  margin-inline-end: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+}
+
+.search__clear:hover { color: var(--text-accent); }
+
+.search__status {
+  margin-top: var(--space-3);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+}
+
+.search__empty {
+  margin-top: var(--space-6);
+  padding: var(--space-6);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+}
+
+.search__empty[hidden] { display: none; }
+
+.search__empty-query { color: var(--text-primary); font-weight: 600; }
+
+/* ---------------------------------------------------------------------------
+   8b. "Fresh from the oven" — recently new/updated skills, above the search
+
+   Sits between the lede and the search field, directly under .install-frame.
+   Its tiles are literally .card — the same component the grid below uses,
+   name/badge/summary/category/arrow and all — rather than a rail-only
+   design, so this rail reads as a preview of that grid and not a second,
+   differently-styled one. "fresh__tile" adds only what a card needs to sit
+   in a rail instead of the grid: sizing, and (below) the rail's own
+   positioning. Rendered only when something is actually fresh (see
+   _render_fresh_section), so there is no empty state to style.
+
+   max-width here used to match .install-frame's own 46rem exactly, so that
+   this section's horizontal centre — which the coverflow below centres its
+   tiles on — sat directly over the install frame's. Both live inside the
+   full-width .container, and with no cap at all that centre lands at the
+   container's centre, well to the right of where .install-frame and
+   .search, both narrower and left-aligned, actually sit. So a cap is still
+   needed; it just no longer has to be 46rem exactly.
+
+   53rem is the width at which the five-card fan stops being clipped, and
+   it was measured rather than picked: the outermost pair of cards has
+   72px of itself exposed at 46rem, 97px at 49rem, 121px at 52rem and
+   126px at 53rem, which is the whole of what it will ever show — 54rem
+   and 56rem are identical to 53rem and add only empty rail. Below 53rem
+   the rail's own edge is what cuts the outer cards short, which is what
+   made the fan read four cards wide with a sliver on the end.
+
+   The cost is that the fan's centre now sits 3.5rem right of the install
+   frame's rather than on top of it. That is the same *kind* of drift the
+   original cap existed to prevent, but a small fraction of it — an
+   uncapped section drifts far further — and it buys the outer pair most
+   of its width back. The heading and tag above are left-aligned and do
+   not move, so the section still starts on the page's left margin.
+
+   That tray also, wherever motion and space are both welcome, becomes a
+   coverflow rather than a flat scroller: one tile flat and full-size at
+   centre, its neighbours tilted away and shrinking on each side, stepping
+   sideways on a timer (site.js's initFreshCoverflow — the stepping itself
+   needs a clock, which is the one thing CSS alone can't keep, so this is
+   the rare feature here with a JS half). --cf-offset (set inline by
+   templates.py at render time, then kept live by site.js) is each tile's
+   signed distance from centre; every visual property below is a plain
+   calc() of that one number, so "make tile N active" is just writing new
+   offsets, not swapping classes. See the gated rule below for the three
+   conditions — motion, width, forced-colors — that all have to hold before
+   it forms; missing any one of them leaves the original flat rail exactly
+   as it was, not a broken coverflow. A visitor with no JS at all still gets
+   the offsets templates.py rendered at build time — a real, if motionless,
+   coverflow — never the flat rail by accident.
+
+   The clock isn't the only way a tile becomes active: initFreshCoverflow
+   also wires up click-and-drag (grab the ring, spin it, release to settle
+   on whichever tile ends up nearest centre) and the prev/next buttons.
+   Clicking a tile is not one of those ways — every tile is a link and a
+   click on any of them, centred or not, just follows it to its skill.
+   cursor/touch-action/user-select below exist for the drag, not for
+   anything this file alone renders.
+   ------------------------------------------------------------------------- */
+
+.fresh { margin-top: var(--space-7); max-width: 53rem; }
+
+.fresh__head {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding-bottom: var(--space-3);
+}
+
+/* The gilded rule again — same fading-at-both-ends gesture as the header's
+   bottom edge and the update modal's top, so the three read as one idea
+   rather than three separate horizontal lines. */
+.fresh__head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    color-mix(in oklch, var(--accent) 70%, transparent),
+    color-mix(in oklch, var(--accent) 22%, transparent) 55%,
+    transparent);
+}
+
+/* icon-grain rather than the loaf: icon-crust is already carrying the
+   install frame's label a few hundred pixels up, and the same mark twice in
+   one viewport reads as a repeated element rather than a shared system. */
+.fresh__icon { color: var(--accent); width: 1.75em; height: 1.75em; }
+
+/* margin: 0 is load-bearing, not tidiness: the global h2 rule carries
+   margin-top: var(--space-8), and inside an align-items: center flex row
+   that margin is part of the item's box — the box centres, the text does
+   not, and the heading drops half a line below the icon beside it. */
+.fresh__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-4);
+  font-weight: 620;
+  color: var(--text-primary);
+}
+
+/* Left on the neutral .tag treatment on purpose. Gold in this band belongs
+   to the New/Updated badges, which carry information; the timeframe is a
+   label, and a third gold pill next to them flattens the distinction. */
+.fresh__tag { align-self: center; }
+
+/* margin-inline-start: auto is the whole layout: it pushes the pair to the
+   far end of .fresh__head's flex row without needing its own positioning
+   context, and wraps under everything else on a narrow measure instead of
+   overlapping it. [hidden] still needs the attribute selector even though
+   the element also starts with the hidden attribute in markup — browsers
+   already do this by default, but section 15 forces display back on for
+   reduced-motion overrides elsewhere in this file, and repeating the rule
+   locally means this one never depends on cascade order with those. */
+.fresh__nav {
+  display: flex;
+  gap: var(--space-2);
+  margin-inline-start: auto;
+}
+
+.fresh__nav[hidden] { display: none; }
+
+.fresh__nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: var(--text-4);
+  line-height: 1;
+  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.fresh__nav-btn:hover,
+.fresh__nav-btn:focus-visible {
+  color: var(--text-accent);
+  border-color: var(--accent);
+  background: var(--surface-hover);
+}
+
+/* Same scroll-rail mechanics as .tabs__list: horizontal overflow with a
+   mask fading the right edge, so a cut-off tile reads as "more this way"
+   rather than as a broken layout. With fewer tiles than fill the width,
+   nothing reaches the fade zone and the mask is invisible — self-correcting,
+   no JS needed to decide whether to draw it. */
+.fresh__rail {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding-block: var(--space-4);
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 40px), transparent 100%);
+  mask-image: linear-gradient(to right, black calc(100% - 40px), transparent 100%);
+}
+
+/* Sizing and rail membership only — .card (section 9) already supplies the
+   look (background, padding, border, hover lift) now that the tile carries
+   that class too. 17rem matches .card-grid's own minmax() floor, so a rail
+   tile is never smaller than the smallest a grid card is ever allowed to
+   be. */
+.fresh__tile {
+  scroll-snap-align: start;
+  flex: 0 0 17rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fresh { animation: hero-rise var(--duration-view) var(--ease-out) 120ms backwards; }
+}
+
+/* No .fresh__tile-specific reduced-motion or forced-colors rules here on
+   purpose: now that every tile is a .card, section 9's own .card handling
+   (a plain solid border that forced-colors remaps fine unaided, and the
+   sitewide reduced-motion block that already lists .card) already covers
+   the rail's tiles. Only .fresh__head still needs its own forced-colors
+   rule, for the gradient rule .card never had to begin with. */
+@media (forced-colors: active) {
+  .fresh__head::after { display: none; }
+  .fresh__head { border-bottom: 1px solid CanvasText; }
+}
+
+/* Wherever a visitor's browser and stated preferences allow it — motion
+   welcome, a viewport with room to spare, no forced system palette — the
+   rail becomes the card stack described above instead of staying a flat
+   scroller. All three conditions live in one query on purpose: it is the
+   single on/off switch for the whole effect, so there is exactly one place
+   that decides whether it runs, and every rule above stays a complete,
+   already-tested fallback with nothing left to override piecemeal. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 640px) and (forced-colors: none) {
+  .fresh__rail {
+    position: relative;
+    display: block;
+    height: 22rem;
+    perspective: 900px;
+    /* The base rule's `overflow-x: auto` has to go -- a scroller would fight
+       the drag handler -- but plain `visible` let the fan push the whole page
+       sideways. A tile sits 11rem either side of the rail's centre and
+       translates up to 280px further, so its far edge lands 456px from centre
+       whatever the rail measures; once the rail's own half-width drops below
+       that (anywhere under roughly 900px of viewport, worst at the 640px
+       breakpoint where this effect switches on) the surplus became real
+       document scroll -- measured at 768px: 5px of horizontal scrollbar on a
+       page with nothing to scroll to.
+
+       `clip` rather than `hidden` because hidden would make this a scroll
+       container and re-introduce the scroller the drag handler replaces, and
+       because clip is the axis-independent one: `overflow-y` stays visible
+       here without being coerced to auto, which `hidden` would have done.
+       The clip margin is what keeps this a scroll fix rather than a visual
+       change -- 280px is the translate clamp above, so every tile still
+       paints its full spread and simply stops contributing scrollable
+       overflow. Bleeding off the viewport edge is the intended look; a
+       scrollbar to chase it was never part of it. */
+    overflow-x: clip;
+    overflow-y: visible;
+    overflow-clip-margin: 280px;
+    -webkit-mask-image: none;
+    mask-image: none;
+    cursor: grab;
+    /* Lets the page's own vertical scroll keep working with a finger
+       starting on the carousel; site.js's pointer handlers claim the
+       horizontal axis themselves rather than asking the browser to. */
+    touch-action: pan-y;
+  }
+
+  .fresh__rail:active { cursor: grabbing; }
+
+  /* --cf-offset (set inline by templates.py, kept live by site.js) is the
+     only per-instance number here — everything else is a calc() of it.
+     --cf-abs is the max()-of-itself-and-its-negation trick for absolute
+     value: scale/opacity/stacking care how *far* a tile is from centre,
+     rotation and position care which *side* it's on, so the signed and
+     unsigned forms are each used where they mean something. The per-step
+     magnitudes (140px, 34deg) are deliberately steep — a flat, prominent
+     centre card with neighbours that fall away fast reads as a coverflow;
+     gentler steps just look like a slightly skewed row.
+
+     The fan is exactly five cards wide: at 140px a step the clamp is
+     reached at offset 2, so 0, ±1 and ±2 are the only distinct positions
+     and everything from 3 out stacks precisely on top of the 2s.
+
+     How much of those five actually shows is a separate question, and the
+     answer is set by the rail's width, not by the step. The fan wants
+     352 + 2x120 + 2x126 = 848px to lay out unclipped, which is why .fresh
+     is capped at 53rem above; at the 46rem it used to be, the rail's own
+     edge cut the outer pair down to 72px each and the fan read four cards
+     wide with a sliver on the end. overflow-clip-margin does not rescue
+     that — it widens the paint region, but hit-testing still stops dead at
+     the padding box, so anything spilling past the rail edge would be
+     visible and unclickable, the wrong trade now that a click navigates.
+
+     Raising the step is the tempting fix and it backfires, measured: at
+     170px a step the outermost pair drops from 72px of exposure to 39, at
+     200px to 6, because a wider step pushes offset 2 further into the edge
+     that is already clipping it. Room comes from the rail, never from
+     spreading these further apart.
+
+     So legibility is what the falloffs buy, and the opacity one is
+     quadratic rather than linear like everything else here for a specific
+     reason: it has to reach *zero* by offset 3 — not merely low — because
+     a 3 sits exactly behind a 2 and any residue shows as a doubled, dirty
+     edge. A linear ramp hitting zero at 3 is forced to about a third at
+     offset 2, and a third is a smudge, not a card; that was the fan
+     reading three wide with two ghosts on the ends. Squaring holds the
+     near cards up and drops the far ones off a cliff: 1, 0.885, 0.54,
+     then 0. Scale softens to match (0.13 a step: 1, 0.87, 0.74) so the
+     outer pair keeps some mass instead of shrinking out of legibility.
+
+     Selectors here are the type-qualified `a.fresh__tile`, not the bare
+     class, on purpose: since a tile is also a .card, and section 9's
+     .card / .card:hover rules sit later in this file, a same-specificity
+     bare `.fresh__tile` would lose the cascade to them — the coverflow's
+     own transform and transition would be silently overridden by .card's.
+     `a.fresh__tile` outranks `.card` regardless of source order, so this
+     doesn't depend on staying below section 9 in the file.
+
+     --cf-transform exists as its own custom property, not inlined straight
+     into `transform`, purely so the :hover/:focus-visible rule below can
+     restate the identical value: a plain hover rule setting `transform`
+     directly would replace this positioning outright rather than add to
+     it — the trap the ring version's animations sat in, two reworks ago.
+
+     width is explicit and load-bearing, not tidiness: the base rule sizes
+     .fresh__tile via `flex: 0 0 17rem`, which only means anything while
+     .fresh__rail is still a flex container. The instant this block's
+     `.fresh__rail { display: block }` takes over, flex-basis stops doing
+     anything, and an absolutely positioned box with no explicit width
+     shrink-to-fits — which, for a flex-column card whose summary text has
+     no natural wrap point to fall back to, measured out to the entire
+     remaining width of the rail rather than anything card-shaped.
+
+     22rem/20rem (not the base rule's 17rem card width) are measured, not
+     guessed: with real skill summaries — some 130-180 characters — a card
+     narrower than this clips real content under overflow: hidden below,
+     the exact bug this size fixes. Measured every currently-fresh tile's
+     true unclipped height (transform: none, so an in-progress transition
+     retargeting mid-scale doesn't read as shorter than the tile actually
+     is — it very nearly did, the first time this was measured) across
+     increasing widths; going past 22rem keeps helping but each further
+     rem buys less than the last, so this is a point on a curve, not a
+     plateau — picked because it's already a real jump from 17rem and the
+     remaining gain per rem past it is small. 20rem then covers that
+     width's measured worst case (306px) with a little headroom, so
+     overflow: hidden below is a safety net for a pathological future
+     summary, not a rule the typical case already needs. */
+  a.fresh__tile {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 22rem;
+    margin: -10rem 0 0 -11rem;
+    height: 20rem;
+    overflow: hidden;
+    flex: none;
+    scroll-snap-align: none;
+    /* A drag crossing tile text would otherwise paint a text-selection
+       highlight instead of spinning the ring. -webkit-user-drag covers
+       Chrome/Safari's native "drag this link" gesture; templates.py's
+       draggable="false" is the one that actually holds in Firefox too. */
+    user-select: none;
+    -webkit-user-drag: none;
+    /* A tile is a link first — clicking one follows it to its skill, the
+       same as every other card on this page — so it gets `pointer` rather
+       than inheriting the rail's `grab`. The rail keeps `grab` for the
+       space around the tiles, where dragging is the only thing on offer,
+       and the rule below puts `grabbing` back on the tiles themselves for
+       as long as a press is actually down on one. */
+    cursor: pointer;
+    --cf-abs: max(var(--cf-offset), calc(var(--cf-offset) * -1));
+    --cf-transform:
+      translateX(calc(clamp(-280px, calc(var(--cf-offset) * 140px), 280px) + var(--cf-shift, 0px)))
+      rotateY(clamp(-38deg, calc(var(--cf-offset) * -34deg), 38deg))
+      scale(clamp(0.55, calc(1 - var(--cf-abs) * 0.13), 1));
+    transform: var(--cf-transform);
+    /* The card itself stays opaque across the fan, so a neighbour's text
+       never shows through it; what fades with distance is its content
+       (--cf-dim, below). Past the two either side of the centre the whole
+       card goes. */
+    opacity: clamp(0, calc((3 - var(--cf-abs)) * 2), 1);
+    --cf-dim: clamp(0, calc(1 - var(--cf-abs) * var(--cf-abs) * 0.115), 1);
+    z-index: max(1, calc(20 - var(--cf-abs)));
+    /* --fresh-spin-duration exists so a momentum-carrying drag release can
+       lengthen just this settle without touching the shared rule: site.js
+       sets it inline only on the tiles animating out of a flung release,
+       proportional to how much momentum carried them, then clears it once
+       that transition finishes. Every other trigger (auto-advance, prev/
+       next, focus landing on a tile) never sets it, so it stays at this
+       default 0.7s for them — same speed as before momentum existed. */
+    --fresh-spin-duration: 0.7s;
+    transition: transform var(--fresh-spin-duration) var(--ease-out),
+                opacity var(--fresh-spin-duration) var(--ease-out),
+                border-color var(--duration-enter) var(--ease-out),
+                background-color var(--duration-enter) var(--ease-out),
+                box-shadow var(--duration-enter) var(--ease-out);
+  }
+
+  a.fresh__tile > * {
+    opacity: var(--cf-dim);
+    transition: opacity var(--fresh-spin-duration) var(--ease-out);
+  }
+
+  /* Held down on a tile, either gesture is still live — the press becomes
+     a spin or a click depending on whether it moves — and `grabbing` is
+     the honest cursor for that moment. Outranks the base rule's `pointer`
+     on specificity alone, so it doesn't depend on source order. */
+  .fresh__rail:active a.fresh__tile { cursor: grabbing; }
+
+  a.fresh__tile:hover,
+  a.fresh__tile:focus-visible {
+    transform: var(--cf-transform);
+  }
+
+  /* WCAG 2.2.2: anything that moves on its own for more than five seconds
+     needs a way to stop it, and the tile a keyboard visitor lands on must
+     be legible rather than tilted and dimmed at the edge of the fan. Both
+     live in site.js's initFreshCoverflow (pause on hover/focus-within;
+     focus also recentres the focused tile to --cf-offset: 0) rather than
+     here, because both are about *when the step timer runs and what it
+     writes*, which CSS has no view into — this block only ever renders
+     whatever offsets it is handed, by design. */
+}
+
+/* ---------------------------------------------------------------------------
+   8c. Update notes — what changed, in words, below the rail
+
+   Neighbour to 8b and deliberately its opposite in weight: the rail is the
+   loud thing in this band (moving, three-dimensional, twelve cards), so this
+   is quiet — one measure of text, no surface, no border box. Two loud
+   sections stacked would leave the reader nothing to look at first.
+
+   Shares 8b's head treatment exactly (icon, display-face h2, the gilded rule
+   fading right) because they are peers in the same band; repeating it is what
+   makes them read as one "what's new" idea rather than two unrelated widgets.
+
+   Native <details> for the older entries. No JS anywhere in this section — it
+   sits above the search field, so anything that could fail to initialize here
+   would strand the site's primary navigation below a half-rendered block.
+   ------------------------------------------------------------------------- */
+
+/* Matches .fresh's measure so the two gilded rules share a right edge — two
+   rules of different lengths 350px apart read as a mistake at a glance. */
+.notes { margin-top: var(--space-7); max-width: 53rem; }
+
+.notes__head {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding-bottom: var(--space-3);
+}
+
+.notes__head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    color-mix(in oklch, var(--accent) 70%, transparent),
+    color-mix(in oklch, var(--accent) 22%, transparent) 55%,
+    transparent);
+}
+
+/* icon-wheat: the third of the three marks, after the install frame's loaf
+   and the rail's grain. Same rule as 8b's — no mark appears twice in one
+   viewport, or the set reads as a repeated element instead of a system. */
+.notes__icon { color: var(--accent); width: 1.75em; height: 1.75em; }
+
+/* margin: 0 for the same load-bearing reason as .fresh__title — the global h2
+   margin-top would centre the box and drop the text half a line. */
+.notes__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-4);
+  font-weight: 620;
+  color: var(--text-primary);
+}
+
+/* Nothing at the far end of this head, unlike .fresh__head's "Last 48 hours"
+   tag. That tag earns its place by naming a real constraint on what the rail
+   can contain; this section has no equivalent fact, and inventing something to
+   fill the slot would be decoration wearing a label's clothes. */
+
+/* Space between entries, not a border: 8b's tiles already carry every edge
+   this band can afford. The date's own weight is what separates one entry
+   from the next. */
+.notes__list {
+  margin: 0;
+  /* padding-top, not 0 all round: the head's gilded rule sits on its bottom
+     edge, and measured without this the first entry's date began 4px under
+     that line -- close enough to read as the rule underlining the date rather
+     than closing the head. --space-4 is what .fresh__rail puts under the same
+     rule one band up, so the two treat the gesture identically. */
+  padding: var(--space-4) 0 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-6);
+}
+
+.notes__list--earlier { margin-top: var(--space-5); }
+
+/* Section 3's `li + li { margin-top: var(--space-2) }` is written for prose
+   lists, which are not grids, and it *sums* with the gaps declared here:
+   measured before this rule existed, entries sat 32px apart where the scale
+   said 24 and bullets 16px apart where it said 8. Neither number is a step
+   on the space scale — they are two rules quietly disagreeing. The gap wins,
+   because it is the one that knows this is a grid. */
+.notes__list > li + li,
+.notes__bullets > li + li { margin-top: 0; }
+
+.notes__entry-head {
+  margin: 0 0 var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  font-size: var(--text-3);
+  font-weight: 500;
+  line-height: var(--leading-normal);
+}
+
+/* Mono and gold, tabular so a column of dates in the open <details> lines up
+   digit-for-digit. The second channel that keeps this from being colour-only
+   is the face itself: it is the one monospaced run in the whole band. */
+.notes__date {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--text-accent);
+  text-transform: uppercase;
+}
+
+.notes__entry-title {
+  font-family: var(--font-display);
+  font-size: var(--text-4);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+  /* break-word, not anywhere: a title is prose and should break at spaces
+     wherever it can. This is only the escape hatch for the one long word. */
+  overflow-wrap: break-word;
+}
+
+/* 66ch, not the section's 53rem: these are sentences, and 53rem of Work Sans
+   is ~100 characters a line — past the point where the eye reliably finds the
+   start of the next one. The left edge still aligns with everything above it;
+   only the ragged right stops short of the rule. */
+.notes__bullets {
+  margin: 0;
+  padding-inline-start: 1.15em;
+  max-width: var(--measure-prose);
+  display: grid;
+  /* Not --space-2: these bullets wrap to two and three lines, and at
+     --leading-relaxed the lines inside one bullet already sit ~10px apart.
+     An 8px gap would put barely more air between two bullets than between
+     two lines of the same bullet, and the group stops reading as a group. */
+  gap: var(--space-3);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  /* A changelog is where unbreakable identifiers turn up -- a config key, a
+     package name, a flag -- and one of them inside a <code> span is the only
+     content here that can be wider than the column it sits in. `anywhere`
+     rather than `break-word` because it also shrinks the min-content width,
+     which is what stops the token forcing the whole page sideways at 360px
+     instead of merely spilling out of its own box. */
+  overflow-wrap: anywhere;
+}
+
+/* Gold markers, unlike .prose's neutral ones: this list is scanned, not read
+   straight through, and the marker column is what the eye returns to. */
+.notes__bullets li { padding-inline-start: 0.2em; }
+.notes__bullets li::marker { color: var(--accent); }
+
+.notes__bullets code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--text-primary);
+}
+
+.notes__bullets strong { color: var(--text-primary); font-weight: 600; }
+
+.notes__earlier { margin-top: var(--space-5); }
+
+/* list-style: none removes the disclosure triangle in Firefox and Chrome;
+   the ::-webkit- pseudo-element is the same job in older Safari, which
+   ignores the property here. Both are needed and neither is redundant. */
+.notes__earlier-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  list-style: none;
+  cursor: pointer;
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  transition: color var(--duration-micro) var(--ease-out);
+}
+
+.notes__earlier-summary::-webkit-details-marker { display: none; }
+
+.notes__earlier-summary:hover,
+.notes__earlier-summary:focus-visible { color: var(--text-accent); }
+
+/* Drawn, not a glyph: two borders on a rotated box, so it inherits the
+   summary's colour and scales with its type instead of depending on whatever
+   the reader's font happens to have at U+203A. Points right when closed, down
+   when open — the direction is the state's second channel, alongside the
+   label's own "Show N earlier" wording. */
+.notes__earlier-summary::before {
+  content: '';
+  flex: none;
+  width: 0.42em;
+  height: 0.42em;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transform-origin: 55% 45%;
+  transition: transform var(--duration-micro) var(--ease-out);
+}
+
+.notes__earlier[open] > .notes__earlier-summary::before {
+  transform: rotate(135deg);
+}
+
+/* ------------------------------------------------------------------ */
+/* 8c-bis. Update-notes archive — the dialog the <details> becomes      */
+/* ------------------------------------------------------------------ */
+
+/* Everything below only applies once site.js has promoted the disclosure.
+   With no script the <details> above is the whole feature and none of this
+   is reachable, which is the point: the archive is never a dead control. */
+
+/* A transport wrapper and nothing else: site.js moves this one element to
+   carry the list and its footnote into the dialog in a single operation.
+   display: contents means it draws no box in either place, so it cannot
+   introduce spacing that exists in the dialog and not in the <details>. */
+.notes__archive-panel { display: contents; }
+
+/* The promoted trigger. Not the summary's chevron — that glyph means
+   "unfolds below," and this no longer does. A framed control with a corner
+   mark reads as "opens onto something," which is what happens. */
+.notes__archive-trigger {
+  margin-top: var(--space-5);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.notes__archive-trigger:hover,
+.notes__archive-trigger:focus-visible {
+  color: var(--text-accent);
+  border-color: color-mix(in oklch, var(--accent) 50%, transparent);
+  background: color-mix(in oklch, var(--accent) 7%, transparent);
+}
+
+/* Two corner strokes rather than a glyph, for the same reason the summary's
+   chevron is drawn: it inherits colour and scales with the type instead of
+   depending on what the reader's font has at some codepoint. */
+.notes__archive-trigger::after {
+  content: '';
+  flex: none;
+  width: 0.55em;
+  height: 0.55em;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  border-top-right-radius: 2px;
+  transition: transform var(--duration-micro) var(--ease-out);
+}
+
+.notes__archive-trigger:hover::after,
+.notes__archive-trigger:focus-visible::after { transform: translate(1px, -1px); }
+
+/* --- the dialog itself --------------------------------------------- */
+
+.notes-dialog {
+  /* A modal <dialog> is centred by the `margin: auto` in the UA stylesheet,
+     against the `inset: 0` it also gets — and this site's reset opens with
+     `* { margin: 0 }`, which is an author rule and therefore wins. The result
+     is a dialog pinned to the top-left corner with `inset: 0` still resolved,
+     so nothing about it looks like a margin problem. Restoring the one
+     declaration is the whole of the centring; the mobile sheet below overrides
+     it again on purpose.
+
+     Worth knowing for any other element that relies on a UA default: a reset
+     with a `*` selector silently removes it, and the symptom shows up nowhere
+     near the reset. */
+  margin: auto;
+  /* max-width is the measure, not a round number: the bullets inside cap at
+     --measure-prose and the entry heads run a little wider, so 46rem is the
+     narrowest box that never makes a bullet the thing setting the width. */
+  width: min(46rem, 100%);
+  max-width: min(46rem, 100%);
+  /* svh, not vh: on mobile browsers vh is the *largest* viewport, so a
+     vh-sized dialog is partly under the address bar until the user scrolls. */
+  max-height: min(84svh, 54rem);
+  padding: 0;
+  overflow: hidden;
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid color-mix(in oklch, var(--accent) 55%, transparent);
+  border-radius: var(--radius-lg);
+  /* Same three-layer recipe as .install-frame and .update-modal: a hairline
+     gold seat, one real cast shadow from a single light direction, and a wide
+     gold ambient so the card looks lit rather than pasted on. */
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 12%, transparent),
+    0 30px 60px -24px hsl(var(--shadow-ink) / 0.75),
+    0 0 80px -28px color-mix(in oklch, var(--accent-solid) 60%, transparent);
+}
+
+/* Both states declared, and `display` kept out of the base rule above.
+   A closed <dialog> is hidden by exactly one thing: `dialog:not([open]) {
+   display: none }` in the UA stylesheet. Any unconditional `display` here is
+   an author declaration, so it wins, and the dialog then renders in normal
+   flow as the last child of <body> — a second, full-height copy of every
+   entry pinned to the bottom of the page, which also makes closing it look
+   like it did not work. Both symptoms, one declaration.
+
+   The `:not([open])` rule is belt and braces: it does not depend on the UA
+   sheet still saying what it says today, and it is the second time on this
+   element that leaning on a UA default has cost a visible bug — the first
+   was `margin: auto`, deleted by the `* { margin: 0 }` reset. */
+.notes-dialog:not([open]) { display: none; }
+
+.notes-dialog[open] {
+  /* Its own scroll container in one row only, so the head and foot stay put
+     while the entries move under them. */
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+/* The gilded rule, the same gesture the header and .update-modal make —
+   fading at both ends rather than running hard corner to corner. */
+.notes-dialog::before {
+  content: '';
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent,
+    color-mix(in oklch, var(--accent) 80%, transparent) 22%,
+    color-mix(in oklch, var(--accent) 80%, transparent) 78%,
+    transparent);
+}
+
+/* --accent-solid rather than --accent for the bloom, exactly as
+   .update-modal-overlay::before explains: everything painted on the scrim is
+   lit against a near-black field in *both* themes, and --accent resolves to
+   the darker gold-700 in flour, which over this scrim subtracts light instead
+   of adding it. */
+.notes-dialog::backdrop {
+  background:
+    radial-gradient(44rem 30rem at 50% 42%,
+      color-mix(in oklch, #dda25c 16%, transparent),
+      transparent 68%),
+    hsl(24 18% 5% / 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.notes-dialog__head {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-5) var(--space-6) var(--space-4);
+}
+
+/* Same fading rule the section head uses one band up, so the dialog reads as
+   the same object opened rather than a different component. */
+.notes-dialog__head::after {
+  content: '';
+  position: absolute;
+  left: var(--space-6);
+  right: var(--space-6);
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    color-mix(in oklch, var(--accent) 70%, transparent),
+    color-mix(in oklch, var(--accent) 22%, transparent) 55%,
+    transparent);
+}
+
+.notes-dialog__icon { color: var(--accent); width: 1.75em; height: 1.75em; flex: none; }
+
+.notes-dialog__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-4);
+  font-weight: 620;
+  color: var(--text-primary);
+}
+
+/* Mono and gold, matching .notes__date — the dialog's one piece of meta text
+   should look like the other meta text in the band it came from. */
+.notes-dialog__subtitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-accent);
+}
+
+.notes-dialog__close {
+  margin-inline-start: auto;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  /* The two strokes below are absolutely positioned; without a containing
+     block here they resolve against the dialog and land in its corner. */
+  position: relative;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.notes-dialog__close:hover,
+.notes-dialog__close:focus-visible {
+  color: var(--text-accent);
+  border-color: color-mix(in oklch, var(--accent) 50%, transparent);
+  background: color-mix(in oklch, var(--accent) 8%, transparent);
+}
+
+/* Drawn from two strokes, same reasoning as every other mark in this band --
+   there is no close glyph in the sprite, and a Unicode multiplication sign
+   would be the one mark on this site not drawn to the same stroke weight.
+
+   Centred from 50%/50% and pulled back by half its own size, rather than left
+   to the static position it would get as an abspos child of a grid container.
+   That static position is a genuine corner of the grid spec -- it resolves
+   through the container's alignment properties -- and engines have disagreed
+   about it. Measured, this one does centre them; the failure mode if another
+   does not is both strokes in a corner of the button, which reads as a broken
+   control rather than as a styling nit. Explicit costs two declarations. */
+.notes-dialog__close::before,
+.notes-dialog__close::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.85rem;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 1px;
+}
+.notes-dialog__close::before { transform: translate(-50%, -50%) rotate(45deg); }
+.notes-dialog__close::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+/* 2.25rem is a comfortable size for a pointer and under the 44px a finger
+   needs, so the circle grows where the pointer is actually coarse. Growing the
+   control rather than padding an invisible hit area past it keeps what is
+   clickable and what is visible the same shape -- a target that extends beyond
+   its own edge is the thing that makes a nearby control feel unreliable, which
+   is the complaint this is meant to remove rather than move. */
+@media (pointer: coarse) {
+  .notes-dialog__close { width: 2.75rem; height: 2.75rem; }
+}
+
+.notes-dialog__body {
+  position: relative;
+  overflow-y: auto;
+  /* Scrolling the last entry must not start scrolling the page behind it. */
+  overscroll-behavior: contain;
+  padding: var(--space-5) var(--space-6) var(--space-6);
+}
+
+/* The scroll region is focusable so it can be scrolled from the keyboard —
+   without this a keyboard-only reader can tab to the close button and to the
+   links, and never move the list. */
+.notes-dialog__body:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -4px;
+}
+
+/* --- the timeline spine -------------------------------------------- */
+
+/* What makes this read as a record rather than a long list: one hairline
+   running the length of the entries, with each date sitting on a node. It
+   also gives the scroll a sense of place, which a flat list of twenty dated
+   blocks does not have. Fades out at the bottom because the list is a window
+   onto UPDATES.md, not the end of it. */
+.notes__list--archive {
+  position: relative;
+  margin-top: 0;
+  padding-inline-start: var(--space-6);
+}
+
+.notes__list--archive::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.55em 0;
+  inset-inline-start: 3px;
+  width: 1px;
+  background: linear-gradient(to bottom,
+    color-mix(in oklch, var(--accent) 55%, transparent),
+    color-mix(in oklch, var(--accent) 18%, transparent) 65%,
+    transparent);
+}
+
+.notes__list--archive > .notes__entry { position: relative; }
+
+.notes__list--archive > .notes__entry::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc(-1 * var(--space-6));
+  top: 0.4em;
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  /* A ring in the panel's own colour, so the node reads as sitting on the
+     line rather than being threaded by it. */
+  box-shadow: 0 0 0 3px var(--surface);
+}
+
+/* The newest entry is the one already on the page behind this dialog, so it
+   gets the filled node and everything older gets a hollow one — a second
+   channel for "you have seen this one" that does not depend on colour. */
+/* Full --accent on the ring, not a 70% mix: measured, gold at 70% over the
+   flour surface lands around 2.4:1, and while nothing here is carried by the
+   node alone -- the date and the ordering already say which entry is newest --
+   a marker too faint to resolve is just noise on the spine. At full strength
+   it is 3.2:1 in flour and 7.1:1 in crust, both clear of the non-text floor. */
+.notes__list--archive > .notes__entry:not(:first-child)::before {
+  background: var(--surface);
+  border: 1.5px solid var(--accent);
+}
+
+.notes__archive-foot {
+  margin: var(--space-6) 0 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+}
+
+/* --- motion --------------------------------------------------------- */
+
+/* The resting state is visible, and @starting-style supplies the from-state
+   only at the moment the dialog enters the top layer.
+
+   Written the other way round -- `opacity: 0` in the base rule, `1` under
+   [open] -- it animates identically and fails catastrophically: any browser
+   that does not run the transition shows an open dialog at zero opacity, so
+   the page is scroll-locked behind a scrim with nothing on it and no visible
+   way out. This ordering degrades to appearing instantly instead, which is
+   the right direction to fail in. The cost is that there is no exit
+   animation, since there is no to-state to interpolate toward; an entrance
+   is worth having and an exit is not worth that risk. */
+@media (prefers-reduced-motion: no-preference) {
+  .notes-dialog {
+    transition:
+      opacity var(--duration-enter) var(--ease-out),
+      transform var(--duration-enter) var(--ease-out);
+  }
+  @starting-style {
+    .notes-dialog[open] { opacity: 0; transform: translateY(12px) scale(0.985); }
+  }
+
+  .notes-dialog::backdrop {
+    transition: opacity var(--duration-enter) var(--ease-out);
+  }
+  @starting-style {
+    .notes-dialog[open]::backdrop { opacity: 0; }
+  }
+}
+
+/* --- the page behind ------------------------------------------------ */
+
+/* showModal() blocks interaction but does not stop the page scrolling behind
+   the scrim, which reads as the dialog sliding around. */
+html.has-notes-dialog { overflow: hidden; }
+
+/* --- narrow --------------------------------------------------------- */
+
+/* Below this the panel stops being a card in the middle of a page and becomes
+   a sheet held to the bottom edge, which is where a thumb is. */
+@media (max-width: 40rem) {
+  .notes-dialog {
+    max-height: 92svh;
+    margin: auto auto 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-bottom: 0;
+  }
+  .notes-dialog__head { padding: var(--space-4) var(--space-4) var(--space-3); }
+  .notes-dialog__head::after { left: var(--space-4); right: var(--space-4); }
+  .notes-dialog__body { padding: var(--space-4); }
+  .notes__list--archive { padding-inline-start: var(--space-5); }
+  .notes__list--archive > .notes__entry::before {
+    inset-inline-start: calc(-1 * var(--space-5));
+  }
+}
+
+/* --- forced colours -------------------------------------------------- */
+
+/* Every gradient here is invisible in a forced palette: the gilded rules, the
+   spine, and the bloom all disappear. Solid borders in the system's own
+   colour are the substitute, and the nodes become CanvasText discs. */
+@media (forced-colors: active) {
+  .notes-dialog { border: 1px solid CanvasText; }
+  .notes-dialog::before { display: none; }
+  .notes-dialog__head { border-bottom: 1px solid CanvasText; }
+  .notes-dialog__head::after { display: none; }
+  .notes__list--archive::before { background: CanvasText; }
+  .notes__list--archive > .notes__entry::before {
+    background: CanvasText;
+    box-shadow: none;
+  }
+  .notes__list--archive > .notes__entry:not(:first-child)::before {
+    background: Canvas;
+    border: 1.5px solid CanvasText;
+  }
+}
+
+/* 160ms: the hero band enters on a 40ms cadence -- headline 0, install 40,
+   lede 80, rail 120 -- and this is the next step, not a rounder number. Same
+   `backwards` fill as .fresh: the element's resting style is already visible
+   (unlike .hero__headline and friends, which set opacity: 0 in their base
+   rule), so the from-state has to be applied during the delay or the section
+   pops in at full opacity and then animates from nothing. */
+@media (prefers-reduced-motion: no-preference) {
+  .notes { animation: hero-rise var(--duration-view) var(--ease-out) 160ms backwards; }
+}
+
+/* The gradient rule is invisible in a forced palette, same as 8b's — a solid
+   border in the system's own colour is the substitute. Nothing else here
+   needs help: text, markers and the drawn chevron are all currentColor. */
+@media (forced-colors: active) {
+  .notes__head::after { display: none; }
+  .notes__head { border-bottom: 1px solid CanvasText; }
+}
+
+/* ---------------------------------------------------------------------------
+   9. Category sections + card grid + card
+   ------------------------------------------------------------------------- */
+
+.category-section {
+  padding-block: var(--space-8);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.category-section[hidden] { display: none; }
+
+.category-section__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.category-section__icon { color: var(--accent); width: 1.75em; height: 1.75em; }
+
+.category-section__title {
+  font-size: var(--text-5);
+  margin: 0;
+}
+
+.category-section__count {
+  margin-inline-start: auto;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-5);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: transform var(--duration-enter) var(--ease-out),
+              border-color var(--duration-enter) var(--ease-out),
+              box-shadow var(--duration-enter) var(--ease-out),
+              background-color var(--duration-enter) var(--ease-out);
+}
+
+.card[hidden] { display: none; }
+
+.card:hover,
+.card:focus-visible {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 2px hsl(var(--shadow-ink) / 0.5),
+    0 20px 32px -16px color-mix(in oklch, var(--accent) 45%, transparent);
+}
+
+.card:focus-visible {
+  outline-offset: 4px;
+}
+
+.card__name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.card__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-4);
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.card__summary {
+  margin-top: var(--space-3);
+  color: var(--text-secondary);
+  font-size: var(--text-3);
+  flex: 1;
+}
+
+.card__foot {
+  margin-top: var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.card__arrow {
+  color: var(--text-secondary);
+  transition: transform var(--duration-micro) var(--ease-out),
+              color var(--duration-micro) var(--ease-out);
+}
+
+.card:hover .card__arrow,
+.card:focus-visible .card__arrow {
+  color: var(--text-accent);
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__headline, .hero__lede{
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .card, .search__field,
+  .notes__earlier-summary, .notes__earlier-summary::before {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  .card:hover, .card:focus-visible {
+    transform: none;
+  }
+}
+
+/* ===========================================================================
+   24. The hero, in two columns, and the counter strip
+   The headline, the one-line lede and the install box on the left: the page's
+   one primary action stays where the eye lands first. On the right, one strip
+   of four previews, each a link and each a small working copy of where it
+   leads. They share one panel and one light, divided by hairlines rather than
+   boxed one by one: this is a counter in the bakery's sense, the window you
+   look through before you go in, not a grid of cards.
+   ======================================================================== */
+
+.hero {
+  padding-block: var(--space-7) var(--space-9);
+}
+
+.hero__grid {
+  display: grid;
+  gap: var(--space-7);
+  align-items: start;
+  margin-top: var(--space-8);
+}
+
+.hero .container > .hero__grid:first-child { margin-top: var(--space-6); }
+
+@media (min-width: 64rem) {
+  .hero__grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(23rem, 0.9fr);
+    gap: var(--space-8);
+  }
+}
+
+.hero__headline {
+  max-width: 13ch;
+  font-size: clamp(2.6rem, 1.25rem + 4.1vw, 4.75rem);
+  font-weight: 660;
+  letter-spacing: -0.028em;
+  line-height: 1.02;
+}
+
+.hero__lede {
+  margin-top: var(--space-5);
+  max-width: 34ch;
+  font-size: clamp(1.15rem, 1rem + 0.55vw, 1.45rem);
+  line-height: 1.45;
+}
+
+.hero__main .install-frame {
+  margin-top: var(--space-7);
+  max-width: none;
+}
+
+/* --- the strip ------------------------------------------------------------ */
+
+.counter {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--accent) 32%, var(--border-subtle));
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%,
+      color-mix(in oklch, var(--accent-solid) 9%, transparent), transparent 70%),
+    linear-gradient(to bottom, color-mix(in oklch, var(--surface) 55%, var(--bg)), var(--bg));
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 8%, transparent),
+    0 30px 60px -34px hsl(var(--shadow-ink) / 0.7),
+    0 0 90px -40px color-mix(in oklch, var(--accent-solid) 45%, transparent);
+}
+
+/* A gilded hairline along the top edge: the strip is lit from the same place
+   the release card is. */
+.counter::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset-inline: 12%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent,
+    color-mix(in oklch, var(--accent) 75%, transparent) 25%,
+    color-mix(in oklch, var(--accent) 75%, transparent) 75%, transparent);
+}
+
+.counter__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 11.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color var(--duration-enter) var(--ease-out);
+}
+
+/* Between previews, a hairline that fades at both ends; never a box. */
+.counter__item + .counter__item::before {
+  content: '';
+  position: absolute;
+  inset-inline: var(--space-5);
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent,
+    var(--border-strong) 18%, var(--border-strong) 82%, transparent);
+}
+
+.counter__item:hover { background: color-mix(in oklch, var(--accent-solid) 7%, transparent); }
+
+/* Inside a panel that clips, a ring offset outward would be cut off; drawn
+   inward it stays whole on every side. */
+.counter__item:focus-visible {
+  outline-offset: -4px;
+  border-radius: var(--radius-lg);
+}
+
+.counter__figure {
+  display: grid;
+  place-items: center;
+  height: 5.5rem;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  transition: border-color var(--duration-enter) var(--ease-out);
+}
+
+.counter__item:hover .counter__figure,
+.counter__item:focus-visible .counter__figure {
+  border-color: color-mix(in oklch, var(--accent) 55%, transparent);
+}
+
+.counter__figure > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.counter__text { min-width: 0; }
+
+.counter__label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: var(--text-4);
+  font-weight: 640;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.counter__note {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-2);
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.counter__arrow {
+  font-size: var(--text-4);
+  color: var(--text-secondary);
+  transition: transform var(--duration-micro) var(--ease-out),
+              color var(--duration-micro) var(--ease-out);
+}
+
+.counter__item:hover .counter__arrow,
+.counter__item:focus-visible .counter__arrow {
+  color: var(--text-accent);
+  transform: translateX(3px);
+}
+
+/* Beside the install column the strip runs the column's full height, its
+   four previews sharing it evenly, so the two columns end on one line
+   rather than leaving a hole under the shorter. */
+@media (min-width: 64rem) {
+  .hero__grid { align-items: stretch; }
+  .counter { grid-auto-rows: 1fr; }
+  .counter__figure { height: auto; min-height: 5.5rem; align-self: stretch; }
+}
+
+@media (max-width: 40rem) {
+  .counter__item {
+    grid-template-columns: 8.25rem minmax(0, 1fr) auto;
+    gap: var(--space-4);
+    padding: var(--space-4);
+  }
+  .counter__item + .counter__item::before { inset-inline: var(--space-4); }
+  .counter__figure { height: 4.75rem; }
+}
+
+/* --- Skills: the count, and the names ------------------------------------ */
+
+.mini-count {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.2rem;
+  width: 100%;
+  padding-inline: var(--space-2);
+}
+
+.mini-count__numeral {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: 2.5rem;
+  font-weight: 680;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--text-accent);
+}
+
+/* What the numeral counts, said under it; then one of them by name, on its
+   own line and marked as an example, so the cycling name never reads as a
+   caption for the count. */
+.mini-count__caption {
+  font-size: var(--text-1);
+  line-height: 1.2;
+  color: var(--text-secondary);
+}
+
+.mini-count__example {
+  min-height: 2.5em;
+  max-width: 100%;
+  margin-top: 0.15rem;
+  font-size: 0.66rem;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
+  color: var(--text-secondary);
+}
+
+.mini-count__eg { font-style: italic; }
+
+.mini-count__name { font-family: var(--font-mono); }
+
+@media (max-width: 40rem) {
+  .mini-count__numeral { font-size: 2.1rem; }
+  .mini-count__example { font-size: 0.6rem; }
+}
+
+/* --- Mods: the climb, small ----------------------------------------------- */
+
+.mini-climb .climb-banner__trail,
+.mini-climb .climb-banner__ring { stroke-width: 1.5; }
+.mini-climb .climb-banner__bar { stroke-dasharray: 4 4; stroke-width: 1.25; }
+
+.mini-climb__run {
+  fill: none;
+  stroke: var(--text-accent);
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  opacity: 0;
+}
+
+.mini-climb__dot,
+.mini-climb__halo {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* --- Graph: the families as a constellation ------------------------------- */
+
+.mini-graph__tie {
+  fill: none;
+  stroke: var(--text-secondary);
+  stroke-width: 0.6;
+  stroke-linecap: round;
+  stroke-opacity: calc(var(--w) * 0.5);
+}
+
+.mini-graph__family {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* --- Getting started: three steps ----------------------------------------- */
+
+/* How far a step is ticked, 0 to 1: registered so the loop below can
+   animate it, and inherited so the tick, its mark and its text all follow
+   one number. At rest every step is done. */
+@property --tick {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+.mini-steps {
+  display: grid;
+  gap: 0.42rem;
+  width: 100%;
+  margin: 0;
+  padding: 0 0.75rem;
+  list-style: none;
+}
+
+.mini-steps__step {
+  --tick: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  font-size: 0.66rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: color-mix(in oklch, var(--text-primary) calc(var(--tick) * 100%), var(--text-secondary));
+}
+
+.mini-steps__step + .mini-steps__step { margin-top: 0; }
+
+.mini-steps__tick {
+  flex: none;
+  width: 0.95rem;
+  height: 0.95rem;
+  overflow: visible;
+}
+
+.mini-steps__tick circle {
+  fill: color-mix(in oklch, var(--accent-solid) calc(var(--tick) * 100%), transparent);
+  stroke: var(--accent);
+  stroke-width: 1.3;
+}
+
+/* The mark draws itself in as the step ticks: pathLength 10, so the dash
+   offset is 10 at 0 and gone at 1. */
+.mini-steps__tick path {
+  fill: none;
+  stroke: var(--text-on-accent-solid);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 10;
+  stroke-dashoffset: calc((1 - var(--tick)) * 10);
+}
+
+.mini-steps__text { overflow: hidden; text-overflow: ellipsis; }
+
+.mini-steps code {
+  padding: 0.05em 0.3em;
+  font-size: 0.95em;
+}
+
+@media (max-width: 40rem) {
+  .mini-steps { padding-inline: 0.5rem; gap: 0.32rem; }
+  .mini-steps__step { font-size: 0.58rem; gap: 0.35rem; }
+  .mini-steps__tick { width: 0.8rem; height: 0.8rem; }
+}
+
+/* --- motion ------------------------------------------------------------------- */
+
+/* Every figure above is finished as drawn. The loops below run only while
+   atelier-web's counter has marked the strip live (on screen, tab visible,
+   motion welcome); leaving view drops the class and each figure is back at
+   rest, so none of them burns frames off screen. */
+@media (prefers-reduced-motion: no-preference) {
+  .counter { animation: hero-rise var(--duration-view) var(--ease-out) 120ms backwards; }
+
+  .counter.is-live .mini-climb__run { animation: mini-climb-run 6.4s var(--ease-in-out) infinite; }
+  .counter.is-live .mini-climb__dot { animation: mini-climb-dot 6.4s var(--ease-out) infinite; }
+  .counter.is-live .mini-climb__halo { animation: mini-climb-halo 6.4s var(--ease-out) infinite; }
+
+  .counter.is-live .mini-graph__family {
+    animation: mini-graph-breathe 5.6s var(--ease-in-out) calc(var(--i) * -0.47s) infinite alternate;
+  }
+  .counter.is-live .mini-graph__ties { animation: mini-graph-ties 5.6s var(--ease-in-out) infinite alternate; }
+
+  .counter.is-live .mini-steps__step:nth-child(1) { animation: mini-step-1 4.8s linear infinite; }
+  .counter.is-live .mini-steps__step:nth-child(2) { animation: mini-step-2 4.8s linear infinite; }
+  .counter.is-live .mini-steps__step:nth-child(3) { animation: mini-step-3 4.8s linear infinite; }
+
+  .mini-count__name.is-in { animation: mini-name-in 420ms var(--ease-out); }
+}
+
+@keyframes mini-climb-run {
+  0%   { stroke-dashoffset: 100; opacity: 1; }
+  56%  { stroke-dashoffset: 0; opacity: 1; }
+  88%  { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+@keyframes mini-climb-dot {
+  0%, 54%  { transform: scale(0.45); opacity: 0.35; }
+  60%      { transform: scale(1.35); opacity: 1; }
+  66%, 90% { transform: scale(1); opacity: 1; }
+  100%     { transform: scale(0.45); opacity: 0.35; }
+}
+
+@keyframes mini-climb-halo {
+  0%, 55% { transform: scale(0.4); opacity: 0; }
+  62%     { transform: scale(1.7); opacity: 1; }
+  76%     { transform: scale(1); opacity: 0.6; }
+  90%     { transform: scale(1); opacity: 0.6; }
+  100%    { transform: scale(0.4); opacity: 0; }
+}
+
+@keyframes mini-graph-breathe {
+  from { transform: scale(0.9); }
+  to   { transform: scale(1.12); }
+}
+
+@keyframes mini-graph-ties {
+  from { opacity: 0.55; }
+  to   { opacity: 1; }
+}
+
+@keyframes mini-step-1 {
+  0%, 8%    { --tick: 0; }
+  14%, 90%  { --tick: 1; }
+  100%      { --tick: 0; }
+}
+
+@keyframes mini-step-2 {
+  0%, 30%   { --tick: 0; }
+  36%, 90%  { --tick: 1; }
+  100%      { --tick: 0; }
+}
+
+@keyframes mini-step-3 {
+  0%, 52%   { --tick: 0; }
+  58%, 90%  { --tick: 1; }
+  100%      { --tick: 0; }
+}
+
+@keyframes mini-name-in {
+  from { opacity: 0; transform: translateY(0.45em); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (forced-colors: active) {
+  .counter { border: 1px solid CanvasText; }
+  .counter::before, .counter__item + .counter__item::before { display: none; }
+  .counter__item + .counter__item { border-top: 1px solid CanvasText; }
+  .counter__figure { border-color: CanvasText; }
+  .mini-graph__family { forced-color-adjust: none; }
+  .mini-graph__tie { stroke: CanvasText; }
+  .mini-steps__tick circle { stroke: CanvasText; fill: Highlight; }
+  .mini-steps__tick path { stroke: HighlightText; }
+}
+
+/* ===========================================================================
+   25. What changed: the fresh rail and the update notes, in a band
+   A band of its own between the hero and the skills: the page's ground deepens
+   into it and back out over a gradient, so the sections change light rather
+   than meet at a line.
+   ======================================================================== */
+
+.news {
+  padding-block: var(--space-8) var(--space-9);
+  background: linear-gradient(to bottom,
+    transparent, var(--bg-deep) var(--space-8),
+    var(--bg-deep) calc(100% - var(--space-8)), transparent);
+}
+
+.news .fresh,
+.news .notes { max-width: none; }
+
+.news .fresh { margin-top: 0; }
+.news .notes { margin-top: var(--space-8); }
+.news .fresh:only-child,
+.news .notes:first-child { margin-top: 0; }
+
+.fresh__title,
+.notes__title {
+  font-size: var(--text-5);
+  letter-spacing: -0.012em;
+}
+
+/* At width, an entry reads as a dated record: the date and title in a
+   column of their own, the bullets in a readable measure beside them. The
+   archive dialog keeps its own single-column timeline (it is scoped here to
+   the notes on the page). */
+@media (min-width: 64rem) {
+  .notes > .notes__list > .notes__entry,
+  .notes__archive > .notes__archive-panel .notes__entry {
+    display: grid;
+    grid-template-columns: minmax(13rem, 17rem) minmax(0, 46rem);
+    gap: var(--space-3) var(--space-8);
+    align-items: start;
+  }
+  .notes > .notes__list > .notes__entry > .notes__entry-head,
+  .notes__archive > .notes__archive-panel .notes__entry-head { margin: 0; }
+  .notes > .notes__list > .notes__entry > .notes__bullets,
+  .notes__archive > .notes__archive-panel .notes__bullets { margin-top: 0; }
+}
+
+/* ===========================================================================
+   26. The skills, with the family index beside them
+   A head (title, what the collection is, the search), then two columns at
+   desktop widths: the index, sticky, and the twelve families. On a phone the
+   index is a strip of chips that stays at the top while the families scroll
+   under it.
+   ======================================================================== */
+
+.skills {
+  padding-top: var(--space-8);
+  scroll-margin-top: var(--space-5);
+}
+
+.skills__head { max-width: 46rem; }
+
+.skills__title {
+  margin: 0;
+  font-size: clamp(2rem, 1.5rem + 1.6vw, 2.9rem);
+  font-weight: 660;
+  letter-spacing: -0.022em;
+}
+
+.skills__intro {
+  margin-top: var(--space-4);
+  max-width: 62ch;
+  font-size: var(--text-3);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.skills__layout {
+  display: grid;
+  gap: var(--space-6);
+  margin-top: var(--space-7);
+}
+
+@media (min-width: 64rem) {
+  .skills__layout {
+    grid-template-columns: 14.5rem minmax(0, 1fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+}
+
+.skills__families .search__empty { margin-top: 0; }
+
+.skills__families .card-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+}
+
+/* Inside its family's section a card's family tag says what the heading
+   above it already says; the rail and the search keep it where it informs. */
+.skills__families .card__foot .tag { display: none; }
+.skills__families .card__arrow { margin-inline-start: auto; }
+
+/* --- the families --------------------------------------------------------- */
+
+.category-section {
+  padding-block: 0 var(--space-8);
+  border-top: 0;
+  scroll-margin-top: var(--space-5);
+}
+
+.category-section__head { margin-bottom: var(--space-5); }
+
+.category-section__icon { color: var(--family, var(--accent)); }
+
+.category-section__title {
+  margin: 0;
+  font-size: clamp(1.45rem, 1.2rem + 0.7vw, 1.8rem);
+  font-weight: 640;
+  letter-spacing: -0.01em;
+}
+
+/* A family begins below a rule that fades out to the right, in the family's
+   colour where it starts, instead of a full-width line across the page. */
+.category-section + .category-section::before {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-bottom: var(--space-7);
+  background: linear-gradient(to right,
+    color-mix(in oklch, var(--family, var(--accent)) 70%, transparent),
+    var(--border-subtle) 30%, transparent 85%);
+}
+
+/* --- the index ------------------------------------------------------------ */
+
+.family-index__title {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.family-index__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.family-index__list li { margin: 0; }
+
+.family-index__link {
+  position: relative;
+  display: grid;
+  grid-template-columns: 0.6rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0.45rem var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-2);
+  line-height: 1.3;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-micro) var(--ease-out),
+              background-color var(--duration-micro) var(--ease-out);
+}
+
+.family-index__swatch {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--family);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--family) 22%, transparent);
+}
+
+.family-index__count {
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.family-index__link:hover {
+  color: var(--text-primary);
+  background: color-mix(in oklch, var(--text-primary) 5%, transparent);
+}
+
+/* The family in view (atelier-web sets aria-current as the page scrolls):
+   brighter, on a tint of its own colour, with its colour as a bar at the
+   leading edge. Colour is never the only sign: the weight changes too. */
+.family-index__link[aria-current='true'] {
+  color: var(--text-primary);
+  font-weight: 600;
+  background: color-mix(in oklch, var(--family) 13%, transparent);
+}
+
+.family-index__link[aria-current='true'] .family-index__count { color: var(--text-primary); }
+
+/* A family the search has emptied stays in the index, quieter, so the list
+   never jumps under the reader while they type. */
+.family-index__link.is-empty { opacity: 0.45; }
+
+@media (min-width: 64rem) {
+  .family-index {
+    position: sticky;
+    top: var(--space-5);
+    max-height: calc(100dvh - 2 * var(--space-5));
+    overflow-y: auto;
+    padding-bottom: var(--space-4);
+  }
+  .family-index__link[aria-current='true']::before {
+    content: '';
+    position: absolute;
+    inset-block: 0.35rem;
+    inset-inline-start: 0;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--family);
+  }
+}
+
+/* A phone: the index is a strip of chips under the page's top edge, scrolled
+   sideways, while the families scroll under it. */
+@media (max-width: 63.99rem) {
+  .family-index {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    margin-inline: calc(-1 * var(--space-5));
+    padding: var(--space-3) var(--space-5);
+    background: var(--bg);
+    box-shadow: 0 1px 0 var(--border-subtle), 0 12px 18px -16px hsl(var(--shadow-ink) / 0.6);
+  }
+  .family-index__title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .family-index__list {
+    display: flex;
+    gap: var(--space-2);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    scroll-padding-inline: var(--space-5);
+  }
+  .family-index__list::-webkit-scrollbar { display: none; }
+  .family-index__list li { flex: none; scroll-snap-align: start; }
+  .family-index__link {
+    grid-template-columns: 0.55rem auto auto;
+    gap: var(--space-2);
+    padding: 0.5rem 0.85rem;
+    min-height: 2.5rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+  }
+  .family-index__link[aria-current='true'] {
+    border-color: color-mix(in oklch, var(--family) 60%, transparent);
+  }
+  .category-section,
+  .skills { scroll-margin-top: 4.5rem; }
+}
+
+@media (min-width: 640px) and (max-width: 63.99rem) {
+  .family-index {
+    margin-inline: calc(-1 * var(--space-8));
+    padding-inline: var(--space-8);
+  }
+  .family-index__list { scroll-padding-inline: var(--space-8); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .family-index__link { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .family-index__swatch { forced-color-adjust: none; }
+  .family-index__link[aria-current='true'] { outline: 2px solid Highlight; }
+  .category-section + .category-section::before { background: CanvasText; }
+}
+
+/* A grid that is one column at a phone's width still sizes its column to the
+   widest thing in it unless told otherwise; these never let a long name or
+   the family strip widen the page. */
+.hero__grid,
+.skills__layout { grid-template-columns: minmax(0, 1fr); }
+
+@media (min-width: 64rem) {
+  .hero__grid { grid-template-columns: minmax(0, 1.1fr) minmax(24rem, 0.9fr); }
+  .skills__layout { grid-template-columns: 15.5rem minmax(0, 1fr); }
+}
+
+.skills__families .card__name { font-size: 1.08rem; }
+
+/* ===========================================================================
+   27. The release card, at the top of the hero
+   It opens with no layout shift: the band always occupies its full width and
+   height, and what changes is the window cut through it. Everything rides one
+   number, --open. What it says is one definition in atelier-build's
+   pages/unfold.rs; atelier-web's unfold.rs sets --bleed and the open state.
+   ======================================================================== */
+
+@property --open { syntax: '<number>'; inherits: true; initial-value: 0; }
+
+/* --bleed starts as 100vw, which counts a classic scrollbar, until the module
+   pins it to the document's width, and with no script it stays that. clip
+   rather than hidden: it makes no scroll container, so nothing sticky changes. */
+.hero { overflow-x: clip; }
+
+.hero__banners { margin-top: var(--space-2); margin-bottom: var(--space-6); }
+
+/* At width, the card sits close under the header and the hero close under the
+   card, and the install box close under the lede. */
+@media (min-width: 64rem) {
+  .hero { padding-top: var(--space-6); }
+  .hero .container > .hero__banners:first-child { margin-top: 0; }
+  .hero__banners + .hero__grid { margin-top: var(--space-6); }
+  .hero__main .install-frame { margin-top: var(--space-6); }
+}
+
+.unfold {
+  --bleed: 100vw;
+  --page: min(var(--container-wide), var(--bleed));
+  --gutter: var(--space-8);
+  --col-left: calc((var(--bleed) - var(--page)) / 2 + var(--gutter));
+  --card: 37rem;
+  --card-pad: var(--space-6);
+  --edge: calc((var(--bleed) - var(--card)) / 2);
+  --inset: calc(var(--edge) * (1 - var(--open)));
+  --round: calc(var(--radius-lg) * (1 - var(--open)));
+  --shift: calc(var(--edge) + var(--card-pad) - var(--col-left));
+  --lane-h: 27.5rem;
+  position: relative;
+  isolation: isolate;
+  width: var(--bleed);
+  margin-inline: calc((100% - var(--bleed)) / 2);
+  transition: --open 1050ms cubic-bezier(.16, 1, .3, 1);
+}
+.unfold[data-open] { --open: 1; }
+
+.unfold__window {
+  position: relative;
+  height: var(--lane-h);
+  overflow: hidden;
+  clip-path: inset(0 var(--inset) round var(--round));
+  background:
+    radial-gradient(ellipse 70% 120% at 50% 62%, color-mix(in oklch, var(--accent-solid) calc(9% + 6% * var(--open)), var(--bg)) 0%, var(--bg) 74%);
+}
+/* The frame round the window: a hairline, its corners, and the glow. A box whose
+   edges moved would count as a layout shift on every frame, so nothing here
+   moves in layout: each half is a fixed box a little wider than half the band,
+   slid in by transform, and clipped to end at the band's centre. They meet
+   there, so the line and the shadow run through unbroken. */
+.unfold__frame {
+  --meet: 7rem;
+  --line: color-mix(in oklch, var(--accent) 42%, var(--border-subtle));
+  /* Open, the band's ends are the page's own, and only its top and bottom lines stay. */
+  --end-line: color-mix(in oklch, var(--line) calc((1 - var(--open)) * 100%), transparent);
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+}
+.unfold__frame::before,
+.unfold__frame::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  width: calc(50% + var(--meet));
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 60px -36px hsl(var(--shadow-ink) / .7), 0 0 90px -44px color-mix(in oklch, var(--accent-solid) 55%, transparent);
+}
+.unfold__frame::before {
+  left: 0;
+  border-right: 0;
+  border-left-color: var(--end-line);
+  border-radius: var(--round) 0 0 var(--round);
+  transform: translateX(var(--inset));
+  clip-path: inset(-12rem calc(var(--inset) + var(--meet)) -12rem -12rem);
+}
+.unfold__frame::after {
+  right: 0;
+  border-left: 0;
+  border-right-color: var(--end-line);
+  border-radius: 0 var(--round) var(--round) 0;
+  transform: translateX(calc(-1 * var(--inset)));
+  clip-path: inset(-12rem -12rem -12rem calc(var(--inset) + var(--meet)));
+}
+/* The gilded catch of light along the top edge. The whole width of the band all
+   along; what follows the window is its mask. */
+.unfold__glint {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: var(--accent);
+  opacity: calc(.55 + .45 * var(--open));
+  mask: linear-gradient(to right, transparent 8%, #000 26.5%, #000 73.5%, transparent 92%) center / calc(100% - 2 * var(--inset)) 100% no-repeat;
+}
+.unfold__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.unfold__lead {
+  position: absolute;
+  z-index: 1;
+  top: var(--space-6);
+  left: var(--col-left);
+  width: calc(var(--card) - 2 * var(--card-pad));
+  transform: translateX(calc(var(--shift) * (1 - var(--open))));
+}
+.unfold__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 650;
+  font-size: var(--text-5);
+  line-height: var(--leading-tight);
+  letter-spacing: -.015em;
+  color: var(--text-primary);
+}
+.unfold__lede { margin: var(--space-3) 0 var(--space-4); color: var(--text-secondary); line-height: var(--leading-normal); max-width: 56ch; }
+.unfold__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.5rem;
+  padding: 0 var(--space-4);
+  font: 600 var(--text-2) var(--font-body);
+  color: var(--text-on-accent-solid);
+  background: var(--accent-solid);
+  border: 0;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: transform var(--duration-micro) var(--ease-out), background-color var(--duration-micro) var(--ease-out);
+}
+/* Held back, with its place kept, until the module has attached to it, so it is never a button
+   that does nothing. The rules for a page without the module are in pages/unfold.rs. */
+.unfold:not([data-unfold-live]) .unfold__toggle { visibility: hidden; }
+.unfold__toggle:hover { transform: translateY(-1px); }
+.unfold__toggle:active { transform: translateY(0); }
+.unfold__toggle-icon { width: 1.05em; height: 1.05em; transition: transform 500ms var(--ease-out); transform: rotate(calc(180deg * var(--open))); }
+.unfold[data-open] .unfold__toggle { color: var(--text-primary); background: color-mix(in oklch, var(--text-primary) 9%, transparent); }
+/* Both labels hold the width of the longer, so the icon beside them stays put. */
+.unfold__toggle-label { display: inline-grid; }
+.unfold__toggle-label > span { grid-area: 1 / 1; }
+.unfold__toggle [data-when-open] { visibility: hidden; }
+.unfold__toggle[aria-expanded="true"] [data-when-open] { visibility: visible; }
+.unfold__toggle[aria-expanded="true"] [data-when-closed] { visibility: hidden; }
+
+/* What the opening reveals. It has its place in the band all along. */
+.unfold__more {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 220ms var(--ease-in), visibility 0s linear 220ms;
+}
+.unfold[data-open] .unfold__more {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 520ms var(--ease-out) 340ms, visibility 0s;
+}
+.unfold__try, .unfold__watch, .unfold__ships { pointer-events: auto; }
+.unfold__canvas.is-pointing { cursor: pointer; }
+.unfold__try {
+  position: absolute;
+  top: var(--space-6);
+  left: calc(var(--col-left) + var(--card) - 2 * var(--card-pad) + var(--space-7));
+  right: calc(var(--col-left) + 13.5rem + var(--space-6));
+  min-width: 0;
+}
+.unfold__try label { display: block; margin-bottom: var(--space-2); font-size: var(--text-2); font-weight: 600; color: var(--text-primary); }
+.unfold__input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0 var(--space-3);
+  font: 400 var(--text-2) var(--font-mono);
+  color: var(--text-primary);
+  background: color-mix(in oklch, var(--bg-deep) 70%, transparent);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+}
+.unfold__input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.unfold__named { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; min-height: 2.1rem; margin-top: var(--space-2); font-size: var(--text-2); color: var(--text-secondary); }
+.unfold__chip { max-width: 100%; overflow-wrap: anywhere; padding: .24rem .55rem; font: 500 var(--text-1) var(--font-mono); color: var(--text-primary); text-decoration: none; background: var(--surface); border: 1px solid var(--dot, var(--border-strong)); border-radius: var(--radius-sm); }
+.unfold__chip:hover { background: var(--surface-hover); }
+
+.unfold__watch {
+  position: absolute;
+  top: var(--space-6);
+  right: var(--col-left);
+  width: 13.5rem;
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: center;
+}
+.unfold__ring { width: 4.6rem; height: 4.6rem; overflow: visible; transform: rotate(-90deg); }
+.unfold__ring circle { fill: none; stroke-width: 8; }
+.unfold__ring-track { stroke: color-mix(in oklch, var(--text-primary) 12%, transparent); }
+.unfold__ring-value { stroke: var(--accent); stroke-linecap: round; stroke-dasharray: var(--used, 42) 100; transition: stroke-dasharray 500ms var(--ease-out), stroke-width 300ms var(--ease-out), stroke 200ms; }
+.unfold__watch[data-woke] .unfold__ring-value { stroke: var(--text-accent); stroke-width: 11; }
+.unfold__watch code { display: block; padding: 0; font: 500 var(--text-1) var(--font-mono); white-space: nowrap; color: var(--text-primary); background: none; border: 0; }
+.unfold__watch p { margin: .15rem 0 0; font-size: var(--text-1); line-height: 1.35; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+
+.unfold__ships {
+  position: absolute;
+  bottom: var(--space-5);
+  left: var(--col-left);
+  right: var(--col-left);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  margin: 0;
+  padding: var(--space-3) 0 0;
+  list-style: none;
+  border-top: 1px solid var(--border-subtle);
+}
+.unfold__ships li { margin: 0; }
+.unfold__ship { display: block; color: inherit; text-decoration: none; }
+.unfold__ship b { display: block; font: 600 var(--text-2) var(--font-body); color: var(--text-primary); overflow-wrap: anywhere; }
+.unfold__ship:hover b { color: var(--text-accent); }
+.unfold__ship span { display: block; margin-top: .15rem; font-size: var(--text-1); line-height: 1.4; color: var(--text-secondary); }
+
+/* Below this the wings have no room, so the card stacks. It still widens to the edges on its own,
+   which moves nothing, and the details open downward only when asked for. */
+@media (max-width: 74.99rem) {
+  .unfold { --gutter: var(--space-8); --card: calc(var(--bleed) - 2 * var(--gutter)); --shift: 0px; --lane-h: auto; }
+  .unfold__window { height: auto; display: grid; }
+  .unfold__lead { position: relative; top: auto; left: auto; width: auto; transform: none; padding: var(--space-5) calc(var(--gutter) + var(--space-5)) 0; }
+  .unfold__braid-lane { height: 9.5rem; }
+  .unfold__more {
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: visible;
+    opacity: 1;
+    transition: grid-template-rows 520ms var(--ease-out);
+  }
+  .unfold__more-inner { overflow: hidden; min-height: 0; visibility: hidden; transition: visibility 0s linear 520ms; }
+  .unfold[data-expanded] .unfold__more { grid-template-rows: 1fr; }
+  .unfold[data-expanded] .unfold__more-inner { visibility: visible; transition: visibility 0s; }
+  .unfold[data-open] .unfold__more { transition: grid-template-rows 520ms var(--ease-out); }
+  .unfold__more-pad { display: grid; gap: var(--space-5); padding: 0 calc(var(--gutter) + var(--space-5)) var(--space-5); }
+  .unfold__try, .unfold__watch, .unfold__ships { position: static; width: auto; }
+  .unfold__ships { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 40rem) {
+  .unfold { --gutter: var(--space-5); }
+  .unfold__frame { --end-line: var(--line); }
+  .unfold__ships { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+  .unfold__lead { padding-inline: calc(var(--gutter) + var(--space-4)); }
+  .unfold__more-pad { padding-inline: calc(var(--gutter) + var(--space-4)); }
+  .unfold__input { font-size: 1rem; }
+}
+/* Two rows of answer, held open wherever two names can wrap: a demo's chips must
+   not move the page under a reader. */
+@media (max-width: 52rem) {
+  .unfold__named { min-height: 4.7rem; align-content: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .unfold, .unfold * { transition: none !important; }
+}
+@media (forced-colors: active) {
+  .unfold__canvas { display: none; }
+  .unfold__window { background: Canvas; }
+  .unfold__frame::before, .unfold__frame::after { border-color: CanvasText; box-shadow: none; }
+  .unfold__glint { display: none; }
+  .unfold__toggle { border: 1px solid ButtonText; }
+  .unfold__ring-track { stroke: CanvasText; }
+  .unfold__ring-value { stroke: Highlight; }
+  .unfold__chip { border-color: LinkText; }
+}

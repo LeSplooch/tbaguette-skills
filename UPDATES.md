@@ -21,17 +21,17 @@ wording can belong here absolutely.
 
 Writing an entry is part of shipping a change here — see
 CLAUDE.md. The shape is `## YYYY-MM-DD — Title` followed by `-` bullets, newest date first, and
-`scripts/generate.py` refuses to build a site if that shape or that order
+the site build refuses to run if that shape or that order
 breaks. A bullet may wrap across lines; the continuation is joined back on.
 Everything above the first `##` is preamble and is never rendered.
 
 New entries always go here, at the top. Once this file passes 128 KiB the build
-stops and asks for `python3 scripts/archive_updates.py`, which moves everything
+stops and asks for `site/atelier archive-updates`, which moves everything
 past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-11-06 — Skills get named when they fit, subagents hear the rule, and waiting runs no model
+## 2026-11-06 — 3.0: Skills get named when they fit, subagents hear the rule, and waiting runs no model
 
 - On Claude Code, the reminder that comes with each prompt now names the skills that prompt seems
   to match, instead of only asking in general whether one applies. The match reads a short list
@@ -78,6 +78,8 @@ holds any text file over 256 KiB for a reviewer.
   "revert" covers everything you touched, and check what else rewrites a value before changing it.
 - The install prompt now offers, on Claude Code, to raise the skill listing's budget so more of
   this library's triggers stay visible. It asks first, and says what it costs.
+- Contributing a change to the library now needs a Rust toolchain, and the README says how to set
+  one up.
 
 ## 2026-10-29 — A climb mod, and Claude Code can dispatch TBaguette's implementer, reviewer and investigator by name
 

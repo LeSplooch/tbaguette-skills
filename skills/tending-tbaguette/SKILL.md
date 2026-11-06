@@ -114,7 +114,7 @@ instructions are where it belonged from the start.
 
 Every skill here is a **reusable judgment call or technique**, stated so it
 applies regardless of language, framework, or project.
-`scripts/content_pipeline.py`'s `CATEGORIES` in the repo is the live list of
+`CATEGORIES` in `site/crates/atelier-core/src/model.rs` is the live list of
 what the library already covers, and reading it beats guessing.
 
 Worth capturing:
@@ -615,7 +615,8 @@ The shape, so this file still says what happens:
    the top, which on the site means inside the archive fold: published, and
    seen by nobody. A cleanly merging note is the one this happens to, because
    nothing forces anyone to look at where it landed.
-4. Run `python3 scripts/run_tests.py`, fully green — and read what green
+4. Run `cargo test --manifest-path site/Cargo.toml --workspace` and
+   `site/atelier check`, fully green — and read what green
    means here. The suite checks the *filing*: registries agreeing, counts
    matching, manifests at one version, the update note well-formed. Nothing in
    it can see whether a section is true, belongs where you put it, or is

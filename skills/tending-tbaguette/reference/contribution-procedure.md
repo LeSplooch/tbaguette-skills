@@ -153,9 +153,9 @@ is fixed by retrying the same command in the same checkout.
    |---|---|
    | Frontmatter with exactly `name` and `description`, in the "Use when A, B, or C. Covers D, E, F." register | `skills/<slug>/SKILL.md` |
    | A `name` matching the directory exactly, and a `description` under 1024 characters | `skills/<slug>/SKILL.md`, per the note above |
-   | Filed under a category in the registry the build reads | `CATEGORIES` in `scripts/content_pipeline.py` |
+   | Filed under a category in the registry the build reads | `CATEGORIES` in `site/crates/atelier-core/src/model.rs` |
    | Filed in the same category in the human-readable mirror | `CATALOG.md` |
-   | The skill count, which is asserted, not derived | `EXPECTED_SKILL_COUNT` in `scripts/generate.py`, plus every manifest description |
+   | The skill count, which is asserted, not derived | `EXPECTED_SKILL_COUNT` in `site/crates/atelier-build/src/write.rs`, plus every manifest description |
    | An inbound cross-reference from a skill that already exists | some existing skill's "Not for:" line |
 
    That last row is the one that ambushes people, and it is a forcing
@@ -177,12 +177,13 @@ is fixed by retrying the same command in the same checkout.
 5. **Run the suite.** From the repo root:
 
    ```bash
-   python3 scripts/run_tests.py
+   cargo test --manifest-path site/Cargo.toml --workspace
+   site/atelier check
    ```
 
    It must be fully green. Fix the real problem or abandon the candidate —
    never open a pull request on red, and never skip a suite to get around a
-   failure. It is stdlib-only and needs no install step.
+   failure. It needs a Rust toolchain, and the README gives the install commands.
 
    A check that fails for reasons that are not yours still has to be handled,
    and the handling is evidence rather than assertion. Run the same suite on a
@@ -194,8 +195,8 @@ is fixed by retrying the same command in the same checkout.
    handed them a platform bug report they did not have, which is worth more
    than the silence would have been.
 
-   The first run also wires this clone's pre-commit hook, which regenerates
-   the site on every commit. Expect your commit to touch **most of `docs/`** —
+   Running `site/build.sh` once wires this clone's pre-commit hook, which
+   regenerates the site on every commit. Expect your commit to touch **most of `docs/`** —
    comfortably a hundred files — on top of the one file you actually edited.
    Every page carries the plugin version and a build timestamp, so any change
    at all rewrites nearly all of them. That is correct, not damage: the site
@@ -208,7 +209,7 @@ is fixed by retrying the same command in the same checkout.
    committing. Pass the path the live site is actually served from:
 
    ```bash
-   python3 scripts/generate.py --base-path /tbaguette-skills
+   site/atelier build --base-path /tbaguette-skills
    ```
 
    Leaving off that flag builds every asset link, stylesheet, script, and font

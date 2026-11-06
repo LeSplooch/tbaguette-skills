@@ -1,12 +1,21 @@
 /*
   TBaguette’s Atelier — design system
   =========================================
-  One stylesheet, hand-authored. Token layer (primitive -> semantic) feeds every
+  Hand-authored. Token layer (primitive -> semantic) feeds every
   component below it; components reference roles (--surface, --text-primary, ...),
   never raw primitives (--crumb-850, --cream-100, ...) directly. Dark ("crust") is
   the default theme; [data-theme="flour"] on <html> remaps the semantic layer only.
 
-  Contents
+  Four stylesheets. This one, the shared core, is on every page; each page
+  adds at most one of its own after it (pages::shell::page_stylesheet), so
+  its rules may build on everything here:
+    landing.css  the landing page: hero, previews, rail, notes, banners, skills
+    graph.css    /graph/: the full-viewport page and the app's chrome
+    mods.css     /mods/ and the mods' own pages
+  The numbers below are the original sections', kept so comments that point
+  at "section 8b" still lead somewhere; the file holding each is named.
+
+  Contents (this file)
   1. Font faces (self-hosted, latin-subset)
   2. Tokens — primitives, semantic (dark default + flour theme)
   3. Reset & base
@@ -14,11 +23,8 @@
   5. Type
   6. Icons
   7. Header / wordmark / nav / theme toggle / updated-time
-  8. Hero + search
-  8b. "Fresh from the oven" rail (recently new/updated skills; a turning
-      3D ring wherever motion, width, and forced-colors all allow it)
-  8c. Update notes (what changed, in words, read from UPDATES.md)
-  9. Category sections + card grid + card (incl. change-badge: new/updated)
+  8. (install box only; the hero and search are in landing.css)
+  9. (.tag and change-badge only; the category grid is in landing.css)
   10. Breadcrumb
   11. Article: lede, prose, tables, code, lists (incl. skill cross-references)
   12. Tabs (formidable)
@@ -28,8 +34,12 @@
   16. Code block (install-verification page: line numbers, syntax tokens)
   17. Responsive notes (fluid by default; hard breakpoints only where noted)
   18. Update-check modal
-  19. The skill graph ("the crumb"): header and skill-page entry points,
-      the full-viewport /graph/ page that holds it, and the app's chrome
+  19. The skill graph: family colours, the header's Graph link, the skill
+      page's link to it (the page itself is graph.css)
+  20. Header nav: Skills · Mods · Graph · Getting started
+
+  In landing.css: 8 hero and search, 8b fresh rail, 8c update notes, 9 the
+  category grid, 19's announcement banners, 21 the 3.0 band.
 */
 
 /* ---------------------------------------------------------------------------
@@ -174,6 +184,7 @@
   /* usage: body-sized accent text only — inline links, active tab/nav label.
      Must independently clear 4.5:1; do not reuse --accent here. */
   --text-accent: var(--gold-500);
+  --nav-current-text: var(--text-accent);
   /* usage: non-text accent — icon strokes, card borders, tag underlines,
      decorative rules. Only needs to clear 3:1. */
   --accent: var(--gold-500);
@@ -308,6 +319,9 @@
   --text-primary: var(--ink-900);
   --text-secondary: var(--ink-700);
   --text-accent: var(--gold-800);
+  /* gold-800 on the current pill's tint measured 4.29:1 at 14.4px; this
+     measures 5.04:1. */
+  --nav-current-text: color-mix(in oklch, var(--gold-800) 85%, var(--ink-900));
   --accent: var(--gold-700);
   --accent-hover: var(--gold-800);
   /* accent-solid / text-on-accent-solid intentionally NOT remapped: the solid
@@ -697,14 +711,18 @@ code {
   border-color: var(--border-strong);
 }
 
-/* On its own page the link stays a link (it still scrolls you back to the
-   top of it) but stops advertising itself as somewhere to go. Colour plus
-   border, not colour alone: aria-current already carries this for a screen
-   reader, and the visual half should not rest on hue for everyone else. */
-.site-header__nav-link[aria-current="page"] {
-  color: var(--text-accent);
+/* "You are here": one treatment for every pill, whether the page is the
+   link's own (aria-current="page") or inside its section ("true": a skill
+   page under Skills, /mods/climb/ under Mods). Colour, border and a tint,
+   not colour alone: aria-current already carries this for a screen reader,
+   and the visual half should not rest on hue for everyone else. Mods and
+   Graph draw their pill as an inner face, so the face takes it there. */
+.site-header__nav-link[aria-current]:not(.site-header__nav-link--mods, .site-header__nav-link--graph),
+.site-header__nav-link[aria-current] .site-header__mods-face,
+.site-header__nav-link[aria-current] .site-header__graph-face {
+  color: var(--nav-current-text);
   border-color: var(--border-strong);
-  background: color-mix(in oklch, var(--accent) 10%, transparent);
+  background: color-mix(in oklch, var(--accent) 10%, var(--bg-deep));
 }
 
 .theme-toggle {
@@ -735,250 +753,11 @@ code {
 [data-theme='flour'] .theme-toggle__icon--sun { opacity: 1; transform: none; }
 [data-theme='flour'] .theme-toggle__icon--moon { opacity: 0; transform: scale(0.6) rotate(40deg); }
 
+
 /* ---------------------------------------------------------------------------
-   8. Hero + search
+   8. (part) The install box: the landing page's hero and /getting-started/
+   both carry it; the rest of section 8 is landing.css's.
    ------------------------------------------------------------------------- */
-
-/* The 1.0.0 milestone plaque, first thing in the hero.
-
-   It renders only while the plugin version is exactly 1.0.0 -- see
-   templates._render_milestone -- so it retires itself on the next release
-   instead of needing a second commit to take it down. That is deliberate:
-   a celebration banner nobody remembered to remove is what makes the next
-   visitor read the whole site as stale.
-
-   The texture is the one piece of pure decoration here, and it is the reason
-   this looks like this site rather than like any other release banner:
-   repeating diagonal slashes standing in for the scoring cuts across a
-   baguette's crust. It lives on a ::before layer behind the content, masked
-   so it fades out well before it reaches the text, and it carries no
-   information at all -- everything the plaque says, it says in words. */
-.milestone {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-4) var(--space-6);
-  margin-bottom: var(--space-7);
-  padding: var(--space-5) var(--space-6);
-  border: 1px solid var(--border-subtle);
-  border-inline-start: 3px solid var(--accent);
-  border-radius: var(--radius-md);
-  /* The tint is theme-aware because the two themes have completely different
-     amounts of room, and a single percentage that suits one sits on a cliff in
-     the other. Every percent of gold mixed into the surface closes the gap
-     against the gold border and the gold numeral from both ends, since the
-     background moves toward the very hue they are made of.
-
-     Crust has room to spare -- measured at 6%: border and numeral 6.5:1, body
-     7.4:1 -- so it takes the richer tint.
-
-     Flour does not, and the reason is in the palette rather than in this
-     component: --accent resolves to gold-700 there, and gold-700 on a flour
-     surface is a ~3.2:1 pairing at *zero* mix (the same measurement the
-     --gold-800 note at the top of this file records). 6% spent almost all of
-     that on tint and landed at 3.01:1 against a 3:1 floor, with 8% already
-     failing at 2.95:1. 3% keeps the tint visible and leaves real margin:
-     border 3.11:1, numeral 4.71:1, body 5.12:1. */
-  background: color-mix(in oklch, var(--accent) 6%, var(--surface));
-  opacity: 0;
-  animation: hero-rise var(--duration-view) var(--ease-out) forwards;
-}
-
-[data-theme='flour'] .milestone {
-  background: color-mix(in oklch, var(--accent) 3%, var(--surface));
-}
-
-.milestone::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: repeating-linear-gradient(
-    115deg,
-    transparent 0 22px,
-    color-mix(in oklch, var(--accent) 34%, transparent) 22px 24px
-  );
-  opacity: 0.3;
-  -webkit-mask-image: linear-gradient(to left, #000, transparent 62%);
-  mask-image: linear-gradient(to left, #000, transparent 62%);
-  pointer-events: none;
-}
-
-.milestone__mark {
-  flex-shrink: 0;
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  /* Fraunces ships oldstyle figures on some axes; a version number wants
-     lining, and tabular keeps the two zeroes optically identical. */
-  font-variant-numeric: lining-nums tabular-nums;
-  font-size: clamp(2rem, 1.3rem + 2.4vw, 3.25rem);
-  font-weight: 700;
-  line-height: var(--leading-tight);
-  letter-spacing: -0.02em;
-  color: var(--text-accent);
-}
-
-.milestone__body {
-  flex: 1 1 24ch;
-  min-width: 0;
-}
-
-/* The plaque clips (overflow: hidden holds the texture and the sheen inside the
-   rounded corners), so a token too long to wrap does not overflow visibly -- it
-   silently disappears at the edge. Measured at a 320px viewport: a 57-character
-   unbreakable word lost its tail with no scrollbar to reveal it. English copy
-   never reaches that, which is exactly why it would have shipped; a translation,
-   a pasted URL, or a long skill slug all can. */
-.milestone__title,
-.milestone__text {
-  overflow-wrap: anywhere;
-}
-
-.milestone__title {
-  font-size: var(--text-4);
-  font-weight: 600;
-  line-height: var(--leading-tight);
-  color: var(--text-primary);
-}
-
-.milestone__text {
-  margin-top: var(--space-2);
-  max-width: 58ch;
-  font-size: var(--text-2);
-  line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
-}
-
-.milestone__link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex-shrink: 0;
-  padding: var(--space-3) var(--space-5);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-full);
-  background: var(--surface);
-  color: var(--text-accent);
-  font-size: var(--text-2);
-  font-weight: 500;
-  text-decoration: none;
-  transition: background-color var(--duration-micro) var(--ease-out),
-              border-color var(--duration-micro) var(--ease-out),
-              color var(--duration-micro) var(--ease-out);
-}
-
-.milestone__link:hover {
-  background: var(--surface-hover);
-  border-color: var(--accent);
-  color: var(--accent-hover);
-}
-
-.milestone__link:active {
-  background: var(--surface-hover);
-  border-color: var(--accent);
-}
-
-.milestone__link-arrow {
-  transition: transform var(--duration-micro) var(--ease-out);
-}
-
-.milestone__link:hover .milestone__link-arrow {
-  transform: translateX(2px);
-}
-
-@media (max-width: 33rem) {
-  .milestone {
-    padding: var(--space-4) var(--space-5);
-    gap: var(--space-3) var(--space-5);
-  }
-
-  .milestone__link {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-.hero {
-  padding-block: var(--space-8) var(--space-9);
-}
-
-.hero__headline {
-  margin-top: 0;
-  max-width: 18ch;
-  font-size: var(--text-7);
-  font-weight: 620;
-  letter-spacing: -0.015em;
-  opacity: 0;
-  animation: hero-rise var(--duration-view) var(--ease-out) forwards;
-}
-
-.hero__lede {
-  margin-top: var(--space-5);
-  max-width: 52ch;
-  font-size: var(--text-4);
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-style: italic;
-  font-weight: 400;
-  color: var(--text-secondary);
-  line-height: var(--leading-relaxed);
-  opacity: 0;
-  animation: hero-rise var(--duration-view) var(--ease-out) 80ms forwards;
-}
-
-.hero__jump {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: var(--space-5);
-  padding: var(--space-3) var(--space-5);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  color: var(--text-secondary);
-  font-size: var(--text-2);
-  text-decoration: none;
-  /* Continues the hero's stagger: headline, lede at 80ms, this at 140ms. Without
-     the matching entry in the prefers-reduced-motion block below, opacity: 0 here
-     would never be undone and the control would simply never appear. */
-  opacity: 0;
-  animation: hero-rise var(--duration-view) var(--ease-out) 140ms forwards;
-  transition: border-color var(--duration-micro) var(--ease-out),
-              color var(--duration-micro) var(--ease-out),
-              background-color var(--duration-micro) var(--ease-out);
-}
-
-.hero__jump:hover {
-  color: var(--text-accent);
-  border-color: var(--border-strong);
-  background: var(--surface);
-}
-
-/* No transform on :active. hero-rise fills forwards, and an animation's value
-   beats a normal author declaration, so a translate here would silently do
-   nothing once the entrance has finished. */
-.hero__jump:active {
-  background: var(--surface-hover);
-  border-color: var(--border-strong);
-}
-
-.hero__jump-icon {
-  flex-shrink: 0;
-}
-
-/* Smooth only where the visitor has not asked for less motion; the jump still
-   lands in exactly the same place either way. */
-@media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
-}
-
-/* The jump target. 50px is an explicit request rather than a scale step, which is
-   why it is a literal and not a --space-* token. */
-#skills {
-  scroll-margin-top: 50px;
-}
 
 @keyframes hero-rise {
   from { opacity: 0; transform: translateY(10px); }
@@ -1147,1199 +926,44 @@ code {
   color: var(--text-secondary);
 }
 
-.search {
-  margin-top: var(--space-7);
-  max-width: 34rem;
+/* The install prompt is a preview of something longer: four whole lines,
+   then a fade over the fourth and whatever the box's bottom edge cuts, so it
+   reads as "more below" rather than as a line sliced through. The rest is
+   one scroll away, and Copy takes all of it. */
+.install-frame .install__command {
+  --install-line: calc(var(--text-2) * var(--leading-normal));
+  max-height: calc(4 * var(--install-line) + 2 * var(--space-4) + 2px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--space-4) - 1.2 * var(--install-line)), transparent calc(100% - 0.4 * var(--space-4)));
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--space-4) - 1.2 * var(--install-line)), transparent calc(100% - 0.4 * var(--space-4)));
 }
 
-.search__field {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  transition: border-color var(--duration-micro) var(--ease-out),
-              box-shadow var(--duration-micro) var(--ease-out);
-}
-
-.search__field:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 30%, transparent);
-}
-
-.search__icon {
-  margin-inline-start: var(--space-4);
-  color: var(--text-secondary);
-}
-
-.search__input {
-  flex: 1;
-  padding: var(--space-4);
-  font-size: var(--text-3);
-  color: var(--text-primary);
-}
-
-.search__input::placeholder { color: var(--text-secondary); }
-
-/* The field wrapper is this input's focus indicator — :focus-within above
-   lights its border and glow — so the input opts out of the global
-   :focus-visible outline. Left in, that outline draws a whole second ring:
-   the input is the flex child *after* the icon, so its box starts inset from
-   the field's left edge, and outline-offset then pushes the ring back out
-   over the field's own border. Two mismatched rounded rectangles, where the
-   design asks for one border getting brighter. Opting out is safe here
-   because the wrapper treatment clears the 3:1 an indicator needs (--accent
-   sits at 8.2:1 on --bg) — except under a forced palette, which drops
-   box-shadow and overrides border-color outright, leaving :focus-within
-   nothing to show. There, put a real outline back on the wrapper. */
-.search__input:focus-visible { outline: none; }
-
-@media (forced-colors: active) {
-  .search__field:focus-within {
-    outline: 2px solid;
-    outline-offset: 2px;
+/* A phone: Copy goes under the box at full width rather than taking a
+   third of a line that is already short. */
+@media (max-width: 37.5rem) {
+  .install { flex-direction: column; }
+  .install__copy {
+    justify-content: center;
+    padding-block: var(--space-3);
   }
 }
 
-.search__clear {
-  margin-inline-end: var(--space-2);
-  padding: var(--space-1) var(--space-3);
-  font-size: var(--text-2);
-  color: var(--text-secondary);
-  border-radius: var(--radius-sm);
+@media (forced-colors: active) {
+  .install-frame .install__command { -webkit-mask-image: none; mask-image: none; }
 }
 
-.search__clear:hover { color: var(--text-accent); }
-
-.search__status {
-  margin-top: var(--space-3);
-  font-size: var(--text-2);
-  color: var(--text-secondary);
+/* A browser that could not load the WASM: scripts run, nothing answers. Controls that need the
+   module go, so none stays on the page doing nothing, and every tab panel shows, because nothing
+   can switch to the others. Set by the loader in pages/shell.rs. `:not([data-wasm])` because
+   /graph/ loads a second module, and that one failing leaves this one working. */
+html[data-nowasm]:not([data-wasm]) :is(.install__copy, [data-theme-toggle], .search, .fresh__nav-btn, .tabs__list) {
+  display: none;
 }
-
-.search__empty {
-  margin-top: var(--space-6);
-  padding: var(--space-6);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-md);
-  color: var(--text-secondary);
-}
-
-.search__empty[hidden] { display: none; }
-
-.search__empty-query { color: var(--text-primary); font-weight: 600; }
+html[data-nowasm]:not([data-wasm]) .tabs__panel[hidden] { display: block; }
 
 /* ---------------------------------------------------------------------------
-   8b. "Fresh from the oven" — recently new/updated skills, above the search
-
-   Sits between the lede and the search field, directly under .install-frame.
-   Its tiles are literally .card — the same component the grid below uses,
-   name/badge/summary/category/arrow and all — rather than a rail-only
-   design, so this rail reads as a preview of that grid and not a second,
-   differently-styled one. "fresh__tile" adds only what a card needs to sit
-   in a rail instead of the grid: sizing, and (below) the rail's own
-   positioning. Rendered only when something is actually fresh (see
-   _render_fresh_section), so there is no empty state to style.
-
-   max-width here used to match .install-frame's own 46rem exactly, so that
-   this section's horizontal centre — which the coverflow below centres its
-   tiles on — sat directly over the install frame's. Both live inside the
-   full-width .container, and with no cap at all that centre lands at the
-   container's centre, well to the right of where .install-frame and
-   .search, both narrower and left-aligned, actually sit. So a cap is still
-   needed; it just no longer has to be 46rem exactly.
-
-   53rem is the width at which the five-card fan stops being clipped, and
-   it was measured rather than picked: the outermost pair of cards has
-   72px of itself exposed at 46rem, 97px at 49rem, 121px at 52rem and
-   126px at 53rem, which is the whole of what it will ever show — 54rem
-   and 56rem are identical to 53rem and add only empty rail. Below 53rem
-   the rail's own edge is what cuts the outer cards short, which is what
-   made the fan read four cards wide with a sliver on the end.
-
-   The cost is that the fan's centre now sits 3.5rem right of the install
-   frame's rather than on top of it. That is the same *kind* of drift the
-   original cap existed to prevent, but a small fraction of it — an
-   uncapped section drifts far further — and it buys the outer pair most
-   of its width back. The heading and tag above are left-aligned and do
-   not move, so the section still starts on the page's left margin.
-
-   That tray also, wherever motion and space are both welcome, becomes a
-   coverflow rather than a flat scroller: one tile flat and full-size at
-   centre, its neighbours tilted away and shrinking on each side, stepping
-   sideways on a timer (site.js's initFreshCoverflow — the stepping itself
-   needs a clock, which is the one thing CSS alone can't keep, so this is
-   the rare feature here with a JS half). --cf-offset (set inline by
-   templates.py at render time, then kept live by site.js) is each tile's
-   signed distance from centre; every visual property below is a plain
-   calc() of that one number, so "make tile N active" is just writing new
-   offsets, not swapping classes. See the gated rule below for the three
-   conditions — motion, width, forced-colors — that all have to hold before
-   it forms; missing any one of them leaves the original flat rail exactly
-   as it was, not a broken coverflow. A visitor with no JS at all still gets
-   the offsets templates.py rendered at build time — a real, if motionless,
-   coverflow — never the flat rail by accident.
-
-   The clock isn't the only way a tile becomes active: initFreshCoverflow
-   also wires up click-and-drag (grab the ring, spin it, release to settle
-   on whichever tile ends up nearest centre) and the prev/next buttons.
-   Clicking a tile is not one of those ways — every tile is a link and a
-   click on any of them, centred or not, just follows it to its skill.
-   cursor/touch-action/user-select below exist for the drag, not for
-   anything this file alone renders.
+   9. (part) Tags and change badges, which skill pages and /mods/climb/ use
+   too; the category grid itself is landing.css's.
    ------------------------------------------------------------------------- */
-
-.fresh { margin-top: var(--space-7); max-width: 53rem; }
-
-.fresh__head {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  padding-bottom: var(--space-3);
-}
-
-/* The gilded rule again — same fading-at-both-ends gesture as the header's
-   bottom edge and the update modal's top, so the three read as one idea
-   rather than three separate horizontal lines. */
-.fresh__head::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: linear-gradient(to right,
-    color-mix(in oklch, var(--accent) 70%, transparent),
-    color-mix(in oklch, var(--accent) 22%, transparent) 55%,
-    transparent);
-}
-
-/* icon-grain rather than the loaf: icon-crust is already carrying the
-   install frame's label a few hundred pixels up, and the same mark twice in
-   one viewport reads as a repeated element rather than a shared system. */
-.fresh__icon { color: var(--accent); width: 1.75em; height: 1.75em; }
-
-/* margin: 0 is load-bearing, not tidiness: the global h2 rule carries
-   margin-top: var(--space-8), and inside an align-items: center flex row
-   that margin is part of the item's box — the box centres, the text does
-   not, and the heading drops half a line below the icon beside it. */
-.fresh__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-4);
-  font-weight: 620;
-  color: var(--text-primary);
-}
-
-/* Left on the neutral .tag treatment on purpose. Gold in this band belongs
-   to the New/Updated badges, which carry information; the timeframe is a
-   label, and a third gold pill next to them flattens the distinction. */
-.fresh__tag { align-self: center; }
-
-/* margin-inline-start: auto is the whole layout: it pushes the pair to the
-   far end of .fresh__head's flex row without needing its own positioning
-   context, and wraps under everything else on a narrow measure instead of
-   overlapping it. [hidden] still needs the attribute selector even though
-   the element also starts with the hidden attribute in markup — browsers
-   already do this by default, but section 15 forces display back on for
-   reduced-motion overrides elsewhere in this file, and repeating the rule
-   locally means this one never depends on cascade order with those. */
-.fresh__nav {
-  display: flex;
-  gap: var(--space-2);
-  margin-inline-start: auto;
-}
-
-.fresh__nav[hidden] { display: none; }
-
-.fresh__nav-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  font-size: var(--text-4);
-  line-height: 1;
-  color: var(--text-secondary);
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  transition: color var(--duration-micro) var(--ease-out),
-              border-color var(--duration-micro) var(--ease-out),
-              background-color var(--duration-micro) var(--ease-out);
-}
-
-.fresh__nav-btn:hover,
-.fresh__nav-btn:focus-visible {
-  color: var(--text-accent);
-  border-color: var(--accent);
-  background: var(--surface-hover);
-}
-
-/* Same scroll-rail mechanics as .tabs__list: horizontal overflow with a
-   mask fading the right edge, so a cut-off tile reads as "more this way"
-   rather than as a broken layout. With fewer tiles than fill the width,
-   nothing reaches the fade zone and the mask is invisible — self-correcting,
-   no JS needed to decide whether to draw it. */
-.fresh__rail {
-  display: flex;
-  gap: var(--space-3);
-  overflow-x: auto;
-  padding-block: var(--space-4);
-  scrollbar-width: thin;
-  scroll-snap-type: x proximity;
-  -webkit-mask-image: linear-gradient(to right, black calc(100% - 40px), transparent 100%);
-  mask-image: linear-gradient(to right, black calc(100% - 40px), transparent 100%);
-}
-
-/* Sizing and rail membership only — .card (section 9) already supplies the
-   look (background, padding, border, hover lift) now that the tile carries
-   that class too. 17rem matches .card-grid's own minmax() floor, so a rail
-   tile is never smaller than the smallest a grid card is ever allowed to
-   be. */
-.fresh__tile {
-  scroll-snap-align: start;
-  flex: 0 0 17rem;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .fresh { animation: hero-rise var(--duration-view) var(--ease-out) 120ms backwards; }
-}
-
-/* No .fresh__tile-specific reduced-motion or forced-colors rules here on
-   purpose: now that every tile is a .card, section 9's own .card handling
-   (a plain solid border that forced-colors remaps fine unaided, and the
-   sitewide reduced-motion block that already lists .card) already covers
-   the rail's tiles. Only .fresh__head still needs its own forced-colors
-   rule, for the gradient rule .card never had to begin with. */
-@media (forced-colors: active) {
-  .fresh__head::after { display: none; }
-  .fresh__head { border-bottom: 1px solid CanvasText; }
-}
-
-/* Wherever a visitor's browser and stated preferences allow it — motion
-   welcome, a viewport with room to spare, no forced system palette — the
-   rail becomes the card stack described above instead of staying a flat
-   scroller. All three conditions live in one query on purpose: it is the
-   single on/off switch for the whole effect, so there is exactly one place
-   that decides whether it runs, and every rule above stays a complete,
-   already-tested fallback with nothing left to override piecemeal. */
-@media (prefers-reduced-motion: no-preference) and (min-width: 640px) and (forced-colors: none) {
-  .fresh__rail {
-    position: relative;
-    display: block;
-    height: 22rem;
-    perspective: 900px;
-    /* The base rule's `overflow-x: auto` has to go -- a scroller would fight
-       the drag handler -- but plain `visible` let the fan push the whole page
-       sideways. A tile sits 11rem either side of the rail's centre and
-       translates up to 280px further, so its far edge lands 456px from centre
-       whatever the rail measures; once the rail's own half-width drops below
-       that (anywhere under roughly 900px of viewport, worst at the 640px
-       breakpoint where this effect switches on) the surplus became real
-       document scroll -- measured at 768px: 5px of horizontal scrollbar on a
-       page with nothing to scroll to.
-
-       `clip` rather than `hidden` because hidden would make this a scroll
-       container and re-introduce the scroller the drag handler replaces, and
-       because clip is the axis-independent one: `overflow-y` stays visible
-       here without being coerced to auto, which `hidden` would have done.
-       The clip margin is what keeps this a scroll fix rather than a visual
-       change -- 280px is the translate clamp above, so every tile still
-       paints its full spread and simply stops contributing scrollable
-       overflow. Bleeding off the viewport edge is the intended look; a
-       scrollbar to chase it was never part of it. */
-    overflow-x: clip;
-    overflow-y: visible;
-    overflow-clip-margin: 280px;
-    -webkit-mask-image: none;
-    mask-image: none;
-    cursor: grab;
-    /* Lets the page's own vertical scroll keep working with a finger
-       starting on the carousel; site.js's pointer handlers claim the
-       horizontal axis themselves rather than asking the browser to. */
-    touch-action: pan-y;
-  }
-
-  .fresh__rail:active { cursor: grabbing; }
-
-  /* --cf-offset (set inline by templates.py, kept live by site.js) is the
-     only per-instance number here — everything else is a calc() of it.
-     --cf-abs is the max()-of-itself-and-its-negation trick for absolute
-     value: scale/opacity/stacking care how *far* a tile is from centre,
-     rotation and position care which *side* it's on, so the signed and
-     unsigned forms are each used where they mean something. The per-step
-     magnitudes (140px, 34deg) are deliberately steep — a flat, prominent
-     centre card with neighbours that fall away fast reads as a coverflow;
-     gentler steps just look like a slightly skewed row.
-
-     The fan is exactly five cards wide: at 140px a step the clamp is
-     reached at offset 2, so 0, ±1 and ±2 are the only distinct positions
-     and everything from 3 out stacks precisely on top of the 2s.
-
-     How much of those five actually shows is a separate question, and the
-     answer is set by the rail's width, not by the step. The fan wants
-     352 + 2x120 + 2x126 = 848px to lay out unclipped, which is why .fresh
-     is capped at 53rem above; at the 46rem it used to be, the rail's own
-     edge cut the outer pair down to 72px each and the fan read four cards
-     wide with a sliver on the end. overflow-clip-margin does not rescue
-     that — it widens the paint region, but hit-testing still stops dead at
-     the padding box, so anything spilling past the rail edge would be
-     visible and unclickable, the wrong trade now that a click navigates.
-
-     Raising the step is the tempting fix and it backfires, measured: at
-     170px a step the outermost pair drops from 72px of exposure to 39, at
-     200px to 6, because a wider step pushes offset 2 further into the edge
-     that is already clipping it. Room comes from the rail, never from
-     spreading these further apart.
-
-     So legibility is what the falloffs buy, and the opacity one is
-     quadratic rather than linear like everything else here for a specific
-     reason: it has to reach *zero* by offset 3 — not merely low — because
-     a 3 sits exactly behind a 2 and any residue shows as a doubled, dirty
-     edge. A linear ramp hitting zero at 3 is forced to about a third at
-     offset 2, and a third is a smudge, not a card; that was the fan
-     reading three wide with two ghosts on the ends. Squaring holds the
-     near cards up and drops the far ones off a cliff: 1, 0.885, 0.54,
-     then 0. Scale softens to match (0.13 a step: 1, 0.87, 0.74) so the
-     outer pair keeps some mass instead of shrinking out of legibility.
-
-     Selectors here are the type-qualified `a.fresh__tile`, not the bare
-     class, on purpose: since a tile is also a .card, and section 9's
-     .card / .card:hover rules sit later in this file, a same-specificity
-     bare `.fresh__tile` would lose the cascade to them — the coverflow's
-     own transform and transition would be silently overridden by .card's.
-     `a.fresh__tile` outranks `.card` regardless of source order, so this
-     doesn't depend on staying below section 9 in the file.
-
-     --cf-transform exists as its own custom property, not inlined straight
-     into `transform`, purely so the :hover/:focus-visible rule below can
-     restate the identical value: a plain hover rule setting `transform`
-     directly would replace this positioning outright rather than add to
-     it — the trap the ring version's animations sat in, two reworks ago.
-
-     width is explicit and load-bearing, not tidiness: the base rule sizes
-     .fresh__tile via `flex: 0 0 17rem`, which only means anything while
-     .fresh__rail is still a flex container. The instant this block's
-     `.fresh__rail { display: block }` takes over, flex-basis stops doing
-     anything, and an absolutely positioned box with no explicit width
-     shrink-to-fits — which, for a flex-column card whose summary text has
-     no natural wrap point to fall back to, measured out to the entire
-     remaining width of the rail rather than anything card-shaped.
-
-     22rem/20rem (not the base rule's 17rem card width) are measured, not
-     guessed: with real skill summaries — some 130-180 characters — a card
-     narrower than this clips real content under overflow: hidden below,
-     the exact bug this size fixes. Measured every currently-fresh tile's
-     true unclipped height (transform: none, so an in-progress transition
-     retargeting mid-scale doesn't read as shorter than the tile actually
-     is — it very nearly did, the first time this was measured) across
-     increasing widths; going past 22rem keeps helping but each further
-     rem buys less than the last, so this is a point on a curve, not a
-     plateau — picked because it's already a real jump from 17rem and the
-     remaining gain per rem past it is small. 20rem then covers that
-     width's measured worst case (306px) with a little headroom, so
-     overflow: hidden below is a safety net for a pathological future
-     summary, not a rule the typical case already needs. */
-  a.fresh__tile {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 22rem;
-    margin: -10rem 0 0 -11rem;
-    height: 20rem;
-    overflow: hidden;
-    flex: none;
-    scroll-snap-align: none;
-    /* A drag crossing tile text would otherwise paint a text-selection
-       highlight instead of spinning the ring. -webkit-user-drag covers
-       Chrome/Safari's native "drag this link" gesture; templates.py's
-       draggable="false" is the one that actually holds in Firefox too. */
-    user-select: none;
-    -webkit-user-drag: none;
-    /* A tile is a link first — clicking one follows it to its skill, the
-       same as every other card on this page — so it gets `pointer` rather
-       than inheriting the rail's `grab`. The rail keeps `grab` for the
-       space around the tiles, where dragging is the only thing on offer,
-       and the rule below puts `grabbing` back on the tiles themselves for
-       as long as a press is actually down on one. */
-    cursor: pointer;
-    --cf-abs: max(var(--cf-offset), calc(var(--cf-offset) * -1));
-    --cf-transform:
-      translateX(calc(clamp(-280px, calc(var(--cf-offset) * 140px), 280px) + var(--cf-shift, 0px)))
-      rotateY(clamp(-38deg, calc(var(--cf-offset) * -34deg), 38deg))
-      scale(clamp(0.55, calc(1 - var(--cf-abs) * 0.13), 1));
-    transform: var(--cf-transform);
-    opacity: clamp(0, calc(1 - var(--cf-abs) * var(--cf-abs) * 0.115), 1);
-    z-index: max(1, calc(20 - var(--cf-abs)));
-    /* --fresh-spin-duration exists so a momentum-carrying drag release can
-       lengthen just this settle without touching the shared rule: site.js
-       sets it inline only on the tiles animating out of a flung release,
-       proportional to how much momentum carried them, then clears it once
-       that transition finishes. Every other trigger (auto-advance, prev/
-       next, focus landing on a tile) never sets it, so it stays at this
-       default 0.7s for them — same speed as before momentum existed. */
-    --fresh-spin-duration: 0.7s;
-    transition: transform var(--fresh-spin-duration) var(--ease-out),
-                opacity var(--fresh-spin-duration) var(--ease-out),
-                border-color var(--duration-enter) var(--ease-out),
-                background-color var(--duration-enter) var(--ease-out),
-                box-shadow var(--duration-enter) var(--ease-out);
-  }
-
-  /* Held down on a tile, either gesture is still live — the press becomes
-     a spin or a click depending on whether it moves — and `grabbing` is
-     the honest cursor for that moment. Outranks the base rule's `pointer`
-     on specificity alone, so it doesn't depend on source order. */
-  .fresh__rail:active a.fresh__tile { cursor: grabbing; }
-
-  a.fresh__tile:hover,
-  a.fresh__tile:focus-visible {
-    transform: var(--cf-transform);
-  }
-
-  /* WCAG 2.2.2: anything that moves on its own for more than five seconds
-     needs a way to stop it, and the tile a keyboard visitor lands on must
-     be legible rather than tilted and dimmed at the edge of the fan. Both
-     live in site.js's initFreshCoverflow (pause on hover/focus-within;
-     focus also recentres the focused tile to --cf-offset: 0) rather than
-     here, because both are about *when the step timer runs and what it
-     writes*, which CSS has no view into — this block only ever renders
-     whatever offsets it is handed, by design. */
-}
-
-/* ---------------------------------------------------------------------------
-   8c. Update notes — what changed, in words, below the rail
-
-   Neighbour to 8b and deliberately its opposite in weight: the rail is the
-   loud thing in this band (moving, three-dimensional, twelve cards), so this
-   is quiet — one measure of text, no surface, no border box. Two loud
-   sections stacked would leave the reader nothing to look at first.
-
-   Shares 8b's head treatment exactly (icon, display-face h2, the gilded rule
-   fading right) because they are peers in the same band; repeating it is what
-   makes them read as one "what's new" idea rather than two unrelated widgets.
-
-   Native <details> for the older entries. No JS anywhere in this section — it
-   sits above the search field, so anything that could fail to initialize here
-   would strand the site's primary navigation below a half-rendered block.
-   ------------------------------------------------------------------------- */
-
-/* Matches .fresh's measure so the two gilded rules share a right edge — two
-   rules of different lengths 350px apart read as a mistake at a glance. */
-.notes { margin-top: var(--space-7); max-width: 53rem; }
-
-.notes__head {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  padding-bottom: var(--space-3);
-}
-
-.notes__head::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: linear-gradient(to right,
-    color-mix(in oklch, var(--accent) 70%, transparent),
-    color-mix(in oklch, var(--accent) 22%, transparent) 55%,
-    transparent);
-}
-
-/* icon-wheat: the third of the three marks, after the install frame's loaf
-   and the rail's grain. Same rule as 8b's — no mark appears twice in one
-   viewport, or the set reads as a repeated element instead of a system. */
-.notes__icon { color: var(--accent); width: 1.75em; height: 1.75em; }
-
-/* margin: 0 for the same load-bearing reason as .fresh__title — the global h2
-   margin-top would centre the box and drop the text half a line. */
-.notes__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-4);
-  font-weight: 620;
-  color: var(--text-primary);
-}
-
-/* Nothing at the far end of this head, unlike .fresh__head's "Last 48 hours"
-   tag. That tag earns its place by naming a real constraint on what the rail
-   can contain; this section has no equivalent fact, and inventing something to
-   fill the slot would be decoration wearing a label's clothes. */
-
-/* Space between entries, not a border: 8b's tiles already carry every edge
-   this band can afford. The date's own weight is what separates one entry
-   from the next. */
-.notes__list {
-  margin: 0;
-  /* padding-top, not 0 all round: the head's gilded rule sits on its bottom
-     edge, and measured without this the first entry's date began 4px under
-     that line -- close enough to read as the rule underlining the date rather
-     than closing the head. --space-4 is what .fresh__rail puts under the same
-     rule one band up, so the two treat the gesture identically. */
-  padding: var(--space-4) 0 0;
-  list-style: none;
-  display: grid;
-  gap: var(--space-6);
-}
-
-.notes__list--earlier { margin-top: var(--space-5); }
-
-/* Section 3's `li + li { margin-top: var(--space-2) }` is written for prose
-   lists, which are not grids, and it *sums* with the gaps declared here:
-   measured before this rule existed, entries sat 32px apart where the scale
-   said 24 and bullets 16px apart where it said 8. Neither number is a step
-   on the space scale — they are two rules quietly disagreeing. The gap wins,
-   because it is the one that knows this is a grid. */
-.notes__list > li + li,
-.notes__bullets > li + li { margin-top: 0; }
-
-.notes__entry-head {
-  margin: 0 0 var(--space-3);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-1) var(--space-3);
-  font-size: var(--text-3);
-  font-weight: 500;
-  line-height: var(--leading-normal);
-}
-
-/* Mono and gold, tabular so a column of dates in the open <details> lines up
-   digit-for-digit. The second channel that keeps this from being colour-only
-   is the face itself: it is the one monospaced run in the whole band. */
-.notes__date {
-  flex: none;
-  font-family: var(--font-mono);
-  font-size: var(--text-1);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-  color: var(--text-accent);
-  text-transform: uppercase;
-}
-
-.notes__entry-title {
-  font-family: var(--font-display);
-  font-size: var(--text-4);
-  font-weight: 600;
-  line-height: var(--leading-tight);
-  color: var(--text-primary);
-  /* break-word, not anywhere: a title is prose and should break at spaces
-     wherever it can. This is only the escape hatch for the one long word. */
-  overflow-wrap: break-word;
-}
-
-/* 66ch, not the section's 53rem: these are sentences, and 53rem of Work Sans
-   is ~100 characters a line — past the point where the eye reliably finds the
-   start of the next one. The left edge still aligns with everything above it;
-   only the ragged right stops short of the rule. */
-.notes__bullets {
-  margin: 0;
-  padding-inline-start: 1.15em;
-  max-width: var(--measure-prose);
-  display: grid;
-  /* Not --space-2: these bullets wrap to two and three lines, and at
-     --leading-relaxed the lines inside one bullet already sit ~10px apart.
-     An 8px gap would put barely more air between two bullets than between
-     two lines of the same bullet, and the group stops reading as a group. */
-  gap: var(--space-3);
-  color: var(--text-secondary);
-  line-height: var(--leading-relaxed);
-  /* A changelog is where unbreakable identifiers turn up -- a config key, a
-     package name, a flag -- and one of them inside a <code> span is the only
-     content here that can be wider than the column it sits in. `anywhere`
-     rather than `break-word` because it also shrinks the min-content width,
-     which is what stops the token forcing the whole page sideways at 360px
-     instead of merely spilling out of its own box. */
-  overflow-wrap: anywhere;
-}
-
-/* Gold markers, unlike .prose's neutral ones: this list is scanned, not read
-   straight through, and the marker column is what the eye returns to. */
-.notes__bullets li { padding-inline-start: 0.2em; }
-.notes__bullets li::marker { color: var(--accent); }
-
-.notes__bullets code {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-  color: var(--text-primary);
-}
-
-.notes__bullets strong { color: var(--text-primary); font-weight: 600; }
-
-.notes__earlier { margin-top: var(--space-5); }
-
-/* list-style: none removes the disclosure triangle in Firefox and Chrome;
-   the ::-webkit- pseudo-element is the same job in older Safari, which
-   ignores the property here. Both are needed and neither is redundant. */
-.notes__earlier-summary {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) 0;
-  list-style: none;
-  cursor: pointer;
-  font-size: var(--text-2);
-  color: var(--text-secondary);
-  transition: color var(--duration-micro) var(--ease-out);
-}
-
-.notes__earlier-summary::-webkit-details-marker { display: none; }
-
-.notes__earlier-summary:hover,
-.notes__earlier-summary:focus-visible { color: var(--text-accent); }
-
-/* Drawn, not a glyph: two borders on a rotated box, so it inherits the
-   summary's colour and scales with its type instead of depending on whatever
-   the reader's font happens to have at U+203A. Points right when closed, down
-   when open — the direction is the state's second channel, alongside the
-   label's own "Show N earlier" wording. */
-.notes__earlier-summary::before {
-  content: '';
-  flex: none;
-  width: 0.42em;
-  height: 0.42em;
-  border-top: 1.5px solid currentColor;
-  border-right: 1.5px solid currentColor;
-  transform: rotate(45deg);
-  transform-origin: 55% 45%;
-  transition: transform var(--duration-micro) var(--ease-out);
-}
-
-.notes__earlier[open] > .notes__earlier-summary::before {
-  transform: rotate(135deg);
-}
-
-/* ------------------------------------------------------------------ */
-/* 8c-bis. Update-notes archive — the dialog the <details> becomes      */
-/* ------------------------------------------------------------------ */
-
-/* Everything below only applies once site.js has promoted the disclosure.
-   With no script the <details> above is the whole feature and none of this
-   is reachable, which is the point: the archive is never a dead control. */
-
-/* A transport wrapper and nothing else: site.js moves this one element to
-   carry the list and its footnote into the dialog in a single operation.
-   display: contents means it draws no box in either place, so it cannot
-   introduce spacing that exists in the dialog and not in the <details>. */
-.notes__archive-panel { display: contents; }
-
-/* The promoted trigger. Not the summary's chevron — that glyph means
-   "unfolds below," and this no longer does. A framed control with a corner
-   mark reads as "opens onto something," which is what happens. */
-.notes__archive-trigger {
-  margin-top: var(--space-5);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-2) var(--space-4);
-  font: inherit;
-  font-size: var(--text-2);
-  color: var(--text-secondary);
-  background: transparent;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: color var(--duration-micro) var(--ease-out),
-              border-color var(--duration-micro) var(--ease-out),
-              background-color var(--duration-micro) var(--ease-out);
-}
-
-.notes__archive-trigger:hover,
-.notes__archive-trigger:focus-visible {
-  color: var(--text-accent);
-  border-color: color-mix(in oklch, var(--accent) 50%, transparent);
-  background: color-mix(in oklch, var(--accent) 7%, transparent);
-}
-
-/* Two corner strokes rather than a glyph, for the same reason the summary's
-   chevron is drawn: it inherits colour and scales with the type instead of
-   depending on what the reader's font has at some codepoint. */
-.notes__archive-trigger::after {
-  content: '';
-  flex: none;
-  width: 0.55em;
-  height: 0.55em;
-  border-top: 1.5px solid currentColor;
-  border-right: 1.5px solid currentColor;
-  border-top-right-radius: 2px;
-  transition: transform var(--duration-micro) var(--ease-out);
-}
-
-.notes__archive-trigger:hover::after,
-.notes__archive-trigger:focus-visible::after { transform: translate(1px, -1px); }
-
-/* --- the dialog itself --------------------------------------------- */
-
-.notes-dialog {
-  /* A modal <dialog> is centred by the `margin: auto` in the UA stylesheet,
-     against the `inset: 0` it also gets — and this site's reset opens with
-     `* { margin: 0 }`, which is an author rule and therefore wins. The result
-     is a dialog pinned to the top-left corner with `inset: 0` still resolved,
-     so nothing about it looks like a margin problem. Restoring the one
-     declaration is the whole of the centring; the mobile sheet below overrides
-     it again on purpose.
-
-     Worth knowing for any other element that relies on a UA default: a reset
-     with a `*` selector silently removes it, and the symptom shows up nowhere
-     near the reset. */
-  margin: auto;
-  /* max-width is the measure, not a round number: the bullets inside cap at
-     --measure-prose and the entry heads run a little wider, so 46rem is the
-     narrowest box that never makes a bullet the thing setting the width. */
-  width: min(46rem, 100%);
-  max-width: min(46rem, 100%);
-  /* svh, not vh: on mobile browsers vh is the *largest* viewport, so a
-     vh-sized dialog is partly under the address bar until the user scrolls. */
-  max-height: min(84svh, 54rem);
-  padding: 0;
-  overflow: hidden;
-  color: var(--text-primary);
-  background: var(--surface);
-  border: 1px solid color-mix(in oklch, var(--accent) 55%, transparent);
-  border-radius: var(--radius-lg);
-  /* Same three-layer recipe as .install-frame and .update-modal: a hairline
-     gold seat, one real cast shadow from a single light direction, and a wide
-     gold ambient so the card looks lit rather than pasted on. */
-  box-shadow:
-    0 0 0 1px color-mix(in oklch, var(--accent) 12%, transparent),
-    0 30px 60px -24px hsl(var(--shadow-ink) / 0.75),
-    0 0 80px -28px color-mix(in oklch, var(--accent-solid) 60%, transparent);
-}
-
-/* Both states declared, and `display` kept out of the base rule above.
-   A closed <dialog> is hidden by exactly one thing: `dialog:not([open]) {
-   display: none }` in the UA stylesheet. Any unconditional `display` here is
-   an author declaration, so it wins, and the dialog then renders in normal
-   flow as the last child of <body> — a second, full-height copy of every
-   entry pinned to the bottom of the page, which also makes closing it look
-   like it did not work. Both symptoms, one declaration.
-
-   The `:not([open])` rule is belt and braces: it does not depend on the UA
-   sheet still saying what it says today, and it is the second time on this
-   element that leaning on a UA default has cost a visible bug — the first
-   was `margin: auto`, deleted by the `* { margin: 0 }` reset. */
-.notes-dialog:not([open]) { display: none; }
-
-.notes-dialog[open] {
-  /* Its own scroll container in one row only, so the head and foot stay put
-     while the entries move under them. */
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-}
-
-/* The gilded rule, the same gesture the header and .update-modal make —
-   fading at both ends rather than running hard corner to corner. */
-.notes-dialog::before {
-  content: '';
-  position: absolute;
-  left: 14%;
-  right: 14%;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(to right,
-    transparent,
-    color-mix(in oklch, var(--accent) 80%, transparent) 22%,
-    color-mix(in oklch, var(--accent) 80%, transparent) 78%,
-    transparent);
-}
-
-/* --accent-solid rather than --accent for the bloom, exactly as
-   .update-modal-overlay::before explains: everything painted on the scrim is
-   lit against a near-black field in *both* themes, and --accent resolves to
-   the darker gold-700 in flour, which over this scrim subtracts light instead
-   of adding it. */
-.notes-dialog::backdrop {
-  background:
-    radial-gradient(44rem 30rem at 50% 42%,
-      color-mix(in oklch, #dda25c 16%, transparent),
-      transparent 68%),
-    hsl(24 18% 5% / 0.78);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.notes-dialog__head {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  padding: var(--space-5) var(--space-6) var(--space-4);
-}
-
-/* Same fading rule the section head uses one band up, so the dialog reads as
-   the same object opened rather than a different component. */
-.notes-dialog__head::after {
-  content: '';
-  position: absolute;
-  left: var(--space-6);
-  right: var(--space-6);
-  bottom: 0;
-  height: 1px;
-  background: linear-gradient(to right,
-    color-mix(in oklch, var(--accent) 70%, transparent),
-    color-mix(in oklch, var(--accent) 22%, transparent) 55%,
-    transparent);
-}
-
-.notes-dialog__icon { color: var(--accent); width: 1.75em; height: 1.75em; flex: none; }
-
-.notes-dialog__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-4);
-  font-weight: 620;
-  color: var(--text-primary);
-}
-
-/* Mono and gold, matching .notes__date — the dialog's one piece of meta text
-   should look like the other meta text in the band it came from. */
-.notes-dialog__subtitle {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: var(--text-1);
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: var(--text-accent);
-}
-
-.notes-dialog__close {
-  margin-inline-start: auto;
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  flex: none;
-  color: var(--text-secondary);
-  background: transparent;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  /* The two strokes below are absolutely positioned; without a containing
-     block here they resolve against the dialog and land in its corner. */
-  position: relative;
-  transition: color var(--duration-micro) var(--ease-out),
-              border-color var(--duration-micro) var(--ease-out),
-              background-color var(--duration-micro) var(--ease-out);
-}
-
-.notes-dialog__close:hover,
-.notes-dialog__close:focus-visible {
-  color: var(--text-accent);
-  border-color: color-mix(in oklch, var(--accent) 50%, transparent);
-  background: color-mix(in oklch, var(--accent) 8%, transparent);
-}
-
-/* Drawn from two strokes, same reasoning as every other mark in this band --
-   there is no close glyph in the sprite, and a Unicode multiplication sign
-   would be the one mark on this site not drawn to the same stroke weight.
-
-   Centred from 50%/50% and pulled back by half its own size, rather than left
-   to the static position it would get as an abspos child of a grid container.
-   That static position is a genuine corner of the grid spec -- it resolves
-   through the container's alignment properties -- and engines have disagreed
-   about it. Measured, this one does centre them; the failure mode if another
-   does not is both strokes in a corner of the button, which reads as a broken
-   control rather than as a styling nit. Explicit costs two declarations. */
-.notes-dialog__close::before,
-.notes-dialog__close::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0.85rem;
-  height: 1.5px;
-  background: currentColor;
-  border-radius: 1px;
-}
-.notes-dialog__close::before { transform: translate(-50%, -50%) rotate(45deg); }
-.notes-dialog__close::after { transform: translate(-50%, -50%) rotate(-45deg); }
-
-/* 2.25rem is a comfortable size for a pointer and under the 44px a finger
-   needs, so the circle grows where the pointer is actually coarse. Growing the
-   control rather than padding an invisible hit area past it keeps what is
-   clickable and what is visible the same shape -- a target that extends beyond
-   its own edge is the thing that makes a nearby control feel unreliable, which
-   is the complaint this is meant to remove rather than move. */
-@media (pointer: coarse) {
-  .notes-dialog__close { width: 2.75rem; height: 2.75rem; }
-}
-
-.notes-dialog__body {
-  position: relative;
-  overflow-y: auto;
-  /* Scrolling the last entry must not start scrolling the page behind it. */
-  overscroll-behavior: contain;
-  padding: var(--space-5) var(--space-6) var(--space-6);
-}
-
-/* The scroll region is focusable so it can be scrolled from the keyboard —
-   without this a keyboard-only reader can tab to the close button and to the
-   links, and never move the list. */
-.notes-dialog__body:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: -4px;
-}
-
-/* --- the timeline spine -------------------------------------------- */
-
-/* What makes this read as a record rather than a long list: one hairline
-   running the length of the entries, with each date sitting on a node. It
-   also gives the scroll a sense of place, which a flat list of twenty dated
-   blocks does not have. Fades out at the bottom because the list is a window
-   onto UPDATES.md, not the end of it. */
-.notes__list--archive {
-  position: relative;
-  margin-top: 0;
-  padding-inline-start: var(--space-6);
-}
-
-.notes__list--archive::before {
-  content: '';
-  position: absolute;
-  inset-block: 0.55em 0;
-  inset-inline-start: 3px;
-  width: 1px;
-  background: linear-gradient(to bottom,
-    color-mix(in oklch, var(--accent) 55%, transparent),
-    color-mix(in oklch, var(--accent) 18%, transparent) 65%,
-    transparent);
-}
-
-.notes__list--archive > .notes__entry { position: relative; }
-
-.notes__list--archive > .notes__entry::before {
-  content: '';
-  position: absolute;
-  inset-inline-start: calc(-1 * var(--space-6));
-  top: 0.4em;
-  width: 7px;
-  height: 7px;
-  border-radius: var(--radius-full);
-  background: var(--accent);
-  /* A ring in the panel's own colour, so the node reads as sitting on the
-     line rather than being threaded by it. */
-  box-shadow: 0 0 0 3px var(--surface);
-}
-
-/* The newest entry is the one already on the page behind this dialog, so it
-   gets the filled node and everything older gets a hollow one — a second
-   channel for "you have seen this one" that does not depend on colour. */
-/* Full --accent on the ring, not a 70% mix: measured, gold at 70% over the
-   flour surface lands around 2.4:1, and while nothing here is carried by the
-   node alone -- the date and the ordering already say which entry is newest --
-   a marker too faint to resolve is just noise on the spine. At full strength
-   it is 3.2:1 in flour and 7.1:1 in crust, both clear of the non-text floor. */
-.notes__list--archive > .notes__entry:not(:first-child)::before {
-  background: var(--surface);
-  border: 1.5px solid var(--accent);
-}
-
-.notes__archive-foot {
-  margin: var(--space-6) 0 0;
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--border-subtle);
-  font-size: var(--text-2);
-  color: var(--text-secondary);
-}
-
-/* --- motion --------------------------------------------------------- */
-
-/* The resting state is visible, and @starting-style supplies the from-state
-   only at the moment the dialog enters the top layer.
-
-   Written the other way round -- `opacity: 0` in the base rule, `1` under
-   [open] -- it animates identically and fails catastrophically: any browser
-   that does not run the transition shows an open dialog at zero opacity, so
-   the page is scroll-locked behind a scrim with nothing on it and no visible
-   way out. This ordering degrades to appearing instantly instead, which is
-   the right direction to fail in. The cost is that there is no exit
-   animation, since there is no to-state to interpolate toward; an entrance
-   is worth having and an exit is not worth that risk. */
-@media (prefers-reduced-motion: no-preference) {
-  .notes-dialog {
-    transition:
-      opacity var(--duration-enter) var(--ease-out),
-      transform var(--duration-enter) var(--ease-out);
-  }
-  @starting-style {
-    .notes-dialog[open] { opacity: 0; transform: translateY(12px) scale(0.985); }
-  }
-
-  .notes-dialog::backdrop {
-    transition: opacity var(--duration-enter) var(--ease-out);
-  }
-  @starting-style {
-    .notes-dialog[open]::backdrop { opacity: 0; }
-  }
-}
-
-/* --- the page behind ------------------------------------------------ */
-
-/* showModal() blocks interaction but does not stop the page scrolling behind
-   the scrim, which reads as the dialog sliding around. */
-html.has-notes-dialog { overflow: hidden; }
-
-/* --- narrow --------------------------------------------------------- */
-
-/* Below this the panel stops being a card in the middle of a page and becomes
-   a sheet held to the bottom edge, which is where a thumb is. */
-@media (max-width: 40rem) {
-  .notes-dialog {
-    max-height: 92svh;
-    margin: auto auto 0;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    border-bottom: 0;
-  }
-  .notes-dialog__head { padding: var(--space-4) var(--space-4) var(--space-3); }
-  .notes-dialog__head::after { left: var(--space-4); right: var(--space-4); }
-  .notes-dialog__body { padding: var(--space-4); }
-  .notes__list--archive { padding-inline-start: var(--space-5); }
-  .notes__list--archive > .notes__entry::before {
-    inset-inline-start: calc(-1 * var(--space-5));
-  }
-}
-
-/* --- forced colours -------------------------------------------------- */
-
-/* Every gradient here is invisible in a forced palette: the gilded rules, the
-   spine, and the bloom all disappear. Solid borders in the system's own
-   colour are the substitute, and the nodes become CanvasText discs. */
-@media (forced-colors: active) {
-  .notes-dialog { border: 1px solid CanvasText; }
-  .notes-dialog::before { display: none; }
-  .notes-dialog__head { border-bottom: 1px solid CanvasText; }
-  .notes-dialog__head::after { display: none; }
-  .notes__list--archive::before { background: CanvasText; }
-  .notes__list--archive > .notes__entry::before {
-    background: CanvasText;
-    box-shadow: none;
-  }
-  .notes__list--archive > .notes__entry:not(:first-child)::before {
-    background: Canvas;
-    border: 1.5px solid CanvasText;
-  }
-}
-
-/* 160ms: the hero band enters on a 40ms cadence -- headline 0, install 40,
-   lede 80, rail 120 -- and this is the next step, not a rounder number. Same
-   `backwards` fill as .fresh: the element's resting style is already visible
-   (unlike .hero__headline and friends, which set opacity: 0 in their base
-   rule), so the from-state has to be applied during the delay or the section
-   pops in at full opacity and then animates from nothing. */
-@media (prefers-reduced-motion: no-preference) {
-  .notes { animation: hero-rise var(--duration-view) var(--ease-out) 160ms backwards; }
-}
-
-/* The gradient rule is invisible in a forced palette, same as 8b's — a solid
-   border in the system's own colour is the substitute. Nothing else here
-   needs help: text, markers and the drawn chevron are all currentColor. */
-@media (forced-colors: active) {
-  .notes__head::after { display: none; }
-  .notes__head { border-bottom: 1px solid CanvasText; }
-}
-
-/* ---------------------------------------------------------------------------
-   9. Category sections + card grid + card
-   ------------------------------------------------------------------------- */
-
-.category-section {
-  padding-block: var(--space-8);
-  border-top: 1px solid var(--border-subtle);
-}
-
-.category-section[hidden] { display: none; }
-
-.category-section__head {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
-}
-
-.category-section__icon { color: var(--accent); width: 1.75em; height: 1.75em; }
-
-.category-section__title {
-  font-size: var(--text-5);
-  margin: 0;
-}
-
-.category-section__count {
-  margin-inline-start: auto;
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
-  gap: var(--space-5);
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-5);
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  transition: transform var(--duration-enter) var(--ease-out),
-              border-color var(--duration-enter) var(--ease-out),
-              box-shadow var(--duration-enter) var(--ease-out),
-              background-color var(--duration-enter) var(--ease-out);
-}
-
-.card[hidden] { display: none; }
-
-.card:hover,
-.card:focus-visible {
-  background: var(--surface-hover);
-  border-color: var(--accent);
-  transform: translateY(-3px);
-  box-shadow:
-    0 1px 2px hsl(var(--shadow-ink) / 0.5),
-    0 20px 32px -16px color-mix(in oklch, var(--accent) 45%, transparent);
-}
-
-.card:focus-visible {
-  outline-offset: 4px;
-}
-
-.card__name-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.card__name {
-  font-family: var(--font-mono);
-  font-size: var(--text-4);
-  font-weight: 500;
-  color: var(--text-primary);
-  overflow-wrap: anywhere;
-}
-
-.card__summary {
-  margin-top: var(--space-3);
-  color: var(--text-secondary);
-  font-size: var(--text-3);
-  flex: 1;
-}
-
-.card__foot {
-  margin-top: var(--space-5);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
 
 .tag {
   display: inline-flex;
@@ -2355,17 +979,6 @@ html.has-notes-dialog { overflow: hidden; }
   white-space: nowrap;
 }
 
-.card__arrow {
-  color: var(--text-secondary);
-  transition: transform var(--duration-micro) var(--ease-out),
-              color var(--duration-micro) var(--ease-out);
-}
-
-.card:hover .card__arrow,
-.card:focus-visible .card__arrow {
-  color: var(--text-accent);
-  transform: translateX(3px);
-}
 
 /* "New"/"Updated" — set by generate.py from a real git status check (see
    its _changed_skill_slugs), shown next to a skill's name on its card
@@ -2431,6 +1044,7 @@ html.has-notes-dialog { overflow: hidden; }
   to { transform: translateX(120%); }
 }
 
+
 /* ---------------------------------------------------------------------------
    10. Breadcrumb
    ------------------------------------------------------------------------- */
@@ -2462,7 +1076,32 @@ html.has-notes-dialog { overflow: hidden; }
 
 .skill-article { padding-block: var(--space-6) var(--space-9); }
 
-.skill-article__head { max-width: var(--measure-prose); }
+/* The head closes on the gilded hairline the header and the bands use,
+   fading out to the right, so the page moves from what it is to what it says
+   over a change of light rather than a gap alone. */
+.skill-article__head {
+  position: relative;
+  max-width: var(--measure-prose);
+  padding-bottom: var(--space-7);
+}
+
+.skill-article__head::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    color-mix(in oklch, var(--accent) 60%, transparent),
+    color-mix(in oklch, var(--accent) 18%, transparent) 55%, transparent);
+}
+
+.skill-article__head + .prose { margin-top: var(--space-7); }
+
+@media (forced-colors: active) {
+  .skill-article__head::after { background: CanvasText; }
+  .site-footer { border-top: 1px solid CanvasText; }
+}
 
 .skill-article__title-row {
   display: flex;
@@ -2473,10 +1112,23 @@ html.has-notes-dialog { overflow: hidden; }
 
 .skill-article__title {
   font-family: var(--font-mono);
-  font-size: clamp(1.75rem, 1.35rem + 1.8vw, var(--text-6));
+  font-size: clamp(1.9rem, 1.35rem + 2.2vw, 3rem);
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   overflow-wrap: anywhere;
+}
+
+/* A page that is not a skill (getting started, the install's proof) has a
+   sentence for a title, not an identifier: it is set in the display face,
+   heavy and tight, where a skill's name stays in mono. */
+.skill-article__head > .skill-article__title {
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: clamp(2.2rem, 1.4rem + 2.8vw, 3.5rem);
+  font-weight: 660;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
 }
 
 .skill-article__tag { margin-top: var(--space-4); }
@@ -2488,9 +1140,173 @@ html.has-notes-dialog { overflow: hidden; }
   font-optical-sizing: auto;
   font-style: italic;
   font-weight: 400;
-  font-size: var(--text-4);
+  font-size: clamp(1.2rem, 1.08rem + 0.4vw, 1.375rem);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
+}
+
+/* Who cites this skill and whom it cites, under the description. */
+.skill-cites {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+  font-size: var(--text-2);
+}
+
+.skill-cites__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+}
+
+.skill-cites__label { margin: 0; font-weight: 600; }
+.skill-cites__label a { color: var(--text-accent); }
+.skill-cites__chips { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.skill-cites__chip {
+  padding: 0.1em 0.6em;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+.skill-cites__chip:hover { border-color: var(--accent); color: var(--text-accent); }
+
+/* --- interior pages: the column and the rail beside it -------------------
+   A skill page, /getting-started/ and /verify-install/ read in one measure;
+   at desktop widths the room right of it holds a rail rather than nothing.
+   On a skill page: how to invoke it, its family, who cites it. On the two
+   long guides: their sections. Below desktop widths there is no rail; the
+   column is the page. */
+
+@media (min-width: 64rem) {
+  .page-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 16rem;
+    column-gap: var(--space-8);
+    align-items: start;
+  }
+}
+
+@media (max-width: 63.99rem) {
+  .page-rail { display: none; }
+}
+
+.page-rail {
+  position: sticky;
+  top: var(--space-6);
+  margin-top: var(--space-3);
+  padding: var(--space-5);
+  font-size: var(--text-2);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.page-rail__facts { display: grid; gap: var(--space-4); margin: 0; }
+.page-rail__facts dt,
+.page-rail__title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.page-rail__facts dd { margin: var(--space-1) 0 0; color: var(--text-primary); }
+.page-rail__invoke { overflow-wrap: anywhere; }
+
+.page-rail a {
+  color: var(--text-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--text-accent) 40%, transparent);
+  text-underline-offset: 0.2em;
+  border-radius: var(--radius-sm);
+}
+.page-rail a:hover { text-decoration-color: currentColor; }
+
+.page-rail__contents {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  line-height: 1.35;
+}
+
+.page-rail__contents a { text-decoration: none; color: var(--text-secondary); }
+.page-rail__contents a:hover { color: var(--text-accent); text-decoration: underline; }
+
+@media (forced-colors: active) {
+  .page-rail { border-color: CanvasText; }
+}
+
+/* A skill's description is its trigger: what makes an agent reach for it.
+   Read as body text (roman, body size), not as a fifteen-line italic lede;
+   a long one shows three lines and a native disclosure opens the rest, so it
+   works without the WASM module. The text is whole in the page either way:
+   the clamp is visual. */
+.skill-trigger { margin-top: var(--space-5); max-width: var(--measure-prose); }
+
+.skill-trigger__text {
+  margin: 0;
+  font-size: var(--text-3);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+.skill-trigger--long .skill-trigger__text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+.skill-trigger--long:has(.skill-trigger__more[open]) .skill-trigger__text {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: none;
+  overflow: visible;
+}
+
+.skill-trigger__more { margin-top: var(--space-2); }
+
+.skill-trigger__more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: var(--text-2);
+  color: var(--text-accent);
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--radius-sm);
+}
+.skill-trigger__more summary::-webkit-details-marker { display: none; }
+.skill-trigger__more summary::after {
+  content: '';
+  width: 0.45em;
+  height: 0.45em;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-0.15em) rotate(45deg);
+}
+.skill-trigger__more[open] summary::after { transform: translateY(0.1em) rotate(-135deg); }
+.skill-trigger__more summary:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+.skill-trigger__close,
+.skill-trigger__more[open] .skill-trigger__open { display: none; }
+.skill-trigger__more[open] .skill-trigger__close { display: inline; }
+
+/* A browser without :has could never open the clamp, so it gets no clamp
+   and no button. */
+@supports not selector(:has(*)) {
+  .skill-trigger--long .skill-trigger__text { display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .skill-trigger__more { display: none; }
 }
 
 .translation-banner {
@@ -2524,6 +1340,14 @@ html.has-notes-dialog { overflow: hidden; }
    and the gap widened one rule at a time. The line is now stated: content
    rules take both selectors, the measure does not. */
 .prose h2, .prose h3, .tabs__panel h2, .tabs__panel h3 { scroll-margin-top: var(--space-6); }
+
+/* Section heads a size and a weight further from the body than before:
+   the step from 16px running text to a heading should read at a glance. */
+.prose h2, .tabs__panel h2 {
+  font-size: clamp(1.6rem, 1.3rem + 0.8vw, 2rem);
+  font-weight: 640;
+  letter-spacing: -0.012em;
+}
 
 .prose p, .tabs__panel p { color: var(--text-primary); }
 
@@ -2999,23 +1823,67 @@ a.skill-link--bare:focus-visible {
    14. Footer
    ------------------------------------------------------------------------- */
 
+/* The page's ground deepens into the footer over a gradient rather than
+   meeting it at a line, with the gilded hairline at the seam. */
 .site-footer {
+  position: relative;
   margin-top: var(--space-9);
-  background: var(--bg-deep);
-  border-top: 1px solid var(--border-subtle);
+  background: linear-gradient(to bottom, var(--bg), var(--bg-deep) var(--space-8));
+}
+
+.site-footer::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent,
+    color-mix(in oklch, var(--accent) 40%, transparent) 30%,
+    color-mix(in oklch, var(--accent) 40%, transparent) 70%, transparent);
 }
 
 .site-footer__inner {
-  padding-block: var(--space-8);
+  padding-block: var(--space-8) var(--space-9);
   display: grid;
   gap: var(--space-7);
 }
 
 @media (min-width: 720px) {
   .site-footer__inner {
-    grid-template-columns: minmax(0, 26rem) 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
+
+@media (min-width: 64rem) {
+  .site-footer__inner {
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr) minmax(0, 13rem);
+    gap: var(--space-8);
+  }
+}
+
+.site-footer__more .site-footer__nav-title + .site-footer__links { margin-top: var(--space-3); }
+.site-footer__links + .site-footer__nav-title { margin-top: var(--space-6); }
+
+.site-footer__links {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer__links li { margin: 0; }
+
+.site-footer__links a {
+  display: inline-block;
+  padding-block: 0.3rem;
+  font-size: var(--text-2);
+  color: var(--text-secondary);
+  border-radius: 3px;
+  transition: color var(--duration-micro) var(--ease-out);
+}
+
+.site-footer__links a:hover { color: var(--text-accent); }
 
 .site-footer__brand {
   font-family: var(--font-display);
@@ -3103,44 +1971,13 @@ a.skill-link--bare:focus-visible {
    and both are removed (not shortened) under reduced motion.
    ------------------------------------------------------------------------- */
 
-/* The milestone plaque's one celebratory flourish: a single sheen crossing the
-   crust texture, once, on load. Once is the whole design -- a loop would turn a
-   release announcement into an ad, and this band sits directly above the page's
-   own headline. It rides the decorative ::after layer behind the content, so it
-   never passes over text, and it exists only inside no-preference: there is no
-   reduced-motion variant to shorten because the plaque is complete without it. */
-@media (prefers-reduced-motion: no-preference) {
-  .milestone::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -45%;
-    width: 45%;
-    z-index: -1;
-    background: linear-gradient(
-      100deg,
-      transparent,
-      color-mix(in oklch, var(--accent) 24%, transparent),
-      transparent
-    );
-    animation: milestone-sheen 1500ms var(--ease-out) 500ms 1 both;
-    pointer-events: none;
-  }
-}
-
-@keyframes milestone-sheen {
-  from { transform: translateX(0); }
-  to   { transform: translateX(330%); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  /* .install-frame animates with the same hero-rise keyframes as the three
-     above and was never listed here, so it kept rising for a reader who asked
-     for no motion — while everything around it held still, which is worse than
-     either behaviour on its own. It matters more now that the frame renders on
-     the getting-started page too, i.e. somewhere that is not a hero at all. */
-  .hero__headline, .hero__lede, .hero__jump, .install-frame, .milestone {
+  /* .install-frame animates with the same hero-rise keyframes as the landing
+     page's hero and was once missing here, so it kept rising for a reader who
+     asked for no motion. It renders on the getting-started page too, i.e.
+     somewhere that is not a hero at all. The landing page's own entrances are
+     stopped in landing.css, next to the rules that start them. */
+  .install-frame {
     animation: none;
     opacity: 1;
     transform: none;
@@ -3148,21 +1985,17 @@ a.skill-link--bare:focus-visible {
 
   .tabs__panel { animation: none; }
 
-  .card, .theme-toggle__icon, .search__field, .tabs__tab,
+  .theme-toggle__icon, .tabs__tab,
   .prevnext__link, .see-also__name, .site-footer__categories a,
-  .site-header__nav-link, .site-footer__start a,
+  .site-header__nav-link, .site-footer__start a, .site-footer__links a,
   .skip-link, .prose a, .tabs__panel a,
   .prose tbody tr, .tabs__panel tbody tr,
-  .notes__earlier-summary, .notes__earlier-summary::before,
   a.skill-link > code, a.skill-link--bare {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
-
-  .card:hover, .card:focus-visible {
-    transform: none;
-  }
 }
+
 
 /* ---------------------------------------------------------------------------
    16. Code block — install-verification page
@@ -3538,8 +2371,9 @@ a.skill-link--bare:focus-visible {
    ------------------------------------------------------------------------- */
 
 .crumb,
-.graph-banner,
-.century-banner {
+.unfold,
+.counter,
+.skills {
   --graph-cat-1: #c8635d;
   --graph-cat-2: #009bab;
   --graph-cat-3: #ed9658;
@@ -3554,7 +2388,7 @@ a.skill-link--bare:focus-visible {
   --graph-cat-12: #5f83d4;
 }
 
-[data-theme='flour'] :is(.crumb, .graph-banner, .century-banner) {
+[data-theme='flour'] :is(.crumb, .unfold, .counter, .skills) {
   --graph-cat-1: #90302e;
   --graph-cat-2: #006777;
   --graph-cat-3: #ad5c15;
@@ -3617,12 +2451,6 @@ a.skill-link--bare:focus-visible {
   border-color: var(--border-strong);
 }
 
-.site-header__nav-link--graph[aria-current="page"] .site-header__graph-face {
-  color: var(--text-accent);
-  border-color: var(--border-strong);
-  background: color-mix(in oklch, var(--accent) 10%, var(--bg-deep));
-}
-
 .site-header__nav-icon {
   width: 1.15em;
   height: 1.15em;
@@ -3647,16 +2475,9 @@ a.skill-link--bare:focus-visible {
   transform-origin: center;
 }
 
-/* While new: the face is gilded, a ring breathes out of it the way a freshly
-   changed skill's does in the graph, and a foil tag sits on its shoulder —
-   the same "New" the skill cards wear. */
-.site-header__nav-link--new .site-header__graph-face {
-  color: var(--text-primary);
-  border-color: color-mix(in oklch, var(--accent) 70%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in oklch, var(--accent) 14%, transparent),
-              0 0 22px -6px color-mix(in oklch, var(--accent-solid) 75%, transparent);
-}
-
+/* While new: a foil tag on its shoulder, the same "New" the skill cards
+   wear, and nothing else. A glow on the face would outshine the pill that
+   marks the page you are on. */
 .site-header__new {
   position: absolute;
   top: -0.72em;
@@ -3674,16 +2495,6 @@ a.skill-link--bare:focus-visible {
   box-shadow: 0 0 0 2px var(--bg-deep);
 }
 
-.site-header__nav-link--new .site-header__graph-face::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  border: 1.5px solid var(--accent-solid);
-  opacity: 0;
-  pointer-events: none;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .site-header__nav-link--new .graph-mark__flow,
   .site-header__nav-link--graph:hover .graph-mark__flow {
@@ -3696,10 +2507,6 @@ a.skill-link--bare:focus-visible {
   .site-header__nav-link--graph:hover .graph-mark__node {
     animation: graph-mark-node 3.2s var(--ease-in-out) infinite;
     animation-delay: calc(var(--i) * 0.8s);
-  }
-
-  .site-header__nav-link--new .site-header__graph-face::after {
-    animation: graph-ring 3.6s var(--ease-out) infinite;
   }
 
   .site-header__new { animation: graph-new-bob 2.8s var(--ease-in-out) infinite; }
@@ -3715,11 +2522,6 @@ a.skill-link--bare:focus-visible {
   12% { fill: var(--accent-solid); transform: scale(1.3); }
 }
 
-@keyframes graph-ring {
-  0% { opacity: 0.55; transform: scale(1); }
-  70%, 100% { opacity: 0; transform: scale(1.08, 1.3); }
-}
-
 @keyframes graph-new-bob {
   0%, 100% { transform: translateY(0) rotate(6deg); }
   50% { transform: translateY(-2px) rotate(-3deg); }
@@ -3728,791 +2530,6 @@ a.skill-link--bare:focus-visible {
 @media (forced-colors: active) {
   .site-header__graph-face { border-color: ButtonText; }
   .site-header__new { border: 1px solid ButtonText; }
-}
-
-/* --- the announcement banner ------------------------------------------------ */
-
-/* The graph announcing itself at the top of the landing page, in its own
-   materials: the stage's dark field and gold bloom, the app bar's gilded
-   hairline, its stat tiles and its foil button, and a small live
-   constellation of the twelve families drawn by site.js. The copy sits on the
-   left over a fade of the page colour, so every word is measured against
-   --bg rather than against whatever the canvas happens to be drawing
-   behind it. */
-
-.graph-banner,
-.release-banner,
-.century-banner,
-.climb-banner {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  display: flex;
-  align-items: center;
-  min-height: 16.5rem;
-  border: 1px solid color-mix(in oklch, var(--accent) 40%, var(--border-subtle));
-  border-radius: var(--radius-lg);
-  background:
-    radial-gradient(ellipse 55% 95% at 74% 50%,
-      color-mix(in oklch, var(--accent-solid) 9%, var(--bg)) 0%,
-      var(--bg) 78%);
-  box-shadow:
-    0 0 0 1px color-mix(in oklch, var(--accent) 10%, transparent),
-    0 30px 60px -34px hsl(var(--shadow-ink) / 0.7),
-    0 0 90px -40px color-mix(in oklch, var(--accent-solid) 50%, transparent);
-}
-
-.graph-banner::before,
-.release-banner::before,
-.century-banner::before,
-.climb-banner::before {
-  content: '';
-  position: absolute;
-  z-index: 2;
-  inset-inline: 10%;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent,
-    color-mix(in oklch, var(--accent) 75%, transparent) 25%,
-    color-mix(in oklch, var(--accent) 75%, transparent) 75%, transparent);
-}
-
-.graph-banner__canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-}
-
-.graph-banner__body,
-.release-banner__body,
-.century-banner__body,
-.climb-banner__body {
-  position: relative;
-  z-index: 1;
-  width: min(36rem, 58%);
-  padding: var(--space-6) var(--space-6) var(--space-6) var(--space-6);
-  pointer-events: none;
-}
-
-/* The fade the copy reads against, drawn as its own layer so the canvas can
-   run under the whole banner and still never sit behind a letter. */
-.graph-banner__body::before,
-.release-banner__body::before,
-.century-banner__body::before,
-.climb-banner__body::before {
-  content: '';
-  position: absolute;
-  inset: 0 -30% 0 0;
-  z-index: -1;
-  background: linear-gradient(to right, var(--bg) 62%, color-mix(in oklch, var(--bg) 70%, transparent) 82%, transparent);
-  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
-}
-
-.graph-banner__body a,
-.release-banner__body a,
-.century-banner__body a,
-.climb-banner__body a { pointer-events: auto; }
-
-.graph-banner__title,
-.release-banner__title,
-.century-banner__title,
-.climb-banner__title {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  margin: 0;
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-weight: 650;
-  font-size: var(--text-5);
-  line-height: var(--leading-tight);
-  letter-spacing: -0.015em;
-  color: var(--text-primary);
-}
-
-.graph-banner__lede,
-.release-banner__lede,
-.century-banner__lede,
-.climb-banner__lede {
-  margin-top: var(--space-3);
-  max-width: 46ch;
-  color: var(--text-secondary);
-  line-height: var(--leading-relaxed);
-}
-
-.graph-banner__stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin: var(--space-4) 0 0;
-}
-
-.graph-banner__stat {
-  display: flex;
-  flex-direction: column-reverse;
-  justify-content: flex-end;
-  min-width: 6.5rem;
-  max-width: 9.5rem;
-  padding: var(--space-2) var(--space-3);
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-}
-
-.graph-banner__stat dd {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: var(--text-4);
-  line-height: 1.15;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-primary);
-}
-
-.graph-banner__stat dt {
-  font-size: 0.72rem;
-  line-height: 1.3;
-  color: var(--text-secondary);
-}
-
-.graph-banner__cta,
-.release-banner__cta,
-.century-banner__cta,
-.climb-banner__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  margin-top: var(--space-5);
-  padding: 0.55em 1.1em;
-  font-weight: 600;
-  color: var(--text-on-accent-solid);
-  background: var(--accent-solid);
-  border: 1px solid var(--accent-solid);
-  border-radius: var(--radius-full);
-  box-shadow: 0 10px 26px -14px color-mix(in oklch, var(--accent-solid) 90%, transparent);
-  transition: background-color var(--duration-micro) var(--ease-out),
-              transform var(--duration-micro) var(--ease-out);
-}
-
-.graph-banner__cta:hover,
-.release-banner__cta:hover,
-.century-banner__cta:hover,
-.climb-banner__cta:hover { background: var(--accent-solid-hover); }
-.graph-banner__cta-icon,
-.release-banner__cta-icon,
-.century-banner__cta-icon,
-.climb-banner__cta-icon { width: 1.15em; height: 1.15em; }
-
-@media (prefers-reduced-motion: no-preference) {
-  .graph-banner__cta:hover,
-  .release-banner__cta:hover,
-  .century-banner__cta:hover,
-  .climb-banner__cta:hover { transform: translateY(-1px); }
-}
-
-/* Narrow: the constellation takes a band of its own above the copy rather
-   than sharing a row it would have to squeeze into. Measured on the banner's
-   own slot, not the viewport (see .hero__banners): half of a desktop row is
-   as narrow as a phone to a banner, and gets the same layout. site.js reads
-   which one applied off flex-direction, so the picture follows. */
-@container banner (max-width: 44rem) {
-  .graph-banner,
-  .release-banner,
-  .century-banner,
-  .climb-banner {
-    flex-direction: column;
-    align-items: stretch;
-    min-height: 0;
-    padding-top: 11rem;
-  }
-  .graph-banner__canvas { height: 12rem; }
-  .graph-banner__body,
-  .release-banner__body,
-  .century-banner__body,
-  .climb-banner__body {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    width: auto;
-    padding: var(--space-4) var(--space-5) var(--space-5);
-  }
-  .graph-banner__body::before,
-  .release-banner__body::before,
-  .century-banner__body::before,
-  .climb-banner__body::before {
-    inset: 0;
-    background: linear-gradient(to bottom, transparent, var(--bg) 2.5rem);
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-  }
-  .graph-banner__title,
-  .release-banner__title,
-  .century-banner__title,
-  .climb-banner__title { font-size: var(--text-4); }
-  .graph-banner__stat { min-width: 0; flex: 1 1 5.5rem; }
-  /* Side by side, the two banners stretch to one height; the buttons sit on
-     the same line at the bottom rather than wherever each copy ran out. */
-  .graph-banner__stats,
-  .release-banner__prefix { margin-bottom: var(--space-5); }
-  .graph-banner__cta,
-  .release-banner__cta,
-  .century-banner__cta,
-  .climb-banner__cta { margin-top: auto; align-self: flex-start; }
-}
-
-@media (forced-colors: active) {
-  .graph-banner { border: 2px solid CanvasText; }
-  .graph-banner::before, .graph-banner__body::before { display: none; }
-  .graph-banner__stat { border: 1px solid CanvasText; }
-  .graph-banner__cta { border: 1px solid ButtonText; }
-}
-
-/* The announcements' row, at the top of the hero: the 2.0 release on the
-   left, the graph on the right, one height, one gutter. auto-fit collapses
-   the column a retired banner leaves, so the one still up takes the row.
-   Each slot is a size container, and each banner lays itself out for the
-   width it is given rather than for the viewport's. */
-.hero__banners {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-  gap: var(--space-5);
-  margin-top: var(--space-5);
-  margin-bottom: var(--space-6);
-}
-
-.banner-slot {
-  container: banner / inline-size;
-  display: flex;
-  min-width: 0;
-}
-
-.banner-slot > * { flex: 1; min-width: 0; }
-
-/* The 2.0 release. The shell -- hairline, fade, title, lede, button, the
-   stacked layout -- is the graph banner's, shared above, so the pair reads
-   as one set. What is its own is the picture: the numeral as a few thousand
-   grains of gold that steam off the top and part around the pointer, drawn
-   by site.js over a type-set numeral it measures and then replaces. The
-   type-set one is what anyone without the canvas sees, so it is finished
-   work in its own right: foil, warm glow, and nothing that depends on JS. */
-
-.release-banner {
-  background:
-    radial-gradient(ellipse 50% 90% at 76% 52%,
-      color-mix(in oklch, var(--accent-solid) 12%, var(--bg)) 0%,
-      var(--bg) 78%);
-}
-
-.release-banner__stage {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background:
-    radial-gradient(ellipse 22% 55% at 76% 62%,
-      color-mix(in oklch, var(--accent-solid) 22%, transparent),
-      transparent 70%);
-}
-
-.release-banner__canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-}
-
-.release-banner__numeral {
-  position: absolute;
-  top: 50%;
-  left: 76%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-style: italic;
-  font-weight: 700;
-  font-size: 13rem;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  white-space: nowrap;
-  /* The italic 0 leans past its own advance, and a text-clipped background
-     paints only inside the box: the padding is room for the lean. */
-  padding-inline: 0.14em;
-  color: var(--accent);
-  background: linear-gradient(172deg, var(--gold-400) 18%, var(--gold-500) 48%, var(--gold-700) 88%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 28px color-mix(in oklch, var(--accent-solid) 40%, transparent));
-  user-select: none;
-  transition: opacity 1200ms var(--ease-out);
-}
-
-[data-theme='flour'] .release-banner__numeral {
-  background-image: linear-gradient(172deg, var(--gold-700) 15%, var(--gold-800) 85%);
-  filter: drop-shadow(0 6px 18px color-mix(in oklch, var(--gold-700) 30%, transparent));
-}
-
-/* site.js sets this once its first frame is on the canvas. */
-.release-banner.is-drawn .release-banner__numeral { opacity: 0; }
-
-.release-banner__body { width: min(36rem, 56%); }
-
-.release-banner__surfaces {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin: var(--space-4) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.release-banner__surface {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  margin: 0;
-  padding: 0.3em 0.75em;
-  font-size: var(--text-2);
-  font-weight: 500;
-  line-height: 1.3;
-  color: var(--text-secondary);
-  background: var(--surface);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-full);
-}
-
-.release-banner__surface.is-live {
-  color: var(--text-primary);
-  background: color-mix(in oklch, var(--accent-solid) 14%, var(--surface));
-  border: 1px solid color-mix(in oklch, var(--accent) 55%, transparent);
-}
-
-.release-banner__surface-dot,
-.release-banner__legend-item::before {
-  flex: none;
-  width: 0.55em;
-  height: 0.55em;
-  border: 1.5px solid currentColor;
-  border-radius: 50%;
-  opacity: 0.65;
-}
-
-.release-banner__surface.is-live .release-banner__surface-dot,
-.release-banner__legend-item.is-live::before {
-  background: var(--accent);
-  border-color: var(--accent);
-  opacity: 1;
-  box-shadow: 0 0 8px color-mix(in oklch, var(--accent) 80%, transparent);
-}
-
-.release-banner__legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-4);
-  margin: var(--space-2) 0 0;
-  font-size: 0.72rem;
-  line-height: 1.3;
-  color: var(--text-secondary);
-}
-
-.release-banner__legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45em;
-}
-
-.release-banner__legend-item::before { content: ''; }
-
-.release-banner__prefix {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  margin-top: var(--space-3);
-}
-
-.release-banner__prefix-label {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-secondary);
-}
-
-.release-banner__prefix-code {
-  padding: 0.25em 0.6em;
-  font-family: var(--font-mono);
-  font-size: var(--text-2);
-  color: var(--text-primary);
-  background: var(--bg-deep);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  overflow-wrap: anywhere;
-}
-
-.release-banner__prefix-code del {
-  margin-right: 0.6em;
-  color: var(--text-secondary);
-  text-decoration-thickness: 1.5px;
-  text-decoration-color: color-mix(in oklch, var(--critical) 80%, transparent);
-}
-
-.release-banner__prefix-code ins {
-  text-decoration: none;
-  color: var(--text-accent);
-}
-
-/* Narrow slot: the numeral takes the band the constellation takes next door,
-   at the same height, so the two pictures sit on one line. */
-@container banner (max-width: 44rem) {
-  .release-banner {
-    background: var(--bg);
-  }
-  .release-banner__stage {
-    height: 12rem;
-    background:
-      radial-gradient(ellipse 45% 60% at 50% 62%,
-        color-mix(in oklch, var(--accent-solid) 18%, transparent),
-        transparent 72%);
-  }
-  .release-banner__numeral { left: 50%; font-size: 9.5rem; }
-  .release-banner__body { width: auto; }
-}
-
-/* Motion: the old prefix is struck through in front of the reader, once, and
-   the new one arrives after it. Without motion, both are simply there. */
-@media (prefers-reduced-motion: no-preference) {
-  .release-banner__prefix-code del {
-    text-decoration: none;
-    background: linear-gradient(color-mix(in oklch, var(--critical) 80%, transparent), color-mix(in oklch, var(--critical) 80%, transparent))
-      no-repeat 0 58% / 0% 1.5px;
-    animation: release-strike 520ms var(--ease-out) 1100ms forwards;
-  }
-  .release-banner__prefix-code ins {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(0.35em);
-    animation: release-arrive 420ms var(--ease-out) 1550ms forwards;
-  }
-  .release-banner__surface.is-live .release-banner__surface-dot {
-    animation: release-live 2.8s var(--ease-in-out) 2s infinite;
-  }
-}
-
-@keyframes release-strike { to { background-size: 100% 1.5px; } }
-@keyframes release-arrive { to { opacity: 1; transform: none; } }
-@keyframes release-live {
-  0%, 100% { box-shadow: 0 0 8px color-mix(in oklch, var(--accent) 80%, transparent),
-                         0 0 0 0 color-mix(in oklch, var(--accent) 45%, transparent); }
-  50%      { box-shadow: 0 0 8px color-mix(in oklch, var(--accent) 80%, transparent),
-                         0 0 0 5px color-mix(in oklch, var(--accent) 0%, transparent); }
-}
-
-@media (forced-colors: active) {
-  .release-banner { border: 2px solid CanvasText; }
-  .release-banner::before, .release-banner__body::before { display: none; }
-  .release-banner__canvas { display: none; }
-  .release-banner__numeral,
-  .release-banner.is-drawn .release-banner__numeral {
-    opacity: 1;
-    background: none;
-    filter: none;
-    -webkit-text-fill-color: CanvasText;
-    color: CanvasText;
-  }
-  .release-banner__surface { border: 1px solid CanvasText; }
-  .release-banner__surface.is-live { border-width: 2px; }
-  .release-banner__prefix-code del { text-decoration: line-through; background: none; }
-  .release-banner__cta { border: 1px solid ButtonText; }
-}
-
-/* The hundred. Across the whole row, above the release and the graph, in
-   their shell -- hairline, fade, title, lede, button -- so the three read as
-   one set. What is its own is an event rather than a figure: the numeral is
-   set in type as a plate with a tally under it, and site.js redraws it from
-   one bead per skill, streaming each family up from its own point and
-   counting them in on the tally. At the hundredth the numeral flares and
-   the tally turns gold; the one after it lands a beat later. The type-set
-   plate is what anyone without the canvas sees, and it is finished work: the
-   foil numeral, and the true count under it. */
-
-.hero__banners--lead { margin-bottom: var(--space-5); }
-
-.century-banner {
-  min-height: 20rem;
-  background:
-    radial-gradient(ellipse 42% 95% at 73% 52%,
-      color-mix(in oklch, var(--accent-solid) 10%, var(--bg)) 0%,
-      var(--bg) 80%);
-}
-
-.century-banner__stage {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background:
-    radial-gradient(ellipse 26% 62% at 73% 50%,
-      color-mix(in oklch, var(--accent-solid) 15%, transparent),
-      transparent 70%);
-}
-
-.century-banner__canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* The numeral and its tally, centred together where the picture goes. */
-.century-banner__plate {
-  position: absolute;
-  top: 50%;
-  left: 73%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-.century-banner__numeral {
-  font-family: var(--font-display);
-  /* Left at auto, as a canvas sets it too: the glyph site.js lays the beads
-     on has to be the glyph drawn here under them. */
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-size: min(14rem, 20cqi);
-  line-height: 1;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  color: var(--accent);
-  background: linear-gradient(172deg, var(--gold-400) 18%, var(--gold-500) 48%, var(--gold-700) 88%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 28px color-mix(in oklch, var(--accent-solid) 40%, transparent));
-  user-select: none;
-  transition: opacity 900ms var(--ease-out);
-}
-
-[data-theme='flour'] .century-banner__numeral {
-  background-image: linear-gradient(172deg, var(--gold-700) 15%, var(--gold-800) 85%);
-  filter: drop-shadow(0 6px 18px color-mix(in oklch, var(--gold-700) 30%, transparent));
-}
-
-/* The count under the hundred. Ticks as the beads land (site.js), and says
-   the true number at rest: the numeral is the milestone, this is the fact. */
-.century-banner__tally {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.55em;
-  margin-top: -0.35em;
-  font-family: var(--font-mono);
-  font-size: var(--text-1);
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-}
-
-.century-banner__tally-count {
-  display: inline-block;
-  min-width: 3ch;
-  font-family: var(--font-display);
-  font-size: var(--text-6);
-  font-weight: 650;
-  line-height: 1;
-  letter-spacing: -0.01em;
-  text-align: end;
-  font-variant-numeric: lining-nums tabular-nums;
-  color: var(--text-primary);
-  transition: color var(--duration-view) var(--ease-out);
-}
-
-.century-banner__tally.is-past .century-banner__tally-count { color: var(--text-accent); }
-
-/* site.js sets this once the beads are on the canvas, and only then is the
-   sentence telling a reader to point at them true. The numeral stays, dimmed,
-   as the dough the beads are set in: a hundred beads alone do not hold the
-   shape of a high-contrast serif, and the number is the point. */
-.century-banner.is-drawn .century-banner__numeral { opacity: 0.3; }
-[data-theme='flour'] .century-banner.is-drawn .century-banner__numeral { opacity: 0.36; }
-.century-banner__hint { display: none; }
-.century-banner.is-drawn .century-banner__hint { display: inline; }
-
-.century-banner__body { width: min(38rem, 52%); }
-
-/* The fade the copy reads against stops short of the numeral, which starts
-   close to it: at the shared width it dims the "1" and leaves the zeros
-   bright, and the number reads as "00". */
-.century-banner__body::before { inset: 0 -8% 0 0; }
-
-/* What took it past a hundred: the skills themselves, as links. Hovering or
-   focusing one lights its bead in the picture. */
-.century-banner__crossers { margin-top: var(--space-4); }
-
-.century-banner__crossers-label {
-  margin: 0 0 var(--space-2);
-  font-size: var(--text-2);
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-/* Stacked on one left edge: three names this long wrap two-and-one in the
-   column's width, which reads as an accident rather than a list. */
-.century-banner__crosser-list {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.century-banner__crosser {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55em;
-  max-width: 100%;
-  padding: 0.4em 0.8em;
-  font-family: var(--font-mono);
-  font-size: var(--text-1);
-  line-height: 1.3;
-  color: var(--text-primary);
-  text-decoration: none;
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  transition: border-color var(--duration-micro) var(--ease-out),
-              background-color var(--duration-micro) var(--ease-out),
-              transform var(--duration-micro) var(--ease-out);
-}
-
-.century-banner__crosser-name { overflow-wrap: anywhere; }
-
-.century-banner__crosser-dot {
-  flex: none;
-  width: 0.7em;
-  height: 0.7em;
-  border-radius: 50%;
-  background: var(--dot, var(--accent));
-  box-shadow: 0 0 0 2px color-mix(in oklch, var(--dot, var(--accent)) 30%, transparent);
-}
-
-.century-banner__crosser:hover,
-.century-banner__crosser:focus-visible {
-  background: color-mix(in oklch, var(--dot, var(--accent)) 14%, var(--surface));
-  border-color: color-mix(in oklch, var(--dot, var(--accent)) 70%, var(--border-subtle));
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .century-banner__crosser:hover { transform: translateY(-1px); }
-}
-
-/* The name of the bead under the pointer, placed by site.js above it. A child
-   of the banner rather than of the stage, so it rides over the copy's fade
-   instead of under it when the bead sits near the text. */
-.century-banner__tip {
-  position: absolute;
-  z-index: 3;
-  top: 0;
-  left: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.3em 0.7em;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  line-height: 1.3;
-  white-space: nowrap;
-  color: var(--text-primary);
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 10px 24px -14px hsl(var(--shadow-ink) / 0.7);
-  pointer-events: none;
-}
-
-.century-banner__tip[hidden] { display: none; }
-
-.century-banner__tip::before {
-  content: '';
-  flex: none;
-  width: 0.6em;
-  height: 0.6em;
-  border-radius: 50%;
-  background: var(--tip-colour, var(--accent));
-}
-
-.century-banner__tip-family { color: var(--text-secondary); }
-
-/* The one authored moment: the hundredth bead lands. The numeral's foil
-   flashes full and settles back into the dough; the tally's figure gives a
-   single beat. Opacity and transform only, once, and never under reduced
-   motion (site.js does not set the class then). */
-@media (prefers-reduced-motion: no-preference) {
-  .century-banner.is-crossing .century-banner__numeral {
-    animation: century-flare 1600ms var(--ease-out);
-  }
-  .century-banner.is-crossing .century-banner__tally-count {
-    animation: century-beat 560ms var(--ease-out);
-  }
-}
-
-@keyframes century-flare {
-  0%   { opacity: 1; }
-  100% { opacity: 0.3; }
-}
-
-@keyframes century-beat {
-  0%   { transform: scale(1); }
-  35%  { transform: scale(1.22); }
-  100% { transform: scale(1); }
-}
-
-/* Narrow slot: the plate takes a band of its own above the copy, and the
-   beads stream up into it from the band's floor. */
-@container banner (max-width: 44rem) {
-  .century-banner {
-    min-height: 0;
-    padding-top: 12rem;
-    background: var(--bg);
-  }
-  .century-banner__stage {
-    height: 12.5rem;
-    background:
-      radial-gradient(ellipse 45% 60% at 50% 48%,
-        color-mix(in oklch, var(--accent-solid) 16%, transparent),
-        transparent 72%);
-  }
-  .century-banner__body::before { inset: 0; }
-  .century-banner__plate { top: 50%; left: 50%; }
-  .century-banner__numeral { font-size: min(8.5rem, 34cqi); }
-  .century-banner__tally-count { font-size: var(--text-5); }
-  .century-banner__body { width: auto; }
-  .century-banner__crossers { margin-bottom: var(--space-5); }
-}
-
-@media (forced-colors: active) {
-  .century-banner { border: 2px solid CanvasText; }
-  .century-banner::before, .century-banner__body::before { display: none; }
-  .century-banner__canvas, .century-banner__tip { display: none; }
-  .century-banner__numeral,
-  .century-banner.is-drawn .century-banner__numeral {
-    opacity: 1;
-    background: none;
-    filter: none;
-    -webkit-text-fill-color: CanvasText;
-    color: CanvasText;
-  }
-  .century-banner__crosser { border: 1px solid ButtonText; }
-  .century-banner__crosser-dot { forced-color-adjust: none; }
-  .century-banner__cta { border: 1px solid ButtonText; }
 }
 
 .skill-article__meta {
@@ -4546,1371 +2563,12 @@ a.skill-link--bare:focus-visible {
   text-decoration-color: currentColor;
 }
 
-/* Who cites this skill and whom it cites, under the lede. */
-.skill-cites {
-  margin-top: var(--space-4);
-  margin-bottom: var(--space-4);
-  display: grid;
-  gap: var(--space-3);
-  font-size: var(--text-2);
-}
+/* --- the climb, drawn: the 3.0 band's picture and the /mods/ card's ---- */
 
-.skill-cites__row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2) var(--space-3);
-}
-
-.skill-cites__label { margin: 0; font-weight: 600; }
-.skill-cites__label a { color: var(--text-accent); }
-.skill-cites__chips { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
-
-.skill-cites__chip {
-  padding: 0.1em 0.6em;
-  border: 1px solid var(--border-strong);
-  border-radius: 999px;
-  color: var(--text-secondary, var(--text));
-  text-decoration: none;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.92em;
-}
-
-.skill-cites__chip:hover { border-color: var(--accent); color: var(--text-accent); }
-
-/* --- the page ------------------------------------------------------------------ */
-
-/* Before graph.js runs (and if it never does) this is an ordinary page: a
-   head saying what the graph shows, a host holding the noscript note, the
-   footer. Once the app mounts it adds .graph-live to <body>, and the page
-   becomes the instrument: the body is exactly one viewport tall, the host
-   takes every pixel below the site header, edge to edge, and the head and
-   footer step out of the way. The head is hidden visually only — it is still
-   the page's heading for a screen reader. The footer is removed outright:
-   below a canvas that spends the wheel on zooming it could only be reached
-   by the scrollbar, and everything in it is one click away in the header.
-
-   The height is max(100dvh, 30rem) rather than 100dvh, so a phone held
-   sideways scrolls to a usable graph rather than squeezing it flat. */
-
-.graph-page__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2) var(--space-5);
-  padding-top: var(--space-6);
-  padding-bottom: var(--space-4);
-}
-
-.graph-page__title {
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-weight: 650;
-  font-size: var(--text-5);
-  line-height: var(--leading-tight);
-  letter-spacing: -0.015em;
-}
-
-.graph-page__lede {
-  max-width: var(--measure-prose);
-  color: var(--text-secondary);
-}
-
-.graph-host {
-  width: min(100% - 2 * var(--space-4), var(--container-wide));
-  margin: 0 auto var(--space-8);
-  background: var(--bg);
-}
-
-.graph-host__noscript {
-  padding: var(--space-5) 0;
-  max-width: var(--measure-prose);
-  color: var(--text-secondary);
-}
-
-.page-graph.graph-live {
-  display: flex;
-  flex-direction: column;
-  height: max(100dvh, 30rem);
-  min-height: 0;
-}
-
-.page-graph.graph-live > main {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.page-graph.graph-live .graph-page {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.page-graph.graph-live .graph-page__head {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.page-graph.graph-live .graph-host {
-  flex: 1 1 auto;
-  width: 100%;
-  min-height: 0;
-  margin: 0;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.page-graph.graph-live .site-footer { display: none; }
-
-/* On a phone the site header wraps to four rows, and every one of them is
-   height the graph does not get. The build time is metadata every other page
-   still shows; here it gives its two rows back, and the nav and the theme
-   toggle close up onto one. */
-@media (max-width: 40rem) {
-  .page-graph.graph-live .site-header__updated { display: none; }
-  .page-graph.graph-live .site-header__inner { padding-block: var(--space-3); }
-}
-
-/* A phone on its side gets the sheet layout at the height of a toolbar. The
-   30rem floor above then scrolled the page, pushing the legend and the sheet
-   handle off the bottom, and header and bar took 244 of 390px. Here the page
-   fits the screen, the header gives back its build time and padding, and the
-   search joins the view tabs on one row. A short window wider than 60rem keeps
-   the floor: its legend stands up the left edge and needs the height. */
-@media (max-height: 30rem) and (max-width: 60rem) {
-  .page-graph.graph-live { height: 100dvh; }
-  .page-graph.graph-live .site-header__updated { display: none; }
-  .page-graph.graph-live .site-header__inner { padding-block: var(--space-2); }
-  .page-graph.graph-live .crumb__search { order: 2; flex: 1 1 12rem; }
-  .page-graph.graph-live .crumb [data-crumb-trace] { order: 3; margin-inline-start: 0; }
-}
-
-/* --- the app ---------------------------------------------------------------------- */
-
-.crumb {
-  container-type: inline-size;
-  position: relative;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  height: 100%;
-  min-height: 0;
-  font-size: var(--text-2);
-  color: var(--text-primary);
-}
-
-/* The prose rhythm in section 5 — a top margin on every paragraph, 64px
-   above any heading that follows something — is right for an article and
-   wrong for an app's chrome. Zeroed here, at the specificity of one class,
-   so every rule below this one still sets its own spacing. */
-.crumb :where(h2, h3, h4, p, blockquote, ol, ul, dl, dd, li + li) { margin: 0; }
-
-.crumb__bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--border-subtle);
-  background: var(--surface);
-  position: relative;
-  z-index: 2;
-}
-
-/* The gilded hairline the header and the update modal both end on. */
-.crumb__bar::after {
-  content: '';
-  position: absolute;
-  inset-inline: 8%;
-  bottom: -1px;
-  height: 1px;
-  background: linear-gradient(to right, transparent,
-    color-mix(in oklch, var(--accent) 60%, transparent) 25%,
-    color-mix(in oklch, var(--accent) 60%, transparent) 75%, transparent);
-}
-
-.crumb__heading {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0 var(--space-3);
-  margin-inline-end: auto;
-}
-
-.crumb__title {
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-weight: 650;
-  font-size: var(--text-4);
-  letter-spacing: -0.01em;
-}
-
-.crumb__meta {
-  font-family: var(--font-mono);
-  font-size: var(--text-1);
-  color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
-}
-
-.crumb__views {
-  display: inline-flex;
-  padding: 3px;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  background: var(--bg);
-}
-
-.crumb__view {
-  padding: 0.35em 0.9em;
-  border-radius: var(--radius-full);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: color var(--duration-micro) var(--ease-out),
-              background-color var(--duration-micro) var(--ease-out);
-}
-
-.crumb__view:hover { color: var(--text-accent); }
-
-/* Selected: fill plus weight, never the fill alone. */
-.crumb__view[aria-selected='true'] {
-  color: var(--text-on-accent-solid);
-  background: var(--accent-solid);
-  font-weight: 600;
-}
-
-.crumb__search {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.crumb__searchnote {
-  position: absolute;
-  top: calc(100% + 0.35rem);
-  left: 0;
-  right: 0;
-  z-index: 5;
-  padding: 0.4rem 0.6rem;
-  font-size: 0.8rem;
-  line-height: 1.35;
-  color: var(--text-primary);
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 14px rgb(0 0 0 / 0.18);
-}
-.crumb__searchnote[hidden] { display: none; }
-
-.crumb__search .icon {
-  position: absolute;
-  inset-inline-start: 0.7em;
-  width: 1.05em;
-  height: 1.05em;
-  color: var(--text-secondary);
-  pointer-events: none;
-}
-
-.crumb__search input {
-  width: 14rem;
-  padding: 0.5em 0.9em 0.5em 2.2em;
-  font-size: var(--text-2);
-  color: var(--text-primary);
-  background: var(--bg);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-full);
-}
-
-.crumb__search input::placeholder { color: var(--text-secondary); opacity: 1; }
-.crumb__search input:focus-visible { border-color: var(--focus-ring); outline-offset: 2px; }
-
-.crumb__btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45em;
-  min-height: 2.25rem;
-  padding: 0.4em 0.9em;
-  font-size: var(--text-2);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color var(--duration-micro) var(--ease-out),
-              border-color var(--duration-micro) var(--ease-out),
-              background-color var(--duration-micro) var(--ease-out);
-}
-
-.crumb__btn .icon { width: 1.15em; height: 1.15em; }
-.crumb__btn:hover { color: var(--text-accent); border-color: var(--border-strong); }
-
-.crumb__btn--icon { width: 2.25rem; padding: 0; }
-.crumb__btn--icon .icon { width: 1.25em; height: 1.25em; }
-
-.crumb__btn--solid {
-  color: var(--text-on-accent-solid);
-  background: var(--accent-solid);
-  border-color: var(--accent-solid);
-  font-weight: 600;
-}
-
-.crumb__btn--solid:hover {
-  color: var(--text-on-accent-solid);
-  background: var(--accent-solid-hover);
-  border-color: var(--accent-solid-hover);
-}
-
-.crumb__btn--quiet { border-color: transparent; }
-.crumb__btn--small { min-height: 1.9rem; padding: 0.2em 0.6em; font-size: var(--text-1); }
-
-/* The row is pinned to the space the app gives it. Left implicit, it sizes
-   to its tallest child — the panel, once a section's quotes open — and the
-   stage grows with it, which re-lays the canvas out for a height nobody can
-   see. */
-.crumb__body {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 22rem;
-  grid-template-rows: minmax(0, 1fr);
-  min-height: 0;
-}
-
-/* --- stage -------------------------------------------------------------------------- */
-
-.crumb__stage {
-  position: relative;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  touch-action: none;
-  cursor: grab;
-  border-radius: 0;
-  background:
-    radial-gradient(ellipse 70% 60% at 50% 48%,
-      color-mix(in oklch, var(--accent-solid) 7%, var(--bg)) 0%,
-      var(--bg) 72%);
-}
-
-[data-theme='flour'] .crumb__stage {
-  background:
-    radial-gradient(ellipse 70% 60% at 50% 48%,
-      color-mix(in oklch, white 38%, var(--bg)) 0%,
-      var(--bg) 75%);
-}
-
-.crumb__stage:focus-visible { outline-offset: -3px; border-radius: 0; }
-.crumb__stage--grabbing { cursor: grabbing; }
-.crumb--loading .crumb__stage { cursor: progress; }
-
-.crumb__canvas {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
-
-.crumb__status {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-}
-
-.crumb__status:empty { display: none; }
-
-/* Several overlays set their own display; the attribute has to win. */
-.crumb [hidden] { display: none !important; }
-
-.crumb__loading,
-.crumb__failed p {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: var(--text-4);
-  color: var(--text-secondary);
-}
-
-.crumb__failed {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-3);
-  pointer-events: auto;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .crumb__loading { animation: crumb-breathe 1.8s var(--ease-in-out) infinite; }
-}
-
-@keyframes crumb-breathe {
-  50% { opacity: 0.45; }
-}
-
-/* Never under the tools or the legend: graph.js measures both and hands over
-   the room left for the hint (--crumb-hint-l, -r, -b). Centred within that
-   room, it wraps onto balanced lines rather than reach either of them. */
-.crumb__hint {
-  position: absolute;
-  left: var(--crumb-hint-l, var(--space-3));
-  right: var(--crumb-hint-r, var(--space-3));
-  bottom: var(--crumb-hint-b, calc(var(--space-3) + 0.4rem));
-  width: fit-content;
-  margin-inline: auto;
-  padding: 0.35em 0.9em;
-  font-size: var(--text-1);
-  color: var(--text-secondary);
-  text-align: center;
-  text-wrap: balance;
-  background: color-mix(in oklch, var(--surface) 85%, transparent);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  pointer-events: none;
-  transition: opacity var(--duration-view) var(--ease-out);
-}
-
-.crumb__hint--gone { opacity: 0; }
-.crumb[data-view='anatomy'] .crumb__hint,
-.crumb:is([data-view='list'], [data-view='matrix']) .crumb__hint { display: none; }
-
-/* Trail: where you walked from, so a walk can be retraced a step at a time. */
-.crumb__trail {
-  position: absolute;
-  top: var(--space-3);
-  inset-inline-start: var(--space-3);
-  max-width: calc(100% - 2 * var(--space-3));
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25em;
-  padding: 0.25em;
-  background: color-mix(in oklch, var(--surface) 88%, transparent);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  z-index: 1;
-}
-
-.crumb__crumb {
-  padding: 0.25em 0.65em;
-  font-family: var(--font-mono);
-  font-size: var(--text-1);
-  color: var(--text-secondary);
-  border-radius: var(--radius-full);
-  cursor: pointer;
-}
-
-.crumb__crumb:hover { color: var(--text-accent); background: var(--surface-hover); }
-.crumb__crumb--back { display: inline-grid; place-items: center; width: 1.9rem; height: 1.9rem; padding: 0; }
-.crumb__crumb--back .icon { width: 1.1em; height: 1.1em; }
-.crumb__crumb--here { color: var(--text-primary); font-weight: 500; cursor: default; }
-.crumb__crumb--here:hover { color: var(--text-primary); background: none; }
-.crumb__crumb-sep { color: var(--text-secondary); opacity: 0.6; }
-
-.crumb__legend {
-  position: absolute;
-  inset-inline-start: var(--space-3);
-  bottom: var(--space-3);
-  max-width: min(44rem, calc(100% - 18rem));
-  z-index: 1;
-}
-
-.crumb__legend-title {
-  margin-bottom: var(--space-2);
-  font-family: var(--font-mono);
-  font-size: var(--text-1);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-accent);
-}
-
-.crumb__legend-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-}
-
-.crumb[data-view='anatomy'] .crumb__legend,
-.crumb:is([data-view='list'], [data-view='matrix']) .crumb__legend { display: none; }
-
-/* A wide stage has width to spare and height to protect: the key stands up
-   along the left edge, the way a map's does, and the graph keeps the full
-   height. graph.js reads which way it stands and fits the camera beside it. */
-@container (min-width: 60rem) {
-  .crumb__legend {
-    top: var(--space-4);
-    bottom: auto;
-    max-width: 15rem;
-  }
-  .crumb-family { white-space: nowrap; }
-  .crumb__legend-list { flex-direction: column; align-items: flex-start; }
-}
-
-.crumb-family {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;
-  padding: 0.2em 0.55em;
-  font-size: var(--text-1);
-  color: var(--text-secondary);
-  background: color-mix(in oklch, var(--surface) 88%, transparent);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: color var(--duration-micro) var(--ease-out),
-              border-color var(--duration-micro) var(--ease-out);
-}
-
-.crumb-family:hover { color: var(--text-primary); border-color: var(--chip); }
-
-/* Pressed: the family's own colour as the border, plus bolder text — two
-   channels, so a filter that is on never rests on hue. */
-.crumb-family[aria-pressed='true'] {
-  color: var(--text-primary);
-  font-weight: 600;
-  border-color: var(--chip);
-  box-shadow: inset 0 0 0 1px var(--chip);
-}
-
-.crumb-family__count {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  opacity: 0.75;
-}
-
-.crumb-swatch {
-  display: inline-block;
-  flex-shrink: 0;
-  width: 0.7em;
-  height: 0.7em;
-  border-radius: var(--radius-full);
-  background: var(--chip);
-}
-
-.crumb__anatomy-key {
-  position: absolute;
-  inset-inline-start: var(--space-3);
-  bottom: var(--space-3);
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
-  padding: 0.4em 0.9em;
-  font-size: var(--text-1);
-  color: var(--text-secondary);
-  background: color-mix(in oklch, var(--surface) 88%, transparent);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  z-index: 1;
-}
-
-.crumb__anatomy-key span { display: inline-flex; align-items: center; gap: 0.4em; }
-.crumb__anatomy-key svg { width: 1em; height: 1em; color: var(--text-accent); }
-
-.crumb__tools {
-  position: absolute;
-  inset-inline-end: var(--space-3);
-  bottom: var(--space-3);
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.3rem;
-  background: color-mix(in oklch, var(--surface) 88%, transparent);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  z-index: 1;
-}
-
-.crumb__tools .crumb__btn { border-color: transparent; min-height: 2rem; width: 2rem; }
-.crumb:is([data-view='list'], [data-view='matrix']) .crumb__tools { display: none; }
-
-.crumb__size {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;
-  padding-inline: 0.6em 0.2em;
-  font-size: var(--text-1);
-  color: var(--text-secondary);
-}
-
-.crumb__size select {
-  padding: 0.25em 0.4em;
-  font: inherit;
-  color: var(--text-primary);
-  background: var(--bg);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-}
-
-.crumb[data-view='anatomy'] .crumb__size { display: none; }
-
-/* --- tooltip -------------------------------------------------------------------------- */
-
-.crumb__tip {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 3;
-  width: max-content;
-  max-width: min(22rem, calc(100% - 16px));
-  padding: var(--space-3) var(--space-4);
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-md);
-  box-shadow: 0 18px 40px -18px hsl(var(--shadow-ink) / 0.7);
-  pointer-events: none;
-}
-
-.crumb__tip[hidden] { display: none; }
-
-.crumb-tip__name {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: var(--text-3);
-  line-height: 1.25;
-  overflow-wrap: anywhere;
-}
-
-.crumb-tip__meta {
-  display: flex;
-  align-items: center;
-  gap: 0.45em;
-  margin-block: 0.15em 0.4em;
-  font-size: var(--text-1);
-  color: var(--text-secondary);
-}
-
-.crumb-tip__body { color: var(--text-secondary); line-height: var(--leading-normal); }
-.crumb-tip__stats { margin-top: 0.4em; font-family: var(--font-mono); font-size: var(--text-1); color: var(--text-accent); }
-
-.crumb-tip__rel {
-  display: flex;
-  align-items: baseline;
-  gap: 0.45em;
-  margin-top: var(--space-2);
-  font-size: var(--text-1);
-  color: var(--text-accent);
-}
-
-.crumb-tip__rel--in { color: var(--text-secondary); }
-
-.crumb-tip__num,
-.crumb-section__num {
-  display: inline-grid;
-  place-items: center;
-  flex-shrink: 0;
-  min-width: 1.5em;
-  height: 1.5em;
-  padding-inline: 0.3em;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-full);
-}
-
-.crumb-quote {
-  margin: 0.35em 0 0;
-  padding-inline-start: 0.75em;
-  border-inline-start: 2px solid color-mix(in oklch, var(--accent) 55%, transparent);
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: var(--text-2);
-  line-height: 1.45;
-  color: var(--text-primary);
-  overflow-wrap: anywhere;
-}
-
-.crumb-quote mark {
-  font-family: var(--font-mono);
-  font-style: normal;
-  font-size: 0.88em;
-  color: var(--text-accent);
-  background: color-mix(in oklch, var(--accent) 12%, transparent);
-  border-radius: 4px;
-  padding: 0 0.2em;
-}
-
-/* --- panel -------------------------------------------------------------------------------- */
-
-.crumb__panel {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
-  background: var(--surface);
-  border-inline-start: 1px solid var(--border-subtle);
-}
-
-.crumb__sheet-handle { display: none; }
-
-.crumb__panel-body {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: var(--space-4) var(--space-5) var(--space-6);
-}
-
-.crumb-panel__section + .crumb-panel__section {
-  margin-top: var(--space-5);
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--border-subtle);
-}
-
-.crumb-panel__title {
-  margin-bottom: var(--space-3);
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: var(--text-1);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-accent);
-}
-
-.crumb-panel__count { color: var(--text-secondary); }
-
-.crumb-panel__text {
-  color: var(--text-secondary);
-  line-height: var(--leading-relaxed);
-}
-
-.crumb-panel__hint {
-  margin-top: var(--space-3);
-  font-size: var(--text-1);
-  color: var(--text-secondary);
-}
-
-.crumb-notes,
-.crumb-roles,
-.crumb-sections,
-.crumb-inbounds,
-.crumb-route {
-  list-style: none;
-  padding: 0;
-}
-
-.crumb-notes li + li,
-.crumb-inbounds li + li { margin-top: var(--space-2); }
-
-.crumb-note {
-  display: block;
-  width: 100%;
-  padding: var(--space-3);
-  text-align: start;
-  line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: border-color var(--duration-micro) var(--ease-out),
-              background-color var(--duration-micro) var(--ease-out);
-}
-
-.crumb-note b { color: var(--text-primary); font-weight: 600; }
-.crumb-note:hover { border-color: var(--border-strong); background: var(--surface-hover); }
-
-.crumb-note[aria-pressed='true'] {
-  border-color: var(--accent);
-  background: color-mix(in oklch, var(--accent) 9%, var(--surface));
-  box-shadow: inset 3px 0 0 var(--accent);
-}
-
-.crumb-chip {
-  display: inline-flex;
-  align-items: center;
-  max-width: 100%;
-  padding: 0.05em 0.45em;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: var(--text-primary);
-  background: var(--surface-hover);
-  border-inline-start: 3px solid var(--chip);
-  border-radius: 5px;
-  overflow-wrap: anywhere;
-  vertical-align: baseline;
-}
-
-a.crumb-chip:hover,
-.crumb-chip--button:hover { color: var(--text-accent); }
-
-.crumb-chip--button { cursor: pointer; }
-.crumb-chip--family { font-family: var(--font-body); font-size: var(--text-1); }
-
-.crumb-roles li + li { margin-top: var(--space-3); }
-
-.crumb-role {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  color: var(--text-secondary);
-  line-height: 1.45;
-}
-
-.crumb-role b { color: var(--text-primary); font-weight: 600; }
-.crumb-role__count { font-family: var(--font-mono); font-size: var(--text-1); color: var(--text-accent); }
-
-.crumb-role-glyph {
-  flex-shrink: 0;
-  width: 1.5rem;
-  height: 1.5rem;
-  color: var(--text-accent);
-}
-
-/* --- panel: one skill ------------------------------------------------------------------ */
-
-.crumb-skill__name {
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-weight: 650;
-  font-size: var(--text-5);
-  line-height: 1.12;
-  letter-spacing: -0.01em;
-  overflow-wrap: anywhere;
-}
-
-.crumb-skill__meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  margin-block: var(--space-3);
-}
-
-.crumb-skill__role {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35em;
-  font-size: var(--text-1);
-  color: var(--text-secondary);
-}
-
-.crumb-skill__role .crumb-role-glyph { width: 1.15rem; height: 1.15rem; }
-
-.crumb-skill__flag {
-  margin-bottom: var(--space-2);
-  font-family: var(--font-mono);
-  font-size: var(--text-1);
-  color: var(--text-accent);
-}
-
-.crumb-stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-2);
-  margin-block: var(--space-4);
-}
-
-.crumb-stats div {
-  padding: var(--space-2);
-  text-align: center;
-  background: var(--bg);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-}
-
-.crumb-stats dt {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-secondary);
-}
-
-.crumb-stats dd {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: var(--text-4);
-  font-variant-numeric: tabular-nums;
-}
-
-.crumb-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.crumb-sections li + li { margin-top: 2px; }
-
-.crumb-section__head {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  width: 100%;
-  padding: 0.45em 0.5em;
-  text-align: start;
-  color: var(--text-secondary);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-}
-
-.crumb-section__head:hover { color: var(--text-primary); background: var(--surface-hover); }
-.crumb-section__title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-
-.crumb-section__cites {
-  font-family: var(--font-mono);
-  font-size: var(--text-1);
-  color: var(--text-accent);
-}
-
-.crumb-section__cites::before { content: '→ '; }
-.crumb-section--ref .crumb-section__num { border-style: dashed; }
-
-.crumb-section--on > .crumb-section__head {
-  color: var(--text-primary);
-  background: color-mix(in oklch, var(--accent) 10%, var(--surface));
-}
-
-.crumb-section--on .crumb-section__num {
-  color: var(--text-on-accent-solid);
-  background: var(--accent-solid);
-  border-color: var(--accent-solid);
-}
-
-.crumb-section__detail {
-  display: grid;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-2) var(--space-3) 2.3em;
-}
-
-.crumb-cite { display: grid; gap: 0.2em; justify-items: start; }
-.crumb-cite + .crumb-cite { margin-top: var(--space-2); }
-
-.crumb-link {
-  font-size: var(--text-1);
-  color: var(--text-accent);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.crumb-link:hover { color: var(--accent-hover); }
-.crumb-link--button {
-  background: none;
-  border: 0;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.crumb-inbound {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: baseline;
-  gap: 0 0.55em;
-  width: 100%;
-  padding: 0.4em 0.5em;
-  text-align: start;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-}
-
-.crumb-inbound:hover { background: var(--surface-hover); }
-.crumb-inbound__name { font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; }
-.crumb-inbound__from { grid-column: 2; font-size: var(--text-1); color: var(--text-secondary); overflow-wrap: anywhere; }
-
-/* --- panel: trace ----------------------------------------------------------------------- */
-
-.crumb-trace { display: grid; gap: var(--space-3); margin-top: var(--space-3); }
-
-.crumb-trace label { display: grid; gap: 0.3em; font-size: var(--text-1); color: var(--text-secondary); }
-
-.crumb-trace input {
-  padding: 0.5em 0.75em;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--text-primary);
-  background: var(--bg);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-}
-
-.crumb-trace__error:empty { display: none; }
-.crumb-trace__error { font-size: var(--text-1); color: var(--text-accent); }
-
-/* The route: a gilded spine with each skill a stop on it. */
-.crumb-route { position: relative; padding-inline-start: 1.4em; }
-
-.crumb-route::before {
-  content: '';
-  position: absolute;
-  inset-block: 0.8em 0.8em;
-  inset-inline-start: 0.35em;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--accent-solid), color-mix(in oklch, var(--accent-solid) 30%, transparent));
-  border-radius: 2px;
-}
-
-.crumb-route__stop { position: relative; display: grid; gap: 0.3em; justify-items: start; }
-.crumb-route__stop + .crumb-route__stop { margin-top: var(--space-4); }
-
-.crumb-route__stop::before {
-  content: '';
-  position: absolute;
-  inset-inline-start: -1.35em;
-  top: 0.45em;
-  width: 0.7em;
-  height: 0.7em;
-  border-radius: var(--radius-full);
-  background: var(--surface);
-  border: 2px solid var(--accent-solid);
-}
-
-.crumb-route__via { font-size: var(--text-1); color: var(--text-secondary); }
-
-/* --- list view ---------------------------------------------------------------------------- */
-
-.crumb__list {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  overflow-y: auto;
-  padding: var(--space-5) var(--space-6) var(--space-7);
-  background: var(--bg);
-  cursor: auto;
-  touch-action: auto;
-}
-
-.crumb__list[hidden] { display: none; }
-
-.crumb-list__intro { color: var(--text-secondary); margin-bottom: var(--space-5); }
-
-.crumb-list__family + .crumb-list__family { margin-top: var(--space-6); }
-
-.crumb-list__title {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  margin-bottom: var(--space-3);
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: var(--text-4);
-}
-
-.crumb-list__skill {
-  padding: var(--space-3) 0;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.crumb-list__skill h4 {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: var(--text-2);
-}
-
-.crumb-list__skill h4 a { color: var(--text-primary); text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 0.2em; }
-.crumb-list__skill h4 a:hover { color: var(--text-accent); }
-
-.crumb-list__role {
-  display: flex;
-  align-items: center;
-  gap: 0.35em;
-  margin-top: 0.3em;
-  font-size: var(--text-1);
-  color: var(--text-secondary);
-}
-
-.crumb-list__role .crumb-role-glyph { width: 1rem; height: 1rem; }
-
-.crumb-list__refs {
-  margin-top: var(--space-2);
-  line-height: 2;
-  color: var(--text-secondary);
-}
-
-.crumb-list__refs b {
-  margin-inline-end: 0.4em;
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: var(--text-1);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-accent);
-}
-
-/* --- matrix view -------------------------------------------------------------------------- */
-
-/* One hue, dim to bright, mixed into the page so both themes keep the number
-   legible: at the strongest cell the digits hold 5.2:1 on crust and 6.2:1 on
-   flour, which is why the two themes stop at different strengths. The number
-   is always printed, so the shade is never the only channel. */
-.crumb__matrix {
-  --matrix-hue: var(--gold-500);
-  --matrix-max: 50%;
-}
-[data-theme='flour'] .crumb__matrix {
-  --matrix-hue: var(--gold-700);
-  --matrix-max: 70%;
-}
-
-.crumb-matrix__lede {
-  max-width: 60ch;
-  margin: calc(-1 * var(--space-3)) 0 var(--space-5);
-  color: var(--text-primary);
-}
-
-.crumb-matrix__scroll { overflow-x: auto; padding-bottom: var(--space-2); }
-
-.crumb-matrix {
-  border-collapse: separate;
-  border-spacing: 2px;
-  font-family: var(--font-mono);
-  font-size: var(--text-1);
-  font-variant-numeric: tabular-nums;
-}
-
-.crumb-matrix th { font-weight: 500; }
-
-.crumb-matrix__corner,
-.crumb-matrix__row {
-  /* The family column stays put while the grid scrolls under it. */
-  position: sticky;
-  inset-inline-start: 0;
-  z-index: 1;
-  background: var(--bg);
-}
-
-.crumb-matrix__corner {
-  padding: 0 var(--space-2) var(--space-2) 0;
-  vertical-align: bottom;
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-
-.crumb-matrix__col { padding-bottom: var(--space-1); vertical-align: bottom; }
-.crumb-matrix__col abbr {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25em;
-  text-decoration: none;
-  color: var(--text-secondary);
-  cursor: help;
-}
-
-.crumb-matrix__row {
-  padding-inline-end: var(--space-3);
-  text-align: start;
-  white-space: nowrap;
-}
-.crumb-matrix__row .crumb-swatch { margin-inline-end: 0.5em; vertical-align: 0.05em; }
-.crumb-matrix__row .crumb-matrix__num { display: inline-block; min-width: 1.6em; color: var(--text-secondary); }
-.crumb-matrix__name { font-family: var(--font-body); color: var(--text-primary); }
-/* The row header is the family's own switch: it looks like the header it is,
-   and answers the pointer and the keyboard like the chips in the legend. */
-.crumb-matrix__pick {
-  display: block;
-  width: 100%;
-  min-height: 2.75rem;
-  padding: 0 var(--space-2) 0 0;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: start;
-  white-space: nowrap;
-  cursor: pointer;
-}
-.crumb-matrix__pick:hover .crumb-matrix__name { text-decoration: underline; text-underline-offset: 0.2em; }
-.crumb-matrix__pick:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
-
-.crumb-matrix__cell { width: 2.75rem; height: 2.75rem; padding: 0; }
-.crumb-matrix__cell--self { box-shadow: inset 0 0 0 1px var(--text-secondary); border-radius: var(--radius-sm); }
-/* A family chosen in the legend: its cross is tinted, and its name and number
-   are set bold, so the mark does not rest on the tint alone. */
-.crumb-matrix__cell--on { background: color-mix(in oklch, var(--text-accent) 12%, transparent); }
-.crumb-matrix__row--on,
-.crumb-matrix__row--on .crumb-matrix__name,
-.crumb-matrix__row--on .crumb-matrix__num,
-.crumb-matrix__col--on .crumb-matrix__num { font-weight: 700; color: var(--text-accent); }
-.crumb-matrix__lede--family { font-weight: 500; }
-.crumb-matrix__cell--self button { box-shadow: inset 0 0 0 1px var(--text-secondary); }
-
-.crumb-matrix__cell button {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--matrix-hue) calc(6% + var(--m) * (var(--matrix-max) - 6%)), var(--bg));
-  color: var(--text-primary);
-  font: inherit;
-  cursor: pointer;
-}
-.crumb-matrix__cell button:hover { outline: 2px solid var(--text-accent); outline-offset: -2px; }
-.crumb-matrix__cell button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
-
-/* On a phone the family names would take the whole width; the numbers in the
-   first column stand for them, as they do along the top. */
-@container (width < 40rem) {
-  .crumb-matrix__name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .crumb-matrix__cell { width: 2.25rem; height: 2.25rem; }
-  .crumb-matrix__pick { min-height: 2.25rem; }
-  .crumb-matrix__corner span { display: block; }
-}
-
-/* --- narrow: the panel becomes a sheet over the stage -------------------------------------- */
-
-/* Below 60rem a side panel leaves the stage too narrow to read — at 50rem it
-   was 440px, and the legend, capped at the width the tools leave, stacked
-   into a column over the graph. So the panel becomes a sheet wherever the
-   legend stops standing up the left edge, and the graph takes the width. */
-@container (width < 60rem) {
-  .crumb__bar { gap: var(--space-2); padding: var(--space-2) var(--space-3); }
-  /* The page's heading names the graph already, and the header's Graph link
-     is marked current; the repeated title is a row the stage can have. */
-  .crumb__heading { display: none; }
-  .crumb__views { order: 1; }
-  .crumb [data-crumb-trace] { order: 2; margin-inline-start: auto; }
-  .crumb__search { order: 3; flex: 1 1 100%; min-width: 9rem; }
-  .crumb__search input { width: 100%; }
-  .crumb [data-crumb-trace] span { display: none; }
-  .crumb [data-crumb-trace] { width: 2.25rem; padding: 0; }
-  .crumb__view { padding: 0.35em 0.7em; }
-
-  .crumb__body { display: block; }
-  .crumb__stage { position: absolute; inset: 0; }
-
-  .crumb__panel {
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    z-index: 3;
-    max-height: 3.25rem;
-    border-inline-start: 0;
-    border-top: 1px solid var(--border-strong);
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    box-shadow: 0 -18px 40px -24px hsl(var(--shadow-ink) / 0.7);
-    transition: max-height var(--duration-view) var(--ease-out);
-  }
-
-  .crumb--sheet-open .crumb__panel { max-height: 72%; }
-
-  .crumb__sheet-handle {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3em;
-    width: 100%;
-    min-height: 3.2rem;
-    padding: 0.45em var(--space-4) 0.6em;
-    font-family: var(--font-mono);
-    font-size: var(--text-1);
-    color: var(--text-accent);
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-
-  .crumb__sheet-grip {
-    width: 2.5rem;
-    height: 4px;
-    border-radius: var(--radius-full);
-    background: var(--border-strong);
-  }
-
-  .crumb__panel-body { padding-top: 0; }
-  .crumb:not(.crumb--sheet-open) .crumb__panel-body { visibility: hidden; }
-
-  .crumb__legend {
-    inset-inline: var(--space-2);
-    bottom: calc(3.25rem + var(--space-2));
-    max-width: none;
-  }
-
-  .crumb__legend-title { display: none; }
-
-  .crumb__legend-list {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 2px;
-    scrollbar-width: none;
-  }
-
-  .crumb-family { flex-shrink: 0; }
-
-  .crumb__anatomy-key { bottom: calc(3.25rem + var(--space-2)); inset-inline-start: var(--space-2); }
-
-  .crumb__tools {
-    top: var(--space-2);
-    bottom: auto;
-    inset-inline-end: var(--space-2);
-    flex-direction: column;
-  }
-
-  .crumb__size { display: none; }
-  /* The tools have moved to the top and the legend to its own row here, so
-     only the edges bound the hint. */
-  .crumb__hint { left: 5%; right: 5%; bottom: calc(3.25rem + 3.5rem); }
-  .crumb__trail { max-width: calc(100% - 4rem); }
-  .crumb__list { padding: var(--space-4) var(--space-4) calc(3.25rem + var(--space-6)); }
-  .crumb-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .crumb__panel,
-  .crumb__hint,
-  .crumb__view,
-  .crumb__btn,
-  .crumb-note,
-  .crumb-family { transition: none; }
-}
-
-@media (forced-colors: active) {
-  .crumb-chip,
-  .crumb-family,
-  .crumb-note,
-  .crumb__btn,
-  .crumb__views { border: 1px solid ButtonText; }
-  .crumb__view[aria-selected='true'],
-  .crumb-family[aria-pressed='true'],
-  .crumb-note[aria-pressed='true'] { outline: 2px solid Highlight; }
-  .crumb-swatch { forced-color-adjust: none; }
-}
-
-/* The climb release. The shell is the other banners', shared above. What is
-   its own is the picture: the loop the release is about, iteration markers
-   rising in steps toward a dashed bar, hollow while the check fails and
-   solid when it passes. The SVG is the climb at rest and is finished work in
-   its own right; site.js lays a canvas over it that replays the climb and
-   hides the drawing once it has drawn its first frame. */
-
-.climb-banner {
-  min-height: 19rem;
-  background:
-    radial-gradient(ellipse 46% 95% at 74% 50%,
-      color-mix(in oklch, var(--accent-solid) 10%, var(--bg)) 0%,
-      var(--bg) 80%);
-}
-
-.climb-banner__stage {
-  position: absolute;
-  inset: 0 0 0 auto;
-  z-index: 0;
-  width: 54%;
-  padding: var(--space-6) var(--space-6) var(--space-6) 0;
-  pointer-events: none;
-}
-
-.climb-banner__art,
-.climb-banner__canvas {
-  position: absolute;
-  inset: var(--space-6) var(--space-6) var(--space-6) 0;
-  width: calc(100% - var(--space-6));
-  height: calc(100% - 2 * var(--space-6));
-}
+/* The SVG of a climb at rest (pages::index::climb_svg). Its colours are
+   shared here because two pages draw it; where it sits is each page's. */
 
 .climb-banner__art { overflow: visible; }
-.climb-banner.is-drawn .climb-banner__art { visibility: hidden; }
 
 .climb-banner__bar {
   stroke: var(--text-accent);
@@ -5935,95 +2593,218 @@ a.crumb-chip:hover,
 .climb-banner__dot { fill: var(--accent-solid); }
 .climb-banner__halo { fill: color-mix(in oklch, var(--accent-solid) 22%, transparent); }
 
-.climb-banner__ships-label {
-  margin-top: var(--space-4);
-  font-size: var(--text-1);
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.climb-banner__ships {
-  display: grid;
-  gap: var(--space-1);
-  max-width: 46ch;
-  margin: var(--space-2) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.climb-banner__ship-link {
-  display: grid;
-  grid-template-columns: 0.75rem 1fr;
-  column-gap: var(--space-3);
-  align-items: baseline;
-  padding: var(--space-1) var(--space-2);
-  margin-inline: calc(-1 * var(--space-2));
-  border-radius: var(--radius-sm);
-  color: inherit;
-  text-decoration: none;
-  transition: background-color var(--duration-micro) var(--ease-out);
-}
-
-.climb-banner__ship-link:hover { background: color-mix(in oklch, var(--accent-solid) 10%, transparent); }
-.climb-banner__ship-link:focus-visible { outline: 2px solid var(--text-accent); outline-offset: 1px; }
-
-/* The marks are the climb's own: a ring for the work, a solid dot for what
-   passes. Drawn in CSS so they match the picture, never a glyph. */
-.climb-banner__ship-mark {
-  grid-row: span 2;
-  align-self: center;
-  width: 0.7rem;
-  height: 0.7rem;
-  border: 2px solid var(--text-accent);
-  border-radius: 50%;
-}
-.climb-banner__ship--mod .climb-banner__ship-mark { background: var(--accent-solid); border-color: var(--accent-solid); }
-
-.climb-banner__ship-name {
-  font-family: var(--font-mono);
-  font-size: 0.92em;
-  font-weight: 600;
-  color: var(--text-primary);
-  overflow-wrap: anywhere;
-}
-
-.climb-banner__ship-link:hover .climb-banner__ship-name { color: var(--text-accent); }
-
-.climb-banner__ship-note {
-  grid-column: 2;
-  font-size: var(--text-1);
-  line-height: 1.4;
-  color: var(--text-secondary);
-}
-
-@container banner (max-width: 44rem) {
-  .climb-banner { padding-top: 12rem; }
-  .climb-banner__stage {
-    inset: 0 0 auto 0;
-    width: auto;
-    height: 12rem;
-    padding: 0;
-  }
-  .climb-banner__art,
-  .climb-banner__canvas {
-    inset: var(--space-4) var(--space-5) var(--space-3);
-    width: calc(100% - 2 * var(--space-5));
-    height: calc(100% - var(--space-4) - var(--space-3));
-  }
-  .climb-banner__ships { margin-bottom: var(--space-5); }
-}
-
 @media (forced-colors: active) {
-  .climb-banner { border: 2px solid CanvasText; }
-  .climb-banner::before, .climb-banner__body::before { display: none; }
-  .climb-banner__canvas { display: none; }
-  .climb-banner.is-drawn .climb-banner__art { visibility: visible; }
   .climb-banner__bar, .climb-banner__trail, .climb-banner__ring { stroke: CanvasText; }
   .climb-banner__dot { fill: Highlight; }
   .climb-banner__halo { display: none; }
-  .climb-banner__ship-mark { border-color: CanvasText; }
-  .climb-banner__ship--mod .climb-banner__ship-mark { background: Highlight; }
 }
 
-.crumb-list__jump { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; margin: 0 0 1rem; }
-.crumb-list__more > summary { cursor: pointer; font-size: 0.85em; opacity: 0.8; }
+/* ===========================================================================
+   20. Header nav: Skills · Mods · Graph · Getting started
+   Four links now, in the order a visitor reaches for them. Skills and Getting
+   started stay plain pills; Mods and Graph each draw their pill as an inner
+   face so it can move while the link box (the click target) never does.
+   ======================================================================== */
+
+.site-header__nav-link--mods,
+.site-header__nav-link--mods:hover,
+.site-header__nav-link--mods[aria-current] {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  padding: 0;
+  border-color: transparent;
+  background: none;
+}
+
+.site-header__mods-face {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  color: var(--text-secondary);
+  background: var(--bg-deep);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  transition: color var(--duration-micro) var(--ease-out),
+              border-color var(--duration-micro) var(--ease-out),
+              box-shadow var(--duration-enter) var(--ease-out);
+}
+
+.site-header__nav-link--mods:hover .site-header__mods-face,
+.site-header__nav-link--mods.is-climbing .site-header__mods-face {
+  color: var(--text-accent);
+  border-color: var(--border-strong);
+}
+
+/* The word is four letters, each its own box, standing on one baseline.
+   atelier-web's mods_button moves them; the origin at the foot is what makes
+   a squash land on the bar rather than shrink in mid-air. */
+.mods-climb__word { display: inline-flex; align-items: baseline; }
+
+.mods-climb__letter {
+  display: inline-block;
+  transform-origin: 50% 100%;
+}
+
+/* One stair (atelier-web's mods_button STEP): tall enough to read as
+   stairs, not a wobble. */
+.site-header__nav-link--mods { --mods-step: 3.75px; }
+
+/* The bar the last letter hops onto: a faint dashed line just above the
+   pill's right shoulder, the climb's own "bar" in miniature. Invisible at
+   rest; the approach fades it in. */
+.mods-climb__bar {
+  position: absolute;
+  right: 0.45rem;
+  /* Clear of the focus ring (3px offset, 2px wide), so focus shows it. */
+  bottom: calc(100% + 8px);
+  width: 2.4em;
+  height: 0;
+  border-top: 1.5px dashed var(--text-accent);
+  opacity: 0;
+  transform-origin: 70% 50%;
+  pointer-events: none;
+}
+
+/* The sparks are the strongest accent the theme has (the text accent, which
+   is the one held to contrast against the ground), so they read in flour as
+   well as in crust. */
+.mods-climb__spark {
+  position: absolute;
+  right: 0.55em;
+  top: -1.5px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-accent);
+  box-shadow: 0 0 3px color-mix(in oklch, var(--text-accent) 70%, transparent);
+  opacity: 0;
+  --a: calc(-168deg + var(--k) * 39deg);
+}
+
+/* The tag steps aside while the word climbs: the bar takes its shoulder. */
+.site-header__nav-link--mods .site-header__new {
+  transition: opacity var(--duration-micro) var(--ease-out),
+              transform var(--duration-micro) var(--ease-out);
+}
+
+.site-header__nav-link--mods.is-astir .site-header__new,
+.site-header__nav-link--mods:focus-visible .site-header__new {
+  opacity: 0;
+  transform: translateY(-4px) scale(0.8);
+  animation: none;
+}
+
+/* Keyboard focus: the climbed word, held still, and the bar it climbs to.
+   No transition, so it reads the same with or without motion. */
+.site-header__nav-link--mods:focus-visible .mods-climb__letter {
+  transform: translateY(calc((var(--i) + 1) * -1 * var(--mods-step)));
+}
+
+.site-header__nav-link--mods:focus-visible .mods-climb__bar { opacity: 0.6; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-header__nav-link--mods.is-flaring .mods-climb__bar {
+    animation: mods-bar-flare 700ms var(--ease-out) 1;
+  }
+
+  .site-header__nav-link--mods.is-flaring .mods-climb__spark {
+    animation: mods-spark 560ms var(--ease-out) 1;
+  }
+}
+
+@keyframes mods-bar-flare {
+  0% { border-top-style: solid; filter: drop-shadow(0 0 0 var(--accent-solid)); }
+  25% { border-top-style: solid; filter: drop-shadow(0 0 5px var(--accent-solid)); }
+  100% { border-top-style: dashed; filter: drop-shadow(0 0 0 transparent); }
+}
+
+@keyframes mods-spark {
+  0% { opacity: 1; transform: rotate(var(--a)) translateX(2px) scale(1); }
+  60% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(var(--a)) translateX(15px) scale(0.6); }
+}
+
+/* Four pills on a phone: a little less air inside and between them so the
+   row fits one line at 390px rather than orphaning the last link. */
+@media (max-width: 30rem) {
+  .site-header__nav { gap: 0.3rem; }
+  .site-header__nav-link:not(.site-header__nav-link--mods, .site-header__nav-link--graph),
+  .site-header__mods-face,
+  .site-header__graph-face { padding-inline: 0.5rem; }
+}
+
+/* With four links the header's one row needs the "Updated" stamp to take
+   less of it: on wide screens its label sits above its value, so brand,
+   nav, stamp and toggle share a single line at the container's width. */
+@media (min-width: 64rem) {
+  .site-header__actions { gap: var(--space-3) var(--space-4); }
+  .site-header__updated {
+    flex-direction: column;
+    gap: 0.1em;
+    line-height: 1.3;
+  }
+}
+
+/* Room for the reader's time before it arrives. The module replaces a shorter UTC stamp
+   with it, and a box that grew then would wrap the header under the reader's eyes and
+   slide the nav at any width. 23em is the widest stamp measured in this font, "May 10,
+   2026, 12:28 AM your time · 22:28 UTC", at 22.94em. */
+@media (min-width: 40.01rem) {
+  .site-header__updated-value { min-width: 23em; }
+}
+
+/* Below this width the header's one row cannot hold everything, so the actions take a
+   row of their own from the first paint. Left to wrap by itself, the header fit in the
+   fallback fonts and wrapped when the web fonts arrived: a layout shift of 0.34 across
+   1150 to 1249 wide. The row needs 76.5rem with the web fonts, and this leaves the
+   width of a classic scrollbar to spare, and then some. */
+@media (max-width: 79.99rem) {
+  .site-header__actions { flex-basis: 100%; }
+}
+
+/* A phone: the nav takes its own row, and the stamp and the theme toggle
+   share the one under it instead of a row each. */
+@media (max-width: 40rem) {
+  .site-header__inner { padding-block: var(--space-4); }
+  .site-header__actions { width: 100%; gap: var(--space-3); }
+  .site-header__nav { flex-basis: 100%; }
+  .site-header__updated {
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.1em;
+    line-height: 1.3;
+  }
+  .site-header__updated-value { white-space: normal; }
+}
+
+/* A phone: the header takes three short rows rather than four. The theme
+   toggle joins the wordmark's row (the actions box steps out of the way so
+   its children can be placed one by one), the nav keeps its own, and the
+   "Updated" stamp drops its UTC half to stay on one line, label beside
+   value. On /graph/, where the stamp is hidden, the toggle is no longer
+   left alone on a row of its own. */
+@media (max-width: 37.5rem) {
+  .site-header__actions { display: contents; }
+  .site-header__brand { order: 0; }
+  .theme-toggle { order: 1; width: 2.5rem; height: 2.5rem; }
+  .site-header__nav { order: 2; }
+  .site-header__updated {
+    order: 3;
+    flex: 0 0 100%;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5em;
+  }
+  .site-header__updated-value { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .site-header__updated-utc { display: none; }
+}
+
+@media (forced-colors: active) {
+  .site-header__mods-face { border-color: ButtonText; }
+  .mods-climb__bar,
+  .mods-climb__spark { display: none; }
+}

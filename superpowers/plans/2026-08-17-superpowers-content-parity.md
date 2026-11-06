@@ -26,7 +26,7 @@
 - **`using-superpowers` is not duplicated** — `using-tbaguette` already covers that role. Nothing in this plan creates a `skills/using-superpowers/` directory.
 - **Cross-references** use the exact form already established throughout the existing 74 skills: a `## When to use` line reading `Not for: <case> (see <skill-name>)`, and inline backtick-quoted skill names elsewhere in prose where genuinely relevant — not a bolted-on "See also" list at the bottom.
 - **Locales for translation** (Task 17): exactly the 12 in `scripts/locales.py`'s `LOCALES` — `ar`, `de`, `es`, `fr`, `hi`, `it`, `ja`, `ko`, `pt`, `ru`, `tr`, `zh`. Skip `en` (the source language). Do not backfill any locale's pre-existing gaps from before this project.
-- **Superpowers 6.3.0 source** is read-only reference at `/home/thisfuck/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0/skills/<name>/` — never edit anything under that path.
+- **Superpowers 6.3.0 source** is read-only reference at `~/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0/skills/<name>/` — never edit anything under that path.
 - **Concurrent writers**: this repo has other agents/worktrees pushing to `origin/master` (confirmed mid-session: a `website-i18n` worktree merged 27 commits during this project's design phase). Before Task 18's push, `git fetch origin master` and check for divergence; if it moved, `git merge origin/master`, resolve any conflicts confined to the generated `docs/` tree by regenerating (`git checkout --ours -- docs/ && python3 scripts/generate.py --base-path /tbaguette-skills`), rerun the full suite, then push. Do not touch `.claude/worktrees/website-i18n` itself.
 
 ---
