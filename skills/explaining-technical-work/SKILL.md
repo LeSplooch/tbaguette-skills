@@ -47,6 +47,10 @@ Wrong altitude is the most common failure here and it is invisible to the writer
 - Delete the process narrative. What you tried, in what order, and which dead ends you hit is rarely what was asked. Two exceptions, both narrow: when the reader would otherwise repeat the dead end, or when the process **is** the evidence (a bisect, a measurement) — and then it is one line, not a story.
 - Use the reader's vocabulary, not the system's. Internal service and class names are a private language; translate into what the reader owns — "checkout", "the nightly export". Introduce an internal name only when they will need it to search.
 
+## Say when each thing reaches the reader
+
+A person reading a status report about their own product is asking one question of each item: when does this change what I see? Internal step names do not answer it, and a deferred item parked in a closing clause reads as not mentioned. For each visible symptom or promised item, say which release or step changes it and where it stands: shipped, in the next build, queued behind something named, or not started. Give anything deferred a line of its own. If the person has to ask "will the next update fix this?", the report left out the part they read it for.
+
 ## A live surface is written from one seat and read from another
 
 Everything above assumes a document: composed once, revisable before anyone sees it, read by someone who can reply. A progress pane, an activity log, a status line, a streamed step message is none of those, and every writing test above still applies to each line of it.
