@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.3.1</span>
+      <span class="wordmark-version" dir="ltr">v2.4.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-05T23:24:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-05T23:24:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-06T05:20:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-06T05:20:07Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">using-tbaguette</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Judgment and meta</span>
@@ -76,6 +76,8 @@
 <h2 id="the-rule">The rule</h2>
 <p>Before responding — including a clarifying question, &quot;let me look at the code first,&quot; or anything that feels too small to bother — check whether a TBaguette skill covers it. You don't need to open a file to see what exists: every <code>tbaguette-atelier:*</code> skill and its trigger description is normally already listed in your available-skills context — with one failure mode, immediately below, that this library is big enough to hit. <code>CATALOG.md</code> in this repo has the longer versions when a one-line trigger isn't enough to judge relevance.</p>
 <p>If a skill turns out not to fit once you're in it, that's fine — drop it. But check first, every time.</p>
+<h2 id="when-the-notice-names-a-skill">When the notice names a skill</h2>
+<p>On Claude Code, the notice that arrives with each prompt names the skills that prompt seems to match, from a short list of intents and each skill's description, rather than from the listing. Treat a name there as a specific suggestion about this turn: invoke the ones that fit before your first other action, and pass over the ones that do not. A long stretch of tool calls gets the question again, and so does each subagent when it starts.</p>
 <h2 id="the-listing-may-be-shorter-than-the-library">The listing may be shorter than the library</h2>
 <p>That rule rests on a claim which is usually true and quietly stops being true at about the size this library has reached: that every skill's trigger description is in front of you. The listing has a character budget — in Claude Code it is a fraction of the context window, one percent by default — and a library of a hundred skills, each carrying a deliberately trigger-rich description, is the shape that exceeds it.</p>
 <p>What happens then is the part worth knowing. The <strong>names</strong> all survive. The <strong>descriptions</strong> are what gets dropped, and they are dropped starting with the skills invoked least — so the trigger text vanishes from precisely the skills nobody has been reaching for, which are precisely the ones you were relying on the listing to surface. Nothing announces it. Every skill is still listed, the check still runs, and it returns &quot;nothing here covers this&quot; with complete confidence. The failure is invisible to the inspection that would catch it, which is the same shape <a class="skill-link" href="/tbaguette-skills/skills/routing-around-capability-gaps/"><code>routing-around-capability-gaps</code></a> describes one level down for a tool whose schema has not been fetched.</p>

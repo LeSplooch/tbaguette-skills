@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.3.1</span>
+      <span class="wordmark-version" dir="ltr">v2.4.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-05T23:24:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-05T23:24:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-06T05:20:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-06T05:20:07Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">checkpointing-long-runs</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Planning and delegation</span>
@@ -126,7 +126,7 @@ Rests on:    how many trials, against what base rate — or &quot;not measured&q
 <p>The asymmetry is what makes this hard to notice: a boundary makes claims <em>less</em> reliable and verdicts <em>more</em> dangerous. A claim at least arrives as a claim, still open to being re-checked. A verdict arrives as a question already closed, and invites no check at all.</p>
 <h2 id="handing-to-a-successor">Handing to a successor</h2>
 <p>A brief, not an archive, and a brief is a set of named sections rather than a short essay — a successor scanning for one of these should find it as a heading, not as a clause inside a paragraph:</p>
-<ul><li><strong>The goal, in the requester's own words</strong>, quoted rather than paraphrased.</li><li><strong>Where it is now</strong> — anchored to commits and paths.</li><li><strong>The single next action</strong>, specific enough to start.</li><li><strong>What is known not to work</strong>, each one in the four-part form above. This is the section that is worth the whole brief, and the first one cut for length.</li><li><strong>Every open assumption and ruling.</strong></li><li><strong>What would make this run stop</strong> if the successor is also unattended.</li></ul>
+<ul><li><strong>The goal, in the requester's own words</strong>, quoted rather than paraphrased.</li><li><strong>Where it is now</strong> — anchored to commits and paths.</li><li><strong>The single next action</strong>, specific enough to start.</li><li><strong>What is known not to work</strong>, each one in the four-part form above. This is the section that is worth the whole brief, and the first one cut for length.</li><li><strong>Every open assumption and ruling.</strong></li><li><strong>What would make this run stop</strong> if the successor is also unattended.</li><li><strong>The track, the envelope, and the skills in force</strong>, by name. A successor starts with none of them loaded and no memory of having used them, so it picks up the plan without the disciplines the plan was written under.</li></ul>
 <p>Length is a feature here, not a cost, and <a class="skill-link" href="/tbaguette-skills/skills/crouton/"><code>crouton</code></a> decides the budget when there is one. What is never acceptable is a brief that is short because compressing it was easier than writing it.</p>
 <h2 id="common-mistakes">Common mistakes</h2>
 <table><thead><tr><th>Symptom</th><th>Real cause</th></tr></thead><tbody><tr><td>The record's last entry is always just before the gap, never inside it</td><td>Checkpointing was left to a judgment call at the boundary, where the harness offered an event that fires there on its own</td></tr><tr><td>A guess made before the compaction is acted on after it as settled fact</td><td>The boundary carried the claim and dropped its tier; verified, inferred, and assumed arrive in the same voice</td></tr><tr><td>A second session redoes committed work</td><td>Recollection trusted over <code>git log</code>, which is the default after a compaction</td></tr><tr><td>The same dead end explored twice</td><td>Negative results were never written; only forward progress was</td></tr><tr><td>A whole family of causes skipped, wrongly</td><td>A dead end recorded without its boundary, so &quot;pinning the clock changed nothing&quot; was read as &quot;not a timing issue&quot;</td></tr><tr><td>A negative result quoted later as settled fact</td><td>It never said what it rested on, and a flat statement reads as conclusive</td></tr><tr><td>The plan's checkboxes are all empty at task six</td><td>Progress lived in context. A compaction now costs the entire run</td></tr><tr><td>A decision gets re-argued with nobody remembering why</td><td>Rulings never recorded, so the reasoning left with the context</td></tr><tr><td>The handoff brief is accurate and useless</td><td>Written for someone who was there — pronouns, shorthand, unstated referents</td></tr><tr><td>The record was written up at the end and reads beautifully</td><td>It was written by the surviving memory, which is the one thing it was meant to guard against</td></tr><tr><td>A counted claim in the final report is wrong</td><td>The count was recalled from an earlier checkpoint rather than re-measured</td></tr><tr><td>A restored run acts on an approval whose subject has since changed</td><td>The verdict named a role rather than an object, so it re-bound on restore</td></tr></tbody></table>

@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.3.1</span>
+      <span class="wordmark-version" dir="ltr">v2.4.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-05T23:24:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-05T23:24:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-06T05:20:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-06T05:20:07Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">rate-limiting-and-backpressure</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Designing systems</span>
@@ -108,6 +108,7 @@
 <p>Removing retries at one layer does not lower the rate if the layer above re-drives the failure on its own tick: that layer is now the retry loop, and it needs a verdict it reads (or state every caller shares) to stop. Count per-attempt side effects before and after, because anything accounted per unit of the outer loop fires more often when the inner loop gets shorter.</p>
 <h2 id="breakers-and-shedding">Breakers and shedding</h2>
 <p>A circuit breaker trips on error <em>ratio</em> over a rolling window with a minimum sample count — tripping on one failure out of one is a self-inflicted outage — stays open for a cooldown, then half-opens to a limited probe before restoring. Its purpose is to stop spending capacity and latency on calls that are already known to fail, and to give the dependency room to recover.</p>
+<p>That ratio is for failures you cannot explain. A failure whose cause has been positively identified, and which only something outside can clear (a dialog waiting for a person, an expired licence, a maintenance flag, a full disk), is not a noisy sample. Retrying cannot fix it, and each retry has its own cost, sometimes another copy of the thing blocking you. Open on sight, and let the half-open probe be a cheap read of the condition rather than a real attempt.</p>
 <p>Shed by value, not uniformly. Rank traffic and reject in ascending order of worth: bulk and batch work first, then retries, then anonymous and free-tier traffic, then interactive user work; never health checks, authentication refresh, or the control plane that lets you fix the incident. Shed at the edge, before a connection, thread, or transaction has been claimed — rejection after the expensive resource is held provides no relief at all. Uniform shedding is how a background job crowds out the paying user, because that job retries harder and cares less.</p>
 <h2 id="tell-the-caller">Tell the caller</h2>
 <p>A limit a client cannot see before hitting it forces every client to discover it by failing. Return a distinct, machine-readable status for &quot;over your quota&quot; versus &quot;we are overloaded&quot; — the first is the caller's to fix, the second is not and should be retried. That is exactly the split <a class="skill-link" href="/tbaguette-skills/skills/modeling-errors/"><code>modeling-errors</code></a> asks for before a mechanism gets chosen, arriving at the point where a client has to act on it: one class is a permanent answer about this request, the other is a temporary answer about the system. Include a <code>Retry-After</code>-equivalent hint with jitter already applied, and headers or fields naming the limit, the remaining allowance, and the reset time. Document the limit, the window, the dimension, and the burst allowance. Keep the error shape identical to other errors so client code handles it on an existing path rather than a new one.</p>

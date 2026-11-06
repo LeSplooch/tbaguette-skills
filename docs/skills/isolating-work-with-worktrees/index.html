@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.3.1</span>
+      <span class="wordmark-version" dir="ltr">v2.4.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-05T23:24:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-05T23:24:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-06T05:20:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-06T05:20:07Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">isolating-work-with-worktrees</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Landing changes</span>
@@ -100,6 +100,7 @@ git rev-parse --git-common-dir</code></pre>
 <p><strong>Create.</strong></p>
 <pre class="prose-code-block"><code>git worktree add .worktrees/&lt;branch-name&gt; -b &lt;branch-name&gt;</code></pre>
 <p>A permission error here is a sandbox denial, not a bug worth fighting — say so and keep working in the current directory instead.</p>
+<p>A worktree made for a subagent isolates nothing until the agent is pointed at it. A dispatched agent normally starts in the parent's directory, so put the workspace's absolute path in its prompt, and tell it to run its verification there.</p>
 <h2 id="when-the-create-step-fails-the-next-command-still-runs">When the create step fails, the next command still runs</h2>
 <p>In a repository more than one session uses, creation fails for ordinary reasons: the path is already registered to someone else's worktree, the directory exists, the branch is checked out elsewhere. <code>git worktree add … &amp;&amp; cd … &amp;&amp; setup</code> stops at the failure, but only that one chain. The next command, issued on its own line or in its own call, starts from wherever the shell already was — your primary checkout, or another session's tree — and does exactly what it would have done in the fresh one. A patch applied there lands on a checkout that carries someone's uncommitted work; a copy lands in the other session's worktree. The failed create did print an error, and what the next command printed scrolled it away.</p>
 <p>Make the wrong tree unreachable instead of hoping to notice it:</p>

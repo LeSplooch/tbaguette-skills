@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.3.1</span>
+      <span class="wordmark-version" dir="ltr">v2.4.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-05T23:24:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-05T23:24:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-06T05:20:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-06T05:20:07Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -65,7 +65,7 @@
 <article class="container skill-article"><div class="skill-article__head">
   <div class="skill-article__title-row">
     <h1 class="skill-article__title">writing-release-notes</h1>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </div>
   <div class="skill-article__meta">
     <span class="tag skill-article__tag">Communicating</span>
@@ -97,6 +97,8 @@
 <p>So on the day you publish, not the day you drafted, for each new-capability entry:</p>
 <ol><li><strong>Name what it needs outside this release</strong> — the flag, the server version, the store or billing setup, the rollout, the entitlement.</li><li><strong>Read each one's current state where it is set</strong>: the flag service, the version the deployed server reports, the store's own console. Not the default in the repository, and not your own build. The record that says &quot;still off&quot; often exists already, written by whoever does the deploys, in a handoff note, a deploy log, or a rollout dashboard; one read of it is cheaper than the support thread.</li><li><strong>Where you can, use it from the reader's seat</strong>: the build they will install, an account on their plan, no debug or test override.</li></ol>
 <p>An entry you cannot observe working goes out as &quot;coming&quot;, with a date only if you can keep it, or it does not go out. One that is on for some readers says so — &quot;rolling out over the next two weeks&quot;, &quot;on the paid plans&quot;. A reader who tries what the notes announced and is refused learns that the notes are not to be trusted, and every later release pays for it. A release note is a copy that describes behavior, so <a class="skill-link" href="/tbaguette-skills/skills/keeping-copies-in-sync/"><code>keeping-copies-in-sync</code></a>'s <em>A copy that describes behavior is true of a build, not of a commit</em> covers publishing it with the release; this section covers what shipping the release does not switch on by itself.</p>
+<h2 id="writing-it-down-is-not-telling-them">Writing it down is not telling them</h2>
+<p>A changelog is read by people who come looking. The people waiting for this release are often somewhere else: a community channel, a tester group, a mailing list, a notice inside the app. Before calling a release finished, name where its audience hears about it, then either post there or offer the draft as a named next step. Do not leave the owner to ask for it after the build is out, which is the usual way this gets missed. Posting is outward-facing, so draft on your own initiative and post only on the go-ahead it needs.</p>
 <h2 id="breaking-changes-carry-the-step-not-the-difference">Breaking changes carry the step, not the difference</h2>
 <p>The entry contains the literal action, not a description of what is now different.</p>
 <ul><li>Weak: &quot;<code>parse</code> now returns a result type instead of throwing.&quot;</li><li>Strong: &quot;<code>parse</code> returns a result instead of throwing. Update call sites: <code>x = parse(s)</code> → <code>x = parse(s).or_default()</code>. Find them by searching <code>parse(</code>. A codemod is available at &lt;link&gt;.&quot;</li></ul>

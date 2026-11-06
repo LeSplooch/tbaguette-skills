@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TBaguette’s Atelier — Claude Code skills, organized</title>
-<meta name="description" content="102 Claude Code skills for the craft between the ticket and the commit, organized into 12 categories and cross-linked for the moment you need one.">
+<meta name="description" content="103 Claude Code skills for the craft between the ticket and the commit, organized into 12 categories and cross-linked for the moment you need one.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="TBaguette’s Atelier — Claude Code skills, organized">
-<meta property="og:description" content="102 Claude Code skills for the craft between the ticket and the commit, organized into 12 categories and cross-linked for the moment you need one.">
+<meta property="og:description" content="103 Claude Code skills for the craft between the ticket and the commit, organized into 12 categories and cross-linked for the moment you need one.">
 <link rel="canonical" href="/tbaguette-skills/">
 <link rel="icon" type="image/svg+xml" href="/tbaguette-skills/assets/favicon.svg">
 <link rel="preload" href="/tbaguette-skills/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
@@ -33,7 +33,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v2.3.1</span>
+      <span class="wordmark-version" dir="ltr">v2.4.0</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -42,7 +42,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-05T23:24:53+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-05T23:24:53Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-06T05:20:07+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-06T05:20:07Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -111,6 +111,8 @@ After a successful install, verify rather than assume. For a clone you placed yo
 - Read &lt;target&gt;/.claude-plugin/plugin.json&#x27;s &quot;version&quot; field, if present, so you can tell me which version I&#x27;m now on.
 For a harness-managed install, verify it the way your harness reports installed plugins — on Hermes that is `hermes plugins list`, and the row has to say enabled, not just present.
 
+If you are Claude Code: this library is large, and by default your skill listing keeps trigger text for only part of it. Ask me whether you should raise that for me, by adding &quot;skillListingBudgetFraction&quot;: 0.04 and &quot;skillListingMaxDescChars&quot;: 250 to ~/.claude/settings.json, merged with what is there. Say that it costs a few thousand more tokens in every session. Change it only if I say yes.
+
 Then tell me what happened (installed fresh, updated, or already current), which version, and the reload step for my agent specifically — restarting it, Claude Code&#x27;s /reload-plugins, Kimi Code&#x27;s /new, Hermes&#x27; `hermes gateway restart`. Skills then invoke as tbaguette-atelier:skill-name.
 
 Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke tbaguette-atelier:using-tbaguette here (if you have no skill tool, read skills/using-tbaguette/SKILL.md from the install instead).</code>
@@ -142,12 +144,156 @@ Flag one more thing, because it applies to this very conversation: this session 
     </p>
   </div>
 </div>
-    <p class="hero__lede">102 Claude Code skills for the craft between the ticket and the commit, across 12 categories — findable by name, browsable below, and written like something a colleague actually handed you. Grown out of my own projects over time, this collection is created and updated automatically — and often — by Claude Opus, always its latest version, as I code.</p>
+    <p class="hero__lede">103 Claude Code skills for the craft between the ticket and the commit, across 12 categories — findable by name, browsable below, and written like something a colleague actually handed you. Grown out of my own projects over time, this collection is created and updated automatically — and often — by Claude Opus, always its latest version, as I code.</p>
     <a class="hero__jump" href="#skills">
       <svg class="icon hero__jump-icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-search"></use></svg>
       Show me the skills
     </a>
-    
+    <section class="fresh" aria-labelledby="fresh-title" data-fresh-section>
+  <div class="fresh__head">
+    <svg class="icon fresh__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-grain"></use></svg>
+    <h2 class="fresh__title" id="fresh-title">Fresh from the oven</h2>
+    <span class="tag fresh__tag">Last 48 hours</span>
+    <div class="fresh__nav" data-fresh-nav hidden>
+    <button type="button" class="fresh__nav-btn" data-fresh-prev aria-label="Show previous skill">&lsaquo;</button>
+    <button type="button" class="fresh__nav-btn" data-fresh-next aria-label="Show next skill">&rsaquo;</button>
+  </div>
+  </div>
+  <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/automating-repetition/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: 0">
+  <span class="card__name-row">
+    <span class="card__name">automating-repetition</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating…</p>
+  <span class="card__foot">
+    <span class="tag">Environment and tooling</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/bounding-autonomous-work/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: 1">
+  <span class="card__name-row">
+    <span class="card__name">bounding-autonomous-work</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan…</p>
+  <span class="card__foot">
+    <span class="tag">Planning and delegation</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/checkpointing-long-runs/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: 2">
+  <span class="card__name-row">
+    <span class="card__name">checkpointing-long-runs</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files…</p>
+  <span class="card__foot">
+    <span class="tag">Planning and delegation</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/deciding-reversibility/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: 3">
+  <span class="card__name-row">
+    <span class="card__name">deciding-reversibility</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library…</p>
+  <span class="card__foot">
+    <span class="tag">Judgment and meta</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/designing-verifiable-goals/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: 4">
+  <span class="card__name-row">
+    <span class="card__name">designing-verifiable-goals</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a run is about to be handed a goal to iterate toward on its own — a loop re-prompting itself until a condition holds…</p>
+  <span class="card__foot">
+    <span class="tag">Planning and delegation</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/explaining-technical-work/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: 5">
+  <span class="card__name-row">
+    <span class="card__name">explaining-technical-work</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation…</p>
+  <span class="card__foot">
+    <span class="tag">Communicating</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/fanning-out-independent-work/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: 6">
+  <span class="card__name-row">
+    <span class="card__name">fanning-out-independent-work</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems…</p>
+  <span class="card__foot">
+    <span class="tag">Planning and delegation</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/formidable/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: -5">
+  <span class="card__name-row">
+    <span class="card__name">formidable</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when a UI, an idea for a UI, or a project with no interface yet should be taken past what was asked and made outstanding.</p>
+  <span class="card__foot">
+    <span class="tag">UI and design</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/handing-a-step-to-a-person/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: -4">
+  <span class="card__name-row">
+    <span class="card__name">handing-a-step-to-a-person</span>
+    <span class="change-badge change-badge--new" data-fresh-at="2026-11-06T06:19:52+01:00">New</span>
+  </span>
+  <p class="card__summary">Use when about to tell the person to run a command, click something, open a page, paste a value, or do any part of the work by hand…</p>
+  <span class="card__foot">
+    <span class="tag">Finishing and proving</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/isolating-work-with-worktrees/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: -3">
+  <span class="card__name-row">
+    <span class="card__name">isolating-work-with-worktrees</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when starting work that shouldn&#x27;t touch the current checkout, before running a multi-step plan you might need to abandon cleanly…</p>
+  <span class="card__foot">
+    <span class="tag">Landing changes</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/least-privilege-design/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: -2">
+  <span class="card__name-row">
+    <span class="card__name">least-privilege-design</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
+  </span>
+  <p class="card__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</p>
+  <span class="card__foot">
+    <span class="tag">Security (defensive)</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card fresh__tile" href="/tbaguette-skills/skills/offering-the-next-move/" data-fresh-at="2026-11-06T06:19:52+01:00" draggable="false" style="--cf-offset: -1">
+  <span class="card__name-row">
+    <span class="card__name">offering-the-next-move</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
+  </span>
+  <p class="card__summary">Use at the end of every task that produced something — a change, an artifact…</p>
+  <span class="card__foot">
+    <span class="tag">Finishing and proving</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+  </div>
+</section>
     <section class="notes" aria-labelledby="notes-title" data-update-notes>
   <div class="notes__head">
     <svg class="icon notes__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
@@ -156,13 +302,24 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ol class="notes__list">
 <li class="notes__entry">
   <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-10-29">29 Oct 2026</time>
-    <span class="notes__entry-title">A climb mod, and Claude Code can dispatch TBaguette's implementer, reviewer and investigator by name</span>
+    <time class="notes__date" datetime="2026-11-06">6 Nov 2026</time>
+    <span class="notes__entry-title">Skills get named when they fit, subagents hear the rule, and waiting runs no model</span>
   </h3>
   <ul class="notes__bullets">
-    <li>New, and separate from the skills: <code>climb</code>, a Claude Code mod in the same marketplace (<code>/plugin install climb --marketplace LeSplooch/tbaguette-skills</code>). Start it with <code>/climb 20 npm test</code>: the mod queues the first iteration, then after every iteration it runs the check itself, so the model's own account of how it did never counts. It logs exit code, score (from a <code>score: N</code> line), check time and turn time to <code>.climb-log.tsv</code>, refuses edit-tool changes to paths you protect, and queues the next iteration until the check passes, the budget runs out, the score stops improving, the check hangs, or you stop it. A prompt you send yourself mid-climb is answered normally and does not count. <code>--in &lt;folder&gt;</code> runs the check, keeps the log and resolves protected paths in another folder. A band above the prompt shows the trail. It is the tool half of <a class="skill-link" href="/tbaguette-skills/skills/designing-verifiable-goals/"><code>designing-verifiable-goals</code></a>, which now points to it. The mod API is early access, and nothing in the skills depends on the mod.</li>
-    <li>The three delegation roles that Copilot CLI already had are now Claude Code agent types too: <code>tbaguette-atelier:implementer</code>, <code>tbaguette-atelier:reviewer</code> and <code>tbaguette-atelier:investigator</code>, shipped in the plugin's <code>agents/</code> folder. Each carries its role's standing rules from <a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a>, so a dispatch holds only the task itself instead of the whole pasted template. The reviewer and investigator have no edit or write tool (they keep a shell, so this limits them rather than sealing them). None pins a model: name one per dispatch.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/delegating-tasks-with-review-gates/"><code>delegating-tasks-with-review-gates</code></a> now says to dispatch those types where the harness lists them, rather than a general-purpose agent.</li>
+    <li>On Claude Code, the reminder that comes with each prompt now names the skills that prompt seems to match, instead of only asking in general whether one applies. The match reads a short list of intents and each skill's description. The skills listing keeps trigger text for only about one skill in six at this library's size, so the old reminder was pointing at text that was often not there. Short replies like <code>Continue</code> still get the general question.</li>
+    <li>This adds hook work: a short notice when a subagent starts, and a small script on every tool call that re-asks once every 40 calls without a skill check. It keeps a counter file per session under <code>$TMPDIR/tbaguette-nudge/</code>. The README's &quot;What it runs&quot; section lists all of it.</li>
+    <li>When a prompt may set a standing instruction (&quot;from now on&quot;, &quot;don't forget&quot;), the reminder points to <a class="skill-link" href="/tbaguette-skills/skills/writing-agent-instructions/"><code>writing-agent-instructions</code></a>, which now says where to record one so it reaches later sessions, and what to propose rather than write.</li>
+    <li>New skill, <a class="skill-link" href="/tbaguette-skills/skills/handing-a-step-to-a-person/"><code>handing-a-step-to-a-person</code></a>: before giving a person part of the work, check whether it is really theirs, whether they already said yes, and whether they can do it from where they are. It also keeps a go-ahead to the step it named.</li>
+    <li>New mod in the same marketplace, <code>watch</code>: <code>/plugin install watch --marketplace LeSplooch/tbaguette-skills</code>. <code>/watch usage 42</code> tells the session once at 42% of the weekly window, during a running turn if there is one, with nothing polling. <code>/watch every 5m &lt;command&gt;</code> runs a check on a timer and wakes the session once when it exits 0. The model can start a usage ceiling itself. Only a person can start a command watch, because a check runs outside the permission system.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/automating-repetition/"><code>automating-repetition</code></a> now says what a watcher owes before its silence can be trusted: a command when a command can tell, reports on change only, one real test alert, and an expiry set when it is created.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a>: a spend ceiling is the owner's dial, and what may finish near it is part of the plan. <a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a>: if you are asked to release and it is already out or on its way, verify it and do only the steps it skipped, and treat commits you did not make as the first sign of a second writer.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/writing-release-notes/"><code>writing-release-notes</code></a>: name where the audience hears about a release. <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a>: say when each promised item reaches the reader.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a>: a check that only runs when its signal is present passes anyone who leaves it out. <a class="skill-link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/"><code>rate-limiting-and-backpressure</code></a>: a blocker with a known cause opens the breaker on sight rather than after a sample.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a>: each lane's prompt names the command that proves it is done, and the result is compared with the declared write sets. <a class="skill-link" href="/tbaguette-skills/skills/isolating-work-with-worktrees/"><code>isolating-work-with-worktrees</code></a>: give a subagent its workspace's absolute path. <a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>: size a draw-on dash from the path, and click through any decorative layer before calling it done.</li>
+    <li><code>climb</code> can now stop at a spend ceiling: <code>/climb ceiling 42</code> ends the climb at 42% of the weekly window. Update the mod to get it.</li>
+    <li>The <code>implementer</code>, <code>reviewer</code> and <code>investigator</code> agent types can now use skills on Claude Code. They could not before, because their tool lists left out the <code>Skill</code> tool.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a>: a handoff brief names the skills in force. <a class="skill-link" href="/tbaguette-skills/skills/deciding-reversibility/"><code>deciding-reversibility</code></a>: &quot;revert&quot; covers everything you touched, and check what else rewrites a value before changing it.</li>
+    <li>The install prompt now offers, on Claude Code, to raise the skill listing's budget so more of this library's triggers stay visible. It asks first, and says what it costs.</li>
   </ul>
 </li>
   </ol>
@@ -175,6 +332,28 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-11-06">6 Nov 2026</time>
+    <span class="notes__entry-title">Skills get named when they fit, subagents hear the rule, and waiting runs no model</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li>On Claude Code, the reminder that comes with each prompt now names the skills that prompt seems to match, instead of only asking in general whether one applies. The match reads a short list of intents and each skill's description. The skills listing keeps trigger text for only about one skill in six at this library's size, so the old reminder was pointing at text that was often not there. Short replies like <code>Continue</code> still get the general question.</li>
+    <li>This adds hook work: a short notice when a subagent starts, and a small script on every tool call that re-asks once every 40 calls without a skill check. It keeps a counter file per session under <code>$TMPDIR/tbaguette-nudge/</code>. The README's &quot;What it runs&quot; section lists all of it.</li>
+    <li>When a prompt may set a standing instruction (&quot;from now on&quot;, &quot;don't forget&quot;), the reminder points to <a class="skill-link" href="/tbaguette-skills/skills/writing-agent-instructions/"><code>writing-agent-instructions</code></a>, which now says where to record one so it reaches later sessions, and what to propose rather than write.</li>
+    <li>New skill, <a class="skill-link" href="/tbaguette-skills/skills/handing-a-step-to-a-person/"><code>handing-a-step-to-a-person</code></a>: before giving a person part of the work, check whether it is really theirs, whether they already said yes, and whether they can do it from where they are. It also keeps a go-ahead to the step it named.</li>
+    <li>New mod in the same marketplace, <code>watch</code>: <code>/plugin install watch --marketplace LeSplooch/tbaguette-skills</code>. <code>/watch usage 42</code> tells the session once at 42% of the weekly window, during a running turn if there is one, with nothing polling. <code>/watch every 5m &lt;command&gt;</code> runs a check on a timer and wakes the session once when it exits 0. The model can start a usage ceiling itself. Only a person can start a command watch, because a check runs outside the permission system.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/automating-repetition/"><code>automating-repetition</code></a> now says what a watcher owes before its silence can be trusted: a command when a command can tell, reports on change only, one real test alert, and an expiry set when it is created.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a>: a spend ceiling is the owner's dial, and what may finish near it is part of the plan. <a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a>: if you are asked to release and it is already out or on its way, verify it and do only the steps it skipped, and treat commits you did not make as the first sign of a second writer.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/writing-release-notes/"><code>writing-release-notes</code></a>: name where the audience hears about a release. <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a>: say when each promised item reaches the reader.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/least-privilege-design/"><code>least-privilege-design</code></a>: a check that only runs when its signal is present passes anyone who leaves it out. <a class="skill-link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/"><code>rate-limiting-and-backpressure</code></a>: a blocker with a known cause opens the breaker on sight rather than after a sample.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/fanning-out-independent-work/"><code>fanning-out-independent-work</code></a>: each lane's prompt names the command that proves it is done, and the result is compared with the declared write sets. <a class="skill-link" href="/tbaguette-skills/skills/isolating-work-with-worktrees/"><code>isolating-work-with-worktrees</code></a>: give a subagent its workspace's absolute path. <a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>: size a draw-on dash from the path, and click through any decorative layer before calling it done.</li>
+    <li><code>climb</code> can now stop at a spend ceiling: <code>/climb ceiling 42</code> ends the climb at 42% of the weekly window. Update the mod to get it.</li>
+    <li>The <code>implementer</code>, <code>reviewer</code> and <code>investigator</code> agent types can now use skills on Claude Code. They could not before, because their tool lists left out the <code>Skill</code> tool.</li>
+    <li><a class="skill-link" href="/tbaguette-skills/skills/checkpointing-long-runs/"><code>checkpointing-long-runs</code></a>: a handoff brief names the skills in force. <a class="skill-link" href="/tbaguette-skills/skills/deciding-reversibility/"><code>deciding-reversibility</code></a>: &quot;revert&quot; covers everything you touched, and check what else rewrites a value before changing it.</li>
+    <li>The install prompt now offers, on Claude Code, to raise the skill listing's budget so more of this library's triggers stay visible. It asks first, and says what it costs.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-10-29">29 Oct 2026</time>
@@ -354,18 +533,6 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li><a class="skill-link" href="/tbaguette-skills/skills/redacting-sensitive-output/"><code>redacting-sensitive-output</code></a> now covers the agent as the emitter: a screenshot of a surface that aggregates unrelated content (a notification shade, a launcher, an inbox, a tab strip, terminal scrollback) records the owner's private data beside the one item the task wanted, and the model that loads the image has seen it. The rule is to prefer a structural query filtered to the subject, assert the foreground context before capturing, and, if a stray capture happens anyway, delete it at once and say so. The skill's <code>description:</code> routes to it for screenshots and recordings.</li>
   </ul>
 </li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-10-14">14 Oct 2026</time>
-    <span class="notes__entry-title">Four skills get a rule they were missing</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/formidable/"><code>formidable</code></a>'s craft floor now covers the widths between phone and desktop (a row that gains an item breaks first at the width where it stops fitting) and controls that grow for emphasis: a transform enlarges the click target too, so it can swallow a neighbour's clicks. Keep the hit target fixed and test at the neighbour's edge.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/performance-profiling/"><code>performance-profiling</code></a> says to measure size on the artifact that ships. A part's share before the optimizer and compressor can be many times its share after them.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/caching-strategy/"><code>caching-strategy</code></a> asks you to cost the miss rate against the capacity the cache protects before settling a TTL, not only to ask how fast the data moves.</li>
-    <li><a class="skill-link" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/"><code>rate-limiting-and-backpressure</code></a> warns that removing a retry at one layer does not lower the rate if the layer above re-drives the failure on its own tick.</li>
-  </ul>
-</li>
       </ol>
       <p class="notes__archive-foot">
         Older than these, the whole record lives in
@@ -390,7 +557,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 </section>
 <p class="search__empty container" data-search-empty hidden>
   No skills match <span class="search__empty-query" data-search-empty-query></span>.
-  <button type="button" data-search-reset>Clear search</button> to see all 102 again.
+  <button type="button" data-search-reset>Clear search</button> to see all 103 again.
 </p>
 <div data-categories>
 <section class="category-section" id="ui-and-design" data-category-section>
@@ -406,7 +573,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/formidable/" data-search-card data-search-terms="formidable use when a ui, an idea for a ui, or a project with no interface yet should be taken past what was asked and made outstanding. ui and design">
   <span class="card__name-row">
     <span class="card__name">formidable</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a UI, an idea for a UI, or a project with no interface yet should be taken past what was asked and made outstanding.</p>
   <span class="card__foot">
@@ -430,7 +597,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/using-tbaguette/" data-search-card data-search-terms="using-tbaguette use at the start of every conversation, in every project… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">using-tbaguette</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in every project…</p>
   <span class="card__foot">
@@ -441,7 +608,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/" data-search-card data-search-terms="orchestrating-work-end-to-end use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">orchestrating-work-end-to-end</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a request will take more than one edit and nothing has decided yet how much process it needs — a feature…</p>
   <span class="card__foot">
@@ -485,7 +652,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/deciding-reversibility/" data-search-card data-search-terms="deciding-reversibility use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library… judgment and meta">
   <span class="card__name-row">
     <span class="card__name">deciding-reversibility</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a choice is blocking progress and the deliberation is costing more than the choice would, when picking a name, a library…</p>
   <span class="card__foot">
@@ -597,7 +764,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/fanning-out-independent-work/" data-search-card data-search-terms="fanning-out-independent-work use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems… planning and delegation">
   <span class="card__name-row">
     <span class="card__name">fanning-out-independent-work</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when two or more tasks look independent enough to hand to separate agents — unrelated failures, disjoint subsystems…</p>
   <span class="card__foot">
@@ -619,7 +786,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/bounding-autonomous-work/" data-search-card data-search-terms="bounding-autonomous-work use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan… planning and delegation">
   <span class="card__name-row">
     <span class="card__name">bounding-autonomous-work</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a stretch of work will finish before any human reads a word of it — a delegated task, a goal handed over instead of a plan…</p>
   <span class="card__foot">
@@ -630,7 +797,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/designing-verifiable-goals/" data-search-card data-search-terms="designing-verifiable-goals use when a run is about to be handed a goal to iterate toward on its own — a loop re-prompting itself until a condition holds… planning and delegation">
   <span class="card__name-row">
     <span class="card__name">designing-verifiable-goals</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a run is about to be handed a goal to iterate toward on its own — a loop re-prompting itself until a condition holds…</p>
   <span class="card__foot">
@@ -641,7 +808,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/checkpointing-long-runs/" data-search-card data-search-terms="checkpointing-long-runs use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files… planning and delegation">
   <span class="card__name-row">
     <span class="card__name">checkpointing-long-runs</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when work will outlive the context holding it — a plan spanning days or sessions, a sweep across hundreds of files…</p>
   <span class="card__foot">
@@ -843,7 +1010,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/isolating-work-with-worktrees/" data-search-card data-search-terms="isolating-work-with-worktrees use when starting work that shouldn&#x27;t touch the current checkout, before running a multi-step plan you might need to abandon cleanly… landing changes">
   <span class="card__name-row">
     <span class="card__name">isolating-work-with-worktrees</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when starting work that shouldn&#x27;t touch the current checkout, before running a multi-step plan you might need to abandon cleanly…</p>
   <span class="card__foot">
@@ -1245,7 +1412,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/rate-limiting-and-backpressure/" data-search-card data-search-terms="rate-limiting-and-backpressure use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses… designing systems">
   <span class="card__name-row">
     <span class="card__name">rate-limiting-and-backpressure</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a system is receiving more load than it can serve, when designing throttling, quotas, or 429 responses…</p>
   <span class="card__foot">
@@ -1368,7 +1535,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/least-privilege-design/" data-search-card data-search-terms="least-privilege-design use when creating or reviewing a role, service account, api key, token scope, iam or rbac policy, or access control list… security (defensive)">
   <span class="card__name-row">
     <span class="card__name">least-privilege-design</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when creating or reviewing a role, service account, API key, token scope, IAM or RBAC policy, or access control list…</p>
   <span class="card__foot">
@@ -1384,9 +1551,9 @@ Flag one more thing, because it applies to this very conversation: this session 
     <div class="category-section__head">
       <svg class="icon category-section__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
       <h2 class="category-section__title">Finishing and proving</h2>
-      <span class="tag category-section__count" data-category-count="6"
+      <span class="tag category-section__count" data-category-count="7"
             data-i18n-singular="skill"
-            data-i18n-plural="skills">6 skills</span>
+            data-i18n-plural="skills">7 skills</span>
     </div>
     <div class="card-grid" data-card-grid>
 <a class="card" href="/tbaguette-skills/skills/finishing-what-you-started/" data-search-card data-search-terms="finishing-what-you-started use when a task is big enough that stopping short would go unnoticed — a sweep across many files, a long autonomous run… finishing and proving">
@@ -1447,9 +1614,20 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/offering-the-next-move/" data-search-card data-search-terms="offering-the-next-move use at the end of every task that produced something — a change, an artifact… finishing and proving">
   <span class="card__name-row">
     <span class="card__name">offering-the-next-move</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use at the end of every task that produced something — a change, an artifact…</p>
+  <span class="card__foot">
+    <span class="tag">Finishing and proving</span>
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </span>
+</a>
+<a class="card" href="/tbaguette-skills/skills/handing-a-step-to-a-person/" data-search-card data-search-terms="handing-a-step-to-a-person use when about to tell the person to run a command, click something, open a page, paste a value, or do any part of the work by hand… finishing and proving">
+  <span class="card__name-row">
+    <span class="card__name">handing-a-step-to-a-person</span>
+    <span class="change-badge change-badge--new" data-fresh-at="2026-11-06T06:19:52+01:00">New</span>
+  </span>
+  <p class="card__summary">Use when about to tell the person to run a command, click something, open a page, paste a value, or do any part of the work by hand…</p>
   <span class="card__foot">
     <span class="tag">Finishing and proving</span>
     <span class="card__arrow" aria-hidden="true">→</span>
@@ -1482,7 +1660,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/writing-agent-instructions/" data-search-card data-search-terms="writing-agent-instructions use when writing, generating, trimming, or reviewing a file a coding agent reads as standing instructions — agents.md, claude.md… communicating">
   <span class="card__name-row">
     <span class="card__name">writing-agent-instructions</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when writing, generating, trimming, or reviewing a file a coding agent reads as standing instructions — AGENTS.md, CLAUDE.md…</p>
   <span class="card__foot">
@@ -1504,7 +1682,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/writing-release-notes/" data-search-card data-search-terms="writing-release-notes use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes… communicating">
   <span class="card__name-row">
     <span class="card__name">writing-release-notes</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when preparing release notes, a changelog, an upgrade guide, or a version announcement; when a release contains breaking changes…</p>
   <span class="card__foot">
@@ -1537,7 +1715,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/explaining-technical-work/" data-search-card data-search-terms="explaining-technical-work use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation… communicating">
   <span class="card__name-row">
     <span class="card__name">explaining-technical-work</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when writing an explanation of technical work for another person — a status update, a summary of a change or an investigation…</p>
   <span class="card__foot">
@@ -1660,7 +1838,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/automating-repetition/" data-search-card data-search-terms="automating-repetition use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">automating-repetition</span>
-    
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T06:19:52+01:00">Updated</span>
   </span>
   <p class="card__summary">Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating…</p>
   <span class="card__foot">
