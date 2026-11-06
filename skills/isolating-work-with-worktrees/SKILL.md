@@ -72,6 +72,8 @@ git worktree add .worktrees/<branch-name> -b <branch-name>
 
 A permission error here is a sandbox denial, not a bug worth fighting — say so and keep working in the current directory instead.
 
+A worktree made for a subagent isolates nothing until the agent is pointed at it. A dispatched agent normally starts in the parent's directory, so put the workspace's absolute path in its prompt, and tell it to run its verification there.
+
 ## When the create step fails, the next command still runs
 
 In a repository more than one session uses, creation fails for ordinary reasons: the path is already registered to someone else's worktree, the directory exists, the branch is checked out elsewhere. `git worktree add … && cd … && setup` stops at the failure, but only that one chain. The next command, issued on its own line or in its own call, starts from wherever the shell already was — your primary checkout, or another session's tree — and does exactly what it would have done in the fresh one. A patch applied there lands on a checkout that carries someone's uncommitted work; a copy lands in the other session's worktree. The failed create did print an error, and what the next command printed scrolled it away.
