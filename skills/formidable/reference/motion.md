@@ -47,6 +47,13 @@ The preference is not "make it faster." Replace movement with an instant change 
 - **Animate the property that changed,** not the whole element.
 - **Never gate information behind an animation.** If the number is there, show it.
 - **One authored moment per surface** beats six competing effects.
+- **A draw-on effect sizes its dash from the path.** A guessed `stroke-dasharray` shorter than the
+  path leaves the end of the stroke clipped for good, and it looks like an animation still running.
+  Use `pathLength` or the measured `getTotalLength()`, and compare it with the dash at the resting state.
+- **A decorative layer must not swallow the page's clicks.** An animated overlay or canvas above
+  interactive content takes every pointer event unless told otherwise, and a screenshot shows
+  nothing wrong. Set `pointer-events: none` on it, and click each link and button beneath it for real,
+  at each breakpoint and on the phone width, before calling it done.
 - **An entrance must degrade to appearing, not to absence.** Put the visible
   state in the base rule and let the animation supply only the *from*-state.
   Written the other way round — the hidden state as the resting style, the
