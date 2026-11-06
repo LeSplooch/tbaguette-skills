@@ -1525,6 +1525,8 @@ After a successful install, verify rather than assume. For a clone you placed yo
 - Read <target>/.claude-plugin/plugin.json's "version" field, if present, so you can tell me which version I'm now on.
 For a harness-managed install, verify it the way your harness reports installed plugins — on Hermes that is `hermes plugins list`, and the row has to say enabled, not just present.
 
+If you are Claude Code: this library is large, and by default your skill listing keeps trigger text for only part of it. Ask me whether you should raise that for me, by adding "skillListingBudgetFraction": 0.04 and "skillListingMaxDescChars": 250 to ~/.claude/settings.json, merged with what is there. Say that it costs a few thousand more tokens in every session. Change it only if I say yes.
+
 Then tell me what happened (installed fresh, updated, or already current), which version, and the reload step for my agent specifically — restarting it, Claude Code's /reload-plugins, Kimi Code's /new, Hermes' `hermes gateway restart`. Skills then invoke as tbaguette-atelier:skill-name.
 
 Flag one more thing, because it applies to this very conversation: this session started before the install, so it is still running on the skill list it had at startup, and nothing you just did changes that. Tell me to open a new conversation to pick up the latest — or, if I want to stay in this one, to invoke tbaguette-atelier:using-tbaguette here (if you have no skill tool, read skills/using-tbaguette/SKILL.md from the install instead)."""
@@ -2477,7 +2479,7 @@ def _render_prose(body_html: str, *, lang: str | None = None,
     # an RTL page the fallback body would otherwise inherit <html dir="rtl">
     # and lay out English as an RTL paragraph — every trailing colon, period
     # and parenthesis jumps to the start of its visual line ("Core
-    # principles:" renders with the colon leading). Since all 102 skill bodies
+    # principles:" renders with the colon leading). Since all 103 skill bodies
     # are still English-only, that was every /ar/skills/* page.
     #
     # text_dir is its own parameter rather than being implied by lang's

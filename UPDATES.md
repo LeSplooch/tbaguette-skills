@@ -31,6 +31,54 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-11-06 — Skills get named when they fit, subagents hear the rule, and waiting runs no model
+
+- On Claude Code, the reminder that comes with each prompt now names the skills that prompt seems
+  to match, instead of only asking in general whether one applies. The match reads a short list
+  of intents and each skill's description. The skills listing keeps trigger text for only about
+  one skill in six at this library's size, so the old reminder was pointing at text that was often
+  not there. Short replies like `Continue` still get the general question.
+- This adds hook work: a short notice when a subagent starts, and a small script on every tool
+  call that re-asks once every 40 calls without a skill check. It keeps a counter file per session
+  under `$TMPDIR/tbaguette-nudge/`. The README's "What it runs" section lists all of it.
+- When a prompt may set a standing instruction ("from now on", "don't forget"), the reminder points
+  to `writing-agent-instructions`, which now says where to record one so it reaches later sessions,
+  and what to propose rather than write.
+- New skill, `handing-a-step-to-a-person`: before giving a person part of the work, check whether
+  it is really theirs, whether they already said yes, and whether they can do it from where
+  they are. It also keeps a go-ahead to the step it named.
+- New mod in the same marketplace, `watch`:
+  `/plugin install watch --marketplace LeSplooch/tbaguette-skills`. `/watch usage 42` tells the
+  session once at 42% of the weekly window, during a running turn if there is one, with nothing
+  polling. `/watch every 5m <command>` runs a check on a timer and wakes the session once when it
+  exits 0. The model can start a usage ceiling itself. Only a person can start a command watch,
+  because a check runs outside the permission system.
+- `automating-repetition` now says what a watcher owes before its silence can be trusted: a
+  command when a command can tell, reports on change only, one real test alert, and an expiry
+  set when it is created.
+- `bounding-autonomous-work`: a spend ceiling is the owner's dial, and what may finish near it is
+  part of the plan. `orchestrating-work-end-to-end`: if you are asked to release and it is already
+  out or on its way, verify it and do only the steps it skipped, and treat commits you did not make
+  as the first sign of a second writer.
+- `writing-release-notes`: name where the audience hears about a release. `explaining-technical-work`:
+  say when each promised item reaches the reader.
+- `least-privilege-design`: a check that only runs when its signal is present passes anyone who
+  leaves it out. `rate-limiting-and-backpressure`: a blocker with a known cause opens the breaker on
+  sight rather than after a sample.
+- `fanning-out-independent-work`: each lane's prompt names the command that proves it is done, and the
+  result is compared with the declared write sets. `isolating-work-with-worktrees`: give a subagent
+  its workspace's absolute path. `formidable`: size a draw-on dash from the path, and click through
+  any decorative layer before calling it done.
+
+- `climb` can now stop at a spend ceiling: `/climb ceiling 42` ends the climb at 42% of the weekly
+  window. Update the mod to get it.
+- The `implementer`, `reviewer` and `investigator` agent types can now use skills on Claude Code.
+  They could not before, because their tool lists left out the `Skill` tool.
+- `checkpointing-long-runs`: a handoff brief names the skills in force. `deciding-reversibility`:
+  "revert" covers everything you touched, and check what else rewrites a value before changing it.
+- The install prompt now offers, on Claude Code, to raise the skill listing's budget so more of
+  this library's triggers stay visible. It asks first, and says what it costs.
+
 ## 2026-10-29 — A climb mod, and Claude Code can dispatch TBaguette's implementer, reviewer and investigator by name
 
 - New, and separate from the skills: `climb`, a Claude Code mod in the same marketplace
