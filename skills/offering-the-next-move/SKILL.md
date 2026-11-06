@@ -22,6 +22,7 @@ The failure this exists against is not forgetting to ask. It is asking generical
 - Not for: the questions that make the work possible in the first place. `scoping-before-building` asks those one at a time, before anything is built; this runs after, and asks what comes next rather than what this is.
 - Not for: naming what is unfinished. `knowing-when-to-stop` owns the explicit handoff and what it owes the reader — this takes that named remainder and makes it selectable.
 - Not for: how to write the summary the options sit under, which is `explaining-technical-work`.
+- Not for: a step only the person can do, handed over mid-run. Whether it is really theirs, and how to write it so it can be done, is `handing-a-step-to-a-person`.
 
 ## Always, and what always means
 

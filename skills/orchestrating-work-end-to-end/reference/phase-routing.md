@@ -24,6 +24,7 @@ the placement.
 - [Phase 3 — Isolate](#phase-3--isolate)
 - [Phase 4 — Plan](#phase-4--plan)
 - [Phase 5 — Implement](#phase-5--implement)
+- [Inside any phase — when a step is about to go to the person](#inside-any-phase--when-a-step-is-about-to-go-to-the-person)
 - [Inside phase 5 — when implementation stalls](#inside-phase-5--when-implementation-stalls)
 - [Phase 6 — Review](#phase-6--review)
 - [Phase 7 — Prove](#phase-7--prove)
@@ -192,6 +193,12 @@ not once the run is already in trouble.
 | `checkpointing-long-runs` | The task list is longer than the context holding it, or a compaction happened mid-task |
 | `bounding-autonomous-work` | The tasks are being executed with nobody available to answer what they raise |
 | `crouton` | Always — this is the phase where reads dominate: ranges over whole files, and no re-read to confirm an edit that already reported success |
+
+## Inside any phase — when a step is about to go to the person
+
+| Skill | Reach for it when |
+|---|---|
+| `handing-a-step-to-a-person` | The next sentence tells the person to run, click, or paste something, asks again for a yes already given, or stretches a go-ahead past the step it named |
 
 ## Inside phase 5 — when implementation stalls
 

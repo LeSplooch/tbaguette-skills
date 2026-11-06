@@ -1,7 +1,7 @@
 {
   "name": "tbaguette-atelier",
-  "version": "2.3.1",
-  "description": "One hundred and two project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling.",
+  "version": "2.4.0",
+  "description": "One hundred and three project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling.",
   "author": {
     "name": "TBaguette",
     "email": "verderosa2@gmail.com"

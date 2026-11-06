@@ -1,6 +1,6 @@
 # TBaguette's Atelier
 
-102 skills, shipped as the `tbaguette-atelier@skills-dir` plugin. Invoke any of them as
+103 skills, shipped as the `tbaguette-atelier@skills-dir` plugin. Invoke any of them as
 `tbaguette-atelier:<skill-name>` — they also load automatically when their `description:`
 matches the situation. This file is for humans browsing what exists.
 
@@ -148,6 +148,7 @@ Atelier skill hands off to a neighbour.
 | `karen-and-the-manager` | Persona-forced finishing pass: never-satisfied critique, then a triage pass on it. Invoke right after `knowing-when-to-stop` |
 | `knowing-when-to-stop` | Diminishing returns, gold-plating, bounded passes, explicit handoff |
 | `offering-the-next-move` | Closing a run with the next move already assembled: options harvested from the ledger and the record rather than invented, ranked, and recommended |
+| `handing-a-step-to-a-person` | Before giving a person part of the work: whether it is really theirs, whether they already said yes, and whether it can be done from where they are |
 
 ## Communicating
 
