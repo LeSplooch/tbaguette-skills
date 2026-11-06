@@ -76,7 +76,7 @@ class TestClaudeCodeAgents(unittest.TestCase):
                              cop[name.replace(".md", ".agent.md")].split("\n---\n", 1)[1], name)
 
     def test_tools_are_claude_code_names(self):
-        known = {t for ts in ca.CLAUDE_TOOLS.values() for t in ts}
+        known = {t for ts in ca.CLAUDE_TOOLS.values() for t in ts} | {"Skill"}
         for name, text in ca.render_claude().items():
             tools = [t.strip() for t in frontmatter(text)["tools"].split(",")]
             self.assertTrue(tools and set(tools) <= known, f"{name}: {tools}")

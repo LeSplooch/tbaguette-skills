@@ -123,7 +123,9 @@ def render_claude() -> dict[str, str]:
                 unknown = [c for c in cats if c not in CLAUDE_TOOLS]
                 if unknown:
                     raise TemplateShapeError(f"{name}: no Claude Code tools for {unknown}")
-                line = "tools: " + ", ".join(t for c in cats for t in CLAUDE_TOOLS[c])
+                # Skill is Claude Code's alone: without it these roles could not use the library
+                # they ship in, and Copilot reaches a skill by description instead.
+                line = "tools: " + ", ".join([t for c in cats for t in CLAUDE_TOOLS[c]] + ["Skill"])
             lines.append(line)
         out[name.removesuffix(".agent.md") + ".md"] = "---\n" + "\n".join(lines) + "\n---\n" + body
     return out
