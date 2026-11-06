@@ -265,7 +265,7 @@ class TestHarnessManifests(unittest.TestCase):
         that missed one would leave that harness exiting non-zero on every
         session start, which no other assertion here would notice."""
         configs = {
-            "hooks/hooks.json": ("SessionStart", "UserPromptSubmit"),
+            "hooks/hooks.json": ("SessionStart", "UserPromptSubmit", "SubagentStart", "PostToolUse"),
             "hooks/hooks-codex.json": ("SessionStart", "UserPromptSubmit"),
             "hooks/hooks-copilot.json": ("sessionStart", "userPromptSubmitted"),
             "com.github.copilot/hooks/hooks.json": ("SessionStart", "UserPromptSubmit"),
@@ -279,7 +279,7 @@ class TestHarnessManifests(unittest.TestCase):
                 # Every config, whatever its schema, routes through the one
                 # cross-platform launcher.
                 self.assertIn("run-hook.cmd", commands)
-                for script in ("session-start", "user-prompt-submit"):
+                for script in ("session-start", "user-prompt-submit", "subagent-start", "post-tool-use"):
                     if script in commands:
                         self.assertTrue(
                             (REPO_ROOT / "hooks" / script).is_file(),

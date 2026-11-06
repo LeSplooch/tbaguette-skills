@@ -10,6 +10,11 @@
 # rewrite file contents, and an eol rule was too close to that to risk. `-text`
 # asks git to leave contents alone, and it is scoped to the files that break.
 hooks/session-start -text
+hooks/skill-index.tsv -text
+hooks/skill-routes.tsv -text
+hooks/route-skills.awk -text
+hooks/post-tool-use -text
+hooks/subagent-start -text
 hooks/user-prompt-submit -text
 hooks/run-hook.cmd -text
 .githooks/* -text

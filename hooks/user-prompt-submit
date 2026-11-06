@@ -12,9 +12,18 @@
 #
 # So this hook trades a small per-turn token cost for the reminder actually
 # staying in force. It deliberately does NOT repeat the whole SKILL.md --
-# SessionStart already did that, and every TBaguette skill's trigger
-# description is already in the available-skills context. All this needs to
-# do is put the check back in front of the model before it starts responding.
+# SessionStart already did that. All this needs to do is put the check back in
+# front of the model before it starts responding.
+#
+# Measured again on 2026-11-06, the reminder arrives and is scrolled past: it reached
+# every substantive session, while the share using a skill fell from about 80% to under
+# 40%, and on the smaller model to 14%. A question asked identically on every turn stops
+# being read, and "triggers are in your listing" had stopped being true, because the
+# listing's budget keeps trigger text for about one skill in six. So on the Claude Code
+# shape, which Codex shares, this names the skills the prompt matches (route-skills.awk,
+# skill-routes.tsv, skill-index.tsv) and falls back to the general question otherwise. It
+# also flags a prompt that may set a standing instruction, which chat alone cannot carry
+# to later sessions.
 #
 # Usage: user-prompt-submit [claude|copilot|vscode]
 #
@@ -67,12 +76,12 @@ OUTPUT_FORMAT="${1:-claude}"
 # for the nudge on every file read.
 NUDGE_EVERY=10
 
-nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see tbaguette-atelier:using-tbaguette. If one plausibly applies, invoke it -- Skill tool, \`tbaguette-atelier:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
+nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see tbaguette-atelier:using-tbaguette. If one plausibly applies, invoke it -- Skill tool, \`tbaguette-atelier:<skill-name>\`. A skill listed by bare name applies as much as one with a description. Drop it if it does not fit once you are in it."
 
 # Same nudge, minus the tool that does not exist here. Copilot -- CLI and VS
 # Code alike -- reaches a skill by description match or by the
 # /tbaguette-atelier:<skill-name> slash command.
-copilot_nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see tbaguette-atelier:using-tbaguette. If one plausibly applies, invoke it as \`/tbaguette-atelier:<skill-name>\`. Triggers are already in your available-skills list; drop the skill if it does not fit once you are in it."
+copilot_nudge="Before responding: does a TBaguette skill cover this turn? Questions and \"too small to bother\" count -- see tbaguette-atelier:using-tbaguette. If one plausibly applies, invoke it as \`/tbaguette-atelier:<skill-name>\`. A skill listed by bare name applies as much as one with a description. Drop it if it does not fit once you are in it."
 
 escape_for_json() {
     local s="$1"
@@ -205,6 +214,43 @@ except Exception:
         "$(escape_for_json "$nudge")"
     exit 0
 fi
+
+# Claude Code's shape, which Codex shares, from here on. The router is optional in every
+# direction: no stdin, no awk, or a table that fails to read all leave the general nudge.
+hook_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+matched=""
+standing=""
+if [ "$OUTPUT_FORMAT" != "vscode" ] && [ ! -t 0 ]; then
+    # read with a timeout, not cat: the old Claude path never touched stdin, and a caller that
+    # leaves it open must cost this turn its routing rather than hang it.
+    payload=""
+    IFS= read -r -d '' -t 2 payload || true
+
+    # A new prompt delivers this nudge, so post-tool-use starts its count again. Built-ins only:
+    # under pipefail a pipe that stops reading a large prompt early would end this script.
+    if [[ "${payload:0:512}" =~ \"session_id\"[[:space:]]*:[[:space:]]*\"([^\"]*)\" ]]; then
+        key="${BASH_REMATCH[1]}-"
+        key="${key//[^A-Za-z0-9_.-]/_}"
+        rm -f "${TMPDIR:-/tmp}/tbaguette-nudge/calls-${key:0:120}" 2>/dev/null || true
+    fi
+
+    routed=""
+    if command -v awk >/dev/null 2>&1; then
+        routed=$(printf '%s' "$payload" | awk -F'\t' -f "$hook_dir/route-skills.awk" "$hook_dir/skill-routes.tsv" "$hook_dir/skill-index.tsv" - 2>/dev/null) || routed=""
+    fi
+    while IFS=$'\t' read -r route_slug route_blurb; do
+        [ -n "$route_slug" ] || continue
+        if [ "$route_slug" = "STANDING" ]; then
+            standing=" This prompt may set a standing instruction. If the person means it for later sessions too, it will not reach them from chat: \`tbaguette-atelier:writing-agent-instructions\` says where to record it, and what to propose rather than write."
+            continue
+        fi
+        matched="${matched:+$matched; }\`tbaguette-atelier:$route_slug\` ($route_blurb)"
+    done <<< "$routed" || true
+fi
+if [ -n "$matched" ]; then
+    nudge="This prompt matches TBaguette skills: $matched. Invoke the ones that fit with the Skill tool before your first other action, and pass over any that do not, without comment."
+fi
+nudge="$nudge$standing"
 
 context="<TBAGUETTE_SKILL_CHECK>\n$(escape_for_json "$nudge")\n</TBAGUETTE_SKILL_CHECK>"
 

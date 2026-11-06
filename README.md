@@ -1,6 +1,6 @@
 # TBaguette's Atelier
 
-102 skills for [Claude Code](https://claude.com/claude-code) — judgment calls, code
+103 skills for [Claude Code](https://claude.com/claude-code) — judgment calls, code
 comprehension, change discipline, testing, debugging, systems design, defensive
 security, communication, and tooling. Every one is project-agnostic, stack-agnostic,
 and language-agnostic, so the same skill works whether you're in a Rust firmware repo
@@ -117,9 +117,16 @@ parts that go further are listed here, so nothing about them is a surprise.
   only network call in the plugin's own code, and it downloads without sending
   anything. When the plugin folder isn't a git clone, which is the case for a
   plugin added from Anthropic's directory, the check says so and stops.
-- **On each prompt**, `hooks/user-prompt-submit` adds a one-sentence reminder to
-  check the skills before replying. On Copilot CLI, which only lets a hook rewrite
-  the prompt, the reminder is prepended to what you typed.
+- **On each prompt**, `hooks/user-prompt-submit` adds a short reminder to check the
+  skills before replying. On Claude Code it reads your prompt, locally, and names the
+  skills it seems to match; nothing leaves your machine. If the prompt may set a standing
+  instruction, it points the model at where to record one. On Copilot CLI, which only
+  lets a hook rewrite the prompt, the reminder is prepended to what you typed.
+- **When a subagent starts**, on Claude Code, `hooks/subagent-start` gives it the same
+  rule once.
+- **On every tool call**, on Claude Code, `hooks/post-tool-use` counts calls since the
+  last skill check and re-asks every 40. It keeps one small counter file per session
+  under `$TMPDIR/tbaguette-nudge/`, and the system's temp cleanup removes them.
 - **`keeping-tbaguette-current`** acts on that update check. It fast-forwards a
   git-clone install only when the clone has no local changes, tells you what
   changed, and appends a line to `tbaguette-update-log.md` in your harness's own

@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# PostToolUse hook for the TBaguette plugin.
+#
+# The other hooks speak when a turn begins, and a turn can run for hundreds of tool calls.
+# Measured on 2026-11-06 across human sessions, the median stretch without a skill call or a
+# new prompt was 7 tool calls, the 90th percentile 47 and the longest 329. This re-asks once
+# a stretch has passed NUDGE_AFTER calls, then every NUDGE_AFTER more. A skill call starts
+# the count again, and so does a new prompt, which delivers a nudge of its own.
+#
+# It runs on every tool call, so it does the least it can: bash built-ins only after `head`,
+# no JSON runtime, and it looks only at the start of the payload, where the harness puts the
+# ids and the tool name. The rest is drained unread. LC_ALL=C because `head` can cut a
+# multibyte character in two, and every field read here is ASCII.
+
+set -euo pipefail
+export LC_ALL=C
+
+NUDGE_AFTER=40
+
+if [ -t 0 ]; then
+    printf '{}\n'
+    exit 0
+fi
+start=$(head -c 2048 || true)
+cat >/dev/null 2>&1 || true
+
+# The leftmost match, so a field of the same name inside tool_input cannot stand in for it.
+field() {
+    FIELD=""
+    local before="${start%%\"$1\"*}"
+    [ "$before" != "$start" ] || return 0
+    local rest="${start:${#before}}"
+    if [[ "$rest" =~ ^\"$1\"[[:space:]]*:[[:space:]]*\"([^\"]*)\" ]]; then
+        FIELD="${BASH_REMATCH[1]}"
+    fi
+}
+
+field session_id
+session="$FIELD"
+if [ -z "$session" ]; then
+    printf '{}\n'
+    exit 0
+fi
+field agent_id
+key="$session-$FIELD"
+# Ids from the harness are untrusted as far as the filesystem is concerned.
+key="${key//[^A-Za-z0-9_.-]/_}"
+state_dir="${TMPDIR:-/tmp}/tbaguette-nudge"
+[ -d "$state_dir" ] || mkdir -p "$state_dir" 2>/dev/null || true
+state_file="$state_dir/calls-${key:0:120}"
+
+field tool_name
+if [ "$FIELD" = "Skill" ]; then
+    rm -f "$state_file" 2>/dev/null || true
+    printf '{}\n'
+    exit 0
+fi
+
+count=0
+[ -r "$state_file" ] && read -r count < "$state_file" 2>/dev/null || true
+case "$count" in ''|*[!0-9]*) count=0 ;; esac
+count=$((count + 1))
+printf '%s' "$count" > "$state_file" 2>/dev/null || true
+
+if [ $((count % NUDGE_AFTER)) -ne 0 ]; then
+    printf '{}\n'
+    exit 0
+fi
+
+printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "PostToolUse",\n    "additionalContext": "<TBAGUETTE_SKILL_CHECK>\\n%s tool calls since the last skill check, so the check at the top of this turn is out of date. What are you doing now, and does a TBaguette skill cover it? If so and you have a Skill tool, invoke it, as `tbaguette-atelier:<skill-name>`, then carry on. If not, carry on without saying so.\\n</TBAGUETTE_SKILL_CHECK>"\n  }\n}\n' "$count"

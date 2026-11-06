@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# SubagentStart hook for the TBaguette plugin.
+#
+# SessionStart and UserPromptSubmit speak to the main session only. Measured on 2026-11-06,
+# 9 of 704 subagents saw any TBaguette notice and 19 invoked a skill, and subagents do much
+# of the actual work. This gives each one the rule once, at its start. Read-only lookups are
+# left alone: the notice would cost more than the lookup.
+
+set -euo pipefail
+
+payload=""
+[ -t 0 ] || payload=$(cat)
+
+if [[ "$payload" =~ \"agent_type\"[[:space:]]*:[[:space:]]*\"([^\"]*)\" ]]; then
+    case "${BASH_REMATCH[1]}" in
+        Explore|Plan|claude-code-guide|statusline-setup)
+            printf '{}\n'
+            exit 0
+            ;;
+    esac
+fi
+
+printf '%s\n' '{
+  "hookSpecificOutput": {
+    "hookEventName": "SubagentStart",
+    "additionalContext": "<TBAGUETTE_SKILL_CHECK>\nIf you have a Skill tool and your brief does not say otherwise: TBaguette'"'"'s skills apply to you too. Before you act, check whether one covers this task and invoke it, as `tbaguette-atelier:<skill-name>`. A skill listed by bare name applies as much as one with a description.\n</TBAGUETTE_SKILL_CHECK>"
+  }
+}'

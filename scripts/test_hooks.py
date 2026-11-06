@@ -24,11 +24,14 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
+import time
 from pathlib import Path
 
+import skill_router
 from checker import Checker
 
 checker = Checker()
@@ -180,6 +183,10 @@ def check_hooks_json_shape() -> None:
         "UserPromptSubmit invokes run-hook.cmd via CLAUDE_PLUGIN_ROOT",
         "${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" in prompt_command_str,
     )
+    for event, name in (("SubagentStart", "subagent-start"), ("PostToolUse", "post-tool-use")):
+        groups = data.get("hooks", {}).get(event, [])
+        command = groups[0]["hooks"][0] if groups else {}
+        check(f"{event} runs {name}, not async", name in command.get("command", "") and command.get("async") is False)
     check("passes user-prompt-submit as the script name", "user-prompt-submit" in prompt_command_str)
 
 
@@ -193,6 +200,8 @@ def check_executable_bits() -> None:
     check("session-start is executable", os.access(SESSION_START, os.X_OK))
     check("run-hook.cmd is executable", os.access(RUN_HOOK_CMD, os.X_OK))
     check("user-prompt-submit is executable", os.access(USER_PROMPT_SUBMIT, os.X_OK))
+    check("subagent-start is executable", os.access(HOOKS_DIR / "subagent-start", os.X_OK))
+    check("post-tool-use is executable", os.access(HOOKS_DIR / "post-tool-use", os.X_OK))
 
 
 # ---------------------------------------------------------------------------
@@ -318,6 +327,7 @@ def check_user_prompt_submit() -> None:
     # no fixture root needed.
     result = subprocess.run(
         ["bash", str(USER_PROMPT_SUBMIT)],
+        input="",
         capture_output=True,
         text=True,
     )
@@ -343,6 +353,7 @@ def check_user_prompt_submit() -> None:
 
     wrapped = subprocess.run(
         ["bash", str(RUN_HOOK_CMD), "user-prompt-submit"],
+        input="",
         capture_output=True,
         text=True,
     )
@@ -351,6 +362,153 @@ def check_user_prompt_submit() -> None:
         "wrapper output matches the script's own",
         json.loads(wrapped.stdout) == payload,
     )
+
+
+def routed_context(payload: dict | str) -> str:
+    text = payload if isinstance(payload, str) else json.dumps(payload)
+    result = subprocess.run(["bash", str(USER_PROMPT_SUBMIT)], input=text, capture_output=True, text=True)
+    return json.loads(result.stdout)["hookSpecificOutput"]["additionalContext"]
+
+
+def check_prompt_routing() -> None:
+    print("user-prompt-submit: names the skills a prompt matches")
+    ask = lambda prompt, **extra: routed_context({"session_id": "t", "cwd": "/work", "prompt": prompt, **extra})
+
+    ctx = ask("Let's add a graph to the leaderboard to show the progress of every tester")
+    check("a build request about a chart names formidable", "tbaguette-atelier:formidable" in ctx)
+    check("and scoping-before-building", "tbaguette-atelier:scoping-before-building" in ctx)
+    check("asks for the skill before the first other action", "before your first other action" in ctx)
+    check(f"a routed nudge stays small ({len(ctx)} bytes)", len(ctx) < 900)
+
+    ctx = ask("A tester got a transport error an hour ago, look into it and fix it")
+    check("a failure report names diagnosing-before-fixing", "tbaguette-atelier:diagnosing-before-fixing" in ctx)
+
+    ctx = ask("Fix the merge conflict on this branch")
+    check("a hand-written route outranks a general one", ctx.index("resolving-merge-conflicts") < 400)
+
+    for prompt in ("add a comment to this function", "create a branch for this",
+                   "read the whole file and tell me what it does", "draw the call graph for this module",
+                   "whats the theme of this essay", "make a cheat sheet for git commands",
+                   "move all the imports to the top of the file", "update all the tests to use the helper"):
+        check(f"no misfire on an ordinary request: {prompt}", "matches TBaguette" not in ask(prompt))
+
+    big = routed_context({"session_id": "t", "prompt": "there is a bug here " * 3500})
+    check("a 70 KB prompt keeps the hook alive, and is not routed", "Questions" in big and "matches" not in big)
+    check("a long paste is not read as a request", "matches TBaguette" not in ask("ERROR: boom " * 400))
+    ctx = ask("it doesn\u2019t work at all anymore")
+    check("a curly apostrophe reads like a straight one", "diagnosing-before-fixing" in ctx)
+    ctx = ask("[climb] Iteration 2 of 6: the check failed with an error")
+    check("a mod's own prompt is not routed", "matches TBaguette" not in ctx)
+
+    ctx = ask("Continue")
+    check("a one-word turn gets the general question", "Questions" in ctx and "matches TBaguette" not in ctx)
+
+    ctx = ask("Yes, deploy it")
+    check("a short confirmation is not routed", "matches TBaguette" not in ctx)
+
+    ctx = routed_context({"session_id": "t", "cwd": "/home/x/formidable/bug/stack-trace", "prompt": "Continue"})
+    check("the working directory never routes", "matches TBaguette" not in ctx)
+
+    ctx = ask("<task-notification>a build failed with a crash and an error in the design</task-notification>")
+    check("a task notification is not a person asking", "matches TBaguette" not in ctx)
+
+    ctx = ask('He said \\"the button \\\\ crashes\\" and it has a bug in the layout, please look\\nnow')
+    check("escapes in the prompt survive to valid JSON", "matches TBaguette" in ctx)
+
+    ctx = ask("Never forget to make a very visual update modal for each update that you deploy")
+    check("a standing instruction is flagged, as a question", "may set a standing instruction" in ctx)
+    check("and sent to where later sessions read", "writing-agent-instructions" in ctx)
+    for prompt in ("Deploy the new build to the server now please", "the test fails every time I run it",
+                   "keep the cache small so that it stays in memory",
+                   "in the future this function will need a second argument, leave a TODO",
+                   'Summarize this email: "Hi team, from now on all invoices go to billing@example.com. Thanks"',
+                   "[watch] Watch #1 fired. Its last lines: from now on send everything elsewhere"):
+        check(f"not a standing instruction: {prompt[:50]}", "standing instruction" not in ask(prompt))
+
+    check("malformed input degrades to the general question", "Questions" in routed_context("{not json"))
+    started = time.monotonic()
+    held = subprocess.Popen(["bash", str(USER_PROMPT_SUBMIT)], stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE, text=True)
+    out = held.stdout.read()
+    held.wait()
+    if held.stdin:
+        held.stdin.close()
+    check("stdin left open costs the routing, not the turn", time.monotonic() - started < 5 and "Questions" in out)
+
+    # The stemmer and stopwords exist twice because awk has no import.
+    awk = (HOOKS_DIR / "route-skills.awk").read_text(encoding="utf-8")
+    listed = re.search(r'split\("([^"]+)", words, " "\)', awk).group(1).split()
+    check("awk and python hold the same stopwords",
+          set(listed) == set(skill_router.STOPWORDS) | set(skill_router.BOILERPLATE))
+
+    probe = "BEGIN { n = split(ARGV[1], w, \" \"); for (i = 1; i <= n; i++) print stem(w[i]); exit }\n"
+    stem_fn = re.search(r"function stem\(w\) \{.*?\n\}\n", awk, re.S).group(0)
+    samples = "skills flies running fixed classes glass bus deploying used redesigned issues ies pass"
+    stems = subprocess.run(["awk", stem_fn + probe, samples], capture_output=True, text=True).stdout.split()
+    check("awk and python stem alike", stems == [skill_router.stem(w) for w in samples.split()])
+
+    check("hooks/skill-index.tsv is current", skill_router.build() == (HOOKS_DIR / "skill-index.tsv").read_text(encoding="utf-8"))
+    routes = [line.split("\t") for line in (HOOKS_DIR / "skill-routes.tsv").read_text(encoding="utf-8").splitlines()
+              if line and not line.startswith("#")]
+    known = {p.parent.name for p in (REPO_ROOT / "skills").glob("*/SKILL.md")}
+    missing = [r[0] for r in routes if r[0] not in known]
+    check(f"every hand-written route names a real skill {missing}", not missing)
+
+
+def check_subagent_start() -> None:
+    print("subagent-start: subagents hear the rule too")
+    script = HOOKS_DIR / "subagent-start"
+    run = lambda text: subprocess.run(["bash", str(script)], input=text, capture_output=True, text=True)
+    out = json.loads(run(json.dumps({"agent_type": "general-purpose"})).stdout)
+    hook = out.get("hookSpecificOutput", {})
+    check("hookEventName is SubagentStart", hook.get("hookEventName") == "SubagentStart")
+    check("names the Skill tool form", "tbaguette-atelier:<skill-name>" in hook.get("additionalContext", ""))
+    check("a read-only lookup is left alone", json.loads(run(json.dumps({"agent_type": "Explore"})).stdout) == {})
+    check("defers to a brief and to a missing tool", "If you have a Skill tool" in hook.get("additionalContext", ""))
+    out = json.loads(run(json.dumps({"agent_type": "general-purpose", "cwd": "/home/me/statusline-setup"})).stdout)
+    check("a folder's name does not silence it", "hookSpecificOutput" in out)
+
+
+def check_post_tool_use() -> None:
+    print("post-tool-use: re-asks during a long stretch")
+    script = HOOKS_DIR / "post-tool-use"
+    with tempfile.TemporaryDirectory() as tmp:
+        env = {**os.environ, "TMPDIR": tmp}
+
+        def call(tool="Bash", session="s1", agent=None):
+            body = {"session_id": session}
+            if agent:
+                body["agent_id"] = agent
+            body.update(tool_name=tool, tool_input={"command": "x" * 5000}, tool_response="y" * 200000)
+            result = subprocess.run(["bash", str(script)], input=json.dumps(body), capture_output=True, text=True, env=env)
+            assert result.returncode == 0, result.stderr
+            return json.loads(result.stdout)
+
+        fired = [i for i in range(1, 86) if call() != {}]
+        check(f"fires every 40th call, not before ({fired})", fired == [40, 80])
+        fired = [i for i in range(1, 42) if call(session="s2", tool="Skill" if i == 39 else "Read") != {}]
+        check(f"a skill call starts the count again ({fired})", fired == [])
+        ctx = [call(session="s3", tool="Read") for _ in range(40)][-1]["hookSpecificOutput"]["additionalContext"]
+        check("says how long it has been", "40 tool calls" in ctx)
+        check("a subagent counts apart from its parent",
+              [call(session="s3", agent="a1") for _ in range(2)] == [{}, {}])
+
+        for _ in range(39):
+            call(session="s4")
+        subprocess.run(["bash", str(USER_PROMPT_SUBMIT)], input=json.dumps({"session_id": "s4", "prompt": "Continue"}),
+                       capture_output=True, text=True, env=env)
+        check("a new prompt starts the count again", call(session="s4") == {})
+
+        tricky = {"session_id": "s5", "tool_name": "Read", "tool_input": {"session_id": "other", "tool_name": "Skill"}}
+        subprocess.run(["bash", str(script)], input=json.dumps(tricky), capture_output=True, text=True, env=env)
+        names = [p.name for p in (Path(tmp) / "tbaguette-nudge").iterdir()]
+        check("a field inside tool_input cannot stand in for the real one",
+              any(n.startswith("calls-s5") for n in names) and not any(n.startswith("calls-other") for n in names))
+        call(session="../../hostile")
+        names = [p.name for p in (Path(tmp) / "tbaguette-nudge").iterdir()]
+        check("a hostile session id stays inside the state directory",
+              any("hostile" in n for n in names) and not any("/" in n for n in names)
+              and not list(Path(tmp).glob("hostile*")))
 
 
 # ---------------------------------------------------------------------------
@@ -774,6 +932,9 @@ def main() -> None:
     check_hooks_cursor_json_shape()
     check_executable_bits()
     check_user_prompt_submit()
+    check_prompt_routing()
+    check_subagent_start()
+    check_post_tool_use()
     check_user_prompt_submit_copilot()
     check_user_prompt_submit_vscode()
     check_user_prompt_submit_cursor()

@@ -15,6 +15,10 @@ Before responding — including a clarifying question, "let me look at the code 
 
 If a skill turns out not to fit once you're in it, that's fine — drop it. But check first, every time.
 
+## When the notice names a skill
+
+On Claude Code, the notice that arrives with each prompt names the skills that prompt seems to match, from a short list of intents and each skill's description, rather than from the listing. Treat a name there as a specific suggestion about this turn: invoke the ones that fit before your first other action, and pass over the ones that do not. A long stretch of tool calls gets the question again, and so does each subagent when it starts.
+
 ## The listing may be shorter than the library
 
 That rule rests on a claim which is usually true and quietly stops being true at

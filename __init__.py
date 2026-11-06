@@ -135,6 +135,7 @@ OMITTED_SECTIONS = {
     # entries are explicit loads, absent from <available_skills> — so the
     # section's advice (raise a listing budget, set skillOverrides) has no
     # referent here. The Hermes-accurate version is one sentence, below.
+    "When the notice names a skill": "does not apply on Hermes",
     "The listing may be shorter than the library": "does not apply on Hermes",
     # Points at the per-harness reference files. This bootstrap appends the
     # Hermes one inline, so following the pointer would be a round trip to
