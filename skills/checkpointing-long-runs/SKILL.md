@@ -254,6 +254,9 @@ not as a clause inside a paragraph:
   the section that is worth the whole brief, and the first one cut for length.
 - **Every open assumption and ruling.**
 - **What would make this run stop** if the successor is also unattended.
+- **The track, the envelope, and the skills in force**, by name. A successor starts with none
+  of them loaded and no memory of having used them, so it picks up the plan without the
+  disciplines the plan was written under.
 
 Length is a feature here, not a cost, and `crouton` decides the budget when
 there is one. What is never acceptable is a brief that is short because
