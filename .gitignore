@@ -8,3 +8,6 @@ __pycache__/
 # interrupted between its rename steps, which should be rare to never.
 /.docs.previous.*
 /.docs.build.*/
+
+# A debug snapshot the retired Python build could leave behind in an older clone.
+/scripts/content.json
