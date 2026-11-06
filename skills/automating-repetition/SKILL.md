@@ -1,6 +1,6 @@
 ---
 name: automating-repetition
-description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a scripted edit, codemod, or migration reported success and changed nothing or the wrong region, when a manual step is risky, irreversible, or easy to get wrong by hand, when a person is being asked to report a state that changes faster than they can reply, when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right, when a one-shot bulk edit will produce a diff too large for anyone to review, or when a recurring job's rule defers work to its next run. Covers the ladder from reporting to unattended, measuring a proposed rule against recorded history before arming it, and when a habit needs a watcher rather than a step.
+description: Use when a manual sequence has been repeated often enough to consider scripting it, when deciding whether a task is worth automating, when a script exists but nobody knows about it or trusts it, when automation half-succeeded and left the system in a middle state, when a scheduled job has been failing silently, when a scripted edit, codemod, or migration reported success and changed nothing or the wrong region, when a manual step is risky, irreversible, or easy to get wrong by hand, when a person is being asked to report a state that changes faster than they can reply, when the thing to be noticed happens on its own schedule rather than inside your procedure and no polling interval feels right, when a one-shot bulk edit will produce a diff too large for anyone to review, when a recurring job's rule defers work to its next run, or when a check is about to run on a timer. Covers the ladder from reporting to unattended, measuring a rule before arming it, and watchers versus steps.
 ---
 
 # Automating repetition
@@ -117,6 +117,15 @@ preference, and when nobody will be sitting there to ask again.
 
 The ladder still applies inside the watcher: report first, act later, and measure
 the firing rate against the record before arming anything.
+
+## Before anyone trusts a watcher's silence
+
+Asked to keep an eye on something, a run tends to reach for the most capable instrument it has: an agent on a timer, or itself. Most waits do not need a mind. Four things decide what to build.
+
+- **A command, if a command can tell.** Does the host answer, has the file appeared, is the build finished, has the number crossed the line? An exit code answers those without a model, while an agent answers them with a full context every time. A loop run in the background through your ordinary shell tool, ending when the condition is true, does this under the permissions you already have. Keep an agent for the case where deciding takes judgment. Where it is available, the `watch` mod in this plugin's marketplace does the same for a person, and tells the session about a usage ceiling without any polling.
+- **Report on change, never on schedule.** A message saying nothing happened is not reassurance. It wakes a model, spends a turn, and teaches the reader to skim the one message that matters. The brief carries the threshold at which to speak, in numbers, and the watcher says nothing below it. In one project the person had to ask three separate times for repetitive "no action needed" messages to stop.
+- **Prove the alarm once.** Send one real alert end to end before trusting the quiet. Silence from a watcher whose alerts cannot arrive reads exactly like silence from one with nothing to say. One watcher told to speak only about useful findings turned out never to have delivered an alert at all.
+- **Give it an end when you create it.** A recurring job often cannot turn itself off, because changing a schedule can need a person present and nobody is. So a job that has decided its work is done goes on firing, deciding the same thing each time. Two such jobs fired about 365 times in two weeks, and tried and failed about 200 times to disable themselves. Set an expiry when you schedule it, or make the prompt's first line a check that ends the run at once when the reason has passed.
 
 ## "Next run" is a claim about the interval, not about the work
 
