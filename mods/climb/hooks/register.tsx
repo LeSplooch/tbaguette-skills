@@ -5,7 +5,7 @@ import type { Climb, ClimbStep } from '../types'
 
 // Change the tag when Climb's fields change: it declines what an earlier
 // version stored, which outlives a reload.
-const climb = atom({ plugin: 'climb', key: 'climb' } as const, null, { shape: 'climb-2' })
+const climb = atom({ plugin: 'climb', key: 'climb' } as const, null, { shape: 'climb-3' })
 const isHidden = atom({ plugin: 'climb', key: 'isHidden' } as const, false)
 
 const LOG = '.climb-log.tsv'
@@ -18,6 +18,7 @@ const USAGE = [
   '                                    --in runs the check, keeps the log and resolves protected paths in <dir>',
   '  /climb protect <path> [...]       refuse edit-tool changes to these paths (relative to the session folder)',
   '  /climb stall <n>                  stop after n iterations with no better score (default 5)',
+  '  /climb ceiling <percent> [5h]      end the climb when the weekly (or 5-hour) usage window reaches it',
   '  /climb stop                       end the climb',
   '  /climb                            show the climb and its last steps',
   'A score is read from the check output as "score: <number>" (last one wins), higher is better.',
@@ -97,7 +98,7 @@ export const register: Register = on => {
     await $.command.register({
       name: 'climb',
       description: 'Iterate on a goal until a check command passes: the mod runs the check after every iteration',
-      argumentHint: '<budget> [--in <dir>] <check command> | protect <path> | stall <n> | stop',
+      argumentHint: '<budget> [--in <dir>] <check command> | protect <path> | ceiling <percent> | stall <n> | stop',
       immediate: true,
     })
     return next(e)
@@ -129,6 +130,20 @@ export const register: Register = on => {
       await update($, climb, c => (c === null ? c : { ...c, stall: Number(stall[1] ?? '5') }))
       return { text: `Stall limit set to ${stall[1]} iterations.` }
     }
+    const ceiling = args.match(/^ceiling\s+(\d+(?:\.\d+)?)%?(\s+5h)?$/)
+    if (ceiling) {
+      if (current === null) return { text: 'Start a climb first.' }
+      const percent = Number(ceiling[1] ?? '0')
+      if (percent <= 0 || percent > 100) return { text: 'The ceiling is a percent above 0 and at most 100.', exitCode: 1 }
+      const window = ceiling[2] === undefined ? 'seven_day' : 'five_hour'
+      await update($, climb, c => (c === null ? c : { ...c, ceiling: percent, ceilingWindow: window }))
+      const { rateLimits } = await $.session.usage()
+      const reading = rateLimits.find(l => l.kind === window)
+      return {
+        text: `The climb ends when ${window === 'seven_day' ? 'the weekly window' : 'the 5-hour window'} reaches ${percent}%.` +
+          (reading === undefined ? ' There is no reading for that window yet, and off a subscription there never is.' : ` It is at ${reading.percentUsed}% now.`),
+      }
+    }
     const start = args.match(/^(\d+)\s+(?:--in\s+(\S+)\s+)?(.+)$/)
     if (!start) return { text: USAGE, exitCode: 1 }
 
@@ -138,6 +153,8 @@ export const register: Register = on => {
       check: start[3] ?? '',
       budget: Math.max(1, Number(start[1] ?? '1')),
       stall: current?.stall ?? 5,
+      ceiling: current?.ceiling ?? null,
+      ceilingWindow: current?.ceilingWindow ?? 'seven_day',
       protect: current?.protect ?? [],
       cwd: start[2] === undefined ? cwd : absolute(cwd, start[2]),
       steps: [],
@@ -154,6 +171,23 @@ export const register: Register = on => {
         'then end your turn. Do not edit the check or anything it reads to pass it.',
     }))
     return { text: `Climb started on \`${fresh.check}\`, budget ${fresh.budget}. A fresh start discards any earlier climb's history.` }
+  })
+
+  // Pushed by the host when a window moves a whole point. A queued iteration is dropped below.
+  on('session.measure', async ($, e, next) => {
+    if (e.changed.includes('rateLimits')) {
+      const c = await read($, climb)
+      if (c !== null && c.isActive && c.ceiling !== null) {
+        const used = e.rateLimits.find(l => l.kind === c.ceilingWindow)?.percentUsed
+        if (used !== undefined && used >= c.ceiling) {
+          const reason = `spend ceiling: ${used}% of the ${c.ceilingWindow === 'seven_day' ? 'weekly' : '5-hour'} window, past ${c.ceiling}%`
+          await update($, climb, ended(reason))
+          $.ui.status(undefined)
+          $.ui.toast(`climb stopped: ${reason}`)
+        }
+      }
+    }
+    return next(e)
   })
 
   // A climb prompt queued before a stop never reaches the model.

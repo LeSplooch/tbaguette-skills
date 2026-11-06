@@ -28,6 +28,7 @@ with `LeSplooch/tbaguette-skills`, then Add plugin.
                                 protected paths live there too
     /climb protect tests fixtures   refuse edits to these paths while it runs
     /climb stall 5              stop after 5 iterations with no better score
+    /climb ceiling 42           end the climb at 42% of the weekly usage window; add 5h for the 5-hour one
     /climb stop                 end it
     /climb                      show the climb and its last steps
 
@@ -35,7 +36,7 @@ with `LeSplooch/tbaguette-skills`, then Add plugin.
 - **Score**, optional: the last `score: <number>` the check prints, higher is
   better. With scores, the climb also stops once it goes the stall limit
   without beating its best.
-- **Stops** on the bar, the budget, the stall limit, `/climb stop`, the Stop
+- **Stops** on the bar, the budget, the stall limit, a spend ceiling, `/climb stop`, the Stop
   button, a turn you interrupt, or a check that runs past ten minutes or cannot
   start. Starting again is a fresh climb: the earlier one's history is discarded.
   An iteration prompt already queued when the climb stops is dropped.

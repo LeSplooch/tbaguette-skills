@@ -32,7 +32,7 @@ So the goal a long run pursues is not the sentence in its prompt. It is the chec
 - [ ] The bar is written as the result wanted, margin included.
 - [ ] A judged proxy, if any, has rejected broken copies in both orders and at several sizes, is calibrated against hand labels, has one stated reference, and is re-measured at each checkpoint on a fresh hand-labelled sample of the loop's own output.
 - [ ] The harness logs waiting and working time per iteration, and something outside the run asks what blocks it, on a stated interval.
-- [ ] A spend ceiling covering tokens and compute is approved by whoever pays, and reaching it halts the run and reports.
+- [ ] A spend ceiling covering tokens and compute is approved by whoever pays, and reaching it halts the run and reports. The `climb` mod's `/climb ceiling` enforces one on a Claude subscription.
 - [ ] The other stop conditions are written (`bounding-autonomous-work`), with the budget counted in iterations that produced no accepted gain, not in failures of the bar, which fails on every iteration until it is met.
 
 ## Take the highest rung of check that exists

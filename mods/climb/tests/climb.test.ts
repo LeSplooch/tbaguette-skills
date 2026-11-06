@@ -44,6 +44,8 @@ function engine(on: On, runs: Run[]) {
   on('tool.call', () => ({ result: {} }))
   on('ui.status', () => ({ value: undefined }))
   on('ui.toast', () => ({ value: undefined }))
+  on('session.measure', (_, e) => ({ changed: e.changed }))
+  on('session.usage', () => ({ value: { startedAt: 0, context: { window: 1 }, rateLimits: [{ kind: 'seven_day', percentUsed: 30 }] } }))
   return { prompts, checks, writes, clock }
 }
 
@@ -237,4 +239,21 @@ test('the band shows the trail and a working Stop on every surface that draws it
   await ui.press({ key: 'stop' })
   await ui.unmount()
   expect((await climb($, '')).text).toContain('stopped from the band')
+})
+
+test('a spend ceiling ends the climb and drops the iteration it had queued', async ($, on) => {
+  const seen = engine(on, [])
+  await start($, '5 npm test', seen.clock)
+  const set = await climb($, 'ceiling 42')
+  expect(set.text).toContain('at 30% now')
+  await $.session.measure({ context: { window: 1 }, rateLimits: [{ kind: 'seven_day', percentUsed: 41 }], changed: ['rateLimits'] })
+  expect((await climb($, '')).text).not.toContain('ended')
+  await $.session.measure({ context: { window: 1 }, rateLimits: [{ kind: 'seven_day', percentUsed: 42 }], changed: ['rateLimits'] })
+  expect((await climb($, '')).text).toContain('spend ceiling')
+})
+
+test('a ceiling outside 0 to 100 is refused', async ($, on) => {
+  const seen = engine(on, [])
+  await start($, '5 npm test', seen.clock)
+  expect((await climb($, 'ceiling 150')).text).toContain('at most 100')
 })

@@ -13,6 +13,9 @@ export type Climb = {
   check: string
   budget: number
   stall: number
+  // end the climb when this rate-limit window reaches this percent
+  ceiling: number | null
+  ceilingWindow: string
   protect: string[]
   cwd: string
   steps: ClimbStep[]
