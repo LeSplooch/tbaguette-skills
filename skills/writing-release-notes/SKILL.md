@@ -75,6 +75,10 @@ So on the day you publish, not the day you drafted, for each new-capability entr
 
 An entry you cannot observe working goes out as "coming", with a date only if you can keep it, or it does not go out. One that is on for some readers says so — "rolling out over the next two weeks", "on the paid plans". A reader who tries what the notes announced and is refused learns that the notes are not to be trusted, and every later release pays for it. A release note is a copy that describes behavior, so `keeping-copies-in-sync`'s *A copy that describes behavior is true of a build, not of a commit* covers publishing it with the release; this section covers what shipping the release does not switch on by itself.
 
+## Writing it down is not telling them
+
+A changelog is read by people who come looking. The people waiting for this release are often somewhere else: a community channel, a tester group, a mailing list, a notice inside the app. Before calling a release finished, name where its audience hears about it, then either post there or offer the draft as a named next step. Do not leave the owner to ask for it after the build is out, which is the usual way this gets missed. Posting is outward-facing, so draft on your own initiative and post only on the go-ahead it needs.
+
 ## Breaking changes carry the step, not the difference
 
 The entry contains the literal action, not a description of what is now different.
