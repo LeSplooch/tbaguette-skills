@@ -45,7 +45,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-06T11:57:30+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-06T11:57:30Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-06T15:01:08+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-06T15:01:08Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -198,10 +198,10 @@ Flag one more thing, because it applies to this very conversation: this session 
   </div>
   </div>
   <div class="fresh__rail" data-fresh-coverflow style="--cf-shift: 0px">
-<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-11-06T12:57:20+01:00" draggable="false" style="--cf-offset: 0">
+<a class="card fresh__tile" href="/tbaguette-skills/skills/tending-tbaguette/" data-fresh-at="2026-11-06T12:57:30+01:00" draggable="false" style="--cf-offset: 0">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T12:57:20+01:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T12:57:30+01:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">
@@ -348,7 +348,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li>This adds hook work: a short notice when a subagent starts, and a small script on every tool call that re-asks once every 40 calls without a skill check. It keeps a counter file per session under <code>$TMPDIR/tbaguette-nudge/</code>. The README's &quot;What it runs&quot; section lists all of it.</li>
     <li>When a prompt may set a standing instruction (&quot;from now on&quot;, &quot;don't forget&quot;), the reminder points to <a class="skill-link" href="/tbaguette-skills/skills/writing-agent-instructions/"><code>writing-agent-instructions</code></a>, which now says where to record one so it reaches later sessions, and what to propose rather than write.</li>
     <li>New skill, <a class="skill-link" href="/tbaguette-skills/skills/handing-a-step-to-a-person/"><code>handing-a-step-to-a-person</code></a>: before giving a person part of the work, check whether it is really theirs, whether they already said yes, and whether they can do it from where they are. It also keeps a go-ahead to the step it named.</li>
-    <li>New mod in the same marketplace, <code>watch</code>: <code>/plugin install watch --marketplace LeSplooch/tbaguette-skills</code>. <code>/watch usage 42</code> tells the session once at 42% of the weekly window, during a running turn if there is one, with nothing polling. <code>/watch every 5m &lt;command&gt;</code> runs a check on a timer and wakes the session once when it exits 0. The model can start a usage ceiling itself. Only a person can start a command watch, because a check runs outside the permission system.</li>
+    <li>New mod in the same marketplace, <code>watch</code>: <code>/plugin install watch --marketplace LeSplooch/tbaguette-skills</code>. <code>/watch usage 42</code> tells the session once at 42% of the weekly window, during a running turn if there is one, with nothing polling. <code>/watch every 5m &lt;command&gt;</code> runs a check on a timer and wakes the session once when it exits 0. The model can start a usage ceiling itself. Only a person can start a command watch, because a check runs outside the permission system. Update to <code>watch</code> 0.1.1: in 0.1.0 the model's ceiling tool returned an error on every call, even when the ceiling had started, and a refusal never reached the model.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/automating-repetition/"><code>automating-repetition</code></a> now says what a watcher owes before its silence can be trusted: a command when a command can tell, reports on change only, one real test alert, and an expiry set when it is created.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a>: a spend ceiling is the owner's dial, and what may finish near it is part of the plan. <a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a>: if you are asked to release and it is already out or on its way, verify it and do only the steps it skipped, and treat commits you did not make as the first sign of a second writer.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/writing-release-notes/"><code>writing-release-notes</code></a>: name where the audience hears about a release. <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a>: say when each promised item reaches the reader.</li>
@@ -381,7 +381,7 @@ Flag one more thing, because it applies to this very conversation: this session 
     <li>This adds hook work: a short notice when a subagent starts, and a small script on every tool call that re-asks once every 40 calls without a skill check. It keeps a counter file per session under <code>$TMPDIR/tbaguette-nudge/</code>. The README's &quot;What it runs&quot; section lists all of it.</li>
     <li>When a prompt may set a standing instruction (&quot;from now on&quot;, &quot;don't forget&quot;), the reminder points to <a class="skill-link" href="/tbaguette-skills/skills/writing-agent-instructions/"><code>writing-agent-instructions</code></a>, which now says where to record one so it reaches later sessions, and what to propose rather than write.</li>
     <li>New skill, <a class="skill-link" href="/tbaguette-skills/skills/handing-a-step-to-a-person/"><code>handing-a-step-to-a-person</code></a>: before giving a person part of the work, check whether it is really theirs, whether they already said yes, and whether they can do it from where they are. It also keeps a go-ahead to the step it named.</li>
-    <li>New mod in the same marketplace, <code>watch</code>: <code>/plugin install watch --marketplace LeSplooch/tbaguette-skills</code>. <code>/watch usage 42</code> tells the session once at 42% of the weekly window, during a running turn if there is one, with nothing polling. <code>/watch every 5m &lt;command&gt;</code> runs a check on a timer and wakes the session once when it exits 0. The model can start a usage ceiling itself. Only a person can start a command watch, because a check runs outside the permission system.</li>
+    <li>New mod in the same marketplace, <code>watch</code>: <code>/plugin install watch --marketplace LeSplooch/tbaguette-skills</code>. <code>/watch usage 42</code> tells the session once at 42% of the weekly window, during a running turn if there is one, with nothing polling. <code>/watch every 5m &lt;command&gt;</code> runs a check on a timer and wakes the session once when it exits 0. The model can start a usage ceiling itself. Only a person can start a command watch, because a check runs outside the permission system. Update to <code>watch</code> 0.1.1: in 0.1.0 the model's ceiling tool returned an error on every call, even when the ceiling had started, and a refusal never reached the model.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/automating-repetition/"><code>automating-repetition</code></a> now says what a watcher owes before its silence can be trusted: a command when a command can tell, reports on change only, one real test alert, and an expiry set when it is created.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/bounding-autonomous-work/"><code>bounding-autonomous-work</code></a>: a spend ceiling is the owner's dial, and what may finish near it is part of the plan. <a class="skill-link" href="/tbaguette-skills/skills/orchestrating-work-end-to-end/"><code>orchestrating-work-end-to-end</code></a>: if you are asked to release and it is already out or on its way, verify it and do only the steps it skipped, and treat commits you did not make as the first sign of a second writer.</li>
     <li><a class="skill-link" href="/tbaguette-skills/skills/writing-release-notes/"><code>writing-release-notes</code></a>: name where the audience hears about a release. <a class="skill-link" href="/tbaguette-skills/skills/explaining-technical-work/"><code>explaining-technical-work</code></a>: say when each promised item reaches the reader.</li>
@@ -1868,7 +1868,7 @@ Flag one more thing, because it applies to this very conversation: this session 
 <a class="card" href="/tbaguette-skills/skills/tending-tbaguette/" data-search-card data-search-terms="tending-tbaguette use at the start of every conversation, in any project or repo… environment and tooling">
   <span class="card__name-row">
     <span class="card__name">tending-tbaguette</span>
-    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T12:57:20+01:00">Updated</span>
+    <span class="change-badge change-badge--updated" data-fresh-at="2026-11-06T12:57:30+01:00">Updated</span>
   </span>
   <p class="card__summary">Use at the start of every conversation, in any project or repo…</p>
   <span class="card__foot">

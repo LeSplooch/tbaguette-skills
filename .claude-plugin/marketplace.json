@@ -55,7 +55,7 @@
       "displayName": "watch",
       "license": "GPL-2.0-only",
       "description": "A Claude Code mod for waiting with no model running: it watches a usage ceiling or runs a check command on a timer, stays silent, and tells the session once, when it should.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "source": "./mods/watch",
       "author": {
         "name": "TBaguette",

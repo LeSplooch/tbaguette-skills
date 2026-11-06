@@ -52,7 +52,9 @@ holds any text file over 256 KiB for a reviewer.
   session once at 42% of the weekly window, during a running turn if there is one, with nothing
   polling. `/watch every 5m <command>` runs a check on a timer and wakes the session once when it
   exits 0. The model can start a usage ceiling itself. Only a person can start a command watch,
-  because a check runs outside the permission system.
+  because a check runs outside the permission system. Update to `watch` 0.1.1: in 0.1.0 the model's
+  ceiling tool returned an error on every call, even when the ceiling had started, and a refusal
+  never reached the model.
 - `automating-repetition` now says what a watcher owes before its silence can be trusted: a
   command when a command can tell, reports on change only, one real test alert, and an expiry
   set when it is created.

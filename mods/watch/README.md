@@ -38,8 +38,9 @@ check is a shell command run on a timer outside the permission system, so only a
 - **Usage.** The mod reads what the host pushes when a window moves a whole point, so nothing
   polls. During a running turn the news arrives with the next tool result, and in an idle session
   as a new turn. Readings come from this session's own responses, so an idle session may not see
-  usage spent elsewhere until its next reply. Off a subscription there are no windows, and the
-  mod says so when you start the watch. A ceiling already passed starts nothing and says so.
+  usage spent elsewhere until its next reply. Off a subscription there are no windows, and some
+  plans have no 5-hour window. If there is no reading, the mod says so when you start the watch,
+  and that watch may never fire. A ceiling already passed starts nothing and says so.
   A usage watch ends after two weeks.
 - **Commands** run with `sh -c` in the session's folder, as you, once at the start and then on the
   timer. A check gets two minutes. A failing check is silent, and only an exit of 0 wakes the

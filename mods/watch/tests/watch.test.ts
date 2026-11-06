@@ -229,3 +229,27 @@ test('the model can start a usage ceiling, and cannot start a command', async ($
   expect(JSON.stringify(sneaky)).not.toContain('curl')
   expect(seen.checks.length).toBe(0)
 })
+
+// The engine holds a hook's answer to the tool's output shape, a string or an array, and this
+// test kit does not: an object here passed every test and failed every real call.
+test('the tool answers in the shape the engine accepts, and refuses by deny', async ($, on) => {
+  engine(on, [], WEEK(50))
+  await begin($)
+  const started = await $.tool.call({ tool: 'mcp__watch__usage_ceiling', ceiling: 60, note: 'n', tool_use_id: 'u1' })
+  expect(typeof started.result).toBe('string')
+  expect(started.result).toContain('Watching')
+  const passed = await $.tool.call({ tool: 'mcp__watch__usage_ceiling', ceiling: 40, tool_use_id: 'u2' })
+  expect(passed.deny).toContain('Nothing was started')
+  expect(passed.result).toBe(undefined)
+  const invalid = await $.tool.call({ tool: 'mcp__watch__usage_ceiling', ceiling: 500, tool_use_id: 'u3' })
+  expect(invalid.deny).toContain('at most 100')
+  expect((await watch($, '')).text).toContain('#1')
+  expect((await watch($, '')).text).not.toContain('#2')
+})
+
+test('a window the account does not report is said plainly when the ceiling starts', async ($, on) => {
+  engine(on, [], WEEK(50))
+  await begin($)
+  const started = await $.tool.call({ tool: 'mcp__watch__usage_ceiling', ceiling: 60, window: 'five_hour', tool_use_id: 'u1' })
+  expect(started.result).toContain('no such window')
+})

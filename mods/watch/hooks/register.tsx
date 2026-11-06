@@ -230,7 +230,7 @@ async function startUsage($: any, ceiling: unknown, window: string, note: string
   const now = await $.clock.now()
   const w = await add($, { kind: 'usage', window, ceiling, note, expiresAt: now + USAGE_LIFETIME })
   const reading = used === null
-    ? ' There is no reading for that window yet. It arrives with the next reply, and off a subscription it never does, so this would not fire.'
+    ? ' There is no reading for that window yet. It arrives with the next reply, and on an account with no such window it never does, so this would not fire.'
     : ` It is at ${used}% now.`
   return { text: `Watching: ${describe(w, now)}.${reading}` }
 }
@@ -304,7 +304,7 @@ export const register: Register = on => {
     const window = typeof input.window === 'string' ? input.window : 'seven_day'
     const note = typeof input.note === 'string' ? input.note : ''
     const { text, isError } = await startUsage($, input.ceiling, window, note)
-    return isError ? { result: { text }, isError: true } : { result: { text } }
+    return isError ? { deny: text } : { result: text }
   })
 
   // A wake queued before a stop never reaches the model.
