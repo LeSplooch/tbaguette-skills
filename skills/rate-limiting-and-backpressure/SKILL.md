@@ -102,6 +102,8 @@ Queue depth alone is ambiguous — 10,000 items is healthy at 5,000 per second a
 
 A circuit breaker trips on error *ratio* over a rolling window with a minimum sample count — tripping on one failure out of one is a self-inflicted outage — stays open for a cooldown, then half-opens to a limited probe before restoring. Its purpose is to stop spending capacity and latency on calls that are already known to fail, and to give the dependency room to recover.
 
+That ratio is for failures you cannot explain. A failure whose cause has been positively identified, and which only something outside can clear (a dialog waiting for a person, an expired licence, a maintenance flag, a full disk), is not a noisy sample. Retrying cannot fix it, and each retry has its own cost, sometimes another copy of the thing blocking you. Open on sight, and let the half-open probe be a cheap read of the condition rather than a real attempt.
+
 Shed by value, not uniformly. Rank traffic and reject in ascending order of worth: bulk and batch work first, then retries, then anonymous and free-tier traffic, then interactive user work; never health checks, authentication refresh, or the control plane that lets you fix the incident. Shed at the edge, before a connection, thread, or transaction has been claimed — rejection after the expensive resource is held provides no relief at all. Uniform shedding is how a background job crowds out the paying user, because that job retries harder and cares less.
 
 ## Tell the caller
