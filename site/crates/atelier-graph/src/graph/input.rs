@@ -28,6 +28,17 @@ fn target_tag(e: &Event) -> String {
 }
 
 impl App {
+    /// Open or close the phone sheet, keeping the handle's `aria-expanded` in step with the class.
+    pub(super) fn set_sheet(&self, open: bool) -> Result<(), JsValue> {
+        self.root
+            .class_list()
+            .toggle_with_force("crumb--sheet-open", open)?;
+        if let Some(handle) = self.root.query_selector("[data-crumb-sheet]")? {
+            handle.set_attribute("aria-expanded", if open { "true" } else { "false" })?;
+        }
+        Ok(())
+    }
+
     fn local_point(&self, e: &MouseEvent) -> (f64, f64) {
         let rect = self.stage.get_bounding_client_rect();
         let (x, y) = client_xy(e);
@@ -490,13 +501,9 @@ impl App {
             }
             return Ok(());
         }
-        if let Some(sheet) = closest(e, "[data-crumb-sheet]") {
+        if closest(e, "[data-crumb-sheet]").is_some() {
             let open = !self.root.class_list().contains("crumb--sheet-open");
-            self.root
-                .class_list()
-                .toggle_with_force("crumb--sheet-open", open)?;
-            sheet.set_attribute("aria-expanded", if open { "true" } else { "false" })?;
-            return Ok(());
+            return self.set_sheet(open);
         }
         if let Some(act) = closest(e, "[data-crumb-act]") {
             return self.act(&act);

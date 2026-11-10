@@ -581,7 +581,7 @@ impl App {
             at: 0.0,
         });
         self.render_panel()?;
-        self.root.class_list().add_1("crumb--sheet-open")?;
+        self.set_sheet(true)?;
         let sel = if from.is_some() {
             "[data-crumb-trace-to]"
         } else {

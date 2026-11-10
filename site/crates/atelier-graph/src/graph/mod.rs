@@ -897,7 +897,7 @@ impl App {
             self.open_skill(start, true)?;
         } else if let Some((a, b)) = walk {
             self.run_trace(a, b)?;
-            self.root.class_list().add_1("crumb--sheet-open")?;
+            self.set_sheet(true)?;
         } else if let Some(asked) = asked {
             self.missing_skill(&asked)?;
         } else if let Some(v) = hash_view(&hash) {
