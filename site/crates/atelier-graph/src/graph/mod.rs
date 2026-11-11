@@ -588,6 +588,8 @@ fn bind_shell(shared: &Rc<Shared>) -> Result<(), JsValue> {
     Ok(())
 }
 
+const IDLE_SLEEP_MS: f64 = 60_000.0;
+
 impl App {
     pub(crate) fn shared(&self) -> Option<Rc<Shared>> {
         self.me.upgrade()
@@ -1604,7 +1606,10 @@ impl App {
             if busy || self.dirty {
                 self.stirred_at = now;
             }
-            if !self.reduced {
+            // The drift is decoration: it runs while someone is here, and
+            // the loop sleeps after a minute of nobody touching the page.
+            // Any input kicks it awake again.
+            if !self.reduced && now - self.stirred_at < IDLE_SLEEP_MS {
                 busy = true;
             }
         }

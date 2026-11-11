@@ -198,6 +198,8 @@ impl App {
             }
         }
         if e.pointer_type() != "touch" {
+            // Someone is here: wake the drift if it had gone to sleep.
+            self.kick();
             let hit = self.pick(p.0, p.1);
             let (node, section) = match &hit {
                 Some(Hit::Node(n)) => (Some(*n), -1),
