@@ -22,7 +22,7 @@ use chrono::{DateTime, Utc};
 use sha2::{Digest, Sha256};
 
 use crate::check::router::site_table;
-use crate::pages::mods::{CLIMB_SLUG, ModsSite, WATCH_SLUG};
+use crate::pages::mods::{CLIMB_SLUG, ModsSite};
 use crate::pages::{self, GRAPH_PATH, MODS_PATH, PageCtx};
 use crate::repo;
 
@@ -254,10 +254,11 @@ fn render_into(staging: &Path, site: &Site) -> Result<()> {
         &mods_dir.join(CLIMB_SLUG).join("index.html"),
         &pages::mods::climb(ctx, &site.mods),
     )?;
-    write_page(
-        &mods_dir.join(WATCH_SLUG).join("index.html"),
-        &pages::mods::watch(ctx, &site.mods),
-    )?;
+    for slug in site.mods.plain_slugs() {
+        let page = pages::mods::plain(ctx, &site.mods, &slug)
+            .ok_or_else(|| anyhow::anyhow!("mods/{slug}: no page was built"))?;
+        write_page(&mods_dir.join(&slug).join("index.html"), &page)?;
+    }
     write_file(&staging.join("version.txt"), &ctx.last_updated_utc())
 }
 

@@ -2270,6 +2270,8 @@ html.has-notes-dialog { overflow: hidden; }
   .unfold__more-pad { display: grid; gap: var(--space-5); padding: 0 calc(var(--gutter) + var(--space-5)) var(--space-5); }
   .unfold__try, .unfold__watch, .unfold__ships { position: static; width: auto; }
   .unfold__ships { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* An odd last ship takes the whole row instead of sitting alone beside a gap. */
+  .unfold__ships li:last-child:nth-child(odd) { grid-column: 1 / -1; }
 }
 @media (max-width: 40rem) {
   .unfold { --gutter: var(--space-5); }

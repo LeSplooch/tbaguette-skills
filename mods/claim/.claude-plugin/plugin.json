@@ -1,0 +1,13 @@
+{
+  "name": "claim",
+  "version": "0.1.0",
+  "description": "Guard a tree with more than one writer: the mod notices files that changed while this session was idle, tells the model once, and refuses sweeping git commands while those files are dirty.",
+  "author": {
+    "name": "TBaguette",
+    "email": "verderosa2@gmail.com"
+  },
+  "homepage": "https://lesplooch.github.io/tbaguette-skills/skills/atomic-commits/",
+  "repository": "https://github.com/LeSplooch/tbaguette-skills",
+  "license": "GPL-2.0-only",
+  "types": "./types/index.d.ts"
+}

@@ -11,7 +11,7 @@
       "displayName": "TBaguette's Atelier",
       "license": "GPL-2.0-only",
       "description": "One hundred and three project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling — plus formidable, design craft for every UI stack.",
-      "version": "3.0.0",
+      "version": "3.0.1",
       "source": "./",
       "author": {
         "name": "TBaguette",
@@ -68,6 +68,86 @@
         "loop",
         "verification",
         "autonomous"
+      ]
+    },
+    {
+      "name": "orders",
+      "displayName": "orders",
+      "license": "GPL-2.0-only",
+      "description": "A Claude Code mod for standing orders: say \"from now on\" once, and the mod keeps the order for the session and puts it back in front of the model after every compaction.",
+      "version": "0.1.0",
+      "source": "./mods/orders",
+      "author": {
+        "name": "TBaguette",
+        "email": "verderosa2@gmail.com"
+      },
+      "homepage": "https://lesplooch.github.io/tbaguette-skills/skills/writing-agent-instructions/",
+      "repository": "https://github.com/LeSplooch/tbaguette-skills",
+      "keywords": [
+        "mod",
+        "instructions",
+        "compaction",
+        "session"
+      ]
+    },
+    {
+      "name": "claim",
+      "displayName": "claim",
+      "license": "GPL-2.0-only",
+      "description": "A Claude Code mod for a working tree with more than one writer: it notices files that changed while the session was idle, tells the model once, and refuses sweeping git commands that would stage, stash or destroy them.",
+      "version": "0.1.0",
+      "source": "./mods/claim",
+      "author": {
+        "name": "TBaguette",
+        "email": "verderosa2@gmail.com"
+      },
+      "homepage": "https://lesplooch.github.io/tbaguette-skills/skills/atomic-commits/",
+      "repository": "https://github.com/LeSplooch/tbaguette-skills",
+      "keywords": [
+        "mod",
+        "git",
+        "guard",
+        "concurrency"
+      ]
+    },
+    {
+      "name": "rest",
+      "displayName": "rest",
+      "license": "GPL-2.0-only",
+      "description": "A Claude Code mod that pauses every session on the machine with one command and resumes them where they stopped: each holds its next tool call with no model running.",
+      "version": "0.1.0",
+      "source": "./mods/rest",
+      "author": {
+        "name": "TBaguette",
+        "email": "verderosa2@gmail.com"
+      },
+      "homepage": "https://lesplooch.github.io/tbaguette-skills/skills/bounding-autonomous-work/",
+      "repository": "https://github.com/LeSplooch/tbaguette-skills",
+      "keywords": [
+        "mod",
+        "pause",
+        "sessions",
+        "usage"
+      ]
+    },
+    {
+      "name": "meter",
+      "displayName": "meter",
+      "license": "GPL-2.0-only",
+      "description": "A Claude Code mod that shows context fill, rate-limit windows and cost in one quiet line, marks what is measured and what is an estimate, and speaks up only when a figure crosses a line.",
+      "version": "0.1.0",
+      "source": "./mods/meter",
+      "author": {
+        "name": "TBaguette",
+        "email": "verderosa2@gmail.com"
+      },
+      "homepage": "https://lesplooch.github.io/tbaguette-skills/skills/checkpointing-long-runs/",
+      "repository": "https://github.com/LeSplooch/tbaguette-skills",
+      "keywords": [
+        "mod",
+        "usage",
+        "context",
+        "cost"
       ]
     }
   ]

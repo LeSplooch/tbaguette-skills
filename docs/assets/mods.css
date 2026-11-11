@@ -114,7 +114,12 @@
 
 .mod-card__art { padding: var(--space-6) var(--space-5) var(--space-6) var(--space-7); }
 .mod-card__art .climb-banner__art { position: static; display: block; width: 100%; height: auto; }
-.mod-card__art .watch-art { display: block; width: 100%; height: auto; }
+.mod-card__art .watch-art,
+.mod-card__art .orders-art,
+.mod-card__art .claim-art,
+.mod-card__art .rest-art,
+.mod-card__art .meter-art,
+.mod-card__art .plain-art { display: block; width: 100%; height: auto; }
 
 .mod-card__body { padding: var(--space-7) var(--space-7) var(--space-6) var(--space-4); }
 
@@ -1081,13 +1086,15 @@
 }
 
 /* ==========================================================================
-   /mods/watch/: the shared mod page's pieces above, then what is its own.
+   The plain mod pages (every mod but climb): the shared mod page's pieces
+   above, then what is its own: the figure, the use and the behaves sections,
+   and each mod's picture.
    ======================================================================== */
 
 /* The picture: checks that say nothing, then the one that does. Under motion
    each check lights in turn and the last one answers; at rest it is this same
    picture, finished. */
-.watch-figure {
+.mod-figure {
   padding: var(--space-6);
   background: var(--surface);
   border: 1px solid var(--border-subtle);
@@ -1135,17 +1142,76 @@
   100% { opacity: 0.35; transform: scale(1.12); }
 }
 
-/* An option or a tool name never breaks inside itself. */
-.watch-who code,
-.watch-behaves__item code { white-space: nowrap; }
+/* The other mods' pictures. Same ink as the watch picture: --border-strong and
+   --text-secondary at rest, --accent-solid and --text-accent for what matters. */
+.orders-art, .claim-art, .rest-art, .meter-art, .plain-art { display: block; width: 100%; height: auto; }
 
-.watch-who p {
+/* orders: the conversation got shorter, the orders came through whole. */
+.orders-art__cut {
+  stroke: var(--border-strong);
+  stroke-width: 2;
+  stroke-dasharray: 2 7;
+  stroke-linecap: round;
+}
+.orders-art__line { stroke: var(--border-strong); stroke-width: 2; stroke-linecap: round; opacity: 0.55; }
+.orders-art__order { stroke: var(--accent-solid); stroke-width: 7; stroke-linecap: round; }
+
+/* claim: files that are not this session's, and a sweep that stops. */
+.claim-art__mine { fill: none; stroke: var(--accent-solid); stroke-width: 2; }
+.claim-art__other {
+  fill: none;
+  stroke: var(--text-secondary);
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+}
+.claim-art__dot { fill: var(--text-secondary); }
+.claim-art__sweep { stroke: var(--text-accent); stroke-width: 2; stroke-linecap: round; }
+.claim-art__stop { stroke: var(--text-accent); stroke-width: 3; stroke-linecap: round; }
+
+/* rest: every session pauses at the same moment, then goes on. */
+.rest-art__before { stroke: var(--text-secondary); stroke-width: 3; stroke-linecap: round; }
+.rest-art__after { stroke: var(--accent-solid); stroke-width: 3; stroke-linecap: round; }
+.rest-art__resume { fill: var(--accent-solid); }
+.rest-art__bar { fill: var(--text-primary); }
+
+/* meter: one line of gauges, one crossing its mark. */
+.meter-art__track { fill: var(--border-subtle); }
+.meter-art__fill { fill: var(--text-secondary); }
+.meter-art__fill--over { fill: var(--accent-solid); }
+.meter-art__tick { stroke: var(--border-strong); stroke-width: 2; stroke-linecap: round; }
+.meter-art__ring {
+  fill: none;
+  stroke: var(--text-accent);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.meter-art__wake { fill: var(--accent-solid); }
+
+/* plain: a mod with no picture of its own yet. */
+.plain-art__box { fill: none; stroke: var(--border-strong); stroke-width: 2; }
+.plain-art__dot { fill: var(--accent-solid); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .rest-art__bar { animation: rest-breathe 6.6s var(--ease-in-out) infinite; }
+}
+
+@keyframes rest-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* An option or a tool name never breaks inside itself. */
+.mod-use code,
+.mod-behaves__item code { white-space: nowrap; }
+
+.mod-use p {
   max-width: 68ch;
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
 }
 
-.watch-behaves__list {
+.mod-behaves__list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
   gap: var(--space-4);
@@ -1154,7 +1220,7 @@
   list-style: none;
 }
 
-.watch-behaves__item {
+.mod-behaves__item {
   margin: 0;
   padding: var(--space-5);
   line-height: var(--leading-relaxed);
@@ -1164,12 +1230,27 @@
   border-radius: var(--radius-lg);
 }
 
-.watch-behaves__item strong { color: var(--text-primary); }
+.mod-behaves__item strong { color: var(--text-primary); }
 
 @media (forced-colors: active) {
-  .watch-figure,
-  .watch-behaves__item { border-color: CanvasText; }
+  .mod-figure,
+  .mod-behaves__item { border-color: CanvasText; }
   .watch-art__tick,
-  .watch-art__ring { stroke: CanvasText; }
-  .watch-art__wake { fill: Highlight; }
+  .watch-art__ring,
+  .meter-art__ring,
+  .orders-art__line,
+  .claim-art__other,
+  .claim-art__dot,
+  .rest-art__before,
+  .meter-art__tick { stroke: CanvasText; }
+  .watch-art__wake,
+  .meter-art__wake,
+  .claim-art__dot,
+  .meter-art__fill,
+  .rest-art__bar { fill: CanvasText; }
+  .meter-art__fill--over,
+  .rest-art__resume { fill: Highlight; }
+  .orders-art__order,
+  .rest-art__after,
+  .claim-art__mine { stroke: Highlight; }
 }

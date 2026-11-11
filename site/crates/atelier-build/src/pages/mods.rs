@@ -1,4 +1,4 @@
-//! /mods/, /mods/climb/ and /mods/watch/.
+//! /mods/, /mods/climb/ and a page for every other mod (`/mods/<slug>/`).
 //!
 //! A mod is a separate plugin in the same marketplace that changes Claude
 //! Code itself. Every fact these pages state about a mod comes from its own
@@ -23,10 +23,10 @@ use super::shell::{self, Page};
 use super::{BRAND_ATELIER_TEXT, MODS_PATH, PageCtx, escape_html, join, strings as chrome};
 use crate::repo::{CLIMB_LIVE_LOG_PATH, ClimbLogRow, ClimbRunMeta, ModManifest, ModSource};
 
-/// The mods that have a page of their own (every mod must; see
-/// [`ModsSite::read`]).
+/// The one mod whose page is its own design. Every other mod gets the plain
+/// page (see [`plain_page`]).
 pub const CLIMB_SLUG: &str = "climb";
-pub const WATCH_SLUG: &str = "watch";
+const WATCH_SLUG: &str = "watch";
 
 /// The pages' own copy (everything that is not a fact about a mod).
 mod strings {
@@ -90,6 +90,7 @@ mod strings {
     pub const REQ_LICENCE: &str = "Licence";
     pub const REQ_SOURCE: &str = "Source";
     pub const WATCH_WHO_HEADING: &str = "Who can start one";
+    pub const USE_HEADING: &str = "In use";
 }
 
 // ---------------------------------------------------------------------------
@@ -256,7 +257,8 @@ fn sentences(text: &str) -> Vec<&str> {
 pub struct ModsSite {
     cards: Vec<ModCard>,
     climb: ClimbPage,
-    watch: WatchPage,
+    /// Every mod but climb, in `mods/` order.
+    plain: Vec<PlainPage>,
 }
 
 #[derive(Debug, Clone)]
@@ -307,7 +309,7 @@ struct ClimbPage {
 }
 
 #[derive(Debug, Clone)]
-struct WatchPage {
+struct PlainPage {
     head: ModHead,
     /// The README's heading for how it behaves, and its bullets.
     behaves_heading: String,
@@ -326,7 +328,7 @@ const STOP_LABELS: [&str; 4] = [
 
 impl ModsSite {
     /// Reads every mod into its card and its page. Fails naming the file
-    /// when a mod has no page here, when the README lacks a part the page
+    /// when the README lacks a part the page
     /// shows, or when the manifest's homepage is not a skill page of a skill
     /// that exists.
     pub fn read(
@@ -346,7 +348,7 @@ impl ModsSite {
         };
         let mut cards = Vec::new();
         let mut climb = None;
-        let mut watch = None;
+        let mut plain = Vec::new();
         for source in mods {
             let readme = parse_readme(&source.readme);
             let head = match source.slug.as_str() {
@@ -356,17 +358,12 @@ impl ModsSite {
                     climb = Some(page);
                     head
                 }
-                WATCH_SLUG => {
-                    let page = watch_page(source, &readme, &render, ctx)?;
+                _ => {
+                    let page = plain_page(source, &readme, &render, ctx)?;
                     let head = page.head.clone();
-                    watch = Some(page);
+                    plain.push(page);
                     head
                 }
-                _ => bail!(
-                    "{}: the mod `{}` has no page on the site; give it one in atelier-build's pages/mods.rs",
-                    source.readme_path.display(),
-                    source.slug
-                ),
             };
             cards.push(ModCard {
                 slug: source.slug.clone(),
@@ -377,11 +374,10 @@ impl ModsSite {
             });
         }
         let climb = climb.ok_or_else(|| anyhow!("mods/{CLIMB_SLUG}: missing"))?;
-        let watch = watch.ok_or_else(|| anyhow!("mods/{WATCH_SLUG}: missing"))?;
         Ok(ModsSite {
             cards,
             climb,
-            watch,
+            plain,
         })
     }
 }
@@ -391,6 +387,11 @@ impl ModsSite {
     /// counter names them).
     pub fn names(&self) -> Vec<String> {
         self.cards.iter().map(|c| c.name.clone()).collect()
+    }
+
+    /// The slugs of the mods that get the plain page, in `mods/` order.
+    pub fn plain_slugs(&self) -> Vec<String> {
+        self.plain.iter().map(|p| p.head.slug.clone()).collect()
     }
 }
 
@@ -483,7 +484,13 @@ fn mod_head(
         .to_string();
     let (headline, lede) = match manifest.description.split_once(": ") {
         Some((head, rest)) => (format!("{head}."), capitalise(rest)),
-        None => (manifest.description.clone(), String::new()),
+        None => {
+            return Err(anyhow!(
+                "{}: `description` needs the form `Headline: what it does`, which /mods/{}/ splits into its title and lede",
+                manifest_file.display(),
+                source.slug
+            ))
+        }
     };
     let source_url = format!(
         "{}/tree/master/mods/{}",
@@ -584,15 +591,15 @@ fn climb_page(
     })
 }
 
-/// The README's heading /mods/watch/ reads what the mod does from.
-const WATCH_BEHAVES: &str = "How it behaves";
+/// The README's heading a plain mod page reads what the mod does from.
+const BEHAVES_HEADING: &str = "How it behaves";
 
-fn watch_page(
+fn plain_page(
     source: &ModSource,
     readme: &Readme,
     render: &RenderCtx,
     ctx: &PageCtx,
-) -> Result<WatchPage> {
+) -> Result<PlainPage> {
     let file = source.readme_path.display();
     let missing = |what: &str| anyhow!("{file}: {what}, which /mods/{}/ shows", source.slug);
     let inline = |text: &str| markdown::render_inline(text, render);
@@ -604,7 +611,7 @@ fn watch_page(
         ));
     }
     let section = readme
-        .section(WATCH_BEHAVES)
+        .section(BEHAVES_HEADING)
         .ok_or_else(|| missing("no `## How it behaves` section"))?;
     let behaves_html: Vec<String> = section
         .blocks
@@ -630,7 +637,7 @@ fn watch_page(
     if limits_html.is_empty() {
         return Err(missing("no closing paragraph under `## How it behaves`"));
     }
-    Ok(WatchPage {
+    Ok(PlainPage {
         head,
         behaves_heading: section.heading.clone(),
         behaves_html,
@@ -807,11 +814,7 @@ pub fn index(ctx: &PageCtx, site: &ModsSite) -> String {
 
 fn mod_card(ctx: &PageCtx, card: &ModCard, featured: bool) -> String {
     let href = ctx.url(&format!("{MODS_PATH}{}/", card.slug));
-    let picture = match card.slug.as_str() {
-        CLIMB_SLUG => super::index::climb_svg(),
-        WATCH_SLUG => watch_svg(),
-        _ => String::new(),
-    };
+    let picture = mod_svg(&card.slug);
     let art = format!("<div class=\"mod-card__art\" aria-hidden=\"true\">{picture}</div>");
     format!(
         r#"      <li class="mod-card{featured}">
@@ -861,21 +864,22 @@ pub fn climb(ctx: &PageCtx, site: &ModsSite) -> String {
     )
 }
 
-/// /mods/watch/: the hero, the commands, who can start one, how it behaves,
-/// requirements and limits, every fact read from its README and manifest.
-pub fn watch(ctx: &PageCtx, site: &ModsSite) -> String {
-    let w = &site.watch;
-    mod_document(
+/// A plain mod's page (`/mods/<slug>/`): the hero, the commands, how it is
+/// used, how it behaves, requirements and limits, every fact read from its
+/// README and manifest. `None` for a slug that has no plain page.
+pub fn plain(ctx: &PageCtx, site: &ModsSite, slug: &str) -> Option<String> {
+    let w = site.plain.iter().find(|p| p.head.slug == slug)?;
+    Some(mod_document(
         ctx,
         &w.head,
         &[
-            mod_hero(ctx, &w.head, &watch_figure()),
+            mod_hero(ctx, &w.head, &mod_figure(slug)),
             mod_commands(&w.head),
-            watch_who(w),
-            watch_behaves(w),
+            mod_use(w),
+            mod_behaves(w),
             mod_requirements(&w.head, &w.limits_html),
         ],
-    )
+    ))
 }
 
 /// A mod's page: its breadcrumb, then `sections` as the article.
@@ -1469,14 +1473,28 @@ fn mod_requirements(c: &ModHead, limits_html: &[String]) -> String {
 }
 
 // ---------------------------------------------------------------------------
-// /mods/watch/
+// The plain mod pages and every mod's picture
 // ---------------------------------------------------------------------------
+
+/// The picture of the mod `slug`: /mods/ draws it on the card and the page
+/// beside its hero.
+fn mod_svg(slug: &str) -> String {
+    match slug {
+        CLIMB_SLUG => super::index::climb_svg(),
+        WATCH_SLUG => watch_svg(),
+        "orders" => orders_svg(),
+        "claim" => claim_svg(),
+        "rest" => rest_svg(),
+        "meter" => meter_svg(),
+        _ => plain_svg(),
+    }
+}
 
 /// How many silent checks the picture draws before the one that wakes.
 const WATCH_TICKS: usize = 11;
 
 /// The mod's picture: a row of checks that say nothing, then the one that
-/// does. /mods/ draws it on the card and the page beside its hero.
+/// does.
 fn watch_svg() -> String {
     let (y, x0, step) = (60.0, 34.0, 26.0);
     let ticks: String = (0..WATCH_TICKS)
@@ -1493,14 +1511,115 @@ fn watch_svg() -> String {
     )
 }
 
-fn watch_figure() -> String {
+fn mod_figure(slug: &str) -> String {
     format!(
-        "<div class=\"watch-figure\" aria-hidden=\"true\">{}</div>",
-        watch_svg()
+        "<div class=\"mod-figure\" aria-hidden=\"true\">{}</div>",
+        mod_svg(slug)
     )
 }
 
-fn watch_who(w: &WatchPage) -> String {
+/// Orders survive a compaction: the conversation (faint lines) gets shorter
+/// across the dashed line, the three standing orders come through whole.
+fn orders_svg() -> String {
+    let mut s = String::from(
+        "<svg class=\"orders-art\" viewBox=\"0 0 400 120\" aria-hidden=\"true\" focusable=\"false\"><line class=\"orders-art__cut\" x1=\"200\" y1=\"14\" x2=\"200\" y2=\"106\"/>",
+    );
+    for i in 0..7 {
+        let y = 20 + 8 * i;
+        s.push_str(&format!(
+            "<line class=\"orders-art__line\" x1=\"36\" y1=\"{y}\" x2=\"164\" y2=\"{y}\"/>"
+        ));
+    }
+    for y in [20, 28] {
+        s.push_str(&format!(
+            "<line class=\"orders-art__line\" x1=\"236\" y1=\"{y}\" x2=\"364\" y2=\"{y}\"/>"
+        ));
+    }
+    for shift in [0, 200] {
+        for (y, to) in [(84, 124), (94, 150), (104, 108)] {
+            s.push_str(&format!(
+                "<line class=\"orders-art__order\" x1=\"{}\" y1=\"{y}\" x2=\"{}\" y2=\"{y}\"/>",
+                36 + shift,
+                to + shift
+            ));
+        }
+    }
+    s.push_str("</svg>");
+    s
+}
+
+/// Files that are not this session's (dashed, with a dot) and a sweep that
+/// stops short of the first of them.
+fn claim_svg() -> String {
+    let mut s = String::from(
+        "<svg class=\"claim-art\" viewBox=\"0 0 400 120\" aria-hidden=\"true\" focusable=\"false\">",
+    );
+    for i in 0..9 {
+        let x = 28 + 38 * i;
+        if [3, 5, 6].contains(&i) {
+            s.push_str(&format!(
+                "<rect class=\"claim-art__other\" x=\"{x}\" y=\"30\" width=\"24\" height=\"32\" rx=\"4\"/><circle class=\"claim-art__dot\" cx=\"{}\" cy=\"46\" r=\"3\"/>",
+                x + 12
+            ));
+        } else {
+            s.push_str(&format!(
+                "<rect class=\"claim-art__mine\" x=\"{x}\" y=\"30\" width=\"24\" height=\"32\" rx=\"4\"/>"
+            ));
+        }
+    }
+    s.push_str("<line class=\"claim-art__sweep\" x1=\"28\" y1=\"88\" x2=\"170\" y2=\"88\"/><line class=\"claim-art__stop\" x1=\"170\" y1=\"78\" x2=\"170\" y2=\"98\"/></svg>");
+    s
+}
+
+/// Every session pauses at the same moment (the two bars) and goes on from
+/// where it stopped.
+fn rest_svg() -> String {
+    let mut s = String::from(
+        "<svg class=\"rest-art\" viewBox=\"0 0 400 120\" aria-hidden=\"true\" focusable=\"false\">",
+    );
+    for y in [30, 50, 70, 90] {
+        s.push_str(&format!(
+            "<line class=\"rest-art__before\" x1=\"36\" y1=\"{y}\" x2=\"176\" y2=\"{y}\"/><line class=\"rest-art__after\" x1=\"224\" y1=\"{y}\" x2=\"364\" y2=\"{y}\"/><circle class=\"rest-art__resume\" cx=\"224\" cy=\"{y}\" r=\"4\"/>"
+        ));
+    }
+    s.push_str("<rect class=\"rest-art__bar\" x=\"188\" y=\"20\" width=\"8\" height=\"80\" rx=\"3\"/><rect class=\"rest-art__bar\" x=\"204\" y=\"20\" width=\"8\" height=\"80\" rx=\"3\"/></svg>");
+    s
+}
+
+/// One line of small gauges, one of them past its mark.
+fn meter_svg() -> String {
+    let mut s = String::from(
+        "<svg class=\"meter-art\" viewBox=\"0 0 400 120\" aria-hidden=\"true\" focusable=\"false\">",
+    );
+    for (x, fill) in [(36, 29), (124, 43), (212, 60), (300, 20)] {
+        let over = fill > 56;
+        s.push_str(&format!(
+            "<rect class=\"meter-art__track\" x=\"{x}\" y=\"56\" width=\"70\" height=\"8\" rx=\"4\"/><rect class=\"meter-art__fill{}\" x=\"{x}\" y=\"56\" width=\"{fill}\" height=\"8\" rx=\"4\"/><line class=\"meter-art__tick\" x1=\"{tx}\" y1=\"50\" x2=\"{tx}\" y2=\"70\"/>",
+            if over { " meter-art__fill--over" } else { "" },
+            tx = x + 56
+        ));
+        if over {
+            s.push_str(&format!(
+                "<circle class=\"meter-art__ring\" cx=\"{tx}\" cy=\"32\" r=\"9\"/><circle class=\"meter-art__wake\" cx=\"{tx}\" cy=\"32\" r=\"4\"/>",
+                tx = x + 56
+            ));
+        }
+    }
+    s.push_str("</svg>");
+    s
+}
+
+/// The picture of a mod that has none of its own yet.
+fn plain_svg() -> String {
+    "<svg class=\"plain-art\" viewBox=\"0 0 400 120\" aria-hidden=\"true\" focusable=\"false\"><rect class=\"plain-art__box\" x=\"140\" y=\"30\" width=\"120\" height=\"60\" rx=\"8\"/><circle class=\"plain-art__dot\" cx=\"200\" cy=\"60\" r=\"5\"/></svg>".to_string()
+}
+
+fn mod_use(w: &PlainPage) -> String {
+    let heading = if w.head.slug == WATCH_SLUG {
+        strings::WATCH_WHO_HEADING
+    } else {
+        strings::USE_HEADING
+    };
     let paragraphs: String = w
         .head
         .use_paragraphs_html
@@ -1508,23 +1627,23 @@ fn watch_who(w: &WatchPage) -> String {
         .map(|p| format!("\n  <p>{p}</p>"))
         .collect();
     format!(
-        r#"<section class="container climb-section watch-who" aria-labelledby="watch-who">
-  <h2 id="watch-who">{heading}</h2>{paragraphs}
+        r#"<section class="container climb-section mod-use" aria-labelledby="mod-use">
+  <h2 id="mod-use">{heading}</h2>{paragraphs}
 </section>"#,
-        heading = escape_html(strings::WATCH_WHO_HEADING),
+        heading = escape_html(heading),
     )
 }
 
-fn watch_behaves(w: &WatchPage) -> String {
+fn mod_behaves(w: &PlainPage) -> String {
     let items: String = w
         .behaves_html
         .iter()
-        .map(|item| format!("\n    <li class=\"watch-behaves__item\">{item}</li>"))
+        .map(|item| format!("\n    <li class=\"mod-behaves__item\">{item}</li>"))
         .collect();
     format!(
-        r#"<section class="container climb-section watch-behaves" aria-labelledby="watch-behaves">
-  <h2 id="watch-behaves">{heading}</h2>
-  <ul class="watch-behaves__list">{items}
+        r#"<section class="container climb-section mod-behaves" aria-labelledby="mod-behaves">
+  <h2 id="mod-behaves">{heading}</h2>
+  <ul class="mod-behaves__list">{items}
   </ul>
 </section>"#,
         heading = escape_html(&w.behaves_heading),

@@ -1,0 +1,13 @@
+{
+  "name": "rest",
+  "version": "0.1.0",
+  "description": "Pause every session with one command: each holds its next tool call with no model running, then resumes where it stopped, and nothing is lost.",
+  "author": {
+    "name": "TBaguette",
+    "email": "verderosa2@gmail.com"
+  },
+  "homepage": "https://lesplooch.github.io/tbaguette-skills/skills/bounding-autonomous-work/",
+  "repository": "https://github.com/LeSplooch/tbaguette-skills",
+  "license": "GPL-2.0-only",
+  "types": "./types/index.d.ts"
+}

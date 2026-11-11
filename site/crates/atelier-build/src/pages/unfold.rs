@@ -52,10 +52,10 @@ pub enum Goes {
 }
 
 pub const CURRENT: Release = Release {
-    label: "New: skills get named when they fit",
-    title: "Skills get named when they fit.",
-    lede: "TBaguette now reads your prompt, on your machine, and names the skills that seem to fit. A new skill and a new mod came with it.",
-    new_until: "2026-11-20",
+    label: "New: four mods for long sessions",
+    title: "Four new mods for long sessions.",
+    lede: "Standing orders that survive a compaction, a guard for a tree with more than one writer, a pause for every session at once, and one quiet line for context, limits and cost.",
+    new_until: "2026-11-25",
     phrases: &[
         "The checkout page crashes when the cart is empty",
         "Let's add a dark theme to the settings screen",
@@ -64,31 +64,36 @@ pub const CURRENT: Release = Release {
         "Migrate the users table to the new schema",
     ],
     dial: Dial {
-        command: "/watch usage 42",
-        from: 31,
-        at: 42,
-        silent: "{n}%. Silent, no model running.",
-        told: "{n}%. The session is told once.",
+        command: "/meter",
+        from: 68,
+        at: 80,
+        silent: "{n}% of context. One quiet line.",
+        told: "{n}%. The band speaks once.",
     },
     ships: &[
         Ship {
-            title: "Named when they fit",
-            note: "From a short list of intents and each skill's description. Subagents hear the rule, and long runs get asked again.",
-            goes: Goes::Skill("using-tbaguette"),
+            title: "/order",
+            note: "New mod. Say it once: a standing order goes back in front of the model after every compaction.",
+            goes: Goes::Page("mods/orders/"),
         },
         Ship {
-            title: "handing-a-step-to-a-person",
-            note: "New skill. Is it really theirs, did they already say yes, can they do it from where they are?",
-            goes: Goes::Skill("handing-a-step-to-a-person"),
+            title: "/claim",
+            note: "New mod. Notices files that changed while the session was idle, and refuses a sweeping git command that would take them.",
+            goes: Goes::Page("mods/claim/"),
         },
         Ship {
-            title: "/watch",
-            note: "New mod. Waits on a usage ceiling or a check with no model running, and speaks once.",
-            goes: Goes::Page("mods/watch/"),
+            title: "/rest",
+            note: "New mod. Pauses every session on the machine at its next tool call, and resumes each where it stopped.",
+            goes: Goes::Page("mods/rest/"),
+        },
+        Ship {
+            title: "/meter",
+            note: "New mod. Context, rate limits, cost and a cold cache in one line, each marked measured or estimate.",
+            goes: Goes::Page("mods/meter/"),
         },
         Ship {
             title: "Sharper skills",
-            note: "Spend ceilings, standing orders, a release that is already out, and more in the update notes.",
+            note: "Extension tools that skip the permission check, token savers that hide a failure, and messages that only look like a yes.",
             goes: Goes::Notes,
         },
     ],

@@ -225,15 +225,15 @@ fn the_landing_page_leads_with_the_release_card_and_no_other_announcement() {
         assert!(!index.contains(retired), "{retired} is gone");
     }
     let card = card();
-    assert!(card.contains("aria-label=\"New: skills get named when they fit\""));
-    assert!(card.contains("<span>Skills get named when they fit.</span>"));
-    assert_eq!(attribute(&card, "data-unfold-new-until"), "2026-11-20");
+    assert!(card.contains("aria-label=\"New: four mods for long sessions\""));
+    assert!(card.contains("<span>Four new mods for long sessions.</span>"));
+    assert_eq!(attribute(&card, "data-unfold-new-until"), "2026-11-25");
     assert_eq!(
         attribute(&card, "data-href"),
         format!("{BASE}/skills/{{slug}}/")
     );
     assert!(index.contains("<noscript><style>.unfold{--open:1}"));
-    assert!(card.contains("data-used>42%. The session is told once.</p>"));
+    assert!(card.contains("data-used>80%. The band speaks once.</p>"));
 }
 
 #[test]
@@ -266,9 +266,10 @@ fn every_ship_leads_to_a_real_page_of_the_built_site() {
     assert_eq!(
         links,
         [
-            format!("{BASE}/skills/using-tbaguette/"),
-            format!("{BASE}/skills/handing-a-step-to-a-person/"),
-            format!("{BASE}/mods/watch/"),
+            format!("{BASE}/mods/orders/"),
+            format!("{BASE}/mods/claim/"),
+            format!("{BASE}/mods/rest/"),
+            format!("{BASE}/mods/meter/"),
             format!("{BASE}/#notes-title"),
         ]
     );
@@ -321,8 +322,8 @@ fn a_build_past_the_cards_date_leaves_it_out() {
         .unwrap();
         unfold::card(&ctx, &unfold::CURRENT)
     };
-    assert!(at("2026-11-20").contains("data-unfold"));
-    assert_eq!(at("2026-11-21"), "");
+    assert!(at("2026-11-25").contains("data-unfold"));
+    assert_eq!(at("2026-11-26"), "");
 }
 
 #[test]
@@ -364,7 +365,7 @@ fn every_page_header_has_skills_mods_graph_and_getting_started_in_order() {
             "{name}: the Mods link carries its animation hook"
         );
         assert!(
-            nav.contains("data-climb-new-until=\"2026-11-12\"><span class=\"visually-hidden\">, </span>New</span>"),
+            nav.contains("data-climb-new-until=\"2026-11-25\"><span class=\"visually-hidden\">, </span>New</span>"),
             "{name}: Mods is New, and its name reads \"Mods, New\" rather than \"ModsNew\""
         );
         assert!(
@@ -551,7 +552,7 @@ fn read_with(edit: impl Fn(&mut ModSource)) -> anyhow::Result<ModsSite> {
     )
     .unwrap();
     let mut mods = repo::mods(&root).unwrap();
-    edit(&mut mods[0]);
+    edit(mods.iter_mut().find(|m| m.slug == "climb").unwrap());
     ModsSite::read(
         &ctx,
         &mods,
@@ -563,7 +564,7 @@ fn read_with(edit: impl Fn(&mut ModSource)) -> anyhow::Result<ModsSite> {
 #[test]
 fn a_readme_missing_what_the_page_shows_fails_the_build_naming_it() {
     assert!(read_with(|_| {}).is_ok());
-    let cases: [(&str, Edit); 5] = [
+    let cases: [(&str, Edit); 4] = [
         (
             "`## Limits`",
             Box::new(|m| m.readme = m.readme.replace("## Limits", "## Caveats")),
@@ -584,7 +585,6 @@ fn a_readme_missing_what_the_page_shows_fails_the_build_naming_it() {
             "commands block",
             Box::new(|m| m.readme = m.readme.replace("    /climb", "    climb")),
         ),
-        ("has no page", Box::new(|m| m.slug = "other".into())),
     ];
     for (what, edit) in cases {
         let err = read_with(edit).expect_err(what).to_string();
@@ -954,92 +954,181 @@ fn the_long_guides_rails_link_headings_that_exist() {
     }
 }
 
+/// Every mod's directory name under `mods/`, sorted.
+fn mod_slugs() -> Vec<String> {
+    let mut slugs: Vec<String> = fs::read_dir(root().join("mods"))
+        .unwrap()
+        .map(|e| e.unwrap())
+        .filter(|e| e.path().join(".claude-plugin/plugin.json").is_file())
+        .map(|e| e.file_name().to_string_lossy().into_owned())
+        .collect();
+    slugs.sort();
+    slugs
+}
+
+/// The mods that get the plain page: every one but climb.
+fn plain_slugs() -> Vec<String> {
+    mod_slugs().into_iter().filter(|s| s != "climb").collect()
+}
+
 #[test]
-fn the_watch_page_states_its_readme_and_manifest_facts() {
+fn every_mod_has_a_page_the_build_wrote() {
+    let slugs = mod_slugs();
+    assert!(slugs.len() >= 6, "{slugs:?}");
     let mods = page("mods/index.html");
-    let watch = page("mods/watch/index.html");
-    let readme = fs::read_to_string(root().join("mods/watch/README.md")).unwrap();
-    let manifest: serde_json::Value = serde_json::from_str(
-        &fs::read_to_string(root().join("mods/watch/.claude-plugin/plugin.json")).unwrap(),
-    )
-    .unwrap();
+    for slug in slugs {
+        let file = built().join(format!("mods/{slug}/index.html"));
+        assert!(file.is_file(), "mods/{slug}/index.html is missing");
+        assert!(mods.contains(&format!("href=\"{BASE}/mods/{slug}/\"")), "{slug}");
+    }
+}
 
-    let version = manifest["version"].as_str().unwrap();
-    assert!(
-        watch.contains(&format!("v{version}")) && watch.contains(&format!("<dd>{version}</dd>"))
-    );
-    assert!(mods.contains(&format!("v{version}")));
-    assert!(watch.contains(&format!(
-        "<meta name=\"description\" content=\"{}\">",
-        esc(manifest["description"].as_str().unwrap())
-    )));
-    assert!(watch.contains(&format!(
-        "/blob/master/LICENSE\">{}</a></dd>",
-        manifest["license"].as_str().unwrap()
-    )));
-
-    // Its install commands, exactly as the README and marketplace name them.
-    let install = "/plugin install watch --marketplace LeSplooch/tbaguette-skills";
-    assert!(readme.contains(&format!("    {install}\n")));
-    assert!(watch.contains(&format!(">{}</code>", esc(install))));
-    assert!(mods.contains(&format!(">{}</code>", esc(install))));
-    assert!(watch.contains(&format!(
-        ">{}</code>",
-        esc("claude plugin install watch --marketplace LeSplooch/tbaguette-skills")
-    )));
+#[test]
+fn every_plain_mod_page_states_its_readme_and_manifest_facts() {
+    let mods = page("mods/index.html");
     let marketplace: serde_json::Value = serde_json::from_str(
         &fs::read_to_string(root().join(".claude-plugin/marketplace.json")).unwrap(),
     )
     .unwrap();
-    let entry = marketplace["plugins"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .find(|p| p["name"] == "watch")
-        .expect("the marketplace lists watch");
-    assert_eq!(entry["version"], manifest["version"]);
-    assert_eq!(entry["source"], "./mods/watch");
+    assert!(plain_slugs().iter().any(|s| s == "watch"));
+    for slug in plain_slugs() {
+        let slug = slug.as_str();
+        let html = page(&format!("mods/{slug}/index.html"));
+        let readme = fs::read_to_string(root().join(format!("mods/{slug}/README.md"))).unwrap();
+        let manifest: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(root().join(format!("mods/{slug}/.claude-plugin/plugin.json")))
+                .unwrap(),
+        )
+        .unwrap();
 
-    // Every README command is a row, and every bullet of how it behaves is on
-    // the page, its code and bold rendered.
-    let mut commands = 0;
-    for line in readme.lines() {
-        let Some(code) = line.strip_prefix("    ") else {
-            continue;
-        };
-        if code.starts_with("/watch") {
-            let command = code.split("  ").next().unwrap().trim();
-            assert!(
-                watch.contains(&format!("<code>{}</code></th>", esc(command))),
-                "{command}"
-            );
-            commands += 1;
+        let version = manifest["version"].as_str().unwrap();
+        assert!(
+            html.contains(&format!("v{version}"))
+                && html.contains(&format!("<dd>{version}</dd>")),
+            "{slug}"
+        );
+        assert!(mods.contains(&format!("v{version}")), "{slug}");
+        assert!(
+            html.contains(&format!(
+                "<meta name=\"description\" content=\"{}\">",
+                esc(manifest["description"].as_str().unwrap())
+            )),
+            "{slug}"
+        );
+        assert!(
+            html.contains(&format!(
+                "/blob/master/LICENSE\">{}</a></dd>",
+                manifest["license"].as_str().unwrap()
+            )),
+            "{slug}"
+        );
+
+        // Its install commands, exactly as the README and marketplace name them.
+        let install = format!("/plugin install {slug} --marketplace LeSplooch/tbaguette-skills");
+        assert!(readme.contains(&format!("    {install}\n")), "{slug}");
+        assert!(html.contains(&format!(">{}</code>", esc(&install))), "{slug}");
+        assert!(mods.contains(&format!(">{}</code>", esc(&install))), "{slug}");
+        assert!(
+            html.contains(&format!(
+                ">{}</code>",
+                esc(&format!(
+                    "claude plugin install {slug} --marketplace LeSplooch/tbaguette-skills"
+                ))
+            )),
+            "{slug}"
+        );
+        let entry = marketplace["plugins"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|p| p["name"] == slug)
+            .unwrap_or_else(|| panic!("the marketplace lists {slug}"));
+        assert_eq!(entry["version"], manifest["version"], "{slug}");
+        assert_eq!(entry["source"], format!("./mods/{slug}"), "{slug}");
+
+        // Every command row of the README's Use block is on the page.
+        let use_block = readme
+            .split("\n## ")
+            .find(|sec| sec.starts_with("Use\n"))
+            .unwrap_or_else(|| panic!("{slug}: the README has a `## Use`"));
+        let mut commands = 0;
+        for line in use_block.lines() {
+            let Some(code) = line.strip_prefix("    ") else {
+                continue;
+            };
+            if code.starts_with('/') {
+                let command = code.split("  ").next().unwrap().trim();
+                assert!(
+                    html.contains(&format!("<code>{}</code></th>", esc(command))),
+                    "{slug}: {command}"
+                );
+                commands += 1;
+            }
         }
+        assert!(commands > 0, "{slug}: a command in the README's Use block");
+
+        // Every bullet of how it behaves is on the page, in its own item.
+        let behaves = readme
+            .split("\n## ")
+            .find(|sec| sec.starts_with("How it behaves\n"))
+            .unwrap_or_else(|| panic!("{slug}: the README has `## How it behaves`"));
+        let bullets = behaves.lines().filter(|l| l.starts_with("- ")).count();
+        assert!(bullets > 0, "{slug}");
+        assert_eq!(
+            html.matches("<li class=\"mod-behaves__item\">").count(),
+            bullets,
+            "{slug}"
+        );
+        assert!(
+            html.contains("id=\"mod-use\"") && html.contains("id=\"mod-behaves\""),
+            "{slug}"
+        );
+        assert!(
+            html.contains(&format!("<svg class=\"{slug}-art\"")),
+            "{slug}: its own picture"
+        );
+        assert!(!html.contains("data-climb-replay"), "{slug}");
+        assert!(
+            html.contains(&format!(
+                "href=\"https://github.com/LeSplooch/tbaguette-skills/tree/master/mods/{slug}\""
+            )),
+            "{slug}"
+        );
+        assert!(mods.contains(&format!("href=\"{BASE}/mods/{slug}/\"")), "{slug}");
+        assert!(
+            html.contains(&format!("href=\"{BASE}/mods/\" aria-current=\"true\"")),
+            "{slug}"
+        );
+        // The use section's heading: watch's own, "In use" for the rest.
+        let heading = if slug == "watch" { "Who can start one" } else { "In use" };
+        assert!(
+            html.contains(&format!("<h2 id=\"mod-use\">{heading}</h2>")),
+            "{slug}"
+        );
     }
+
+    // What is specific to watch.
+    let watch = page("mods/watch/index.html");
+    let readme = fs::read_to_string(root().join("mods/watch/README.md")).unwrap();
+    let commands = readme
+        .lines()
+        .filter_map(|l| l.strip_prefix("    "))
+        .filter(|c| c.starts_with("/watch"))
+        .count();
     assert_eq!(commands, 7, "the README's seven commands");
     assert_eq!(
-        watch.matches("<li class=\"watch-behaves__item\">").count(),
+        watch.matches("<li class=\"mod-behaves__item\">").count(),
         4
     );
     assert!(watch.contains("A check gets two minutes."));
     assert!(watch.contains("It cannot start a command watch."));
     assert!(watch.contains("The mod API is early access"));
-
-    // No replay, and the links go to its skill and its source.
-    assert!(!watch.contains("data-climb-replay"));
     assert!(watch.contains(&format!("href=\"{BASE}/skills/automating-repetition/\"")));
     assert!(watch.contains(">Read automating-repetition<"));
-    assert!(
-        watch.contains(
-            "href=\"https://github.com/LeSplooch/tbaguette-skills/tree/master/mods/watch\""
-        )
-    );
-    assert!(mods.contains(&format!("href=\"{BASE}/mods/watch/\"")));
-    assert!(watch.contains(&format!("href=\"{BASE}/mods/\" aria-current=\"true\"")));
 }
 
 #[test]
-fn a_watch_readme_missing_what_the_page_shows_fails_the_build_naming_it() {
+fn a_plain_mod_readme_missing_what_the_page_shows_fails_the_build_naming_it() {
     let root = root();
     let ctx = PageCtx::new(
         repo::load_skills(&root).unwrap(),
@@ -1051,9 +1140,9 @@ fn a_watch_readme_missing_what_the_page_shows_fails_the_build_naming_it() {
         BTreeMap::new(),
     )
     .unwrap();
-    let read = |edit: fn(&mut ModSource)| {
+    let read = |slug: &str, edit: fn(&mut ModSource)| {
         let mut mods = repo::mods(&root).unwrap();
-        edit(mods.iter_mut().find(|m| m.slug == "watch").unwrap());
+        edit(mods.iter_mut().find(|m| m.slug == slug).unwrap());
         ModsSite::read(
             &ctx,
             &mods,
@@ -1061,7 +1150,29 @@ fn a_watch_readme_missing_what_the_page_shows_fails_the_build_naming_it() {
             repo::climb_live_meta(&root).unwrap(),
         )
     };
-    assert!(read(|_| {}).is_ok());
+    assert!(read("watch", |_| {}).is_ok());
+    // Every plain mod: no `## How it behaves` fails the build naming its README.
+    for slug in plain_slugs() {
+        let err = read(&slug, |m| {
+            m.readme = m.readme.replace("## How it behaves", "## Notes")
+        })
+        .expect_err(&slug)
+        .to_string();
+        assert!(
+            err.contains(&format!("mods/{slug}/README.md")) && err.contains("`## How it behaves`"),
+            "{slug}: {err}"
+        );
+        // A manifest description without `: ` fails the build naming plugin.json.
+        let err = read(&slug, |m| {
+            m.manifest.description = m.manifest.description.replace(": ", "; ")
+        })
+        .expect_err(&slug)
+        .to_string();
+        assert!(
+            err.contains("plugin.json") && err.contains("`description` needs the form"),
+            "{slug}: {err}"
+        );
+    }
     type ReadmeEdit = fn(&mut ModSource);
     let cases: [(&str, ReadmeEdit); 3] = [
         ("`## How it behaves`", |m| {
@@ -1078,7 +1189,7 @@ fn a_watch_readme_missing_what_the_page_shows_fails_the_build_naming_it() {
         }),
     ];
     for (what, edit) in cases {
-        let err = read(edit).expect_err(what).to_string();
+        let err = read("watch", edit).expect_err(what).to_string();
         assert!(
             err.contains("mods/watch/README.md") && err.contains(what),
             "{what}: {err}"

@@ -1,0 +1,13 @@
+{
+  "name": "orders",
+  "version": "0.1.0",
+  "description": "Say it once: the mod keeps a session's standing orders and puts them back in front of the model after every compaction.",
+  "author": {
+    "name": "TBaguette",
+    "email": "verderosa2@gmail.com"
+  },
+  "homepage": "https://lesplooch.github.io/tbaguette-skills/skills/writing-agent-instructions/",
+  "repository": "https://github.com/LeSplooch/tbaguette-skills",
+  "license": "GPL-2.0-only",
+  "types": "./types/index.d.ts"
+}

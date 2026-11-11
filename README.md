@@ -105,6 +105,25 @@ prompt is written to discover the rest instead of asserting them.
   security, communicating, environment and tooling** — 8 more categories, 76 more
   skills. Full breakdown in [`CATALOG.md`](CATALOG.md) or, better, on the site above.
 
+## Mods
+
+A skill changes what your agent knows to do. A mod changes Claude Code itself. The mods ship
+from the same marketplace as separate plugins, for Claude Code only. Each installs on its own,
+and no skill depends on one.
+
+| Mod | What it does |
+|---|---|
+| `climb` | Runs your check after every turn and queues the next iteration until it passes or a stop condition fires |
+| `watch` | Waits on a usage ceiling or a check command with no model running, and tells the session once |
+| `orders` | Keeps a session's standing orders and puts them back in front of the model after every compaction |
+| `claim` | Refuses sweeping git commands while files another writer changed are still dirty |
+| `rest` | Pauses every session on the machine at its next tool call, and resumes each where it stopped |
+| `meter` | One status line for context, rate limits and cost, each figure marked measured or estimate |
+
+    /plugin install <mod> --marketplace LeSplooch/tbaguette-skills
+
+Each has its own page under [Mods](https://lesplooch.github.io/tbaguette-skills/mods/) on the site.
+
 ## What it runs
 
 Nearly all of this is text: skill files the model reads when a task matches. The

@@ -31,6 +31,36 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-11-11 — Four mods for long sessions, and two checks that get skipped without anyone deciding to
+
+- Four new mods in the same marketplace, each installed on its own, for example
+  `/plugin install orders --marketplace LeSplooch/tbaguette-skills`. Like `climb` and `watch`,
+  they run in Claude Code only, and no skill depends on one.
+- `orders`: `/order <text>` keeps a standing order for the session and puts the list back in
+  front of the model after every compaction, so "from now on" is said once. When your own prompt
+  holds such a phrase, a band offers to keep that sentence. Only you can add an order. One that
+  should outlive the session still belongs in the project's instruction file.
+- `claim`: for a working tree with more than one writer. It notices files that changed while the
+  session was running nothing, tells the model once, and refuses `git add -A`, `git commit -a`,
+  a stash, a hard reset or a clean while such files are dirty. `/claim take` accepts files as
+  yours. It can blame a background command of the same session, and it can miss a change that
+  lands during one of the session's own writes.
+- `rest`: `/rest` pauses every session on the machine that has the mod, each at its next tool
+  call, with no model running. `/rest off` lets each continue where it stopped, and `/rest 45m`
+  ends by itself. A response that is already streaming finishes first, and shell commands already
+  running in the background keep running.
+- `meter`: one status line for context fill, rate-limit windows and cost, read from what Claude
+  Code already reports, with nothing polling. A band speaks once when context or a window passes
+  80%, or when the prompt cache has probably gone cold under a large context. That last line is
+  an estimate and says so.
+- `least-privilege-design`: a tool that an extension answers itself runs outside the host's
+  permission prompt and deny rules, so it must not act on a command, path or URL the model chose.
+- `crouton`: a tool that saves tokens by shortening what other tools return also decides what you
+  see of a failure. The table of false economies now says so and points to the skill that covers it.
+- `bounding-autonomous-work`: once a question has been put to a person, a scheduled prompt, a
+  loop's "continue", another agent's message or an interrupt does not answer it, even when it
+  arrives in the person's role.
+
 ## 2026-11-06 — 3.0: Skills get named when they fit, subagents hear the rule, and waiting runs no model
 
 - On Claude Code, the reminder that comes with each prompt now names the skills that prompt seems

@@ -1,0 +1,13 @@
+{
+  "name": "meter",
+  "version": "0.1.0",
+  "description": "One quiet line for the session's numbers: context, rate-limit windows, cost and the prompt cache, each marked measured or estimated, with a band only when a figure crosses a line.",
+  "author": {
+    "name": "TBaguette",
+    "email": "verderosa2@gmail.com"
+  },
+  "homepage": "https://lesplooch.github.io/tbaguette-skills/skills/checkpointing-long-runs/",
+  "repository": "https://github.com/LeSplooch/tbaguette-skills",
+  "license": "GPL-2.0-only",
+  "types": "./types/index.d.ts"
+}
