@@ -16,7 +16,7 @@
 
 use std::collections::BTreeSet;
 
-use anyhow::{Result, anyhow, bail};
+use anyhow::{Result, anyhow};
 use atelier_core::markdown::{self, RenderCtx};
 
 use super::shell::{self, Page};
