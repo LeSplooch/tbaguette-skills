@@ -31,7 +31,7 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
-## 2026-11-11 — Four mods for long sessions, and two checks that get skipped without anyone deciding to
+## 2026-11-11 — Four mods for long sessions, and checks that get skipped without anyone deciding to
 
 - Four new mods in the same marketplace, each installed on its own, for example
   `/plugin install orders --marketplace LeSplooch/tbaguette-skills`. Like `climb` and `watch`,
@@ -60,6 +60,12 @@ holds any text file over 256 KiB for a reviewer.
 - `bounding-autonomous-work`: once a question has been put to a person, a scheduled prompt, a
   loop's "continue", another agent's message or an interrupt does not answer it, even when it
   arrives in the person's role.
+- `reproducible-environments`: a test copy of a service on its own ports and config is isolated
+  only as far as the copy. A client you point at it can still reconnect to the live service it
+  saved earlier, or come out of the build wired to production by your global settings, and the
+  copy's actions still land on the real machine and accounts. Before connecting, read where each
+  client will point and what each action reaches, make both inert, and watch one action fail at
+  the inert target. `deciding-reversibility` now points there from its credential rule.
 
 ## 2026-11-06 — 3.0: Skills get named when they fit, subagents hear the rule, and waiting runs no model
 

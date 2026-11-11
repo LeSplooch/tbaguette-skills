@@ -1,6 +1,6 @@
 ---
 name: reproducible-environments
-description: Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt, when onboarding needs undocumented setup steps, when a build breaks though no commit changed, when two builds of the same commit produce different artifacts, when a script or recipe that reproduces an expensive step lives only in a scratch or temp directory, or when choosing between a version manager, a container, and a hermetic build. Covers pinning, lockfiles, toolchain declaration, isolation, and determinism. Also use when a verification step launches the real built artifact, or when a check that was supposed to touch nothing may have run against a real profile, store, or credential.
+description: Use when a build or test passes on one machine and fails on another, when an old tag or release can no longer be rebuilt, when onboarding needs undocumented setup steps, when a build breaks though no commit changed, when two builds of the same commit produce different artifacts, when a script or recipe that reproduces an expensive step lives only in a scratch or temp directory, or when choosing between a version manager, a container, and a hermetic build. Covers pinning, lockfiles, toolchain declaration, isolation, and determinism. Also use when a verification step launches the real built artifact, when a check that was supposed to touch nothing may have run against a real profile, store, or credential, or when a client, device, or test build is about to be pointed at a copy of a service isolated by its own ports and config.
 ---
 
 # Reproducible environments
@@ -16,6 +16,7 @@ Every "works on my machine" is an input the build consumed without declaring. Re
 - You cannot rebuild the artifact a released version was cut from
 - Onboarding a person or a new runner takes more than one command
 - Choosing an isolation mechanism, or deciding whether the current one is worth its cost
+- A client, a device or a fresh build is about to be connected to a test copy of a service
 
 Not for: runtime configuration and secrets that legitimately differ per environment (`configuration-management`), or moving pinned versions forward on purpose (`upgrading-dependencies`).
 
@@ -92,6 +93,15 @@ Point every variable the artifact reads at a scratch directory, unset the fallba
 - **A negative check, aimed at the right files.** "The real store was not modified" gets written as an mtime comparison on the main database file, and a short run leaves that file byte-identical while putting half a megabyte into its write-ahead journal. Compare mtime *and* size, across the primary file *and* its sidecars. The obvious check passes while the application writes freely.
 - **A positive check that the run got far enough to matter.** A launch that died in its first second, never reached its storage layer and exited satisfies every "nothing was touched" assertion by touching nothing. Assert that a store *was* created under the scratch directory. Without it, your strongest evidence is indistinguishable from the binary failing to start.
 
+## A test copy is isolated; its client and its effects are not
+
+The section above isolates one process from the machine it runs on. A test rig is usually more than one process: a second copy of a service started beside the real one, and a client, a device or a browser pointed at it. The isolation gets done on the part you started, and checked there too: its own ports, its own config and data directories, its own process. That check answers what the copy itself touches. There are two other ways out of the rig, and no port or directory touches either. Each has been met in practice, with the copy itself correctly isolated:
+
+- **The client brings its own target.** A client that has been used before keeps where it last connected, as a saved pairing, a session, a cached endpoint or a token, and often connects there on launch, before any test configuration is applied. A client built fresh for the test is no cleaner: a build that merges the developer's user-global settings comes out pointed at whatever those settings name, credential included. In one case the test device reconnected to the live service. In another, the only way into the screen under test was a first-run prompt that would have registered a test identity on the production service.
+- **The copy drives what the real one drives.** An instance's actions land wherever they are wired: the machine's input and audio, the user's files, a shared account, a mail or payment provider. A copy on other ports drives exactly the same things. In one rig every action the test client could fire would have typed into the real desktop, and a test slider would have changed its real volume.
+
+So before connecting anything, list both: where each client will point when it starts, read from its saved state and its generated config rather than from the setting you meant to apply, and what each action the test can fire will reach. Then make both inert. Back up and clear the client's saved state, and restore it when the test ends. Override inherited build settings with the narrowest setting the build reads, usually its command line, and read the endpoint back out of the generated artifact. Bind the copy's effects to a target that does nothing: a closed port, a scratch account, a stub provider. Then fire one action and confirm it **fails visibly** at that target. An action that quietly goes nowhere looks exactly like one that went somewhere you were not watching. This is `least-privilege-design`'s rule that containment is tested by attempting to leave, applied to a rig rather than to a sandbox.
+
 ## Verify rather than assume
 
 - Build twice and compare artifact hashes. Vary deliberately between the two: different directory, user, hostname, timezone, locale, and a clock at least a day apart. An unvaried rebuild proves almost nothing.
@@ -115,11 +125,13 @@ Point every variable the artifact reads at a scratch directory, unset the fallba
 | Onboarding takes days | setup lives in prose that has never been executed |
 | A rebuild fails on a missing file you wrote | the script that reproduced the step lived in a scratch directory, and the scratch directory did its job |
 | The verification step's own runs show up in the production audit trail | The check launched the real artifact with no environment set, so it resolved the operator's real profile through the home-directory fallback |
+| A test against an isolated copy changed the real system | Isolation was checked on the copy alone; the client reconnected to a target it had saved, or the copy drove effects that no port separates |
 
 ## Red flags
 
 - "It only runs for a few seconds, it cannot have written anything." — a write-ahead journal fills in the first second, and the main file's mtime never moves.
 - "Nothing was modified, so the isolation worked." — also true of a binary that failed to start.
+- "It has its own ports and its own config, so it cannot touch anything real." — that isolates the copy, not what its client remembers or what it drives.
 - "Just install the latest version" as a setup instruction
 - "We'll pin it later" — the pin costs minutes now and an archaeology session later
 - Any build input named `latest`, `stable`, `main`, or an unversioned download URL
