@@ -1,0 +1,13 @@
+{
+  "name": "moves",
+  "version": "0.1.0",
+  "description": "Keep the moves a run did not take: the mod holds what the model set aside, hands it back when the run closes so the next move is offered rather than announced, and leaves what you did not pick one press away.",
+  "author": {
+    "name": "TBaguette",
+    "email": "verderosa2@gmail.com"
+  },
+  "homepage": "https://lesplooch.github.io/tbaguette-skills/skills/offering-the-next-move/",
+  "repository": "https://github.com/LeSplooch/tbaguette-skills",
+  "license": "GPL-2.0-only",
+  "types": "./types/index.d.ts"
+}

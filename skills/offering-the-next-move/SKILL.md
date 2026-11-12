@@ -73,6 +73,8 @@ The ranking rule falls out of the table: **would they have thought of this witho
 
 Row 4 has no home in any file, which is why it decays fastest — and it is the row a `clairvoyance` sweep fills. Its discard pile is exactly the set of things that were real, were seen, and were correctly not acted on, each already carrying the one-line reason that makes it offerable. On a run that swept, harvest row 4 from there rather than from recall.
 
+Where it is available, the `moves` mod in this plugin's marketplace gives the first four rows a home that outlasts the context: a move is set aside at the moment it is passed by, the table comes back ranked at the close, and what was offered and not picked is kept where the person can reach it rather than in a transcript nobody will reread.
+
 ## What a real option looks like
 
 An option is an action with a size, not a topic. "Add tests" is a topic — the reader cannot tell what they would be agreeing to. "Cover the retry path — one test, the case the review flagged and nobody closed" is an action they can price.

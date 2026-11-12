@@ -1486,6 +1486,7 @@ fn mod_svg(slug: &str) -> String {
         "claim" => claim_svg(),
         "rest" => rest_svg(),
         "meter" => meter_svg(),
+        "moves" => moves_svg(),
         _ => plain_svg(),
     }
 }
@@ -1606,6 +1607,32 @@ fn meter_svg() -> String {
         }
     }
     s.push_str("</svg>");
+    s
+}
+
+/// Where along the run the picture sets a move aside.
+const MOVES_SEEN: [u32; 3] = [76, 136, 196];
+
+/// A run passes three things and sets each on the table below; where the run
+/// and the table meet, they come back as options: one taken, two kept.
+fn moves_svg() -> String {
+    let mut s = String::from(
+        "<svg class=\"moves-art\" viewBox=\"0 0 400 120\" aria-hidden=\"true\" focusable=\"false\"><path class=\"moves-art__run\" d=\"M36 34H226Q248 34 248 60\"/><path class=\"moves-art__table\" d=\"M40 102H226Q248 102 248 60\"/>",
+    );
+    for (i, x) in MOVES_SEEN.iter().enumerate() {
+        s.push_str(&format!(
+            "<line class=\"moves-art__drop\" x1=\"{x}\" y1=\"42\" x2=\"{x}\" y2=\"72\"/><rect class=\"moves-art__card\" x=\"{}\" y=\"76\" width=\"44\" height=\"18\" rx=\"5\"/><circle class=\"moves-art__seen\" style=\"--i:{i}\" cx=\"{x}\" cy=\"34\" r=\"5\"/>",
+            x - 22
+        ));
+    }
+    for (i, y) in [22, 51, 80].iter().enumerate() {
+        let taken = if i == 0 { " moves-art__option--taken" } else { "" };
+        s.push_str(&format!(
+            "<line class=\"moves-art__fan\" x1=\"248\" y1=\"60\" x2=\"284\" y2=\"{}\"/><rect class=\"moves-art__option{taken}\" x=\"284\" y=\"{y}\" width=\"80\" height=\"18\" rx=\"9\"/>",
+            y + 9
+        ));
+    }
+    s.push_str("<circle class=\"moves-art__close\" cx=\"248\" cy=\"60\" r=\"5\"/></svg>");
     s
 }
 

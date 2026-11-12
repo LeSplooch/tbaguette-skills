@@ -104,7 +104,7 @@ pub const SKILLS_ANCHOR: &str = "#skills";
 /// The climb release's window, inclusive: the header's "New" tag on Mods and the
 /// one on the landing page's Mods counter both carry it, and atelier-web's news
 /// check retires both against the reader's clock.
-pub const CLIMB_NEW_UNTIL: &str = "2026-11-25";
+pub const CLIMB_NEW_UNTIL: &str = "2026-11-26";
 
 /// The header's Graph link carries a "New" tag until this date, inclusive
 /// (`GRAPH_NEW_UNTIL`); site.js retires it against the reader's clock.

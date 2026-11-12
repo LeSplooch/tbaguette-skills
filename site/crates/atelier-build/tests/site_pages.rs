@@ -225,15 +225,15 @@ fn the_landing_page_leads_with_the_release_card_and_no_other_announcement() {
         assert!(!index.contains(retired), "{retired} is gone");
     }
     let card = card();
-    assert!(card.contains("aria-label=\"New: four mods for long sessions\""));
-    assert!(card.contains("<span>Four new mods for long sessions.</span>"));
-    assert_eq!(attribute(&card, "data-unfold-new-until"), "2026-11-25");
+    assert!(card.contains("aria-label=\"New: moves, a mod for the end of a run\""));
+    assert!(card.contains("<span>A new mod for the end of a run.</span>"));
+    assert_eq!(attribute(&card, "data-unfold-new-until"), "2026-11-26");
     assert_eq!(
         attribute(&card, "data-href"),
         format!("{BASE}/skills/{{slug}}/")
     );
     assert!(index.contains("<noscript><style>.unfold{--open:1}"));
-    assert!(card.contains("data-used>80%. The band speaks once.</p>"));
+    assert!(card.contains("data-used>100%. The report, then one question.</p>"));
 }
 
 #[test]
@@ -266,10 +266,9 @@ fn every_ship_leads_to_a_real_page_of_the_built_site() {
     assert_eq!(
         links,
         [
-            format!("{BASE}/mods/orders/"),
-            format!("{BASE}/mods/claim/"),
-            format!("{BASE}/mods/rest/"),
-            format!("{BASE}/mods/meter/"),
+            format!("{BASE}/mods/moves/"),
+            format!("{BASE}/skills/offering-the-next-move/"),
+            format!("{BASE}/mods/"),
             format!("{BASE}/#notes-title"),
         ]
     );
@@ -322,8 +321,8 @@ fn a_build_past_the_cards_date_leaves_it_out() {
         .unwrap();
         unfold::card(&ctx, &unfold::CURRENT)
     };
-    assert!(at("2026-11-25").contains("data-unfold"));
-    assert_eq!(at("2026-11-26"), "");
+    assert!(at("2026-11-26").contains("data-unfold"));
+    assert_eq!(at("2026-11-27"), "");
 }
 
 #[test]
@@ -365,7 +364,7 @@ fn every_page_header_has_skills_mods_graph_and_getting_started_in_order() {
             "{name}: the Mods link carries its animation hook"
         );
         assert!(
-            nav.contains("data-climb-new-until=\"2026-11-25\"><span class=\"visually-hidden\">, </span>New</span>"),
+            nav.contains("data-climb-new-until=\"2026-11-26\"><span class=\"visually-hidden\">, </span>New</span>"),
             "{name}: Mods is New, and its name reads \"Mods, New\" rather than \"ModsNew\""
         );
         assert!(

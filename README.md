@@ -119,6 +119,7 @@ and no skill depends on one.
 | `claim` | Refuses sweeping git commands while files another writer changed are still dirty |
 | `rest` | Pauses every session on the machine at its next tool call, and resumes each where it stopped |
 | `meter` | One status line for context, rate limits and cost, each figure marked measured or estimate |
+| `moves` | Keeps the moves a run set aside, hands them back as the closing question, and leaves what you did not pick one press away |
 
     /plugin install <mod> --marketplace LeSplooch/tbaguette-skills
 

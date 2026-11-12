@@ -31,6 +31,27 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-11-12 — moves: a mod that keeps what a run did not take
+
+- New mod, `moves`, in the same marketplace: `/plugin install moves --marketplace LeSplooch/tbaguette-skills`.
+  Like the others it runs in Claude Code only, and no skill depends on it. It is the tool half of
+  `offering-the-next-move`.
+- It holds the end of a turn, once. When a turn you started changed a file or set a move aside,
+  and is about to end without asking you anything, the model is handed what the run set aside and
+  asked to put one question under its report: the move it would take, a way to stop, four options
+  at most. `/moves gate off` stops the holding in every session. A turn started by a schedule, a
+  plugin or another session is never held, and neither is one with a background task still
+  running.
+- As it works, the model sets aside what it is not acting on: a line of the request it gave up, a
+  call that could have gone the other way, scope it pushed out, something it found on the way
+  past. The table is not in the conversation, so a compaction does not lose it.
+- What you do not pick stays. `/moves` lists the project's table, a band above the prompt shows
+  up to three moves as buttons after a turn, and a later session in the same project starts with
+  what earlier ones left, for 30 days. A move is only ever a candidate: it becomes a request when
+  you pick it in a question, press it, or type `/moves take`.
+- Not yet driven in a live session: its tests run against the engine's test kit. The mod's page
+  says what has not been watched.
+
 ## 2026-11-11 — Four mods for long sessions, and checks that get skipped without anyone deciding to
 
 - Four new mods in the same marketplace, each installed on its own, for example
