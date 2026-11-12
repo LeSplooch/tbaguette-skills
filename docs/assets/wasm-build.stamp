@@ -1,4 +1,4 @@
-sources 2b0ae7311e441d7eeea55cc1e348a4fed028c92147686a289cea08c001dfa9e3
+sources ae07161fefdbc80ead3fa257cc35425fbf8ddc0db4d822ec66c00a311f95113f
 rustc 1.99.1
 wasm-bindgen 0.2.128
 wasm-opt none

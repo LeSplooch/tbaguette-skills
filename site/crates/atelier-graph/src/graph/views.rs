@@ -692,10 +692,12 @@ pub fn list_html(model: &Model, graph_icon: &str) -> String {
             let ins: Vec<usize> = node.inn.iter().map(|(s, _)| *s).collect();
             let role = node.role.key();
             h.push_str(&format!(
-                "<article class=\"crumb-list__skill\"><h4><a href=\"{}\">{}</a><button type=\"button\" class=\"crumb__btn crumb__btn--quiet crumb__btn--small\" data-crumb-act=\"open\" data-crumb-node=\"{}\">{graph_icon}<span>{}</span></button></h4><p class=\"crumb-list__role\">{}{}</p><details class=\"crumb-list__more\"><summary>{} {} · {} {}</summary><p class=\"crumb-list__refs\"><b>{} {}</b> {}</p><p class=\"crumb-list__refs\"><b>{} {}</b> {}</p></details></article>",
+                "<article class=\"crumb-list__skill\"><h4><a href=\"{}\">{}</a><button type=\"button\" class=\"crumb__btn crumb__btn--quiet crumb__btn--small\" data-crumb-act=\"open\" data-crumb-node=\"{}\" aria-label=\"{}: {}\">{graph_icon}<span>{}</span></button></h4><p class=\"crumb-list__role\">{}{}</p><details class=\"crumb-list__more\"><summary>{} {} · {} {}</summary><p class=\"crumb-list__refs\"><b>{} {}</b> {}</p><p class=\"crumb-list__refs\"><b>{} {}</b> {}</p></details></article>",
                 escape_html(&model.skill_url(&node.slug)),
                 escape_html(&node.name),
                 escape_html(&node.slug),
+                escape_html(LIST_OPEN),
+                escape_html(&node.name),
                 escape_html(LIST_OPEN),
                 role_svg(role),
                 escape_html(role_copy(role).0),
@@ -943,5 +945,27 @@ mod tests {
             "<blockquote class=\"crumb-quote\">use <mark>a</mark> &amp; b then a</blockquote>"
         );
         assert_eq!(quote_html(None, "a"), "");
+    }
+
+    #[test]
+    fn every_open_in_the_graph_button_names_its_skill() {
+        let text = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../../docs/graph/graph.json"
+        ))
+        .expect("docs/graph/graph.json");
+        let data = super::super::model::unpack(&text).expect("unpacks");
+        let mut seed = 0.0;
+        let model = Model::build(&data, &mut || {
+            seed += 0.001;
+            seed
+        });
+        let html = list_html(&model, "");
+        let buttons = html.matches("data-crumb-act=\"open\"").count();
+        assert_eq!(buttons, model.nodes.len());
+        for node in &model.nodes {
+            let label = format!("aria-label=\"{}: {}\"", LIST_OPEN, node.name);
+            assert!(html.contains(&label), "no label for {}", node.name);
+        }
     }
 }
