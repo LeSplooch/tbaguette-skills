@@ -53,6 +53,8 @@ type Knobs = {
   surfaces: RenderSurface[]
   // null: not a git working tree
   top: string | null
+  // the folder the session is in now; a session.start sets it
+  cwd: string
   answers: Record<string, string>
   isDismissed: boolean
   isEditFailing: boolean
@@ -90,6 +92,7 @@ function engine(on: On, entries: [string, unknown][] = [], set: Partial<Knobs> =
     session: SESSION,
     surfaces: ['desktop'],
     top: ROOT,
+    cwd: ROOT,
     answers: {},
     isDismissed: false,
     isEditFailing: false,
@@ -126,9 +129,12 @@ function engine(on: On, entries: [string, unknown][] = [], set: Partial<Knobs> =
     registered.push(e as { name?: string; isDeferred?: unknown })
     return { value: { tool: 'x' } }
   })
-  on('session.start', (_, e) => ({ cwd: e.cwd }))
+  on('session.start', (_, e) => {
+    knobs.cwd = e.cwd
+    return { cwd: e.cwd }
+  })
   on('session.id', () => ({ value: knobs.session }))
-  on('session.cwd', () => ({ value: ROOT }))
+  on('session.cwd', () => ({ value: knobs.cwd }))
   on('session.end', (_, e) => ({ sessionId: e.sessionId }))
   on('session.surfaces', () => ({ value: knobs.surfaces }))
   on('process.run', (_, e) => {
@@ -1142,7 +1148,7 @@ test('a move older than thirty days is forgotten, and what the store holds in an
 })
 
 test('a session started below a repository\'s top shares the repository\'s table; outside one, the folder\'s', async ($, on) => {
-  const seen = engine(on, [entry(stored({ id: 1, move: 'Cover the retry path' }))])
+  const seen = engine(on, [entry(stored({ id: 1, move: 'Cover the retry path' }))], { cwd: `${ROOT}/crates/web` })
   await begin($, `${ROOT}/crates/web`)
   expect(seen.git).toEqual([{ argv: ['git', 'rev-parse', '--show-toplevel'], cwd: `${ROOT}/crates/web` }])
   expect((await moves($, '')).text).toContain('#1 found · Cover the retry path')
@@ -1376,4 +1382,23 @@ test('a band press on a move another session already took says so and fills noth
   expect(seen.fills).toEqual([])
   expect(seen.toasts.at(-1)).toBe('That move is no longer on the table.')
   await ui.unmount()
+})
+
+test('a session that starts in a spare folder and moves to the project reads the project\'s table, not the spare\'s', async ($, on) => {
+  const SPARES = '/home/me/.claude'
+  const seen = engine(on, [
+    entry(stored({ id: 1, move: 'Build the pledge book', root: SPARES, uid: 'spare:1' })),
+    entry(stored({ id: 2, move: 'Cover the retry path' })),
+  ], { top: SPARES, cwd: `${SPARES}/spares/spare-abc` })
+  await begin($, `${SPARES}/spares/spare-abc`)
+  expect((await moves($, '')).text).toContain('Build the pledge book')
+  // The app moves the session to the project.
+  seen.knobs.cwd = `${ROOT}/src`
+  seen.knobs.top = ROOT
+  const listed = (await moves($, '')).text
+  expect(listed).toContain('#2 found · Cover the retry path')
+  expect(listed).not.toContain('pledge book')
+  // A move set aside now belongs to the project.
+  await aside($, 'found', 'Rename the stale flag', 'five minutes')
+  expect(seen.kept().find(m => m.move === 'Rename the stale flag')?.root).toBe(ROOT)
 })

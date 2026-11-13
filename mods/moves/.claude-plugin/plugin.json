@@ -1,6 +1,6 @@
 {
   "name": "moves",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Keep the moves a run did not take: the mod holds what the model set aside, hands it back when the run closes so the next move is offered rather than announced, and leaves what you did not pick one press away.",
   "author": {
     "name": "TBaguette",

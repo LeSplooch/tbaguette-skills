@@ -364,6 +364,8 @@ function asMove(value: unknown): Move | null {
 
 // The module's own variables start over on a reload; `session.start` and `ready` set them again.
 let root: string | undefined
+// The folder `root` was worked out from.
+let rootCwd: string | undefined
 let session = ''
 // Moves a store write failed for: they stay in the session's state and are written again.
 const unsaved = new Set<string>()
@@ -389,8 +391,20 @@ async function projectRoot($: EngineInterface, cwd: string): Promise<string> {
   }
 }
 
+/**
+ * The project is worked out again whenever the session's folder has moved. The desktop app starts
+ * a session in a spare folder under ~/.claude, which is a git repository of its own, and only
+ * then moves it to the project: a root read once at the start filed every such session's moves
+ * under ~/.claude, one table shared by every project.
+ */
 async function ready($: EngineInterface) {
-  if (root === undefined) root = await projectRoot($, await $.session.cwd())
+  const here = await $.session.cwd()
+  if (root === undefined || here !== rootCwd) {
+    const next = await projectRoot($, here)
+    if (next !== root) await update($, table, () => [])
+    root = next
+    rootCwd = here
+  }
   if (session === '') session = await $.session.id()
 }
 
@@ -799,6 +813,7 @@ export const register: Register = on => {
     })
     try {
       root = await projectRoot($, e.cwd)
+      rootCwd = e.cwd
       session = await $.session.id()
       await raise($)
     } catch {

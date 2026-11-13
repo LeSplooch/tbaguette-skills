@@ -89,9 +89,10 @@ table, opens nothing and changes no move.
   own, and the gate is switched from the pane's last row. The pane draws on every surface the mod
   loads in, the phone included.
 - **Across sessions.** The table belongs to the project: the repository's top folder, or the
-  session's own folder outside one. It is kept in the mod's store, so a later session in the same
-  project starts with what earlier ones left, each marked with its age, and the band is up before
-  the first turn. A move is forgotten after 30 days, and its number is never given to another.
+  session's own folder outside one, worked out again whenever the session moves to another folder.
+  It is kept in the mod's store, so a later session in the same project starts with what earlier
+  ones left, each marked with its age, and the band is up before the first turn. A move is
+  forgotten after 30 days, and its number is never given to another.
 - **A full table.** The table holds 24 moves. A twenty-fifth pushes off the oldest one a model
   set aside, another session's before this one's, and a toast tells you which. A move you added
   is never pushed off: a table full of your own moves takes no more until you drop one.

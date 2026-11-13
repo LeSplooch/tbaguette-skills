@@ -45,7 +45,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-13T03:23:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-13T03:23:31Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-13T03:26:24+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-13T03:26:24Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 <article class="climb-page">
 <section class="container climb-hero" aria-labelledby="moves-title">
   <div class="climb-hero__copy">
-    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.2.0</span></p>
+    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.2.1</span></p>
     <h1 class="climb-hero__title" id="moves-title"><span class="climb-hero__name">moves</span><span class="climb-hero__headline">Keep the moves a run did not take.</span></h1>
     <p class="climb-hero__lede">The mod holds what the model set aside, hands it back when the run closes so the next move is offered rather than announced, and leaves what you did not pick one press away.</p>
     <p class="climb-hero__where">At the prompt of a terminal session:</p>
@@ -137,7 +137,7 @@
     <li class="mod-behaves__item"><strong>Taking a move.</strong> Your prompt carries the move's number and its label, which you saw. What a model wrote about the move, its cost, never goes out as your words: it rides beside the request as a note marked as a model's. An option worded as a move's opposite (&quot;Don't cover the retry path&quot;, &quot;Skip it&quot;, &quot;Leave it for later&quot;) is not that move, and an option two moves match equally well is neither: picking it leaves both on the table. Where the session has no prompt box to fill, the mod sends the move under its own name, saying that you picked it.</li>
     <li class="mod-behaves__item"><strong>The band.</strong> After a turn, while the table holds a move you have not waved off, a band above the prompt shows the strongest three: each on a row of its own with its kind, its number, its words in full and, under them, what it costs, and a Take button that puts it in the prompt. A short band drops the costs first, then moves, and always keeps the strongest. See details opens the pane. Not now hides the moves it showed; a move it had no room for, or a new one, brings the band back after a later turn. Your next prompt lowers the band, and it steps aside while a subagent's transcript is in view.</li>
     <li class="mod-behaves__item"><strong>The pane.</strong> <code>/moves</code>, or See details on the band, opens the table beside the chat (above the prompt on a narrow terminal). Every move is a card: its kind, number, where it came from (this session, how long ago, or added by you) and how many times it was offered and passed over, the move itself, and its cost in full. Each has Put in prompt, Send now and Drop; a drop can be undone from the top of the pane until the next one. A field at the bottom adds a move of your own, and the gate is switched from the pane's last row. The pane draws on every surface the mod loads in, the phone included.</li>
-    <li class="mod-behaves__item"><strong>Across sessions.</strong> The table belongs to the project: the repository's top folder, or the session's own folder outside one. It is kept in the mod's store, so a later session in the same project starts with what earlier ones left, each marked with its age, and the band is up before the first turn. A move is forgotten after 30 days, and its number is never given to another.</li>
+    <li class="mod-behaves__item"><strong>Across sessions.</strong> The table belongs to the project: the repository's top folder, or the session's own folder outside one, worked out again whenever the session moves to another folder. It is kept in the mod's store, so a later session in the same project starts with what earlier ones left, each marked with its age, and the band is up before the first turn. A move is forgotten after 30 days, and its number is never given to another.</li>
     <li class="mod-behaves__item"><strong>A full table.</strong> The table holds 24 moves. A twenty-fifth pushes off the oldest one a model set aside, another session's before this one's, and a toast tells you which. A move you added is never pushed off: a table full of your own moves takes no more until you drop one.</li>
     <li class="mod-behaves__item"><strong>Compaction and <code>/clear</code>.</strong> The table is not in the conversation, so neither one touches it.</li>
     <li class="mod-behaves__item"><strong>Not yet confirmed live.</strong> The mod's tests run against the engine's test kit, not a live session. Two things in particular have not been watched: the end of a turn being held in a real session, and a running session seeing what another running session wrote, a move or the gate, which depends on how the engine shares a mod's store. A session started later does read it.</li>
@@ -149,7 +149,7 @@
   <h2 id="climb-requirements">Requirements and limits</h2>
   <dl class="climb-requirements__facts">
     <div><dt>Runs in</dt><dd>Claude Code, in a build with mods</dd></div>
-    <div><dt>Version</dt><dd>0.2.0</dd></div>
+    <div><dt>Version</dt><dd>0.2.1</dd></div>
     <div><dt>Licence</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/LICENSE">GPL-2.0-only</a></dd></div>
     <div><dt>Source</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/tree/master/mods/moves">LeSplooch/tbaguette-skills</a></dd></div>
   </dl>

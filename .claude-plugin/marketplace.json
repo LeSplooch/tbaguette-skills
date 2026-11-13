@@ -155,7 +155,7 @@
       "displayName": "moves",
       "license": "GPL-2.0-only",
       "description": "A Claude Code mod for the end of a run: it keeps the moves the model set aside, hands them back when the run closes so the next move is offered rather than announced, and leaves what you did not pick one press away.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "source": "./mods/moves",
       "author": {
         "name": "TBaguette",
