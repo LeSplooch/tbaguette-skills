@@ -4,7 +4,7 @@
 //! graph.js builds them, so the DOM is the same DOM, attribute for attribute.
 //! Pure functions over the model; the app sets them as innerHTML.
 
-use super::model::{Model, Path, Sec, quote_of, reach_two, ref_count};
+use super::model::{Model, Path, Sec, quote_of, reach_in_two, reach_two, ref_count};
 use super::text::*;
 
 pub fn icon(href: &str) -> String {
@@ -444,6 +444,14 @@ pub fn panel_skill(
             "<p class=\"crumb-panel__text crumb-skill__reach\">{} <button type=\"button\" class=\"crumb-link crumb-link--button\" data-crumb-act=\"reach\">{}</button></p>",
             fmt(REACH, &[("n", reach.nodes.len().to_string()), ("f", fams)]),
             escape_html(REACH_LIGHT)
+        ));
+    }
+    let reached = reach_in_two(model, focus);
+    if reached > 0 {
+        let pct = (100.0 * reached as f64 / (model.nodes.len().max(2) - 1) as f64).round();
+        h.push_str(&format!(
+            "<p class=\"crumb-panel__text crumb-skill__reached\">{}</p>",
+            fmt(REACHED_BY, &[("n", reached.to_string()), ("p", format!("{pct}"))])
         ));
     }
     h.push_str(&format!(
@@ -966,6 +974,41 @@ mod tests {
         for node in &model.nodes {
             let label = format!("aria-label=\"{}: {}\"", LIST_OPEN, node.name);
             assert!(html.contains(&label), "no label for {}", node.name);
+        }
+    }
+
+    #[test]
+    fn a_skill_panel_says_how_many_skills_lead_to_it_within_two_citations() {
+        let text = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../../docs/graph/graph.json"
+        ))
+        .expect("docs/graph/graph.json");
+        let data = super::super::model::unpack(&text).expect("unpacks");
+        let mut seed = 0.0;
+        let model = Model::build(&data, &mut || {
+            seed += 0.001;
+            seed
+        });
+        for (n, node) in model.nodes.iter().enumerate() {
+            let mut direct: Vec<usize> = node.inn.iter().map(|(s, _)| *s).collect();
+            direct.sort();
+            direct.dedup();
+            let mut two = direct.clone();
+            for &s in &direct {
+                two.extend(model.nodes[s].inn.iter().map(|(t, _)| *t));
+            }
+            two.sort();
+            two.dedup();
+            two.retain(|&t| t != n);
+            assert_eq!(reach_in_two(&model, n), two.len(), "{}", node.name);
+            let html = panel_skill(&model, n, -1, None, "");
+            assert_eq!(
+                html.contains("crumb-skill__reached"),
+                !two.is_empty(),
+                "{}",
+                node.name
+            );
         }
     }
 }

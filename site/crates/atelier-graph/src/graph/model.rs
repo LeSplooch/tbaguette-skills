@@ -747,6 +747,29 @@ pub fn reach_two(model: &Model, node: usize) -> Reach {
     }
 }
 
+/// How many skills lead to this one by following citations for at most two steps.
+pub fn reach_in_two(model: &Model, node: usize) -> usize {
+    let mut seen = vec![false; model.nodes.len()];
+    seen[node] = true;
+    let mut first = Vec::new();
+    for &(s, _) in &model.nodes[node].inn {
+        if !seen[s] {
+            seen[s] = true;
+            first.push(s);
+        }
+    }
+    let mut n = first.len();
+    for s in first {
+        for &(t, _) in &model.nodes[s].inn {
+            if !seen[t] {
+                seen[t] = true;
+                n += 1;
+            }
+        }
+    }
+    n
+}
+
 pub struct Path {
     pub nodes: Vec<usize>,
     pub edges: Vec<usize>,

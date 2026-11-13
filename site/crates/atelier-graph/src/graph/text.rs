@@ -47,6 +47,7 @@ pub const OPEN_SKILL: &str = "Open the skill page";
 pub const TRACE_FROM: &str = "Trace a path from here";
 pub const REACH: &str = "Two steps of citations take it to <b>{n} skills</b> in {f}.";
 pub const REACH_FAMILIES: [&str; 2] = ["{k} family", "{k} families"];
+pub const REACHED_BY: &str = "Within two citations, <b>{n} skills</b> lead here ({p}% of the library).";
 pub const REACH_LIGHT: &str = "Light them up";
 pub const REACH_SHOWN: &str = "{name} and the {n} skills within two citations, shown in the graph.";
 pub const READ_SECTION: &str = "Read this section";
