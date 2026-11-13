@@ -34,7 +34,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v3.0.3</span>
+      <span class="wordmark-version" dir="ltr">v3.0.4</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -45,7 +45,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-12T23:25:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-12T23:25:50Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-13T03:23:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-13T03:23:31Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 <article class="climb-page">
 <section class="container climb-hero" aria-labelledby="watch-title">
   <div class="climb-hero__copy">
-    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.1.1</span></p>
+    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.1.2</span></p>
     <h1 class="climb-hero__title" id="watch-title"><span class="climb-hero__name">watch</span><span class="climb-hero__headline">Wait with no model running.</span></h1>
     <p class="climb-hero__lede">The mod watches a usage ceiling or runs a check command on a timer, stays silent, and tells the session once, when it should.</p>
     <p class="climb-hero__where">At the prompt of a terminal session:</p>
@@ -125,11 +125,12 @@
 <section class="container climb-section mod-use" aria-labelledby="mod-use">
   <h2 id="mod-use">Who can start one</h2>
   <p>The model can start a usage ceiling itself, with the <code>mcp__watch__usage_ceiling</code> tool, rather than checking usage or dispatching an agent to check it. It cannot start a command watch. A check is a shell command run on a timer outside the permission system, so only a person typing <code>/watch</code> can start one. To wait on a command, the model has its own permissioned tools.</p>
+  <p>Only you can change a watch: <code>/watch</code> starts, stops or tests one only when you type it (at the terminal, in an app, or through Remote Control). A scheduled prompt, another plugin or another session running <code>/watch</code> gets the list and nothing else.</p>
 </section>
 <section class="container climb-section mod-behaves" aria-labelledby="mod-behaves">
   <h2 id="mod-behaves">How it behaves</h2>
   <ul class="mod-behaves__list">
-    <li class="mod-behaves__item"><strong>Usage.</strong> The mod reads what the host pushes when a window moves a whole point, so nothing polls. During a running turn the news arrives with the next tool result, and in an idle session as a new turn. Readings come from this session's own responses, so an idle session may not see usage spent elsewhere until its next reply. Off a subscription there are no windows, and some plans have no 5-hour window. If there is no reading, the mod says so when you start the watch, and that watch may never fire. A ceiling already passed starts nothing and says so. A usage watch ends after two weeks.</li>
+    <li class="mod-behaves__item"><strong>Usage.</strong> The mod reads what the host pushes when a window moves a whole point, so nothing polls. During a running turn the news arrives with the next tool result, and in an idle session as a new turn. Readings come from this session's own responses, so an idle session may not see usage spent elsewhere until its next reply. Off a subscription there are no windows, and some plans have no 5-hour window. If there is no reading, the mod says so when you start the watch, and that watch may never fire. A ceiling already passed starts nothing and says so. A usage watch ends after two weeks, checked hourly, so it ends even when no reading ever comes.</li>
     <li class="mod-behaves__item"><strong>Commands</strong> run with <code>sh -c</code> in the session's folder, as you, once at the start and then on the timer. A check gets two minutes. A failing check is silent, and only an exit of 0 wakes the session. A command that cannot run (exit 126 or 127), or that times out three times running, stops the watch and says so. A command watch ends after 24 hours unless <code>--for</code> says otherwise, and says so when it gives up. Its output reaches the model labelled as output, not instructions.</li>
     <li class="mod-behaves__item"><strong><code>/watch test</code></strong> proves a wake can reach this session. It says nothing about whether a command can run or a window is reported.</li>
     <li class="mod-behaves__item">Watches last as long as the session, at most 8 at a time. Closing the session ends them. Other harnesses ignore this mod.</li>
@@ -139,7 +140,7 @@
   <h2 id="climb-requirements">Requirements and limits</h2>
   <dl class="climb-requirements__facts">
     <div><dt>Runs in</dt><dd>Claude Code, in a build with mods</dd></div>
-    <div><dt>Version</dt><dd>0.1.1</dd></div>
+    <div><dt>Version</dt><dd>0.1.2</dd></div>
     <div><dt>Licence</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/LICENSE">GPL-2.0-only</a></dd></div>
     <div><dt>Source</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/tree/master/mods/watch">LeSplooch/tbaguette-skills</a></dd></div>
   </dl>

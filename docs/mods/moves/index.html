@@ -34,7 +34,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v3.0.3</span>
+      <span class="wordmark-version" dir="ltr">v3.0.4</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -45,7 +45,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-12T23:25:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-12T23:25:50Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-13T03:23:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-13T03:23:31Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 <article class="climb-page">
 <section class="container climb-hero" aria-labelledby="moves-title">
   <div class="climb-hero__copy">
-    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.1.0</span></p>
+    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.2.0</span></p>
     <h1 class="climb-hero__title" id="moves-title"><span class="climb-hero__name">moves</span><span class="climb-hero__headline">Keep the moves a run did not take.</span></h1>
     <p class="climb-hero__lede">The mod holds what the model set aside, hands it back when the run closes so the next move is offered rather than announced, and leaves what you did not pick one press away.</p>
     <p class="climb-hero__where">At the prompt of a terminal session:</p>
@@ -111,7 +111,7 @@
     <table class="climb-table">
       <thead><tr><th scope="col">Command</th><th scope="col">What it does</th></tr></thead>
       <tbody>
-        <tr><th scope="row"><code>/moves</code></th><td>what is on the table for this project</td></tr>
+        <tr><th scope="row"><code>/moves</code></th><td>open the table beside the chat, and list it</td></tr>
         <tr><th scope="row"><code>/moves take 2</code></th><td>put move #2 in the prompt, to edit and send as your next request</td></tr>
         <tr><th scope="row"><code>/moves send 2</code></th><td>send move #2 as your next request, as it stands</td></tr>
         <tr><th scope="row"><code>/moves drop 2</code></th><td>take move #2 off the table</td></tr>
@@ -124,8 +124,8 @@
 </section>
 <section class="container climb-section mod-use" aria-labelledby="mod-use">
   <h2 id="mod-use">In use</h2>
-  <p>The model puts moves on the table as it works, through two tools the mod registers: <code>set_aside</code> takes a kind, the move in a few words and what it costs, and <code>harvest</code> hands the table back, strongest first, right before the closing question. The model can clear a move it set aside in this session once it is done. A move an earlier session left, and one you added, leave the table only by your hand.</p>
-  <p>Only you take, send, drop or add a move, clear the table, or switch the gate. A move on the table is a candidate, never an instruction: the model is told to put it to you, and it becomes a request only when you pick it in a question, press it on the band, or type <code>/moves take</code> or <code>/moves send</code>. <code>/moves</code> run by a plugin, a schedule or another session lists the table and changes nothing.</p>
+  <p>The model puts moves on the table as it works, through two tools the mod registers: <code>set_aside</code> takes a kind, the move in a few words and what it costs, and <code>harvest</code> hands the table back, strongest first, right before the closing question. The model can clear a move it set aside in this session once it is done. A move an earlier session left, and one you added, are never cleared by the model: they leave by your hand, by a full table pushing off the oldest one a model set aside, or after 30 days.</p>
+  <p>Only you take, send, drop or add a move, clear the table, or switch the gate. A move on the table is a candidate, never an instruction: the model is told to put it to you, and it becomes a request only when you pick it in a question, press it on the band or in the pane, or type <code>/moves take</code> or <code>/moves send</code>. <code>/moves</code> run by a plugin, a schedule or another session lists the table, opens nothing and changes no move.</p>
 </section>
 <section class="container climb-section mod-behaves" aria-labelledby="mod-behaves">
   <h2 id="mod-behaves">How it behaves</h2>
@@ -134,21 +134,22 @@
     <li class="mod-behaves__item"><strong>The close.</strong> When a turn you started changed a file (Edit, Write or NotebookEdit, a subagent's included) or set a move aside, and is about to end with no question from the model since, the mod holds the end once. The model is handed the table and asked to put one question under its report: the move it would take first, one option that stops, four options at most. If its last lines announce what it will do next (&quot;Tonight I'll rebuild the runner&quot;), the hold quotes them. A background task that reports back later belongs to the run that started it, so the turn its report starts can be the one held.</li>
     <li class="mod-behaves__item"><strong>What is never held.</strong> A turn that changed no file and set nothing aside. A turn that already asked. A turn with a background task still running or a schedule waiting to wake the session. A run started by a plugin, a schedule, a channel or another session, or with no app or terminal attached, where nobody may be there to answer. The same turn twice. Any turn while the gate is off: <code>/moves gate off</code> is kept for every session, and read again at each close.</li>
     <li class="mod-behaves__item"><strong>The offer.</strong> The question is Claude Code's own, asked by the model; the mod only watches it. An option whose label says a move on the table is that move. Picked, it leaves the table, and the model is reminded that a chosen move is a new request. Passed over, it stays and counts one more offer. An option that says no move, like the one that stops, is not kept.</li>
-    <li class="mod-behaves__item"><strong>Taking a move.</strong> Your prompt carries the move's number and its label, which you saw. What a model wrote about the move, its cost, never goes out as your words: it rides beside the request as a note marked as a model's. Where the session has no prompt box to fill, the mod sends the move under its own name, saying that you picked it.</li>
-    <li class="mod-behaves__item"><strong>The band.</strong> After a turn, while the table holds a move you have not waved off, a band above the prompt shows up to three of them as buttons. Not now hides the moves it showed; a move it had no room for, or a new one, brings the band back after a later turn. Your next prompt lowers the band.</li>
+    <li class="mod-behaves__item"><strong>Taking a move.</strong> Your prompt carries the move's number and its label, which you saw. What a model wrote about the move, its cost, never goes out as your words: it rides beside the request as a note marked as a model's. An option worded as a move's opposite (&quot;Don't cover the retry path&quot;, &quot;Skip it&quot;, &quot;Leave it for later&quot;) is not that move, and an option two moves match equally well is neither: picking it leaves both on the table. Where the session has no prompt box to fill, the mod sends the move under its own name, saying that you picked it.</li>
+    <li class="mod-behaves__item"><strong>The band.</strong> After a turn, while the table holds a move you have not waved off, a band above the prompt shows the strongest three: each on a row of its own with its kind, its number, its words in full and, under them, what it costs, and a Take button that puts it in the prompt. A short band drops the costs first, then moves, and always keeps the strongest. See details opens the pane. Not now hides the moves it showed; a move it had no room for, or a new one, brings the band back after a later turn. Your next prompt lowers the band, and it steps aside while a subagent's transcript is in view.</li>
+    <li class="mod-behaves__item"><strong>The pane.</strong> <code>/moves</code>, or See details on the band, opens the table beside the chat (above the prompt on a narrow terminal). Every move is a card: its kind, number, where it came from (this session, how long ago, or added by you) and how many times it was offered and passed over, the move itself, and its cost in full. Each has Put in prompt, Send now and Drop; a drop can be undone from the top of the pane until the next one. A field at the bottom adds a move of your own, and the gate is switched from the pane's last row. The pane draws on every surface the mod loads in, the phone included.</li>
     <li class="mod-behaves__item"><strong>Across sessions.</strong> The table belongs to the project: the repository's top folder, or the session's own folder outside one. It is kept in the mod's store, so a later session in the same project starts with what earlier ones left, each marked with its age, and the band is up before the first turn. A move is forgotten after 30 days, and its number is never given to another.</li>
     <li class="mod-behaves__item"><strong>A full table.</strong> The table holds 24 moves. A twenty-fifth pushes off the oldest one a model set aside, another session's before this one's, and a toast tells you which. A move you added is never pushed off: a table full of your own moves takes no more until you drop one.</li>
     <li class="mod-behaves__item"><strong>Compaction and <code>/clear</code>.</strong> The table is not in the conversation, so neither one touches it.</li>
     <li class="mod-behaves__item"><strong>Not yet confirmed live.</strong> The mod's tests run against the engine's test kit, not a live session. Two things in particular have not been watched: the end of a turn being held in a real session, and a running session seeing what another running session wrote, a move or the gate, which depends on how the engine shares a mod's store. A session started later does read it.</li>
     <li class="mod-behaves__item"><strong>What it does not see.</strong> A turn that changed things only through shell commands owes nothing unless a move was set aside. The match between an option and a move is by their words, so an option worded very differently from its move is not recognised: the move stays on the table.</li>
-    <li class="mod-behaves__item">The status line shows how many moves are on the table. The band draws on the terminal and in the desktop app; <code>/moves</code> and the two tools work wherever the mod loads. Other harnesses ignore this mod.</li>
+    <li class="mod-behaves__item">The status line shows how many moves are on the table. The band draws on the terminal and in the desktop app, the pane wherever the mod loads; <code>/moves</code> and the two tools work everywhere. Other harnesses ignore this mod.</li>
   </ul>
 </section>
 <section class="container climb-section climb-requirements" aria-labelledby="climb-requirements">
   <h2 id="climb-requirements">Requirements and limits</h2>
   <dl class="climb-requirements__facts">
     <div><dt>Runs in</dt><dd>Claude Code, in a build with mods</dd></div>
-    <div><dt>Version</dt><dd>0.1.0</dd></div>
+    <div><dt>Version</dt><dd>0.2.0</dd></div>
     <div><dt>Licence</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/LICENSE">GPL-2.0-only</a></dd></div>
     <div><dt>Source</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/tree/master/mods/moves">LeSplooch/tbaguette-skills</a></dd></div>
   </dl>

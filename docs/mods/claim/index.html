@@ -34,7 +34,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v3.0.3</span>
+      <span class="wordmark-version" dir="ltr">v3.0.4</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -45,7 +45,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-12T23:25:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-12T23:25:50Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-13T03:23:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-13T03:23:31Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 <article class="climb-page">
 <section class="container climb-hero" aria-labelledby="claim-title">
   <div class="climb-hero__copy">
-    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.1.0</span></p>
+    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.1.1</span></p>
     <h1 class="climb-hero__title" id="claim-title"><span class="climb-hero__name">claim</span><span class="climb-hero__headline">Guard a tree with more than one writer.</span></h1>
     <p class="climb-hero__lede">The mod notices files that changed while this session was idle, tells the model once, and refuses sweeping git commands while those files are dirty.</p>
     <p class="climb-hero__where">At the prompt of a terminal session:</p>
@@ -122,7 +122,8 @@
 </section>
 <section class="container climb-section mod-use" aria-labelledby="mod-use">
   <h2 id="mod-use">In use</h2>
-  <p>While a foreign file is dirty, these commands are refused: <code>git add -A</code> (and <code>--all</code>, <code>-u</code>, <code>.</code>), <code>git commit -a</code>, a stash, <code>git reset --hard</code>, <code>git checkout .</code>, <code>git restore .</code> and <code>git clean -f</code>. The refusal names the foreign files. A command that names explicit paths passes, and so does everything else, and nothing is refused once no foreign file is dirty.</p>
+  <p>While a foreign file is dirty, these commands are refused: <code>git add -A</code>, <code>--all</code> or <code>-u</code> with no path or with one that names the whole tree (<code>.</code>, <code>:/</code>, <code>*</code>, the repository root), <code>git add .</code>, <code>git commit -a</code>, a stash, <code>git reset --hard</code>, <code>git checkout .</code>, <code>git checkout -f</code>, <code>git switch -f</code>, <code>git restore .</code>, <code>git rm -r .</code> and <code>git clean -f</code>. The refusal names the foreign files. A command that names explicit paths passes, so does <code>git add -A -- src/a.ts</code>, and so does everything else, and nothing is refused once no foreign file is dirty.</p>
+  <p><code>/claim take &lt;path&gt;</code> reads the path as you type it from the session's directory: <code>./a.ts</code>, <code>a.ts</code> from a subdirectory, <code>../a.ts</code> and an absolute path all work, and a path written from the repository root still does too.</p>
   <p>Only a person can take a file or switch the guard off or on, by typing <code>/claim</code>. The same command from a plugin, a schedule or a peer prints the report and changes nothing, and the mod registers no tool for the model.</p>
 </section>
 <section class="container climb-section mod-behaves" aria-labelledby="mod-behaves">
@@ -130,7 +131,7 @@
   <ul class="mod-behaves__list">
     <li class="mod-behaves__item"><strong>The rule.</strong> This session changes the tree only while one of its own write-capable calls runs, subagents included. A dirty file whose size or modification time changed while none was running was changed by someone else, and is called foreign.</li>
     <li class="mod-behaves__item"><strong>Telling the model.</strong> Once for each new set of foreign files, attached to the next tool result and marked <code>[claim]</code>, with the paths given as data. You get a toast and a <code>claim: N foreign</code> status entry.</li>
-    <li class="mod-behaves__item"><strong>The guard.</strong> It reads the Bash tool's command, including compound commands, <code>git -C</code> and options before the subcommand, and environment prefixes. It does not see a sweeping command inside a script, an alias or a Makefile target, and it does not see shells other than the Bash tool.</li>
+    <li class="mod-behaves__item"><strong>The guard.</strong> It reads the Bash tool's command, including compound commands, <code>git -C</code> and options before the subcommand, environment prefixes, and these wrappers: <code>sudo</code>, <code>env</code>, <code>xargs</code>, <code>nice</code>, <code>nohup</code>, <code>time</code>, <code>command</code>, <code>eval</code> and a shell run with <code>-c</code> (<code>bash -c &quot;git add -A&quot;</code>). A heredoc body is data: it is skipped, so an apostrophe in it hides nothing. It does not see a sweeping command inside a script, an alias, a Makefile target, a heredoc fed to a shell (<code>bash &lt;&lt;EOF</code>), a <code>git</code> invoked through a variable or a <code>$(...)</code> string, or a shell other than the Bash tool. A <code>git add -A</code> through <code>git -C &lt;other repo&gt;</code> is judged all the same: the guard knows this session's foreign files, not that repository's. A forced <code>git checkout &lt;paths&gt;</code>, <code>git reset --merge</code>, <code>git rebase --autostash</code> and <code>git pull</code> into a dirty tree are not seen either.</li>
     <li class="mod-behaves__item"><strong>Background commands.</strong> Detection pauses while a command this session moved to the background is running, because its writes cannot be told from another writer's. It resumes with a fresh baseline when a turn ends with none left, or at <code>/claim on</code>.</li>
     <li class="mod-behaves__item"><strong>Taking a file.</strong> <code>/claim take</code> and a commit both take a file off the list. A taken file returns only if it changes again while the session is idle.</li>
     <li class="mod-behaves__item"><strong>What it can get wrong.</strong> It can call a file foreign when a tool it does not know as a writer changed it between calls. It misses a foreign change that lands while one of this session's own write-capable calls is running. Above 300 dirty entries it compares status codes only, so a second change to an already-changed file is not seen.</li>
@@ -142,7 +143,7 @@
   <h2 id="climb-requirements">Requirements and limits</h2>
   <dl class="climb-requirements__facts">
     <div><dt>Runs in</dt><dd>Claude Code, in a build with mods</dd></div>
-    <div><dt>Version</dt><dd>0.1.0</dd></div>
+    <div><dt>Version</dt><dd>0.1.1</dd></div>
     <div><dt>Licence</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/LICENSE">GPL-2.0-only</a></dd></div>
     <div><dt>Source</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/tree/master/mods/claim">LeSplooch/tbaguette-skills</a></dd></div>
   </dl>

@@ -41,14 +41,22 @@ with `LeSplooch/tbaguette-skills`, then Add plugin.
   start. Starting again is a fresh climb: the earlier one's history is discarded.
   An iteration prompt already queued when the climb stops is dropped.
 - **Only its own prompts advance it.** A prompt you send yourself mid-climb is
-  answered normally and does not count as an iteration or run the check.
+  answered normally and does not count as an iteration or run the check, even if
+  it contains `[climb]`. If the host refuses to queue the next iteration, the
+  climb ends and says so.
+- **Only you change it.** Starting, protecting, `stall`, `ceiling` and `stop` work
+  only when you type `/climb` yourself. A scheduled prompt, another plugin or
+  another session running `/climb` gets the read-only view. The stall limit is
+  at least 1.
 - **Log**: `.climb-log.tsv` in the climb's folder (the session folder, or `--in`) holds the current climb, one
   row per iteration: exit code, score, check time and turn time, both measured
   by the mod and the engine rather than reported by the model. A climb whose turns are short
   and whose checks are long is waiting on the check, not short of ideas.
 - **Protected**: `Edit`, `Write`, `MultiEdit` and `NotebookEdit` on a protected
-  path, and on the log, are refused, matched by spelling and, for a file that
-  exists, by its real path. A shell command is not inspected, so this limits the
+  path, and on the log, are refused, matched by spelling and by where the path
+  lands: for a file that does not exist yet, the nearest existing folder above
+  it is resolved, so a new file under a symlinked folder is caught too. Paths
+  are relative to the climb's folder (the session folder, or `--in`). A shell command is not inspected, so this limits the
   easy route rather than sealing the check; keep what the check reads somewhere
   the run cannot write if that matters.
 - A band above the prompt shows the trail (filled dot for a pass), the last

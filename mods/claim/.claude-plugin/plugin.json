@@ -1,6 +1,6 @@
 {
   "name": "claim",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Guard a tree with more than one writer: the mod notices files that changed while this session was idle, tells the model once, and refuses sweeping git commands while those files are dirty.",
   "author": {
     "name": "TBaguette",

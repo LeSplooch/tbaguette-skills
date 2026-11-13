@@ -1,6 +1,6 @@
 {
   "name": "rest",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pause every session with one command: each holds its next tool call with no model running, then resumes where it stopped, and nothing is lost.",
   "author": {
     "name": "TBaguette",

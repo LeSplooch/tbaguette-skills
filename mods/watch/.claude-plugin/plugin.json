@@ -1,6 +1,6 @@
 {
   "name": "watch",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Wait with no model running: the mod watches a usage ceiling or runs a check command on a timer, stays silent, and tells the session once, when it should.",
   "author": {
     "name": "TBaguette",

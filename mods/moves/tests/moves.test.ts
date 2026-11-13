@@ -15,9 +15,10 @@ import {
   announced,
   closeness,
   fallen,
-  fit,
+  bandPlan,
   hash,
   landing,
+  provenance,
   recordText,
   refusal,
   relayText,
@@ -300,17 +301,17 @@ test('ages, the prompt a take sends, and the buttons that fit a row', () => {
     `The person picked this move on the moves table, and it is their request. Take move #3 from the table: Cover the retry path\n${recordText({ id: 3, cost: 'One test.' })}`,
   )
   expect(relayText({ id: 5, move: 'call the vendor', cost: '' })).toBe('The person picked this move on the moves table, and it is their request. Take move #5 from the table: call the vendor')
-  const four = [1, 2, 3, 4].map(id => stored({ id, move: `Cover the retry path number ${id}` })) as unknown as Move[]
-  expect(fit(four, 200).map(b => b.label)).toEqual(['Cover the retry path number…', 'Cover the retry path number…', 'Cover the retry path number…'])
-  expect(fit(four, 60).length).toBe(1)
-  // A row too narrow for a whole label still offers the strongest move, cut.
-  const narrow = fit(four, 30)
-  expect(narrow.length).toBe(1)
-  expect(narrow[0]?.label.endsWith('…')).toBe(true)
-  for (const columns of [30, 40, 60, 80, 120]) {
-    const row = fit(four, columns).reduce((sum, b) => sum + b.label.length + 5, 'Not now'.length + 4)
-    expect(row).toBeLessThanOrEqual(columns + 1)
-  }
+  // The band: three moves with their costs when there is room; short of rows, costs go, then moves.
+  expect(bandPlan(4, 8)).toEqual({ shown: 3, withCost: true })
+  expect(bandPlan(2, 8)).toEqual({ shown: 2, withCost: true })
+  expect(bandPlan(4, 5)).toEqual({ shown: 3, withCost: false })
+  expect(bandPlan(4, 3)).toEqual({ shown: 1, withCost: false })
+  expect(bandPlan(4, 1)).toEqual({ shown: 1, withCost: false })
+  expect(bandPlan(0, 8)).toEqual({ shown: 0, withCost: false })
+  const mine = stored({ id: 1, move: 'X', session: SESSION, at: NOW }) as unknown as Move
+  expect(provenance(mine, SESSION, NOW)).toBe('this session')
+  expect(provenance({ ...mine, session: 'old', at: NOW - 3 * DAY, offered: 2 }, SESSION, NOW)).toBe('3 days ago · offered twice')
+  expect(provenance({ ...mine, kind: 'asked', offered: 1 }, SESSION, NOW)).toBe('added by you · offered once')
   expect(hash('/repo')).not.toBe(hash('/repo2'))
   // Two moves that share a number: the later one moves past the highest in use and the floor.
   const twins = [stored({ id: 2, move: 'A', at: NOW - DAY }), stored({ id: 2, move: 'B', uid: 'other:2', at: NOW - HOUR }), stored({ id: 3, move: 'C' })] as unknown as Move[]
@@ -803,9 +804,12 @@ test('after a turn the band shows the moves not taken; a press puts one in the p
   await during.unmount()
   await endTurn($, 1)
   const ui = await band($)
-  expect((await ui.find({ type: 'Text', text: /On the table/ }))?.text).toBe('On the table: 2 moves not taken. /moves lists them.')
-  expect((await ui.find({ type: 'Button', key: 'take-2' }))?.text).toBe('Handle empty input')
-  expect((await ui.find({ type: 'Button', key: 'take-1' }))?.text).toBe('Cover the retry path')
+  expect((await ui.find({ type: 'Text', text: /on the table/ }))?.text).toMatch(/^2 moves on the table/)
+  // Strongest first, each with its kind, its number, its words in full, and what it costs.
+  expect((await ui.find({ type: 'Text', text: /#2/ }))?.text).toBe('given up #2  Handle empty input')
+  expect((await ui.find({ type: 'Text', text: /#1/ }))?.text).toBe('found #1  Cover the retry path')
+  expect(await ui.find({ type: 'Text', text: 'ten minutes' })).not.toBe(undefined)
+  expect((await ui.find({ type: 'Button', key: 'take-2' }))?.text).toBe('Take')
   await ui.press({ key: 'take-2' })
   expect(seen.fills).toEqual(['Take move #2 from the table: Handle empty input'])
   expect(seen.prompts.length).toBe(1)
@@ -851,7 +855,7 @@ test('Not now hides the moves it showed until a new one arrives; the person\'s p
   expect(await ui.find({ type: 'Button', key: 'take-1' })).toBe(undefined)
   await aside($, 'ruling', 'Key the cache per tenant', 'an hour')
   await endTurn($, 3)
-  expect((await ui.find({ type: 'Text', text: /On the table/ }))?.text).toBe('On the table: 1 move not taken. /moves lists them.')
+  expect((await ui.find({ type: 'Text', text: /on the table/ }))?.text).toMatch(/^1 move on the table/)
   expect(await ui.find({ type: 'Button', key: 'take-2' })).not.toBe(undefined)
   expect(await ui.find({ type: 'Button', key: 'take-1' })).toBe(undefined)
   // The table itself still holds both.
@@ -874,11 +878,12 @@ test('Not now waves off the moves the band showed, not the ones it had no room f
   }
   await endTurn($, 1)
   const ui = await band($, 'desktop', 200)
-  expect((await ui.find({ type: 'Text', text: /On the table/ }))?.text).toBe('On the table: 5 moves not taken. /moves lists them.')
+  expect((await ui.find({ type: 'Text', text: /on the table/ }))?.text).toMatch(/^5 moves on the table/)
+  expect((await ui.find({ type: 'Button', key: 'open-table' }))?.text).toBe('See all 5, with details')
   expect(await ui.find({ type: 'Button', key: 'take-4' })).toBe(undefined)
   await ui.press({ key: 'not-now' })
   await endTurn($, 2)
-  expect((await ui.find({ type: 'Text', text: /On the table/ }))?.text).toBe('On the table: 2 moves not taken. /moves lists them.')
+  expect((await ui.find({ type: 'Text', text: /on the table/ }))?.text).toMatch(/^2 moves on the table/)
   expect(await ui.find({ type: 'Button', key: 'take-4' })).not.toBe(undefined)
   expect(await ui.find({ type: 'Button', key: 'take-5' })).not.toBe(undefined)
   expect(await ui.find({ type: 'Button', key: 'take-1' })).toBe(undefined)
@@ -897,7 +902,7 @@ test('a subagent ending its turn raises no band', async ($, on) => {
   await ui.unmount()
 })
 
-test('the band draws on every surface, fits its width, and yields to a survey', async ($, on) => {
+test('the band draws on the surfaces that have one, fits its rows, and yields to a survey or an agent\'s transcript', async ($, on) => {
   engine(on)
   await begin($)
   await aside($, 'surrendered', 'Handle the empty input their importer actually sends on Mondays', 'ten minutes')
@@ -905,24 +910,31 @@ test('the band draws on every surface, fits its width, and yields to a survey', 
   await aside($, 'found', 'Rename the stale flag', 'five minutes')
   await aside($, 'found', 'Delete the dead branch', 'a minute')
   await endTurn($, 1)
-  for (const surface of SURFACES) {
-    const wide = await band($, surface, 120)
-    expect((await wide.find({ type: 'Button', key: 'take-1' }))?.text).toBe('Handle the empty input thei…')
-    expect(await wide.find({ type: 'Button', key: 'take-3' })).not.toBe(undefined)
-    // Three at most: the fourth waits on the table.
-    expect(await wide.find({ type: 'Button', key: 'take-4' })).toBe(undefined)
-    await wide.unmount()
-    const narrow = await band($, surface, 40)
-    expect((await narrow.find({ type: 'Text', text: /On the table/ }))?.text.length).toBeLessThanOrEqual(40)
-    expect(await narrow.find({ type: 'Button', key: 'take-1' })).not.toBe(undefined)
-    expect(await narrow.find({ type: 'Button', key: 'take-2' })).toBe(undefined)
-    expect(await narrow.find({ type: 'Button', key: 'not-now' })).not.toBe(undefined)
-    await narrow.unmount()
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const roomy = await band($, surface, 120)
+    // The move's words are never cut by the mod: the surface truncates at its own edge.
+    expect((await roomy.find({ type: 'Text', text: /#1/ }))?.text).toBe('given up #1  Handle the empty input their importer actually sends on Mondays')
+    expect(await roomy.find({ type: 'Text', text: 'ten minutes' })).not.toBe(undefined)
+    expect(await roomy.find({ type: 'Button', key: 'take-3' })).not.toBe(undefined)
+    // Three at most: the fourth waits on the table, one press away.
+    expect(await roomy.find({ type: 'Button', key: 'take-4' })).toBe(undefined)
+    expect((await roomy.find({ type: 'Button', key: 'open-table' }))?.text).toBe('See all 4, with details')
+    await roomy.unmount()
+    const short = await $.ui.mount({ plugin: 'moves', surface, component: 'AbovePrompt', props: { ...BAND, maxRows: 3 } })
+    expect(await short.find({ type: 'Button', key: 'take-1' })).not.toBe(undefined)
+    expect(await short.find({ type: 'Button', key: 'take-2' })).toBe(undefined)
+    expect(await short.find({ type: 'Text', text: 'ten minutes' })).toBe(undefined)
+    expect(await short.find({ type: 'Button', key: 'not-now' })).not.toBe(undefined)
+    await short.unmount()
   }
   const survey = await $.ui.mount({ plugin: 'moves', surface: 'terminal', component: 'AbovePrompt', props: { ...BAND, hasSurvey: true } })
   expect(await survey.find({ type: 'Button', key: 'not-now' })).toBe(undefined)
   expect(await survey.find({ type: 'Text', text: 'engine band' })).not.toBe(undefined)
   await survey.unmount()
+  const agent = await $.ui.mount({ plugin: 'moves', surface: 'desktop', component: 'AbovePrompt', props: { ...BAND, view: { agentId: 'a1' } } })
+  expect(await agent.find({ type: 'Button', key: 'take-1' })).toBe(undefined)
+  expect(await agent.find({ type: 'Text', text: 'engine band' })).not.toBe(undefined)
+  await agent.unmount()
 })
 
 test('only the person\'s own prompt takes a move off the table', async ($, on) => {
@@ -1105,7 +1117,7 @@ test('moves an earlier session left on this project are on the table at the star
   ])
   // The band is up before the first turn: the person sees what was left here.
   const ui = await band($)
-  expect((await ui.find({ type: 'Text', text: /On the table/ }))?.text).toBe('On the table: 2 moves not taken. /moves lists them.')
+  expect((await ui.find({ type: 'Text', text: /on the table/ }))?.text).toMatch(/^2 moves on the table/)
   await ui.unmount()
   // A new move takes the next number of the project, not of the session.
   expect((await aside($, 'found', 'Rename the stale flag', 'five minutes')).result).toContain('Set aside as #3 (found). 3 on the table.')
@@ -1243,5 +1255,125 @@ test('a table stored under an older shape tag is declined', async ($, on) => {
   }))
   const ui = await band($)
   expect(await ui.find({ type: 'Text', text: 'engine band' })).not.toBe(undefined)
+  await ui.unmount()
+})
+
+// ---------------------------------------------------------------------------
+// The pane, and the audit of 2026-11-13
+// ---------------------------------------------------------------------------
+
+const PANE_PROPS = {
+  title: 'Moves',
+  isFocused: true,
+  bodyColumns: 60,
+  placement: 'dock',
+  scroll: { offset: 0, bodyRows: 40 },
+  view: {},
+} as const
+
+async function pane($: any, surface: (typeof SURFACES)[number] = 'desktop', placement: 'dock' | 'inline' = 'dock') {
+  return $.ui.mount({ plugin: 'moves', surface, component: 'Pane', requestId: 'moves', props: { ...PANE_PROPS, placement } })
+}
+
+test('an option that says the opposite of a move is not that move, and a picked one leaves it on the table', async ($, on) => {
+  expect(closeness("Don't cover the retry path", 'Cover the retry path')).toBe(0)
+  expect(closeness('Skip retry path', 'Retry path')).toBe(0)
+  expect(closeness('Leave the retry path for later', 'Cover the retry path')).toBe(0)
+  // A negation the move itself says is not an opposite.
+  expect(closeness('Drop the dead branch', 'Drop the dead branch')).toBe(1)
+  const seen = engine(on, [], { answers: { 'What next?': "Don't cover the retry path" } })
+  await begin($)
+  await moves($, 'add Retry path')
+  await aside($, 'found', 'Cover the retry path', 'one test')
+  await ask($, ["Don't cover the retry path", 'Skip retry path'])
+  expect(seen.kept().map(m => [m.id, m.offered])).toEqual([[1, 0], [2, 0]])
+})
+
+test('an option two moves match equally well takes neither', async ($, on) => {
+  const seen = engine(on, [], { answers: { 'What next?': 'Cover the retry path' } })
+  await begin($)
+  await aside($, 'found', 'Cover the retry path in the API', 'one test')
+  await aside($, 'found', 'Cover the retry path in the CLI', 'two tests')
+  await ask($, ['Cover the retry path', 'Ship as is'])
+  expect(seen.kept().map(m => [m.id, m.offered])).toEqual([[1, 0], [2, 0]])
+})
+
+test('the pane shows every move in full, and takes, sends, drops, undoes and adds by the person\'s press', async ($, on) => {
+  const seen = engine(on)
+  await begin($)
+  await aside($, 'found', 'Cover the retry path', 'one test, and the importer keeps failing until then')
+  await aside($, 'surrendered', 'Handle empty input', 'ten minutes')
+  for (const surface of SURFACES) {
+    for (const placement of ['dock', 'inline'] as const) {
+      const ui = await pane($, surface, placement)
+      expect((await ui.find({ type: 'Text', text: /on the table/ }))?.text).toBe('2 moves on the table')
+      expect(await ui.find({ type: 'Text', text: 'one test, and the importer keeps failing until then' })).not.toBe(undefined)
+      expect(await ui.find({ type: 'Text', text: 'this session' })).not.toBe(undefined)
+      await ui.unmount()
+    }
+  }
+  const ui = await pane($)
+  // Strongest first: the given-up move is the one to press.
+  const buttons = (await ui.findAll({ type: 'Button' })).map((b: { key?: string }) => b.key)
+  expect(buttons.slice(0, 3)).toEqual([expect.stringMatching(/^pane-take-.*:2$/), expect.stringMatching(/^pane-send-/), expect.stringMatching(/^pane-drop-/)])
+  const uidOf = async (id: number) => (await ui.findAll({ type: 'Button' })).map((b: { key?: string }) => b.key).find((k: string | undefined) => k?.startsWith('pane-take-') && k.endsWith(`:${id}`))?.slice('pane-take-'.length)
+  const two = await uidOf(2)
+  await ui.press({ key: `pane-take-${two}` })
+  expect(seen.fills).toEqual(['Take move #2 from the table: Handle empty input'])
+  // Drop, then undo: the move comes back under its own number.
+  const one = await uidOf(1)
+  await ui.press({ key: `pane-drop-${one}` })
+  expect(seen.kept().map(m => m.id)).toEqual([2])
+  expect((await ui.find({ type: 'Text', text: /^Dropped/ }))?.text).toBe('Dropped #1: Cover the retry path')
+  await ui.press({ key: 'undo-drop' })
+  expect(seen.kept().map(m => m.id)).toEqual([1, 2])
+  expect(await ui.find({ type: 'Button', key: 'undo-drop' })).toBe(undefined)
+  // Add one of the person's own.
+  await ui.input({ key: 'add-move', text: '  call the vendor  ' })
+  expect(seen.kept().map(m => [m.id, m.kind, m.move])).toContainEqual([3, 'asked', 'call the vendor'])
+  expect(seen.toasts.at(-1)).toBe('On the table as #3: call the vendor')
+  await ui.input({ key: 'add-move', text: 'call the vendor' })
+  expect(seen.toasts.at(-1)).toBe('That is already on the table as #3.')
+  // Send it as it stands.
+  await ui.press({ key: `pane-send-${await uidOf(3)}` })
+  await seen.clock.settle()
+  expect(seen.prompts.at(-1)?.text).toContain('Take move #3 from the table: call the vendor')
+  // The gate.
+  await ui.press({ key: 'gate' })
+  expect(seen.store.get(GATE_KEY)).toBe(false)
+  expect((await ui.find({ type: 'Button', key: 'gate' }))?.text).toBe('Turn on')
+  await ui.unmount()
+})
+
+test('an empty table says what it is for; the person\'s /moves opens the pane, no one else\'s does', async ($, on) => {
+  const opened: string[] = []
+  engine(on)
+  on('ui.open', (_, e) => {
+    opened.push(e.id)
+    return { value: { isPlaced: true } }
+  })
+  await begin($)
+  const ui = await pane($)
+  expect((await ui.find({ type: 'Text', text: /on the table/i }))?.text).toBe('Nothing on the table')
+  expect(await ui.find({ type: 'Input', key: 'add-move' })).not.toBe(undefined)
+  await ui.unmount()
+  await moves($, '', { kind: 'scheduled-trigger' })
+  await moves($, '', { kind: 'plugin', name: 'other' })
+  expect(opened).toEqual([])
+  await moves($, '')
+  expect(opened).toEqual(['moves'])
+})
+
+test('a band press on a move another session already took says so and fills nothing', async ($, on) => {
+  const seen = engine(on)
+  await begin($)
+  await aside($, 'found', 'Cover the retry path', 'one test')
+  await endTurn($, 1)
+  const ui = await band($)
+  // Another session takes it: the store no longer holds it.
+  for (const key of [...seen.store.keys()]) if (key.startsWith(STORE_PREFIX)) seen.store.delete(key)
+  await ui.press({ key: 'take-1' })
+  expect(seen.fills).toEqual([])
+  expect(seen.toasts.at(-1)).toBe('That move is no longer on the table.')
   await ui.unmount()
 })

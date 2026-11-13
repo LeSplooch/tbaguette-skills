@@ -7,6 +7,10 @@ import type { Climb, ClimbStep } from '../types'
 // version stored, which outlives a reload.
 const climb = atom({ plugin: 'climb', key: 'climb' } as const, null, { shape: 'climb-3' })
 const isHidden = atom({ plugin: 'climb', key: 'isHidden' } as const, false)
+// The text of each prompt this mod queued that has not started a turn yet. A turn counts only if it
+// carries one of them: the mark alone is something a person can type. In the session's state, so a
+// reload between the queue and the turn does not lose it.
+const ownPrompts = atom({ plugin: 'climb', key: 'ownPrompts' } as const, [])
 
 const LOG = '.climb-log.tsv'
 // Every prompt this mod queues starts with it, so a turn can tell its own from the person's.
@@ -16,7 +20,7 @@ const USAGE = [
   'Usage:',
   '  /climb <budget> [--in <dir>] <check command>   start: run the check after every iteration until it exits 0',
   '                                    --in runs the check, keeps the log and resolves protected paths in <dir>',
-  '  /climb protect <path> [...]       refuse edit-tool changes to these paths (relative to the session folder)',
+  '  /climb protect <path> [...]       refuse edit-tool changes to these paths (relative to the folder the climb runs in: the session folder, or --in)',
   '  /climb stall <n>                  stop after n iterations with no better score (default 5)',
   '  /climb ceiling <percent> [5h]      end the climb when the weekly (or 5-hour) usage window reaches it',
   '  /climb stop                       end the climb',
@@ -84,8 +88,49 @@ function describe(c: Climb): string {
   ].join('\n')
 }
 
+/** The person's own Enter: at a terminal, through Remote Control, or in an app that draws the session. */
+async function isPerson($: any, origin: { kind: string }): Promise<boolean> {
+  if (origin.kind === 'composer' || origin.kind === 'bridge') return true
+  return origin.kind === 'sdk' && (await $.session.surfaces()).length > 0
+}
+
+/**
+ * Where an absolute path lands: the nearest part of it that exists, resolved, with the rest joined on.
+ * A file that is not there yet has no real path of its own, but the folder it would go in does.
+ */
+async function landing($: any, path: string): Promise<string> {
+  const rest: string[] = []
+  let here = path
+  for (;;) {
+    try {
+      const real = (await $.fs.stat(here, { resolve: true })).realPath
+      if (real !== undefined) return absolute('/', [real, ...rest].join('/'))
+    } catch {
+      // not there: look at its folder
+    }
+    const cut = here.lastIndexOf('/')
+    if (cut <= 0) return path
+    rest.unshift(here.slice(cut + 1))
+    here = here.slice(0, cut)
+  }
+}
+
 function ended(reason: string) {
   return (x: Climb | null) => (x === null ? x : { ...x, isActive: false, isPending: false, stopReason: reason })
+}
+
+/** Queues the next iteration. A refusal ends the climb, which would otherwise sit active with nothing queued. */
+async function queue($: any, text: string) {
+  await update($, ownPrompts, (held: string[]) => [...held, text].slice(-20))
+  try {
+    await $.prompt.submit({ text })
+  } catch {
+    await update($, ownPrompts, (held: string[]) => held.filter(p => p !== text))
+    const reason = 'the next iteration prompt could not be queued'
+    await update($, climb, ended(reason))
+    $.ui.status(undefined)
+    $.ui.toast(`climb stopped: ${reason}`)
+  }
 }
 
 export const register: Register = on => {
@@ -111,6 +156,8 @@ export const register: Register = on => {
     if (args === '') {
       return { text: current === null ? USAGE : describe(current) }
     }
+    // A climb runs a shell command after every turn: starting, changing or ending one is the person's.
+    if (!(await isPerson($, e.origin))) return { text: 'Only you, typing /climb yourself, can start or change a climb. Plain /climb shows it.' }
     if (args === 'stop') {
       if (current === null || !current.isActive) return { text: 'No climb is running.' }
       await update($, climb, ended('stopped by /climb stop'))
@@ -127,6 +174,7 @@ export const register: Register = on => {
     const stall = args.match(/^stall\s+(\d+)$/)
     if (stall) {
       if (current === null) return { text: 'Start a climb first.' }
+      if (Number(stall[1]) < 1) return { text: 'The stall limit is at least 1 iteration.', exitCode: 1 }
       await update($, climb, c => (c === null ? c : { ...c, stall: Number(stall[1] ?? '5') }))
       return { text: `Stall limit set to ${stall[1]} iterations.` }
     }
@@ -164,12 +212,11 @@ export const register: Register = on => {
     await update($, isHidden, () => false)
     $.ui.status(`climb 0/${fresh.budget}`)
     // A command hook may not submit (it would wait on the turn it holds): queue it once this hook has returned.
-    $.clock.after(0, () => void $.prompt.submit({
-      text:
-        `${MARK} A climb has started. The climb mod runs \`${fresh.check}\` itself after each of your turns, ` +
-        `up to ${fresh.budget} iterations, and only its result counts. Make one change toward making it pass, ` +
-        'then end your turn. Do not edit the check or anything it reads to pass it.',
-    }))
+    const first =
+      `${MARK} A climb has started. The climb mod runs \`${fresh.check}\` itself after each of your turns, ` +
+      `up to ${fresh.budget} iterations, and only its result counts. Make one change toward making it pass, ` +
+      'then end your turn. Do not edit the check or anything it reads to pass it.'
+    $.clock.after(0, () => void queue($, first))
     return { text: `Climb started on \`${fresh.check}\`, budget ${fresh.budget}. A fresh start discards any earlier climb's history.` }
   })
 
@@ -202,7 +249,10 @@ export const register: Register = on => {
   on('turn.start', async ($, e, next) => {
     if (e.agentId === undefined) {
       // The engine may wrap a plugin's prompt in a header, so the mark is looked for anywhere.
-      isOwnTurn = e.text.includes(MARK)
+      const held = await read($, ownPrompts)
+      const at = e.text.includes(MARK) ? held.findIndex(p => e.text.includes(p)) : -1
+      isOwnTurn = at >= 0
+      if (at >= 0) await update($, ownPrompts, (now: string[]) => now.filter((_, i) => i !== at))
       if (isOwnTurn) await update($, climb, x => (x === null ? x : { ...x, isPending: false }))
     }
     return next(e)
@@ -219,14 +269,11 @@ export const register: Register = on => {
     if (path === null) return next(e)
     const target = absolute(c.cwd, path)
     const roots = [...c.protect, LOG].map(p => absolute(c.cwd, p))
-    // Spellings first; then, where the path exists, its real path, so a link into a protected root is caught too.
-    let real = target
-    try {
-      real = (await $.fs.stat(target, { resolve: true })).realPath ?? target
-    } catch {
-      // a file that does not exist yet has no real path; its spelling stands
-    }
-    if (roots.some(r => isUnder(target, r) || isUnder(real, r))) {
+    // Spellings first; then where each lands, so a link into a protected root is caught too, even
+    // for a file that is not there yet (its nearest existing folder is resolved, the rest joined on).
+    const real = await landing($, target)
+    const realRoots = await Promise.all(roots.map(r => landing($, r)))
+    if ([...roots, ...realRoots].some(r => isUnder(target, r) || isUnder(real, r))) {
       return { deny: `climb: ${path} is protected while the climb runs. Make the check pass without changing it.` }
     }
     return next(e)
@@ -294,8 +341,7 @@ export const register: Register = on => {
     if (s === null) return done
     $.ui.status(`climb ${s.iteration}/${after.budget}`)
     const best = after.steps.reduce<number | null>((b, x) => (x.score === null ? b : b === null ? x.score : Math.max(b, x.score)), null)
-    void $.prompt.submit({
-      text: [
+    await queue($, [
         `${MARK} Iteration ${s.iteration} of ${after.budget}: the check \`${after.check}\` exited ${s.exitCode}` +
           (s.score === null ? '.' : `, score ${s.score} (best ${best}).`),
         'Its last lines:',
@@ -304,8 +350,7 @@ export const register: Register = on => {
         '```',
         'Make one change toward passing it, then end your turn; the check runs again by itself.' +
           (after.protect.length > 0 ? ` Protected, and refused: ${after.protect.join(', ')}.` : ''),
-      ].join('\n'),
-    })
+      ].join('\n'))
     return done
   })
 
@@ -318,14 +363,14 @@ export const register: Register = on => {
       .slice(-12)
       .map(s => (s.exitCode === 0 ? '●' : '○'))
       .join('')
-    const head = c.isActive ? `climb ${c.steps.length}/${c.budget}` : `climb ended: ${c.stopReason ?? 'stopped'}`
+    const head = c.isActive ? `climb ${c.steps.length}/${c.budget}` : `climb ended: ${(c.stopReason ?? 'stopped').replace(/\s+/g, ' ')}`
     const detail = last === undefined
       ? ' waiting for the first iteration'
       : ` ${trail}  exit ${last.exitCode}${last.score === null ? '' : `  score ${last.score}`}  check ${(last.checkMs / 1000).toFixed(1)}s  turn ${(last.turnMs / 1000).toFixed(1)}s`
 
     return (
       <Box>
-        <Text dimColor>
+        <Text dimColor wrap="truncate-end">
           {head}
           {detail}{' '}
         </Text>

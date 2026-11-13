@@ -28,7 +28,11 @@ In the desktop app: click + next to the prompt box, then Plugins, Add marketplac
     /rest status          who rests, since when, until when, and what this session holds
 
 `/rest` while a rest is in force says so and changes nothing; `/rest <length>` starts a new one.
-A prompt you type in a resting session wakes that session alone, and the others keep resting.
+A prompt you type in a resting session wakes that session alone, and the others keep resting. A slash
+command you type there wakes it too, any command but `/rest` itself.
+
+A length is a whole number and a lowercase unit: `90s`, `45m` or `2h`, from 1 minute to 24 hours. `1.5h`,
+`2H`, `1h30m` and a bare `45` are refused with the usage text; write `90m` for an hour and a half.
 
 The mod registers no tool for the model, and `/rest` changes nothing unless you typed it. A
 session never pauses your other sessions, or wakes itself, on its own.
@@ -54,7 +58,9 @@ session never pauses your other sessions, or wakes itself, on its own.
 - **Waking costs.** After a long rest the prompt cache has usually expired, so the first request
   after waking reads the whole conversation again at full price.
 - **Where it cannot hold.** Where `sleep` is not on the PATH (or not a CLI session), the mod cannot
-  hold a call: `/rest` says so and starts nothing, and that session never waits. Other harnesses
-  ignore this mod.
+  hold a call: `/rest` says so and starts nothing, and that session never waits. One failed round of
+  `sleep` does not end a rest: the call stays held, and the session gives up holding only after three
+  failed rounds in a row. `/rest status` and the next `/rest` try `sleep` again, so a session that gave
+  up holds again once it works. Other harnesses ignore this mod.
 
 The mod API is early access, and nothing in the skills depends on this mod.

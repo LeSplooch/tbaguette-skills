@@ -42,7 +42,11 @@ function engine(on: On, entries: Record<string, unknown> = {}) {
   })
   on('store.keys', () => ({ value: [...store.keys()] }))
   // What the engine draws in the band when the mod passes.
-  on('ui.render', { component: 'AbovePrompt' }, ($, e) => h($.ui.resolve(e).Text, null, 'engine band') as RenderElement)
+  let bandsAsked = 0
+  on('ui.render', { component: 'AbovePrompt' }, ($, e) => {
+    bandsAsked += 1
+    return h($.ui.resolve(e).Text, null, 'engine band') as RenderElement
+  })
   on('command.register', () => ({ value: { command: 'order' } }))
   on('tool.register', (_, e) => {
     registered.push(JSON.stringify(e))
@@ -57,6 +61,7 @@ function engine(on: On, entries: Record<string, unknown> = {}) {
   on('turn.start', (_, e) => ({ turnId: e.turnId }))
   on('tool.call', () => ({ result: 'file text' }))
   on('prompt.submit', (_, e) => {
+    if (e.text === 'boom') throw new Error('the engine refused')
     prompts.push({ text: e.text, context: e.context })
     return { text: e.text, context: e.context }
   })
@@ -67,7 +72,7 @@ function engine(on: On, entries: Record<string, unknown> = {}) {
   on('ui.toast', () => ({ value: undefined }))
   /** The text of every row the mod appended, oldest first. */
   const rows = () => session.appended().map(r => String((r.message.content[0] as { text?: unknown } | undefined)?.text))
-  return { prompts, statuses, registered, clock, session, rows, store }
+  return { bandsAsked: () => bandsAsked, prompts, statuses, registered, clock, session, rows, store }
 }
 
 async function begin($: any) {
@@ -470,7 +475,7 @@ test('a resumed session gets its orders back from the store and tells the model 
   await begin($)
   expect((await order($, '')).text).toBe('#4 use pnpm')
   expect(seen.statuses.at(-1)).toBe('1 order')
-  expect((await say($, 'where were we')).context).toEqual([expect.stringContaining('1. use pnpm')])
+  expect((await say($, 'where were we')).context).toEqual([expect.stringContaining('4. use pnpm')])
   expect((await order($, 'answer in English')).text).toBe('Kept as order #5: answer in English')
 })
 
@@ -489,4 +494,39 @@ test('the store forgets what sessions left more than 30 days ago, and nothing el
   })
   await begin($)
   expect([...seen.store.keys()]).toEqual(['session:recent', 'other'])
+})
+
+test("the model's list carries the same ids /order shows, after a drop", async ($, on) => {
+  const seen = engine(on)
+  await begin($)
+  await order($, 'first order')
+  await order($, 'second order')
+  await order($, 'drop 1')
+  await seen.clock.settle()
+  expect(seen.rows().at(-1)).toBe(`${HEADER}\n2. second order\nThis list replaces any earlier one.`)
+  expect((await order($, '')).text).toBe('#2 second order')
+})
+
+test('an offer in the band is drawn above what the engine or another mod draws beneath it', async ($, on) => {
+  const seen = engine(on)
+  await begin($)
+  await say($, 'From now on, use pnpm.')
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const ui = await band($, surface)
+    expect(await ui.find({ type: 'Button', key: 'keep' })).not.toBe(undefined)
+    expect(await ui.find({ type: 'Text', text: 'engine band' })).not.toBe(undefined)
+    await ui.unmount()
+  }
+  // The offer is drawn over what the engine draws, so the engine was asked for it both times.
+  expect(seen.bandsAsked()).toBe(2)
+})
+
+test('an owed list is not lost when the prompt it rode on fails to enter', async ($, on) => {
+  const seen = engine(on)
+  await begin($)
+  await order($, 'use pnpm')
+  await seen.clock.settle()
+  await compact($, { trigger: 'auto' })
+  await say($, 'boom').catch(() => undefined)
+  expect((await say($, 'again')).context).toEqual([expect.stringContaining('1. use pnpm')])
 })

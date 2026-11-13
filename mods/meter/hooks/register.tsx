@@ -207,7 +207,7 @@ export function reportLines(r: MeterReadings, life: MeterLifetime, since: number
     lines.push("rate limits: none reported; off a subscription there are none, on one they arrive with this session's next reply")
   }
   for (const w of ordered(r.windows)) {
-    lines.push(`${NAMES[w.kind]?.long ?? w.kind}: ${w.percentUsed}%${w.resetsAt === undefined ? '' : `, resets ${w.resetsAt}`} (measured ${ago(w.at)})`)
+    lines.push(`${NAMES[w.kind]?.long ?? w.kind}: ${Math.floor(w.percentUsed)}%${w.resetsAt === undefined ? '' : `, resets ${w.resetsAt}`} (measured ${ago(w.at)})`)
   }
   lines.push(r.cost === null ? 'cost: no figure; this host keeps no ledger' : `cost: $${r.cost.usd.toFixed(2)} (measured ${ago(r.cost.at)})`)
   const minutes = life.ms / MINUTE
@@ -387,7 +387,7 @@ export const register: Register = on => {
   })
 
   on('command.run', { command: 'meter' }, async ($, e) => {
-    const verb = e.args.trim()
+    const verb = e.args.trim().toLowerCase()
     if (verb === 'quiet') {
       await update($, isQuiet, () => true)
       return { text: 'meter: the band is quiet for this session; the status line stays. /meter loud brings it back.' }

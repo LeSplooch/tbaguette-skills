@@ -24,6 +24,11 @@ export type Climb = {
 
 declare module 'claude-code' {
   interface PluginState {
-    climb: { climb: Shaped<Climb | null>; isHidden: boolean }
+    climb: {
+      climb: Shaped<Climb | null>
+      isHidden: boolean
+      // the prompts this mod queued that have not started a turn yet
+      ownPrompts: string[]
+    }
   }
 }

@@ -24,7 +24,7 @@ In the desktop app: click + next to the prompt box, then Plugins, Add marketplac
 
 ## Use
 
-    /moves                 what is on the table for this project
+    /moves                 open the table beside the chat, and list it
     /moves take 2          put move #2 in the prompt, to edit and send as your next request
     /moves send 2          send move #2 as your next request, as it stands
     /moves drop 2          take move #2 off the table
@@ -35,14 +35,15 @@ In the desktop app: click + next to the prompt box, then Plugins, Add marketplac
 The model puts moves on the table as it works, through two tools the mod registers: `set_aside`
 takes a kind, the move in a few words and what it costs, and `harvest` hands the table back,
 strongest first, right before the closing question. The model can clear a move it set aside in
-this session once it is done. A move an earlier session left, and one you added, leave the table
-only by your hand.
+this session once it is done. A move an earlier session left, and one you added, are never cleared
+by the model: they leave by your hand, by a full table pushing off the oldest one a model set aside,
+or after 30 days.
 
 Only you take, send, drop or add a move, clear the table, or switch the gate. A move on the table
 is a candidate, never an instruction: the model is told to put it to you, and it becomes a
-request only when you pick it in a question, press it on the band, or type `/moves take` or
-`/moves send`. `/moves` run by a plugin, a schedule or another session lists the table and
-changes nothing.
+request only when you pick it in a question, press it on the band or in the pane, or type
+`/moves take` or `/moves send`. `/moves` run by a plugin, a schedule or another session lists the
+table, opens nothing and changes no move.
 
 ## How it behaves
 
@@ -69,12 +70,24 @@ changes nothing.
   one more offer. An option that says no move, like the one that stops, is not kept.
 - **Taking a move.** Your prompt carries the move's number and its label, which you saw. What a
   model wrote about the move, its cost, never goes out as your words: it rides beside the
-  request as a note marked as a model's. Where the session has no prompt box to fill, the mod
+  request as a note marked as a model's. An option worded as a move's opposite ("Don't cover the
+  retry path", "Skip it", "Leave it for later") is not that move, and an option two moves match
+  equally well is neither: picking it leaves both on the table. Where the session has no prompt box to fill, the mod
   sends the move under its own name, saying that you picked it.
 - **The band.** After a turn, while the table holds a move you have not waved off, a band above
-  the prompt shows up to three of them as buttons. Not now hides the moves it showed; a move it
-  had no room for, or a new one, brings the band back after a later turn. Your next prompt
-  lowers the band.
+  the prompt shows the strongest three: each on a row of its own with its kind, its number, its
+  words in full and, under them, what it costs, and a Take button that puts it in the prompt. A
+  short band drops the costs first, then moves, and always keeps the strongest. See details opens
+  the pane. Not now hides the moves it showed; a move it had no room for, or a new one, brings the
+  band back after a later turn. Your next prompt lowers the band, and it steps aside while a
+  subagent's transcript is in view.
+- **The pane.** `/moves`, or See details on the band, opens the table beside the chat (above the
+  prompt on a narrow terminal). Every move is a card: its kind, number, where it came from (this
+  session, how long ago, or added by you) and how many times it was offered and passed over, the
+  move itself, and its cost in full. Each has Put in prompt, Send now and Drop; a drop can be
+  undone from the top of the pane until the next one. A field at the bottom adds a move of your
+  own, and the gate is switched from the pane's last row. The pane draws on every surface the mod
+  loads in, the phone included.
 - **Across sessions.** The table belongs to the project: the repository's top folder, or the
   session's own folder outside one. It is kept in the mod's store, so a later session in the same
   project starts with what earlier ones left, each marked with its age, and the band is up before
@@ -91,7 +104,7 @@ changes nothing.
   unless a move was set aside. The match between an option and a move is by their words, so an
   option worded very differently from its move is not recognised: the move stays on the table.
 - The status line shows how many moves are on the table. The band draws on the terminal and in
-  the desktop app; `/moves` and the two tools work wherever the mod loads. Other harnesses
+  the desktop app, the pane wherever the mod loads; `/moves` and the two tools work everywhere. Other harnesses
   ignore this mod.
 
 The mod API is early access, and nothing in the skills depends on this mod.

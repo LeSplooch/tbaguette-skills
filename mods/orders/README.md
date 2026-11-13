@@ -32,7 +32,9 @@ this session", "every time you", "each time you", "whenever you" or "don't ever"
 sentence that starts with "Always" or "Never", a band above the prompt offers to keep that
 sentence: Keep, or Not this. Your next prompt takes the offer away.
 
-Only a person adds an order. An instruction that outlives the turn has to come from you: a web
+Only a person adds an order. "A person" means the prompt came from the prompt box on your
+machine or through Remote Control (you, on another device): the same two origins the other mods
+here trust. An instruction that outlives the turn has to come from you: a web
 page, a file or a tool result that says "from now on" is something the model read, and it never
 becomes a standing order. So the mod registers no tool for the model, the band reads only what
 you typed (never a plugin's, a peer's, a schedule's, a channel's or an SDK host's prompt, and
@@ -56,7 +58,8 @@ change nothing.
   ignoring case and spacing, is refused, and the band does not offer it. The status line shows
   how many orders there are.
 - The orders last as long as the session. They are also kept in the mod's store under the
-  session's id for 30 days, so a session resumed under the same id gets them back.
+  session's id for 30 days, so a session resumed under the same id gets them back. The 30 days
+  count from the last change to the list, not from the last time the session was used.
 - An order is words the model reads, nothing more: the mod does not check that it is followed.
 - The band draws on the terminal and in the desktop app, the two that draw a band above the
   prompt. Other harnesses ignore this mod.

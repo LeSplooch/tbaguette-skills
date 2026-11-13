@@ -34,7 +34,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v3.0.3</span>
+      <span class="wordmark-version" dir="ltr">v3.0.4</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -45,7 +45,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-12T23:25:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-12T23:25:50Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-13T03:23:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-13T03:23:31Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 <article class="climb-page">
 <section class="container climb-hero" aria-labelledby="climb-title">
   <div class="climb-hero__copy">
-    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.1.2</span></p>
+    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.1.3</span></p>
     <h1 class="climb-hero__title" id="climb-title"><span class="climb-hero__name">climb</span><span class="climb-hero__headline">Run a goal as a climb.</span></h1>
     <p class="climb-hero__lede">The mod runs your check after every turn, logs score and timing, protects named files, and queues the next iteration until the check passes or a stop condition fires.</p>
     <p class="climb-hero__where">At the prompt of a terminal session:</p>
@@ -191,12 +191,12 @@
       <li><strong>Bar met</strong> when the check exits 0. Anything else is another iteration.</li>
       <li><strong>Score</strong>, optional: the last <code>score: &lt;number&gt;</code> the check prints, higher is better. With scores, the climb also stops once it goes the stall limit without beating its best.</li>
       <li><strong>Stops</strong> on the bar, the budget, the stall limit, a spend ceiling, <code>/climb stop</code>, the Stop button, a turn you interrupt, or a check that runs past ten minutes or cannot start. Starting again is a fresh climb: the earlier one's history is discarded. An iteration prompt already queued when the climb stops is dropped.</li>
-      <li><strong>Only its own prompts advance it.</strong> A prompt you send yourself mid-climb is answered normally and does not count as an iteration or run the check.</li>
+      <li><strong>Only its own prompts advance it.</strong> A prompt you send yourself mid-climb is answered normally and does not count as an iteration or run the check, even if it contains <code>[climb]</code>. If the host refuses to queue the next iteration, the climb ends and says so.</li>
     </ul>
   </div>
   <div class="climb-guards__col">
     <h2>What it protects</h2>
-    <p><strong>Protected</strong>: <code>Edit</code>, <code>Write</code>, <code>MultiEdit</code> and <code>NotebookEdit</code> on a protected path, and on the log, are refused, matched by spelling and, for a file that exists, by its real path.</p>
+    <p><strong>Protected</strong>: <code>Edit</code>, <code>Write</code>, <code>MultiEdit</code> and <code>NotebookEdit</code> on a protected path, and on the log, are refused, matched by spelling and by where the path lands: for a file that does not exist yet, the nearest existing folder above it is resolved, so a new file under a symlinked folder is caught too. Paths are relative to the climb's folder (the session folder, or <code>--in</code>).</p>
     <p class="climb-limit"><span class="climb-limit__label">The limit</span><span class="climb-limit__text">A shell command is not inspected, so this limits the easy route rather than sealing the check; keep what the check reads somewhere the run cannot write if that matters.</span></p>
     <p>The check runs with <code>sh -c</code> in the climb's folder, with a ten-minute timeout.</p>
   </div>
@@ -221,7 +221,7 @@
   <h2 id="climb-requirements">Requirements and limits</h2>
   <dl class="climb-requirements__facts">
     <div><dt>Runs in</dt><dd>Claude Code, in a build with mods</dd></div>
-    <div><dt>Version</dt><dd>0.1.2</dd></div>
+    <div><dt>Version</dt><dd>0.1.3</dd></div>
     <div><dt>Licence</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/LICENSE">GPL-2.0-only</a></dd></div>
     <div><dt>Source</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/tree/master/mods/climb">LeSplooch/tbaguette-skills</a></dd></div>
   </dl>

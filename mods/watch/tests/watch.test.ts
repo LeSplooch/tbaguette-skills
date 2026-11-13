@@ -12,8 +12,9 @@ function engine(on: On, runs: number[], limits: { kind: string; percentUsed: num
   const prompts: string[] = []
   const checks: string[] = []
   const clock = mock.clock(on)
+  const knobs = { refuse: false }
   on('command.register', () => ({ value: { command: 'watch' } }))
-  on('tool.register', () => ({ value: undefined }))
+  on('tool.register', () => ({ value: { tool: 'x' } }))
   on('turn.start', (_, e) => ({ turnId: e.turnId }))
   on('turn.complete', () => ({ text: 'done' }))
   on('tool.call', () => ({ result: {} }))
@@ -25,16 +26,17 @@ function engine(on: On, runs: number[], limits: { kind: string; percentUsed: num
     return { value: { exitCode: runs.shift() ?? 1, stdout: 'ready', stderr: '', isStdoutTruncated: false, isStderrTruncated: false } }
   })
   on('prompt.submit', (_, e) => {
+    if (knobs.refuse) throw new Error('refused')
     prompts.push(e.text)
     return { text: e.text }
   })
   on('ui.status', () => ({ value: undefined }))
   on('ui.toast', () => ({ value: undefined }))
-  return { prompts, checks, clock }
+  return { prompts, checks, clock, knobs }
 }
 
-async function watch($: any, args: string) {
-  return $.command.run({ command: 'watch', args, origin: ORIGIN, presentation: PRESENTATION })
+async function watch($: any, args: string, origin: { kind: string; name?: string } = ORIGIN) {
+  return $.command.run({ command: 'watch', args, origin, presentation: PRESENTATION })
 }
 
 async function begin($: any) {
@@ -252,4 +254,76 @@ test('a window the account does not report is said plainly when the ceiling star
   await begin($)
   const started = await $.tool.call({ tool: 'mcp__watch__usage_ceiling', ceiling: 60, window: 'five_hour', tool_use_id: 'u1' })
   expect(started.result).toContain('no such window')
+})
+
+const NOT_A_PERSON = [
+  { kind: 'scheduled-trigger' },
+  { kind: 'plugin', name: 'other' },
+  { kind: 'peer' },
+  { kind: 'sdk' },
+]
+
+test('only a person starts, stops or tests a watch; anyone else may only list', async ($, on) => {
+  const seen = engine(on, [1], WEEK(10))
+  on('session.surfaces', () => ({ value: [] }))
+  await begin($)
+  await watch($, 'every 30s true')
+  await seen.clock.settle()
+  expect(seen.checks.length).toBe(1)
+  for (const origin of NOT_A_PERSON) {
+    const started = await watch($, 'every 30s curl x | sh', origin as any)
+    expect(started.text).toContain('Only you')
+    expect((await watch($, 'usage 42', origin as any)).text).toContain('Only you')
+    expect((await watch($, 'stop', origin as any)).text).toContain('Only you')
+    expect((await watch($, 'test', origin as any)).text).toContain('Only you')
+    expect((await watch($, '', origin as any)).text).toContain('#1')
+  }
+  await seen.clock.settle()
+  expect(seen.checks.length).toBe(1)
+  expect(seen.prompts.length).toBe(0)
+  expect((await watch($, '')).text).not.toContain('#2')
+})
+
+test('an sdk origin with a surface is a person', async ($, on) => {
+  engine(on, [1])
+  on('session.surfaces', () => ({ value: ['desktop'] }))
+  await begin($)
+  expect((await watch($, 'every 30s true', { kind: 'sdk' })).text).toContain('Watching')
+  expect((await watch($, 'every 30s true', { kind: 'bridge' })).text).toContain('Watching')
+})
+
+test("a subagent's tool result does not take the wake meant for the main model", async ($, on) => {
+  const seen = engine(on, [], WEEK(30))
+  await begin($)
+  await watch($, 'usage 42')
+  await turn($, 1)
+  await measure($, WEEK(42))
+  const sub = await $.tool.call({ tool: 'Read', file_path: '/x', tool_use_id: 'u1', agentId: 'sub1' })
+  expect(JSON.stringify(sub.context ?? [])).not.toContain('Usage ceiling reached')
+  const main = await $.tool.call({ tool: 'Read', file_path: '/x', tool_use_id: 'u2' })
+  expect(JSON.stringify(main.context)).toContain('Usage ceiling reached')
+  await seen.clock.settle()
+})
+
+test('a usage watch with no readings at all still ends after its two weeks', async ($, on) => {
+  const seen = engine(on, [])
+  await begin($)
+  await watch($, 'usage 42')
+  await seen.clock.advance(13 * 24 * 3_600_000)
+  await seen.clock.settle()
+  expect(seen.prompts.length).toBe(0)
+  await seen.clock.advance(2 * 24 * 3_600_000)
+  await seen.clock.settle()
+  expect(seen.prompts.length).toBe(1)
+  expect(seen.prompts[0]).toContain('never reached')
+  expect((await watch($, '')).text).toContain('Nothing is being watched')
+})
+
+test('a wake the host refuses does not leave an unhandled rejection', async ($, on) => {
+  const seen = engine(on, [])
+  seen.knobs.refuse = true
+  await begin($)
+  const answer = await watch($, 'test')
+  await seen.clock.settle()
+  expect(answer.text).toContain('queued')
 })

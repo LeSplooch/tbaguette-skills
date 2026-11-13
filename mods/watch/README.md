@@ -33,6 +33,10 @@ than checking usage or dispatching an agent to check it. It cannot start a comma
 check is a shell command run on a timer outside the permission system, so only a person typing
 `/watch` can start one. To wait on a command, the model has its own permissioned tools.
 
+Only you can change a watch: `/watch` starts, stops or tests one only when you type it (at the
+terminal, in an app, or through Remote Control). A scheduled prompt, another plugin or another
+session running `/watch` gets the list and nothing else.
+
 ## How it behaves
 
 - **Usage.** The mod reads what the host pushes when a window moves a whole point, so nothing
@@ -41,7 +45,7 @@ check is a shell command run on a timer outside the permission system, so only a
   usage spent elsewhere until its next reply. Off a subscription there are no windows, and some
   plans have no 5-hour window. If there is no reading, the mod says so when you start the watch,
   and that watch may never fire. A ceiling already passed starts nothing and says so.
-  A usage watch ends after two weeks.
+  A usage watch ends after two weeks, checked hourly, so it ends even when no reading ever comes.
 - **Commands** run with `sh -c` in the session's folder, as you, once at the start and then on the
   timer. A check gets two minutes. A failing check is silent, and only an exit of 0 wakes the
   session. A command that cannot run (exit 126 or 127), or that times out three times running,

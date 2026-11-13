@@ -11,7 +11,8 @@ const OUTPUT = { stdout: 'listed', stderr: '', interrupted: false }
 // Set by another session: every session with the mod rests from 00:00 until 08:00.
 const FLAG = { since: 0, until: 8 * HOUR, by: 'other' }
 
-type World = { store?: Record<string, unknown>; canSleep?: boolean; wakeAfter?: number; surfaces?: RenderSurface[] }
+// `flaky`: how many of the next `sleep 2` rounds exit 1; the test lowers it as it likes.
+type World = { store?: Record<string, unknown>; canSleep?: boolean; wakeAfter?: number; surfaces?: RenderSurface[]; flaky?: number; isStoreBroken?: boolean }
 
 /**
  * Stands for the engine and the machine beneath the mod. `sleep` waits on the mocked clock, and
@@ -43,7 +44,7 @@ function engine(on: On, world: World = {}) {
     return (on as (...args: unknown[]) => unknown)(event, ...rest)
   }) as unknown as On
   const clock = mock.clock(counting)
-  on('store.get', (_, e) => ({ value: store[e.key] }))
+  on('store.get', (_, e) => (world.isStoreBroken === true ? { deny: 'the store is unreachable' } : { value: store[e.key] }))
   on('store.set', (_, e) => {
     seen.storeWrites += 1
     store[e.key] = e.value
@@ -59,7 +60,11 @@ function engine(on: On, world: World = {}) {
     const seconds = Number(e.argv[1])
     if (e.argv[0] !== 'sleep' || !(seconds >= 0)) return { deny: `not sleep: ${e.argv.join(' ')}` }
     if (seconds === 0) seen.probes += 1
-    else {
+    else if ((world.flaky ?? 0) > 0) {
+      seen.rounds += 1
+      world.flaky = (world.flaky ?? 0) - 1
+      return { value: { exitCode: 1, stdout: '', stderr: 'sleep: killed', isStdoutTruncated: false, isStderrTruncated: false } }
+    } else {
       seen.rounds += 1
       await clock.sleep(seconds * 1000)
       if (seen.rounds === world.wakeAfter) delete store.rest
@@ -423,4 +428,69 @@ test('a bare -p run\'s prompt waits for the rest to end', async ($, on) => {
   expect(w.seen.entered).toEqual([])
   await w.clock.advance(2000)
   expect(await held).toEqual({ text: 'from a script' })
+})
+
+test('one failed round of sleep does not end the rest: the call stays held and the next round goes on', async ($, on) => {
+  const w = engine(on, { store: { rest: FLAG }, flaky: 1, wakeAfter: 3 })
+  await begin($)
+  const call = bash($)
+  await w.clock.settle()
+  expect(w.seen.ran).toEqual([])
+  expect(w.seen.toasts.some(t => t.includes('no longer holds'))).toBe(false)
+  expect(w.status()).toBe(`resting until ${at(8 * HOUR)}, 1 held`)
+  await w.clock.advance(2000)
+  await w.clock.advance(2000)
+  expect((await call).result).toEqual(OUTPUT)
+  expect(w.seen.rounds).toBe(3)
+  expect(await rest($, 'status')).not.toContain('cannot hold a call')
+})
+
+test('three failed rounds in a row stop the holding; sleep working again is seen at the next status or rest', async ($, on) => {
+  const world: World = { store: { rest: FLAG }, flaky: 3 }
+  const w = engine(on, world)
+  await begin($)
+  expect(await bash($)).toEqual({ result: OUTPUT })
+  expect(w.seen.toasts.filter(t => t.includes('no longer holds'))).toHaveLength(1)
+  expect(await rest($, 'status')).toContain('Held in this session now: 0.')
+  // Sleep works again: the status probes it afresh and reports the session as able to hold.
+  expect(await rest($, 'status')).not.toContain('cannot hold a call')
+  expect(await rest($, '1h')).toContain('rests until')
+  const again = bash($)
+  await w.clock.settle()
+  expect(w.seen.ran).toEqual(['Bash'])
+  await rest($, 'off')
+  await w.clock.advance(2000)
+  await again
+})
+
+test('a failed round followed by a good one resets the count', async ($, on) => {
+  const world: World = { store: { rest: FLAG }, flaky: 2 }
+  const w = engine(on, world)
+  await begin($)
+  const call = bash($)
+  await w.clock.settle()
+  expect(w.seen.ran).toEqual([])
+  expect(w.seen.rounds).toBe(3)
+  await w.clock.advance(2000)
+  world.flaky = 2
+  await w.clock.advance(2000)
+  await w.clock.advance(2000)
+  expect(w.seen.ran).toEqual([])
+  delete w.seen.store.rest
+  await w.clock.advance(2000)
+  expect((await call).result).toEqual(OUTPUT)
+})
+
+test('a refresh that fails on the timer is caught, not left unhandled', async ($, on) => {
+  const world: World = {}
+  const w = engine(on, world)
+  await begin($)
+  world.isStoreBroken = true
+  // An uncaught rejection from the timer fails the run; so does a timer that stops ticking after one.
+  await w.clock.advance(5_000)
+  await w.clock.advance(5_000)
+  world.isStoreBroken = false
+  const before = w.seen.statuses.length
+  await rest($, 'here 1h')
+  expect(w.seen.statuses.length).toBeGreaterThan(before)
 })

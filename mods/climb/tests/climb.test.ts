@@ -8,17 +8,25 @@ const ORIGIN = { kind: 'composer' } as const
 const BAND = {
   plugin: 'climb',
   component: 'AbovePrompt',
-  props: { hasSurvey: false, isWorking: false, maxRows: 3, bodyColumns: 100, scroll: { offset: 0, bodyRows: 3 } },
+  props: { hasSurvey: false, isCollapsed: false, view: {}, isWorking: false, maxRows: 3, bodyColumns: 100, scroll: { offset: 0, bodyRows: 3 } },
 } as const
+
+// The prompts the mod has queued so far: an iteration's turn starts with the latest of them.
+let queuedPrompts: string[] = []
+const latest = () => queuedPrompts[queuedPrompts.length - 1] ?? ''
 
 type Run = { exitCode: number; stdout: string } | 'hang' | Promise<{ exitCode: number; stdout: string }>
 
 /** Stands for the engine beneath the mod: each check run answers from `runs` in order. */
 function engine(on: On, runs: Run[]) {
   const prompts: string[] = []
+  queuedPrompts = prompts
   const checks: string[] = []
   const writes: string[] = []
   const clock = mock.clock(on)
+  const knobs = { refuse: false }
+  // Paths that exist, and where each one lands: a missing path rejects, as the host's does.
+  const real = new Map<string, string>([['/work', '/work'], ['/work/tests', '/work/tests']])
   on('command.register', () => ({ value: { command: 'climb' } }))
   on('session.start', (_, e) => ({ cwd: e.cwd }))
   on('process.run', async (_, e) => {
@@ -32,10 +40,14 @@ function engine(on: On, runs: Run[]) {
     writes.push(String((e as { path?: unknown }).path))
     return { value: undefined }
   })
-  on('fs.stat', () => {
-    throw new Error('no such file')
+  on('fs.stat', (_, e) => {
+    const path = String((e as { path?: unknown }).path)
+    const landing = real.get(path)
+    if (landing === undefined) throw new Error('no such file')
+    return { value: { kind: 'dir', size: 0, mtimeMs: 0, isLink: landing !== path, realPath: landing } }
   })
   on('prompt.submit', (_, e) => {
+    if (knobs.refuse) throw new Error('refused')
     prompts.push(e.text)
     return { text: e.text }
   })
@@ -46,7 +58,7 @@ function engine(on: On, runs: Run[]) {
   on('ui.toast', () => ({ value: undefined }))
   on('session.measure', (_, e) => ({ changed: e.changed }))
   on('session.usage', () => ({ value: { startedAt: 0, context: { window: 1 }, rateLimits: [{ kind: 'seven_day', percentUsed: 30 }] } }))
-  return { prompts, checks, writes, clock }
+  return { prompts, checks, writes, clock, knobs, real }
 }
 
 async function climb($: any, args: string) {
@@ -62,7 +74,7 @@ async function start($: any, args: string, clock: { settle: () => Promise<void> 
 
 /** One main-loop turn; `own` says whether it is the mod's queued prompt. */
 async function turn($: any, n: number, own = true, reason: 'answer' | 'aborted' = 'answer') {
-  await $.turn.start({ text: own ? `${MARK} go` : 'a question of my own', turnId: `t${n}` })
+  await $.turn.start({ text: own ? latest() : 'a question of my own', turnId: `t${n}` })
   await $.turn.complete({ answer: 'ok', durationMs: 60_000, reason, isAborted: reason !== 'answer', turnId: `t${n}` })
 }
 
@@ -132,8 +144,7 @@ test('no better score for the stall limit ends the climb', async ($, on) => {
 test('an iteration still counts when the engine wraps the prompt in a header', async ($, on) => {
   const seen = engine(on, [{ exitCode: 1, stdout: 'score: 4' }])
   await start($, '5 npm test', seen.clock)
-  await $.turn.start({ text: `The climb plugin sent a message:
-${MARK} go`, turnId: 'w1' })
+  await $.turn.start({ text: `The climb plugin sent a message:\n${seen.prompts[0]}`, turnId: 'w1' })
   await $.turn.complete({ answer: 'ok', durationMs: 1000, reason: 'answer', isAborted: false, turnId: 'w1' })
 
   expect(seen.checks.length).toBe(1)
@@ -153,7 +164,7 @@ test("a turn the person starts mid-climb is not an iteration", async ($, on) => 
 test("a subagent's turn is not an iteration", async ($, on) => {
   const seen = engine(on, [])
   await start($, '5 npm test', seen.clock)
-  await $.turn.start({ text: `${MARK} go`, turnId: 'm1' })
+  await $.turn.start({ text: latest(), turnId: 'm1' })
   await $.turn.complete({ answer: 'ok', durationMs: 1000, reason: 'answer', isAborted: false, turnId: 's1', agentId: 'a1' })
 
   expect(seen.checks.length).toBe(0)
@@ -165,9 +176,9 @@ test('a stop pressed while the check runs stands', async ($, on) => {
   const seen = engine(on, [slow])
   await start($, '5 npm test', seen.clock)
 
-  await $.turn.start({ text: `${MARK} go`, turnId: 't1' })
+  await $.turn.start({ text: latest(), turnId: 't1' })
   const ending = $.turn.complete({ answer: 'ok', durationMs: 1000, reason: 'answer', isAborted: false, turnId: 't1' })
-  await new Promise(r => setTimeout(r, 20))
+  await seen.clock.settle()
   await climb($, 'stop')
   finish({ exitCode: 1, stdout: '' })
   await ending
@@ -256,4 +267,108 @@ test('a ceiling outside 0 to 100 is refused', async ($, on) => {
   const seen = engine(on, [])
   await start($, '5 npm test', seen.clock)
   expect((await climb($, 'ceiling 150')).text).toContain('at most 100')
+})
+
+const NOT_A_PERSON = [{ kind: 'scheduled-trigger' }, { kind: 'plugin', name: 'other' }, { kind: 'peer' }, { kind: 'sdk' }] as any[]
+
+test('only a person starts or changes a climb; anyone else may only read it', async ($, on) => {
+  const seen = engine(on, [])
+  on('session.surfaces', () => ({ value: [] }))
+  await $.session.start({ cwd: CWD, surface: 'desktop', isInteractive: true })
+  for (const origin of NOT_A_PERSON) {
+    const run = (args: string) => $.command.run({ command: 'climb', args, origin, presentation: PRESENTATION })
+    expect((await run('5 rm -rf x')).text).toContain('Only you')
+    expect((await run('protect a')).text).toContain('Only you')
+    expect((await run('stall 3')).text).toContain('Only you')
+    expect((await run('ceiling 40')).text).toContain('Only you')
+    expect((await run('stop')).text).toContain('Only you')
+    expect((await run('')).text).toContain('Usage')
+  }
+  await seen.clock.settle()
+  expect(seen.prompts.length).toBe(0)
+  expect(seen.checks.length).toBe(0)
+  await climb($, '5 npm test')
+  await seen.clock.settle()
+  const stop = await $.command.run({ command: 'climb', args: 'stop', origin: NOT_A_PERSON[1] as never, presentation: PRESENTATION })
+  expect(stop.text).toContain('Only you')
+  expect((await climb($, '')).text).toContain('Climb running')
+})
+
+test('an sdk origin with a surface is a person', async ($, on) => {
+  const seen = engine(on, [])
+  on('session.surfaces', () => ({ value: ['desktop'] }))
+  await $.session.start({ cwd: CWD, surface: 'desktop', isInteractive: true })
+  const answer = await $.command.run({ command: 'climb', args: '5 npm test', origin: { kind: 'sdk' }, presentation: PRESENTATION })
+  await seen.clock.settle()
+  expect(answer.text).toContain('Climb started')
+})
+
+test('a new file under a symlinked directory is protected by where it would land', async ($, on) => {
+  const seen = engine(on, [])
+  seen.real.set('/work/link', '/work/tests')
+  seen.real.set('/work/out', '/elsewhere')
+  seen.real.set('/elsewhere', '/elsewhere')
+  await start($, '5 npm test', seen.clock)
+  await climb($, 'protect tests')
+  const viaLink = await $.tool.call({ tool: 'Write', file_path: '/work/link/new/deep.ts', content: 'x' })
+  expect(viaLink.deny).toContain('protected')
+  const elsewhere = await $.tool.call({ tool: 'Write', file_path: '/work/out/new.ts', content: 'x' })
+  expect(elsewhere.deny).toBeUndefined()
+})
+
+test('a protected root that is itself a symlink is matched by where it lands', async ($, on) => {
+  const seen = engine(on, [])
+  seen.real.set('/work/spec', '/vault/spec')
+  seen.real.set('/work/alias', '/vault/spec')
+  await start($, '5 npm test', seen.clock)
+  await climb($, 'protect spec')
+  const viaAlias = await $.tool.call({ tool: 'Write', file_path: '/work/alias/new.ts', content: 'x' })
+  expect(viaAlias.deny).toContain('protected')
+})
+
+test('a person typing the mark is not an iteration; only the mod\'s own prompt is', async ($, on) => {
+  const seen = engine(on, [{ exitCode: 1, stdout: '' }])
+  await start($, '5 npm test', seen.clock)
+  await $.turn.start({ text: `${MARK} I typed this myself`, turnId: 'p1' })
+  await $.turn.complete({ answer: 'ok', durationMs: 1000, reason: 'answer', isAborted: false, turnId: 'p1' })
+  expect(seen.checks.length).toBe(0)
+  await turn($, 2)
+  expect(seen.checks.length).toBe(1)
+})
+
+test('a prompt the host refuses ends the climb with a reason, not a silent stall', async ($, on) => {
+  const seen = engine(on, [{ exitCode: 1, stdout: '' }])
+  await start($, '5 npm test', seen.clock)
+  seen.knobs.refuse = true
+  await turn($, 1)
+  await seen.clock.settle()
+  expect((await climb($, '')).text).toContain('could not be queued')
+  expect((await climb($, '')).text).toContain('Climb ended')
+})
+
+test('the first prompt the host refuses also ends the climb', async ($, on) => {
+  const seen = engine(on, [])
+  seen.knobs.refuse = true
+  await start($, '5 npm test', seen.clock)
+  expect((await climb($, '')).text).toContain('could not be queued')
+})
+
+test('stall 0 is refused', async ($, on) => {
+  const seen = engine(on, [])
+  await start($, '5 npm test', seen.clock)
+  const refused = await climb($, 'stall 0')
+  expect(refused.text).toContain('at least 1')
+  expect((await climb($, '')).text).toContain('stall 5')
+})
+
+test('a long stop reason is cut to one line so the Stop or Hide button stays on screen', async ($, on) => {
+  const seen = engine(on, ['hang'])
+  await start($, '5 npm test', seen.clock)
+  await turn($, 1)
+  const ui = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  const row = await ui.find({ type: 'Text', text: /climb ended/ })
+  expect(row?.props?.wrap).toBe('truncate-end')
+  expect(row?.text).not.toContain('\n')
+  expect((await ui.find({ type: 'Button', key: 'hide' }))?.key).toBe('hide')
+  await ui.unmount()
 })

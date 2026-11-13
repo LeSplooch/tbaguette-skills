@@ -486,3 +486,64 @@ test('only the person takes a file or switches claim off or on; any other origin
   expect((await claim($, 'take all')).text).toContain('took 1 file')
   expect((await bash($, 'git add -A')).deny).toBe(undefined)
 })
+
+test('-A, -u and --all narrowed to named paths pass; the same flags on the whole tree are refused', async ($, on) => {
+  const w = world(on)
+  await begin($)
+  await foreignFile($, w)
+  const narrowed = [
+    'git add -A -- src/a.ts', 'git add -u src/', 'git add --all src', 'git add -A src/a.ts src/b.ts', 'git add -u -- src',
+    'git add --update -- src/a.ts', 'git add -Av src',
+  ]
+  for (const command of narrowed) expect((await bash($, command)).deny, command).toBe(undefined)
+  const whole = ['git add -A .', 'git add -u :/', 'git add -A -- .', 'git add --all *', `git add -A ${ROOT}`, 'git add -A src .', 'git add -A', 'git add -u']
+  for (const command of whole) expect((await bash($, command)).deny, command).toContain('theirs.ts')
+  expect(w.ran.slice(2)).toEqual(narrowed)
+})
+
+test('a sweep behind a shell, a wrapper or a heredoc is refused; the same wrapped command on named paths passes', async ($, on) => {
+  const w = world(on)
+  await begin($)
+  await foreignFile($, w)
+  const wrapped = [
+    'bash -c "git add -A"', "sh -c 'git add -A'", 'zsh -c "cd x && git stash"', 'bash -lc "git reset --hard"',
+    "bash -c \"bash -c 'git add -A'\"", 'eval "git add -A"', 'xargs git add -A', 'echo x | xargs -n1 git add -A',
+    'sudo git add -A', 'sudo -u bob git add -A', 'env -i git add -A', 'env -i FOO=1 git add -A', 'env -u X git add -A',
+    'command git add -A', 'nice -n 5 git add -A', 'time git add -A', 'nohup sudo env git stash',
+    "cat <<'EOF'\nit's here\nEOF\ngit add -A", "cat <<EOF > f\ndon't\nEOF\ngit stash", 'cat <<-EOF\n\tdon\'t\n\tEOF\ngit add -A',
+    'cat <<A <<B\nx\nA\ny\nB\ngit add -A',
+    'git checkout -f', 'git checkout --force main', 'git checkout -fb topic', 'git switch -f main', 'git switch --force main',
+    'git switch --discard-changes main', 'git rm -r .', 'git rm -rf .', 'git rm -r --cached .',
+  ]
+  for (const command of wrapped) expect((await bash($, command)).deny, command).toContain('theirs.ts')
+  const passing = [
+    'bash -c "git add src/a.ts"', 'sudo git status', 'env FOO=1 ls', 'xargs echo', 'nice -n 5 git add -- a.ts', 'eval "git status"',
+    'cat <<EOF\ngit add -A\nEOF', "cat <<'EOF'\nit's git stash\nEOF\ngit status",
+    'git checkout main', 'git switch main', 'git switch -c topic', 'git rm src/a.ts', 'git rm -r src', 'git checkout -b topic',
+  ]
+  for (const command of passing) expect((await bash($, command)).deny, command).toBe(undefined)
+  expect(w.ran.slice(2)).toEqual(passing)
+})
+
+test('/claim take reads the path as typed from the session directory: ./, a subdirectory, .., or the root', async ($, on) => {
+  const w = world(on)
+  await $.session.start({ cwd: `${ROOT}/sub`, surface: 'terminal', isInteractive: true })
+  await bash($, 'ls')
+  for (const path of ['sub/a.ts', 'sub/b.ts', 'sub/c.ts', 'sub/d.ts', 'top.ts']) w.change(path)
+  await bash($, 'ls')
+  expect((await claim($, 'take a.ts')).text).toContain('took 1 file')
+  expect((await claim($, 'take ./b.ts')).text).toContain('took 1 file')
+  expect((await claim($, 'take ../sub/c.ts')).text).toContain('took 1 file')
+  expect((await claim($, 'take sub/d.ts')).text).toContain('took 1 file')
+  expect((await claim($, 'take ../top.ts')).text).toContain('took 1 file')
+  expect(w.statuses.at(-1)).toBe(undefined)
+})
+
+test('/claim take strips ./ at the root too', async ($, on) => {
+  const w = world(on)
+  await begin($)
+  await bash($, 'ls')
+  w.change('a.ts')
+  await bash($, 'ls')
+  expect((await claim($, 'take ./a.ts')).text).toContain('took 1 file')
+})

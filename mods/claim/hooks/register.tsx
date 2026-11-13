@@ -96,8 +96,46 @@ export function segments(command: string): string[][] {
     if (words.length > 0) out.push(words)
     words = []
   }
+  // A heredoc body is data, not shell: its quotes must not open a quote, and its lines are not commands.
+  const heredocs: { delimiter: string; isStripped: boolean }[] = []
+  const skipBodies = (from: number): number => {
+    let at = from
+    for (const { delimiter, isStripped } of heredocs) {
+      while (at < command.length) {
+        const end = command.indexOf('\n', at)
+        const line = command.slice(at, end === -1 ? command.length : end)
+        at = end === -1 ? command.length : end + 1
+        if ((isStripped ? line.replace(/^\t+/, '') : line) === delimiter) break
+      }
+    }
+    heredocs.length = 0
+    return at
+  }
   for (let i = 0; i < command.length; i++) {
     const c = command[i] ?? ''
+    if (quote === '' && c === '<' && command[i + 1] === '<' && command[i + 2] !== '<' && command[i + 2] !== '(') {
+      endWord()
+      let at = i + 2
+      const isStripped = command[at] === '-'
+      if (isStripped) at++
+      while (command[at] === ' ' || command[at] === '\t') at++
+      let delimiter = ''
+      for (; at < command.length; at++) {
+        const d = command[at] ?? ''
+        if (d === "'" || d === '"') continue
+        if (d === '\\') continue
+        if (/[\s;&|()<>]/.test(d)) break
+        delimiter += d
+      }
+      if (delimiter !== '') heredocs.push({ delimiter, isStripped })
+      i = at - 1
+      continue
+    }
+    if (quote === '' && c === '\n' && heredocs.length > 0) {
+      endSegment()
+      i = skipBodies(i + 1) - 1
+      continue
+    }
     if (quote !== '') {
       if (c === quote) quote = ''
       else if (c === '\\' && quote === '"' && i + 1 < command.length) word += command[++i]
@@ -128,20 +166,29 @@ function isShortCluster(arg: string): boolean {
   return /^-[A-Za-z]+$/.test(arg)
 }
 
+/** A pathspec that names the whole tree: `.`, `:/`, `*`, or the repository root itself. */
+function isWholeTree(path: string): boolean {
+  if (WHOLE_TREE.test(path)) return true
+  return root !== undefined && (path === root || path === `${root}/` || path === `${root}/.`)
+}
+
+/** `-A`, `-u` and `--all` take the whole tree only without a pathspec, or with one that names the whole tree. */
 function addSweeps(args: string[]): boolean {
   let isPathspec = false
+  let isWide = false
+  const paths: string[] = []
   for (const arg of args) {
     if (isPathspec || !arg.startsWith('-')) {
-      if (WHOLE_TREE.test(arg)) return true
+      paths.push(arg)
     } else if (arg === '--') {
       isPathspec = true
     } else if (arg === '--all' || arg === '--update' || arg === '--no-ignore-removal') {
-      return true
+      isWide = true
     } else if (isShortCluster(arg) && /[Au]/.test(arg)) {
-      return true
+      isWide = true
     }
   }
-  return false
+  return paths.some(isWholeTree) || (isWide && paths.length === 0)
 }
 
 function commitSweeps(args: string[]): boolean {
@@ -201,9 +248,52 @@ function restoreSweeps(args: string[]): boolean {
   return false
 }
 
-function classify(words: string[]): Sweep | undefined {
+const SHELLS = new Set(['bash', 'sh', 'zsh', 'dash', 'ksh'])
+// Options that take a value, for the wrappers that have any; every other option is a bare flag.
+const WRAPPER_VALUE_OPTIONS: Record<string, Set<string>> = {
+  sudo: new Set(['-u', '-g', '-h', '-p', '-C', '-D', '-R', '-T', '-U', '--user', '--group', '--host']),
+  env: new Set(['-u', '--unset', '-C', '--chdir', '-S', '--split-string']),
+  xargs: new Set(['-I', '-n', '-L', '-P', '-s', '-d', '-E', '-a', '-J', '--max-args', '--max-procs', '--max-lines', '--delimiter', '--arg-file']),
+  nice: new Set(['-n', '--adjustment']),
+  nohup: new Set(),
+  time: new Set(['-f', '-o', '--format', '--output']),
+  command: new Set(),
+}
+
+/** The simple command behind any leading wrappers: `sudo -u me env -i X=1 xargs -n1 git ...` is `git ...`. */
+function unwrapped(words: string[]): { words: string[]; inner?: string } {
   let i = 0
-  while (i < words.length && (WRAPPERS.has(words[i] ?? '') || /^[A-Za-z_][A-Za-z0-9_]*=/.test(words[i] ?? ''))) i++
+  while (i < words.length) {
+    const word = words[i] ?? ''
+    const base = word.replace(/^.*\//, '')
+    const options = WRAPPER_VALUE_OPTIONS[base]
+    if (/^[A-Za-z_][A-Za-z0-9_]*=/.test(word) || (WRAPPERS.has(word) && options === undefined)) {
+      i++
+    } else if (options !== undefined) {
+      i++
+      while (i < words.length && (words[i] ?? '').startsWith('-') && words[i] !== '--') i += options.has(words[i] ?? '') ? 2 : 1
+      if (words[i] === '--') i++
+    } else if (SHELLS.has(base)) {
+      // `bash -c 'string'`, also in a cluster such as `-lc`: the string is a script of its own.
+      let at = i + 1
+      while (at < words.length && (words[at] ?? '').startsWith('-')) {
+        if (/^-[A-Za-z]*c[A-Za-z]*$/.test(words[at] ?? '')) return { words: [], inner: words[at + 1] }
+        at++
+      }
+      return { words: words.slice(i) }
+    } else if (base === 'eval') {
+      return { words: [], inner: words.slice(i + 1).join(' ') }
+    } else {
+      break
+    }
+  }
+  return { words: words.slice(i) }
+}
+
+function classify(all: string[]): Sweep | undefined {
+  const { words, inner } = unwrapped(all)
+  if (inner !== undefined) return sweeping(inner)
+  let i = 0
   if (!/(^|\/)git$/.test(words[i] ?? '')) return undefined
   i++
   while (i < words.length && (words[i] ?? '').startsWith('-')) i += GIT_VALUE_OPTIONS.has(words[i] ?? '') ? 2 : 1
@@ -213,10 +303,24 @@ function classify(words: string[]): Sweep | undefined {
   if (sub === 'commit') return commitSweeps(args) ? 'stage-all' : undefined
   if (sub === 'stash') return stashSweeps(args) ? 'stash' : undefined
   if (sub === 'reset') return args.includes('--hard') ? 'destroy' : undefined
-  if (sub === 'checkout') return args.some(a => WHOLE_TREE.test(a)) ? 'destroy' : undefined
+  if (sub === 'checkout') return args.some(a => WHOLE_TREE.test(a) || isForce(a, '--force')) ? 'destroy' : undefined
+  if (sub === 'switch') return args.some(a => isForce(a, '--force') || a === '--discard-changes') ? 'destroy' : undefined
   if (sub === 'restore') return restoreSweeps(args) ? 'destroy' : undefined
+  if (sub === 'rm') return rmSweeps(args)
   if (sub === 'clean') return args.some(a => a === '--force' || (isShortCluster(a) && a.includes('f'))) ? 'destroy' : undefined
   return undefined
+}
+
+/** `-f` alone or in a cluster (`-fb`), or the long spelling. */
+function isForce(arg: string, long: string): boolean {
+  return arg === long || (isShortCluster(arg) && arg.includes('f'))
+}
+
+/** `git rm -r .` deletes every tracked file; with `--cached` it only unstages them all. */
+function rmSweeps(args: string[]): Sweep | undefined {
+  const isRecursive = args.some(a => a === '-r' || (isShortCluster(a) && a.includes('r')))
+  if (!isRecursive || !args.some(isWholeTree)) return undefined
+  return args.includes('--cached') ? 'stage-all' : 'destroy'
 }
 
 /** Whether a shell command holds a git command that stages, stashes or discards the whole tree. */
@@ -263,6 +367,7 @@ function refusal(paths: string[]): string {
 // The module's own variables start over on a reload, which is right for these: the engine
 // reloads a mod between turns, and the counter is only true of calls this copy saw start.
 let root: string | undefined
+let cwd: string | undefined
 let inFlight = 0
 let lane: Promise<unknown> = Promise.resolve()
 let pending: string[] = []
@@ -271,6 +376,26 @@ let pending: string[] = []
 function queue(work: () => Promise<unknown>): Promise<unknown> {
   lane = lane.then(work).catch(() => undefined)
   return lane
+}
+
+/** `a/./b/../c` is `a/c`; a `..` above the start is kept, so it matches nothing. */
+function tidy(path: string): string {
+  const out: string[] = []
+  for (const part of path.split('/')) {
+    if (part === '' || part === '.') continue
+    if (part === '..' && out.length > 0 && out[out.length - 1] !== '..') out.pop()
+    else out.push(part)
+  }
+  return out.join('/')
+}
+
+/** What the person typed, as root-relative paths to try: from the session directory first, then as typed from the root. */
+function typed(path: string): string[] {
+  if (path.startsWith('/')) return [relative(tidy(path) === '' ? '/' : `/${tidy(path)}`)]
+  const fromRoot = tidy(path)
+  const below = cwd !== undefined && root !== undefined && cwd.startsWith(`${root}/`) ? cwd.slice(root.length + 1) : ''
+  const fromHere = below === '' ? fromRoot : tidy(`${below}/${path}`)
+  return fromHere === fromRoot ? [fromRoot] : [fromHere, fromRoot]
 }
 
 function relative(path: string): string {
@@ -474,10 +599,10 @@ async function report($: EngineInterface): Promise<string> {
 
 async function take($: EngineInterface, arg: string): Promise<string> {
   if (arg === '') return USAGE
-  const wanted = arg === 'all' ? Object.keys(await read($, foreign)) : [relative(arg)]
+  const wanted = arg === 'all' ? Object.keys(await read($, foreign)) : typed(arg)
   let took: string[] = []
   await update($, foreign, list => {
-    took = wanted.filter(path => list[path] !== undefined)
+    took = arg === 'all' ? wanted.filter(path => list[path] !== undefined) : wanted.filter(path => list[path] !== undefined).slice(0, 1)
     const kept = { ...list }
     for (const path of took) delete kept[path]
     return kept
@@ -491,6 +616,7 @@ async function take($: EngineInterface, arg: string): Promise<string> {
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
     root = await findRoot($, e.cwd)
+    cwd = e.cwd
     await $.command.register({
       name: 'claim',
       description: 'Files another writer changed in this working tree, and the guard on sweeping git commands',

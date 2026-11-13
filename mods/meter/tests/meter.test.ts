@@ -428,7 +428,7 @@ test('/meter labels each figure measured, with when, or estimate, with what from
   expect(answer.isTextDisplayOnly).toBe(undefined)
   const lines = answer.text.split('\n')
   expect(lines).toContain('context: 41% of a 200k window, 82k tokens (measured 2 min ago)')
-  expect(lines).toContain('5-hour window: 62.5% (measured 2 min ago)')
+  expect(lines).toContain('5-hour window: 62% (measured 2 min ago)')
   expect(lines).toContain('weekly window: 18% (measured 2 min ago)')
   expect(lines).toContain('cost: $1.84 (measured 2 min ago)')
   expect(lines).toContain('cache: likely warm (estimate from idle 2 min against the 5 min lifetime)')
@@ -523,4 +523,36 @@ test('the mod registers no tool, calls no model, and writes nothing to the conve
   await seen.clock.advance(90 * MIN)
   expect(seen.never).toEqual({ tools: 0, models: 0, submits: 0, logs: 0, toasts: 0 })
   expect(seen.session.appended()).toHaveLength(0)
+})
+
+test('the /meter verbs ignore case: Quiet and LOUD act, and do not print usage', async ($, on) => {
+  engine(on, { context: CTX(83) })
+  await begin($)
+  expect((await meter($, 'Quiet')).text).toContain('quiet for this session')
+  expect(await band($)).toBe(undefined)
+  expect((await meter($, ' LOUD ')).text).toContain('speaks again')
+  expect(await band($)).toContain('context at 83%')
+  expect((await meter($, 'QUIET')).text).toContain('quiet for this session')
+  expect((await meter($, 'nonsense')).text).toContain('Usage:')
+})
+
+test('/meter floors a window percentage as the status line does', async ($, on) => {
+  const seen = engine(on)
+  await begin($)
+  await measure($, { rateLimits: [{ kind: 'five_hour', percentUsed: 42.7 }] })
+  expect(seen.statuses.at(-1)).toBe('5h 42%')
+  const text = (await meter($)).text
+  expect(text).toContain('5-hour window: 42%')
+  expect(text).not.toContain('42.7')
+})
+
+test('a crossing is not marked seen by drawing the band, collapsed or not: it stays until Hide or a newer crossing', async ($, on) => {
+  engine(on, { context: CTX(83) })
+  await begin($)
+  const collapsed = { ...BAND(100), surface: 'terminal' as const, props: { ...BAND(100).props, isCollapsed: true } }
+  for (let i = 0; i < 2; i++) {
+    const ui = await $.ui.mount(collapsed)
+    await ui.unmount()
+  }
+  expect(await band($)).toContain('context at 83%')
 })

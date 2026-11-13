@@ -34,7 +34,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v3.0.3</span>
+      <span class="wordmark-version" dir="ltr">v3.0.4</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -45,7 +45,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-12T23:25:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-12T23:25:50Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-13T03:23:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-13T03:23:31Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -274,15 +274,17 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ol class="notes__list">
 <li class="notes__entry">
   <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-11-12">12 Nov 2026</time>
-    <span class="notes__entry-title">moves: a mod that keeps what a run did not take</span>
+    <time class="notes__date" datetime="2026-11-13">13 Nov 2026</time>
+    <span class="notes__entry-title">moves gets a full table you can read, and every mod was audited</span>
   </h3>
   <ul class="notes__bullets">
-    <li>New mod, <code>moves</code>, in the same marketplace: <code>/plugin install moves --marketplace LeSplooch/tbaguette-skills</code>. Like the others it runs in Claude Code only, and no skill depends on it. It is the tool half of <a class="skill-link" href="/tbaguette-skills/skills/offering-the-next-move/"><code>offering-the-next-move</code></a>.</li>
-    <li>It holds the end of a turn, once. When a turn you started changed a file or set a move aside, and is about to end without asking you anything, the model is handed what the run set aside and asked to put one question under its report: the move it would take, a way to stop, four options at most. <code>/moves gate off</code> stops the holding in every session. A turn started by a schedule, a plugin or another session is never held, and neither is one with a background task still running.</li>
-    <li>As it works, the model sets aside what it is not acting on: a line of the request it gave up, a call that could have gone the other way, scope it pushed out, something it found on the way past. The table is not in the conversation, so a compaction does not lose it.</li>
-    <li>What you do not pick stays. <code>/moves</code> lists the project's table, a band above the prompt shows up to three moves as buttons after a turn, and a later session in the same project starts with what earlier ones left, for 30 days. A move is only ever a candidate: it becomes a request when you pick it in a question, press it, or type <code>/moves take</code>.</li>
-    <li>Not yet driven in a live session: its tests run against the engine's test kit. The mod's page says what has not been watched.</li>
+    <li>Update the mods you have installed. <code>/watch</code> and <code>/climb</code> now start only when you type them: until this release a scheduled prompt, another plugin or another session could start one, and each runs a shell command on a timer or a loop outside the permission prompt. <code>/watch</code>'s own page already said only you could.</li>
+    <li><code>moves</code>: <code>/moves</code> now opens the table beside the chat. Every move is a card with its kind, where it came from and how often it was passed over, the move in full and what it costs, with Put in prompt, Send now and Drop on each. A drop can be undone, and a field at the bottom adds a move of your own. The band above the prompt no longer cuts moves into small buttons: each move is a row with its words in full, its cost under it and a Take button, and See details opens the table.</li>
+    <li><code>moves</code>: an option worded as a move's opposite (&quot;Don't cover the retry path&quot;, &quot;Skip it&quot;) no longer counts as picking that move, which used to take it off the table. An option two moves match equally well now touches neither.</li>
+    <li><code>climb</code>: a file created through a symlinked folder no longer slips past a protected path, and a prompt you type that happens to contain <code>[climb]</code> no longer counts as an iteration.</li>
+    <li><code>claim</code>: <code>git add -A -- src/a.ts</code> and <code>git add -u src/</code> pass, since they touch only the paths named. A sweep hidden behind <code>bash -c</code>, <code>sudo</code>, <code>env</code>, <code>xargs</code> or after a heredoc is now refused, and <code>/claim take ./path</code> works from a subfolder.</li>
+    <li><code>rest</code>: one failed check while holding no longer turns resting off for the rest of the session.</li>
+    <li><code>orders</code>: the list the model reads uses the same numbers <code>/order</code> shows, and a band from another mod stays visible under an offer. <code>meter</code>: <code>/meter Quiet</code> works in any case.</li>
   </ul>
 </li>
   </ol>
@@ -295,6 +297,21 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-11-13">13 Nov 2026</time>
+    <span class="notes__entry-title">moves gets a full table you can read, and every mod was audited</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li>Update the mods you have installed. <code>/watch</code> and <code>/climb</code> now start only when you type them: until this release a scheduled prompt, another plugin or another session could start one, and each runs a shell command on a timer or a loop outside the permission prompt. <code>/watch</code>'s own page already said only you could.</li>
+    <li><code>moves</code>: <code>/moves</code> now opens the table beside the chat. Every move is a card with its kind, where it came from and how often it was passed over, the move in full and what it costs, with Put in prompt, Send now and Drop on each. A drop can be undone, and a field at the bottom adds a move of your own. The band above the prompt no longer cuts moves into small buttons: each move is a row with its words in full, its cost under it and a Take button, and See details opens the table.</li>
+    <li><code>moves</code>: an option worded as a move's opposite (&quot;Don't cover the retry path&quot;, &quot;Skip it&quot;) no longer counts as picking that move, which used to take it off the table. An option two moves match equally well now touches neither.</li>
+    <li><code>climb</code>: a file created through a symlinked folder no longer slips past a protected path, and a prompt you type that happens to contain <code>[climb]</code> no longer counts as an iteration.</li>
+    <li><code>claim</code>: <code>git add -A -- src/a.ts</code> and <code>git add -u src/</code> pass, since they touch only the paths named. A sweep hidden behind <code>bash -c</code>, <code>sudo</code>, <code>env</code>, <code>xargs</code> or after a heredoc is now refused, and <code>/claim take ./path</code> works from a subfolder.</li>
+    <li><code>rest</code>: one failed check while holding no longer turns resting off for the rest of the session.</li>
+    <li><code>orders</code>: the list the model reads uses the same numbers <code>/order</code> shows, and a band from another mod stays visible under an offer. <code>meter</code>: <code>/meter Quiet</code> works in any case.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-11-12">12 Nov 2026</time>
@@ -498,15 +515,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   </h3>
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/reproducing-bugs/"><code>reproducing-bugs</code></a> now covers the defect whose only check is a look (a visual fault, behaviour on one device): the commit before the fix is the control. Keep it buildable in a throwaway tree, run identical steps on the same device and data against the unfixed build and then the fixed one, and compare the captures. A symptom that vanished alongside an unrelated change of setup would otherwise be credited to the fix.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-10-14">14 Oct 2026</time>
-    <span class="notes__entry-title">Defects only a real screen shows now get a guard</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/regression-test-from-bug/"><code>regression-test-from-bug</code></a> now says what to do when no test at any layer can render the failure (text clipped by its container, an element pushed off a small screen): verify once on the real target, then pin a conservative proxy for the cause in the content's own test, such as a length or line-count ceiling set from the measurement with margin, and say plainly that it is a proxy.</li>
   </ul>
 </li>
       </ol>

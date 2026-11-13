@@ -11,7 +11,7 @@
       "displayName": "TBaguette's Atelier",
       "license": "GPL-2.0-only",
       "description": "One hundred and three project-, stack-, and language-agnostic skills: judgment, code comprehension, change discipline, testing, debugging, systems design, defensive security, communication, tooling — plus formidable, design craft for every UI stack.",
-      "version": "3.0.3",
+      "version": "3.0.4",
       "source": "./",
       "author": {
         "name": "TBaguette",
@@ -35,7 +35,7 @@
       "displayName": "climb",
       "license": "GPL-2.0-only",
       "description": "A Claude Code mod: name a check command and the mod runs it after every turn, logs score and timing, refuses edits to protected paths, and queues the next iteration until the check passes or a stop condition fires.",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "source": "./mods/climb",
       "author": {
         "name": "TBaguette",
@@ -55,7 +55,7 @@
       "displayName": "watch",
       "license": "GPL-2.0-only",
       "description": "A Claude Code mod for waiting with no model running: it watches a usage ceiling or runs a check command on a timer, stays silent, and tells the session once, when it should.",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "source": "./mods/watch",
       "author": {
         "name": "TBaguette",
@@ -75,7 +75,7 @@
       "displayName": "orders",
       "license": "GPL-2.0-only",
       "description": "A Claude Code mod for standing orders: say \"from now on\" once, and the mod keeps the order for the session and puts it back in front of the model after every compaction.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "source": "./mods/orders",
       "author": {
         "name": "TBaguette",
@@ -95,7 +95,7 @@
       "displayName": "claim",
       "license": "GPL-2.0-only",
       "description": "A Claude Code mod for a working tree with more than one writer: it notices files that changed while the session was idle, tells the model once, and refuses sweeping git commands that would stage, stash or destroy them.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "source": "./mods/claim",
       "author": {
         "name": "TBaguette",
@@ -115,7 +115,7 @@
       "displayName": "rest",
       "license": "GPL-2.0-only",
       "description": "A Claude Code mod that pauses every session on the machine with one command and resumes them where they stopped: each holds its next tool call with no model running.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "source": "./mods/rest",
       "author": {
         "name": "TBaguette",
@@ -135,7 +135,7 @@
       "displayName": "meter",
       "license": "GPL-2.0-only",
       "description": "A Claude Code mod that shows context fill, rate-limit windows and cost in one quiet line, marks what is measured and what is an estimate, and speaks up only when a figure crosses a line.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "source": "./mods/meter",
       "author": {
         "name": "TBaguette",
@@ -155,7 +155,7 @@
       "displayName": "moves",
       "license": "GPL-2.0-only",
       "description": "A Claude Code mod for the end of a run: it keeps the moves the model set aside, hands them back when the run closes so the next move is offered rather than announced, and leaves what you did not pick one press away.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./mods/moves",
       "author": {
         "name": "TBaguette",

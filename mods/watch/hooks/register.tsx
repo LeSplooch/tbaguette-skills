@@ -89,6 +89,18 @@ const fired = new Set<number>()
 const dropped = new Set<number>()
 let isInTurn = false
 let pending: string[] = []
+let sweeper: { cancel: () => void } | undefined
+
+/** A background step nobody awaits: a refusal from the host ends here rather than going unhandled. */
+function quietly(work: Promise<unknown>) {
+  work.catch(() => {})
+}
+
+/** The person's own Enter: at a terminal, through Remote Control, or in an app that draws the session. */
+async function isPerson($: any, origin: { kind: string }): Promise<boolean> {
+  if (origin.kind === 'composer' || origin.kind === 'bridge') return true
+  return origin.kind === 'sdk' && (await $.session.surfaces()).length > 0
+}
 
 async function status($: any) {
   const list = await read($, watches)
@@ -119,7 +131,7 @@ function wake($: any, text: string, id?: number) {
   if (id !== undefined) fired.add(id)
   const message = `${MARK} ${text}`
   if (isInTurn) pending.push(message)
-  else $.clock.after(0, () => void $.prompt.submit({ text: message }))
+  else $.clock.after(0, () => quietly($.prompt.submit({ text: message })))
 }
 
 async function tick($: any, id: number) {
@@ -182,8 +194,9 @@ async function tick($: any, id: number) {
 }
 
 function arm($: any, w: Watch) {
+  if (w.kind === 'usage') sweep($)
   if (w.kind !== 'command' || timers.has(w.id)) return
-  timers.set(w.id, $.clock.every(w.everyMs as number, () => void tick($, w.id)))
+  timers.set(w.id, $.clock.every(w.everyMs as number, () => quietly(tick($, w.id))))
 }
 
 async function add($: any, fields: Omit<Watch, 'id'>): Promise<Watch> {
@@ -199,14 +212,35 @@ async function add($: any, fields: Omit<Watch, 'id'>): Promise<Watch> {
   return w
 }
 
-async function checkUsage($: any, limits: readonly { kind: string; percentUsed: number }[]) {
+/** Ends usage watches past their two weeks, whether or not a reading ever came. True if one is left. */
+async function expireUsage($: any): Promise<boolean> {
   const now = await $.clock.now()
+  let isLeft = false
   for (const w of await read($, watches)) {
     if (w.kind !== 'usage') continue
-    if (now >= w.expiresAt) {
-      if (await take($, w.id)) wake($, `Watch #${w.id} ended: ${w.window} never reached ${w.ceiling}% in its two weeks.`, w.id)
+    if (now < w.expiresAt) {
+      isLeft = true
       continue
     }
+    if (await take($, w.id)) wake($, `Watch #${w.id} ended: ${w.window} never reached ${w.ceiling}% in its two weeks.`, w.id)
+  }
+  return isLeft
+}
+
+/** Readings may never come, so an hourly timer, armed while a usage watch exists, does the expiring. */
+function sweep($: any) {
+  if (sweeper !== undefined) return
+  sweeper = $.clock.every(HOUR, () => quietly(expireUsage($).then(isLeft => {
+    if (isLeft) return
+    sweeper?.cancel()
+    sweeper = undefined
+  })))
+}
+
+async function checkUsage($: any, limits: readonly { kind: string; percentUsed: number }[]) {
+  await expireUsage($)
+  for (const w of await read($, watches)) {
+    if (w.kind !== 'usage') continue
     const used = usedPercent(w.window, limits)
     if (used === null || used < (w.ceiling ?? Infinity)) continue
     if (await take($, w.id)) {
@@ -284,14 +318,15 @@ export const register: Register = on => {
       isInTurn = false
       const waiting = pending
       pending = []
-      for (const text of waiting) $.clock.after(0, () => void $.prompt.submit({ text }))
+      for (const text of waiting) $.clock.after(0, () => quietly($.prompt.submit({ text })))
     }
     return done
   })
 
   on('tool.call', async ($, e, next) => {
     const answer = await next(e)
-    if (pending.length === 0 || 'deny' in answer) return answer
+    // Only the main conversation's call takes the news: a subagent's result is not the model it is for.
+    if (e.agentId !== undefined || pending.length === 0 || 'deny' in answer) return answer
     const waiting = pending
     pending = []
     return { ...answer, context: [...(answer.context ?? []), ...waiting] }
@@ -325,6 +360,8 @@ export const register: Register = on => {
       const list = await read($, watches)
       return { text: list.length === 0 ? `Nothing is being watched.\n\n${USAGE}` : list.map((w: Watch) => describe(w, now)).join('\n') }
     }
+    // Anyone may read the list. A watch runs a shell command on a timer, so changing one is the person's.
+    if (!(await isPerson($, e.origin))) return { text: 'Only you, typing /watch yourself, can start, stop or test a watch. This only lists them.' }
     if (verb === 'test') {
       wake($, 'Test wake: this proves a watch can reach this session. It says nothing about whether a command can run or a window is reported. Say so in one line and carry on.')
       return { text: 'Test wake queued.' }
@@ -354,7 +391,7 @@ export const register: Register = on => {
       if ((await read($, watches)).length >= MAX_WATCHES) return { text: `${MAX_WATCHES} watches are already running. Stop one first.` }
       const { everyMs, lifetime, note, check } = parsed
       const w = await add($, { kind: 'command', check, cwd, everyMs, note, checks: 0, lastExit: null, expiresAt: now + lifetime })
-      $.clock.after(0, () => void tick($, w.id))
+      $.clock.after(0, () => quietly(tick($, w.id)))
       return { text: `Watching: ${describe(w, now)}` }
     }
     return { text: USAGE }

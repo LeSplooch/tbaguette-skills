@@ -77,7 +77,7 @@ export function refusal(text: string, list: readonly Order[]): string | null {
 
 /** The one message that carries the whole list, each order on a line of its own. */
 export function ordersMessage(list: readonly Order[]): string {
-  return [HEADER, ...list.map((o, i) => `${i + 1}. ${o.text.replace(/\s+/g, ' ')}`), REPLACES].join('\n')
+  return [HEADER, ...list.map(o => `${o.id}. ${o.text.replace(/\s+/g, ' ')}`), REPLACES].join('\n')
 }
 
 export function cut(text: string, room: number): string {
@@ -352,7 +352,12 @@ export const register: Register = on => {
     if (e.agentId !== undefined || answer.deny !== undefined) return answer
     const text = await takeOwed($)
     if (text === null) return answer
-    await markDelivered($, text)
+    try {
+      await markDelivered($, text)
+    } catch (error) {
+      await update($, isOwed, () => true)
+      throw error
+    }
     return { ...answer, context: [...(answer.context ?? []), text] }
   })
 
@@ -364,15 +369,22 @@ export const register: Register = on => {
     await bringBack($)
     const text = await takeOwed($)
     if (text === null) return next(e)
-    const entered = await next({ ...e, context: [...(e.context ?? []), text] })
-    if (entered.drop !== undefined) await update($, isOwed, () => true)
-    else await markDelivered($, text)
-    return entered
+    try {
+      const entered = await next({ ...e, context: [...(e.context ?? []), text] })
+      if (entered.drop !== undefined) await update($, isOwed, () => true)
+      else await markDelivered($, text)
+      return entered
+    } catch (error) {
+      // The prompt did not enter, or its bookkeeping failed: the list is still owed.
+      await update($, isOwed, () => true)
+      throw error
+    }
   })
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     const shown = await read($, suggestion)
     if (shown === null || e.props.hasSurvey) return next(e)
+    const beneath = await next(e)
     const { Box, Button, Text } = $.ui.resolve(e)
     return (
       <Box flexDirection="column">
@@ -381,6 +393,7 @@ export const register: Register = on => {
           <Button key="keep" label="Keep" variant="primary" onPress={() => keep($, shown)} />
           <Button key="not-this" label="Not this" onPress={() => notThis($, shown)} />
         </Box>
+        {beneath}
       </Box>
     )
   })

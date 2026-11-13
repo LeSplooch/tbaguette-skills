@@ -14,6 +14,7 @@ const heldTurn = atom({ plugin: 'moves', key: 'heldTurn' } as const, null)
 const isGateOn = atom({ plugin: 'moves', key: 'isGateOn' } as const, true)
 const isBandUp = atom({ plugin: 'moves', key: 'isBandUp' } as const, false)
 const dismissed = atom({ plugin: 'moves', key: 'dismissed' } as const, [])
+const lastDropped = atom({ plugin: 'moves', key: 'lastDropped' } as const, null, { shape: SHAPE })
 
 export const MARK = '[moves]'
 export const MAX_MOVE = 80
@@ -30,8 +31,10 @@ const HOUR = 3_600_000
 const DAY = 24 * HOUR
 const LIFETIME = 30 * DAY
 const GIT_TIMEOUT = 5_000
-const BUTTON_ROOM = 28
+const BAND_MOVES = 3
 const NOT_NOW = 'Not now'
+const PANE = 'moves'
+const PANE_TITLE = 'Moves'
 const SELF = 'moves'
 const SET_ASIDE = 'mcp__moves__set_aside'
 const HARVEST = 'mcp__moves__harvest'
@@ -45,6 +48,15 @@ const NAMES: Record<MoveKind, string> = {
   ruling: 'ruling',
   deferred: 'pushed out',
   found: 'found',
+}
+// The kind's color follows its rank, warm to quiet. The kind's name is always drawn beside it,
+// so the color is never the only thing that says it.
+const TINT: Record<MoveKind, string> = {
+  asked: 'claude',
+  surrendered: 'warning',
+  ruling: 'permission',
+  deferred: 'suggestion',
+  found: 'subtle',
 }
 
 const USAGE = [
@@ -108,11 +120,17 @@ function content(text: string): string[] {
   return kept.length === 0 ? all : kept
 }
 
-/** From 0 to 1, how much an option's label says a move: 1 is the same words. */
+// Words that turn an option into the opposite of the move it names: "Don't cover the retry path",
+// "Skip the retry path", "Leave the retry path for later". `don` and `won` are what `words` leaves of
+// "don't" and "won't".
+const NEGATIONS = new Set(['not', 'no', 'never', 'don', 'dont', 'won', 'doesn', 'skip', 'without', 'avoid', 'instead', 'leave', 'later', 'defer', 'postpone', 'drop', 'stop', 'nor', 'neither'])
+
+/** From 0 to 1, how much an option's label says a move: 1 is the same words; 0 when it says the move's opposite. */
 export function closeness(label: string, move: string): number {
   const a = new Set(content(label))
   const b = new Set(content(move))
   if (a.size === 0 || b.size === 0) return 0
+  for (const w of words(label)) if (NEGATIONS.has(w) && !b.has(w)) return 0
   let shared = 0
   for (const w of a) if (b.has(w)) shared++
   const jaccard = shared / (a.size + b.size - shared)
@@ -272,18 +290,24 @@ export function announced(text: string): string | null {
   return hit === undefined ? null : cut(hit.replace(/^[-*•]\s+/, '').replace(/"/g, "'"), 140)
 }
 
-/** The buttons that fit one row beside "Not now": three moves at most, one at least. */
-export function fit(open: readonly Move[], columns: number): { move: Move; label: string }[] {
-  const out: { move: Move; label: string }[] = []
-  let used = NOT_NOW.length + 4
-  for (const move of open.slice(0, 3)) {
-    const room = Math.min(BUTTON_ROOM, columns - used - 5)
-    if (out.length > 0 && room < Math.min(move.move.length, 12)) break
-    const label = cut(move.move, room)
-    out.push({ move, label })
-    used += label.length + 5
-  }
-  return out
+/**
+ * How much of the table the band has room for: up to three moves, each on a row of its own with
+ * its cost on the row under it, between the heading and the row of actions. Short of rows, the
+ * costs go first, then moves; the strongest move always shows.
+ */
+export function bandPlan(count: number, maxRows: number): { shown: number; withCost: boolean } {
+  const want = Math.min(BAND_MOVES, count)
+  if (want === 0) return { shown: 0, withCost: false }
+  const room = maxRows - 2
+  if (room >= 2 * want) return { shown: want, withCost: true }
+  return { shown: Math.max(1, Math.min(want, room)), withCost: false }
+}
+
+/** Where a move came from and where it has been, for the pane: "this session", "3 days ago · offered twice". */
+export function provenance(m: Move, session: string, now: number): string {
+  const notes = [m.kind === 'asked' ? 'added by you' : m.session === session ? 'this session' : age(now - m.at)]
+  if (m.offered > 0) notes.push(m.offered === 1 ? 'offered once' : m.offered === 2 ? 'offered twice' : `offered ${m.offered} times`)
+  return notes.join(' · ')
 }
 
 /** A project's key in the store's names: short, and checked against the move's own `root` on a read. */
@@ -422,7 +446,8 @@ async function refresh($: EngineInterface): Promise<Move[]> {
       const m = asMove(await $.store.get(key))
       if (m === null || m.root !== root) continue
       if (gone.has(m.uid)) await forget($, m)
-      else if (now - m.at > LIFETIME) await $.store.delete(key)
+      // A delete that fails is tried again at the next read; it never stops this one.
+      else if (now - m.at > LIFETIME) await $.store.delete(key).catch(() => undefined)
       else found.push(m)
     }
     const floor = await counted($)
@@ -519,14 +544,19 @@ async function offered($: EngineInterface, questions: unknown, answer: ToolCallR
   for (const label of labels) {
     let best: Move | undefined
     let score = 0
+    let isTied = false
     for (const m of left) {
       const near = closeness(label, m.move)
       if (near > score) {
         best = m
         score = near
+        isTied = false
+      } else if (near === score && near > 0) {
+        isTied = true
       }
     }
-    if (best === undefined || score < CLOSE) continue
+    // Two moves the label says equally well: which one was meant is not known, so neither is touched.
+    if (best === undefined || score < CLOSE || isTied) continue
     left.splice(left.indexOf(best), 1)
     // A multi-select's picks come back joined by ", ", and a label may hold a comma of its own.
     const isPicked = answers.some(a => `, ${a}, `.includes(`, ${label}, `))
@@ -651,8 +681,12 @@ async function hand($: EngineInterface, m: Move): Promise<'filled' | 'sent' | 'b
 }
 
 async function pick($: EngineInterface, uid: string) {
-  const m = (await read($, table)).find(x => x.uid === uid)
-  if (m === undefined) return
+  // Read again first: another session may have taken or dropped it since the band was drawn.
+  const m = (await queue(() => refresh($))).find(x => x.uid === uid)
+  if (m === undefined) {
+    $.ui.toast('That move is no longer on the table.')
+    return
+  }
   const how = await hand($, m)
   if (how === 'busy') $.ui.toast(`The prompt did not take it. /moves send ${m.id} sends it as your next request.`)
   else await update($, isBandUp, () => false)
@@ -661,6 +695,65 @@ async function pick($: EngineInterface, uid: string) {
 async function notNow($: EngineInterface, uids: readonly string[]) {
   await update($, dismissed, (held: string[]) => [...new Set([...held, ...uids])].slice(-200))
   await update($, isBandUp, () => false)
+}
+
+/** The person puts a move of their own on the table; answers what to tell them. */
+async function addMove($: EngineInterface, typed: string): Promise<string> {
+  const text = clean(typed)
+  if (text === '') return 'A move needs words, like /moves add cover the retry path.'
+  if (text.length > MAX_ASKED) return `A move is at most ${MAX_ASKED} characters, and this one has ${text.length}.`
+  const made = await queue(async () => {
+    const list = await refresh($)
+    const twin = list.find(m => closeness(m.move, text) === 1)
+    if (twin !== undefined) return `That is already on the table as #${twin.id}.`
+    if (list.length >= MAX_ON_TABLE && fallen(list, session) === null) {
+      return `The table is full: ${MAX_ON_TABLE} moves, all yours. Make room with /moves drop <n>.`
+    }
+    return place($, list, 'asked', text, '')
+  })
+  if (typeof made === 'string') return made
+  const fell = made.fell === null ? '' : ` The table was full, so its oldest move fell off: #${made.fell.id} ${made.fell.move}.`
+  return `On the table as #${made.made.id}: ${made.made.move}${fell}`
+}
+
+/** The person takes a move off the table; the pane keeps it one press away from coming back. */
+async function dropMove($: EngineInterface, isOut: (m: Move) => boolean): Promise<Move | undefined> {
+  const out = await queue(() => takeOff($, isOut))
+  if (out[0] !== undefined) await update($, lastDropped, () => out[0] ?? null)
+  return out[0]
+}
+
+/** Puts the last dropped move back under its own number, unless that number was given to another. */
+async function undoDrop($: EngineInterface) {
+  const m = await read($, lastDropped)
+  if (m === null) return
+  const said = await queue(async () => {
+    const list = await refresh($)
+    if (list.some(x => x.uid === m.uid)) return null
+    if (list.some(x => x.id === m.id)) return `Move #${m.id} could not come back: its number is in use.`
+    if (list.length >= MAX_ON_TABLE) return `Move #${m.id} could not come back: the table is full.`
+    await update($, table, (held: Move[]) => ordered([...held.filter(x => x.uid !== m.uid), m]))
+    gone.delete(m.uid)
+    await save($, m)
+    await status($)
+    return null
+  })
+  await update($, lastDropped, () => null)
+  if (said !== null) $.ui.toast(said)
+}
+
+async function setGate($: EngineInterface, isOn: boolean) {
+  await update($, isGateOn, () => isOn)
+  await $.store.set(GATE_KEY, isOn).catch(() => undefined)
+}
+
+/** Opens the table beside the chat, with the keyboard if the prompt is free to give it. */
+async function openTable($: EngineInterface) {
+  try {
+    await $.ui.open({ id: PANE, title: PANE_TITLE, focus: true, closeOnEscape: true })
+  } catch {
+    // A surface that cannot place it leaves /moves as the way to read the table.
+  }
 }
 
 /** After a turn: the band comes up when a move is on the table that the person has not waved off. */
@@ -830,7 +923,11 @@ export const register: Register = on => {
     const rest = args.slice(verb.length).trim()
     const now = await $.clock.now()
     const show = async () => listing(await queue(() => refresh($)), session, now, await gateOn($))
-    if (verb === '') return { text: await show() }
+    if (verb === '') {
+      // The person's own /moves opens the table beside the chat as well; anyone else's only reads it.
+      if (await isPerson($, e.origin)) await openTable($)
+      return { text: await show() }
+    }
     if (!['take', 'send', 'drop', 'add', 'clear', 'gate'].includes(verb)) return { text: USAGE }
     if (!(await isPerson($, e.origin))) return { text: `${await show()}\n${ONLY_YOU}` }
     if (verb === 'gate') {
@@ -839,31 +936,14 @@ export const register: Register = on => {
       if (want !== 'on' && want !== 'off') {
         return { text: `The gate is ${isOn ? 'on: a turn that changes files and offers nothing is held once, to offer the next move' : 'off'}. /moves gate ${isOn ? 'off' : 'on'} changes it.` }
       }
-      await update($, isGateOn, () => want === 'on')
-      await $.store.set(GATE_KEY, want === 'on').catch(() => undefined)
+      await setGate($, want === 'on')
       return {
         text: want === 'on'
           ? 'The gate is on, in every session: a turn that changes files and offers nothing is held once, to offer the next move.'
           : 'The gate is off, in every session from now on. Moves are still set aside and kept; no turn is held. /moves gate on',
       }
     }
-    if (verb === 'add') {
-      const text = clean(rest)
-      if (text === '') return { text: 'A move needs words, like /moves add cover the retry path.' }
-      if (text.length > MAX_ASKED) return { text: `A move is at most ${MAX_ASKED} characters, and this one has ${text.length}.` }
-      const made = await queue(async () => {
-        const list = await refresh($)
-        const twin = list.find(m => closeness(m.move, text) === 1)
-        if (twin !== undefined) return `That is already on the table as #${twin.id}.`
-        if (list.length >= MAX_ON_TABLE && fallen(list, session) === null) {
-          return `The table is full: ${MAX_ON_TABLE} moves, all yours. Make room with /moves drop <n>.`
-        }
-        return place($, list, 'asked', text, '')
-      })
-      if (typeof made === 'string') return { text: made }
-      const fell = made.fell === null ? '' : ` The table was full, so its oldest move fell off: #${made.fell.id} ${made.fell.move}.`
-      return { text: `On the table as #${made.made.id}: ${made.made.move}${fell}` }
-    }
+    if (verb === 'add') return { text: await addMove($, rest) }
     if (verb === 'clear') {
       const out = await queue(() => takeOff($, () => true))
       return { text: out.length === 0 ? 'Nothing was on the table.' : out.length === 1 ? 'Took 1 move off the table.' : `Took ${out.length} moves off the table.` }
@@ -872,8 +952,8 @@ export const register: Register = on => {
     if (number === null) return { text: `Name the move by its number, like /moves ${verb} 2.\n\n${await show()}` }
     const id = Number(number[1])
     if (verb === 'drop') {
-      const out = await queue(() => takeOff($, m => m.id === id))
-      return { text: out[0] === undefined ? `There is no move #${id}.\n\n${await show()}` : `Took #${id} off the table: ${out[0].move}` }
+      const out = await dropMove($, m => m.id === id)
+      return { text: out === undefined ? `There is no move #${id}.\n\n${await show()}` : `Took #${id} off the table: ${out.move}` }
     }
     const m = (await queue(() => refresh($))).find(x => x.id === id)
     if (m === undefined) return { text: `There is no move #${id}.\n\n${await show()}` }
@@ -887,21 +967,105 @@ export const register: Register = on => {
   })
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
-    if (e.props.hasSurvey || !(await read($, isBandUp))) return next(e)
+    // A subagent's transcript in view: the main conversation's table is not what the person is reading.
+    if (e.props.hasSurvey || e.props.view.agentId !== undefined || !(await read($, isBandUp))) return next(e)
     const hidden = await read($, dismissed)
     const open = ordered(await read($, table)).filter(m => !hidden.includes(m.uid))
     if (open.length === 0) return next(e)
     const { Box, Button, Text } = $.ui.resolve(e)
-    const head = open.length === 1 ? 'On the table: 1 move not taken.' : `On the table: ${open.length} moves not taken.`
-    const shown = fit(open, e.props.bodyColumns)
+    const plan = bandPlan(open.length, e.props.maxRows)
+    const shown = open.slice(0, plan.shown)
+    const more = open.length - shown.length
+    const head = open.length === 1 ? '1 move on the table' : `${open.length} moves on the table`
     return (
       <Box flexDirection="column">
-        <Text>{cut(`${head} /moves lists them.`, e.props.bodyColumns)}</Text>
+        <Text wrap="truncate-end">
+          <Text weight="semibold">{head}</Text>
+          <Text dimColor>{' · strongest first, nothing happens until you take one'}</Text>
+        </Text>
+        {shown.map((move, i) => (
+          <Box key={`row-${move.uid}`} flexDirection="row" gap={1} alignItems="flex-start">
+            <Box flexDirection="column" flexGrow={1} flexShrink={1}>
+              <Text wrap="truncate-end">
+                <Text color={TINT[move.kind]} weight="semibold">{NAMES[move.kind]}</Text>
+                <Text dimColor>{` #${move.id}  `}</Text>
+                <Text weight="medium">{move.move}</Text>
+              </Text>
+              {plan.withCost && move.cost !== '' && (
+                <Text dimColor wrap="truncate-end">
+                  {move.cost}
+                </Text>
+              )}
+            </Box>
+            <Button key={`take-${move.id}`} label="Take" variant={i === 0 ? 'primary' : undefined} onPress={() => pick($, move.uid)} />
+          </Box>
+        ))}
         <Box flexDirection="row" gap={1}>
-          {shown.map(({ move, label }) => (
-            <Button key={`take-${move.id}`} label={label} onPress={() => pick($, move.uid)} />
-          ))}
-          <Button key="not-now" label={NOT_NOW} onPress={() => notNow($, shown.map(b => b.move.uid))} />
+          <Button key="open-table" label={more > 0 ? `See all ${open.length}, with details` : 'See details'} onPress={() => openTable($)} />
+          <Button key="not-now" label={NOT_NOW} dimColor onPress={() => notNow($, shown.map(m => m.uid))} />
+        </Box>
+      </Box>
+    )
+  })
+
+  // The table in full: every move with its kind, what it costs, where it came from, and what to do with it.
+  on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
+    const { Box, Button, Text, Input } = $.ui.resolve(e)
+    const list = ordered(await read($, table))
+    const isOn = await read($, isGateOn)
+    const dropped = await read($, lastDropped)
+    const now = await $.clock.now()
+    const isRoomy = e.surface !== 'terminal' || e.props.placement === 'dock'
+    const head = list.length === 0 ? 'Nothing on the table' : list.length === 1 ? '1 move on the table' : `${list.length} moves on the table`
+    return (
+      <Box flexDirection="column" gap={1}>
+        <Box flexDirection="column">
+          <Text weight="semibold" size="heading">
+            {head}
+          </Text>
+          <Text dimColor>
+            {list.length === 0
+              ? 'What a run decides not to do lands here, so it is still here when the run ends. Add your own below.'
+              : 'Strongest first. Each is a candidate a run set aside; nothing happens until you take it.'}
+          </Text>
+        </Box>
+        {dropped !== null && (
+          <Box flexDirection="row" gap={1} alignItems="center">
+            <Text dimColor wrap="truncate-end">{`Dropped #${dropped.id}: ${dropped.move}`}</Text>
+            <Button key="undo-drop" label="Undo" onPress={() => undoDrop($)} />
+          </Box>
+        )}
+        {list.map((m, i) => (
+          <Box
+            key={`card-${m.uid}`}
+            flexDirection="column"
+            borderStyle={isRoomy ? 'round' : undefined}
+            borderColor={isRoomy ? TINT[m.kind] : undefined}
+            borderDimColor={isRoomy ? true : undefined}
+            paddingX={isRoomy ? 1 : undefined}
+          >
+            <Box flexDirection="row" justifyContent="space-between" gap={1}>
+              <Text>
+                <Text color={TINT[m.kind]} weight="semibold">{NAMES[m.kind]}</Text>
+                <Text dimColor>{` #${m.id}`}</Text>
+              </Text>
+              <Text dimColor size="footnote" wrap="truncate-end">{provenance(m, session, now)}</Text>
+            </Box>
+            <Text weight="semibold" wrap="wrap">{m.move}</Text>
+            {m.cost !== '' && <Text dimColor wrap="wrap">{m.cost}</Text>}
+            <Box flexDirection="row" gap={1} marginTop={1}>
+              <Button key={`pane-take-${m.uid}`} label="Put in prompt" variant={i === 0 ? 'primary' : undefined} onPress={() => pick($, m.uid)} />
+              <Button key={`pane-send-${m.uid}`} label="Send now" onPress={() => send($, m)} />
+              <Button key={`pane-drop-${m.uid}`} label="Drop" dimColor onPress={() => void dropMove($, x => x.uid === m.uid)} />
+            </Box>
+          </Box>
+        ))}
+        <Input key="add-move" label="Add" placeholder="a move of your own, verb first" submitLabel="add" value="" onSubmit={text => void addMove($, text).then(said => $.ui.toast(said))} />
+        <Box flexDirection="row" gap={1} alignItems="center">
+          <Text dimColor>
+            {isOn ? 'Gate on: a turn that changed files and offered nothing is held once.' : 'Gate off: turns end as they are.'}
+          </Text>
+          <Button key="gate" label={isOn ? 'Turn off' : 'Turn on'} dimColor onPress={() => void setGate($, !isOn)} />
         </Box>
       </Box>
     )

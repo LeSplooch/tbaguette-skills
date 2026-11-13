@@ -34,7 +34,7 @@
         <svg class="icon wordmark__icon" aria-hidden="true"><use href="/tbaguette-skills/assets/icons.svg?v=1a47008903#icon-wheat"></use></svg>
         <span class="wordmark__text">TBaguette<span class="wordmark__suffix">&rsquo;s Atelier</span></span>
       </a>
-      <span class="wordmark-version" dir="ltr">v3.0.3</span>
+      <span class="wordmark-version" dir="ltr">v3.0.4</span>
     </div>
     <div class="site-header__actions">
       <nav class="site-header__nav" aria-label="Site">
@@ -45,7 +45,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-12T23:25:50+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-12T23:25:50Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-13T03:23:31+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-13T03:23:31Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -68,7 +68,7 @@
 <article class="climb-page">
 <section class="container climb-hero" aria-labelledby="rest-title">
   <div class="climb-hero__copy">
-    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.1.0</span></p>
+    <p class="climb-hero__name-row"><span class="climb-hero__mark" aria-hidden="true"></span><span class="tag">mod</span><span class="climb-hero__version">v0.1.1</span></p>
     <h1 class="climb-hero__title" id="rest-title"><span class="climb-hero__name">rest</span><span class="climb-hero__headline">Pause every session with one command.</span></h1>
     <p class="climb-hero__lede">Each holds its next tool call with no model running, then resumes where it stopped, and nothing is lost.</p>
     <p class="climb-hero__where">At the prompt of a terminal session:</p>
@@ -122,7 +122,8 @@
 </section>
 <section class="container climb-section mod-use" aria-labelledby="mod-use">
   <h2 id="mod-use">In use</h2>
-  <p><code>/rest</code> while a rest is in force says so and changes nothing; <code>/rest &lt;length&gt;</code> starts a new one. A prompt you type in a resting session wakes that session alone, and the others keep resting.</p>
+  <p><code>/rest</code> while a rest is in force says so and changes nothing; <code>/rest &lt;length&gt;</code> starts a new one. A prompt you type in a resting session wakes that session alone, and the others keep resting. A slash command you type there wakes it too, any command but <code>/rest</code> itself.</p>
+  <p>A length is a whole number and a lowercase unit: <code>90s</code>, <code>45m</code> or <code>2h</code>, from 1 minute to 24 hours. <code>1.5h</code>, <code>2H</code>, <code>1h30m</code> and a bare <code>45</code> are refused with the usage text; write <code>90m</code> for an hour and a half.</p>
   <p>The mod registers no tool for the model, and <code>/rest</code> changes nothing unless you typed it. A session never pauses your other sessions, or wakes itself, on its own.</p>
 </section>
 <section class="container climb-section mod-behaves" aria-labelledby="mod-behaves">
@@ -134,14 +135,14 @@
     <li class="mod-behaves__item"><strong>Not yet confirmed live.</strong> Sessions learn of a rest by reading the mod's own store file. That every running session re-reads that file has not been checked with two live sessions. After starting a rest, <code>/rest status</code> in a second session shows whether it saw it.</li>
     <li class="mod-behaves__item"><strong>What it cannot stop.</strong> A model response that is already streaming finishes; the session stops at its next tool call. A turn that calls no tool simply ends. Shell commands already running in the background keep running. Sessions without the mod, and other machines, are not affected.</li>
     <li class="mod-behaves__item"><strong>Waking costs.</strong> After a long rest the prompt cache has usually expired, so the first request after waking reads the whole conversation again at full price.</li>
-    <li class="mod-behaves__item"><strong>Where it cannot hold.</strong> Where <code>sleep</code> is not on the PATH (or not a CLI session), the mod cannot hold a call: <code>/rest</code> says so and starts nothing, and that session never waits. Other harnesses ignore this mod.</li>
+    <li class="mod-behaves__item"><strong>Where it cannot hold.</strong> Where <code>sleep</code> is not on the PATH (or not a CLI session), the mod cannot hold a call: <code>/rest</code> says so and starts nothing, and that session never waits. One failed round of <code>sleep</code> does not end a rest: the call stays held, and the session gives up holding only after three failed rounds in a row. <code>/rest status</code> and the next <code>/rest</code> try <code>sleep</code> again, so a session that gave up holds again once it works. Other harnesses ignore this mod.</li>
   </ul>
 </section>
 <section class="container climb-section climb-requirements" aria-labelledby="climb-requirements">
   <h2 id="climb-requirements">Requirements and limits</h2>
   <dl class="climb-requirements__facts">
     <div><dt>Runs in</dt><dd>Claude Code, in a build with mods</dd></div>
-    <div><dt>Version</dt><dd>0.1.0</dd></div>
+    <div><dt>Version</dt><dd>0.1.1</dd></div>
     <div><dt>Licence</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/blob/master/LICENSE">GPL-2.0-only</a></dd></div>
     <div><dt>Source</dt><dd><a href="https://github.com/LeSplooch/tbaguette-skills/tree/master/mods/rest">LeSplooch/tbaguette-skills</a></dd></div>
   </dl>

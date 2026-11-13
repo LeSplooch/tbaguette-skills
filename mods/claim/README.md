@@ -26,10 +26,15 @@ In the desktop app: click + next to the prompt box, then Plugins, Add marketplac
     /claim off            switch detection and the guard off for this session
     /claim on             switch them back on
 
-While a foreign file is dirty, these commands are refused: `git add -A` (and `--all`, `-u`, `.`),
-`git commit -a`, a stash, `git reset --hard`, `git checkout .`, `git restore .` and `git clean -f`. The
-refusal names the foreign files. A command that names explicit paths passes, and so does everything
-else, and nothing is refused once no foreign file is dirty.
+While a foreign file is dirty, these commands are refused: `git add -A`, `--all` or `-u` with no path or
+with one that names the whole tree (`.`, `:/`, `*`, the repository root), `git add .`, `git commit -a`, a
+stash, `git reset --hard`, `git checkout .`, `git checkout -f`, `git switch -f`, `git restore .`, `git rm -r .` and
+`git clean -f`. The refusal names the foreign files. A command that names explicit paths passes, so does
+`git add -A -- src/a.ts`, and so does everything else, and nothing is refused once no foreign file is dirty.
+
+`/claim take <path>` reads the path as you type it from the session's directory: `./a.ts`, `a.ts` from a
+subdirectory, `../a.ts` and an absolute path all work, and a path written from the repository root still
+does too.
 
 Only a person can take a file or switch the guard off or on, by typing `/claim`. The same command from
 a plugin, a schedule or a peer prints the report and changes nothing, and the mod registers no tool for
@@ -43,8 +48,14 @@ the model.
 - **Telling the model.** Once for each new set of foreign files, attached to the next tool result and
   marked `[claim]`, with the paths given as data. You get a toast and a `claim: N foreign` status entry.
 - **The guard.** It reads the Bash tool's command, including compound commands, `git -C` and options
-  before the subcommand, and environment prefixes. It does not see a sweeping command inside a script,
-  an alias or a Makefile target, and it does not see shells other than the Bash tool.
+  before the subcommand, environment prefixes, and these wrappers: `sudo`, `env`, `xargs`, `nice`, `nohup`,
+  `time`, `command`, `eval` and a shell run with `-c` (`bash -c "git add -A"`). A heredoc body is data: it is
+  skipped, so an apostrophe in it hides nothing. It does not see a sweeping command inside a script, an
+  alias, a Makefile target, a heredoc fed to a shell (`bash <<EOF`), a `git` invoked through a variable or a
+  `$(...)` string, or a shell other than the Bash tool. A `git add -A` through `git -C <other repo>` is
+  judged all the same: the guard knows this session's foreign files, not that repository's. A forced
+  `git checkout <paths>`, `git reset --merge`, `git rebase --autostash` and `git pull` into a dirty tree are
+  not seen either.
 - **Background commands.** Detection pauses while a command this session moved to the background is
   running, because its writes cannot be told from another writer's. It resumes with a fresh baseline when
   a turn ends with none left, or at `/claim on`.

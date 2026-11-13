@@ -31,6 +31,29 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-11-13 — moves gets a full table you can read, and every mod was audited
+
+- Update the mods you have installed. `/watch` and `/climb` now start only when you type them:
+  until this release a scheduled prompt, another plugin or another session could start one, and
+  each runs a shell command on a timer or a loop outside the permission prompt. `/watch`'s own
+  page already said only you could.
+- `moves`: `/moves` now opens the table beside the chat. Every move is a card with its kind, where
+  it came from and how often it was passed over, the move in full and what it costs, with Put in
+  prompt, Send now and Drop on each. A drop can be undone, and a field at the bottom adds a move
+  of your own. The band above the prompt no longer cuts moves into small buttons: each move is a
+  row with its words in full, its cost under it and a Take button, and See details opens the table.
+- `moves`: an option worded as a move's opposite ("Don't cover the retry path", "Skip it") no
+  longer counts as picking that move, which used to take it off the table. An option two moves
+  match equally well now touches neither.
+- `climb`: a file created through a symlinked folder no longer slips past a protected path, and a
+  prompt you type that happens to contain `[climb]` no longer counts as an iteration.
+- `claim`: `git add -A -- src/a.ts` and `git add -u src/` pass, since they touch only the paths
+  named. A sweep hidden behind `bash -c`, `sudo`, `env`, `xargs` or after a heredoc is now refused,
+  and `/claim take ./path` works from a subfolder.
+- `rest`: one failed check while holding no longer turns resting off for the rest of the session.
+- `orders`: the list the model reads uses the same numbers `/order` shows, and a band from another
+  mod stays visible under an offer. `meter`: `/meter Quiet` works in any case.
+
 ## 2026-11-12 — moves: a mod that keeps what a run did not take
 
 - New mod, `moves`, in the same marketplace: `/plugin install moves --marketplace LeSplooch/tbaguette-skills`.

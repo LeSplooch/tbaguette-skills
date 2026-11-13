@@ -18,6 +18,7 @@ const HOUR = 60 * MINUTE
 const LONGEST = 24 * HOUR
 const ROUND = ['sleep', '2']
 const ROUND_TIMEOUT = 10_000
+const GIVE_UP = 3
 const TICK = 5_000
 const USAGE = [
   'Usage:',
@@ -35,6 +36,8 @@ let local: RestHere | null = null
 let wokeAt: number | null = null
 let held = 0
 let holdable = false
+// Rounds of `sleep` that failed one after another: one is a hiccup, three are a machine that cannot hold.
+let failures = 0
 let by = 'a session'
 let shown = 'awake'
 let ticker: { cancel: () => void } | undefined
@@ -135,6 +138,14 @@ async function canHold($: Dollar): Promise<boolean> {
   }
 }
 
+/** After giving up, a fresh probe: a `sleep` that works again lets this session hold again. */
+async function reprobe($: Dollar) {
+  if (holdable || !(await canHold($))) return
+  holdable = true
+  failures = 0
+  await refresh($, false)
+}
+
 /**
  * Waits while this session rests, then says whether the dispatch is still wanted. Each round is a
  * `sleep 2` on the host: a hook's budget stops while a `$` call is in flight, but runs on through a
@@ -156,9 +167,12 @@ async function hold($: Dollar, signal: AbortSignal): Promise<'free' | 'abandoned
       const how = await Promise.race([slept, abandoned])
       if (how === 'abandoned') return how
       if (!how) {
+        failures++
+        if (failures < GIVE_UP) continue
         cannotHold($)
         return 'free'
       }
+      failures = 0
       if ((await restingUntil($)) === null) return 'free'
     }
   } finally {
@@ -186,6 +200,7 @@ async function wake($: Dollar) {
 }
 
 async function report($: Dollar): Promise<string> {
+  await reprobe($)
   const now = await $.clock.now()
   const flag = await sharedRest($, now)
   const lines: string[] = []
@@ -201,6 +216,7 @@ async function report($: Dollar): Promise<string> {
 }
 
 async function start($: Dollar, scope: 'all' | 'here', length: number): Promise<string> {
+  await reprobe($)
   if (!holdable) return 'Nothing was started: this session cannot hold a call, because `sleep` could not run here.'
   const since = await $.clock.now()
   const until = since + length
@@ -237,6 +253,7 @@ export const register: Register = on => {
       immediate: true,
     })
     holdable = await canHold($)
+    failures = 0
     local = await read($, here)
     wokeAt = await read($, awake)
     held = 0
@@ -244,7 +261,7 @@ export const register: Register = on => {
     shown = 'awake'
     ticker?.cancel()
     // Only repaints and toasts: it reads the store and the clock, and makes no model call.
-    ticker = $.clock.every(TICK, () => void refresh($, true))
+    ticker = $.clock.every(TICK, () => void refresh($, true).catch(() => undefined))
     await refresh($, true)
     return next(e)
   })

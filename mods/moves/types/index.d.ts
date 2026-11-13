@@ -38,6 +38,8 @@ declare module 'claude-code' {
       isBandUp: boolean
       // the moves the person answered "Not now" for, by uid
       dismissed: string[]
+      // the move the person last dropped, kept so the pane can put it back; null once undone or replaced
+      lastDropped: Shaped<Move | null>
     }
   }
 }

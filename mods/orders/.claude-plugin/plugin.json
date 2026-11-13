@@ -1,6 +1,6 @@
 {
   "name": "orders",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Say it once: the mod keeps a session's standing orders and puts them back in front of the model after every compaction.",
   "author": {
     "name": "TBaguette",
