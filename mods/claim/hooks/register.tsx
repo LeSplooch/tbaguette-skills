@@ -413,6 +413,33 @@ async function findRoot($: EngineInterface, cwd: string): Promise<string | undef
   }
 }
 
+/**
+ * The tree watched follows the session's folder. The desktop app starts a session in a spare folder
+ * under ~/.claude, a git repository of its own, and then moves it to the project: a root read once
+ * at the start watched ~/.claude for the whole session and never the project. What was known of
+ * the old tree is dropped and the new one is read afresh. Runs in the lane.
+ */
+async function follow($: EngineInterface) {
+  let here: unknown
+  try {
+    here = await $.session.cwd()
+  } catch {
+    return
+  }
+  if (typeof here !== 'string' || here === '' || here === cwd) return
+  cwd = here
+  const top = await findRoot($, here)
+  if (top === root) return
+  root = top
+  pending = []
+  await update($, foreign, () => ({}))
+  await update($, taken, () => [])
+  await update($, mine, () => [])
+  await update($, baseline, () => null)
+  await rebaseline($)
+  await showStatus($)
+}
+
 async function fingerprint($: EngineInterface, top: string): Promise<ClaimFingerprint | null> {
   let out: string
   try {
@@ -629,6 +656,7 @@ export const register: Register = on => {
   })
 
   on('tool.call', async ($, e, next) => {
+    await queue(() => follow($))
     if (root === undefined) return next(e)
     if (!isWriter(String(e.tool))) return attach(await next(e))
     const isIdle = inFlight === 0
@@ -667,6 +695,7 @@ export const register: Register = on => {
 
   // Only the person runs this: no tool lets the model take a file or switch the guard off.
   on('command.run', { command: 'claim' }, async ($, e) => {
+    await queue(() => follow($))
     if (root === undefined) return { text: 'claim: not a git working tree, so claim does nothing in this session.' }
     const args = e.args.trim()
     const verb = /^\S*/.exec(args)?.[0] ?? ''

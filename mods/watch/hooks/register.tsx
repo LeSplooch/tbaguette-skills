@@ -352,6 +352,9 @@ export const register: Register = on => {
   })
 
   on('command.run', { command: 'watch' }, async ($, e) => {
+    // The session's folder now, not the one it started in: the desktop app starts a session in a
+    // spare folder under ~/.claude and only then moves it to the project.
+    cwd = await $.session.cwd().then(c => (typeof c === 'string' && c !== '' ? c : cwd), () => cwd)
     const args = e.args.trim()
     const now = await $.clock.now()
     const verb = /^\S*/.exec(args)?.[0] ?? ''

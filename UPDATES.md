@@ -42,10 +42,12 @@ holds any text file over 256 KiB for a reviewer.
   prompt, Send now and Drop on each. A drop can be undone, and a field at the bottom adds a move
   of your own. The band above the prompt no longer cuts moves into small buttons: each move is a
   row with its words in full, its cost under it and a Take button, and See details opens the table.
-- `moves`: in the desktop app, every session shared one table, whatever project it was in. The app
-  starts a session in a spare folder under `~/.claude` before moving it to your project, and the
-  mod took that folder as the project. It now follows the session to the folder it works in. Moves
-  set aside in earlier sessions stay filed under `~/.claude` and no longer show in your projects.
+- In the desktop app, four mods were working in the wrong folder. The app starts a session in a
+  spare folder under `~/.claude` before moving it to your project, and these mods kept the folder
+  the session started in. `moves` filed every desktop session's moves on one shared table. `claim`
+  watched `~/.claude` instead of your project. `climb` and `watch` ran their command in the spare
+  folder unless you passed `--in`. All four now follow the session to the folder it works in.
+  Moves set aside before this stay filed under `~/.claude` and no longer show in your projects.
 - `moves`: an option worded as a move's opposite ("Don't cover the retry path", "Skip it") no
   longer counts as picking that move, which used to take it off the table. An option two moves
   match equally well now touches neither.

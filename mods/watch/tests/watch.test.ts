@@ -327,3 +327,13 @@ test('a wake the host refuses does not leave an unhandled rejection', async ($, 
   await seen.clock.settle()
   expect(answer.text).toContain('queued')
 })
+
+test('a command watch started after the session moved folders runs where the session is now', async ($, on) => {
+  const seen = engine(on, [1])
+  // The desktop app starts a session in a spare folder under ~/.claude, then moves it to the project.
+  on('session.cwd', () => ({ value: '/work' }))
+  await $.session.start({ cwd: '/home/me/.claude/spares/spare-abc', surface: 'desktop', isInteractive: true })
+  await watch($, 'every 1m make check')
+  await seen.clock.settle()
+  expect(seen.checks[0]).toContain('"cwd":"/work"')
+})

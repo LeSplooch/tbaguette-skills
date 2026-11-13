@@ -49,7 +49,8 @@ function world(on: On, options: { isRepo?: boolean } = {}) {
   const toasts: string[] = []
   const statuses: (string | undefined)[] = []
   const registered: string[] = []
-  const knobs: { isStoreBroken: boolean; movedToBackground?: string } = { isStoreBroken: false }
+  // cwd: the session's folder now; top: what git names as the tree's top for it
+  const knobs: { isStoreBroken: boolean; movedToBackground?: string; cwd?: string; top?: string } = { isStoreBroken: false }
   let time = 1_000
   let gate: { reached: Promise<void>; hold: Promise<void>; reach: () => void; release: () => void } | undefined
 
@@ -72,7 +73,11 @@ function world(on: On, options: { isRepo?: boolean } = {}) {
     return gate
   }
 
-  on('session.start', (_, e) => ({ cwd: e.cwd }))
+  on('session.start', (_, e) => {
+    knobs.cwd = e.cwd
+    return { cwd: e.cwd }
+  })
+  on('session.cwd', () => ({ value: knobs.cwd ?? ROOT }))
   on('command.register', () => ({ value: { command: 'claim' } }))
   on('tool.register', (_, e) => {
     registered.push(JSON.stringify(e))
@@ -95,7 +100,7 @@ function world(on: On, options: { isRepo?: boolean } = {}) {
     const answer = (exitCode: number, stdout: string) => ({
       value: { exitCode, stdout, stderr: '', isStdoutTruncated: false, isStderrTruncated: false },
     })
-    if (e.argv.includes('rev-parse')) return options.isRepo === false ? answer(128, '') : answer(0, `${ROOT}\n`)
+    if (e.argv.includes('rev-parse')) return options.isRepo === false ? answer(128, '') : answer(0, `${knobs.top ?? ROOT}\n`)
     if (e.argv.includes('status')) {
       return answer(0, [...tree].map(([path, d]) => (d.from === undefined ? `${d.code} ${path}\0` : `${d.code} ${path}\0${d.from}\0`)).join(''))
     }
@@ -546,4 +551,20 @@ test('/claim take strips ./ at the root too', async ($, on) => {
   w.change('a.ts')
   await bash($, 'ls')
   expect((await claim($, 'take ./a.ts')).text).toContain('took 1 file')
+})
+
+test('a session that starts in a spare folder and moves to the project watches the project\'s tree', async ($, on) => {
+  const SPARES = '/home/me/.claude'
+  const w = world(on)
+  w.knobs.top = SPARES
+  await $.session.start({ cwd: `${SPARES}/spares/spare-abc`, surface: 'desktop', isInteractive: true })
+  expect(w.git.some(argv => argv.includes(SPARES) && argv.includes('status'))).toBe(true)
+  // The app moves the session to the project.
+  w.knobs.cwd = ROOT
+  w.knobs.top = ROOT
+  await call($, { tool: 'Edit', file_path: `${ROOT}/b.ts`, old_string: 'x', new_string: 'y' })
+  expect(w.git).toContainEqual(STATUS_ARGV)
+  w.change('notes.md')
+  await bash($, 'git status')
+  expect((await bash($, 'git add -A')).deny).toContain('notes.md')
 })

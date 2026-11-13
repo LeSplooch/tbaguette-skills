@@ -372,3 +372,15 @@ test('a long stop reason is cut to one line so the Stop or Hide button stays on 
   expect((await ui.find({ type: 'Button', key: 'hide' }))?.key).toBe('hide')
   await ui.unmount()
 })
+
+test('a climb started after the session moved folders runs its check where the session is now', async ($, on) => {
+  const seen = engine(on, [])
+  // The desktop app starts a session in a spare folder under ~/.claude, then moves it to the project.
+  on('session.cwd', () => ({ value: '/work' }))
+  await $.session.start({ cwd: '/home/me/.claude/spares/spare-abc', surface: 'desktop', isInteractive: true })
+  await climb($, '5 npm test')
+  await seen.clock.settle()
+  await turn($, 1)
+  expect(seen.checks[0]).toContain('"cwd":"/work"')
+  expect(seen.writes).toContain('/work/.climb-log.tsv')
+})
