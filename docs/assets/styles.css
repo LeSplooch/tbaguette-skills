@@ -2808,3 +2808,22 @@ a.skill-link--bare:focus-visible {
   .mods-climb__bar,
   .mods-climb__spark { display: none; }
 }
+
+/* Page-to-page crossings animate instead of cutting: the skill page's title
+   and the graph panel's skill name share a transition name, so the name
+   travels between the two. Browsers without cross-document view transitions
+   simply load the page as before. */
+@view-transition {
+  navigation: auto;
+}
+.skill-article__title,
+.crumb-skill__name {
+  view-transition-name: skill-name;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.15s;
+  }
+}
