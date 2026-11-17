@@ -31,6 +31,10 @@ past the newest thirty into its month's archive, word for word. The ceiling is
 there because this file ships in the plugin, and Anthropic's plugin directory
 holds any text file over 256 KiB for a reviewer.
 
+## 2026-11-18 — OpenCode 2.0 will not run the Atelier's adapter yet
+
+- If you use TBaguette in OpenCode, stay on 1.x: OpenCode 2.0 does not run the plugin format our adapter uses, so after upgrading the session-start bootstrap would stop loading without any error. The OpenCode guide now says so. A 2.0 version of the adapter is not available yet.
+
 ## 2026-11-13 — moves gets a full table you can read, and every mod was audited
 
 - Update the mods you have installed. `/watch` and `/climb` now start only when you type them:

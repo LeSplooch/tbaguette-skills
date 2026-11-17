@@ -2,6 +2,10 @@
 
 Complete guide for using the Atelier with [OpenCode.ai](https://opencode.ai).
 
+> **OpenCode 2.0 note.** OpenCode 2.0 does not run V1 plugins, and this adapter is a V1
+> plugin. Stay on OpenCode 1.x for now: after the upgrade the Atelier's session-start
+> bootstrap silently stops loading. A V2 port is not shipped yet.
+
 ## Installation
 
 Add the Atelier to the `plugin` array in your `opencode.json` (global or
