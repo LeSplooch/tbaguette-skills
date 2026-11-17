@@ -143,6 +143,9 @@ pub struct Notes {
     pub thin: &'static str,
 }
 
+/// Appended to the reach note when it leans on hand-offs.
+pub const STR_NOTES_HANDOFFS: &str = " That counts the {r} hand-offs (\"Not for X, use Y\") as citations; without them {k} skills no longer reach every other.";
+
 pub const STR_NOTES: Notes = Notes {
     reach: "<b>Every skill reaches every other</b> by following citations — never more than {d} steps. The longest walk runs from {a} to {b}.{ties}",
     reach_partial: "Following citations, {pct}% of all pairs of skills are connected. The longest walk runs from {a} to {b}, {d} steps.{ties}",
@@ -152,7 +155,7 @@ pub const STR_NOTES: Notes = Notes {
     bridge: "{a} is the bridge: more of the shortest routes between skills run through it than through any other.",
     bond: "{a} and {b} cite each other <b>{n} times</b> — the strongest bond here.",
     family: "{a} keeps <b>{p}%</b> of its citations in the family; {b} sends <b>{q}%</b> of its outward.",
-    mutual: "<b>{n} pairs</b> of skills cite each other.",
+    mutual: "<b>{n} pairs</b> of skills cite each other, setting aside hand-offs (\"Not for X, use Y\").",
     quiet: "{a} keeps to itself: cited by {i}, cites {o}.",
     quiet_pair: "{a} and {b} keep to themselves: each is cited by {i} and cites {o}.",
     quiet_many: "{a} and <b>{k} others</b> keep to themselves: each is cited by {i} and cites {o}.",

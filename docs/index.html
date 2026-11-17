@@ -45,7 +45,7 @@
       </nav>
       <p class="site-header__updated">
       <span class="site-header__updated-label">Updated</span>
-      <time class="site-header__updated-value" datetime="2026-11-14T23:17:02+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-14T23:17:02Z UTC</time>
+      <time class="site-header__updated-value" datetime="2026-11-17T23:19:10+00:00" data-format-updated data-version-url="/tbaguette-skills/version.txt" data-i18n-updated-template="{local} your time · {utc} UTC">2026-11-17T23:19:10Z UTC</time>
     </p>
       <button class="theme-toggle" type="button" data-theme-toggle
               aria-label="Switch to light theme"
@@ -195,18 +195,11 @@ Flag one more thing, because it applies to this very conversation: this session 
   <ol class="notes__list">
 <li class="notes__entry">
   <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-11-13">13 Nov 2026</time>
-    <span class="notes__entry-title">moves gets a full table you can read, and every mod was audited</span>
+    <time class="notes__date" datetime="2026-11-18">18 Nov 2026</time>
+    <span class="notes__entry-title">OpenCode 2.0 will not run the Atelier's adapter yet</span>
   </h3>
   <ul class="notes__bullets">
-    <li>Update the mods you have installed. <code>/watch</code> and <code>/climb</code> now start only when you type them: until this release a scheduled prompt, another plugin or another session could start one, and each runs a shell command on a timer or a loop outside the permission prompt. <code>/watch</code>'s own page already said only you could.</li>
-    <li><code>moves</code>: <code>/moves</code> now opens the table beside the chat. Every move is a card with its kind, where it came from and how often it was passed over, the move in full and what it costs, with Put in prompt, Send now and Drop on each. A drop can be undone, and a field at the bottom adds a move of your own. The band above the prompt no longer cuts moves into small buttons: each move is a row with its words in full, its cost under it and a Take button, and See details opens the table.</li>
-    <li>In the desktop app, four mods were working in the wrong folder. The app starts a session in a spare folder under <code>~/.claude</code> before moving it to your project, and these mods kept the folder the session started in. <code>moves</code> filed every desktop session's moves on one shared table. <code>claim</code> watched <code>~/.claude</code> instead of your project. <code>climb</code> and <code>watch</code> ran their command in the spare folder unless you passed <code>--in</code>. All four now follow the session to the folder it works in. Moves set aside before this stay filed under <code>~/.claude</code> and no longer show in your projects.</li>
-    <li><code>moves</code>: an option worded as a move's opposite (&quot;Don't cover the retry path&quot;, &quot;Skip it&quot;) no longer counts as picking that move, which used to take it off the table. An option two moves match equally well now touches neither.</li>
-    <li><code>climb</code>: a file created through a symlinked folder no longer slips past a protected path, and a prompt you type that happens to contain <code>[climb]</code> no longer counts as an iteration.</li>
-    <li><code>claim</code>: <code>git add -A -- src/a.ts</code> and <code>git add -u src/</code> pass, since they touch only the paths named. A sweep hidden behind <code>bash -c</code>, <code>sudo</code>, <code>env</code>, <code>xargs</code> or after a heredoc is now refused, and <code>/claim take ./path</code> works from a subfolder.</li>
-    <li><code>rest</code>: one failed check while holding no longer turns resting off for the rest of the session.</li>
-    <li><code>orders</code>: the list the model reads uses the same numbers <code>/order</code> shows, and a band from another mod stays visible under an offer. <code>meter</code>: <code>/meter Quiet</code> works in any case.</li>
+    <li>If you use TBaguette in OpenCode, stay on 1.x: OpenCode 2.0 does not run the plugin format our adapter uses, so after upgrading the session-start bootstrap would stop loading without any error. The OpenCode guide now says so. A 2.0 version of the adapter is not available yet.</li>
   </ul>
 </li>
   </ol>
@@ -219,6 +212,15 @@ Flag one more thing, because it applies to this very conversation: this session 
     </summary>
     <div class="notes__archive-panel" data-notes-archive-panel>
       <ol class="notes__list notes__list--earlier notes__list--archive">
+<li class="notes__entry">
+  <h3 class="notes__entry-head">
+    <time class="notes__date" datetime="2026-11-18">18 Nov 2026</time>
+    <span class="notes__entry-title">OpenCode 2.0 will not run the Atelier's adapter yet</span>
+  </h3>
+  <ul class="notes__bullets">
+    <li>If you use TBaguette in OpenCode, stay on 1.x: OpenCode 2.0 does not run the plugin format our adapter uses, so after upgrading the session-start bootstrap would stop loading without any error. The OpenCode guide now says so. A 2.0 version of the adapter is not available yet.</li>
+  </ul>
+</li>
 <li class="notes__entry">
   <h3 class="notes__entry-head">
     <time class="notes__date" datetime="2026-11-13">13 Nov 2026</time>
@@ -429,15 +431,6 @@ Flag one more thing, because it applies to this very conversation: this session 
   </h3>
   <ul class="notes__bullets">
     <li><a class="skill-link" href="/tbaguette-skills/skills/writing-durable-docs/"><code>writing-durable-docs</code></a> now covers the second half of updating a document when behaviour changes. The section you rewrote is right, but the same behaviour is often still described in a table row, an FAQ answer or a store copy, in other words, and the page now contradicts itself. The skill says to search the document and every copy of it for the feature's name and the old behaviour's verbs (not for your new wording), read each hit, and edit it or keep it with a reason. The <code>description:</code> field now routes a page-being-corrected request to it.</li>
-  </ul>
-</li>
-<li class="notes__entry">
-  <h3 class="notes__entry-head">
-    <time class="notes__date" datetime="2026-10-14">14 Oct 2026</time>
-    <span class="notes__entry-title">A fix checked only by looking now needs a before-build</span>
-  </h3>
-  <ul class="notes__bullets">
-    <li><a class="skill-link" href="/tbaguette-skills/skills/reproducing-bugs/"><code>reproducing-bugs</code></a> now covers the defect whose only check is a look (a visual fault, behaviour on one device): the commit before the fix is the control. Keep it buildable in a throwaway tree, run identical steps on the same device and data against the unfixed build and then the fixed one, and compare the captures. A symptom that vanished alongside an unrelated change of setup would otherwise be credited to the fix.</li>
   </ul>
 </li>
       </ol>

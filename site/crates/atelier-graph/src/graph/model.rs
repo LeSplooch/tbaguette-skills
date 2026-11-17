@@ -15,7 +15,7 @@ use atelier_core::graph::{
 };
 use serde_json::Value;
 
-use super::text::{STR_NOTES, escape_html, fmt, js_round, num};
+use super::text::{STR_NOTES, STR_NOTES_HANDOFFS, escape_html, fmt, js_round, num};
 
 /// graph.json's packed schema.
 const PACKED_SCHEMA: u64 = 2;
@@ -384,6 +384,9 @@ pub struct Edge {
     pub w: f64,
     pub sections: Vec<i32>,
     pub mutual: bool,
+    /// Every citation behind this edge opens with "Not for": a hand-off
+    /// away from the cited skill, not a reliance on it.
+    pub redirect: bool,
     pub phase: f64,
     pub len: f64,
 }
@@ -601,6 +604,7 @@ impl Model {
                             w: 0.0,
                             sections: Vec::new(),
                             mutual: false,
+                            redirect: false,
                             phase,
                             len: 1.0,
                         });
@@ -611,9 +615,29 @@ impl Model {
                 }
             }
         }
+        for edge in edges.iter_mut() {
+            let (s, t) = (edge.s, edge.t);
+            let slug = &nodes[t].slug;
+            let quotes: Vec<Option<&str>> = edge
+                .sections
+                .iter()
+                .map(|&i| {
+                    if i < 0 {
+                        quote_of(&nodes[s].trigger_quotes, slug)
+                    } else {
+                        quote_of(&nodes[s].sections[i as usize].quotes, slug)
+                    }
+                })
+                .collect();
+            edge.redirect = !quotes.is_empty()
+                && quotes.iter().all(|q| q.is_some_and(|q| q.starts_with("Not for")));
+        }
+        let redirects: Vec<bool> = edges.iter().map(|e| e.redirect).collect();
         for (i, edge) in edges.iter_mut().enumerate() {
             let (s, t) = (edge.s, edge.t);
-            edge.mutual = edge_map.contains_key(&(t, s));
+            edge.mutual = edge_map
+                .get(&(t, s))
+                .is_some_and(|&back| !redirects[back] && !redirects[i]);
             // `out[slug] = e` keeps the first insertion's position.
             if nodes[s].out_edge(t).is_none() {
                 nodes[s].out.push((t, i));
@@ -685,6 +709,11 @@ pub struct Walk {
 }
 
 pub fn bfs(model: &Model, from: usize, directed: bool) -> Walk {
+    bfs_filtered(model, from, directed, false)
+}
+
+/// `bfs`, optionally walking only real citations (no "Not for" hand-offs).
+pub fn bfs_filtered(model: &Model, from: usize, directed: bool, skip_redirects: bool) -> Walk {
     let n = model.nodes.len();
     let mut w = Walk {
         dist: vec![None; n],
@@ -708,6 +737,9 @@ pub fn bfs(model: &Model, from: usize, directed: bool) -> Walk {
         });
         for e in next {
             let edge = &model.edges[e];
+            if skip_redirects && edge.redirect {
+                continue;
+            }
             let v = if edge.s == u { edge.t } else { edge.s };
             if w.dist[v].is_none() {
                 w.dist[v] = Some(w.dist[u].unwrap_or(0) + 1);
@@ -879,12 +911,28 @@ fn compute_notes(model: &Model) -> Vec<Note> {
         }
     }
     if let Some((d, a, b)) = far {
-        let ties = if at_far > 1 {
+        let mut ties = if at_far > 1 {
             " It is the first of {n} ordered pairs that far apart."
                 .replace("{n}", &at_far.to_string())
         } else {
             String::new()
         };
+        // A "Not for" hand-off is drawn like a citation but points away from
+        // its target; say how much of the connectivity leans on them.
+        let handoffs = model.edges.iter().filter(|e| e.redirect).count();
+        let cut_off = (0..nodes.len())
+            .filter(|&a| {
+                let r = bfs_filtered(model, a, true, true);
+                r.dist.iter().any(Option::is_none)
+            })
+            .count();
+        if cut_off > 0 {
+            ties.push_str(
+                &STR_NOTES_HANDOFFS
+                    .replace("{r}", &handoffs.to_string())
+                    .replace("{k}", &cut_off.to_string()),
+            );
+        }
         let html = if reachable == pairs {
             fmt(
                 STR_NOTES.reach,
@@ -1277,6 +1325,29 @@ mod tests {
                     .html
                     .contains("pairs of skills are connected")
         );
+        // The claim must say when it leans on "Not for" hand-offs.
+        if model.edges.iter().any(|e| e.redirect) {
+            let without = (0..model.nodes.len())
+                .any(|a| bfs_filtered(&model, a, true, true).dist.iter().any(Option::is_none));
+            assert_eq!(model.notes[0].html.contains("hand-offs"), without);
+        }
+    }
+
+    #[test]
+    fn hand_offs_are_not_counted_as_mutual_citations() {
+        let data = unpack(&graph_json()).unwrap();
+        let mut seed = 0.0;
+        let model = Model::build(&data, &mut || {
+            seed += 0.001;
+            seed
+        });
+        let redirects = model.edges.iter().filter(|e| e.redirect).count();
+        assert!(redirects > 0, "the library has Not-for hand-offs");
+        for e in model.edges.iter().filter(|e| e.mutual) {
+            assert!(!e.redirect);
+            let back = model.edge(e.t, e.s).expect("mutual has a back edge");
+            assert!(!model.edges[back].redirect);
+        }
     }
 
     #[test]
