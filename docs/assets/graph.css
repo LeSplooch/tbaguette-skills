@@ -1244,6 +1244,7 @@ a.crumb-chip:hover,
   }
 
   .crumb--sheet-open .crumb__panel { max-height: 72%; }
+  .crumb--sheet-peek .crumb__panel { max-height: 42%; }
 
   .crumb__sheet-handle {
     display: flex;

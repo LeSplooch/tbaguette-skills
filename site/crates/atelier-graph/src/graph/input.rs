@@ -33,10 +33,20 @@ impl App {
         self.root
             .class_list()
             .toggle_with_force("crumb--sheet-open", open)?;
+        self.root.class_list().remove_1("crumb--sheet-peek")?;
         if let Some(handle) = self.root.query_selector("[data-crumb-sheet]")? {
             handle.set_attribute("aria-expanded", if open { "true" } else { "false" })?;
         }
         Ok(())
+    }
+
+    /// Half-open the phone sheet so a skill just opened shows its text without hiding the graph.
+    pub(super) fn peek_sheet(&self) -> Result<(), JsValue> {
+        if self.root.class_list().contains("crumb--sheet-open") {
+            return Ok(());
+        }
+        self.set_sheet(true)?;
+        self.root.class_list().add_1("crumb--sheet-peek")
     }
 
     fn local_point(&self, e: &MouseEvent) -> (f64, f64) {
@@ -504,7 +514,11 @@ impl App {
             return Ok(());
         }
         if closest(e, "[data-crumb-sheet]").is_some() {
-            let open = !self.root.class_list().contains("crumb--sheet-open");
+            let classes = self.root.class_list();
+            if classes.contains("crumb--sheet-peek") {
+                return classes.remove_1("crumb--sheet-peek");
+            }
+            let open = !classes.contains("crumb--sheet-open");
             return self.set_sheet(open);
         }
         if let Some(act) = closest(e, "[data-crumb-act]") {

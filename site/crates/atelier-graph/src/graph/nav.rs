@@ -12,6 +12,7 @@ use super::model::{Action, Spot, ask_hits, reach_two, shortest_path};
 use super::text::{self, escape_html, fmt};
 use super::views;
 use super::{
+    media,
     App, Ev, Hit, Trace, dispatch, document, on_settle, perf_now, prop_f64, set_prop_f64, window,
 };
 
@@ -170,6 +171,9 @@ impl App {
         self.render_trail();
         self.render_panel()?;
         self.dismiss_hint();
+        if media("(pointer: coarse)") {
+            self.peek_sheet()?;
+        }
         self.announce(Some(node));
         let name = self
             .model
