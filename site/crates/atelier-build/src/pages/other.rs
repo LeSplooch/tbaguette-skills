@@ -525,6 +525,10 @@ pub fn getting_started(ctx: &PageCtx) -> String {
 /// this page). The counts come from the graph's banner summary.
 pub fn graph_page(ctx: &PageCtx, summary: &BannerSummary) -> String {
     let graph_dir = ctx.url(GRAPH_PATH);
+    let data_url = match ctx.asset_versions.get(GRAPH_DATA_FILENAME) {
+        Some(version) => format!("{graph_dir}{GRAPH_DATA_FILENAME}?v={version}"),
+        None => format!("{graph_dir}{GRAPH_DATA_FILENAME}"),
+    };
     let lede = graph_strings::GRAPH_PAGE_LEDE_TEMPLATE
         .replace("{skill_count}", &ctx.skills.len().to_string())
         .replace("{pair_count}", &summary.pair_count.to_string());
@@ -534,12 +538,12 @@ pub fn graph_page(ctx: &PageCtx, summary: &BannerSummary) -> String {
     <h1 class="graph-page__title" id="graph-page-title">{title}</h1>
     <p class="graph-page__lede">{lede}</p>
   </div>
-  <div class="graph-host" data-graph-host data-graph-data="{graph_dir}{GRAPH_DATA_FILENAME}">
+  <div class="graph-host" data-graph-host data-graph-data="{data_url}">
     <noscript><p class="graph-host__noscript">{noscript}</p></noscript>
     <p class="graph-host__noscript graph-host__nowasm">{noscript}</p>
   </div>
 </section>
-<link rel="preload" as="fetch" href="{graph_dir}{GRAPH_DATA_FILENAME}" crossorigin="anonymous">"#,
+<link rel="preload" as="fetch" href="{data_url}" crossorigin="anonymous">"#,
         title = escape_html(graph_strings::GRAPH_PAGE_TITLE),
         lede = escape_html(&lede),
         noscript = escape_html(graph_strings::GRAPH_NOSCRIPT),

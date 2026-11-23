@@ -1239,3 +1239,17 @@ fn the_published_wasm_names_no_local_path() {
         }
     }
 }
+
+#[test]
+fn the_graph_page_names_its_data_by_content_so_a_cached_copy_cannot_outlive_a_deploy() {
+    use sha2::{Digest, Sha256};
+    let graph_json = page("graph/graph.json");
+    let hex: String = Sha256::digest(graph_json.as_bytes())
+        .iter()
+        .map(|b| format!("{b:02x}"))
+        .collect();
+    let url = format!("graph/graph.json?v={}", &hex[..10]);
+    let html = page("graph/index.html");
+    // The host reads it and the preload warms exactly the same URL.
+    assert_eq!(html.matches(&url).count(), 2, "host and preload share one URL");
+}

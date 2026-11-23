@@ -153,7 +153,7 @@ fn read_site(root: &Path, options: &BuildOptions) -> Result<Site> {
         pages::unfold::ROUTER_ASSET.to_string(),
         fingerprint(router_json.as_bytes()),
     );
-    let ctx = PageCtx::new(
+    let mut ctx = PageCtx::new(
         skills.clone(),
         categories(),
         &options.base_path,
@@ -170,6 +170,13 @@ fn read_site(root: &Path, options: &BuildOptions) -> Result<Site> {
         &ctx.fresh,
         &ctx.skill_url("{slug}"),
     );
+    let graph_json = graph::to_json(&graph);
+    // graph.json is fingerprinted like the assets: GitHub Pages lets a copy
+    // live ten minutes, and a stale one beside a newer module is a wrong graph.
+    ctx.asset_versions.insert(
+        pages::other::GRAPH_DATA_FILENAME.to_string(),
+        fingerprint(graph_json.as_bytes()),
+    );
     let mods = ModsSite::read(
         &ctx,
         &repo::mods(root)?,
@@ -178,7 +185,7 @@ fn read_site(root: &Path, options: &BuildOptions) -> Result<Site> {
     )?;
     Ok(Site {
         mods,
-        graph_json: graph::to_json(&graph),
+        graph_json,
         graph_summary: graph::banner_summary(&graph),
         citations: graph::citation_lists(&graph),
         notes: repo::update_notes(root)?,
