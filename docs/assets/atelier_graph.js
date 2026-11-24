@@ -56,6 +56,10 @@ function __wbg_get_imports() {
         __wbg_add_8ead3105ef6d0bda: function() { return handleError(function (arg0, arg1, arg2) {
             arg0.add(getStringFromWasm0(arg1, arg2));
         }, arguments); },
+        __wbg_altKey_fa381deee4b395cd: function(arg0) {
+            const ret = arg0.altKey;
+            return ret;
+        },
         __wbg_appendChild_0a61ee9a9da4556f: function() { return handleError(function (arg0, arg1) {
             const ret = arg0.appendChild(arg1);
             return ret;
@@ -139,6 +143,10 @@ function __wbg_get_imports() {
             const ret = arg0.createRadialGradient(arg1, arg2, arg3, arg4, arg5, arg6);
             return ret;
         }, arguments); },
+        __wbg_ctrlKey_785e802b8798af13: function(arg0) {
+            const ret = arg0.ctrlKey;
+            return ret;
+        },
         __wbg_ctrlKey_ba07ac4b2ea90600: function(arg0) {
             const ret = arg0.ctrlKey;
             return ret;
@@ -397,6 +405,10 @@ function __wbg_get_imports() {
             const ret = arg0.measureText(getStringFromWasm0(arg1, arg2));
             return ret;
         }, arguments); },
+        __wbg_metaKey_3f9183dfd5e1b726: function(arg0) {
+            const ret = arg0.metaKey;
+            return ret;
+        },
         __wbg_moveTo_2e2b57a16e7eda7b: function(arg0, arg1, arg2) {
             arg0.moveTo(arg1, arg2);
         },

@@ -430,7 +430,24 @@ impl App {
                 if best.is_some() {
                     self.kb_node = best;
                     self.announce(best);
+                    self.follow_kb_node();
                 }
+            }
+            self.kick();
+        } else if matches!(key.as_str(), "+" | "=" | "-" | "_" | "0")
+            && !(e.ctrl_key() || e.meta_key() || e.alt_key())
+        {
+            e.prevent_default();
+            match key.as_str() {
+                "0" => {
+                    self.user_cam = false;
+                    self.fit_camera(false, None);
+                }
+                k => self.zoom_at(
+                    self.w / 2.0,
+                    self.h / 2.0,
+                    if k == "+" || k == "=" { 1.35 } else { 1.0 / 1.35 },
+                ),
             }
             self.kick();
         } else if (key == "Enter" || key == " ") && self.kb_node.is_some() {
@@ -440,6 +457,24 @@ impl App {
             }
         }
         Ok(())
+    }
+
+    /// Keep the keyboard's skill in view: when arrowing carries it off the
+    /// stage (or under its edge), ease the camera onto it.
+    fn follow_kb_node(&mut self) {
+        let (Some(kb), Some(model)) = (self.kb_node, &self.model) else {
+            return;
+        };
+        let n = &model.nodes[kb];
+        if offstage(n.sx, n.sy, self.w, self.h, 48.0) {
+            let (px, py) = (n.px, n.py);
+            self.cam_t.x = px;
+            self.cam_t.y = py;
+            self.user_cam = true;
+            if self.reduced {
+                self.cam = self.cam_t;
+            }
+        }
     }
 
     /// '/' anywhere in the app focuses the search, unless typing already.
@@ -780,4 +815,26 @@ impl App {
 /// `+attribute` for the small integers these attributes carry.
 pub(crate) fn js_number(s: &str) -> i32 {
     super::model::js_trim(s).parse().unwrap_or(0)
+}
+
+/// Whether a point sits outside the stage once inset by `margin` on each side.
+pub(crate) fn offstage(x: f64, y: f64, w: f64, h: f64, margin: f64) -> bool {
+    x < margin || y < margin || x > w - margin || y > h - margin
+}
+
+#[cfg(test)]
+mod follow_tests {
+    use super::offstage;
+
+    #[test]
+    fn a_skill_inside_the_inset_stays_put() {
+        assert!(!offstage(400.0, 300.0, 800.0, 600.0, 48.0));
+    }
+
+    #[test]
+    fn a_skill_past_or_under_an_edge_pulls_the_camera() {
+        assert!(offstage(900.0, 300.0, 800.0, 600.0, 48.0));
+        assert!(offstage(20.0, 300.0, 800.0, 600.0, 48.0));
+        assert!(offstage(400.0, 590.0, 800.0, 600.0, 48.0));
+    }
 }
