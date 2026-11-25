@@ -146,6 +146,9 @@ pub struct Notes {
 /// Appended to the reach note when it leans on hand-offs.
 pub const STR_NOTES_HANDOFFS: &str = " That counts the {r} hand-offs (\"Not for X, use Y\") as citations; without them {k} skills no longer reach every other.";
 
+/// Appended to the thin note when one family is cited least per skill.
+pub const STR_NOTES_THIN_FAMILY: &str = " {a} has the fewest citations per skill, {m} on average against {h} in {b}.";
+
 pub const STR_NOTES: Notes = Notes {
     reach: "<b>Every skill reaches every other</b> by following citations — never more than {d} steps. The longest walk runs from {a} to {b}.{ties}",
     reach_partial: "Following citations, {pct}% of all pairs of skills are connected. The longest walk runs from {a} to {b}, {d} steps.{ties}",

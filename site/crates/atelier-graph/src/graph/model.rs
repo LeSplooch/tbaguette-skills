@@ -15,7 +15,7 @@ use atelier_core::graph::{
 };
 use serde_json::Value;
 
-use super::text::{STR_NOTES, STR_NOTES_HANDOFFS, escape_html, fmt, js_round, num};
+use super::text::{STR_NOTES, STR_NOTES_HANDOFFS, STR_NOTES_THIN_FAMILY, escape_html, fmt, js_round, num};
 
 /// graph.json's packed schema.
 const PACKED_SCHEMA: u64 = 2;
@@ -1140,18 +1140,54 @@ fn compute_notes(model: &Model) -> Vec<Note> {
         .map(|n| n.slug.clone())
         .collect();
     if !thin.is_empty() {
+        let mut html = fmt(
+            STR_NOTES.thin,
+            &[
+                ("n", thin.len().to_string()),
+                ("k", THIN_CITED_BY.to_string()),
+            ],
+        );
+        html.push_str(&thinnest_family_clause(model, nodes));
         notes.push(Note {
-            html: fmt(
-                STR_NOTES.thin,
-                &[
-                    ("n", thin.len().to_string()),
-                    ("k", THIN_CITED_BY.to_string()),
-                ],
-            ),
+            html,
             action: Action::Spot(Spot::nodes(thin, "in")),
         });
     }
     notes
+}
+
+/// A family needs this many skills before its average says anything.
+const FAMILY_MIN_SKILLS: usize = 3;
+
+/// "X has the fewest citations per skill (a against b in Y)", or nothing when
+/// fewer than two families are large enough to compare or they tie.
+fn thinnest_family_clause(model: &Model, nodes: &[Node]) -> String {
+    let mut means: Vec<(&str, f64)> = model
+        .categories
+        .iter()
+        .filter(|c| c.nodes.len() >= FAMILY_MIN_SKILLS)
+        .map(|c| {
+            let total: usize = c.nodes.iter().map(|&n| nodes[n].in_deg).sum();
+            (c.title.as_str(), total as f64 / c.nodes.len() as f64)
+        })
+        .collect();
+    if means.len() < 2 {
+        return String::new();
+    }
+    means.sort_by(|a, b| a.1.total_cmp(&b.1));
+    let (low, high) = (means[0], means[means.len() - 1]);
+    if format!("{:.1}", low.1) == format!("{:.1}", high.1) {
+        return String::new();
+    }
+    fmt(
+        STR_NOTES_THIN_FAMILY,
+        &[
+            ("a", escape_html(low.0)),
+            ("m", format!("{:.1}", low.1)),
+            ("h", format!("{:.1}", high.1)),
+            ("b", escape_html(high.0)),
+        ],
+    )
 }
 
 /// A skill cited by this many others or fewer is one a reader rarely reaches
@@ -1317,6 +1353,11 @@ mod tests {
         assert!(model.notes.len() >= 5, "{} notes", model.notes.len());
         let thin = model.notes.last().expect("the notes end on the thinly cited");
         assert!(thin.html.contains("cited by 2 others or fewer"), "{}", thin.html);
+        assert!(
+            thin.html.contains("fewest citations per skill"),
+            "the thin note names the least-cited family: {}",
+            thin.html
+        );
         assert!(
             model.notes[0]
                 .html
